@@ -6,6 +6,6 @@ export const Translations = {
         "txt_home": "Accueil"
     },
     "esp": {
-        "txt_home": "Casa"
+        "txt_home": "Casas"
     }
 };
