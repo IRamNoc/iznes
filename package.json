@@ -1,8 +1,8 @@
 {
-  "name": "socketcluster-wrapper",
+  "name": "@setl/socketcluster-wrapper",
   "version": "1.0.0",
   "description": "Implement Diffie-Hellman encryption on Socketcluster, to allow encrypted communication.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify src/index.js -o test/bundle.js -t [ babelify --presets [ es2015] ]"

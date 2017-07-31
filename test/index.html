@@ -10,7 +10,7 @@
 </body>
 <script src="bundle.js"></script>
 <script>
-    var setlWebsocket = new SocketClusterWrapper('wss', '10.0.1.163', '9788', 'db');
+    var setlWebsocket = new SocketClusterWrapper('wss', 'localhost', '9788', 'db');
     setlWebsocket.openWebSocket();
 
     var Request = {
