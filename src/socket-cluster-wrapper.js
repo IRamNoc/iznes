@@ -130,13 +130,6 @@ export class SocketClusterWrapper {
 
     sendRequest([request, callback]) {
 
-        // Log the request we sending out.
-        try {
-            console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
-        } catch (error) {
-            this.showTryCatchError(error);
-        }
-
         /**
          * Cache the requests from the browser when:
          * 1. Initialising
@@ -146,6 +139,14 @@ export class SocketClusterWrapper {
         if (this.initialising || this.encryption.shareKey === false) {
             this.messageQueue.push([request, callback]);
         } else {
+
+            // Log the request we sending out.
+            try {
+                console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
+            } catch (error) {
+                this.showTryCatchError(error);
+            }
+
             // Send request
 
             let requestText = JSON.stringify(request);
@@ -155,8 +156,6 @@ export class SocketClusterWrapper {
             }
 
             this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
-                console.log('receive message')
-                console.log(responseData)
                 let decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
 
 
