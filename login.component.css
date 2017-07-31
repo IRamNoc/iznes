@@ -1,0 +1,9 @@
+#login-prompt {
+    text-align: center;
+    color: rgb(247, 110, 92);
+    background-color: rgb(255, 231, 228);
+    border: 1px solid rgb(247, 110, 92);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
