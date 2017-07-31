@@ -1,7 +1,7 @@
 Installation
 =
 ```
-npm install http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git
+npm install git+http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.0
 ```
 
 Test
