@@ -2,25 +2,23 @@
 import { Injectable } from '@angular/core';
 
 /* Setl Websocket. */
-import {SetlWebSocket, SetlCallbackRegister} from 'setl-websocket';
+import { SocketClusterWrapper } from '@setl/socketcluster-wrapper';
 
 @Injectable()
 export class LoginService {
     /* Properties. */
     public loggedIn:boolean;
-    public setlCallBackRegister:any;
     public setlWebsocket:any;
+    public workerMessageChannel:any;
 
     /* Constructor. */
     constructor () {
         /* Setup the websocket connection. */
-        this.setlCallBackRegister = new SetlCallbackRegister();
-        this.setlWebsocket = new SetlWebSocket(
-            'ws:',
+        this.setlWebsocket = new SocketClusterWrapper(
+            'ws',
             '10.0.1.163',
             '9788',
-            false,
-            this.setlCallBackRegister
+            'db'
         );
 
         /* Init the connection, */
@@ -36,21 +34,13 @@ export class LoginService {
      public handleLogin ( logindata ) {
          /* Return a promise to handle the login. */
          return new Promise((resolve, reject) => {
-             /* Message ID reference. */
-             let messageID = this.setlCallBackRegister.uniqueIDValue;
-
-             /* Add message handler. */
-             this.setlCallBackRegister.addHandler(messageID, (id, event, userData) => {
-                 console.log(event);
-             }, {});
-
              /* Build a request. */
              var Request = {
                  MessageType: 'DataRequest',
                  MessageHeader: '',
-                 RequestID: messageID,
+                 RequestID: 0,
                  //MessageBody: {RequestName: 'Login', UserName: username, Password: password, CFCountry: nz(document.cf_ipcountry, '.')}
-                 // CFCountry just legacy. It still required as a parameter, but it is not used for anything.
+                 // CFCountry just legacy. It still required as a parameter, but it is not used for anything. <- typical...
                  MessageBody: {
                      RequestName: 'Login',
                      UserName: logindata.UserName,
@@ -64,5 +54,26 @@ export class LoginService {
                  resolve([err, data]);
              }]);
          })
+     }
+
+     /**
+      * Subscribe Workers
+      * Subscribe to the worker channel.
+      * TODO delete this after testing.
+      * @return {void}
+      */
+     public subscribeWorkers (callback):void {
+         /* Check if we already have a channel made. */
+         if ( ! this.workerMessageChannel ) {
+             console.log('Subscribing to worker channel.');
+             this.workerMessageChannel = this.setlWebsocket.webSocketConn.subscribe('worker-Message');
+         }
+
+         /* Un watch and re-watch the channel. */
+         this.workerMessageChannel.unwatch();
+         this.workerMessageChannel.watch(function(data){
+             /* Callback. */
+             callback(data);
+         });
      }
 }

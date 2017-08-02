@@ -32,6 +32,10 @@ export class SetlLoginComponent {
         private loginService:LoginService
     ) {
         /* Stub */
+        // this.loginService.subscribeWorkers(function (data){
+        //     console.log( "|- worker-Message" );
+        //     console.log( "| ", data );
+        // });
     }
 
     /**
