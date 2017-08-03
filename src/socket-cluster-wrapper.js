@@ -115,7 +115,15 @@ export class SocketClusterWrapper {
                     });
 
                     this.webSocketConn.on('error', (error) => {
-                        console.error(error);
+                        /* Set back to initialising */
+                        this.initialising = true;
+                        console.error("socket error: ", error);
+                    });
+
+                    this.webSocketConn.on('disconnect', (error) => {
+                        /* Set back to initialising */
+                        this.initialising = true;
+                        console.error("socket disconnect: ", error);
                     });
 
                 });
