@@ -115,19 +115,18 @@ export class SocketClusterWrapper {
                             }
                         }
                     });
+                });
 
-                    this.webSocketConn.on('error', (error) => {
-                        /* Set back to initialising */
-                        this.initialising = true;
-                        console.error("socket error: ", error);
-                    });
+                this.webSocketConn.on('error', (error) => {
+                    /* Set back to initialising */
+                    this.initialising = true;
+                    console.error("socket error: ", error);
+                });
 
-                    this.webSocketConn.on('disconnect', (error) => {
-                        /* Set back to initialising */
-                        this.initialising = true;
-                        console.error("socket disconnect: ", error);
-                    });
-
+                this.webSocketConn.on('disconnect', (error) => {
+                    /* Set back to initialising */
+                    this.initialising = true;
+                    console.error("socket disconnect: ", error);
                 });
 
                 this.defaultOnOpen();
@@ -233,11 +232,11 @@ export class SocketClusterWrapper {
         this.channels[channelName].unwatch();
 
         /* Add a watcher to the channel, we'll do the decryption in here. */
-        this.channels[channelName].watch((responseData) => {
+        this.channels[channelName].watch((transmissionData) => {
             /* Now we can decrypt the data. */
-            console.log("|- Decrypting...");
-            console.log("| RESPONSE DATA: ", responseData);
-            let decrypted = GibberishAES.dec(responseData, this.encryption.shareKey) || responseData;
+            console.log("|- Incoming Channel Publish...");
+            console.log("| TRANSMISSION DATA: ", transmissionData);
+            let decrypted = GibberishAES.dec(transmissionData, this.encryption.shareKey) || transmissionData;
 
             console.log("| DESCRYPTED DATA: ", decrypted);
             /* Callback. */
