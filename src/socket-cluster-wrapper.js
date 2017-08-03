@@ -52,6 +52,8 @@ export class SocketClusterWrapper {
         // Track connection attempts.
         this.connectTries = 0;
 
+        this.channels = [];
+
     }
 
     openWebSocket() {
@@ -174,6 +176,92 @@ export class SocketClusterWrapper {
             });
 
         }
+    }
+
+    subscribeToChannel (channelName, callback) {
+
+        /* Validate. */
+        if ( !channelName ) {
+            console.warn('Channel name not passed ')
+            return;
+        }
+
+        /**
+         * Handle the assignment of a watcher to a channel.
+         * 1. Spawn a channel.
+         * 2. Assign the callback as a watcher to the channel.
+         */
+
+        // if (this.initialising || this.encryption.shareKey === false) {
+        //     this.messageQueue.push([request, callback]);
+        // } else {
+        //
+        //     // Log the request we sending out.
+        //     try {
+        //         console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
+        //     } catch (error) {
+        //         this.showTryCatchError(error);
+        //     }
+        //
+        //     // Send request
+        //
+        //     let requestText = JSON.stringify(request);
+        //
+        //     if (this.encryption.shareKey !== false) {
+        //         requestText = GibberishAES.enc(requestText, this.encryption.shareKey);
+        //     }
+        //
+        //     this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
+        //         let decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
+        //
+        //
+        //         let message = JSON.parse(decoded);
+        //
+        //
+        //         callback(error, message);
+        //     });
+        //
+        // }
+
+        /* Create the channel if it doesn't exist. */
+        if ( !this.channels[channelName] ) {
+            console.log( "Subscribing to "+ channelName +": ", this.channels[channelName] );
+            this.channels[channelName] = this.webSocketConn.subscribe(channelName);
+        }
+
+        /* Unwatch any handlers already on the channel. */
+        this.channels[channelName].unwatch();
+
+        /* Add a watcher to the channel, we'll do the decryption in here. */
+        this.channels[channelName].watch((responseData) => {
+            /* Now we can decrypt the data. */
+            console.log("|- Decrypting...");
+            console.log("| RESPONSE DATA: ", responseData);
+            let decrypted = GibberishAES.dec(responseData, this.encryption.shareKey) || responseData;
+
+            console.log("| DESCRYPTED DATA: ", decrypted);
+            /* Callback. */
+            callback(decrypted);
+        })
+    }
+
+    onConnection () {
+        /**
+         * On Connection.
+         * Returns a promise that resolves as soon as the socket has connected.
+         * @return {promise} Promise.
+         */
+        return new Promise((resolve, reject) => {
+            /* Set the interval. */
+            this.onConnectionInterval = setInterval(() => {
+                /* Check if we have connected. */
+                if ( this.hasConnected ) {
+                    /* Clear and resolve if so. */
+                    clearInterval( this.onConnectionInterval );
+                    resolve();
+                }
+            }, 50)
+        })
     }
 
     defaultOnOpen() {
