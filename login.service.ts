@@ -23,6 +23,15 @@ export class LoginService {
 
         /* Init the connection, */
         this.setlWebsocket.openWebSocket();
+
+        /* Subscribe to our channel. */
+        this.setlWebsocket.onConnection().then(() => {
+            if ( this.setlWebsocket.webSocketConn.id ) {
+                this.setlWebsocket.subscribeToChannel(this.setlWebsocket.webSocketConn.id, function(data){
+                    console.log("FROM CHANNEL: ", data);
+                });
+            }
+        });
     }
 
     /**
