@@ -119,12 +119,19 @@ export class SocketClusterWrapper {
 
                 this.webSocketConn.on('error', (error) => {
                     /* Set back to initialising */
+                    // Todo
+                    // Need investigate why do we need to set this.initialising for make it work.
+                    // the connect and handshake should happen even without setting it to true.
+                    //
+                    // However, when the flag is not set to true here, the browser clash with an error
                     this.initialising = true;
                     console.error("socket error: ", error);
                 });
 
                 this.webSocketConn.on('disconnect', (error) => {
                     /* Set back to initialising */
+                    // Todo
+                    // Same as on  error
                     this.initialising = true;
                     console.error("socket disconnect: ", error);
                 });
@@ -177,10 +184,10 @@ export class SocketClusterWrapper {
         }
     }
 
-    subscribeToChannel (channelName, callback) {
+    subscribeToChannel(channelName, callback) {
 
         /* Validate. */
-        if ( !channelName ) {
+        if (!channelName) {
             console.warn('Channel name not passed ')
             return;
         }
@@ -223,8 +230,8 @@ export class SocketClusterWrapper {
         // }
 
         /* Create the channel if it doesn't exist. */
-        if ( !this.channels[channelName] ) {
-            console.log( "Subscribing to "+ channelName +": ", this.channels[channelName] );
+        if (!this.channels[channelName]) {
+            console.log("Subscribing to " + channelName + ": ", this.channels[channelName]);
             this.channels[channelName] = this.webSocketConn.subscribe(channelName);
         }
 
@@ -244,7 +251,7 @@ export class SocketClusterWrapper {
         })
     }
 
-    onConnection () {
+    onConnection() {
         /**
          * On Connection.
          * Returns a promise that resolves as soon as the socket has connected.
@@ -254,9 +261,9 @@ export class SocketClusterWrapper {
             /* Set the interval. */
             this.onConnectionInterval = setInterval(() => {
                 /* Check if we have connected. */
-                if ( this.hasConnected ) {
+                if (this.hasConnected) {
                     /* Clear and resolve if so. */
-                    clearInterval( this.onConnectionInterval );
+                    clearInterval(this.onConnectionInterval);
                     resolve();
                 }
             }, 50)
