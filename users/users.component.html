@@ -1,1 +1,226 @@
-<h2>users works!</h2>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2><span class="title-icon-lineup"><i class="fa fa-database"></i></span><span>Manage User</span></h2>
+        <ol class="breadcrumb">
+
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <ngb-tabset>
+        <ngb-tab>
+            <ng-template ngbTabTitle><i class="fa fa-search"></i> Search</ng-template>
+            <ng-template ngbTabContent>
+                <div class="panel-body">
+                    <setl-admin-users-table
+                        [dataArray]="userData"
+                    ></setl-admin-users-table>
+                </div>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab>
+            <ng-template ngbTabTitle><i></i><i class="fa fa-plus"></i> Add User</ng-template>
+            <ng-template ngbTabContent>
+                <div class="user-tab-panel-body panel-body">
+                    <form action="#" role="form">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_username">Username</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_email">Email</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
+                                <div class="col-sm-9">
+                                    <select name="account" class="account">
+                                        <option value="" disabled="disabled">Select one</option>
+                                        <option value="1">SETL Private Admin</option>
+                                        <option value="2">Developement_Admin_Account</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span mltag="txt_usertype">User Type</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <select name="type" class="usertype">
+                                        <option value="" disabled="disabled">Select one</option>
+                                        <option value="15">System Admin</option>
+                                        <option value="25">Chain Admin</option>
+                                        <option value="26">SGP Admin</option>
+                                        <option value="27">Bank</option>
+                                        <option value="36">Investor Admin</option>
+                                        <option value="46">Investor with KYC</option>
+                                        <option value="47">Investor without KYC</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_password">Password</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml" mltag="txt_access">Accès</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+
+    <!-- This nested tab set cannot be directly inside the main one :( -->
+    <ng-template #accessAdminTabs>
+        <ngb-tabset>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-users"></i> Administrative
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        Administrative
+                        <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-users"></i> Transactional
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        Transactional
+                        <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-briefcase"></i> Wallets
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        Wallets
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-chain"></i> Chains
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        Chains
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </ng-template>
+
+    <!-- Same goes for this nested tabset. -->
+    <ng-template #accessAdminSubTabs>
+        <ngb-tabset>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-users"></i> Groups
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        <select>
+                            <option value="">Select One</option>
+                            <option value="1">Group 1</option>
+                            <option value="2">Group 2</option>
+                        </select>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-user"></i> Individual
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        big grid thing needs to be here...
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </ng-template>
+
+    <!-- Same goes for this nested tabset. -->
+    <ng-template #accessTransactionSubTabs>
+        <ngb-tabset>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-users"></i> Groups
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        1
+                        <select>
+                            <option value="">Select One</option>
+                            <option value="1">Group 1</option>
+                            <option value="2">Group 2</option>
+                        </select>
+                        2
+                        <select>
+                            <option value="">Select One</option>
+                            <option value="1">Group 1</option>
+                            <option value="2">Group 2</option>
+                        </select>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <i class="fa fa-user"></i> Individual
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="panel-body">
+                        <select>
+                            <option value="">Select One</option>
+                            <option value="1">Group 1</option>
+                            <option value="2">Group 2</option>
+                        </select>
+                        big grid thing again...
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </ng-template>
+</div>

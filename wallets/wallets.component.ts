@@ -2,6 +2,10 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 
+
+/* Users table. */
+import { AdminWalletsTableComponent } from './subcomponents/wallets-table.component';
+
 /* Decorator. */
 @Component({
     selector: 'setl-admin-wallets',
@@ -11,6 +15,9 @@ import { FormsModule, NgModel } from '@angular/forms';
 
 /* Class. */
 export class AdminWalletsComponent {
+
+    /* Properties. */
+    public walletsData:any = [];
 
     /* Constructor. */
     constructor () {

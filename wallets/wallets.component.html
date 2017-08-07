@@ -1,1 +1,35 @@
-<h2>wallets works!</h2>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2><span class="title-icon-lineup"><i class="fa fa-briefcase"></i></span><span>Wallets</span></h2>
+        <ol class="breadcrumb">
+
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <ngb-tabset>
+        <ngb-tab>
+            <ng-template ngbTabTitle><i class="fa fa-search"></i> Search</ng-template>
+            <ng-template ngbTabContent>
+                <div class="panel-body">
+                    <setl-admin-wallets-table
+                        [dataArray]="walletsData"
+                    ></setl-admin-wallets-table>
+                </div>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab>
+            <ng-template ngbTabTitle><i></i><i class="fa fa-plus"></i> Add Wallet</ng-template>
+            <ng-template ngbTabContent>
+                <div class="user-tab-panel-body panel-body">
+                    <form action="#" role="form">
+                        <div class="form-horizontal">
+
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+</div>
