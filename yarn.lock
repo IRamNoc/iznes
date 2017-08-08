@@ -154,17 +154,17 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.2":
-  version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1dde4cf18e077847842d847549e7b1589751f7f7"
+"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.3":
+  version "1.0.3"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#8d1ddcc6de2b356b96a382334ed30bb6dee77ede"
 
 "@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.0":
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#6a9da0d414c65e43d48157a75b01ef3747e76937"
 
-"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.2":
+"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#6fde8aeb36b02620ca6c1351318bcadd8784a67b"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#88a105f3bef09f3071984af145d8b53487f0a880"
   dependencies:
     libsodium-wrappers "^0.5.2"
     lodash "^4.17.4"
