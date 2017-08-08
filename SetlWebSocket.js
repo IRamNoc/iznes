@@ -44,7 +44,7 @@ export class SetlWebSocket {
     }
 
     initResponse(id, message, userData) {
-        let thisData = _.get(message, "Data", false);
+        let thisData = _.get(message, "data", false);
         if (thisData != false) {
             this.encryption.serverPublicKey = thisData;
 
@@ -99,7 +99,7 @@ export class SetlWebSocket {
             }
         }
 
-        id = _.get(message, 'RequestID', 0);
+        id = _.get(message, 'requestid', 0);
 
         // Only process callbacks if id is the initMessageID or encryption is in place
 
@@ -150,7 +150,7 @@ export class SetlWebSocket {
         if (
             (this.initialising) ||
             (   this.requiredAuthentication && (!this.authenticated) &&
-                (!_.includes(this.authMessageTypes, String(_.get(request, 'MessageType', "")).toLowerCase()))
+                (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', "")).toLowerCase()))
             )
         ) {
             this.messageQueue.push(request);
