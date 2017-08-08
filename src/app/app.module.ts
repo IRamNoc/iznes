@@ -17,11 +17,11 @@ import {AppComponent} from './app.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
 import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
+import { NavigationTopbarComponent } from './core/navigation-topbar/navigation-topbar.component';
+import { NavigationSidebarComponent } from './core/navigation-sidebar/navigation-sidebar.component';
 
 import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
-import {NavigationComponent} from './core/navigation/navigation.component';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -29,7 +29,8 @@ import {NavigationComponent} from './core/navigation/navigation.component';
         BasicLayoutComponent,
         BlankLayoutComponent,
         HomeComponent,
-        NavigationComponent,
+        NavigationTopbarComponent,
+        NavigationSidebarComponent,
     ],
     imports: [
         BrowserModule,
