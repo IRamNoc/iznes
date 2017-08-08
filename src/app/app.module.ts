@@ -6,30 +6,38 @@ import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 
+/* Routes. */
+import { ROUTES } from "./app.routes";
 
-import {AppComponent} from './app.component';
-import {ROUTES} from "./app.routes";
-// import {SetlLoginModule, SetlLoginComponent} from '@setl/core-login';
-// import { TestComComponent } from './test-com/test-com.component';
+/* SETL Modules. */
+import { SetlLoginModule } from '@setl/core-login';
+
+/* Components. */
+import { AppComponent } from './app.component';
+import { TestComComponent } from './test-com/test-com.component';
+import { BasicLayoutComponent } from './layouts/basic/basic.component';
+import { BlankLayoutComponent } from './layouts/blank/blank.component';
 
 @NgModule({
     declarations: [
-        AppComponent
-        // TestComComponent
-
+        AppComponent,
+        TestComComponent,
+        BasicLayoutComponent,
+        BlankLayoutComponent,
     ],
     imports: [
         BrowserModule,
         HttpModule,
-        ClarityModule.forRoot(),
-        // SetlLoginModule,
-        // RouterModule.forRoot(ROUTES),
         FormsModule,
+        ClarityModule.forRoot(),
+        RouterModule.forRoot(ROUTES),
+        SetlLoginModule,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [ AppComponent ]
 })
 export class AppModule {
+
 }
