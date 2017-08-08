@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "@setl/utils",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
