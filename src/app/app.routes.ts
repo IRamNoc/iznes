@@ -1,33 +1,45 @@
 import {Routes} from '@angular/router';
 
 /* Layouts. */
-import { BasicLayoutComponent } from './layouts/basic/basic.component';
-import { BlankLayoutComponent } from './layouts/blank/blank.component';
+import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
+import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
 
 /* Components. */
-import { SetlLoginComponent } from '@setl/core-login';
-import { TestComComponent } from './test-com/test-com.component';
+import {HomeComponent} from './home/home.component';
+import {SetlLoginComponent} from '@setl/core-login';
+import {FormElementsComponent} from './ui-elements/form-elements.component';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
 
     /* Blank layout components */
     {
-        path: 'login', component: BlankLayoutComponent,
+        path: '', component: BlankLayoutComponent,
         children: [
             {
-                path: '', component: SetlLoginComponent,
+                path: 'login', component: SetlLoginComponent,
             }
         ]
     },
 
-    /* Basic layout components */
+    /* Root pages. */
     {
-        path: 'home', component: BasicLayoutComponent,
+        path: '', component: BasicLayoutComponent,
         children: [
             {
-                path: '', component: TestComComponent,
-            }
+                path: 'home', component: HomeComponent,
+            },
+        ]
+    },
+
+    /* Ui Element Pages. */
+    {
+        path: 'ui-elements', component: BasicLayoutComponent,
+        children: [
+            {
+                path: 'form', component: FormElementsComponent,
+            },
         ]
     }
 ];
