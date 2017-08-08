@@ -8,8 +8,12 @@ import {HttpModule} from '@angular/http';
 
 import {SidebarModule} from 'ng-sidebar';
 
+/* Services */
+import {MemberSocketService} from '@setl/websocket-service';
+import {WalletNodeSocketService} from '@setl/websocket-service';
+
 /* Routes. */
-import {ROUTES} from "./app.routes";
+import {ROUTES} from './app.routes';
 
 /* SETL Modules. */
 import {SetlLoginModule} from '@setl/core-login';
@@ -25,7 +29,7 @@ import {BlankLayoutComponent} from './layouts/blank/blank.component';
         AppComponent,
         TestComComponent,
         BasicLayoutComponent,
-        BlankLayoutComponent,
+        BlankLayoutComponent
     ],
     imports: [
         BrowserModule,
@@ -37,7 +41,9 @@ import {BlankLayoutComponent} from './layouts/blank/blank.component';
         SidebarModule
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        MemberSocketService,
+        WalletNodeSocketService
     ],
     bootstrap: [AppComponent]
 })
