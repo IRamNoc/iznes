@@ -29,6 +29,16 @@ import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-s
 
 import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
+
+/**
+ * App main state
+ */
+// import {
+//     AppStore,
+//     appStoreProviders
+// } from './app.store';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -51,6 +61,7 @@ import {HomeComponent} from './home/home.component';
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
+        // appStoreProviders,
         MemberSocketService,
         WalletNodeSocketService
     ],
