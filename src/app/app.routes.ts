@@ -9,6 +9,12 @@ import {HomeComponent} from './home/home.component';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
+/* UserAdmin Module. */
+import { AdminUsersComponent } from '@setl/core-useradmin';
+import { AdminWalletsComponent } from '@setl/core-useradmin';
+import { AdminPermissionsComponent } from '@setl/core-useradmin';
+import { AdminWizardComponent } from '@setl/core-useradmin';
+
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -41,6 +47,18 @@ export const ROUTES: Routes = [
             {
                 path: 'form', component: FormElementsComponent,
             },
+
+        ]
+    },
+
+    /* User Admin Pages. */
+    {
+        path: 'user-administration', component: BasicLayoutComponent,
+        children: [
+            { path: 'users', component: AdminUsersComponent },
+            { path: 'wallets', component: AdminWalletsComponent },
+            { path: 'permissions', component: AdminPermissionsComponent },
+            { path: 'wizard', component: AdminWizardComponent }
 
         ]
     }
