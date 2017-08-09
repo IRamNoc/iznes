@@ -35,7 +35,7 @@
   outline: 0px;
 }
 
-form .form-group input[type=text], form .form-group input[type=password] {
+input[type=text], input[type=password] {
   border: 1px solid #b9b9b9;
   background: white;
   padding: 5px;
@@ -99,7 +99,7 @@ nav {
 .sidenav .nav-group .nav-list .nav-link {
   margin: 0px;
   padding: 12px;
-  padding-left: 20px;
+  padding-left: 40px;
   padding-right: 20px;
 }
 
@@ -127,8 +127,13 @@ nav {
   border-radius: 4px;
 }
 
+app-navigation-topbar {
+  height: 75px;
+}
+
 .main-container header, .main-container .header {
   flex: 0 0 75px;
+  height: 75px;
 }
 
 header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider, .header .branding, .header .header-nav, .header .search-box, .header .search, .header .settings, .header .header-actions, .header .divider {

@@ -164,7 +164,7 @@
 
 "@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#6a9da0d414c65e43d48157a75b01ef3747e76937"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#341f5061d66e2975622eaa587a6bc99e35ac5637"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
