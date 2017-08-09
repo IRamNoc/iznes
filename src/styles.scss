@@ -215,3 +215,12 @@ clr-tab-link i {
   margin: 0px;
 }
 
+/* Float fix. */
+clr-tabs,
+clr-tab-content {
+    float: none;
+}
+
+clr-tab-content.active {
+    display: block;
+}
