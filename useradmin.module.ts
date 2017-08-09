@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbTabsetConfig} from '@ng-bootstrap/ng-bootstrap';
 
 /* Import core components. */
 import { AdminWizardComponent } from './wizard/wizard.component';
@@ -51,6 +52,9 @@ import { AdminPermissionsTableComponent } from './permissions/subcomponents/perm
         CommonModule,
         BrowserModule,
         FormsModule
+    ],
+    providers: [
+        NgbTabsetConfig
     ]
 })
 
