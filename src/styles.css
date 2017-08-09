@@ -1,7 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+/**
+Font - start
+ */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+
+body {
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
 /**
- ng-sidebar
+Font - start
+ */
+
+/**
+Common - start
+ */
+
+body {
+    color: rgb(103, 106, 108);
+}
+
+/**
+Common - end
+ */
+
+/**
+ ng-sidebar - start
  */
 .ng-sidebar--opened.ng-sidebar--over {
     box-shadow: 0 0 2.5em rgba(85, 85, 85, .5);
@@ -32,4 +56,9 @@
     padding: 2em 1em;
     width: 320px;
 }
+
+/**
+  ng-sidebar - end
+ */
+
 

@@ -9,6 +9,7 @@ import {HomeComponent} from './home/home.component';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
+
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
@@ -40,6 +41,7 @@ export const ROUTES: Routes = [
             {
                 path: 'form', component: FormElementsComponent,
             },
+
         ]
     }
 ];
