@@ -53,7 +53,7 @@ export class AdminPermissionsComponent {
          }
 
          /* All is good, so lets push it and tell the user. */
-         this.toasterService.pop('success', 'Permissions Group', 'Added group successfully!');
+        //  this.toasterService.pop('success', 'Permissions Group', 'Added group successfully!');
          this.permissionsData.push({
             'name': this.formGroupName,
             'type': this.formGroupType,

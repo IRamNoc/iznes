@@ -31,13 +31,11 @@ export class AdminPermissionsTableComponent {
 
     public deleteEventHandler (event):void {
         /* Emit */
-        console.log("emitting delete event: ", event + 1);
         this.deleteEvent.emit(event + 1);
     }
 
     public editEventHandler (event):void {
         /* Emit */
-        console.log("emitting edit event: ", event + 1);
         this.editEvent.emit(event + 1);
     }
 

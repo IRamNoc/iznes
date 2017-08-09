@@ -35,4 +35,55 @@ export class AdminUsersComponent {
         /* Stub */
     }
 
+    /**
+     * Handle Save
+     * Handles saving a user.
+     *
+     * @param {event}
+     * @return {void}
+     */
+     public handleSave ( event ):void {
+
+         /* Return. */
+         return;
+     }
+
+     /**
+      * Handle Delete
+      * Deletes a user.
+      *
+      * @param {index}
+      * @return {void}
+      */
+     public handleDelete (index):void {
+
+         /* Return. */
+         return;
+     }
+
+     /**
+      * Handle Edit
+      * Edits a user.
+      *
+      * @param {index}
+      * @return {void}
+      */
+     public handleEdit (index):void {
+
+         /* Return. */
+         return;
+     }
+
+     /**
+      * Clear Form
+      * Clears the new group form.
+      *
+      * @return {void}
+      */
+      public clearForm ():void {
+
+          /* Return. */
+          return;
+      }
+
 }

@@ -1,27 +1,26 @@
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-9">
-        <h2><span class="title-icon-lineup"><i class="fa fa-database"></i></span><span>Manage User</span></h2>
-        <ol class="breadcrumb">
-
-        </ol>
-    </div>
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-users"></i> Manage User</h1>
 </div>
+
 <div class="wrapper wrapper-content">
-    <ngb-tabset>
-        <ngb-tab>
-            <ng-template ngbTabTitle><i class="fa fa-search"></i> Search</ng-template>
-            <ng-template ngbTabContent>
-                <div class="panel-body">
-                    <setl-admin-users-table
-                        [dataArray]="userData"
-                    ></setl-admin-users-table>
-                </div>
-            </ng-template>
-        </ngb-tab>
-        <ngb-tab>
-            <ng-template ngbTabTitle><i></i><i class="fa fa-plus"></i> Add User</ng-template>
-            <ng-template ngbTabContent>
-                <div class="user-tab-panel-body panel-body">
+    <clr-tabs>
+        <!-- Tabs. -->
+        <clr-tab-link [clrTabLinkId]="'link1'" [clrTabLinkActive]="true"><i class="fa fa-search"></i> Search</clr-tab-link>
+        <clr-tab-link [clrTabLinkId]="'link2'" [clrTabLinkActive]="false"><i class="fa fa-user"></i> Add User</clr-tab-link>
+
+        <!-- Content panels. -->
+        <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="true">
+            <div class="panel-body">
+                <setl-admin-users-table
+                    [dataArray]="userData"
+                    (deleteEvent)="handleDelete($event)"
+                    (editEvent)="handleEdit($event)"
+                ></setl-admin-users-table>
+            </div>
+        </clr-tab-content>
+        <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="false">
+            <div class="user-tab-panel-body panel-body">
+                <form>
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">
@@ -105,128 +104,105 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-    </ngb-tabset>
+                </form>
+            </div>
+        </clr-tab-content>
+    </clr-tabs>
 
     <!-- This nested tab set cannot be directly inside the main one :( -->
     <ng-template #accessAdminTabs>
-        <ngb-tabset>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-users"></i> Administrative
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        Administrative
-                        <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-users"></i> Transactional
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        Transactional
-                        <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-briefcase"></i> Wallets
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        Wallets
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-chain"></i> Chains
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        Chains
-                    </div>
-                </ng-template>
-            </ngb-tab>
-        </ngb-tabset>
+        <clr-tabs>
+            <!-- Tabs. -->
+            <clr-tab-link [clrTabLinkId]="'link1.1'" [clrTabLinkActive]="true"><i class="fa fa-users"></i> Administrative</clr-tab-link>
+            <clr-tab-link [clrTabLinkId]="'link1.2'" [clrTabLinkActive]="false"><i class="fa fa-user"></i> Transactional</clr-tab-link>
+            <clr-tab-link [clrTabLinkId]="'link1.3'" [clrTabLinkActive]="false"><i class="fa fa-briefcase"></i> Wallets</clr-tab-link>
+            <clr-tab-link [clrTabLinkId]="'link1.4'" [clrTabLinkActive]="false"><i class="fa fa-chain"></i> Chains</clr-tab-link>
+
+            <!-- Content panels. -->
+            <clr-tab-content [clrTabContentId]="'content1.1'" [clrTabContentActive]="true">
+                <div class="panel-body">
+                    Administrative
+                    <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
+                </div>
+            </clr-tab-content>
+            <clr-tab-content [clrTabContentId]="'content1.2'" [clrTabContentActive]="false">
+                <div class="panel-body">
+                    Transactional
+                    <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
+                </div>
+            </clr-tab-content>
+            <clr-tab-content [clrTabContentId]="'content1.3'" [clrTabContentActive]="false">
+                <div class="panel-body">
+                    Wallets
+                </div>
+            </clr-tab-content>
+            <clr-tab-content [clrTabContentId]="'content1.4'" [clrTabContentActive]="false">
+                <div class="panel-body">
+                    Chains
+                </div>
+            </clr-tab-content>
+        </clr-tabs>
     </ng-template>
 
     <!-- Same goes for this nested tabset. -->
     <ng-template #accessAdminSubTabs>
-        <ngb-tabset>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-users"></i> Groups
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-user"></i> Individual
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        big grid thing needs to be here...
-                    </div>
-                </ng-template>
-            </ngb-tab>
-        </ngb-tabset>
+        <clr-tabs>
+            <!-- Tabs. -->
+            <clr-tab-link [clrTabLinkId]="'link2.1'" [clrTabLinkActive]="true"><i class="fa fa-users"></i> Groups</clr-tab-link>
+            <clr-tab-link [clrTabLinkId]="'link2.2'" [clrTabLinkActive]="false"><i class="fa fa-user"></i> Individual</clr-tab-link>
+
+            <!-- Content panels. -->
+            <clr-tab-content [clrTabContentId]="'content2.1'" [clrTabContentActive]="true">
+                <div class="panel-body">
+                    <select>
+                        <option value="">Select One</option>
+                        <option value="1">Group 1</option>
+                        <option value="2">Group 2</option>
+                    </select>
+                </div>
+            </clr-tab-content>
+            <clr-tab-content [clrTabContentId]="'content2.2'" [clrTabContentActive]="false">
+                <div class="panel-body">
+                    big grid thing needs to be here...
+                </div>
+            </clr-tab-content>
+        </clr-tabs>
     </ng-template>
 
     <!-- Same goes for this nested tabset. -->
     <ng-template #accessTransactionSubTabs>
-        <ngb-tabset>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-users"></i> Groups
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        1
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        2
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab>
-                <ng-template ngbTabTitle>
-                    <i class="fa fa-user"></i> Individual
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        big grid thing again...
-                    </div>
-                </ng-template>
-            </ngb-tab>
-        </ngb-tabset>
+        <clr-tabs>
+            <!-- Tabs. -->
+            <clr-tab-link [clrTabLinkId]="'link2.1'" [clrTabLinkActive]="true"><i class="fa fa-users"></i> Groups</clr-tab-link>
+            <clr-tab-link [clrTabLinkId]="'link2.2'" [clrTabLinkActive]="false"><i class="fa fa-user"></i> Individual</clr-tab-link>
+
+            <!-- Content panels. -->
+            <clr-tab-content [clrTabContentId]="'content2.1'" [clrTabContentActive]="true">
+                <div class="panel-body">
+                    1
+                    <select>
+                        <option value="">Select One</option>
+                        <option value="1">Group 1</option>
+                        <option value="2">Group 2</option>
+                    </select>
+                    2
+                    <select>
+                        <option value="">Select One</option>
+                        <option value="1">Group 1</option>
+                        <option value="2">Group 2</option>
+                    </select>
+                </div>
+            </clr-tab-content>
+            <clr-tab-content [clrTabContentId]="'content2.2'" [clrTabContentActive]="false">
+                <div class="panel-body">
+                    <select>
+                        <option value="">Select One</option>
+                        <option value="1">Group 1</option>
+                        <option value="2">Group 2</option>
+                    </select>
+                    big grid thing again...
+                </div>
+            </clr-tab-content>
+        </clr-tabs>
     </ng-template>
 </div>

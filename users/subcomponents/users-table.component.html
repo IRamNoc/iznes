@@ -11,10 +11,14 @@
         </thead>
         <tbody *ngIf="dataArray.length; else noRowsBlock">
             <tr *ngFor="let row of dataArray">
-                <td data-account-id="2" data-member-id="2" class="table-action-cell">
+                <td class="table-action-cell">
                     <div class="btn-group">
-                        <button class="btn-white btn btn-xs edit btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                        <button class="btn-white btn btn-xs delete btn-default"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                        <button (click)="editEventHandler(i)" class="btn-white btn btn-xs btn-default">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button (click)="deleteEventHandler(i)" class="btn-white btn btn-xs btn-default">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </td>
 

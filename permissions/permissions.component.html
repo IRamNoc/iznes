@@ -1,74 +1,70 @@
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-9">
-        <h2><span class="title-icon-lineup"><i class="fa fa-users"></i></span><span>Groups</span></h2>
-        <ol class="breadcrumb">
-
-        </ol>
-    </div>
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-key"></i> Permissions</h1>
 </div>
 
 <div class="wrapper wrapper-content">
-    <ngb-tabset>
-        <ngb-tab>
-            <ng-template ngbTabTitle><i class="fa fa-search"></i> Search</ng-template>
-            <ng-template ngbTabContent>
-                <div class="panel-body">
-                    <setl-admin-permissions-table
-                        [dataArray]="permissionsData"
-                        (deleteEvent)="handleDelete(event)"
-                        (editEvent)="handleEdit(event)"
-                    ></setl-admin-permissions-table>
-                </div>
-            </ng-template>
-        </ngb-tab>
-        <ngb-tab>
-            <ng-template ngbTabTitle><i></i><i class="fa fa-plus"></i> Add New Group</ng-template>
-            <ng-template ngbTabContent>
-                <div class="user-tab-panel-body panel-body">
-                    <div class="form-horizontal">
+    <clr-tabs (clrTabsCurrentTabLinkChanged)="onTabSelected($event)"
+              (clrTabsCurrentTabIndexChanged)="onTabIndexChanged($event)"
+              (clrTabsCurrentTabContentChanged)="onTabContentActivated($event)">
+        <!-- Tabs. -->
+        <clr-tab-link [clrTabLinkId]="'link1'" [clrTabLinkActive]="true"><i class="fa fa-search"></i> Search</clr-tab-link>
+        <clr-tab-link [clrTabLinkId]="'link2'" [clrTabLinkActive]="false"><i class="fa fa-plus"></i> Add New Group</clr-tab-link>
 
-                        <div class="form-group">
-                            <label class="col-sm-4 col-sm-offset-3"><span class="ml_translated" mltag="txt_groupdetails">Group Details</span></label>
+        <!-- Content panels. -->
+        <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="true">
+            <div class="panel-body">
+                <setl-admin-permissions-table
+                    [dataArray]="permissionsData"
+                    (deleteEvent)="handleDelete($event)"
+                    (editEvent)="handleEdit($event)"
+                ></setl-admin-permissions-table>
+            </div>
+        </clr-tab-content>
+        <clr-tab-content [clrTabContentId]="'content2'" [clrTabContentActive]="false">
+            <div class="user-tab-panel-body panel-body">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-4 col-sm-offset-3"><span class="ml_translated" mltag="txt_groupdetails">Group Details</span></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <span class="ml_translated" mltag="txt_groupname">Group Name</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input [(ngModel)]="formGroupName" type="text" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_groupname">Group Name</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input [(ngModel)]="formGroupName" type="text" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <span class="ml_translated" mltag="txt_groupdescription">Group Description</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input [(ngModel)]="formGroupDesc" type="text" placeholder="Group Description" class="form-control groupdescription mlp_translated" mltag="txt_groupdescription">
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_groupdescription">Group Description</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input [(ngModel)]="formGroupDesc" type="text" placeholder="Group Description" class="form-control groupdescription mlp_translated" mltag="txt_groupdescription">
-                            </div>
+                    <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_grouptype">Group Type</span></label>
+                        <div class="col-sm-9">
+                            <select [(ngModel)]="formGroupType" name="wallettype" class="grouptype mlp_translated" mltag="txt_choosegrouptag">
+                                <option value="" disabled="disabled">Select Type</option>
+                                <option value="0">Administrative</option>
+                                <option value="1">Transactional</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_grouptype">Group Type</span></label>
-                            <div class="col-sm-9">
-                                <select [(ngModel)]="formGroupType" name="wallettype" class="grouptype mlp_translated" mltag="txt_choosegrouptag">
-                                    <option value="" disabled="disabled">Select Type</option>
-                                    <option value="0">Administrative</option>
-                                    <option value="1">Transactional</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group button-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <button (click)="handleSave($event)" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                                </button>
-                            </div>
+                    <div class="form-group button-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button (click)="handleSave($event)" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
                         </div>
                     </div>
                 </div>
-            </ng-template>
-        </ngb-tab>
-    </ngb-tabset>
+            </div>
+        </clr-tab-content>
+    </clr-tabs>
 </div>

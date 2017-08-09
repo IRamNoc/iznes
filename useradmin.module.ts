@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgbTabsetConfig} from '@ng-bootstrap/ng-bootstrap';
+import {ClarityModule} from 'clarity-angular';
 
 /* Import core components. */
 import { AdminWizardComponent } from './wizard/wizard.component';
@@ -51,7 +52,8 @@ import { AdminPermissionsTableComponent } from './permissions/subcomponents/perm
         NgbModule,
         CommonModule,
         BrowserModule,
-        FormsModule
+        FormsModule,
+        ClarityModule
     ],
     providers: [
         NgbTabsetConfig
