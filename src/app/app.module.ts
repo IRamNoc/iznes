@@ -30,6 +30,9 @@ import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-s
 import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
 
+/* UserAdmin Module. */
+import { UserAdminModule } from '@setl/core-useradmin';
+
 /**
  * App main state
  */
@@ -57,6 +60,7 @@ import {HomeComponent} from './home/home.component';
         RouterModule.forRoot(ROUTES),
         SelectModule,
         SetlLoginModule,
+        UserAdminModule,
         SidebarModule
     ],
     providers: [
