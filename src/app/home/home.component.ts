@@ -112,4 +112,16 @@ export class HomeComponent {
         this.basic = !this.basic;
     }
 
+    onTabSelected () {
+
+    }
+
+    onTabIndexChanged () {
+
+    }
+
+    onTabContentActivated () {
+        
+    }
+
 }
