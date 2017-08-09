@@ -7,23 +7,30 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 
 /* Routes. */
-import { ROUTES } from "./app.routes";
+import {ROUTES} from "./app.routes";
 
 /* SETL Modules. */
 import { SetlLoginModule } from '@setl/core-login';
 
 /* Components. */
-import { AppComponent } from './app.component';
-import { TestComComponent } from './test-com/test-com.component';
-import { BasicLayoutComponent } from './layouts/basic/basic.component';
-import { BlankLayoutComponent } from './layouts/blank/blank.component';
+import {AppComponent} from './app.component';
+import {FormElementsComponent} from './ui-elements/form-elements.component';
+import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
+import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
+import { NavigationTopbarComponent } from './core/navigation-topbar/navigation-topbar.component';
+import { NavigationSidebarComponent } from './core/navigation-sidebar/navigation-sidebar.component';
 
+import {SelectModule} from 'ng2-select';
+import {HomeComponent} from './home/home.component';
 @NgModule({
     declarations: [
         AppComponent,
-        TestComComponent,
+        FormElementsComponent,
         BasicLayoutComponent,
         BlankLayoutComponent,
+        HomeComponent,
+        NavigationTopbarComponent,
+        NavigationSidebarComponent,
     ],
     imports: [
         BrowserModule,
@@ -31,6 +38,7 @@ import { BlankLayoutComponent } from './layouts/blank/blank.component';
         FormsModule,
         ClarityModule.forRoot(),
         RouterModule.forRoot(ROUTES),
+        SelectModule,
         SetlLoginModule,
     ],
     providers: [

@@ -1,0 +1,216 @@
+.animate, .animate:hover, .animate:focus {
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+.select {
+  select {
+    border: 1px solid #b9b9b9;
+    padding: 0 20px;
+    height: 34px;
+    line-height: 31px;
+    border-radius: 5px;
+    @extend .animate;
+
+    &:hover {
+      background: transparent;
+      border-color: #555;
+    }
+  }
+
+  &::after {
+    top: 13px;
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  outline: 0px;
+}
+
+.nav .nav-item.active > .nav-link {
+  outline: 0px;
+}
+
+form .form-group input[type=text], form .form-group input[type=password] {
+  border: 1px solid #b9b9b9;
+  background: white;
+  padding: 5px;
+  height: 35px;
+  border-radius: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+input[type=text]:not([readonly]):focus, input[type=password]:not([readonly]):focus, input[type=number]:not([readonly]):focus, input[type=email]:not([readonly]):focus, input[type=url]:not([readonly]):focus, input[type=tel]:not([readonly]):focus, input[type=date]:not([readonly]):focus, input[type=time]:not([readonly]):focus, input[type=datetime-local]:not([readonly]):focus {
+  border-bottom: 1px solid #b9b9b9;
+  border: 1px solid black;
+}
+
+header .branding {
+  width: 230px;
+}
+
+.sidenav {
+  width: 230px;
+}
+
+.content-area {
+  background: #f1f1f1;
+}
+
+nav {
+  font-size: 12px;
+}
+
+.sidenav .sidenav-content > .nav-link.active {
+  background: #e8e8e8;
+  color: #353535;
+  border-right: 4px solid #62a420;
+}
+
+.sidenav .sidenav-content > .nav-link {
+  margin: 0px;
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sidenav .sidenav-content > .nav-link i {
+  padding-right: 5px;
+}
+
+.sidenav .label.label-success, a.label.label-success {
+  float: right;
+}
+
+.sidenav .nav-group {
+  margin-top: 0px;
+}
+
+.sidenav .collapsible input[type="checkbox"] ~ .nav-list, .sidenav .collapsible input[type="checkbox"] ~ ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+.sidenav .nav-group .nav-list .nav-link {
+  margin: 0px;
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sidenav .collapsible label {
+  margin: 0px;
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sidenav .collapsible label:after {
+  float: right;
+}
+
+.sidenav .nav-group .nav-list .nav-link i {
+  padding-right: 5px;
+}
+
+.color-square {
+  display: inline-block;
+  vertical-align: text-bottom;
+  height: 14px;
+  width: 14px;
+  border: 0px solid #000;
+  border-radius: 4px;
+}
+
+.main-container header, .main-container .header {
+  flex: 0 0 75px;
+}
+
+header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider, .header .branding, .header .header-nav, .header .search-box, .header .search, .header .settings, .header .header-actions, .header .divider {
+  height: 75px;
+}
+
+.header .branding > a, header .branding > .nav-link, .header .branding > a, .header .branding > .nav-link {
+  height: 75px;
+}
+
+header .branding + .search::after, header .branding + .search-box::after, .header .branding + .search::after, .header .branding + .search-box::after {
+  height: 52px;
+}
+
+.main-container .content-container .content-area {
+  padding: 0px;
+}
+
+.header-breadcrumbs h1 {
+  margin-top: 0px;
+}
+
+.header-breadcrumbs {
+  padding: 20px;
+  background: white;
+  padding-bottom: 10px;
+}
+
+clr-tabs {
+  float: left;
+  width: 100%;
+}
+
+clr-tabs ul {
+  background: white;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+clr-tab-content {
+  float: left;
+  width: calc(100% - 40px);
+  margin: 20px;
+  background: white;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.nav {
+  box-shadow: 0 0px 0 #ccc inset;
+  height: 45px;
+}
+
+.nav .nav-item {
+  margin-right: 10px;
+}
+
+.nav .nav-item.active > .nav-link {
+  background: #f1f1f1;
+  color: #007cbb;
+  box-shadow: 0 0px 0 #007cbb inset;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.nav .nav-link.btn {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 45px;
+}
+
+.nav .nav-link:hover, .nav .nav-link.active {
+  box-shadow: 0 0px 0 #007cbb inset;
+  transition: box-shadow 0.2s ease-in;
+  outline: 0;
+  color: #000;
+}
+
+clr-tab-link i {
+  margin-right: 4px;
+}
+
+.datagrid {
+  margin: 0px;
+}
