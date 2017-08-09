@@ -21,7 +21,8 @@
       "styles": [
         "../node_modules/clarity-icons/clarity-icons.min.css",
         "../node_modules/clarity-ui/clarity-ui.min.css",
-        "styles.scss"
+        "styles.scss",
+        "styles.css"
       ],
       "scripts": [
         "../node_modules/mutationobserver-shim/dist/mutationobserver.min.js",

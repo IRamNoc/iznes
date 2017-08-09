@@ -6,19 +6,26 @@ import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 
+import {SidebarModule} from 'ng-sidebar';
+
+/* Services */
+import {MemberSocketService} from '@setl/websocket-service';
+import {WalletNodeSocketService} from '@setl/websocket-service';
+
 /* Routes. */
-import {ROUTES} from "./app.routes";
+import {ROUTES} from './app.routes';
 
 /* SETL Modules. */
-import { SetlLoginModule } from '@setl/core-login';
+import {SetlLoginModule} from '@setl/core-login';
 
 /* Components. */
 import {AppComponent} from './app.component';
+
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
 import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
-import { NavigationTopbarComponent } from './core/navigation-topbar/navigation-topbar.component';
-import { NavigationSidebarComponent } from './core/navigation-sidebar/navigation-sidebar.component';
+import {NavigationTopbarComponent} from './core/navigation-topbar/navigation-topbar.component';
+import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-sidebar.component';
 
 import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
@@ -40,11 +47,14 @@ import {HomeComponent} from './home/home.component';
         RouterModule.forRoot(ROUTES),
         SelectModule,
         SetlLoginModule,
+        SidebarModule
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        MemberSocketService,
+        WalletNodeSocketService
     ],
-    bootstrap: [ AppComponent ]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 

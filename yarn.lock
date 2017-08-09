@@ -171,6 +171,20 @@
     sha256 "^0.2.0"
     socketcluster-client "^6.3.0"
 
+"@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#51aaf1214f210262e5eaedf1f6f1489d48c87da7"
+  dependencies:
+    libsodium-wrappers "^0.5.2"
+
+"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_pipes/websocket-service.git":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_pipes/websocket-service.git#e334569b05e1192f059215fdd766771db4fe1482"
+  dependencies:
+    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
+    "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git"
+    lodash "^4.17.4"
+
 "@types/jasmine@*", "@types/jasmine@~2.5.53":
   version "2.5.53"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.53.tgz#4e0cefad09df5ec48c8dd40433512f84b1568d61"
@@ -3144,6 +3158,10 @@ ncname@1.0.x:
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
+
+ng-sidebar@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/ng-sidebar/-/ng-sidebar-6.0.1.tgz#38a642bbc5a65ce2351e95053fc89d78e877ae56"
 
 ng2-select@^1.2.0:
   version "1.2.0"
