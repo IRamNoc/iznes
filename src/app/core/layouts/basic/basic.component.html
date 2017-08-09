@@ -1,0 +1,24 @@
+<div class="main-container">
+
+    <!-- Navigation Topbar. -->
+    <app-navigation-topbar></app-navigation-topbar>
+
+    <div class="content-container">
+
+        <div class="content-area">
+
+            <!--
+                Basic Layout.
+                This layout wraps the navbar and the top bar.
+            -->
+            <router-outlet></router-outlet>
+
+        </div>
+
+        <!-- Navigation Sidebar. -->
+        <nav class="sidenav"><!-- Nav needs to be in here... -->
+            <app-navigation-sidebar></app-navigation-sidebar>
+        </nav>
+
+    </div>
+</div>
