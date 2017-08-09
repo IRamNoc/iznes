@@ -17,7 +17,14 @@ import { AdminWalletsTableComponent } from './subcomponents/wallets-table.compon
 export class AdminWalletsComponent {
 
     /* Properties. */
-    public walletsData:any = [];
+    public walletsData:any = [
+        {
+            'name': 'name of wallet....',
+            'account': 'melons',
+            'type': 'Type',
+            'enabled': 'true'
+        },
+    ];
 
     /* Constructor. */
     constructor () {

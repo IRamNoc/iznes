@@ -9,7 +9,7 @@
                 <th mltag="txt_status">Wallet Status</th>
             </tr>
         </thead>
-        <tbody *ngIf="dataArray">
+        <tbody *ngIf="dataArray.length">
             <tr *ngFor="let row of dataArray">
                 <td data-account-id="2" data-member-id="2" class="table-action-cell">
                     <div class="btn-group">
@@ -33,10 +33,10 @@
                 </td>
             </tr>
         </tbody>
-        <tbody *ngIf="!dataArray">
+        <tbody *ngIf="!dataArray.length">
             <tr>
                 <td colspan="5" class="text-center">
-                    No Wallets.
+                    No Wallets to show.
                 </td>
             </tr>
         </tbody>

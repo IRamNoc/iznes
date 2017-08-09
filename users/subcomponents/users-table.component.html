@@ -9,7 +9,7 @@
                 <th class="sorting ml_translated" mltag="txt_status" tabindex="0" aria-controls="um-table" rowspan="1" colspan="1" aria-label="Statut: activate to sort column ascending" style="width: 0px;">Status</th>
             </tr>
         </thead>
-        <tbody *ngIf="dataArray; else noRowsBlock">
+        <tbody *ngIf="dataArray.length; else noRowsBlock">
             <tr *ngFor="let row of dataArray">
                 <td data-account-id="2" data-member-id="2" class="table-action-cell">
                     <div class="btn-group">
@@ -34,11 +34,13 @@
             </tr>
         </tbody>
         <ng-template #noRowsBlock>
-            <tr>
-                <td colspan="5" class="text-center">
-                    No Users.
-                </td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td class="text-center" colspan="5">
+                        No Users to show.
+                    </td>
+                </tr>
+            </tbody>
         </ng-template>
     </table>
 </div>

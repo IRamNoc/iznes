@@ -2,11 +2,10 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /* Import core components. */
-
-import { AdminPermissionsComponent } from './permissions/permissions.component';
 import { AdminWizardComponent } from './wizard/wizard.component';
 
 /* Users components. */
@@ -17,8 +16,11 @@ import { AdminUsersTableComponent } from './users/subcomponents/users-table.comp
 import { AdminWalletsComponent } from './wallets/wallets.component';
 import { AdminWalletsTableComponent } from './wallets/subcomponents/wallets-table.component';
 
-/* User admin service. */
+/* Permissions components. */
+import { AdminPermissionsComponent } from './permissions/permissions.component';
+import { AdminPermissionsTableComponent } from './permissions/subcomponents/permissions-table.component';
 
+/* User admin service. */
 @NgModule({
     declarations: [
         AdminUsersComponent,
@@ -28,24 +30,27 @@ import { AdminWalletsTableComponent } from './wallets/subcomponents/wallets-tabl
         AdminWalletsTableComponent,
 
         AdminPermissionsComponent,
+        AdminPermissionsTableComponent,
 
         AdminWizardComponent,
     ],
     exports: [
         AdminUsersComponent,
-        AdminWalletsComponent,
+        AdminUsersTableComponent,
 
-        AdminPermissionsComponent,
+        AdminWalletsComponent,
         AdminWalletsTableComponent,
 
-        AdminWizardComponent,
+        AdminPermissionsComponent,
+        AdminPermissionsTableComponent,
 
-        AdminUsersTableComponent
+        AdminWizardComponent,
     ],
     imports: [
         NgbModule,
         CommonModule,
-        BrowserModule
+        BrowserModule,
+        FormsModule
     ]
 })
 

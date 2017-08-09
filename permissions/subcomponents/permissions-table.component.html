@@ -1,0 +1,42 @@
+<div id="um-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <table class="table table-striped table-bordered table-hover dataTables-example dataTable no-footer" id="um-table" aria-describedby="um-table_info" role="grid">
+        <thead>
+            <tr role="row">
+                <th class="sorting_disabled ml_translated" mltag="txt_action" rowspan="1" colspan="1" aria-label="Action" style="width: 0px;">Action</th>
+                <th class="sorting_asc ml_translated" mltag="txt_username" tabindex="0" aria-controls="um-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Nom d'utilisateur: activate to sort column descending" style="width: 0px;">Group Name</th>
+                <th class="sorting ml_translated" mltag="txt_email" tabindex="0" aria-controls="um-table" rowspan="1" colspan="1" aria-label="Email: activate to sort column ascending" style="width: 0px;">Group Type</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="dataArray.length; else noRowsBlock">
+            <tr *ngFor="let row of dataArray; let i = index">
+                <td class="table-action-cell">
+                    <div class="btn-group">
+                        <button (click)="editEventHandler(i)" class="btn-white btn btn-xs btn-default">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button (click)="deleteEventHandler(i)" class="btn-white btn btn-xs btn-default">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </td>
+
+                <td class="group_name">
+                    {{ row.name }}
+                </td>
+
+                <td class="group_type">
+                    {{ row.type }}
+                </td>
+            </tr>
+        </tbody>
+        <ng-template #noRowsBlock>
+            <tbody>
+                <tr>
+                    <td class="text-center" colspan="5">
+                        No Permissions to show.
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
+    </table>
+</div>

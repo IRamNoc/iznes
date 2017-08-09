@@ -26,6 +26,53 @@
                     <form action="#" role="form">
                         <div class="form-horizontal">
 
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="submit" data-action="menu_leis" class="btn btn-primary createfromleisearch-btn"><i class="fa fa-building"></i> <span class="ml_translated" mltag="txt_createfromlei">Create From LEI Search</span></button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 col-sm-offset-3"><span class="ml_translated" mltag="txt_walletdetails">Wallet Details</span></label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_walletname">Wallet Name</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" placeholder="Wallet Name" class="form-control newwalletname mlp_translated" mltag="txt_walletname">
+                                </div>
+                            </div>
+
+                            <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
+                                <div class="col-sm-9">
+                                    <select name="account" class="chosen-select account mlp_translated" mltag="txt_chooseaccount">
+                                        <option value="">Select One</option>
+                                        <option value="1">SETL Private Admin</option>
+                                        <option value="2">Developement_Admin_Account</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_wallettype">Wallet Type</span></label>
+                                <div class="col-sm-9">
+                                    <select name="wallettype" class="chosen-select wallettype mlp_translated" mltag="txt_choosewallettype">
+                                        <option value="">Select One</option>
+                                        <option value="1">Legal Entity</option>
+                                        <option value="2">Individual</option>
+                                        <option value="3">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group button-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <button type="submit" class="btn btn-primary manage-wallet-submit-btn"><i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span></button>
+                                </div>
+                            </div>
+
                         </div>
                     </form>
                 </div>
