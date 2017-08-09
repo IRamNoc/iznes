@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navigation-sidebar',
@@ -7,9 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationSidebarComponent implements OnInit {
 
-  constructor() { }
+  constructor (
+      private router:Router
+  ) {
+      /* Stub. */
+  }
 
   ngOnInit() {
+  }
+
+  /**
+   * Active Route
+   * Returns whether a string in in the ac
+   * @param  {route}  - string
+   * @return {active} - boolean
+   */
+  public activeRoute ( route ):boolean {
+      return !!(this.router.url.indexOf( route ) !== -1);
   }
 
 }
