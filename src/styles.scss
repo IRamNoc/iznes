@@ -35,19 +35,33 @@
   outline: 0px;
 }
 
-form .form-group input[type=text], form .form-group input[type=password] {
+select {
   border: 1px solid #b9b9b9;
+  padding: 0 20px;
+  height: 40px;
+  line-height: 31px;
+  border-radius: 3px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+input[type=text], input[type=password], input[type=email] {
+  border: 1px solid #dadada;
   background: white;
   padding: 5px;
-  height: 35px;
+  height: 40px;
   border-radius: 3px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 input[type=text]:not([readonly]):focus, input[type=password]:not([readonly]):focus, input[type=number]:not([readonly]):focus, input[type=email]:not([readonly]):focus, input[type=url]:not([readonly]):focus, input[type=tel]:not([readonly]):focus, input[type=date]:not([readonly]):focus, input[type=time]:not([readonly]):focus, input[type=datetime-local]:not([readonly]):focus {
-  border-bottom: 1px solid #b9b9b9;
+  border-bottom: 0px solid #b9b9b9;
   border: 1px solid black;
+}
+
+input[type=text]:not([readonly]), input[type=password]:not([readonly]), input[type=number]:not([readonly]), input[type=email]:not([readonly]), input[type=url]:not([readonly]), input[type=tel]:not([readonly]), input[type=date]:not([readonly]), input[type=time]:not([readonly]), input[type=datetime-local]:not([readonly]) {
+  background: white;
 }
 
 header .branding {
@@ -99,7 +113,7 @@ nav {
 .sidenav .nav-group .nav-list .nav-link {
   margin: 0px;
   padding: 12px;
-  padding-left: 20px;
+  padding-left: 40px;
   padding-right: 20px;
 }
 
@@ -127,8 +141,13 @@ nav {
   border-radius: 4px;
 }
 
+app-navigation-topbar {
+  height: 75px;
+}
+
 .main-container header, .main-container .header {
   flex: 0 0 75px;
+  height: 75px;
 }
 
 header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider, .header .branding, .header .header-nav, .header .search-box, .header .search, .header .settings, .header .header-actions, .header .divider {
@@ -149,32 +168,17 @@ header .branding + .search::after, header .branding + .search-box::after, .heade
 
 .header-breadcrumbs h1 {
   margin-top: 0px;
+  font-size: 26px;
+}
+
+.header-breadcrumbs h1 i {
+  margin-right: 5px;
 }
 
 .header-breadcrumbs {
   padding: 20px;
   background: white;
   padding-bottom: 10px;
-}
-
-clr-tabs {
-  float: left;
-  width: 100%;
-}
-
-clr-tabs ul {
-  background: white;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-clr-tab-content {
-  float: left;
-  width: calc(100% - 40px);
-  margin: 20px;
-  background: white;
-  border-radius: 4px;
-  padding: 20px;
 }
 
 .nav {
@@ -207,63 +211,154 @@ clr-tab-content {
   color: #000;
 }
 
+clr-tabs {
+  float: left;
+  width: 100%;
+}
+
+clr-tabs ul {
+  background: white;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+clr-tab-content {
+  float: left;
+  width: calc(100% - 40px);
+  margin: 20px;
+  background: white;
+  border-radius: 4px;
+  padding: 20px;
+}
+
 clr-tab-link i {
   margin-right: 4px;
+}
+
+clr-tabs,
+clr-tab-content {
+  float: none;
+}
+
+clr-tab-content.active {
+  display: block;
+}
+
+.panel-body clr-tabs ul {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.panel-body .nav .nav-item.active > .nav-link {
+  box-shadow: 0 0px 0 #007cbb inset;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border: 1px solid #cccccc;
+  border-bottom: 1px solid white;
+  background: white;
+}
+
+.panel-body clr-tab-content.active {
+  margin: 0px;
+  border: 1px solid #cccccc;
+}
+
+.panel-body clr-tab-content.active:first-of-type {
+  //background: red;
+  border-top-left-radius: 0px;
+}
+
+.panel-body clr-tab-content {
+  padding: 15px;
+}
+
+.panel-body clr-tabs {
+  margin-top: 10px;
 }
 
 .datagrid {
   margin: 0px;
 }
 
+.header-actions .nav-link.nav-icon label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: 24px;
+  width: 24px;
+}
+
 /* Float fix for tabs. */
 clr-tabs,
 clr-tab-content {
-    float: none;
+  float: none;
 }
 
-clr-tab-content.active {
-    display: block;
+form .form-group > label:first-child, form .form-group > span:first-child, form .form-group.row > [class*='col-'] > label, form .form-group.row > [class*='col-'] > span, .form .form-group > label:first-child, .form .form-group > span:first-child, .form .form-group.row > [class*='col-'] > label, .form .form-group.row > [class*='col-'] > span {
+  line-height: 30px;
+}
+
+header .search-box input[type="text"], header .search input[type="text"], .header .search-box input[type="text"], .header .search input[type="text"] {
+  background: white;
+}
+
+header .search-box, header .search, .header .search-box, .header .search {
+  opacity: 1.0;
+}
+
+form .form-group > label:first-child, form .form-group > span:first-child, .form .form-group > label:first-child, .form .form-group > span:first-child {
+  text-align: right;
+}
+
+.table {
+  margin-top: 0px;
+}
+
+form .form-group, .form .form-group {
+  margin-bottom: 3px;
 }
 
 /* Fix for ng2-select dropdowns. */
 .ui-select-toggle {
-    min-width: 225px;
-    margin-right: 0;
-    height: 35px;
-    border: 1px solid #b9b9b9 !important;
+  min-width: 225px;
+  margin-right: 0;
+  height: 35px;
+  border: 1px solid #b9b9b9 !important;
 }
 
 .ui-select-toggle .ui-select-placeholder,
 .ui-select-toggle .ui-select-match-text {
-    margin: 0;
-    font-size: 12.5px;
-    letter-spacing: normal;
-    text-transform: none;
-    line-height: 35px;
-    color: #565656;
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 35px;
+  color: #565656;
 }
 
 .ui-select-toggle > a.btn-link {
-    margin: 0;
+  margin: 0;
 }
 
 .ui-select-search {
-    /* Importants are needed as the component ng2-select has inline styling... */
-    min-width: 240px !important;
-    border: 1px solid #b9b9b9 !important;
-    padding: 0px 12px !important;
+  /* Importants are needed as the component ng2-select has inline styling... */
+  min-width: 240px !important;
+  border: 1px solid #b9b9b9 !important;
+  padding: 0px 12px !important;
 }
 
 .ui-select-choices {
-    padding: 4px 0;
+  padding: 4px 0;
 }
 
 /* Fix for button groups in tables. */
 td > .btn-group {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 /* Fix for buttons with spans in them. */
 .btn > span {
-    margin: 0 !important;
+  margin: 0 !important;
 }
