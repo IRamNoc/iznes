@@ -290,6 +290,12 @@ clr-tab-content.active {
   width: 24px;
 }
 
+/* Float fix for tabs. */
+clr-tabs,
+clr-tab-content {
+  float: none;
+}
+
 form .form-group > label:first-child, form .form-group > span:first-child, form .form-group.row > [class*='col-'] > label, form .form-group.row > [class*='col-'] > span, .form .form-group > label:first-child, .form .form-group > span:first-child, .form .form-group.row > [class*='col-'] > label, .form .form-group.row > [class*='col-'] > span {
   line-height: 30px;
 }
@@ -312,4 +318,47 @@ form .form-group > label:first-child, form .form-group > span:first-child, .form
 
 form .form-group, .form .form-group {
   margin-bottom: 3px;
+}
+
+/* Fix for ng2-select dropdowns. */
+.ui-select-toggle {
+  min-width: 225px;
+  margin-right: 0;
+  height: 35px;
+  border: 1px solid #b9b9b9 !important;
+}
+
+.ui-select-toggle .ui-select-placeholder,
+.ui-select-toggle .ui-select-match-text {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 35px;
+  color: #565656;
+}
+
+.ui-select-toggle > a.btn-link {
+  margin: 0;
+}
+
+.ui-select-search {
+  /* Importants are needed as the component ng2-select has inline styling... */
+  min-width: 240px !important;
+  border: 1px solid #b9b9b9 !important;
+  padding: 0px 12px !important;
+}
+
+.ui-select-choices {
+  padding: 4px 0;
+}
+
+/* Fix for button groups in tables. */
+td > .btn-group {
+  margin-right: 0;
+}
+
+/* Fix for buttons with spans in them. */
+.btn > span {
+  margin: 0 !important;
 }
