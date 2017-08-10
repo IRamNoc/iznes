@@ -1,0 +1,45 @@
+Arguments: 
+  /usr/local/Cellar/node/8.2.1/bin/node /usr/local/Cellar/yarn/0.27.5_1/libexec/bin/yarn.js link
+
+PATH: 
+  /Users/dansarracayo/bin/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  0.27.5
+
+Node version: 
+  8.2.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "@setl/core-useradmin",
+    "version": "1.0.4",
+    "description": "The vanilla users and permissions module.",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Daniel Sarracayo",
+    "license": "ISC",
+    "dependencies" : {
+        "@setl/socketcluster-wrapper": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git",
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: /private/var/www/opencsd-rewrite/opencsd-frontend-clarity/setl_modules/core-useradmin/package.json: Unexpected token } in JSON at position 420
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/0.27.5_1/libexec/lib/yarn-cli.js:747:57
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/0.27.5_1/libexec/lib/yarn-cli.js:91:30)
+      at /usr/local/Cellar/yarn/0.27.5_1/libexec/lib/yarn-cli.js:102:13
+      at <anonymous>
