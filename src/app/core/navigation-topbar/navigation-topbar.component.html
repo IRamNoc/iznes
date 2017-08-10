@@ -12,21 +12,33 @@
         </label>
     </form>
     <div class="header-actions">
-        <a href="..." class="nav-link nav-icon">
-            <clr-icon shape="user"></clr-icon>
-            <label>User</label>
-        </a>
+        <div class="wallet">
+            <ng-select [allowClear]="true"
+                       [items]="items"
+                       [disabled]="disabled"
+                       (data)="refreshValue($event)"
+                       (selected)="selected($event)"
+                       (removed)="removed($event)"
+                       (typed)="typed($event)"
+                       placeholder="No city selected">
+            </ng-select>
+        </div>
+
+        <div class="user">
+            <img src="assets/images/ollie.jpg">
+            <p>Ollie Kett <i class="fa fa-angle-down"></i></p>
+            <span>Last 21/08/2017 20:00</span>
+        </div>
 
         <a href="..." class="nav-link nav-icon">
             <clr-icon shape="email" class="is-solid has-badge"></clr-icon>
             <label>Notifications</label>
         </a>
 
-        <a href="..." class="nav-link nav-icon">
+        <a class="nav-link nav-icon" (click)="callToggleSidebar($event)">
             <clr-icon shape="cog"></clr-icon>
             <label>Settings</label>
         </a>
-
 
         <a href="..." class="nav-link nav-icon">
             <clr-icon shape="logout"></clr-icon>
