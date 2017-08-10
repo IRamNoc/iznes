@@ -43,11 +43,13 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
                             <div class="col-sm-9">
-                                <select name="account" class="account">
-                                    <option value="" disabled="disabled">Select one</option>
-                                    <option value="1">SETL Private Admin</option>
-                                    <option value="2">Developement_Admin_Account</option>
-                                </select>
+                                <ng-select
+                                    (selected)="selected('accountType', $event)"
+                                    (removed)="removed('accountType', $event)"
+                                    [items]="accountTypes"
+                                    [allowClear]="true"
+                                    placeholder="Select Type">
+                                </ng-select>
                             </div>
                         </div>
 
@@ -56,16 +58,13 @@
                                 <span mltag="txt_usertype">User Type</span>
                             </label>
                             <div class="col-sm-9">
-                                <select name="type" class="usertype">
-                                    <option value="" disabled="disabled">Select one</option>
-                                    <option value="15">System Admin</option>
-                                    <option value="25">Chain Admin</option>
-                                    <option value="26">SGP Admin</option>
-                                    <option value="27">Bank</option>
-                                    <option value="36">Investor Admin</option>
-                                    <option value="46">Investor with KYC</option>
-                                    <option value="47">Investor without KYC</option>
-                                </select>
+                                <ng-select
+                                    (selected)="selected('userType', $event)"
+                                    (removed)="removed('userType', $event)"
+                                    [items]="userTypes"
+                                    [allowClear]="true"
+                                    placeholder="Select Type">
+                                </ng-select>
                             </div>
                         </div>
 

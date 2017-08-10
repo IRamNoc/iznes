@@ -5,11 +5,15 @@ import { FormsModule, NgModel } from '@angular/forms';
 /* Users table. */
 import { AdminUsersTableComponent } from './subcomponents/users-table.component';
 
+/* User Admin Service. */
+import {UserAdminService} from '../useradmin.service';
+
 /* Decorator. */
 @Component({
     selector: 'setl-admin-users',
     templateUrl: 'users.component.html',
-    styleUrls: [ 'users.component.css' ]
+    styleUrls: [ 'users.component.css' ],
+    providers: [ UserAdminService ]
 })
 
 /* Class. */
@@ -30,9 +34,31 @@ export class AdminUsersComponent {
         }
     ];
 
+    /* Account types select. */
+    public accountType:string;
+    public accountTypes:any;
+
+    /* User types select. */
+    public userType:string;
+    public userTypes:any;
+
     /* Constructor. */
-    constructor () {
-        /* Stub */
+    constructor (private userAdminService:UserAdminService) {
+        /* Get Account Types. */
+        this.accountTypes = userAdminService.getAccountTypes();
+
+        /* Get User Types. */
+        this.userTypes = userAdminService.getUserTypes();
+    }
+
+    /* Handles a ng2-select selection. */
+    public selected(propertyName:string, value:any):void {
+        this[propertyName] = value;
+    }
+
+    /* Handles a ng2-select deletion. */
+    public removed(propertyName:string, value:any):void {
+        this[propertyName] = undefined;
     }
 
     /**

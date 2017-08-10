@@ -1,62 +1,70 @@
 /* Core imports. */
-import { NgModule } from "@angular/core";
-import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {NgbTabsetConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgModule} from "@angular/core";
+import {CommonModule} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
+
+/* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 
+/* 3rd party modules. */
+import {SelectModule} from 'ng2-select';
+
 /* Import core components. */
-import { AdminWizardComponent } from './wizard/wizard.component';
+import {AdminWizardComponent} from './wizard/wizard.component';
 
 /* Users components. */
-import { AdminUsersComponent } from './users/users.component';
-import { AdminUsersTableComponent } from './users/subcomponents/users-table.component';
+import {AdminUsersComponent} from './users/users.component';
+import {AdminUsersTableComponent} from './users/subcomponents/users-table.component';
 
 /* Wallets components. */
-import { AdminWalletsComponent } from './wallets/wallets.component';
-import { AdminWalletsTableComponent } from './wallets/subcomponents/wallets-table.component';
+import {AdminWalletsComponent} from './wallets/wallets.component';
+import {AdminWalletsTableComponent} from './wallets/subcomponents/wallets-table.component';
 
 /* Permissions components. */
-import { AdminPermissionsComponent } from './permissions/permissions.component';
-import { AdminPermissionsTableComponent } from './permissions/subcomponents/permissions-table.component';
+import {AdminPermissionsComponent} from './permissions/permissions.component';
+import {AdminPermissionsTableComponent} from './permissions/subcomponents/permissions-table.component';
 
 /* User admin service. */
 @NgModule({
     declarations: [
+        /* Users components. */
         AdminUsersComponent,
         AdminUsersTableComponent,
 
+        /* Wallets components. */
         AdminWalletsComponent,
         AdminWalletsTableComponent,
 
+        /* Permissions components. */
         AdminPermissionsComponent,
         AdminPermissionsTableComponent,
 
+        /* Wizard component. */
         AdminWizardComponent,
     ],
     exports: [
+        /* Users components. */
         AdminUsersComponent,
         AdminUsersTableComponent,
 
+        /* Wallets components. */
         AdminWalletsComponent,
         AdminWalletsTableComponent,
 
+        /* Permissions components. */
         AdminPermissionsComponent,
         AdminPermissionsTableComponent,
 
+        /* Wizard component. */
         AdminWizardComponent,
     ],
     imports: [
-        NgbModule,
         CommonModule,
         BrowserModule,
         FormsModule,
-        ClarityModule
-    ],
-    providers: [
-        NgbTabsetConfig
+        ClarityModule,
+        SelectModule
     ]
 })
 

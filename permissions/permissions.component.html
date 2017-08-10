@@ -48,11 +48,13 @@
 
                     <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_grouptype">Group Type</span></label>
                         <div class="col-sm-9">
-                            <select [(ngModel)]="formGroupType" name="wallettype" class="grouptype mlp_translated" mltag="txt_choosegrouptag">
-                                <option value="" disabled="disabled">Select Type</option>
-                                <option value="0">Administrative</option>
-                                <option value="1">Transactional</option>
-                            </select>
+                            <ng-select
+                                (selected)="selected('groupType', $event)"
+                                (removed)="removed('groupType', $event)"
+                                [items]="groupTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type">
+                            </ng-select>
                         </div>
                     </div>
 

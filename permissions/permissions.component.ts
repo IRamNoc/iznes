@@ -6,11 +6,15 @@ import { ToasterService } from 'angular2-toaster';
 /* Users table. */
 import { AdminPermissionsTableComponent } from './subcomponents/permissions-table.component';
 
+/* User Admin Service. */
+import {UserAdminService} from '../useradmin.service';
+
 /* Decorator. */
 @Component({
     selector: 'setl-admin-permissions',
     templateUrl: 'permissions.component.html',
-    styleUrls: [ 'permissions.component.css' ]
+    styleUrls: [ 'permissions.component.css' ],
+    providers: [ UserAdminService, ToasterService ]
 })
 
 /* Class. */
@@ -23,11 +27,27 @@ export class AdminPermissionsComponent {
     private formGroupDesc:string = "";
     private formGroupType:string = "";
 
+    /* Account types select. */
+    public groupType:string;
+    public groupTypes:any;
+
     /* Constructor. */
     constructor (
-        private toasterService:ToasterService,
+        private userAdminService:UserAdminService,
+        private toasterService:ToasterService
     ) {
-        /* Stub */
+        /* Get User Types. */
+        this.groupTypes = userAdminService.getGroupTypes();
+    }
+
+    /* Handles a ng2-select selection. */
+    public selected(propertyName:string, value:any):void {
+        this[propertyName] = value;
+    }
+
+    /* Handles a ng2-select deletion. */
+    public removed(propertyName:string, value:any):void {
+        this[propertyName] = undefined;
     }
 
     /**
