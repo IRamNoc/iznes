@@ -1,11 +1,17 @@
-export const RUN_TASK = 'RUN_TASK';
+export const RUN_ASYNC_TASK = 'RUN_ASYNC_TASK';
 
-export const runTask = (successType, failureType, descriptor, args) => (
+export const runAsyncTask = (successTypes, failureTypes, descriptor, args) => (
     {
-        type: RUN_TASK
-        , successType
-        , failureType
-        , descriptor
-        , args
+        type: RUN_ASYNC_TASK,
+        successTypes,
+        failureTypes,
+        descriptor,
+        args
     }
 );
+
+export interface AsyncTaskResponseAction {
+    type: string;
+    payload: any;
+}
+

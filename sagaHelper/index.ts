@@ -1,25 +1,28 @@
-import {identity} from 'ramda'
-import * as actions from './actions'
-import saga from './saga'
+import * as actions from './actions';
+import {asyncTaskSaga, preSagaMiddleWare, postSagaMiddleWare} from './saga';
 
 // Creates a task descriptor
 const create = (fn) => {
-    return {pipe: [fn]}
+    return {pipe: [fn]};
 };
 
 // Pipes task descriptors
 const pipe = (...ds) => ds.reduce((piped, d) => {
-    piped.pipe = piped.pipe.concat(d.pipe)
-    return piped
-}, {pipe: []})
+    piped.pipe = piped.pipe.concat(d.pipe);
+    return piped;
+}, {pipe: []});
 
-const run = actions.runTask
+const runAsync = actions.runAsyncTask;
 
 export
 {
-    actions
-    , saga
-    , create
-    , pipe
-    , run
-}
+    actions,
+    asyncTaskSaga,
+    create,
+    pipe,
+    runAsync,
+    preSagaMiddleWare,
+    postSagaMiddleWare
+};
+
+

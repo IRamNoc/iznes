@@ -1,41 +1,140 @@
-import {pipeP, identity} from 'ramda'
-import {call, fork, put, take} from 'redux-saga/effects'
-import {RUN_TASK} from './actions'
+import {pipeP, identity} from 'ramda';
+import {call, fork, put, take} from 'redux-saga/effects';
+import {RUN_ASYNC_TASK} from './actions';
 
-const runTask = async (descriptor, args) => {
-    console.log('hit run task');
-    const fn = pipeP(...descriptor.pipe)
+
+/**
+ * Convert standard Redux action to @angular-redux/store specific action.
+ * @param action: standard Redux action.
+ * @return {{}&{action: {}, type: string, timestamp: number}&{action: any}}: @angular-redux/store action.
+ *
+ * Standard Redux action:
+ * {
+ *      type: string,
+ *      other?...
+ * }
+ *
+ * @angular-redux/store action.
+ * {
+ *      type: 'PERFORM_ACTION',
+ *      timestamp: number (milliseconds)
+ *      action: {
+ *                  type: string,
+ *                  other?...
+ *              }
+ * }
+ */
+function toNgReduxStoreAction(action) {
+    const timeNow = Math.floor(Date.now() / 1);
+    const anAction = Object.assign({}, {action: {}, type: 'PERFORM_ACTION', timestamp: timeNow}, {action: action});
+    return anAction;
+}
+
+/**
+ * Convert @angular-redux/store action to standard Redux action.
+ * @param action
+ */
+function toStandardReduxAction(action) {
+    return action.action;
+}
+
+/**
+ * Common asynchronous task runner.
+ * Normally for async call.
+ *
+ * @param descriptor: In essence is function definition.
+ * @param args: Arguments that pass into the descriptor.
+ * @return {Promise<any>} Return the result in synchronous fashion( Still asynchronous).
+ */
+const runAsyncTask = async (descriptor, args) => {
+    // console.log('hit run task');
+    const fn = pipeP(...descriptor.pipe);
     try {
-        const result = await fn(...args)
-        return {resolved: result}
+        const result = await fn(...args);
+        return {resolved: result};
     } catch (error) {
-        return {rejected: error}
+        return {rejected: error};
     }
 }
 
-function* doRunTask(successType, failureType, descriptor, args) {
-    console.log('hit do run task');
-    const {resolved, rejected} = yield call(runTask, descriptor, args)
+/**
+ * Handle a asynchronous task and dispatch success/failure action depend on the result.
+ *
+ * @param successTypes: List of action type when call is success.
+ * @param failureTypes: List of action type when call is failt.
+ * @param descriptor: Async call to make.
+ * @param args: Arguments for the async call.
+ */
+function* doRunAsyncTask(successTypes, failureTypes, descriptor, args) {
+    // console.log('hit do run task');
+    const {resolved, rejected} = yield call(runAsyncTask, descriptor, args)
     if (resolved) {
-        yield put({type: successType, payload: resolved})
+        for (const successType of successTypes) {
+            yield put({type: successType, payload: resolved});
+        }
     } else {
-        yield put({type: failureType, payload: rejected})
+        for (const failureType of failureTypes) {
+            yield put({type: failureType, payload: rejected});
+        }
     }
 }
 
-function* watchRunTasks() {
+/**
+ * Redux-saga watcher for:
+ * Watch all our async call task
+ */
+function* watchRunAsyncTasks() {
+    // console.log('start watcher');
+    // console.log(RUN_ASYNC_TASK)
     while (true) {
-        console.log('hit watch');
+        // console.log('hit watch!');
+
         const {
-            successType
-            , failureType
+            successTypes
+            , failureTypes
             , descriptor
             , args
-        } = yield take(RUN_TASK)
-        yield fork(doRunTask, successType, failureType, descriptor, args)
+        } = yield take(RUN_ASYNC_TASK);
+
+        console.log(successTypes);
+        yield fork(doRunAsyncTask, successTypes, failureTypes, descriptor, args);
+
     }
 }
 
-export default function*() {
-    yield fork(watchRunTasks)
+/******************************************************************************************************************
+ *
+ * Exports
+ *
+ *****************************************************************************************************************/
+
+/**
+ * Saga for async task
+ */
+export function* asyncTaskSaga() {
+    yield fork(watchRunAsyncTasks);
+}
+
+/**
+ * Convert the @angular-redux/store action to standard Redux action when the come into saga middleware,
+ * So saga middleware can handle the actions as normal.
+ *
+ * This middleware should be apply before all saga middlewares (Might be some other middleware as well).
+ *
+ * @param store
+ */
+export const preSagaMiddleWare = store => next => action => {
+    next(toStandardReduxAction(action));
+}
+
+/**
+ * Convert the standard Redux action to @angular-redux/store action. So @angular-redux/store and handle action
+ * as normal.
+ *
+ * The middleware should be apply after all saga middlewares (Might be some other middleware as well).
+ *
+ * @param store
+ */
+export const postSagaMiddleWare = store => next => action => {
+    next(toNgReduxStoreAction(action));
 }
