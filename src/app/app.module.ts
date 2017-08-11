@@ -33,6 +33,9 @@ import {HomeComponent} from './home/home.component';
 /* UserAdmin Module. */
 import { UserAdminModule } from '@setl/core-useradmin';
 
+/* Dropdown Directive. */
+import { DropdownDirective } from './core/dropdown/dropdown.directive';
+
 /**
  * App main state
  */
@@ -44,6 +47,10 @@ import { UserAdminModule } from '@setl/core-useradmin';
 
 @NgModule({
     declarations: [
+        /* Directives. */
+        DropdownDirective,
+
+        /* Components. */
         AppComponent,
         FormElementsComponent,
         BasicLayoutComponent,
