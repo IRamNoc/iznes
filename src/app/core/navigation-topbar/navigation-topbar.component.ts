@@ -7,7 +7,7 @@ import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 })
 export class NavigationTopbarComponent implements OnInit {
 
-    public items: Array<string> = ['Test Wallet', 'Another Wallet', 'Investment Wallet', 'Cash Wallet'];
+    public items: Array<string> = ['Test Wallet', 'Another Wallet', 'Investment Wallet', 'Cash Wallet', 'A Really Really Long Wallet Name'];
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 

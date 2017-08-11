@@ -96,6 +96,7 @@ nav {
 
 .sidenav .sidenav-content > .nav-link i {
   padding-right: 5px;
+  width: 20px !important;
 }
 
 .sidenav .label.label-success, a.label.label-success {
@@ -134,8 +135,9 @@ nav {
   float: right;
 }
 
-.sidenav .nav-group .nav-list .nav-link i {
+.sidenav .nav-group .nav-list .nav-link i, .sidenav .nav-group.collapsible .nav-list .nav-link i {
   padding-right: 5px;
+  width: 20px;
 }
 
 .color-square {
