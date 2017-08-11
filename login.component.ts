@@ -1,79 +1,91 @@
 /* Core imports. */
-import { Component } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormsModule, NgModel} from '@angular/forms';
 
 /* Notifications. */
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToasterService } from 'angular2-toaster';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToasterService} from 'angular2-toaster';
+
+import {
+    FormBuilder,
+    FormGroup,
+    Validators,
+    AbstractControl,
+    FormControl
+} from '@angular/forms';
 
 /* Login Service. */
-import { LoginService } from './login.service';
+import {SagaHelper} from '@setl/utils';
+
+import {NgRedux} from '@angular-redux/store';
+import {select} from '@angular-redux/store';
+
+
+import {Observable} from 'rxjs/Observable';
+import {MyUserService} from '@setl/core-req-services';
+import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL} from '@setl/core-store';
+
+
+function skuValidator(control: FormControl): { [s: string]: boolean } {
+    if (!control.value.match(/^123/)) {
+        return {invalidSku: true};
+    }
+}
 
 /* Dectorator. */
 @Component({
-    selector: 'setl-login',
+    selector: 'app-login',
     templateUrl: 'login.component.html',
-    styleUrls: [ 'login.component.css' ],
-    providers: [ LoginService, ToasterService ]
+    styleUrls: ['login.component.css'],
+    providers: [ToasterService]
 })
 
 /* Class. */
 export class SetlLoginComponent {
 
-    public toasterconfig:any;
-    public email:string;
-    public password:string;
-    public prompt:string;
-    public buttonDisabled:boolean = false;
+    public toasterconfig: any;
+    public prompt: string;
+    public buttonDisabled: boolean = false;
+
+    loginForm: FormGroup;
+    username: AbstractControl;
+    password: AbstractControl;
+
+    // @select(state =>
+    //     state.login.count
+    // )
+    // counterSelectedWithFunction;
 
     /* Constructor. */
-    constructor (
-        private toasterService:ToasterService,
-        private loginService:LoginService
-    ) {
-        /* Stub */
-        // this.loginService.subscribeWorkers(function (data){
-        //     console.log( "|- worker-Message" );
-        //     console.log( "| ", data );
-        // });
+    constructor(private toasterService: ToasterService,
+                private ngRedux: NgRedux<any>,
+                private myUserService: MyUserService,
+                fb: FormBuilder) {
+
+        this.loginForm = fb.group({
+            'username': ['', Validators.required],
+            'password': ['', Validators.required]
+        });
+
+        this.username = this.loginForm.controls['username'];
+        this.password = this.loginForm.controls['password'];
     }
 
-    /**
-     * Send Login
-     * Sends a login request to the service.
-     */
-     public sendLogin (event):boolean {
-         /* Stop propagation. */
-         event.preventDefault();
+    login(value) {
 
-         /* Empty prompt. */
-         this.prompt = "";
+        if (!this.loginForm.valid) {
+            return false;
+        }
 
-         /* Validate the we have the email and password. */
-         if ( !this.email || !this.password ) {
-            //  this.toasterService.pop('error', 'Enter your Details.', 'Both your email and password are required to login.');
-             this.prompt = 'Email and Password are required to login.';
-             return false;
-         }
+        this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
 
-         /* Hide the button. */
-         this.buttonDisabled = true;
+        const asyncTaskPipe = this.myUserService.loginRequest({
+            username: value.username,
+            password: value.password
+        });
 
-         /* Send the login call. */
-         this.loginService.handleLogin({
-             UserName: this.email,
-             Password: this.password,
-         }).then((data) => {
-             console.log( '|- Login Response' );
-             console.log( '| code: ', data[0] );
-             console.log( '| data: ', data[1] );
+        this.ngRedux.dispatch(SagaHelper.runAsync([LOGIN_SUCCESS], [LOGIN_FAIL], asyncTaskPipe, {}));
 
-             /* Make button clickable again. */
-             this.buttonDisabled = true;
-         })
-
-         /* Return false to event. */
-         return false;
-     }
-
+        return false;
+    }
 }

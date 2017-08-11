@@ -1,14 +1,17 @@
 /* Core imports. */
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
+import {NgModule} from "@angular/core";
+import {BrowserModule} from "@angular/platform-browser";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {RouterModule} from "@angular/router";
 
 /* Login view. */
-import { SetlLoginComponent } from './login.component';
+import {SetlLoginComponent} from './login.component';
 
 /* Notifications. */
-import { ToasterModule, ToasterService } from 'angular2-toaster';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
+import {ClarityModule} from 'clarity-angular';
+
 
 @NgModule({
     declarations: [
@@ -18,10 +21,12 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
         ToasterModule,
         BrowserModule,
         FormsModule,
-        RouterModule
+        RouterModule,
+        ReactiveFormsModule,
+        ClarityModule
     ],
     exports: [
-        SetlLoginComponent,
+        SetlLoginComponent
     ],
     providers: [
         ToasterService,
