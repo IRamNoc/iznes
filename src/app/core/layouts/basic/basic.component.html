@@ -1,24 +1,56 @@
 <div class="main-container">
 
-    <!-- Navigation Topbar. -->
-    <app-navigation-topbar></app-navigation-topbar>
+    <ng-sidebar-container>
 
-    <div class="content-container">
+        <ng-sidebar [(opened)]="_opened"
+                    [mode]="_MODES[_modeNum]"
+                    [keyClose]="_keyClose"
+                    [position]="_POSITIONS[_positionNum]"
+                    [dock]="_dock"
+                    [dockedSize]="'50px'"
+                    [autoCollapseHeight]="_autoCollapseHeight"
+                    [autoCollapseWidth]="_autoCollapseWidth"
+                    [closeOnClickOutside]="_closeOnClickOutside"
+                    [closeOnClickBackdrop]="_closeOnClickBackdrop"
+                    [showBackdrop]="_showBackdrop"
+                    [animate]="_animate"
+                    [trapFocus]="_trapFocus"
+                    [autoFocus]="_autoFocus"
+                    [sidebarClass]="'demo-sidebar'"
+                    [ariaLabel]="'My sidebar'"
+        >
+            <button class="header-overflow-trigger" type="button">
+                <span></span>
+            </button>
+            <p>Sidebar contents</p>
+            <button (click)="_toggleSidebar()">Toggle sidebar</button>
+        </ng-sidebar>
 
-        <div class="content-area">
+        <div ng-sidebar-content class="main-container-sidebar-content">
 
-            <!--
-                Basic Layout.
-                This layout wraps the navbar and the top bar.
-            -->
-            <router-outlet></router-outlet>
+            <!-- Navigation Topbar. -->
+            <app-navigation-topbar (toggleSidebar)="_toggleSidebar()"></app-navigation-topbar>
+
+            <div class="content-container">
+
+                <div class="content-area">
+
+                    <!--
+                        Basic Layout.
+                        This layout wraps the navbar and the top bar.
+                    -->
+                    <router-outlet></router-outlet>
+
+                </div>
+
+                <!-- Navigation Sidebar. -->
+                <nav class="sidenav"><!-- Nav needs to be in here... -->
+                    <app-navigation-sidebar></app-navigation-sidebar>
+                </nav>
+
+            </div>
 
         </div>
 
-        <!-- Navigation Sidebar. -->
-        <nav class="sidenav"><!-- Nav needs to be in here... -->
-            <app-navigation-sidebar></app-navigation-sidebar>
-        </nav>
-
-    </div>
+    </ng-sidebar-container>
 </div>
