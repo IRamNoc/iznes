@@ -33,6 +33,12 @@ import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-s
 import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
 
+/* UserAdmin Module. */
+import {UserAdminModule} from '@setl/core-useradmin';
+
+/* Dropdown Directive. */
+import {DropdownDirective} from './core/dropdown/dropdown.directive';
+
 /**
  * App main state
  */
@@ -49,6 +55,10 @@ import {AppState} from './store/app.reducer';
 
 @NgModule({
     declarations: [
+        /* Directives. */
+        DropdownDirective,
+
+        /* Components. */
         AppComponent,
         FormElementsComponent,
         BasicLayoutComponent,
@@ -65,9 +75,10 @@ import {AppState} from './store/app.reducer';
         RouterModule.forRoot(ROUTES),
         SelectModule,
         SetlLoginModule,
+        UserAdminModule,
         SidebarModule,
         NgReduxModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
