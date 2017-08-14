@@ -3,11 +3,14 @@
 
 .header-breadcrumbs {
   padding: 20px;
-  background: white;
-  padding-bottom: 10px; }
+  padding-bottom: 10px;
+  border-top: 1px solid #dce1eb; }
   .header-breadcrumbs h1 {
     margin-top: 0;
-    font-size: 26px; }
+    font-weight: bold;
+    font-size: 22px;
+    padding-left: 5px;
+    color: #383d48; }
     .header-breadcrumbs h1 i {
       margin-right: 5px; }
 
@@ -142,7 +145,7 @@ clr-tab-content {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  padding-top: 0px; }
+  margin-top: 0px; }
 
 clr-tab-link i {
   margin-right: 4px; }
@@ -183,6 +186,36 @@ clr-tab-content.active {
 .panel-body clr-tabs {
   margin-top: 10px;
   margin-bottom: 10px; }
+
+.nav {
+  box-shadow: 0 0 0 #ccc inset;
+  height: 45px; }
+  .nav .nav-item {
+    margin-right: 10px; }
+  .nav .nav-item.active > .nav-link {
+    background: white;
+    color: #383d48;
+    box-shadow: 0 0 0 white inset;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #dce1eb;
+    border-bottom: 0px; }
+  .nav .nav-link.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 45px;
+    font-size: 13px; }
+  .nav .nav-link {
+    color: #a8a8a8;
+    line-height: 35px; }
+  .nav .nav-link:hover, .nav .nav .nav-link.active {
+    box-shadow: 0 0 0 #007cbb inset;
+    transition: box-shadow 0.2s ease-in;
+    outline: 0;
+    color: #000; }
+
+.datagrid {
+  margin: 0; }
 
 /* Fix for ng2-select dropdowns. */
 .ui-select-toggle {
@@ -275,37 +308,6 @@ header .branding + .search::after, header .branding + .search-box::after, .heade
 
 .main-container .content-container .content-area {
   padding: 0; }
-
-.nav {
-  box-shadow: 0 0 0 #ccc inset;
-  height: 45px; }
-
-.nav .nav-item {
-  margin-right: 10px; }
-
-.nav .nav-item.active > .nav-link {
-  background: #f1f1f1;
-  color: black;
-  box-shadow: 0 0 0 #007cbb inset;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px; }
-
-.nav .nav-link.btn {
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 45px; }
-
-.nav .nav-link {
-  color: #a8a8a8; }
-
-.nav .nav-link:hover, .nav .nav-link.active {
-  box-shadow: 0 0 0 #007cbb inset;
-  transition: box-shadow 0.2s ease-in;
-  outline: 0;
-  color: #000; }
-
-.datagrid {
-  margin: 0; }
 
 .header-actions .nav-link.nav-icon label {
   position: absolute;
