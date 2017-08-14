@@ -300,6 +300,10 @@ clr-tab-content.active {
   margin: 0px;
 }
 
+body {
+  background-color: #f1f1f1;
+}
+
 .header-actions .nav-link.nav-icon label {
   position: absolute;
   top: 70%;
@@ -610,3 +614,4 @@ header .header-actions, header .branding + .search {
 .sidenav .nav-group .nav-list .nav-link {
   color: white;
 }
+
