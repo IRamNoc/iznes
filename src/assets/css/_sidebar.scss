@@ -1,0 +1,103 @@
+.sidenav {
+    width: 230px;
+    background: $setl;
+    border: 0;
+    font-size: 12px;
+    font-weight: 300;
+
+    .sidenav-content {
+
+        // for all sidebar elements
+        .nav-list .nav-link, .nav-link, .nav-group, label {
+            color: #ddd;
+            font-weight: 300;
+            @extend .animate;
+
+            &:hover {
+                background: $setlHover;
+                color: white;
+            }
+
+            &.active, &.active:hover {
+                background: $setlSelected !important;
+                color: white;
+                border-radius: 0;
+                cursor: default;
+            }
+        }
+
+        // for link element only (with no drop-down)
+        .nav-link {
+
+            margin: 0;
+            padding: 12px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            i {
+                padding-right: 5px;
+                width: 20px !important;
+            }
+
+        }
+
+        // for drop-down element only
+        .nav-group {
+            margin-top: 0;
+
+            .nav-list .nav-link {
+                margin: 0;
+                padding: 12px;
+                padding-left: 40px;
+                padding-right: 20px;
+            }
+
+            .nav-list .nav-link i,
+            .collapsible .nav-list .nav-link i {
+                padding-right: 5px;
+                width: 20px;
+            }
+
+            label i {
+                width: 20px !important;
+            }
+        }
+        
+        // for the hover on inner drop-downs
+        .nav-list .nav-link {
+            &:hover {
+                background: $setlHoverDarker;
+            }
+        }
+    }
+
+    .label.label-success, a.label.label-success {
+        background: rgba(26, 179, 148, 0.17);
+        color: #1ab394;
+        border: 1px solid #1ab394;
+        margin-right: 0;
+        float: right;
+        margin-top: 2px;
+    }
+
+    .collapsible {
+        input[type="checkbox"] ~ .nav-list,
+        input[type="checkbox"] ~ ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        label {
+            margin: 0;
+            padding: 12px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            &::after {
+                float: right;
+            }
+        }
+
+    }
+
+}
