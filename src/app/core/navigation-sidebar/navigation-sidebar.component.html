@@ -4,8 +4,7 @@
     </a>
 
     <section class="nav-group collapsible">
-        <input checked="" id="asset-manager-dropdown" type="checkbox">
-        <label for="asset-manager-dropdown"><i class="fa fa-bar-chart"></i> Asset Manager Panel</label>
+        <label menu-dropdown><i class="fa fa-bar-chart"></i> Asset Manager Dashboard</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> Fund Holidings</a>
@@ -22,8 +21,7 @@
     </a>
 
     <section class="nav-group collapsible">
-        <input checked="" id="account-module-dropdown" type="checkbox">
-        <label for="account-module-dropdown"><i class="fa fa-user"></i> Account Module</label>
+        <label menu-dropdown><i class="fa fa-user"></i> Account Module</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/my-account')}" class="nav-link"><i class="fa fa-user"></i> My Account</a>
@@ -42,8 +40,7 @@
     </a>
 
     <section class="nav-group collapsible">
-        <input checked="" id="product-module-dropdown" type="checkbox">
-        <label for="product-module-dropdown"><i class="fa fa-industry"></i> Product Module</label>
+        <label menu-dropdown><i class="fa fa-industry"></i> Product Module</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/managment-company')}" class="nav-link"><i class="fa fa-university"></i> Managment Company</a>
@@ -65,8 +62,7 @@
     </a>
 
     <section class="nav-group collapsible">
-        <input checked="" id="corporate-actions-dropdown" type="checkbox">
-        <label for="corporate-actions-dropdown"><i class="fa fa-university"></i> Corporate Actions</label>
+        <label menu-dropdown><i class="fa fa-university"></i> Corporate Actions</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/create-resolution')}" class="nav-link"><i class="fa fa-plus"></i> Create Resolution</a>
@@ -90,8 +86,7 @@
     </section>
 
     <section class="nav-group collapsible">
-        <input checked="" id="ui-elements-dropdown" type="checkbox">
-        <label for="ui-elements-dropdown"><i class="fa fa-cubes"></i> UI Elements</label>
+        <label menu-dropdown><i class="fa fa-cubes"></i> UI Elements</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/ui-elements/form']" [ngClass]="{active: activeRoute('/ui-elements/form')}" class="nav-link"><i class="fa fa-pencil"></i> Form Elements</a>
@@ -100,8 +95,7 @@
     </section>
 
     <section class="nav-group collapsible">
-        <input checked="" id="reports-dropdown" type="checkbox">
-        <label for="reports-dropdown"><i class="fa fa-flag"></i> Reports</label>
+        <label menu-dropdown><i class="fa fa-flag"></i> Reports</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/balance-reports')}" class="nav-link"><i class="fa fa-user"></i> Balance Reports</a>
@@ -116,8 +110,7 @@
     </section>
 
     <section class="nav-group collapsible">
-        <input checked="" id="users-admin-dropdown" type="checkbox">
-        <label for="users-admin-dropdown"><i class="fa fa-cubes"></i> User Administration</label>
+        <label menu-dropdown><i class="fa fa-cubes"></i> User Administration</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link"><i class="fa fa-user"></i> Users</a>
@@ -134,8 +127,8 @@
         </ul>
     </section>
 
-    <!-- <section class="nav-group collapsible">
-        <label dropdown><i class="fa fa-cubes"></i> Test List</label>
+    <section class="nav-group collapsible">
+        <label menu-dropdown><i class="fa fa-cubes"></i> Test List</label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link"><i class="fa fa-user"></i> Users</a>
@@ -150,7 +143,7 @@
                 <a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link"><i class="fa fa-users"></i> Wizard</a>
             </li>
         </ul>
-    </section> -->
+    </section>
 
     <!-- <section class="nav-group">
         <input id="tabexample2" type="checkbox">
