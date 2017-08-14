@@ -1,5 +1,6 @@
 import * as SagaHelper from './sagaHelper';
 import {always as k} from 'ramda';
+import _ from 'lodash';
 
 export const kAction = type => k({type});
 
@@ -41,9 +42,62 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
 
     return SagaHelper.create(async () => {
         const response = await new Promise((resolve, reject) => {
+            thisConnection.sendRequest(request, (messageId, data, userData) => {
+                const status = _.get(data, 'Data[0].Status', 'Fail');
+                // status is ok -> success.
+                if (status === 'OK') {
+                    // success
+                    resolve([messageId, data, userData]);
+                } else {
+                    // fail
+                    reject([messageId, data, userData]);
+                }
+            });
+        });
+
+        const result = await response;
+
+        return result;
+    });
+}
+
+/**
+ * Wallet node request
+ */
+export interface WalletNodeMessageBody {
+    topic: string;
+}
+
+export interface WalletNodeRequest {
+    messageType: string;
+    messageHeader: string;
+    requestID: number;
+    messageBody: WalletNodeMessageBody;
+}
+
+
+/**
+ * Create our RUN_ASYNC_TASK descriptor, for our saga asynchronous task middleware.
+ *
+ * @param thisConnection
+ * @param messageType
+ * @param messageBody
+ * @return {{pipe: any[]}}
+ */
+export function createWalletNodeSagaRequest(thisConnection, messageType: string, messageBody: WalletNodeMessageBody): any {
+    const request: WalletNodeRequest = {
+        messageType: messageType,
+        messageHeader: '',
+        requestID: 0, // requestID in here will be set later in sendRequest method.
+        messageBody: messageBody
+    };
+
+    return SagaHelper.create(async () => {
+        const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (errorCode, data) => {
-                // No error code -> success.
-                if (errorCode == null) {
+                const status = _.get(data, 'status', 'Fail');
+                // No error code and status is ok -> success.
+                if (status === 'OK') {
                     // success
                     resolve([errorCode, data]);
                 } else {
@@ -57,6 +111,4 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
 
         return result;
     });
-
-
 }
