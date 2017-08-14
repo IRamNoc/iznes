@@ -2,6 +2,12 @@ import {Injectable} from '@angular/core';
 import {SetlCallbackRegister, SetlWebSocket} from '@setl/vanilla-websocket-wrapper';
 import {ToasterService} from 'angular2-toaster';
 import _ from 'lodash';
+import {NgRedux} from '@angular-redux/store';
+import {
+    getAuthentication,
+    getMyDetail
+} from '@setl/core-store';
+
 
 @Injectable()
 export class WalletNodeSocketService {
@@ -9,10 +15,32 @@ export class WalletNodeSocketService {
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
 
-    constructor(private toasterService: ToasterService) {
+    constructor(private toasterService: ToasterService,
+                private ngRedux: NgRedux<any>) {
+        ngRedux.subscribe(() => this.connectToNode());
     }
 
+    /**
+     * Connect to walletnode
+     */
     connectToNode() {
+        /**
+         * Get Authentication and user data from app store,
+         * use them to connect to walletnode.
+         */
+        const newState = this.ngRedux.getState();
+        const authenData = getAuthentication(newState);
+        const myDetail = getMyDetail(newState);
+
+        const userId = myDetail.userId;
+        const {isLogin, apiKey} = authenData;
+
+        // If websocket instance is not created and user is not login.
+        // return.
+        if (this.websocket || !isLogin) {
+            return;
+        }
+
         this.callBackRegister = new SetlCallbackRegister();
 
         // If socket closes, re-open it.
@@ -61,12 +89,12 @@ export class WalletNodeSocketService {
                         // Send Initialise Message
                         // Start initial authentication.
 
-                        let Request = {
+                        const Request = {
                             'messageType': 'authenticate',
                             'requestID': 'authenticate',
                             'messageBody': {
-                                'userid': 7,
-                                'apikey': 'J1JGw0gGZTm34IMsiBWA9dVyKMOmf1r4YDDaxgxZ2ic='
+                                'userid': userId,
+                                'apikey': apiKey
                             }
                         };
 
@@ -146,4 +174,14 @@ export class WalletNodeSocketService {
     renderSnapshot(ID, initialSnapshot, UserData) {
         console.log(initialSnapshot);
     }
+
+    sendRequest(request, callBack) {
+        const messageId = this.callBackRegister.uniqueIDValue;
+        this.callBackRegister.addHandler(messageId, callBack, {});
+
+        const thisRequest = Object.assign({}, request, {requestID: messageId});
+
+        this.websocket.sendRequest(thisRequest);
+    }
 }
+
