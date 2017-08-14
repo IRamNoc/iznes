@@ -1,3 +1,8 @@
-/**
- * Created by ming on 10/08/2017.
- */
+export interface MyDetailState {
+    username: string;
+    emailAddress: string;
+    userId: number;
+    lastLogin: string;
+    userType: number;
+}
+

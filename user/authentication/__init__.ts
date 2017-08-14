@@ -1,3 +1,3 @@
-/**
- * Created by ming on 10/08/2017.
- */
+export const name = 'authentication';
+
+

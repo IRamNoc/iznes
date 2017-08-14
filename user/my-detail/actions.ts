@@ -5,8 +5,7 @@ import {
 
 import {name} from './__init__';
 import {Common, SagaHelper} from '@setl/utils';
-
-const AsyncTaskResponseAction = SagaHelper.actions.AsyncTaskResponseAction;
+import {AsyncTaskResponseAction} from '@setl/utils/SagaHelper/actions';
 
 /**
  * Login request action
@@ -15,21 +14,21 @@ export const LOGIN_REQUEST = `${name}/LOGIN_REQUEST`;
 export const loginRequestAC = Common.kAction(LOGIN_REQUEST);
 
 /**
- * Login success action
+ * Set user detail
  */
-export const LOGIN_SUCCESS = `${name}/LOGIN_SUCCESS`;
-export const loginSuccess: ActionCreator<SagaHelper.actions.AsyncTaskResponseAction> = (payload) => ({
-    type: LOGIN_SUCCESS,
+export const SET_LOGIN_DETAIL = `${name}/SET_LOGIN_DETAIL`;
+export const setLoginDetai: ActionCreator<AsyncTaskResponseAction> = (payload) => ({
+    type: SET_LOGIN_DETAIL,
     payload: payload
 });
 
 /**
- * Login fail action
+ * Reset user detail
  *
  */
-export const LOGIN_FAIL = `${name}/LOGIN_FAIL`;
-export const loginFail: ActionCreator<SagaHelper.actions.AsyncTaskResponseAction> = (payload) => ({
-    type: LOGIN_FAIL,
+export const RESET_LOGIN_DETAIL = `${name}/RESET_LOGIN_DETAIL`;
+export const resetLoginDetail: ActionCreator<AsyncTaskResponseAction> = (payload) => ({
+    type: RESET_LOGIN_DETAIL,
     payload: payload
 });
 

@@ -1,4 +1,6 @@
 export {name} from './__init__';
-export {MyDetailState, MyDetailReducer} from './reducer';
-export {LOGIN_SUCCESS, LOGIN_REQUEST, LOGIN_FAIL} from './actions';
+export {MyDetailReducer} from './reducer';
+export {MyDetailState} from './model';
+export {SET_LOGIN_DETAIL, LOGIN_REQUEST, RESET_LOGIN_DETAIL, loginRequestAC} from './actions';
+export {getMyDetail} from './selectors';
 
