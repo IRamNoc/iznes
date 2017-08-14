@@ -206,7 +206,6 @@ header .search-box label::before, header .search label::before, .header .search-
 
 header .search input[type=text]:not([readonly]):focus {
   border: 0 solid white !important;
-
 }
 
 header .user {
@@ -270,7 +269,7 @@ header .wallet {
 }
 
 header.header-6, .header.header-6 {
-    background-color: $setlHoverDarker;
+  background-color: $setlHoverDarker;
 }
 
 .btn.btn-primary, .btn-primary .btn {
