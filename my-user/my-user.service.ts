@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from "../../utils/common";
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {LoginRequestMessageBody} from './my-user.service.model';
 
 interface LoginRequestData {
@@ -16,7 +16,7 @@ export class MyUserService {
     }
 
     loginRequest(loginData: LoginRequestData): any {
-        const messageBody = {
+        const messageBody: LoginRequestMessageBody = {
             RequestName: 'Login',
             UserName: loginData.username,
             Password: loginData.password,
