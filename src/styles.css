@@ -1,61 +1,18 @@
-.sidenav {
-  width: 230px;
-  background: #373a49;
-  border: 0;
-  font-size: 12px;
-  font-weight: 300; }
-  .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label {
-    color: #ddd;
-    font-weight: 300; }
-    .sidenav .sidenav-content .nav-list .nav-link:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover {
-      background: #2c2f3c;
-      color: white; }
-    .sidenav .sidenav-content .nav-list .nav-link.active, .sidenav .sidenav-content .nav-list .nav-link.active:hover, .sidenav .sidenav-content .nav-link.active, .sidenav .sidenav-content .nav-link.active:hover, .sidenav .sidenav-content .nav-group.active, .sidenav .sidenav-content .nav-group.active:hover, .sidenav .sidenav-content label.active, .sidenav .sidenav-content label.active:hover {
-      background: #57a5e3 !important;
-      color: white;
-      border-radius: 0;
-      cursor: default; }
-  .sidenav .sidenav-content .nav-link {
-    margin: 0;
-    padding: 12px;
-    padding-left: 20px;
-    padding-right: 20px; }
-    .sidenav .sidenav-content .nav-link i {
-      padding-right: 5px;
-      width: 20px !important; }
-  .sidenav .sidenav-content .nav-group {
-    margin-top: 0; }
-    .sidenav .sidenav-content .nav-group .nav-list .nav-link {
-      margin: 0;
-      padding: 12px;
-      padding-left: 40px;
-      padding-right: 20px; }
-    .sidenav .sidenav-content .nav-group .nav-list .nav-link i,
-    .sidenav .sidenav-content .nav-group .collapsible .nav-list .nav-link i {
-      padding-right: 5px;
-      width: 20px; }
-    .sidenav .sidenav-content .nav-group label i {
-      width: 20px !important; }
-  .sidenav .sidenav-content .nav-list .nav-link:hover {
-    background: #282b38; }
-  .sidenav .label.label-success, .sidenav a.label.label-success {
-    background: rgba(26, 179, 148, 0.17);
-    color: #1ab394;
-    border: 1px solid #1ab394;
-    margin-right: 0;
-    float: right;
-    margin-top: 2px; }
-  .sidenav .collapsible input[type="checkbox"] ~ .nav-list,
-  .sidenav .collapsible input[type="checkbox"] ~ ul {
-    padding: 0;
-    margin: 0; }
-  .sidenav .collapsible label {
-    margin: 0;
-    padding: 12px;
-    padding-left: 20px;
-    padding-right: 20px; }
-    .sidenav .collapsible label::after {
-      float: right; }
+.content-area {
+  background: #f7f8fd; }
+
+.header-breadcrumbs {
+  padding: 20px;
+  background: white;
+  padding-bottom: 10px; }
+  .header-breadcrumbs h1 {
+    margin-top: 0;
+    font-size: 26px; }
+    .header-breadcrumbs h1 i {
+      margin-right: 5px; }
+
+body {
+  background: #f7f8fd; }
 
 form .form-group, form .form-group.row >, .form .form-group, .form .form-group.row > {
   margin-bottom: 3px; }
@@ -102,127 +59,20 @@ form select, .form select {
 .select::after {
   top: 13px; }
 
-/* Fix for ng2-select dropdowns. */
-.ui-select-toggle {
-  width: 300px !important;
-  margin-right: 0;
-  height: 35px;
-  border: 1px solid #b9b9b9 !important; }
-
-.ui-select-search {
-  width: 300px !important; }
-
-.ui-select-toggle .ui-select-placeholder,
-.ui-select-toggle .ui-select-match-text {
-  margin: 0;
-  font-size: 12.5px;
-  letter-spacing: normal;
-  text-transform: none;
-  line-height: 35px;
-  color: #565656; }
-
-.ui-select-toggle > a.btn-link {
-  margin: 0; }
-
-.ui-select-search {
-  /* Importants are needed as the component ng2-select has inline styling... */
-  border: 1px solid #b9b9b9 !important;
-  padding: 0 12px !important; }
-
-.ui-select-choices {
-  padding: 4px 0; }
-
-.animate, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .animate:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .animate:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus {
-  -webkit-transition: all 0.3s ease-out;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out; }
-
-* {
-  outline: 0; }
-
-.nav .nav-item.active > .nav-link {
-  outline: 0; }
-
-header .branding {
-  width: 230px; }
-
-.content-area {
-  background: #f1f1f1; }
-
-.color-square {
-  display: inline-block;
-  vertical-align: text-bottom;
-  height: 14px;
-  width: 14px;
-  border: 0 solid #000;
-  border-radius: 4px; }
-
-app-navigation-topbar {
-  height: 75px; }
-
-.main-container header, .main-container .header {
-  flex: 0 0 75px;
-  height: 75px; }
-
-header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider, .header .branding, .header .header-nav, .header .search-box, .header .search, .header .settings, .header .header-actions, .header .divider {
-  height: 75px; }
-
-.header .branding > a, header .branding > .nav-link, .header .branding > a, .header .branding > .nav-link {
-  height: 75px; }
-
-header .branding + .search::after, header .branding + .search-box::after, .header .branding + .search::after, .header .branding + .search-box::after {
-  height: 52px; }
-
-.main-container .content-container .content-area {
-  padding: 0; }
-
-.header-breadcrumbs h1 {
-  margin-top: 0;
-  font-size: 26px; }
-
-.header-breadcrumbs h1 i {
-  margin-right: 5px; }
-
-.header-breadcrumbs {
-  padding: 20px;
+clr-tab-content {
+  float: left;
+  width: calc(100% - 40px);
+  margin: 20px;
   background: white;
-  padding-bottom: 10px; }
-
-.nav {
-  box-shadow: 0 0 0 #ccc inset;
-  height: 45px; }
-
-.nav .nav-item {
-  margin-right: 10px; }
-
-.nav .nav-item.active > .nav-link {
-  background: #f1f1f1;
-  color: black;
-  box-shadow: 0 0 0 #007cbb inset;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px; }
-
-.nav .nav-link.btn {
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 45px; }
-
-.nav .nav-link {
-  color: #a8a8a8; }
-
-.nav .nav-link:hover, .nav .nav-link.active {
-  box-shadow: 0 0 0 #007cbb inset;
-  transition: box-shadow 0.2s ease-in;
-  outline: 0;
-  color: #000; }
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid #dce1eb; }
 
 clr-tabs {
   float: left;
   width: 100%; }
 
 clr-tabs ul {
-  background: white;
   padding-left: 20px;
   padding-right: 20px; }
 
@@ -232,7 +82,8 @@ clr-tab-content {
   margin: 20px;
   background: white;
   border-radius: 4px;
-  padding: 20px; }
+  padding: 20px;
+  padding-top: 0px; }
 
 clr-tab-link i {
   margin-right: 4px; }
@@ -274,11 +125,186 @@ clr-tab-content.active {
   margin-top: 10px;
   margin-bottom: 10px; }
 
-.datagrid {
+/* Fix for ng2-select dropdowns. */
+.ui-select-toggle {
+  width: 300px !important;
+  margin-right: 0;
+  height: 35px;
+  border: 1px solid #b9b9b9 !important; }
+
+.ui-select-search {
+  width: 300px !important; }
+
+.ui-select-toggle .ui-select-placeholder,
+.ui-select-toggle .ui-select-match-text {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 35px;
+  color: #565656; }
+
+.ui-select-toggle > a.btn-link {
   margin: 0; }
 
-body {
-  background-color: #f1f1f1; }
+.ui-select-search {
+  /* Importants are needed as the component ng2-select has inline styling... */
+  border: 1px solid #b9b9b9 !important;
+  padding: 0 12px !important; }
+
+.ui-select-choices {
+  padding: 4px 0; }
+
+.caret {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #9a9a9a; }
+
+.ui-select-match .btn a {
+  padding: 0;
+  color: #88a2f9;
+  min-width: 30px;
+  margin-right: -10px !important;
+  margin-top: 1px;
+  z-index: 9999;
+  position: inherit;
+  background: white; }
+
+.ui-select-choices-row.active > a {
+  background-color: #6098f7; }
+
+.animate, .select select, .animate:hover, .select select:hover, .animate:focus, .select select:focus {
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out; }
+
+* {
+  outline: 0; }
+
+.nav .nav-item.active > .nav-link {
+  outline: 0; }
+
+header .branding {
+  width: 230px; }
+
+.sidenav {
+  width: 230px;
+  background: #2d303f;
+  border: 0; }
+
+nav {
+  font-size: 12px; }
+
+.sidenav .sidenav-content > .nav-link.active, .sidenav .nav-group .nav-list .nav-link.active {
+  background: #56a4df;
+  color: #353535;
+  border-radius: 0;
+  color: white; }
+
+.sidenav .sidenav-content > .nav-link {
+  margin: 0;
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px; }
+
+.sidenav .sidenav-content > .nav-link i {
+  padding-right: 5px;
+  width: 20px !important; }
+
+.sidenav .label.label-success, a.label.label-success {
+  background: rgba(26, 179, 148, 0.17);
+  color: #1ab394;
+  border: 1px solid #1ab394;
+  margin-right: 0;
+  float: right;
+  margin-top: 2px; }
+
+.sidenav .nav-group {
+  margin-top: 0; }
+
+.sidenav .collapsible input[type="checkbox"] ~ .nav-list, .sidenav .collapsible input[type="checkbox"] ~ ul {
+  padding: 0;
+  margin: 0; }
+
+.sidenav .nav-group .nav-list .nav-link {
+  margin: 0;
+  padding: 12px;
+  padding-left: 40px;
+  padding-right: 20px; }
+
+.sidenav .collapsible label {
+  margin: 0;
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px; }
+
+.sidenav .collapsible label:after {
+  float: right; }
+
+.sidenav .nav-group .nav-list .nav-link i, .sidenav .nav-group.collapsible .nav-list .nav-link i {
+  padding-right: 5px;
+  width: 20px; }
+
+.color-square {
+  display: inline-block;
+  vertical-align: text-bottom;
+  height: 14px;
+  width: 14px;
+  border: 0 solid #000;
+  border-radius: 4px; }
+
+app-navigation-topbar {
+  height: 75px; }
+
+.main-container header, .main-container .header {
+  flex: 0 0 75px;
+  height: 75px; }
+
+header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider, .header .branding, .header .header-nav, .header .search-box, .header .search, .header .settings, .header .header-actions, .header .divider {
+  height: 75px; }
+
+.header .branding > a, header .branding > .nav-link, .header .branding > a, .header .branding > .nav-link {
+  height: 75px; }
+
+header .branding + .search::after, header .branding + .search-box::after, .header .branding + .search::after, .header .branding + .search-box::after {
+  height: 52px; }
+
+.main-container .content-container .content-area {
+  padding: 0; }
+
+.nav {
+  box-shadow: 0 0 0 #ccc inset;
+  height: 45px; }
+
+.nav .nav-item {
+  margin-right: 10px; }
+
+.nav .nav-item.active > .nav-link {
+  background: #f1f1f1;
+  color: black;
+  box-shadow: 0 0 0 #007cbb inset;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px; }
+
+.nav .nav-link.btn {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 45px; }
+
+.nav .nav-link {
+  color: #a8a8a8; }
+
+.nav .nav-link:hover, .nav .nav-link.active {
+  box-shadow: 0 0 0 #007cbb inset;
+  transition: box-shadow 0.2s ease-in;
+  outline: 0;
+  color: #000; }
+
+.datagrid {
+  margin: 0; }
 
 .header-actions .nav-link.nav-icon label {
   position: absolute;
@@ -308,7 +334,8 @@ header .search-box label, header .search label, .header .search-box label, .head
   background: white; }
 
 .table {
-  margin-top: 0; }
+  margin-top: 0;
+  background: red; }
 
 /* Fix for button groups in tables. */
 td > .btn-group {
@@ -438,26 +465,6 @@ header.header-6, .header.header-6 {
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
   line-height: 24px !important; }
-
-.caret {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #9a9a9a; }
-
-.ui-select-match .btn a {
-  padding: 0;
-  color: #88a2f9;
-  min-width: 30px;
-  margin-right: -10px !important;
-  margin-top: 1px;
-  z-index: 9999;
-  position: inherit;
-  background: white; }
-
-.ui-select-choices-row.active > a {
-  background-color: #6098f7; }
 
 header .ui-select-container.dropdown.open input {
   margin-top: 6px;
