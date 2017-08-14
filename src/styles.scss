@@ -70,6 +70,8 @@ header .branding {
 
 .sidenav {
   width: 230px;
+  background: rgb(45, 48, 63);
+  border: 0px;
 }
 
 .content-area {
@@ -81,7 +83,7 @@ nav {
 }
 
 .sidenav .sidenav-content > .nav-link.active, .sidenav .nav-group .nav-list .nav-link.active {
-  background: #1ab394;
+  background: rgb(86, 164, 223);
   color: #353535;
   border-radius: 0px;
   color: white;
@@ -268,6 +270,7 @@ clr-tab-content.active {
   border: 1px solid #cccccc;
   border-bottom: 1px solid white;
   background: white;
+  font-size: 13px;
 }
 
 .panel-body clr-tab-content {
@@ -316,6 +319,10 @@ header .search-box input[type="text"], header .search input[type="text"], .heade
   color: #8a8a8a;
   width: 200px;
   font-size: 13px;
+  height: 31px;
+  line-height: 31px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 header .search-box, header .search, .header .search-box, .header .search {
@@ -331,6 +338,7 @@ header .search-box label, header .search label, .header .search-box label, .head
 form .form-group > label:first-child, form .form-group > span:first-child, .form .form-group > label:first-child, .form .form-group > span:first-child {
   text-align: right;
   font-weight: bold;
+  color: #616161;
 }
 
 .table {
@@ -343,10 +351,14 @@ form .form-group, .form .form-group {
 
 /* Fix for ng2-select dropdowns. */
 .ui-select-toggle {
-  min-width: 225px;
+  width: 300px !important;
   margin-right: 0;
   height: 35px;
   border: 1px solid #b9b9b9 !important;
+}
+
+.ui-select-search {
+  width: 300px !important;
 }
 
 .ui-select-toggle .ui-select-placeholder,
@@ -365,7 +377,7 @@ form .form-group, .form .form-group {
 
 .ui-select-search {
   /* Importants are needed as the component ng2-select has inline styling... */
-  min-width: 240px !important;
+  //min-width: 240px !important;
   border: 1px solid #b9b9b9 !important;
   padding: 0px 12px !important;
 }
@@ -427,15 +439,16 @@ header .header-actions .nav-link.nav-icon::after {
   margin-left: 20px;
   float: left;
   background: white;
-  height: 40px;
+  height: 35px;
   border-radius: 4px;
   padding-left: 0px;
-  line-height: 38px;
+  line-height: 33px;
+  border-radius: 30px;
 }
 
 header .search-box label::before, header .search label::before, .header .search-box label::before, .header .search label::before {
-  margin-top: 12px;
-  margin-left: 8px;
+  margin-top: 10px;
+  margin-left: 10px;
   margin-right: 3px;
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2036%2036%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23002538%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3ESearch%3C%2Ftitle%3E%3Cg%20id%3D%22icons%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M15%2C4.05A10.95%2C10.95%2C0%2C1%2C1%2C4.05%2C15%2C11%2C11%2C0%2C0%2C1%2C15%2C4.05M15%2C2A13%2C13%2C0%2C1%2C0%2C28%2C15%2C13%2C13%2C0%2C0%2C0%2C15%2C2Z%22%2F%3E%3Cpath%20class%3D%22cls-1%22%20%20d%3D%22M33.71%2C32.29l-7.37-7.42-1.42%2C1.41%2C7.37%2C7.42a1%2C1%2C0%2C1%2C0%2C1.42-1.41Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
   height: 16px;
@@ -454,6 +467,7 @@ header .user {
   margin-top: 13px !important;
   padding-left: 15px !important;
   width: 200px !important;
+  opacity: 1.0 !important;
 }
 
 header .user img {
@@ -488,7 +502,12 @@ header .wallet {
 }
 
 .btn.btn-secondary:hover, .btn.btn-info:hover, .btn.btn-outline:hover, .btn.btn-primary-outline:hover, .btn.btn-secondary-outline:hover, .btn.btn-outline-primary:hover, .btn.btn-outline-secondary:hover, .btn.btn-info-outline:hover, .btn-secondary .btn:hover, .btn-info .btn:hover, .btn-outline .btn:hover, .btn-primary-outline .btn:hover, .btn-secondary-outline .btn:hover, .btn-outline-primary .btn:hover, .btn-outline-secondary .btn:hover, .btn-info-outline .btn:hover {
-  background: #f2f2f2;
+  border: 1px solid #a4c4fa !important;
+  background: white;
+}
+
+.ui-select-match .btn a:hover {
+  border: 1px solid white !important;
 }
 
 .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
@@ -502,12 +521,12 @@ header .wallet {
 }
 
 header.header-6, .header.header-6 {
-  background-color: #2f4050;
+  background-color: rgb(40, 43, 56);
 }
 
 .btn.btn-primary, .btn-primary .btn {
-  border-color: #1ab394;
-  background-color: #1ab394;
+  border-color: rgb(86, 164, 223);
+  background-color: rgb(86, 164, 223);
   color: #fff;
 }
 
@@ -523,20 +542,12 @@ header.header-6, .header.header-6 {
   line-height: 24px !important;
 }
 
-.ui-select-toggle a {
-  background: red;
-}
-
 .caret {
-  //-webkit-appearance: none;
-  //-moz-appearance: none;
-  //background: transparent;
-  //background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-  //background-repeat: no-repeat;
-  //border-radius: 2px;
-  //margin-right: 2rem;
-  //padding: 1rem;
-  //padding-right: 2rem;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #9a9a9a;
 }
 
 .ui-select-match .btn a {
@@ -545,6 +556,10 @@ header.header-6, .header.header-6 {
   min-width: 30px;
   margin-right: -10px !important;
   margin-top: 1px;
+  padding: 0;
+  z-index: 9999;
+  position: inherit;
+  background: white;
 }
 
 .ui-select-choices-row.active > a {
@@ -574,4 +589,24 @@ header .ui-select-toggle .ui-select-placeholder::before, header .ui-select-toggl
 
 header clr-dropdown .dropdown-menu {
   margin-top: 5px !important;
+}
+
+.sidenav .nav-group label i {
+  width: 20px !important;
+}
+
+header .header-actions, header .branding + .search {
+  background: white;
+}
+
+.sidenav .nav-group label {
+  color: white;
+}
+
+.sidenav .sidenav-content > .nav-link {
+  color: white;
+}
+
+.sidenav .nav-group .nav-list .nav-link {
+  color: white;
 }
