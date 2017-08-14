@@ -51,10 +51,10 @@ export class SetlLoginComponent {
     username: AbstractControl;
     password: AbstractControl;
 
-    // @select(state =>
-    //     state.login.count
-    // )
-    // counterSelectedWithFunction;
+    @select(state =>
+        state.user.myDetail.username
+    )
+    loginUser;
 
     /* Constructor. */
     constructor(private toasterService: ToasterService,
@@ -62,6 +62,9 @@ export class SetlLoginComponent {
                 private myUserService: MyUserService,
                 fb: FormBuilder) {
 
+        /**
+         * Form control setup
+         */
         this.loginForm = fb.group({
             'username': ['', Validators.required],
             'password': ['', Validators.required]
@@ -77,13 +80,20 @@ export class SetlLoginComponent {
             return false;
         }
 
+        // Dispatch a login request action.
         this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
 
+        // Create a saga pipe.
         const asyncTaskPipe = this.myUserService.loginRequest({
             username: value.username,
             password: value.password
         });
 
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  LOGIN_FAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
         this.ngRedux.dispatch(SagaHelper.runAsync([LOGIN_SUCCESS], [LOGIN_FAIL], asyncTaskPipe, {}));
 
         return false;
