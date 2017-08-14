@@ -63,44 +63,6 @@ header .branding + .search::after, header .branding + .search-box::after, .heade
   padding: 0;
 }
 
-.nav {
-  box-shadow: 0 0 0 #ccc inset;
-  height: 45px;
-}
-
-.nav .nav-item {
-  margin-right: 10px;
-}
-
-.nav .nav-item.active > .nav-link {
-  background: #f1f1f1;
-  color: black;
-  box-shadow: 0 0 0 #007cbb inset;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-.nav .nav-link.btn {
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 45px;
-}
-
-.nav .nav-link {
-  color: #a8a8a8;
-}
-
-.nav .nav-link:hover, .nav .nav-link.active {
-  box-shadow: 0 0 0 #007cbb inset;
-  transition: box-shadow 0.2s ease-in;
-  outline: 0;
-  color: #000;
-}
-
-.datagrid {
-  margin: 0;
-}
-
 .header-actions .nav-link.nav-icon label {
   position: absolute;
   top: 70%;
