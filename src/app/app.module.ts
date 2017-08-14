@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule, FormControl, NgModel} from '@angular/forms';
+import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
@@ -8,9 +8,12 @@ import {HttpModule} from '@angular/http';
 
 import {SidebarModule} from 'ng-sidebar';
 
-/* Services */
+/* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
+
+/* Core services*/
+import {MyUserService} from '@setl/core-req-services';
 
 /* Routes. */
 import {ROUTES} from './app.routes';
@@ -31,18 +34,23 @@ import {SelectModule} from 'ng2-select';
 import {HomeComponent} from './home/home.component';
 
 /* UserAdmin Module. */
-import { UserAdminModule } from '@setl/core-useradmin';
+import {UserAdminModule} from '@setl/core-useradmin';
 
 /* Dropdown Directive. */
-import { DropdownDirective } from './core/dropdown/dropdown.directive';
+import {DropdownDirective} from './core/dropdown/dropdown.directive';
 
 /**
  * App main state
  */
-// import {
-//     AppStore,
-//     appStoreProviders
-// } from './app.store';
+import {NgRedux, NgReduxModule} from '@angular-redux/store';
+
+import {
+    createAppStore,
+    appSaga,
+    sagaMiddleware
+} from './store/app.store';
+
+import {AppState} from './store/app.reducer';
 
 
 @NgModule({
@@ -68,16 +76,21 @@ import { DropdownDirective } from './core/dropdown/dropdown.directive';
         SelectModule,
         SetlLoginModule,
         UserAdminModule,
-        SidebarModule
+        SidebarModule,
+        NgReduxModule,
+        ReactiveFormsModule,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        // appStoreProviders,
         MemberSocketService,
-        WalletNodeSocketService
+        WalletNodeSocketService,
+        MyUserService
     ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-
+    constructor(ngRedux: NgRedux<AppState>) {
+        ngRedux.provideStore(createAppStore());
+        sagaMiddleware.run(appSaga);
+    }
 }

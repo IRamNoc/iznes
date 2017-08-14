@@ -2,9 +2,13 @@
 # yarn lockfile v1
 
 
+"@angular-redux/store@^6.5.7":
+  version "6.5.7"
+  resolved "https://registry.yarnpkg.com/@angular-redux/store/-/store-6.5.7.tgz#22c3b4815c89d6cca0ac93dddb7cabec3966f1fc"
+
 "@angular/animations@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.3.3.tgz#b71ddd453673929f550b171cca99952b3aaa831c"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.3.4.tgz#02c726b3b70ae3d2e155704c8c60e9baf01547ef"
   dependencies:
     tslib "^1.7.1"
 
@@ -77,68 +81,68 @@
     node-sass "^4.3.0"
 
 "@angular/common@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.3.3.tgz#1fafbea33af4eba4cddd8677ef57a0f76a50488c"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.3.4.tgz#98fb7d6e8da633ba56844d5c00986ca407aea950"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/compiler-cli@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.3.3.tgz#b3e39991d1a2ac1445a4a7a122e29dce5492c637"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.3.4.tgz#3d16ec869c39f4aca18cac71dcf118a80f6208e6"
   dependencies:
-    "@angular/tsc-wrapped" "4.3.3"
+    "@angular/tsc-wrapped" "4.3.4"
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
 
 "@angular/compiler@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.3.3.tgz#8c1582fe28a784401325e51a04a9b36b6712033e"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.3.4.tgz#9b16ae785f22b918aa168db0555c05304baf9d77"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/core@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.3.3.tgz#8e6a76914661db407fa2d88dd2441c4c016ff625"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.3.4.tgz#42dd8046600f5a080a4e1212116b12fe97bcfcb4"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/forms@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.3.3.tgz#0912aebb818a176f4e08b7df0ec9fd4021efcb6b"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.3.4.tgz#57fa07b7bf9103f1b948fbfe4cfed314092c9e96"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/http@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.3.3.tgz#cbe3639010362b681076f0b606673a0e62fd940d"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.3.4.tgz#762cb7c032059f41dfd0553f574e9ce0d5ecc0a9"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/language-service@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-4.3.3.tgz#638cfca1342c394f713f8c0fa398c26032e156f4"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-4.3.4.tgz#3a44a227a2256941eb328057e3c1372868a8516f"
 
 "@angular/platform-browser-dynamic@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.3.3.tgz#b16c09dfe97b5b83daa0581b233f5ea3c3eefb3a"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.3.4.tgz#bf7b841f2fc8d20efe756fe1e50aa028c95eb57c"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/platform-browser@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.3.3.tgz#623b659794f079096d4f7685b4bebcb49e3b9a71"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.3.4.tgz#dede8ff31441a2452f202ed798a0822ebc5a9153"
   dependencies:
     tslib "^1.7.1"
 
 "@angular/router@^4.0.0":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-4.3.3.tgz#f3f9004ec31b4fe4d15477e1e63e118df36ad46d"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-4.3.4.tgz#206588fec466f83a2768bd756c5664651091e477"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/tsc-wrapped@4.3.3":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.3.3.tgz#c5890f743664be64b79c200ae6e9da5d2a801f5b"
+"@angular/tsc-wrapped@4.3.4":
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.3.4.tgz#86c14cec0ee7f25bb7a7f80270bffe19fe7acd63"
   dependencies:
     tsickle "^0.21.0"
 
@@ -158,13 +162,23 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.3":
+"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.4":
   version "1.0.3"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#8d1ddcc6de2b356b96a382334ed30bb6dee77ede"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#45f23647a70d58b77c0e2b1ade50d2b4ac700d3c"
+  dependencies:
+    "@setl/utils" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git":
-  version "1.0.4"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#3c12cb3c462fda5e5c5fa1d0088a136235cf649a"
+"@setl/core-req-services@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.0":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#16726902621c4e6b906145efd064d057bf5b5933"
+
+"@setl/core-store@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#1.0.0":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#b972a4a94fff6ec7ef53d53f31d609cbecf564ae"
+
+"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.3":
+  version "1.0.3"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#8a36ff6fc5e65a4a3f00c36c9e3db29f598a32d4"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
@@ -175,13 +189,21 @@
     sha256 "^0.2.0"
     socketcluster-client "^6.3.0"
 
+"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git", "@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.0":
+  version "1.0.0"
+  uid "8ef0968cf8054a57c0f08910d0d72f2aadc27d83"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#8ef0968cf8054a57c0f08910d0d72f2aadc27d83"
+  dependencies:
+    ramda "^0.24.1"
+    redux-saga "^0.15.6"
+
 "@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git":
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#51aaf1214f210262e5eaedf1f6f1489d48c87da7"
   dependencies:
     libsodium-wrappers "^0.5.2"
 
-"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git":
+"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.0":
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e334569b05e1192f059215fdd766771db4fe1482"
   dependencies:
@@ -805,8 +827,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000713"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000713.tgz#ea01761840b5f148faf94ec5f34d0aa1d321966f"
+  version "1.0.30000715"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000715.tgz#0b9b5c795950dfbaf301a8806bafe87f126da8ca"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -3998,6 +4020,10 @@ querystringify@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
 
+ramda@^0.24.1:
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
+
 randomatic@^1.1.3:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.7.tgz#c7abe9cc8b87c0baa876b19fde83fd464797e38c"
@@ -4101,6 +4127,14 @@ reduce-function-call@^1.0.1:
   resolved "https://registry.yarnpkg.com/reduce-function-call/-/reduce-function-call-1.0.2.tgz#5a200bf92e0e37751752fe45b0ab330fd4b6be99"
   dependencies:
     balanced-match "^0.4.2"
+
+redux-observable@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-0.15.0.tgz#8c01231f022073b653ae4bc6c6fd53c38e1c46fb"
+
+redux-saga@^0.15.6:
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.15.6.tgz#8638dc522de6c6c0a496fe8b2b5466287ac2dc4d"
 
 redux@^3.7.2:
   version "3.7.2"
@@ -4288,8 +4322,8 @@ rx-lite@*, rx-lite@^4.0.8:
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
 rxjs@^5.0.1, rxjs@^5.4.1:
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
     symbol-observable "^1.0.1"
 
