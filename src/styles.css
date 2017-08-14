@@ -1,3 +1,62 @@
+.sidenav {
+  width: 230px;
+  background: #373a49;
+  border: 0;
+  font-size: 12px;
+  font-weight: 300; }
+  .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label {
+    color: #ddd;
+    font-weight: 300; }
+    .sidenav .sidenav-content .nav-list .nav-link:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover {
+      background: #2c2f3c;
+      color: white; }
+    .sidenav .sidenav-content .nav-list .nav-link.active, .sidenav .sidenav-content .nav-list .nav-link.active:hover, .sidenav .sidenav-content .nav-link.active, .sidenav .sidenav-content .nav-link.active:hover, .sidenav .sidenav-content .nav-group.active, .sidenav .sidenav-content .nav-group.active:hover, .sidenav .sidenav-content label.active, .sidenav .sidenav-content label.active:hover {
+      background: #57a5e3 !important;
+      color: white;
+      border-radius: 0;
+      cursor: default; }
+  .sidenav .sidenav-content .nav-link {
+    margin: 0;
+    padding: 12px;
+    padding-left: 20px;
+    padding-right: 20px; }
+    .sidenav .sidenav-content .nav-link i {
+      padding-right: 5px;
+      width: 20px !important; }
+  .sidenav .sidenav-content .nav-group {
+    margin-top: 0; }
+    .sidenav .sidenav-content .nav-group .nav-list .nav-link {
+      margin: 0;
+      padding: 12px;
+      padding-left: 40px;
+      padding-right: 20px; }
+    .sidenav .sidenav-content .nav-group .nav-list .nav-link i,
+    .sidenav .sidenav-content .nav-group .collapsible .nav-list .nav-link i {
+      padding-right: 5px;
+      width: 20px; }
+    .sidenav .sidenav-content .nav-group label i {
+      width: 20px !important; }
+  .sidenav .sidenav-content .nav-list .nav-link:hover {
+    background: #282b38; }
+  .sidenav .label.label-success, .sidenav a.label.label-success {
+    background: rgba(26, 179, 148, 0.17);
+    color: #1ab394;
+    border: 1px solid #1ab394;
+    margin-right: 0;
+    float: right;
+    margin-top: 2px; }
+  .sidenav .collapsible input[type="checkbox"] ~ .nav-list,
+  .sidenav .collapsible input[type="checkbox"] ~ ul {
+    padding: 0;
+    margin: 0; }
+  .sidenav .collapsible label {
+    margin: 0;
+    padding: 12px;
+    padding-left: 20px;
+    padding-right: 20px; }
+    .sidenav .collapsible label::after {
+      float: right; }
+
 form .form-group, form .form-group.row >, .form .form-group, .form .form-group.row > {
   margin-bottom: 3px; }
   form .form-group label:first-child, form .form-group span:first-child, form .form-group.row > label:first-child, form .form-group.row > span:first-child, .form .form-group label:first-child, .form .form-group span:first-child, .form .form-group.row > label:first-child, .form .form-group.row > span:first-child {
@@ -73,13 +132,12 @@ form select, .form select {
 .ui-select-choices {
   padding: 4px 0; }
 
-.animate, .select select, .animate:hover, .select select:hover, .animate:focus, .select select:focus {
+.animate, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .animate:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .animate:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus {
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out; }
 
-/* You can add global styles to this file, and also import other style files */
 * {
   outline: 0; }
 
@@ -89,66 +147,8 @@ form select, .form select {
 header .branding {
   width: 230px; }
 
-.sidenav {
-  width: 230px;
-  background: #2d303f;
-  border: 0; }
-
 .content-area {
   background: #f1f1f1; }
-
-nav {
-  font-size: 12px; }
-
-.sidenav .sidenav-content > .nav-link.active, .sidenav .nav-group .nav-list .nav-link.active {
-  background: #56a4df;
-  color: #353535;
-  border-radius: 0;
-  color: white; }
-
-.sidenav .sidenav-content > .nav-link {
-  margin: 0;
-  padding: 12px;
-  padding-left: 20px;
-  padding-right: 20px; }
-
-.sidenav .sidenav-content > .nav-link i {
-  padding-right: 5px;
-  width: 20px !important; }
-
-.sidenav .label.label-success, a.label.label-success {
-  background: rgba(26, 179, 148, 0.17);
-  color: #1ab394;
-  border: 1px solid #1ab394;
-  margin-right: 0;
-  float: right;
-  margin-top: 2px; }
-
-.sidenav .nav-group {
-  margin-top: 0; }
-
-.sidenav .collapsible input[type="checkbox"] ~ .nav-list, .sidenav .collapsible input[type="checkbox"] ~ ul {
-  padding: 0;
-  margin: 0; }
-
-.sidenav .nav-group .nav-list .nav-link {
-  margin: 0;
-  padding: 12px;
-  padding-left: 40px;
-  padding-right: 20px; }
-
-.sidenav .collapsible label {
-  margin: 0;
-  padding: 12px;
-  padding-left: 20px;
-  padding-right: 20px; }
-
-.sidenav .collapsible label:after {
-  float: right; }
-
-.sidenav .nav-group .nav-list .nav-link i, .sidenav .nav-group.collapsible .nav-list .nav-link i {
-  padding-right: 5px;
-  width: 20px; }
 
 .color-square {
   display: inline-block;
@@ -479,19 +479,7 @@ header .ui-select-toggle .ui-select-placeholder::before, header .ui-select-toggl
 header clr-dropdown .dropdown-menu {
   margin-top: 5px !important; }
 
-.sidenav .nav-group label i {
-  width: 20px !important; }
-
 header .header-actions, header .branding + .search {
   background: white; }
-
-.sidenav .nav-group label {
-  color: white; }
-
-.sidenav .sidenav-content > .nav-link {
-  color: white; }
-
-.sidenav .nav-group .nav-list .nav-link {
-  color: white; }
 
 /*# sourceMappingURL=styles.css.map */
