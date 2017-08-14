@@ -102,9 +102,7 @@ export class AdminPermissionsComponent {
          }
 
          /* Set the array to an identical array, lacking the asked index. */
-         console.log('before: ', this.permissionsData);
          this.permissionsData = [ ...this.permissionsData.slice(0, index - 1), ...this.permissionsData.slice(index, this.permissionsData.length) ];
-         console.log('after: ', this.permissionsData);
 
          /* Return. */
          return;

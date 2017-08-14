@@ -22,27 +22,31 @@
             <div class="user-tab-panel-body panel-body">
                 <form>
                     <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated" mltag="txt_username">Username</span>
+                                </label>
+                                <div>
+                                    <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated" mltag="txt_email">Email</span>
+                                </label>
+                                <div>
+                                    <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
-                            <div class="col-sm-9">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated" mltag="txt_account">Account</span>
+                                </label>
                                 <ng-select
                                     (selected)="selected('accountType', $event)"
                                     (removed)="removed('accountType', $event)"
@@ -53,11 +57,11 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
-                            <div class="col-sm-9">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span mltag="txt_usertype">User Type</span>
+                                </label>
                                 <ng-select
                                     (selected)="selected('userType', $event)"
                                     (removed)="removed('userType', $event)"
@@ -68,35 +72,39 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_password">Password</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated" mltag="txt_password">Password</span>
+                                </label>
+                                <div>
+                                    <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
+                                </label>
+                                <div>
+                                    <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml" mltag="txt_access">Accès</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group button-group">
-                            <div class="col-sm-offset-3 col-sm-9">
+                            <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                                 </button>

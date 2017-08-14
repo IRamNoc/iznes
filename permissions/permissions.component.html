@@ -3,9 +3,7 @@
 </div>
 
 <div class="wrapper wrapper-content">
-    <clr-tabs (clrTabsCurrentTabLinkChanged)="onTabSelected($event)"
-              (clrTabsCurrentTabIndexChanged)="onTabIndexChanged($event)"
-              (clrTabsCurrentTabContentChanged)="onTabContentActivated($event)">
+    <clr-tabs>
         <!-- Tabs. -->
         <clr-tab-link [clrTabLinkId]="'link1'" [clrTabLinkActive]="true"><i class="fa fa-search"></i> Search</clr-tab-link>
         <clr-tab-link [clrTabLinkId]="'link2'" [clrTabLinkActive]="false"><i class="fa fa-plus"></i> Add New Group</clr-tab-link>

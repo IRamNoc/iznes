@@ -3,6 +3,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
@@ -61,6 +62,7 @@ import {AdminPermissionsTableComponent} from './permissions/subcomponents/permis
     ],
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         BrowserModule,
         FormsModule,
         ClarityModule,
