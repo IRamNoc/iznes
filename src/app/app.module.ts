@@ -13,7 +13,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
 /* Core services*/
-import {MyUserService} from '@setl/core-req-services';
+import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
 
 /* Routes. */
 import {ROUTES} from './app.routes';
@@ -52,6 +52,11 @@ import {
 
 import {AppState} from './store/app.reducer';
 
+/**
+ * Environment
+ */
+import {environment} from '../environments/environment';
+
 
 @NgModule({
     declarations: [
@@ -82,9 +87,23 @@ import {AppState} from './store/app.reducer';
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        MemberSocketService,
+
+        {
+            provide: MemberSocketService,
+
+            useFactory() {
+
+                return new MemberSocketService(
+                    environment.MEMBER_NODE_CONNECTION.host,
+                    environment.MEMBER_NODE_CONNECTION.port,
+                    environment.MEMBER_NODE_CONNECTION.path
+                );
+            }
+        },
+
         WalletNodeSocketService,
-        MyUserService
+        MyUserService,
+        WalletNodeRequestService
     ],
     bootstrap: [AppComponent]
 })
