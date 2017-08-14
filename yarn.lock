@@ -176,9 +176,9 @@
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#b972a4a94fff6ec7ef53d53f31d609cbecf564ae"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.3":
-  version "1.0.3"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#8a36ff6fc5e65a4a3f00c36c9e3db29f598a32d4"
+"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.4":
+  version "1.0.4"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#3c12cb3c462fda5e5c5fa1d0088a136235cf649a"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
