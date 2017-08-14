@@ -23,13 +23,9 @@ export class DropdownDirective {
         private label: ElementRef
     ) {
         /* Check if the isOpen property was set... */
-        console.log( " |--- Nav Directive" );
-        console.log( " | element: ", label.nativeElement.getAttribute('') );
         let prop = label.nativeElement.getAttribute('isOpen');
-        console.log( " | type: ", typeof prop );
-        console.log( " | value: '"+ prop +"'" );
-        if (prop === true || prop === false) {
-            /* It should equal true or false. */
+        if (prop === true) {
+            /*Set it, if it was true. */
             this.isOpen = prop;
         }
     }
