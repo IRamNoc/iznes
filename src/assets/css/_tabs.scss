@@ -1,0 +1,80 @@
+clr-tab-content {
+  float: left;
+  width: calc(100% - 40px);
+  margin: 20px;
+  background: white;
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid rgb(220, 225, 235);
+}
+
+clr-tabs {
+  float: left;
+  width: 100%;
+}
+
+clr-tabs ul {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+clr-tab-content {
+  float: left;
+  width: calc(100% - 40px);
+  margin: 20px;
+  background: white;
+  border-radius: 4px;
+  padding: 20px;
+  padding-top: 0px;
+}
+
+clr-tab-link i {
+  margin-right: 4px;
+}
+
+clr-tabs,
+clr-tab-content {
+  float: left;
+}
+
+clr-tab-content.active {
+  display: block;
+}
+
+.panel-body clr-tabs ul {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.panel-body .nav .nav-item.active > .nav-link {
+  box-shadow: 0 0 0 #007cbb inset;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border: 1px solid #cccccc;
+  border-bottom: 1px solid white;
+  background: white;
+  font-size: 13px;
+}
+
+.panel-body clr-tab-content {
+  width: 100%;
+}
+
+.panel-body clr-tab-content.active {
+  margin: 0;
+  border: 1px solid #cccccc;
+}
+
+.panel-body clr-tab-content.active:first-of-type {
+  //background: red;
+  border-top-left-radius: 0;
+}
+
+.panel-body clr-tab-content {
+  padding: 15px;
+}
+
+.panel-body clr-tabs {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
