@@ -18,12 +18,13 @@ import {
 import {SagaHelper} from '@setl/utils';
 
 import {NgRedux} from '@angular-redux/store';
-import {select} from '@angular-redux/store';
 
-
-import {Observable} from 'rxjs/Observable';
-import {MyUserService} from '@setl/core-req-services';
-import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL} from '@setl/core-store';
+import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
+import {
+    SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
+    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
+    getMyDetail
+} from '@setl/core-store';
 
 
 function skuValidator(control: FormControl): { [s: string]: boolean } {
@@ -47,20 +48,26 @@ export class SetlLoginComponent {
     public prompt: string;
     public buttonDisabled: boolean = false;
 
+    loginUser: string;
+
     loginForm: FormGroup;
     username: AbstractControl;
     password: AbstractControl;
 
-    @select(state =>
-        state.user.myDetail.username
-    )
-    loginUser;
+    // @select(state =>
+    //     state.user.myDetail.username
+    // )
+    // loginUser;
 
     /* Constructor. */
     constructor(private toasterService: ToasterService,
                 private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
+                private walletNodeRequestService: WalletNodeRequestService,
                 fb: FormBuilder) {
+        // Subscribe to app store
+        ngRedux.subscribe(() => this.updateState());
+        this.updateState();
 
         /**
          * Form control setup
@@ -81,7 +88,9 @@ export class SetlLoginComponent {
         }
 
         // Dispatch a login request action.
-        this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
+        // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
+        const loginRequestAction = loginRequestAC();
+        this.ngRedux.dispatch(loginRequestAction);
 
         // Create a saga pipe.
         const asyncTaskPipe = this.myUserService.loginRequest({
@@ -91,11 +100,39 @@ export class SetlLoginComponent {
 
         // Send a saga action.
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  LOGIN_FAIL.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
         // Saga pipe function arguments.
-        this.ngRedux.dispatch(SagaHelper.runAsync([LOGIN_SUCCESS], [LOGIN_FAIL], asyncTaskPipe, {}));
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL],
+            [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
+            asyncTaskPipe, {}));
 
         return false;
+    }
+
+
+    requestWalletAddress() {
+        // Create a saga pipe.
+        const asyncTaskPipe = this.walletNodeRequestService.walletAddressRequest({
+            walletId: 2,
+        });
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [RESET_LOGIN_DETAIL],
+            [RESET_LOGIN_DETAIL],
+            asyncTaskPipe, {}));
+
+        return false;
+    }
+
+    updateState() {
+        const myDetail = getMyDetail(this.ngRedux.getState());
+        this.loginUser = myDetail.username;
     }
 }

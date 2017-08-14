@@ -1,13 +1,13 @@
 <div class="login-container">
   <div>
     <div class="logo-wrap">
-      <img src="assets/images/Setl_Logo_Clean.png" width="100%"/>
+      <img id="logo-image" src="assets/images/Setl_Logo_Clean.png"/>
     </div>
 
-    <span class="login-subheading">OpenCSD</span>
 
     <div class="login-inner-wrapper">
-      <p>Please enter your username and password to log into SETL OpenCSD</p>
+      <span class="login-subheading">OpenCSD</span>
+      <p class="login-subpara">Please enter your username and password to log into SETL OpenCSD</p>
 
       <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)" [class.error]="!loginForm.valid && loginForm.touched">
 
@@ -58,10 +58,9 @@
 
         </div>
 
-        <h2>login: {{loginUser | async}}</h2>
-
-
       </form>
+
+      <button (click)="requestWalletAddress()">Get address</button>
 
       <p class="m-t">
         <small>
