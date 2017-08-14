@@ -181,7 +181,6 @@ clr-tab-content.active {
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out; }
 
-/* You can add global styles to this file, and also import other style files */
 * {
   outline: 0; }
 
@@ -487,19 +486,7 @@ header .ui-select-toggle .ui-select-placeholder::before, header .ui-select-toggl
 header clr-dropdown .dropdown-menu {
   margin-top: 5px !important; }
 
-.sidenav .nav-group label i {
-  width: 20px !important; }
-
 header .header-actions, header .branding + .search {
   background: white; }
-
-.sidenav .nav-group label {
-  color: white; }
-
-.sidenav .sidenav-content > .nav-link {
-  color: white; }
-
-.sidenav .nav-group .nav-list .nav-link {
-  color: white; }
 
 /*# sourceMappingURL=styles.css.map */

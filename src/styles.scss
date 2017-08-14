@@ -1,3 +1,8 @@
+$setl: #373a49;
+$setlHover: #2c2f3c;
+$setlHoverDarker: #282b38;
+$setlSelected: #57a5e3;
+
 @import 'assets/css/general';
 @import 'assets/css/navbar';
 @import 'assets/css/sidebar';
@@ -12,8 +17,6 @@
   transition: all 0.3s ease-out;
 }
 
-/* You can add global styles to this file, and also import other style files */
-
 * {
   outline: 0;
 }
@@ -24,76 +27,6 @@
 
 header .branding {
   width: 230px;
-}
-
-.sidenav {
-  width: 230px;
-  background: rgb(45, 48, 63);
-  border: 0;
-}
-
-nav {
-  font-size: 12px;
-}
-
-.sidenav .sidenav-content > .nav-link.active, .sidenav .nav-group .nav-list .nav-link.active {
-  background: rgb(86, 164, 223);
-  color: #353535;
-  border-radius: 0;
-  color: white;
-}
-
-.sidenav .sidenav-content > .nav-link {
-  margin: 0;
-  padding: 12px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.sidenav .sidenav-content > .nav-link i {
-  padding-right: 5px;
-  width: 20px !important;
-}
-
-.sidenav .label.label-success, a.label.label-success {
-  background: rgba(26, 179, 148, 0.17);
-  color: #1ab394;
-  border: 1px solid #1ab394;
-  margin-right: 0;
-  float: right;
-  margin-top: 2px;
-}
-
-.sidenav .nav-group {
-  margin-top: 0;
-}
-
-.sidenav .collapsible input[type="checkbox"] ~ .nav-list, .sidenav .collapsible input[type="checkbox"] ~ ul {
-  padding: 0;
-  margin: 0;
-}
-
-.sidenav .nav-group .nav-list .nav-link {
-  margin: 0;
-  padding: 12px;
-  padding-left: 40px;
-  padding-right: 20px;
-}
-
-.sidenav .collapsible label {
-  margin: 0;
-  padding: 12px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.sidenav .collapsible label:after {
-  float: right;
-}
-
-.sidenav .nav-group .nav-list .nav-link i, .sidenav .nav-group.collapsible .nav-list .nav-link i {
-  padding-right: 5px;
-  width: 20px;
 }
 
 .color-square {
@@ -337,7 +270,7 @@ header .wallet {
 }
 
 header.header-6, .header.header-6 {
-  background-color: rgb(40, 43, 56);
+    background-color: $setlHoverDarker;
 }
 
 .btn.btn-primary, .btn-primary .btn {
@@ -383,23 +316,6 @@ header clr-dropdown .dropdown-menu {
   margin-top: 5px !important;
 }
 
-.sidenav .nav-group label i {
-  width: 20px !important;
-}
-
 header .header-actions, header .branding + .search {
   background: white;
 }
-
-.sidenav .nav-group label {
-  color: white;
-}
-
-.sidenav .sidenav-content > .nav-link {
-  color: white;
-}
-
-.sidenav .nav-group .nav-list .nav-link {
-  color: white;
-}
-
