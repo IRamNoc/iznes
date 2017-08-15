@@ -17,7 +17,7 @@ export class NavigationTopbarComponent implements OnInit {
     ngOnInit() {
     }
 
-    private callToggleSidebar(event) {
+    public callToggleSidebar(event) {
         this.toggleSidebar.emit(event);
     }
 

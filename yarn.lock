@@ -177,9 +177,20 @@
     lodash "^4.17.4"
     reselect "^3.0.1"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.4":
-  version "1.0.4"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#3c12cb3c462fda5e5c5fa1d0088a136235cf649a"
+"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.7":
+  version "1.0.7"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#c4d665f917dfa85f86c76a8a6231211848d927c2"
+  dependencies:
+    "@angular/common" "^4.0.0"
+    "@angular/core" "^4.0.0"
+    "@angular/forms" "^4.0.0"
+    "@angular/platform-browser" "^4.0.0"
+    "@angular/router" "^4.0.0"
+    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
+    clarity-angular "^0.9.16"
+    clarity-icons "^0.9.16"
+    clarity-ui "^0.9.16"
+    ng2-select "^1.2.0"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
@@ -5037,9 +5048,13 @@ type-is@~1.6.15:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-"typescript@>=2.0.0 <2.4.0", typescript@~2.3.3:
+"typescript@>=2.0.0 <2.4.0":
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.4.tgz#3d38321828231e434f287514959c37a82b629f42"
+
+typescript@^2.4.0:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"
 
 uglify-js@3.0.x:
   version "3.0.27"
@@ -5442,8 +5457,8 @@ xml2js@^0.4.17:
     xmlbuilder "~9.0.1"
 
 xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.1.tgz#91cd70897755363eba57c12ddeeab4a341a61f65"
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.3.tgz#2b975dd9f6c7ccac84bb5d316d948f72b06ffacf"
 
 xmldom@^0.1.19:
   version "0.1.27"
