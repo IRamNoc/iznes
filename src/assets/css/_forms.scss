@@ -1,16 +1,58 @@
 
 form, .form {
 
-    .form-group, .form-group.row > {
-        label, span {
+    padding: 10px;
 
+    .form-group, .form-group.row {
+
+        padding-left: 0px;
+        margin-bottom: 10px;
+
+        label, span {
             // side labels
             &:first-child {
-                text-align: right;
+                text-align: left;
                 font-weight: bold;
-                color: #616161;
+                color: #545454;
                 line-height: 30px;
+                position: initial;
+                width: 100%;
+                margin-top: 0px;
+                margin-bottom: 0px;
             }
+        }
+
+        .ui-select-container {
+            input {
+                margin-top: 6px;
+                width: 200px;
+                height: 41px !important;
+                margin-bottom: 0px;
+            }
+        }
+
+        .ui-select-toggle {
+            margin-top: 6px !important;
+            height: 41px !important;
+        }
+
+        .ui-select-choices {
+            margin-top: 5px;
+        }
+
+        .ui-select-placeholder, .ui-select-match-text {
+            line-height: 40px !important;
+            font-weight: normal !important;
+            width: 90% !important;
+        }
+
+        .ui-select-container input {
+            font-size: 12.5px;
+            height: 40px;
+        }
+
+        div {
+            width: 100%;
         }
 
         [class*='col-'] > {
@@ -23,8 +65,6 @@ form, .form {
 
         }
 
-        margin-bottom: 3px;
-
         input[type] {
             border: 1px solid #dadada;
             background: white;
@@ -33,12 +73,13 @@ form, .form {
             border-radius: 3px;
             padding-left: 10px;
             padding-right: 10px;
+            width: 95%;
 
             &:not([readonly]) {
 
                 &:focus {
                     border-bottom: 0px solid #b9b9b9;
-                    border: 1px solid rgb(164, 196, 250) !important;
+                    border: 1px solid #96c8f1 !important;
                 }
                 background: white;
             }
@@ -53,6 +94,11 @@ form, .form {
         border-radius: 3px;
         margin-top: 6px;
         margin-bottom: 6px;
+    }
+
+    .row {
+        margin-right: 0px;
+        margin-left: 0px;
     }
 
 }

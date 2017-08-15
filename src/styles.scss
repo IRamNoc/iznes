@@ -10,7 +10,6 @@ $setlSelected: #57a5e3;
 @import 'assets/css/tabs';
 @import 'assets/css/utils/ngSelect';
 
-
 .color-square {
     display: inline-block;
     vertical-align: text-bottom;
@@ -25,7 +24,7 @@ app-navigation-topbar {
 }
 
 .table {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 /* Fix for button groups in tables. */
@@ -75,14 +74,6 @@ td > .btn-group {
     border-color: rgb(86, 164, 223);
     background-color: rgb(86, 164, 223);
     color: #fff;
-}
-
-.ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
-    line-height: 40px;
-}
-
-.ui-select-choices-row > a {
-    line-height: 24px;
 }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
