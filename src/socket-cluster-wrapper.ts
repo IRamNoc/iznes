@@ -130,6 +130,12 @@ export class SocketClusterWrapper {
                             }
                         }
                     });
+
+                    if (this.webSocketConn.id) {
+                        this.subscribeToChannel(this.webSocketConn.id, function (data) {
+                            console.log('FROM CHANNEL: ', data);
+                        });
+                    }
                 });
 
                 this.webSocketConn.on('error', (error) => {
@@ -147,7 +153,9 @@ export class SocketClusterWrapper {
                     /* Set back to initialising */
                     // Todo
                     // Same as on  error
-                    this.initialising = true;
+                    this.closeWebSocket()
+                    this.openWebSocket();
+                    console.log('comehere')
                     console.error('socket disconnect: ', error);
                 });
 
@@ -303,6 +311,11 @@ export class SocketClusterWrapper {
     resetConnectionData() {
         this.webSocketConn = false;
         this.initialising = false;
+        this.encryption = {};
+        this.messageQueue = [];
+        this.hasConnected = false;
+        this.connectTries = 0;
+        this.channels = [];
     }
 
     showTryCatchError(error) {
