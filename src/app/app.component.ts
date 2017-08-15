@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ToasterService} from 'angular2-toaster';
 
 @Component({
     selector: 'app-root',
@@ -8,13 +9,9 @@ import {Component} from '@angular/core';
 export class AppComponent {
     title = 'app';
     users: Array<object>;
+    public toasterconfig: any;
 
     constructor() {
-        this.users = [{
-            id: 1,
-            name: 'Ming',
-            creation: '10/10/1993',
-            color: 'red'
-        }];
+
     }
 }
