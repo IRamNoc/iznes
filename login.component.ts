@@ -6,6 +6,8 @@ import {FormsModule, NgModel} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToasterService} from 'angular2-toaster';
 
+import {Router} from '@angular/router';
+
 import {
     FormBuilder,
     FormGroup,
@@ -64,7 +66,8 @@ export class SetlLoginComponent {
                 private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                fb: FormBuilder) {
+                fb: FormBuilder,
+                private router: Router) {
         // Subscribe to app store
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -134,5 +137,11 @@ export class SetlLoginComponent {
     updateState() {
         const myDetail = getMyDetail(this.ngRedux.getState());
         this.loginUser = myDetail.username;
+
+        //
+
+        if (this.loginUser !== '') {
+            this.router.navigateByUrl('/home');
+        }
     }
 }
