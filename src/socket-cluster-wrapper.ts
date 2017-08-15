@@ -9,8 +9,6 @@ import sha256 from 'sha256';
 import * as SocketCluster from 'socketcluster-client';
 import sodium from 'libsodium-wrappers';
 
-const GibberishAES = require('./gibberish-aes-1.0.0.min');
-
 const initialRequestTemplate = {
     EndPoint: 'member',
     MessageType: 'Initialise',
@@ -18,11 +16,28 @@ const initialRequestTemplate = {
     MessageBody: {},
 };
 
-export class SocketClusterWrapper {
-    constructor(protocol, hostname, port, route) {
-        let defaultProtocol = window.location.protocol === 'https' ? 'wws' : 'ws';
+const GibberishAES = (<any>window).GibberishAES;
 
-        this.protocol = _.defaultTo(protocol, defaultProtocol);
+export class SocketClusterWrapper {
+    defaultProtocol: string;
+    protocol: string;
+    hostName: string;
+    port: string;
+    route: string;
+    socketClusterOption: object;
+    webSocketConn: any;
+    encryption: any;
+    messageQueue: Array<any>;
+    initialising: boolean;
+    hasConnected: boolean;
+    connectTries: number;
+    channels: Array<any>;
+    onConnectionInterval: any;
+
+    constructor(protocol, hostname, port, route) {
+        this.defaultProtocol = window.location.protocol === 'https' ? 'wws' : 'ws';
+
+        this.protocol = _.defaultTo(protocol, this.defaultProtocol);
         this.hostName = _.defaultTo(hostname, window.location.hostname);
         this.port = _.defaultTo(port, '9788');
         this.route = _.defaultTo(route, 'db');
@@ -57,9 +72,10 @@ export class SocketClusterWrapper {
     }
 
     openWebSocket() {
+        console.log('testaaa');
 
         if (SocketCluster === undefined) {
-            console.error("Socketcluster is undefined");
+            console.error('Socketcluster is undefined');
             return false;
         }
 
@@ -92,20 +108,20 @@ export class SocketClusterWrapper {
                     this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
 
                     // Send my public key to server.
-                    let requestBody = {
+                    const requestBody = {
                         pub: this.encryption.myPublicKey,
                     };
 
                     // Initial handshake request.
-                    let initialRequest = Object.assign({}, initialRequestTemplate, {MessageBody: requestBody});
-                    let initialRequestText = JSON.stringify(initialRequest);
+                    const initialRequest = Object.assign({}, initialRequestTemplate, {MessageBody: requestBody});
+                    const initialRequestText = JSON.stringify(initialRequest);
 
                     this.webSocketConn.emit('onMessage', initialRequestText, (errorCode, data) => {
                         // We should receive server's public key now.
-                        if (data != false) {
+                        if (data !== false) {
                             this.encryption.serverPublicKey = data.Data;
-
-                            let shared = sodium.crypto_scalarmult(this.encryption.mySecret, sodium.from_hex(this.encryption.serverPublicKey));
+                            const shared = sodium.crypto_scalarmult(this.encryption.mySecret,
+                                sodium.from_hex(this.encryption.serverPublicKey));
                             this.encryption.shareKey = sha256(sodium.to_hex(shared));
 
                             this.initialising = false;
@@ -125,7 +141,7 @@ export class SocketClusterWrapper {
                     //
                     // However, when the flag is not set to true here, the browser clash with an error
                     this.initialising = true;
-                    console.error("socket error: ", error);
+                    console.error('socket error: ', error);
                 });
 
                 this.webSocketConn.on('disconnect', (error) => {
@@ -133,7 +149,7 @@ export class SocketClusterWrapper {
                     // Todo
                     // Same as on  error
                     this.initialising = true;
-                    console.error("socket disconnect: ", error);
+                    console.error('socket disconnect: ', error);
                 });
 
                 this.defaultOnOpen();
@@ -172,11 +188,9 @@ export class SocketClusterWrapper {
             }
 
             this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
-                let decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
+                const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
 
-
-                let message = JSON.parse(decoded);
-
+                const message = JSON.parse(decoded);
 
                 callback(error, message);
             });
@@ -188,7 +202,7 @@ export class SocketClusterWrapper {
 
         /* Validate. */
         if (!channelName) {
-            console.warn('Channel name not passed ')
+            console.log('Channel name not passed ');
             return;
         }
 
@@ -231,7 +245,7 @@ export class SocketClusterWrapper {
 
         /* Create the channel if it doesn't exist. */
         if (!this.channels[channelName]) {
-            console.log("Subscribing to " + channelName + ": ", this.channels[channelName]);
+            console.log('Subscribing to ' + channelName + ': ', this.channels[channelName]);
             this.channels[channelName] = this.webSocketConn.subscribe(channelName);
         }
 
@@ -241,14 +255,14 @@ export class SocketClusterWrapper {
         /* Add a watcher to the channel, we'll do the decryption in here. */
         this.channels[channelName].watch((transmissionData) => {
             /* Now we can decrypt the data. */
-            console.log("|- Incoming Channel Publish...");
-            console.log("| TRANSMISSION DATA: ", transmissionData);
-            let decrypted = GibberishAES.dec(transmissionData, this.encryption.shareKey) || transmissionData;
+            console.log('|- Incoming Channel Publish...');
+            console.log('| TRANSMISSION DATA: ', transmissionData);
+            const decrypted = GibberishAES.dec(transmissionData, this.encryption.shareKey) || transmissionData;
 
-            console.log("| DESCRYPTED DATA: ", decrypted);
+            console.log('| DESCRYPTED DATA: ', decrypted);
             /* Callback. */
             callback(decrypted);
-        })
+        });
     }
 
     onConnection() {
@@ -266,12 +280,12 @@ export class SocketClusterWrapper {
                     clearInterval(this.onConnectionInterval);
                     resolve();
                 }
-            }, 50)
-        })
+            }, 50);
+        });
     }
 
     defaultOnOpen() {
-        console.info("Connection established to web socket server!");
+        console.log('Connection established to web socket server!');
     }
 
     closeWebSocket() {
@@ -279,7 +293,7 @@ export class SocketClusterWrapper {
             // Deauthenticate this connection.
             // It is seen that deauthenticate() can make sure the auth token is clear in local storage.
             this.webSocketConn.deauthenticate(() => {
-                console.info('Connection deauthenticated.');
+                console.log('Connection deauthenticated.');
             });
 
             this.webSocketConn.destroy(this.socketClusterOption);
@@ -288,11 +302,11 @@ export class SocketClusterWrapper {
     }
 
     resetConnectionData() {
-        this.webSocketConn.false;
+        this.webSocketConn = false;
         this.initialising = false;
     }
 
-    static showTryCatchError(error) {
-        console.log("Error: " + error.message + ', file: ' + error.fileName + ', line: ' + error.lineNumber);
+    showTryCatchError(error) {
+        console.log('Error: ' + error.message + ', file: ' + error.fileName + ', line: ' + error.lineNumber);
     }
 }
