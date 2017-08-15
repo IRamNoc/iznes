@@ -1,0 +1,20 @@
+label[menu-dropdown] + ul.nav-list {
+    opacity: 0;
+    -webkit-transition: height 0.3s, opacity 0.5s;
+    -moz-transition: height 0.3s, opacity 0.5s;
+    transition: height 0.3s, opacity 0.5s;
+}
+
+label[menu-dropdown] + ul.nav-list.active {
+    opacity: 1;
+}
+
+.collapsible label[menu-dropdown]:after {
+    -webkit-transform: rotate(-90deg) translateX(-7px) translateY(-8px);
+    transform: rotate(-90deg) translateX(-7px) translateY(-8px);
+}
+
+.collapsible label[menu-dropdown].active:after {
+    -webkit-transform: translateX(-8px) translateY(7px);
+    transform: translateX(-8px) translateY(7px);
+}
