@@ -217,6 +217,9 @@ header .header-actions, header .branding + .search {
     .sidenav .collapsible label::after {
       float: right; }
 
+.content-area form input[type], .content-area .form input[type] {
+  width: 95%; }
+
 form, .form {
   padding: 10px; }
   form .form-group, form .form-group.row, .form .form-group, .form .form-group.row {
@@ -261,8 +264,7 @@ form, .form {
       height: 40px;
       border-radius: 3px;
       padding-left: 10px;
-      padding-right: 10px;
-      width: 95%; }
+      padding-right: 10px; }
       form .form-group input[type]:not([readonly]), form .form-group.row input[type]:not([readonly]), .form .form-group input[type]:not([readonly]), .form .form-group.row input[type]:not([readonly]) {
         background: white; }
         form .form-group input[type]:not([readonly]):focus, form .form-group.row input[type]:not([readonly]):focus, .form .form-group input[type]:not([readonly]):focus, .form .form-group.row input[type]:not([readonly]):focus {
@@ -378,31 +380,33 @@ clr-tab-content.active {
     padding-left: 20px;
     padding-right: 20px;
     height: 45px; }
-    .nav .nav-link.btn .nav-item {
-      margin-right: 10px; }
-    .nav .nav-link.btn .nav-item.active > .nav-link {
-      background: white;
-      color: #383d48;
-      box-shadow: 0 0 0 white inset;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      border: 1px solid #dce1eb;
-      border-bottom: 0px; }
-    .nav .nav-link.btn .nav-link.btn {
-      padding-left: 20px;
-      padding-right: 20px;
-      height: 45px;
-      font-size: 13px; }
-    .nav .nav-link.btn .nav-link {
-      color: #a8a8a8;
-      line-height: 35px; }
-    .nav .nav-link.btn .nav-link:hover, .nav .nav-link.btn .nav .nav-link.active {
-      box-shadow: 0 0 0 #007cbb inset;
-      transition: box-shadow 0.2s ease-in;
-      outline: none;
-      color: #000; }
-    .nav .nav-link.btn .nav-link:focus {
-      outline: none; }
+  .nav .nav-item {
+    margin-right: 10px; }
+  .nav .nav-item.active > .nav-link {
+    background: white;
+    color: #383d48;
+    box-shadow: 0 0 0 white inset;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #dce1eb;
+    border-bottom: 0px; }
+  .nav .nav-link.btn {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 45px;
+    font-size: 13px; }
+  .nav .nav-link {
+    color: #a8a8a8;
+    line-height: 35px; }
+  .nav .nav-link:hover, .nav .nav-link.active {
+    box-shadow: 0 0 0 #007cbb inset;
+    transition: box-shadow 0.2s ease-in;
+    outline: none;
+    color: #000; }
+  .nav .nav-link:focus {
+    outline: none; }
+  .nav .nav-link.active:focus {
+    outline: none; }
 
 .datagrid {
   margin: 0; }
