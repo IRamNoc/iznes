@@ -17,15 +17,6 @@ export class MemberSocketService {
 
         this.socket.openWebSocket();
 
-        this.socket.onConnection().then(() => {
-            if (this.socket.webSocketConn.id) {
-                this.socket.subscribeToChannel(this.socket.webSocketConn.id, function (data) {
-                    console.log('FROM CHANNEL: ', data);
-                });
-            }
-        });
-
-
     }
 
     sendRequest(Request, callBack) {
