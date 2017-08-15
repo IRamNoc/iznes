@@ -25,10 +25,8 @@ export class LoginGuardService implements CanActivate {
 
         if (!this.isLogin) {
             this.toasterService.pop('warning', 'test');
-            console.log('test');
         }
-                    return true;
-                    //return this.isLogin;
+        return this.isLogin;
     }
 
     updateState() {
