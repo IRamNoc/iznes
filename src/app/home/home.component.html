@@ -2,9 +2,7 @@
     <h1>Home</h1>
 </div>
 
-<clr-tabs (clrTabsCurrentTabLinkChanged)="onTabSelected($event)"
-          (clrTabsCurrentTabIndexChanged)="onTabIndexChanged($event)"
-          (clrTabsCurrentTabContentChanged)="onTabContentActivated($event)">
+<clr-tabs>
     <clr-tab-link [clrTabLinkId]="'link1'" [clrTabLinkActive]="true"><i class="fa fa-table"></i> Datagrid</clr-tab-link>
     <clr-tab-link><i class="fa fa-trash-o"></i> Random Stuff</clr-tab-link>
     <clr-tab-link><i class="fa fa-pencil"></i> Form</clr-tab-link>
