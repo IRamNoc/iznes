@@ -177,9 +177,20 @@
     lodash "^4.17.4"
     reselect "^3.0.1"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.4":
+"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.6":
   version "1.0.4"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#3c12cb3c462fda5e5c5fa1d0088a136235cf649a"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#b48a7930c7acaa132d42215d86e1299c704d8d56"
+  dependencies:
+    "@angular/common" "^4.0.0"
+    "@angular/core" "^4.0.0"
+    "@angular/forms" "^4.0.0"
+    "@angular/platform-browser" "^4.0.0"
+    "@angular/router" "^4.0.0"
+    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
+    clarity-angular "^0.9.16"
+    clarity-icons "^0.9.16"
+    clarity-ui "^0.9.16"
+    ng2-select "^1.2.0"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
@@ -5442,8 +5453,8 @@ xml2js@^0.4.17:
     xmlbuilder "~9.0.1"
 
 xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.1.tgz#91cd70897755363eba57c12ddeeab4a341a61f65"
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.2.tgz#de321e7964eac81e97143fe84d1a105b8c2ba125"
 
 xmldom@^0.1.19:
   version "0.1.27"
