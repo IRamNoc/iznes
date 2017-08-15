@@ -162,9 +162,9 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.5":
-  version "1.0.3"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#44a61eee287299bc4fcb9d0d91b9344446eef169"
+"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.6":
+  version "1.0.6"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#074afd3144c5a4e6a24984734867be57944b7435"
   dependencies:
     "@setl/utils" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git"
 
