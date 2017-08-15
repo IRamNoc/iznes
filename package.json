@@ -27,9 +27,8 @@
         "@setl/core-req-services": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1",
         "@setl/core-store": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#1.0.1",
         "@setl/core-useradmin": "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.7",
-        "@setl/socketcluster-wrapper": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git",
         "@setl/utils": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.1",
-        "@setl/websocket-service": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.1",
+        "@setl/websocket-service": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.2",
         "@webcomponents/custom-elements": "1.0.0-alpha.3",
         "angular2-toaster": "^4.0.1",
         "clarity-angular": "^0.9.16",
@@ -43,7 +42,6 @@
         "redux": "^3.7.2",
         "redux-observable": "^0.15.0",
         "rxjs": "^5.4.1",
-        "socketcluster-wrapper": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.0",
         "zone.js": "^0.8.14"
     },
     "devDependencies": {
