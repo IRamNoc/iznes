@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody *ngIf="dataArray.length; else noRowsBlock">
-            <tr *ngFor="let row of dataArray">
+            <tr *ngFor="let row of dataArray; let i = index">
                 <td class="table-action-cell">
                     <div class="btn-group">
                         <button (click)="editEventHandler(i)" class="btn-white btn btn-xs btn-default">

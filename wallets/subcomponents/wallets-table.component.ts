@@ -19,10 +19,10 @@ export class AdminWalletsTableComponent {
     public dataArray:any;
 
     @Output()
-    public deleteEvent:EventEmitter<number> = new EventEmitter();
+    public deleteEvent:EventEmitter<{}> = new EventEmitter();
 
     @Output()
-    public editEvent:EventEmitter<number> = new EventEmitter();
+    public editEvent:EventEmitter<{}> = new EventEmitter();
 
     /* Constructor. */
     constructor () {
@@ -31,12 +31,12 @@ export class AdminWalletsTableComponent {
 
     public deleteEventHandler (event):void {
         /* Emit */
-        this.deleteEvent.emit(event + 1);
+        this.deleteEvent.emit(event);
     }
 
     public editEventHandler (event):void {
         /* Emit */
-        this.editEvent.emit(event + 1);
+        this.editEvent.emit(event);
     }
 
 }

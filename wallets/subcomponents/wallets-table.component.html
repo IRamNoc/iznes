@@ -9,8 +9,8 @@
                 <th mltag="txt_status">Wallet Status</th>
             </tr>
         </thead>
-        <tbody *ngIf="dataArray.length">
-            <tr *ngFor="let row of dataArray">
+        <tbody *ngIf="dataArray.length; else noRowsBlock">
+            <tr *ngFor="let row of dataArray; let i = index">
                 <td class="table-action-cell">
                     <div class="btn-group">
                         <button (click)="editEventHandler(i)" class="btn-white btn btn-xs btn-default">
@@ -37,12 +37,14 @@
                 </td>
             </tr>
         </tbody>
-        <tbody *ngIf="!dataArray.length">
-            <tr>
-                <td colspan="5" class="text-center">
-                    No Wallets to show.
-                </td>
-            </tr>
-        </tbody>
+        <ng-template #noRowsBlock>
+            <tbody>
+                <tr>
+                    <td class="text-center" colspan="5">
+                        No Wallets to show.
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
     </table>
 </div>

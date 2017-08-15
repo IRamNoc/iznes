@@ -20,7 +20,7 @@
         </clr-tab-content>
         <clr-tab-content [clrTabContentId]="'content2'" [clrTabContentActive]="false">
             <div class="user-tab-panel-body panel-body">
-                <form [formGroup]="createWalletForm" role="form">
+                <form (submit)="saveWallet($event)" role="form">
                     <div class="form-horizontal">
 
                         <div class="form-group">
@@ -38,7 +38,7 @@
                                 <span class="ml_translated" mltag="txt_walletname">Wallet Name</span>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name='walletName' placeholder="Wallet Name" class="form-control newwalletname mlp_translated" mltag="txt_walletname">
+                                <input [(ngModel)]="walletName" type="text" name='walletName' placeholder="Wallet Name" class="form-control newwalletname mlp_translated" mltag="txt_walletname">
                             </div>
                         </div>
 

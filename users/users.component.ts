@@ -19,18 +19,30 @@ import {UserAdminService} from '../useradmin.service';
 /* Class. */
 export class AdminUsersComponent {
 
-    public userData:any = [
+    public usersData:any = [
         {
             'username': 'Daniel',
             'email': 'dan.sarracayo@setl.io',
             'account': 'Something...',
-            'enabled': 'true'
+            'enabled': true
         },
         {
             'username': 'Ollie',
             'email': 'ollie.kett@setl.io',
             'account': 'Something else...',
-            'enabled': 'false'
+            'enabled': false
+        },
+        {
+            'username': 'Like',
+            'email': 'luke.bowen@setl.io',
+            'account': 'Something else 5...',
+            'enabled': true
+        },
+        {
+            'username': 'Ming',
+            'email': 'ming.boss.man@setl.io',
+            'account': 'Something else 2...',
+            'enabled': true
         }
     ];
 
@@ -76,12 +88,26 @@ export class AdminUsersComponent {
 
      /**
       * Handle Delete
-      * Deletes a user.
+      * Handles the deletion of a user.
       *
-      * @param {index}
+      * @param {deleteUserIndex} object - Contains the target user's index.
+      *
       * @return {void}
       */
-     public handleDelete (index):void {
+     public handleDelete ( deleteUserIndex ):void {
+         /* Check we have the wallet's index... */
+         if ( (! deleteUserIndex && deleteUserIndex !== 0) || this.usersData.length === 0 ) {
+             return;
+         }
+
+         /*
+             ...so we do, lets remove it from the data by setting the data to an
+             array with everything before and everything after.
+         */
+         this.usersData = [
+             ...this.usersData.slice(0, deleteUserIndex - 1),
+             ...this.usersData.slice(deleteUserIndex, this.usersData.length)
+         ];
 
          /* Return. */
          return;
@@ -89,12 +115,13 @@ export class AdminUsersComponent {
 
      /**
       * Handle Edit
-      * Edits a user.
+      * Handles the editting of a wallet.
       *
-      * @param {index}
+      * @param {editWalletIndex} number - The index of a wallet to be editted.
+      *
       * @return {void}
       */
-     public handleEdit (index):void {
+     public handleEdit ( editWalletIndex ):void {
 
          /* Return. */
          return;

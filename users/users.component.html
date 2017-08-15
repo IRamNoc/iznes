@@ -12,7 +12,7 @@
         <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="true">
             <div class="panel-body">
                 <setl-admin-users-table
-                    [dataArray]="userData"
+                    [dataArray]="usersData"
                     (deleteEvent)="handleDelete($event)"
                     (editEvent)="handleEdit($event)"
                 ></setl-admin-users-table>

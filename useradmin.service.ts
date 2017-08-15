@@ -8,10 +8,6 @@ export class UserAdminService {
     /* Account types. */
     public accountTypes:any = [
         {
-            'id': '0',
-            'text': 'Select One',
-        },
-        {
             'id': '1',
             'text': 'SETL Private Admin',
         },
@@ -23,10 +19,6 @@ export class UserAdminService {
 
     /* Wallet Types. */
     public walletTypes:any = [
-        {
-            'id': '0',
-            'text': 'Select One',
-        },
         {
             'id': '1',
             'text': 'Legal Entity',
@@ -43,10 +35,6 @@ export class UserAdminService {
 
     /* User Types. */
     public userTypes:any = [
-        {
-            'id': '0',
-            'text': 'Select One',
-        },
         {
             'id': '15',
             'text': 'System Admin',
@@ -79,10 +67,6 @@ export class UserAdminService {
 
     /* Group Types. */
     public groupTypes:any = [
-        {
-            'id': '0',
-            'text': 'Select Type',
-        },
         {
             'id': '1',
             'text': 'Administrative',

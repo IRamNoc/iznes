@@ -16,7 +16,7 @@ import {UserAdminService} from '../useradmin.service';
 
 class Wallet {
     name:string
-    account:string
+    account:number
     type:number
     enabled:boolean
 }
@@ -43,32 +43,21 @@ export class AdminWalletsComponent {
     ];
 
     /* Account types select. */
-    public accountType:string;
+    public accountType:{
+        id:string,
+        text:string
+    };
     public accountTypes:any;
 
     /* Wallet types select. */
-    public walletType:string;
+    public walletType:{
+        id:string,
+        text:string
+    };
     public walletTypes:any;
 
-    /* Wallet creation form. */
-    public createWalletForm = new FormGroup({
-        'walletName': new FormControl(
-            null,
-            Validators.required
-        ),
-        'walletAccount': new FormControl(
-            this.accountType,
-            Validators.required
-        ),
-        'walletType': new FormControl(
-            this.walletType,
-            Validators.required
-        ),
-        'walletEnabled': new FormControl(
-            true,
-            Validators.required
-        )
-    })
+    /* Wallet form properties. */
+    public walletName:string;
 
     /* Constructor. */
     constructor (
@@ -86,9 +75,10 @@ export class AdminWalletsComponent {
      * Handles the selection of an option in ng2-select, this is bound to the
      * component.
      *
-     * @param {propertyName} - string - The propertyName that is on the class of
+     * @param {propertyName} string - The propertyName that is on the class of
      * this component.
-     * @param {value} - object - An object representing the selection.
+     *
+     * @param {value} object - An object representing the selection.
      *
      * @return {void}
      */
@@ -112,16 +102,60 @@ export class AdminWalletsComponent {
     }
 
     /**
-     * Handle Delete
-     * Handles the deletion of a wallet.
+     * Save Wallet
+     * Forms a wallet object and pushes it to the wallets array.
      *
-     * @param {deleteWalletIndex} number - Contains the target wallet's index.
+     * @param {formSubmitEvent} object - The wallet creations form's submit
+     * event.
      *
      * @return {void}
      */
-    public handleDelete ( deleteWalletIndex:number ):void {
+    public saveWallet ( formSubmitEvent ):boolean {
+        formSubmitEvent.preventDefault();
+
+        /* Check all information. */
+        if ( ! this.walletName ) {
+            console.warn('Missing a wallet name.');
+            return;
+        }
+        if ( ! this.accountType || Number( this.accountType.id ) < 1 ) {
+            console.warn('Missing a wallet account.');
+            return;
+        }
+        if ( ! this.walletType || Number( this.walletType.id ) < 1 ) {
+            console.warn('Missing a wallet type.');
+            return;
+        }
+
+        /* Build the wallet object. */
+        let wallet:Wallet = {
+            'name': this.walletName,
+            'type': Number( this.walletType.id ),
+            'account': Number( this.accountType.id ),
+            'enabled': true,
+        };
+
+        /* Push the wallet data. */
+        this.walletsData.push( wallet );
+
+        /* Clear Form. */
+        this.clearForm();
+
+        /* Return. */
+        return false;
+    }
+
+    /**
+     * Handle Delete
+     * Handles the deletion of a wallet.
+     *
+     * @param {deleteWalletIndex} object - Contains the target wallet's index.
+     *
+     * @return {void}
+     */
+    public handleDelete ( deleteWalletIndex ):void {
         /* Check we have the wallet's index... */
-        if ( ! deleteWalletIndex || isNaN(deleteWalletIndex) ) {
+        if ( (! deleteWalletIndex && deleteWalletIndex !== 0) || this.walletsData.length === 0 ) {
             return;
         }
 
@@ -130,8 +164,8 @@ export class AdminWalletsComponent {
             array with everything before and everything after.
         */
         this.walletsData = [
-            ...this.walletsData.slice(0, deleteWalletIndex - 1),
-            ...this.walletsData.slice(deleteWalletIndex, this.walletsData.length)
+            ...this.walletsData.slice(0, deleteWalletIndex),
+            ...this.walletsData.slice((deleteWalletIndex + 1), this.walletsData.length)
         ];
 
         /* Return. */
@@ -150,6 +184,25 @@ export class AdminWalletsComponent {
 
         /* Return. */
         return;
+    }
+
+    /**
+     * Clear Form
+     * Clears the form in this component.
+     *
+     * @return {void}
+     */
+    public clearForm ():void {
+        /* Set all properties to nothing. */
+	this.accountType = {
+	    id: undefined,
+	    text: undefined
+	};
+	this.walletType = {
+	    id: undefined,
+	    text: undefined
+	};
+        this.walletName = "";
     }
 
 }

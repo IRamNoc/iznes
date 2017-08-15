@@ -1,10 +1,10 @@
 /* Core imports. */
-import { Component } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
-import { ToasterService } from 'angular2-toaster';
+import {Component} from '@angular/core';
+import {FormsModule, NgModel} from '@angular/forms';
+import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 
 /* Users table. */
-import { AdminPermissionsTableComponent } from './subcomponents/permissions-table.component';
+import {AdminPermissionsTableComponent} from './subcomponents/permissions-table.component';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -23,9 +23,9 @@ export class AdminPermissionsComponent {
     public permissionsData:any = [];
 
     /* Form variables. */
-    private formGroupName:string = "";
-    private formGroupDesc:string = "";
-    private formGroupType:string = "";
+    public formGroupName:string = "";
+    public formGroupDesc:string = "";
+    public formGroupType:string = "";
 
     /* Account types select. */
     public groupType:string;
