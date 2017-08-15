@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
@@ -20,6 +21,7 @@ import {ROUTES} from './app.routes';
 
 /* SETL Modules. */
 import {SetlLoginModule} from '@setl/core-login';
+import {LoginGuardService} from '@setl/core-login';
 
 /* Components. */
 import {AppComponent} from './app.component';
@@ -38,6 +40,11 @@ import {UserAdminModule} from '@setl/core-useradmin';
 
 /* Dropdown Directive. */
 import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
+
+/**
+ * Toaster service
+ */
+import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 /**
  * App main state
@@ -74,6 +81,7 @@ import {environment} from '../environments/environment';
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpModule,
         FormsModule,
         ClarityModule.forRoot(),
@@ -84,6 +92,7 @@ import {environment} from '../environments/environment';
         SidebarModule,
         NgReduxModule,
         ReactiveFormsModule,
+        ToasterModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -103,7 +112,9 @@ import {environment} from '../environments/environment';
 
         WalletNodeSocketService,
         MyUserService,
-        WalletNodeRequestService
+        WalletNodeRequestService,
+        LoginGuardService,
+        ToasterService
     ],
     bootstrap: [AppComponent]
 })
