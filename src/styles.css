@@ -29,7 +29,7 @@ body {
   background: #f9f9f9; }
 
 header {
-  background-color: #282b38;
+  background-color: #282b38 !important;
   flex: 0 0 75px;
   height: 75px; }
   header .header-actions .nav-link.nav-icon {
@@ -48,6 +48,8 @@ header {
       height: 53px;
       width: 1px;
       top: 10px; }
+    header .header-actions .nav-link.nav-icon *:hover {
+      cursor: pointer; }
     header .header-actions .nav-link.nav-icon label {
       position: absolute;
       top: 70%;
@@ -92,12 +94,14 @@ header {
     padding-left: 15px;
     margin-right: 15px; }
     header .header-actions .wallet .wallet-tile {
-      color: #222;
+      color: #57a5e3;
       position: absolute;
-      top: 21px;
+      top: 28px;
       font-size: 10px;
-      margin-left: 13px;
+      margin-left: 16px;
       z-index: 10; }
+    header .header-actions .wallet .ui-select-container .dropdown-menu {
+      margin-top: 20px !important; }
     header .header-actions .wallet .ui-select-container .dropdown .open input {
       margin-top: 6px;
       width: 200px; }
@@ -112,18 +116,25 @@ header {
           height: 30px;
           background: red; }
     header .header-actions .wallet .ui-select-placeholder {
-      padding-top: 8px; }
+      padding: 0 45px; }
     header .header-actions .wallet .ui-select-search {
       min-height: 40px;
       margin-top: 6px;
-      padding-top: 12px !important;
+      padding: 10px 55px !important;
       font-size: 12.5px;
       font-weight: bold;
-      border-radius: 3px; }
+      border-radius: 3px;
+      background: none; }
+    header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
+      margin: -1px 2px !important; }
+    header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
+      padding-left: 40px; }
   header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider {
     height: 75px; }
   header .branding {
     width: 230px; }
+    header .branding .nav-link {
+      margin: auto; }
   header .search, header .search-box {
     opacity: 1.0; }
     header .search input[type="text"], header .search-box input[type="text"] {
@@ -154,7 +165,8 @@ header clr-dropdown .dropdown-menu {
   margin-top: 5px !important; }
 
 header .header-actions, header .branding + .search {
-  background: white; }
+  background: white;
+  border-bottom: 1px solid #ddd; }
 
 .sidenav {
   width: 230px;
@@ -216,6 +228,12 @@ header .header-actions, header .branding + .search {
     padding-right: 20px; }
     .sidenav .collapsible label::after {
       float: right; }
+
+.ng-sidebar {
+  width: 300px;
+  background: white;
+  border-left: 1px solid #999;
+  padding: 25px; }
 
 .content-area form input[type], .content-area .form input[type] {
   width: 95%; }
