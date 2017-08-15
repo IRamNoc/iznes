@@ -25,6 +25,10 @@ header {
                 top: 10px;
             }
 
+            *:hover {
+                cursor: pointer;
+            }
+
             label {
                 position: absolute;
                 top: 70%;
@@ -86,11 +90,11 @@ header {
             margin-right: 15px;
 
             .wallet-tile {
-                color: #222;
+                color: $setlSelected;
                 position: absolute;
-                top: 21px;
+                top: 28px;
                 font-size: 10px;
-                margin-left: 13px;
+                margin-left: 16px;
                 z-index: 10;
             }
 
@@ -119,17 +123,26 @@ header {
             }
 
             .ui-select-placeholder {
-                padding-top: 8px;
+                padding: 0 45px;
             }
 
             .ui-select-search {
                 @extend .animate;
                 min-height: 40px;
                 margin-top: 6px;
-                padding-top: 12px !important;
+                padding: 10px 55px !important;
                 font-size: 12.5px;
                 font-weight: bold;
                 border-radius: 3px;
+                background: none;
+            }
+
+            .ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
+                margin: -1px 2px !important;
+            }
+
+            .ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
+                padding-left: 40px;
             }
         }
 
@@ -189,4 +202,5 @@ header clr-dropdown .dropdown-menu {
 
 header .header-actions, header .branding + .search {
     background: white;
+    border-bottom: 1px solid #ddd;
 }
