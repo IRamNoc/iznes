@@ -72,7 +72,6 @@ export class SocketClusterWrapper {
     }
 
     openWebSocket() {
-        console.log('testaaa');
 
         if (SocketCluster === undefined) {
             console.error('Socketcluster is undefined');
