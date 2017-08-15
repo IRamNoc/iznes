@@ -12,10 +12,15 @@ import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 import {ClarityModule} from 'clarity-angular';
 
+/**
+ * Login guard service
+ */
+import {LoginGuardService} from './login-guard.service';
+
 
 @NgModule({
     declarations: [
-        SetlLoginComponent,
+        SetlLoginComponent
     ],
     imports: [
         ToasterModule,
@@ -29,7 +34,7 @@ import {ClarityModule} from 'clarity-angular';
         SetlLoginComponent
     ],
     providers: [
-        ToasterService,
+        ToasterService
     ]
 })
 
