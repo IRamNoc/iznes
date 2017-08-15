@@ -1,3 +1,10 @@
+.content-area {
+    form, .form {
+        input[type] {
+            width: 95%;
+        }
+    }
+}
 
 form, .form {
 
@@ -73,10 +80,8 @@ form, .form {
             border-radius: 3px;
             padding-left: 10px;
             padding-right: 10px;
-            width: 95%;
 
             &:not([readonly]) {
-
                 &:focus {
                     border-bottom: 0px solid #b9b9b9;
                     border: 1px solid #96c8f1 !important;
