@@ -9,18 +9,19 @@ $setlSelected: #57a5e3;
 @import 'assets/css/forms';
 @import 'assets/css/tabs';
 @import 'assets/css/utils/ngSelect';
+@import '../node_modules/angular2-toaster/toaster';
 
 .color-square {
-    display: inline-block;
-    vertical-align: text-bottom;
-    height: 14px;
-    width: 14px;
-    border: 0 solid #000;
-    border-radius: 4px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  height: 14px;
+  width: 14px;
+  border: 0 solid #000;
+  border-radius: 4px;
 }
 
 app-navigation-topbar {
-    height: 75px;
+  height: 75px;
 }
 
 .table {
@@ -29,53 +30,53 @@ app-navigation-topbar {
 
 /* Fix for button groups in tables. */
 td > .btn-group {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 /* Fix for buttons with spans in them. */
 .btn > span {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .main-container-sidebar-content {
-    float: left;
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: 100vh;
-    background: #fafafa;
+  float: left;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 100vh;
+  background: #fafafa;
 }
 
 .btn.btn-secondary:hover, .btn.btn-info:hover, .btn.btn-outline:hover, .btn.btn-primary-outline:hover, .btn.btn-secondary-outline:hover, .btn.btn-outline-primary:hover, .btn.btn-outline-secondary:hover, .btn.btn-info-outline:hover, .btn-secondary .btn:hover, .btn-info .btn:hover, .btn-outline .btn:hover, .btn-primary-outline .btn:hover, .btn-secondary-outline .btn:hover, .btn-outline-primary .btn:hover, .btn-outline-secondary .btn:hover, .btn-info-outline .btn:hover {
-    border: 1px solid #a4c4fa !important;
-    background: white;
+  border: 1px solid #a4c4fa !important;
+  background: white;
 }
 
 .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
-    box-shadow: 0 0 0 0 #0094d2 inset;
+  box-shadow: 0 0 0 0 #0094d2 inset;
 }
 
 .ui-select-toggle {
-    height: 40px;
-    line-height: 40px;
-    border: 1px solid #dadada !important;
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid #dadada !important;
 }
 
 .btn.btn-primary, .btn-primary .btn {
-    border-color: rgb(86, 164, 223);
-    background-color: rgb(86, 164, 223);
-    color: #fff;
+  border-color: rgb(86, 164, 223);
+  background-color: rgb(86, 164, 223);
+  color: #fff;
 }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
-    line-height: 24px !important;
+  line-height: 24px !important;
 }
 
 .main-container .content-container .content-area {
-    padding: 0;
+  padding: 0;
 }
