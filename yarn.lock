@@ -176,20 +176,9 @@
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#b972a4a94fff6ec7ef53d53f31d609cbecf564ae"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.6":
+"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.4":
   version "1.0.4"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#b48a7930c7acaa132d42215d86e1299c704d8d56"
-  dependencies:
-    "@angular/common" "^4.0.0"
-    "@angular/core" "^4.0.0"
-    "@angular/forms" "^4.0.0"
-    "@angular/platform-browser" "^4.0.0"
-    "@angular/router" "^4.0.0"
-    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
-    clarity-angular "^0.9.16"
-    clarity-icons "^0.9.16"
-    clarity-ui "^0.9.16"
-    ng2-select "^1.2.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#3c12cb3c462fda5e5c5fa1d0088a136235cf649a"
 
 "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
   version "1.0.0"
@@ -200,9 +189,15 @@
     sha256 "^0.2.0"
     socketcluster-client "^6.3.0"
 
-"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git", "@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.0":
+"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git":
   version "1.0.0"
-  uid "8ef0968cf8054a57c0f08910d0d72f2aadc27d83"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#23a11397ee620b7c52c94e3fb8965eee7681e0a0"
+  dependencies:
+    ramda "^0.24.1"
+    redux-saga "^0.15.6"
+
+"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.0":
+  version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#8ef0968cf8054a57c0f08910d0d72f2aadc27d83"
   dependencies:
     ramda "^0.24.1"
@@ -233,8 +228,8 @@
     "@types/jasmine" "*"
 
 "@types/node@^6.0.46", "@types/node@~6.0.60":
-  version "6.0.85"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.85.tgz#ec02bfe54a61044f2be44f13b389c6a0e8ee05ae"
+  version "6.0.86"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.86.tgz#ae0fff49f6fc13d7ddcd322362581c52e8755ff9"
 
 "@types/q@^0.0.32":
   version "0.0.32"
@@ -5442,21 +5437,15 @@ xml2js@0.4.4:
     xmlbuilder ">=1.0.0"
 
 xml2js@^0.4.17:
-  version "0.4.17"
-  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.17.tgz#17be93eaae3f3b779359c795b419705a8817e868"
+  version "0.4.18"
+  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.18.tgz#a117ec8153aeeb22f9541bfbe8805e35dae7b969"
   dependencies:
     sax ">=0.6.0"
-    xmlbuilder "^4.1.0"
+    xmlbuilder "~9.0.1"
 
-xmlbuilder@>=1.0.0:
+xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.1.tgz#91cd70897755363eba57c12ddeeab4a341a61f65"
-
-xmlbuilder@^4.1.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-4.2.1.tgz#aa58a3041a066f90eaa16c2f5389ff19f3f461a5"
-  dependencies:
-    lodash "^4.0.0"
 
 xmldom@^0.1.19:
   version "0.1.27"

@@ -3,7 +3,10 @@ import {
     combineReducers
 } from 'redux';
 
-import {UserState, userReducer} from '@setl/core-store';
+import {
+    UserState, userReducer,
+
+} from '@setl/core-store';
 
 
 export interface AppState {
@@ -13,5 +16,3 @@ export interface AppState {
 export const rootReducer: Reducer<any> = combineReducers<any>({
     user: userReducer
 });
-
-
