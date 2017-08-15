@@ -162,11 +162,9 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.6":
-  version "1.0.6"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#074afd3144c5a4e6a24984734867be57944b7435"
-  dependencies:
-    "@setl/utils" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git"
+"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.7":
+  version "1.0.7"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#ae5aae4f176d3e35867626e461a4a43b1f1829c2"
 
 "@setl/core-req-services@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1":
   version "1.0.0"
@@ -192,9 +190,8 @@
     sha256 "^0.2.0"
     socketcluster-client "^6.3.0"
 
-"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git", "@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.1":
+"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.1":
   version "1.0.0"
-  uid "23a11397ee620b7c52c94e3fb8965eee7681e0a0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#23a11397ee620b7c52c94e3fb8965eee7681e0a0"
   dependencies:
     ramda "^0.24.1"
