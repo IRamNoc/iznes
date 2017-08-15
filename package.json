@@ -1,6 +1,6 @@
 {
     "name": "@setl/socketcluster-wrapper",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Implement Diffie-Hellman encryption on Socketcluster, to allow encrypted communication.",
     "main": "src/index.js",
     "scripts": {
