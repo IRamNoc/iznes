@@ -51,18 +51,18 @@ export class WalletNodeSocketService {
                     console.log('reconnect to wallet node');
                     setTimeout(this.websocket.openWebSocket, 2000);
                 }
-            }
+            }, {}
         );
 
         this.callBackRegister.addHandler('Update', (data, response) => {
             console.log(data);
-        });
+        }, {});
 
 
         try {
 
             // Instantiate WebSocket object.
-            this.websocket = new SetlWebSocket('ws:', '127.0.0.1', 13535, '', this.callBackRegister, true);
+            this.websocket = new SetlWebSocket('ws:', '127.0.0.1', 13535, '', this.callBackRegister, true, ['authenticate']);
 
             this.websocket.openWebSocket();
 
@@ -83,7 +83,7 @@ export class WalletNodeSocketService {
                                     }
 
                                 }
-                            }
+                            }, {}
                         );
 
                         // Send Initialise Message
@@ -100,12 +100,12 @@ export class WalletNodeSocketService {
 
                         this.websocket.sendRequest(Request);
                     }
-                }
+                }, {}
             );
 
 
         } catch (e) {
-            console.log("Connection failed!");
+            console.log('Connection failed!');
         }
     }
 
