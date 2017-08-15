@@ -8,12 +8,11 @@
   outline: 0; }
 
 .content-area {
-  background: #f7f8fd; }
+  background: #f9f9f9; }
 
 .header-breadcrumbs {
   padding: 20px;
-  padding-bottom: 10px;
-  border-top: 1px solid #dce1eb; }
+  padding-bottom: 10px; }
   .header-breadcrumbs h1 {
     margin-top: 0;
     font-weight: bold;
@@ -254,6 +253,9 @@ clr-tab-content {
   padding: 20px;
   border: 1px solid #dce1eb; }
 
+clr-tab-content.active:first-of-type {
+  border-top-left-radius: 0; }
+
 clr-tabs {
   float: left;
   width: 100%; }
@@ -289,7 +291,7 @@ clr-tab-content.active {
   box-shadow: 0 0 0 #007cbb inset;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  border: 1px solid #cccccc;
+  border: 1px solid #dce1eb;
   border-bottom: 1px solid white;
   background: white;
   font-size: 13px; }
@@ -299,7 +301,7 @@ clr-tab-content.active {
 
 .panel-body clr-tab-content.active {
   margin: 0;
-  border: 1px solid #cccccc; }
+  border: 1px solid #dce1eb; }
 
 .panel-body clr-tab-content.active:first-of-type {
   border-top-left-radius: 0; }
@@ -312,7 +314,7 @@ clr-tab-content.active {
   margin-bottom: 10px; }
 
 .nav {
-  box-shadow: 0 0 0 #ccc inset;
+  box-shadow: 0 0 0 #dce1eb inset;
   height: 45px; }
   .nav .nav-item {
     margin-right: 10px; }
@@ -403,8 +405,7 @@ app-navigation-topbar {
   height: 75px; }
 
 .table {
-  margin-top: 0;
-  background: red; }
+  margin-top: 0; }
 
 /* Fix for button groups in tables. */
 td > .btn-group {
