@@ -1,4 +1,4 @@
-.animate, header .header-actions .nav-link.nav-icon, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .animate:hover, header .header-actions .nav-link.nav-icon:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .animate:focus, header .header-actions .nav-link.nav-icon:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus {
+.animate, header .header-actions .nav-link.nav-icon, header .header-actions .wallet, header .header-actions .wallet .ui-select-container, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle, header .header-actions .wallet .ui-select-search, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .animate:hover, header .header-actions .nav-link.nav-icon:hover, header .header-actions .wallet:hover, header .header-actions .wallet .ui-select-container:hover, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:hover, header .header-actions .wallet .ui-select-search:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .animate:focus, header .header-actions .nav-link.nav-icon:focus, header .header-actions .wallet:focus, header .header-actions .wallet .ui-select-container:focus, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:focus, header .header-actions .wallet .ui-select-search:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus {
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
@@ -23,8 +23,7 @@
       margin-right: 5px; }
 
 body {
-  background: #f7f8fd;
-  min-width: 769px; }
+  background: #f9f9f9; }
 
 header {
   background-color: #282b38;
@@ -89,6 +88,13 @@ header {
     margin-top: 13px;
     padding-left: 15px;
     margin-right: 15px; }
+    header .header-actions .wallet .wallet-tile {
+      color: #222;
+      position: absolute;
+      top: 21px;
+      font-size: 10px;
+      margin-left: 13px;
+      z-index: 10; }
     header .header-actions .wallet .ui-select-container .dropdown .open input {
       margin-top: 6px;
       width: 200px; }
@@ -102,6 +108,15 @@ header {
           width: 30px;
           height: 30px;
           background: red; }
+    header .header-actions .wallet .ui-select-placeholder {
+      padding-top: 8px; }
+    header .header-actions .wallet .ui-select-search {
+      min-height: 40px;
+      margin-top: 6px;
+      padding-top: 12px !important;
+      font-size: 12.5px;
+      font-weight: bold;
+      border-radius: 3px; }
   header .branding, header .header-nav, header .search-box, header .search, header .settings, header .header-actions, header .divider {
     height: 75px; }
   header .branding {
@@ -181,7 +196,7 @@ header .header-actions, header .branding + .search {
   .sidenav .sidenav-content .nav-list .nav-link:hover {
     background: #282b38; }
   .sidenav .label.label-success, .sidenav a.label.label-success {
-    background: rgba(26, 179, 148, 0.17);
+    background: rgba(87, 165, 227, 0.2);
     color: #57a5e3;
     border: 1px solid #57a5e3;
     margin-right: 0;
@@ -325,7 +340,7 @@ clr-tab-content.active {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 1px solid #dce1eb;
-    border-bottom: 0px; }
+    border-bottom: 0; }
   .nav .nav-link.btn {
     padding-left: 20px;
     padding-right: 20px;
@@ -432,9 +447,6 @@ td > .btn-group {
   border: 1px solid #a4c4fa !important;
   background: white; }
 
-.ui-select-match .btn a:hover {
-  border: 1px solid white !important; }
-
 .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
   box-shadow: 0 0 0 0 #0094d2 inset; }
 
@@ -447,12 +459,6 @@ td > .btn-group {
   border-color: #56a4df;
   background-color: #56a4df;
   color: #fff; }
-
-.ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
-  line-height: 40px; }
-
-.ui-select-choices-row > a {
-  line-height: 24px; }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
   line-height: 24px !important; }
