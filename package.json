@@ -23,7 +23,7 @@
         "@angular/platform-browser-dynamic": "^4.0.0",
         "@angular/router": "^4.0.0",
         "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.30",
-        "@setl/core-login": "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.6",
+        "@setl/core-login": "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.7",
         "@setl/core-req-services": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1",
         "@setl/core-store": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#1.0.1",
         "@setl/core-useradmin": "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.4",
