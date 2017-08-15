@@ -1,11 +1,35 @@
 import _ from 'lodash';
 import sha256 from 'sha256';
-var GibberishAES = require('./gibberish-aes-1.0.0.min');
-import sodium  from 'libsodium-wrappers';
+import sodium from 'libsodium-wrappers';
 
-import './jsxcompressor/jsxcompressor.min';
+const GibberishAES = (<any>window).GibberishAES;
+const JXG = (<any>window).JXG;
 
 export class SetlWebSocket {
+    protocol: string;
+    hostName: string;
+    port: string;
+    route: string;
+    callbackHandler: any;
+    requiredAuthentication: any;
+    authMessageTypes: any;
+    url: string;
+    initialProtocol: string;
+    intialHostname: string;
+    intialPort: string;
+    initialRoute: string;
+    haveTriedWs: boolean;
+    webSocketConn: any;
+    initMessageID: any;
+    encryption: any;
+    messageQueue: Array<any>;
+    initialising: boolean;
+    authTokenName: any;
+    authToken: any;
+    authenticated: boolean;
+    hasConnected: boolean;
+    connectTries: number;
+
     constructor(protocol, hostname, port, route, callbackHandler, requiredAuthentication, authMessageTypes) {
         this.protocol = protocol || ((window.location.protocol === 'https') ? 'wss' : 'ws');
         this.hostName = hostname || window.location.hostname;
@@ -31,7 +55,7 @@ export class SetlWebSocket {
         this.messageQueue = [];
         this.initialising = false;
         this.authTokenName = false;
-        this.authToken = "";
+        this.authToken = '';
 
         this.authenticated = false;
         this.hasConnected = false;
@@ -44,30 +68,30 @@ export class SetlWebSocket {
     }
 
     initResponse(id, message, userData) {
-        let thisData = _.get(message, "data", false);
-        if (thisData != false) {
+        const thisData = _.get(message, 'data', false);
+        if (thisData !== false) {
             this.encryption.serverPublicKey = thisData;
 
-            let shared = sodium.crypto_scalarmult(this.encryption.mySecret, sodium.from_hex(this.encryption.serverPublicKey));
+            const shared = sodium.crypto_scalarmult(this.encryption.mySecret, sodium.from_hex(this.encryption.serverPublicKey));
             this.encryption.shareKey = sha256(sodium.to_hex(shared));
         }
     }
 
     defaultOnOpen() {
-        console.info("Connection established to web socket server!");
+        console.log('Connection established to web socket server!');
     }
 
-    defaultOnClose() {
-        console.log("Connection closed! No longer connected to web socket server");
+    defaultOnClose(e) {
+        console.log('Connection closed! No longer connected to web socket server');
 
         this.webSocketConn = false;
-        this.intialising = false;
+        this.initialising = false;
         this.authenticated = false;
         this.authTokenName = false;
         this.authToken = '';
     }
 
-    defaultOnError() {
+    defaultOnError(e) {
         console.log('Error detail: ' + e.data);
     }
 
@@ -106,8 +130,7 @@ export class SetlWebSocket {
         try {
             console.log('%cOn Message : %c' + _.defaultTo(_.get(message, 'Request.MessageBody.RequestName', undefined),
                     _.get(message, 'Request.MessageType', undefined)), 'color: green', 'color: black');
-        }
-        catch (e) {
+        } catch (e) {
             console.log('Fail to get message RequestName/MessageType');
         }
 
@@ -136,9 +159,8 @@ export class SetlWebSocket {
 
     sendRequest(request) {
         try {
-            console.log("%csendRequest() : %c" + _.get(request, 'MessageBody.RequestName'), 'color: #229b9c', 'color: black');
-        }
-        catch (e) {
+            console.log('%csendRequest() : %c' + _.get(request, 'MessageBody.RequestName'), 'color: #229b9c', 'color: black');
+        } catch (e) {
         }
 
         /**
@@ -150,12 +172,11 @@ export class SetlWebSocket {
         if (
             (this.initialising) ||
             (   this.requiredAuthentication && (!this.authenticated) &&
-                (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', "")).toLowerCase()))
+                (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', '')).toLowerCase()))
             )
         ) {
             this.messageQueue.push(request);
-        }
-        else {
+        } else {
             if (!this.webSocketConn) {
                 this.messageQueue.push(request);
                 this.openWebSocket();
@@ -166,7 +187,7 @@ export class SetlWebSocket {
                 }
 
                 let messageText = JSON.stringify(request);
-                if (this.encryption.shareKey != false) {
+                if (this.encryption.shareKey !== false) {
 
                     messageText = GibberishAES.enc(messageText, this.encryption.shareKey);
                 }
@@ -176,7 +197,7 @@ export class SetlWebSocket {
         }
     }
 
-    openWebSocket(userCallback, userCallbackData) {
+    openWebSocket(userCallback?: any, userCallbackData?: any) {
         if (WebSocket === undefined) {
             return false;
         }
@@ -194,15 +215,14 @@ export class SetlWebSocket {
                         // Try none-secure connection on every second try: this.connectTries % 2 == 0
                         if (
                             (!this.hasConnected) && (this.initialProtocol === 'wss:') && (this.connectTries > 1) &&
-                            (this.connectTries % 2 == 0)
+                            (this.connectTries % 2 === 0)
                         ) {
 
-                            if ((this.connectTries % 4 != 0)) { // not sure why we doing this
+                            if ((this.connectTries % 4 !== 0)) { // not sure why we doing this
                                 this.url = 'ws://' + this.initialProtocol + ':80' + this.initialRoute;
                                 this.haveTriedWs = true;
 
-                            }
-                            else {
+                            } else {
                                 this.url = this.initialProtocol + '//' + this.intialHostname + ':' + this.intialPort +
                                     '/' + this.initialRoute;
                             }
@@ -221,7 +241,7 @@ export class SetlWebSocket {
                         return false;
                     }
 
-                    if (this.webSocketConn.readyState == WebSocket.CLOSED) {
+                    if (this.webSocketConn.readyState === WebSocket.CLOSED) {
                         // Socket failed to open.
                         this.initialising = false;
                         this.authenticated = false;
@@ -238,7 +258,6 @@ export class SetlWebSocket {
                     this.encryption.serverPublicKey = false;
                     this.encryption.Curve = false;
 
-                    let _this = this;
                     // Handle when the websocket connection is opened
                     this.webSocketConn.onopen = () => {
                         this.hasConnected = true;
@@ -248,7 +267,6 @@ export class SetlWebSocket {
                         // todo
                         // callHandler funciton
                         this.initMessageID = this.callbackHandler.uniqueIDValue;
-                        let request = {};
                         this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
                         this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
 
@@ -275,14 +293,19 @@ export class SetlWebSocket {
                             {}
                         );
 
-                        request.MessageType = 'Initialise';
-                        request.MessageHeader = '';
-                        request.RequestID = this.initMessageID;
-                        request.MessageBody = {};
+                        const messageBody = {
+                            pub: this.encryption.myPublicKey,
+                        };
 
-                        request.MessageBody.pub = this.encryption.myPublicKey;
+                        const request = {
+                            MessageType: 'Initialise',
+                            MessageHeader: '',
+                            RequestID: this.initMessageID,
+                            MessageBody: messageBody,
+                        };
 
-                        let messageText = JSON.stringify(request);
+
+                        const messageText = JSON.stringify(request);
 
                         this.webSocketConn.send(messageText);
 
@@ -290,7 +313,7 @@ export class SetlWebSocket {
                     };
 
                     this.webSocketConn.onclose = (e) => {
-                        defaultOnClose(e);
+                        this.defaultOnClose(e);
 
                         if (this.hasConnected) {
                             if (this.callbackHandler) {
@@ -309,9 +332,9 @@ export class SetlWebSocket {
 
                     this.webSocketConn.onmessage = (e) => {
                         this.defaultOnMessage(e);
-                    }
+                    };
                 } catch (e) {
-                    console.log("%cError : %c" + e.message + ", socket.js, line " + e.lineNumber,
+                    console.log('%cError : %c' + e.message + ', socket.js, line ' + e.lineNumber,
                         'color: #229b9c', 'color: black');
                 }
             }

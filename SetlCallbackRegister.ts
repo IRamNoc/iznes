@@ -1,10 +1,15 @@
+import _ from 'lodash';
+
 export class SetlCallbackRegister {
+    callbackCache: any;
+    uniqueID: any;
+    maxReservedID: any;
+
     constructor() {
         this.callbackCache = {};
-        this.uniqueID;
         this.maxReservedID = 999;
 
-        this.uniqueID = this.maxReservedID + 1; //Initial value.
+        this.uniqueID = this.maxReservedID + 1; // Initial value.
     }
 
     get uniqueIDValue() {
@@ -26,7 +31,7 @@ export class SetlCallbackRegister {
             return id;
         }
         catch (e) {
-
+            console.log(e);
         }
 
         return -1;
@@ -47,9 +52,9 @@ export class SetlCallbackRegister {
                     try {
                         thisCallbackObject = this.callbackCache[id][index];
 
-                        if (thisCallbackObject.Callback == callBack) {
+                        if (thisCallbackObject.Callback === callBack) {
                             delete this.callbackCache[id][index];
-                            rVal++
+                            rVal++;
                         }
                     } catch (e) {
                         rVal = -1;
@@ -93,7 +98,7 @@ export class SetlCallbackRegister {
         }
 
         let rVal = 0;
-        let thisID = id;
+        const thisID = id;
 
         if (this.callbackCache[id]) {
             let thisCallbackObject;
