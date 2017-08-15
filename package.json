@@ -8,7 +8,5 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@setl/utils": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git"
-  }
+  "dependencies": {}
 }
