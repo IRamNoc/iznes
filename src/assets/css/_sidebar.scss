@@ -1,3 +1,4 @@
+// left sidebar
 .sidenav {
     width: 230px;
     background: $setl;
@@ -105,4 +106,12 @@
 
     }
 
+}
+
+// right sidebar
+.ng-sidebar {
+    width: 300px;
+    background: white;
+    border-left: 1px solid #999;
+    padding: 25px;
 }
