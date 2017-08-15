@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {
+    Router,
     CanActivate,
     ActivatedRouteSnapshot,
-    RouterStateSnapshot
+    RouterStateSnapshot,
+
 } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {NgRedux} from '@angular-redux/store';
@@ -14,7 +16,8 @@ export class LoginGuardService implements CanActivate {
     isLogin: boolean;
 
     constructor(private ngRedux: NgRedux<any>,
-                private toasterService: ToasterService) {
+                private toasterService: ToasterService,
+                private router: Router) {
         this.isLogin = false;
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -24,7 +27,9 @@ export class LoginGuardService implements CanActivate {
                 state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
         if (!this.isLogin) {
-            this.toasterService.pop('warning', 'test');
+            this.toasterService.pop('warning', 'Session Expired!');
+            this.router.navigateByUrl('');
+
         }
         return this.isLogin;
     }
