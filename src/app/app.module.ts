@@ -37,7 +37,7 @@ import {HomeComponent} from './home/home.component';
 import {UserAdminModule} from '@setl/core-useradmin';
 
 /* Dropdown Directive. */
-import {DropdownDirective} from './core/dropdown/dropdown.directive';
+import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
 
 /**
  * App main state
