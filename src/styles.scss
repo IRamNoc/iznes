@@ -9,6 +9,7 @@ $setlSelected: #57a5e3;
 @import 'assets/css/forms';
 @import 'assets/css/tabs';
 @import 'assets/css/utils/ngSelect';
+@import '../node_modules/angular2-toaster/toaster';
 
 .color-square {
     display: inline-block;
@@ -56,10 +57,6 @@ td > .btn-group {
     background: white;
 }
 
-.ui-select-match .btn a:hover {
-    border: 1px solid white !important;
-}
-
 .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
     box-shadow: 0 0 0 0 #0094d2 inset;
 }
@@ -71,9 +68,9 @@ td > .btn-group {
 }
 
 .btn.btn-primary, .btn-primary .btn {
-    border-color: rgb(86, 164, 223);
     background-color: rgb(86, 164, 223);
     color: #fff;
+    border-color: rgb(86, 164, 223);
 }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {

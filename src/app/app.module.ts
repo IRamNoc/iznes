@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
@@ -13,13 +14,14 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
 /* Core services*/
-import {MyUserService} from '@setl/core-req-services';
+import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
 
 /* Routes. */
 import {ROUTES} from './app.routes';
 
 /* SETL Modules. */
 import {SetlLoginModule} from '@setl/core-login';
+import {LoginGuardService} from '@setl/core-login';
 
 /* Components. */
 import {AppComponent} from './app.component';
@@ -40,6 +42,11 @@ import {UserAdminModule} from '@setl/core-useradmin';
 import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
 
 /**
+ * Toaster service
+ */
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
+/**
  * App main state
  */
 import {NgRedux, NgReduxModule} from '@angular-redux/store';
@@ -51,6 +58,11 @@ import {
 } from './store/app.store';
 
 import {AppState} from './store/app.reducer';
+
+/**
+ * Environment
+ */
+import {environment} from '../environments/environment';
 
 
 @NgModule({
@@ -69,6 +81,7 @@ import {AppState} from './store/app.reducer';
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpModule,
         FormsModule,
         ClarityModule.forRoot(),
@@ -79,12 +92,29 @@ import {AppState} from './store/app.reducer';
         SidebarModule,
         NgReduxModule,
         ReactiveFormsModule,
+        ToasterModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        MemberSocketService,
+
+        {
+            provide: MemberSocketService,
+
+            useFactory() {
+
+                return new MemberSocketService(
+                    environment.MEMBER_NODE_CONNECTION.host,
+                    environment.MEMBER_NODE_CONNECTION.port,
+                    environment.MEMBER_NODE_CONNECTION.path
+                );
+            }
+        },
+
         WalletNodeSocketService,
-        MyUserService
+        MyUserService,
+        WalletNodeRequestService,
+        LoginGuardService,
+        ToasterService
     ],
     bootstrap: [AppComponent]
 })
