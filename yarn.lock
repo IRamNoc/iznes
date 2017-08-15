@@ -4,7 +4,7 @@
 
 "@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#352576848381fdaf1b764b55d656916a49707073"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#8ef0968cf8054a57c0f08910d0d72f2aadc27d83"
   dependencies:
     ramda "^0.24.1"
     redux-saga "^0.15.6"

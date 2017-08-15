@@ -8,6 +8,11 @@
     padding: 10px;
 }
 
+#logo-image {
+    width: 75%;
+    margin-top: 50px;
+}
+
 .login-container {
     width: 30%;
     margin: 20px auto 0;
@@ -21,7 +26,7 @@ form .form-group, .form .form-group {
 }
 
 .login-subheading {
-    font-size: 45px;
+    font-size: 35px;
     line-height: 70px;
     font-weight: 300;
 }
@@ -65,6 +70,10 @@ form .form-group > .radio-inline, form .form-group > button, form .form-group > 
 
 form .form-group input[type=text].error, form .form-group input[type=password].error {
     border: 1px solid #ebafa6;
+}
+
+.login-subpara {
+    margin-top: 20px;
 }
 
 /**
