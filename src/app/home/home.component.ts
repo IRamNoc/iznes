@@ -13,6 +13,8 @@ export class HomeComponent {
 
     public users;
 
+    private tabs:Array<any>;
+
     basic: boolean = false;
 
     public constructor() {
@@ -104,6 +106,25 @@ export class HomeComponent {
             },
         ];
 
+        this.tabs = [
+            {
+                "title": "tab1",
+                "content": "tabcont1"
+            },
+            {
+                "title": "tab2",
+                "content": "tabcont2"
+            },
+            {
+                "title": "tab3",
+                "content": "tabcont3"
+            },
+            {
+                "title": "tab4",
+                "content": "tabcont4"
+            }
+        ];
+
         //this.total = this.users.length;
         //this.total = 10;
     }
@@ -121,7 +142,7 @@ export class HomeComponent {
     }
 
     onTabContentActivated () {
-        
+
     }
 
 }

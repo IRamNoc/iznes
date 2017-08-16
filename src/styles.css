@@ -317,7 +317,29 @@ form, .form {
 .select::after {
   top: 13px; }
 
-clr-tab-content {
+/**
+ * New Tabs.
+ */
+clr-tabs.clr-tabs clr-tab-content {
+  display: none; }
+
+clr-tab > .nav-link.active {
+  background: white !important;
+  color: #383d48 !important;
+  box-shadow: 0 0 0 white inset !important;
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border: 1px solid #dce1eb !important;
+  border-bottom: 0px !important; }
+
+clr-tab > .nav-link {
+  margin-right: 0px !important; }
+
+/**
+ * Old Tabs.
+ */
+clr-tab-content,
+clr-tabs > section {
   float: left;
   width: calc(100% - 40px);
   margin: 20px;
@@ -325,6 +347,10 @@ clr-tab-content {
   border-radius: 4px;
   padding: 20px;
   border: 1px solid #dce1eb; }
+
+clr-tabs > section {
+  margin-top: 0;
+  border-top-left-radius: 0px; }
 
 clr-tab-content.active:first-of-type {
   border-top-left-radius: 0; }

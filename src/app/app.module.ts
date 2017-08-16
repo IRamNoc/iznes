@@ -24,8 +24,8 @@ import {SetlMessagesModule} from '@setl/core-messages';
 import {UserAdminModule} from '@setl/core-useradmin';
 
 /* Internal App Modules. */
-import { AppCoreModule } from './core/app-core.module';
-import { AppViewsModule } from './app-views.module';
+import {AppCoreModule} from './core/app-core.module';
+import {AppViewsModule} from './app-views.module';
 
 /* Internal Components. */
 import {AppComponent} from './app.component';
