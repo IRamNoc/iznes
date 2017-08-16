@@ -7,8 +7,6 @@ import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 
-import {SidebarModule} from 'ng-sidebar';
-
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
@@ -27,20 +25,24 @@ import {SetlMessagesModule} from '@setl/core-messages';
 /* Components. */
 import {AppComponent} from './app.component';
 
-import {FormElementsComponent} from './ui-elements/form-elements.component';
-import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
-import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
-import {NavigationTopbarComponent} from './core/navigation-topbar/navigation-topbar.component';
-import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-sidebar.component';
+// import {FormElementsComponent} from './ui-elements/form-elements.component';
+// import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
+// import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
+// import {NavigationTopbarComponent} from './core/navigation-topbar/navigation-topbar.component';
+// import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-sidebar.component';
 
 import {SelectModule} from 'ng2-select';
-import {HomeComponent} from './home/home.component';
+// import {HomeComponent} from './home/home.component';
 
 /* UserAdmin Module. */
 import {UserAdminModule} from '@setl/core-useradmin';
 
 /* Dropdown Directive. */
-import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
+// import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
+
+/* App Modules. */
+import { AppCoreModule } from './core/app-core.module';
+import { AppViewsModule } from './app-views.module';
 
 /**
  * Toaster service
@@ -68,19 +70,11 @@ import {environment} from '../environments/environment';
 
 @NgModule({
     declarations: [
-        /* Directives. */
-        DropdownDirective,
-
         /* Components. */
         AppComponent,
-        FormElementsComponent,
-        BasicLayoutComponent,
-        BlankLayoutComponent,
-        HomeComponent,
-        NavigationTopbarComponent,
-        NavigationSidebarComponent
     ],
     imports: [
+        /* Vendor/Angular */
         BrowserModule,
         BrowserAnimationsModule,
         HttpModule,
@@ -88,12 +82,17 @@ import {environment} from '../environments/environment';
         ClarityModule.forRoot(),
         RouterModule.forRoot(ROUTES),
         SelectModule,
-        SetlLoginModule,
-        UserAdminModule,
-        SidebarModule,
+        ToasterModule,
         NgReduxModule,
         ReactiveFormsModule,
-        ToasterModule,
+
+        /* Internal modules. */
+        AppCoreModule,
+        AppViewsModule,
+
+        /* External modules */
+        SetlLoginModule,
+        UserAdminModule,
         SetlMessagesModule
     ],
     providers: [

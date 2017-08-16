@@ -4,25 +4,29 @@
  * where to import page components. Also don't forget to export them.
  **/
 
-/* Core imports. */
-import {
-    NgModule,
-    CommonModule
-} from '@angular/core';
+ /* Core imports. */
+ import {NgModule} from '@angular/core';
+ import {CommonModule} from '@angular/common';
+ import {RouterModule} from '@angular/router';
+ import {ClarityModule} from 'clarity-angular';
 
 /* Components. */
 import {FormElementsComponent} from './ui-elements/form-elements.component';
+import {HomeComponent} from './home/home.component';
 
 @NgModule({
-    declarations: [
-        FormElementsComponent
-    ],
     imports: [
         CommonModule,
-        FormElementsComponent
+        RouterModule,
+        ClarityModule
+    ],
+    declarations: [
+        FormElementsComponent,
+        HomeComponent
     ],
     exports: [
         FormElementsComponent,
+        HomeComponent
     ],
     providers: [
         /* Services. */
