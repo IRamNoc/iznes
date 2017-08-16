@@ -22,6 +22,7 @@ import {AdminWalletsTableComponent} from '@setl/core-useradmin/wallets/subcompon
 import {AdminPermissionsTableComponent} from '@setl/core-useradmin/permissions/subcomponents/permissions-table.component';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {RegisterIssuerComponent, RegisterAssetComponent, IssueAssetComponent} from '@setl/asset-servicing';
 
 describe('BasicComponent', () => {
     let component: BasicLayoutComponent;
@@ -44,7 +45,10 @@ describe('BasicComponent', () => {
                 AdminWizardComponent,
                 AdminUsersTableComponent,
                 AdminWalletsTableComponent,
-                AdminPermissionsTableComponent
+                AdminPermissionsTableComponent,
+                RegisterIssuerComponent,
+                RegisterAssetComponent,
+                IssueAssetComponent
             ],
             imports: [
                 CommonModule,

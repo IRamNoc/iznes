@@ -22,6 +22,7 @@ import {CommonModule, APP_BASE_HREF} from '@angular/common';
 import {SidebarModule} from 'ng-sidebar';
 import {SelectModule} from 'ng2-select';
 import {ClarityModule} from 'clarity-angular';
+import {RegisterIssuerComponent, RegisterAssetComponent, IssueAssetComponent} from '@setl/asset-servicing';
 
 describe('HomeComponent', () => {
     let component: HomeComponent;
@@ -45,7 +46,10 @@ describe('HomeComponent', () => {
                 AdminUsersTableComponent,
                 AdminWalletsTableComponent,
                 AdminPermissionsTableComponent,
-                BasicLayoutComponent],
+                BasicLayoutComponent,
+                RegisterIssuerComponent,
+                RegisterAssetComponent,
+                IssueAssetComponent],
             imports: [
                 CommonModule,
                 RouterModule.forRoot(ROUTES),
