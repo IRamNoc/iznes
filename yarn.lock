@@ -166,9 +166,9 @@
   version "1.0.7"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#ae5aae4f176d3e35867626e461a4a43b1f1829c2"
 
-"@setl/core-messages@http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git":
-  version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#d2c5e8ace15ca9e7454e26aa6a3b57debbbe377b"
+"@setl/core-messages@http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#1.0.1":
+  version "1.0.1"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#00956c2f9d45b272c11af4e2e2eac77fd0686c82"
 
 "@setl/core-req-services@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1":
   version "1.0.0"
@@ -196,9 +196,9 @@
     clarity-ui "^0.9.16"
     ng2-select "^1.2.0"
 
-"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
-  version "1.0.3"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#8864bb4fc2276e0bfffc757587080aedea56b728"
+"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git", "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
+  version "1.0.4"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#89a747b75346aca612060a24156f8323d4adb63c"
   dependencies:
     libsodium-wrappers "^0.5.2"
     lodash "^4.17.4"
@@ -212,18 +212,18 @@
     ramda "^0.24.1"
     redux-saga "^0.15.6"
 
-"@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git":
+"@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#51aaf1214f210262e5eaedf1f6f1489d48c87da7"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#de743227735e290f7520aae19619d68830688221"
   dependencies:
     libsodium-wrappers "^0.5.2"
 
-"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.1":
-  version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e35265d842196efd6317320c926659f46f792c07"
+"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.2":
+  version "1.0.2"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e893882c1d20ecdb0eb028022da70a9a6f844661"
   dependencies:
-    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
-    "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git"
+    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4"
+    "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0"
     lodash "^4.17.4"
 
 "@types/jasmine@*", "@types/jasmine@~2.5.53":
@@ -587,8 +587,8 @@ babel-types@^6.18.0, babel-types@^6.25.0:
     to-fast-properties "^1.0.1"
 
 babylon@^6.17.2, babylon@^6.17.4:
-  version "6.17.4"
-  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.17.4.tgz#3e8b7402b88d22c3423e137a1577883b15ff869a"
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
 backo2@1.0.2:
   version "1.0.2"
