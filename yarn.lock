@@ -162,9 +162,9 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.7":
-  version "1.0.7"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#ae5aae4f176d3e35867626e461a4a43b1f1829c2"
+"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.8":
+  version "1.0.8"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#987c73914a131b7ee0867e3e354e12fcf9ae722c"
 
 "@setl/core-messages@http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#1.0.1":
   version "1.0.1"
@@ -4181,8 +4181,8 @@ relateurl@0.2.x:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
 remove-trailing-separator@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.0.2.tgz#69b062d978727ad14dc6b56ba4ab772fd8d70511"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
 
 renderkid@^2.0.1:
   version "2.0.1"
