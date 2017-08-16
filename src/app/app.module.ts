@@ -22,6 +22,7 @@ import {ROUTES} from './app.routes';
 /* SETL Modules. */
 import {SetlLoginModule} from '@setl/core-login';
 import {LoginGuardService} from '@setl/core-login';
+import {SetlMessagesModule} from '@setl/core-messages';
 
 /* Components. */
 import {AppComponent} from './app.component';
@@ -77,7 +78,7 @@ import {environment} from '../environments/environment';
         BlankLayoutComponent,
         HomeComponent,
         NavigationTopbarComponent,
-        NavigationSidebarComponent,
+        NavigationSidebarComponent
     ],
     imports: [
         BrowserModule,
@@ -92,7 +93,8 @@ import {environment} from '../environments/environment';
         SidebarModule,
         NgReduxModule,
         ReactiveFormsModule,
-        ToasterModule
+        ToasterModule,
+        SetlMessagesModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

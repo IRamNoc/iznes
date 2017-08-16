@@ -19,6 +19,7 @@ import {AdminWizardComponent} from '@setl/core-useradmin';
  * Login Guard service
  */
 import {LoginGuardService} from '@setl/core-login';
+import {SetlMessagesComponent} from '@setl/core-messages';
 
 
 export const ROUTES: Routes = [
@@ -41,6 +42,9 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'home', component: HomeComponent, canActivate: [LoginGuardService]
+            },
+            {
+                path: 'messages', component: SetlMessagesComponent, canActivate: [LoginGuardService]
             },
         ],
         canActivate: [LoginGuardService]

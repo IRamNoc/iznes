@@ -166,6 +166,10 @@
   version "1.0.7"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#ae5aae4f176d3e35867626e461a4a43b1f1829c2"
 
+"@setl/core-messages@http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#d2c5e8ace15ca9e7454e26aa6a3b57debbbe377b"
+
 "@setl/core-req-services@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1":
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#a91c2028c5c66bbd4f3e120394853e1ee75f1c9e"
