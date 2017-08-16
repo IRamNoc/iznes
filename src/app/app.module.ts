@@ -22,10 +22,11 @@ import {SetlLoginModule} from '@setl/core-login';
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
 import {UserAdminModule} from '@setl/core-useradmin';
+import {AssetServicingModule} from '@setl/asset-servicing';
 
 /* Internal App Modules. */
-import { AppCoreModule } from './core/app-core.module';
-import { AppViewsModule } from './app-views.module';
+import {AppCoreModule} from './core/app-core.module';
+import {AppViewsModule} from './app-views.module';
 
 /* Internal Components. */
 import {AppComponent} from './app.component';
@@ -79,7 +80,8 @@ import {environment} from '../environments/environment';
         /* External modules */
         SetlLoginModule,
         UserAdminModule,
-        SetlMessagesModule
+        SetlMessagesModule,
+        AssetServicingModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
