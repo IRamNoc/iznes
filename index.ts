@@ -1,1 +1,2 @@
-export {MessagesModule} from './messages.module';
+export {SetlMessagesModule} from './messages.module';
+export {SetlMessagesComponent} from './messages/messages.component';

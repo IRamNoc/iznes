@@ -13,5 +13,5 @@ import {SetlMessagesComponent} from './messages/messages.component';
         SetlMessagesComponent
     ]
 })
-export class MessagesModule {
+export class SetlMessagesModule {
 }
