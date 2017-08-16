@@ -22,6 +22,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {environment} from '../environments/environment';
 import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
+import {AssetServicingModule} from '@setl/asset-servicing';
 
 describe('AppComponent', () => {
     beforeEach(async(() => {
@@ -30,7 +31,6 @@ describe('AppComponent', () => {
                 AppComponent
             ],
             imports: [
-                /* Vendor/Angular */
                 BrowserModule,
                 BrowserAnimationsModule,
                 HttpModule,
@@ -41,15 +41,13 @@ describe('AppComponent', () => {
                 ToasterModule,
                 NgReduxModule,
                 ReactiveFormsModule,
-
-                /* Internal modules. */
                 AppCoreModule,
                 AppViewsModule,
-
-                /* External modules */
                 SetlLoginModule,
                 UserAdminModule,
-                SetlMessagesModule
+                SetlMessagesModule,
+                AssetServicingModule
+
             ],
             providers: [
                 {provide: LocationStrategy, useClass: HashLocationStrategy},

@@ -16,6 +16,15 @@ import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 
 /**
+ * Asset serving module
+ */
+import {
+    RegisterIssuerComponent,
+    RegisterAssetComponent,
+    IssueAssetComponent
+} from '@setl/asset-servicing';
+
+/**
  * Login Guard service
  */
 import {LoginGuardService} from '@setl/core-login';
@@ -58,6 +67,18 @@ export const ROUTES: Routes = [
                 path: 'form', component: FormElementsComponent,
                 canActivate: [LoginGuardService]
             },
+
+        ],
+        canActivate: [LoginGuardService]
+    },
+
+    /* User Admin Pages. */
+    {
+        path: 'asset-servicing', component: BasicLayoutComponent,
+        children: [
+            {path: 'register-issue', component: RegisterIssuerComponent, canActivate: [LoginGuardService]},
+            {path: 'register-asset', component: RegisterAssetComponent, canActivate: [LoginGuardService]},
+            {path: 'issue-asset', component: IssueAssetComponent, canActivate: [LoginGuardService]}
 
         ],
         canActivate: [LoginGuardService]
