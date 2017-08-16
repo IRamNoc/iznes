@@ -1,3 +1,32 @@
-<p>
-  register-issuer works!
-</p>
+<div class="header-breadcrumbs">
+  <h1><i class="fa fa-users"></i> Register Issuer</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+  <div class="card">
+    <div class="card-block">
+      <form>
+        <section class="form-block">
+          <div class="form-group">
+            <label for="issuer-identifier">Issuer Identifier</label>
+            <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45">
+          </div>
+          <div class="form-group">
+            <label class="control-label">
+              Issuer Address
+            </label>
+            <ng-select
+              (selected)="selected('issuerAddress', $event.value)"
+              (removed)="removed('issueAddress')"
+              [items]="walletAddresses"
+              [allowClear]="true"
+              placeholder="Select Issuer Address">
+            </ng-select>
+          </div>
+          <button type="submit" class="btn btn-primary">Register Issuer</button>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>

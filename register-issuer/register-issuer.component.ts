@@ -1,15 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-register-issuer',
-  templateUrl: './register-issuer.component.html',
-  styleUrls: ['./register-issuer.component.css']
+    selector: 'app-register-issuer',
+    templateUrl: './register-issuer.component.html',
+    styleUrls: ['./register-issuer.component.css']
 })
 export class RegisterIssuerComponent implements OnInit {
 
-  constructor() { }
+    walletAddresses: Array<string>;
 
-  ngOnInit() {
-  }
+    constructor() {
+        this.walletAddresses = [
+            'adssds',
+            'bdssds',
+            'cdssds',
+            'ddssds',
+            'edssds',
+        ];
+    }
+
+    ngOnInit() {
+    }
 
 }
