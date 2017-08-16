@@ -240,6 +240,9 @@ header .header-actions, header .branding + .search {
 
 form, .form {
   padding: 10px; }
+  form .btn-secondary .btn:hover, .form .btn-secondary .btn:hover {
+    border: 0px solid white !important;
+    background: white; }
   form .form-group, form .form-group.row, .form .form-group, .form .form-group.row {
     padding-left: 0px;
     margin-bottom: 10px; }
@@ -398,8 +401,6 @@ clr-tab-content.active {
     padding-left: 20px;
     padding-right: 20px;
     height: 45px; }
-  .nav .nav-item {
-    margin-right: 10px; }
   .nav .nav-item.active > .nav-link {
     background: white;
     color: #383d48;

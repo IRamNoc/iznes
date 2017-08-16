@@ -4595,15 +4595,6 @@ socketcluster-client@^6.3.0:
     sc-formatter "~3.0.0"
     ws "3.1.0"
 
-"socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.0":
-  version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#0511b7bbb141fb1b5d64aee8e73949e9f0d5e5bd"
-  dependencies:
-    libsodium-wrappers "^0.5.2"
-    lodash "^4.17.4"
-    sha256 "^0.2.0"
-    socketcluster-client "^6.3.0"
-
 sockjs-client@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/sockjs-client/-/sockjs-client-1.1.2.tgz#f0212a8550e4c9468c8cceaeefd2e3493c033ad5"

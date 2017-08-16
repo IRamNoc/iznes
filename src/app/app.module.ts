@@ -54,7 +54,6 @@ import {AppState} from './store/app.reducer';
  */
 import {environment} from '../environments/environment';
 
-
 @NgModule({
     declarations: [
         /* Components. */
