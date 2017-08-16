@@ -21,33 +21,20 @@ import {ROUTES} from './app.routes';
 import {SetlLoginModule} from '@setl/core-login';
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
-
-/* Components. */
-import {AppComponent} from './app.component';
-
-// import {FormElementsComponent} from './ui-elements/form-elements.component';
-// import {BasicLayoutComponent} from './core/layouts/basic/basic.component';
-// import {BlankLayoutComponent} from './core/layouts/blank/blank.component';
-// import {NavigationTopbarComponent} from './core/navigation-topbar/navigation-topbar.component';
-// import {NavigationSidebarComponent} from './core/navigation-sidebar/navigation-sidebar.component';
-
-import {SelectModule} from 'ng2-select';
-// import {HomeComponent} from './home/home.component';
-
-/* UserAdmin Module. */
 import {UserAdminModule} from '@setl/core-useradmin';
 
-/* Dropdown Directive. */
-// import {DropdownDirective} from './core/menu-dropdown/menu-dropdown.directive';
-
-/* App Modules. */
+/* Internal App Modules. */
 import { AppCoreModule } from './core/app-core.module';
 import { AppViewsModule } from './app-views.module';
 
+/* Internal Components. */
+import {AppComponent} from './app.component';
+
 /**
- * Toaster service
+ * Vendor Modules and Services.
  */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import {SelectModule} from 'ng2-select';
 
 /**
  * App main state
