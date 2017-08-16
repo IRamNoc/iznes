@@ -28,6 +28,14 @@ const appSaga = SagaHelper.asyncTaskSaga;
  */
 const sagaMiddleware = createSagaMiddleware();
 
+const composeMiddlewares = window['devToolsExtension'] ? compose(
+    devtools,
+    applyMiddleware(SagaHelper.preSagaMiddleWare),
+    applyMiddleware(sagaMiddleware),
+    applyMiddleware(SagaHelper.postSagaMiddleWare)
+) : compose(
+    applyMiddleware(sagaMiddleware)
+);
 
 /**
  * Return store with middlewares
@@ -36,10 +44,7 @@ const sagaMiddleware = createSagaMiddleware();
 export function createAppStore(): Store<any> {
     return createStore<any>(
         rootReducer,
-        compose(devtools,
-            applyMiddleware(SagaHelper.preSagaMiddleWare),
-            applyMiddleware(sagaMiddleware),
-            applyMiddleware(SagaHelper.postSagaMiddleWare))
+        composeMiddlewares
     );
 }
 
