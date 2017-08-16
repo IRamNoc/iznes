@@ -1,0 +1,79 @@
+.messages {
+    padding: 0 30px;
+
+    hr {
+        border: 1px solid #eee;
+    }
+
+    .tile {
+        background: white;
+        margin: 20px auto;
+        font-size: 20px;
+        font-weight: 300;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        @extend .animate;
+
+        > div {
+            padding: 15px;
+        }
+
+        .tile-icon {
+            width: 20%;
+            background: #eeeeee;
+            text-align: center;
+            @extend .animate;
+            clr-icon {
+                margin-top: 10px;
+            }
+        }
+        .tile-text {
+            width: 80%;
+            opacity: 0.7;
+            @extend .animate;
+            h4 {
+                margin: 10px 0 0;
+                line-height: 10px;
+            }
+            span {
+                font-size: 12px;
+            }
+        }
+
+        &:hover, &.active {
+            cursor: pointer;
+            border-color: $setlSelected;
+
+            .tile-icon {
+                background: $setlSelected;
+                color: white;
+            }
+
+            .tile-text {
+                opacity: 1;
+            }
+        }
+
+        &.active {
+            .tile-text {
+                h4 {
+                    font-weight: bold;
+                }
+            }
+
+            &:hover {
+                cursor: default;
+            }
+        }
+    }
+
+    .message-grid {
+        background: white;
+
+        .datagrid-host {
+            margin-top: 20px;
+        }
+
+    }
+
+}

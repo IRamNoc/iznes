@@ -196,7 +196,7 @@
     clarity-ui "^0.9.16"
     ng2-select "^1.2.0"
 
-"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git":
+"@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git", "@setl/socketcluster-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
   version "1.0.4"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#89a747b75346aca612060a24156f8323d4adb63c"
   dependencies:
@@ -212,18 +212,18 @@
     ramda "^0.24.1"
     redux-saga "^0.15.6"
 
-"@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git":
+"@setl/vanilla-websocket-wrapper@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0":
   version "1.0.0"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#de743227735e290f7520aae19619d68830688221"
   dependencies:
     libsodium-wrappers "^0.5.2"
 
-"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.1":
-  version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e35265d842196efd6317320c926659f46f792c07"
+"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.2":
+  version "1.0.2"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e893882c1d20ecdb0eb028022da70a9a6f844661"
   dependencies:
-    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
-    "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git"
+    "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4"
+    "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0"
     lodash "^4.17.4"
 
 "@types/jasmine@*", "@types/jasmine@~2.5.53":
@@ -4181,8 +4181,8 @@ relateurl@0.2.x:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
 remove-trailing-separator@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.0.2.tgz#69b062d978727ad14dc6b56ba4ab772fd8d70511"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
 
 renderkid@^2.0.1:
   version "2.0.1"
