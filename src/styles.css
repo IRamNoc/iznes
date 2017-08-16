@@ -236,6 +236,9 @@ header .header-actions, header .branding + .search {
 
 form, .form {
   padding: 10px; }
+  form .btn-secondary .btn:hover, .form .btn-secondary .btn:hover {
+    border: 0px solid white !important;
+    background: white; }
   form .form-group, form .form-group.row, .form .form-group, .form .form-group.row {
     padding-left: 0px;
     margin-bottom: 10px; }

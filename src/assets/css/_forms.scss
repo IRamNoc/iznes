@@ -10,6 +10,11 @@ form, .form {
 
     padding: 10px;
 
+    .btn-secondary .btn:hover {
+        border: 0px solid white !important;
+        background: white;
+    }
+
     .form-group, .form-group.row {
 
         padding-left: 0px;
