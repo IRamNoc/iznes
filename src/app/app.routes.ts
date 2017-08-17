@@ -30,6 +30,7 @@ import {
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesComponent} from '@setl/core-messages';
 
+import {SetlBalancesComponent} from '@setl/core-balances';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -68,6 +69,15 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
 
+        ],
+        canActivate: [LoginGuardService]
+    },
+
+    /* Balance Reports. */
+    {
+        path: 'reports', component: BasicLayoutComponent,
+        children: [
+            {path: 'balances', component: SetlBalancesComponent, canActivate: [LoginGuardService]}
         ],
         canActivate: [LoginGuardService]
     },

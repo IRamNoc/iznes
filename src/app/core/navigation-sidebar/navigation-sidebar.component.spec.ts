@@ -9,6 +9,7 @@ import {SetlLoginComponent} from '@setl/core-login';
 import {HomeComponent} from '../../home/home.component';
 import {NavigationTopbarComponent} from '../navigation-topbar/navigation-topbar.component';
 import {SetlMessagesComponent} from '@setl/core-messages';
+import {SetlBalancesComponent} from '@setl/core-balances';
 import {FormElementsComponent} from '../../ui-elements/form-elements.component';
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
@@ -38,6 +39,7 @@ describe('NavigationSidebarComponent', () => {
                 HomeComponent,
                 SetlMessagesComponent,
                 SetlLoginComponent,
+                SetlBalancesComponent,
                 FormElementsComponent,
                 AdminUsersComponent,
                 AdminWalletsComponent,

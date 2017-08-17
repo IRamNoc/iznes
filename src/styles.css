@@ -550,12 +550,12 @@ clr-tab-content.active {
 .datagrid clr-dg-row:nth-child(odd) {
   background: #FFF; }
 .datagrid .datagrid-head {
-  border-bottom: 1px solid #ececec; }
+  border-bottom: 1px solid #ccc; }
 .datagrid .datagrid-body .datagrid-row {
   border-top: 1px solid #ececec; }
 
 .datagrid-foot {
-  border-top: 1px #ccc; }
+  border-top: 0px solid #ccc; }
 
 .datagrid .datagrid-body .datagrid-row .datagrid-cell {
   line-height: 24px; }

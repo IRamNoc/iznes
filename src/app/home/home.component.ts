@@ -50,7 +50,7 @@ export class HomeComponent {
 
     public users;
 
-    private tabs:Array<any>;
+    private tabs: Array<any>;
 
     basic: boolean = false;
 
@@ -178,12 +178,7 @@ export class HomeComponent {
 
     }
 
-<<<<<<< HEAD
     onTabContentActivated() {
-=======
-    onTabContentActivated () {
->>>>>>> 819d934bfec0172584b3f1f93c93952810044bce
-
     }
 
 }
