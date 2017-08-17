@@ -1,0 +1,8 @@
+{
+    "name": "@setl/core-balances",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-balances.git",
+    "author": "Ollie Kett <ollie.kett@setl.io>",
+    "license": "MIT"
+}

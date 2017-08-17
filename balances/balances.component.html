@@ -1,0 +1,72 @@
+<div class="header-breadcrumbs">
+    <h1>Balances</h1>
+</div>
+
+<clr-datagrid>
+    <clr-dg-column>Actions XX XXX XXXX XXXXX XX XXX XXXX XXXXX</clr-dg-column>
+    <clr-dg-column>Identifier</clr-dg-column>
+    <clr-dg-column>Asset</clr-dg-column>
+    <clr-dg-column>Total</clr-dg-column>
+    <clr-dg-column>Encumbered</clr-dg-column>
+    <clr-dg-column>Free</clr-dg-column>
+
+
+    <clr-dg-row *clrDgItems="let asset of assets">
+        <clr-dg-cell>
+            <div class="btn-group btn-sm">
+                <button class="btn"><i class="fa fa-search"></i> View</button>
+                <button class="btn"><i class="fa fa-history"></i> History</button>
+            </div>
+        </clr-dg-cell>
+        <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
+        <clr-dg-cell>{{asset.asset}}</clr-dg-cell>
+        <clr-dg-cell>{{asset.total}}</clr-dg-cell>
+        <clr-dg-cell>{{asset.encumbered}}</clr-dg-cell>
+        <clr-dg-cell>{{asset.free}}</clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>
+        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+        of {{pagination.totalItems}} assets
+        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>
+
+
+<clr-tabs class="clr-tabs">
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="reports-balances"><i class="fa fa-th-list"></i> Balances</button>
+        <clr-tab-content *clrIfActive>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Actions XX XXX XXXX XXXXX XX XXX XXXX XXXXX</clr-dg-column>
+                <clr-dg-column>Identifier</clr-dg-column>
+                <clr-dg-column>Asset</clr-dg-column>
+                <clr-dg-column>Total</clr-dg-column>
+                <clr-dg-column>Encumbered</clr-dg-column>
+                <clr-dg-column>Free</clr-dg-column>
+
+
+                <clr-dg-row *clrDgItems="let asset of assets">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button class="btn"><i class="fa fa-search"></i> View</button>
+                            <button class="btn"><i class="fa fa-history"></i> History</button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.asset}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.total}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.encumbered}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.free}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} assets
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
