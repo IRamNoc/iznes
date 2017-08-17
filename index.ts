@@ -6,3 +6,9 @@ export {
     // authentication
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication
 } from './user';
+
+export {
+    WalletState,
+    walletReducer,
+    SET_WALLET_ADDRESSES
+} from './wallet';
