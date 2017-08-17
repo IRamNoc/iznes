@@ -76,7 +76,7 @@ export const ROUTES: Routes = [
     {
         path: 'asset-servicing', component: BasicLayoutComponent,
         children: [
-            {path: 'register-issue', component: RegisterIssuerComponent, canActivate: [LoginGuardService]},
+            {path: 'register-issuer', component: RegisterIssuerComponent, canActivate: [LoginGuardService]},
             {path: 'register-asset', component: RegisterAssetComponent, canActivate: [LoginGuardService]},
             {path: 'issue-asset', component: IssueAssetComponent, canActivate: [LoginGuardService]}
 

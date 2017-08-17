@@ -37,6 +37,7 @@
         "clarity-icons": "^0.9.16",
         "clarity-ui": "^0.9.16",
         "core-js": "^2.4.1",
+        "immutable": "^3.8.1",
         "mutationobserver-shim": "0.3.2",
         "ng-sidebar": "^6.0.1",
         "ng2-select": "^1.2.0",
