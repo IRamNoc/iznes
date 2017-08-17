@@ -28,7 +28,7 @@
         "@setl/core-messages": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#1.0.2",
         "@setl/core-balances": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#1.0.0",
         "@setl/core-req-services": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#1.0.1",
-        "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#1.0.1",
+        "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#1.0.2",
         "@setl/core-useradmin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#1.0.7",
         "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#1.0.1",
         "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#1.0.4",
