@@ -28,6 +28,32 @@
 body {
   background: #f9f9f9; }
 
+table tr:nth-child(even) {
+  background: #f9f9f9; }
+table tr:nth-child(odd) {
+  background: #FFF; }
+
+.btn-sm .btn {
+  font-weight: normal;
+  letter-spacing: 0.2px;
+  text-transform: none; }
+
+.btn {
+  font-weight: normal;
+  letter-spacing: 0.2px;
+  text-transform: none;
+  border-color: #57a5e3;
+  background-color: transparent;
+  color: #57a5e3; }
+
+.btn:focus, button:focus {
+  outline: none; }
+
+.btn.btn-primary:hover, .btn-primary .btn:hover {
+  background-color: #3c739c;
+  color: #fff;
+  border-color: #3c739c; }
+
 header {
   background-color: #292e3c !important;
   flex: 0 0 75px;
@@ -478,7 +504,8 @@ clr-tab-content.active {
   z-index: 9999;
   position: absolute;
   background: white;
-  right: 11px; }
+  right: 11px;
+  border: 0px; }
 
 .ui-select-choices-row {
   font-size: 13px; }
@@ -490,6 +517,21 @@ clr-tab-content.active {
   line-height: 40px; }
 
 .ui-select-choices-row > a {
+  line-height: 24px; }
+
+.datagrid clr-dg-row:nth-child(even) {
+  background: #f9f9f9; }
+.datagrid clr-dg-row:nth-child(odd) {
+  background: #FFF; }
+.datagrid .datagrid-head {
+  border-bottom: 1px solid #ececec; }
+.datagrid .datagrid-body .datagrid-row {
+  border-top: 1px solid #ececec; }
+
+.datagrid-foot {
+  border-top: 1px #ccc; }
+
+.datagrid .datagrid-body .datagrid-row .datagrid-cell {
   line-height: 24px; }
 
 .color-square {

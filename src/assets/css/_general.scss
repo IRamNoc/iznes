@@ -37,3 +37,39 @@
 body {
     background: #f9f9f9;
 }
+
+table {
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:nth-child(odd) {
+        background: #FFF;
+    }
+}
+
+.btn-sm {
+    .btn {
+        font-weight: normal;
+        letter-spacing: 0.2px;
+        text-transform: none;
+    }
+}
+
+.btn {
+    font-weight: normal;
+    letter-spacing: 0.2px;
+    text-transform: none;
+    border-color: #57a5e3;
+    background-color: transparent;
+    color: #57a5e3;
+}
+
+.btn:focus, button:focus {
+    outline: none;
+}
+
+.btn.btn-primary:hover, .btn-primary .btn:hover {
+    background-color: #3c739c;
+    color: #fff;
+    border-color: #3c739c;
+}

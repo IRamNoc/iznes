@@ -9,12 +9,34 @@
 
     <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="true">
         <clr-datagrid>
+            <clr-dg-column>Actions</clr-dg-column>
+            <clr-dg-column>Status</clr-dg-column>
+            <clr-dg-column>Type</clr-dg-column>
+            <clr-dg-column>NAV</clr-dg-column>
             <clr-dg-column>User ID</clr-dg-column>
-            <clr-dg-column>Name</clr-dg-column>
+            <clr-dg-column [clrDgField]="'name'">
+                Name
+                <clr-dg-string-filter [clrDgStringFilter]="myFilter"
+                ></clr-dg-string-filter>
+            </clr-dg-column>
             <clr-dg-column>Creation date</clr-dg-column>
-            <clr-dg-column>Favorite color</clr-dg-column>
+            <clr-dg-column>
+                Favorite color
+                <clr-dg-string-filter [clrDgStringFilter]="colorFilter"
+                ></clr-dg-string-filter>
+            </clr-dg-column>
 
             <clr-dg-row *clrDgItems="let user of users">
+                <clr-dg-cell>
+                    <div class="btn-group btn-sm">
+                        <button class="btn">Details</button>
+                        <button class="btn">Edit</button>
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>{{user.name}}</clr-dg-cell>
+                <clr-dg-cell>{{user.id}}</clr-dg-cell>
+                <clr-dg-cell>{{user.name}}</clr-dg-cell>
+
                 <clr-dg-cell>{{user.id}}</clr-dg-cell>
                 <clr-dg-cell>{{user.name}}</clr-dg-cell>
                 <clr-dg-cell>{{user.creation | date}}</clr-dg-cell>
@@ -26,7 +48,7 @@
             <clr-dg-footer>
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                 of {{pagination.totalItems}} users
-                <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
 
