@@ -19,9 +19,9 @@
 
 .header-breadcrumbs {
     h1 {
-        margin-top: 0;
+        margin-top: 25px;
         font-weight: bold;
-        font-size: 22px;
+        font-size: 48px;
         padding-left: 5px;
         color: rgb(56, 61, 72);
 
@@ -29,11 +29,43 @@
             margin-right: 5px;
         }
     }
-
-    padding: 20px;
+    padding-top: 30px;
     padding-bottom: 10px;
 }
 
 body {
     background: #f9f9f9;
+}
+
+/* Style the list */
+ul.breadcrumb {
+    padding: 10px 16px;
+    list-style: none;
+    background-color: white;
+    font-size: 12px;
+    border: 1px solid #ccc;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+    display: inline;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li + li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    color: $setlSelected;
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    color: $setlSelected;
+    text-decoration: underline;
 }
