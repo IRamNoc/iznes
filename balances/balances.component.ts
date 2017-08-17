@@ -43,16 +43,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
-        console.log(this.myDataGrid);
-
-        //this.myDataGrid.resize();
     }
 
     ngAfterViewInit() {
-        // this.someInput.resize();
-        console.log('tes');
-        console.log(this.someInput)
         this.myDataGrid.resize();
     }
 
