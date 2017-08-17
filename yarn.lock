@@ -162,9 +162,9 @@
     magic-string "^0.22.3"
     source-map "^0.5.6"
 
-"@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#1.0.0":
-  version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#8d625f3019795639e6332249ada43a078d356ef3"
+"@setl/asset-servicing@http://si-nexus01.dev.setl.io/SETL_Modules/Angular-Module.git#1.0.1":
+  version "1.0.1"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular-Module.git#52199fc878f10ba6c6dae0267a2a043b842df684"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#1.0.8":
   version "1.0.8"

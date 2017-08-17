@@ -3,17 +3,54 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
+import {StringFilter, Comparator} from "clarity-angular";
 import {Component} from "@angular/core";
+
+interface User {
+    id: number;
+    name: string;
+    creation: Date;
+    color: string;
+
+    // Type for dynamic access to specific properties
+    [key: string]: any;
+}
+
+class MyFilter implements StringFilter<User> {
+    accepts(user: User, search: string): boolean {
+        return '' + user.number === search
+            || user.name.toLowerCase().indexOf(search) >= 0;
+    }
+}
+
+class ColorFilter implements StringFilter<User> {
+    accepts(user: User, search: string): boolean {
+        return '' + user.number === search
+            || user.color.toLowerCase().indexOf(search) >= 0;
+    }
+}
+
+class MyComparator implements Comparator<User> {
+    compare(a: User, b: User) {
+        return a.id - b.id; // [clrDgSortBy]="myComparator"
+    }
+}
 
 @Component({
     styleUrls: ['./home.component.scss'],
     templateUrl: './home.component.html',
 })
+
+
 export class HomeComponent {
+
+    public myFilter = new MyFilter();
+    public colorFilter = new ColorFilter();
+    public myComparator = new MyComparator();
 
     public users;
 
-    private tabs:Array<any>;
+    private tabs: Array<any>;
 
     basic: boolean = false;
 
@@ -42,25 +79,25 @@ export class HomeComponent {
                 id: '4',
                 name: 'Mingrui Huang',
                 creation: '1988-10-13 00:00:00',
-                color: 'red'
+                color: 'green'
             },
             {
                 id: '5',
                 name: 'Ollie Kett',
                 creation: '1993-02-08 00:00:00',
-                color: 'blue'
+                color: 'yellow'
             },
             {
                 id: '6',
                 name: 'Mingrui Huang',
                 creation: '1988-10-13 00:00:00',
-                color: 'red'
+                color: 'purple'
             },
             {
                 id: '7',
                 name: 'Ollie Kett',
                 creation: '1993-02-08 00:00:00',
-                color: 'blue'
+                color: 'orange'
             },
             {
                 id: '8',
@@ -94,13 +131,13 @@ export class HomeComponent {
             },
             {
                 id: '13',
-                name: 'Ollie Kett',
+                name: 'Dan',
                 creation: '1993-02-08 00:00:00',
                 color: 'blue'
             },
             {
                 id: '14',
-                name: 'Mingrui Huang',
+                name: 'Luke',
                 creation: '1988-10-13 00:00:00',
                 color: 'red'
             },
@@ -133,16 +170,15 @@ export class HomeComponent {
         this.basic = !this.basic;
     }
 
-    onTabSelected () {
+    onTabSelected() {
 
     }
 
-    onTabIndexChanged () {
+    onTabIndexChanged() {
 
     }
 
-    onTabContentActivated () {
-
+    onTabContentActivated() {
     }
 
 }

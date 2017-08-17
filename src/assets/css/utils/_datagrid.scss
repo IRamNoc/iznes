@@ -1,0 +1,26 @@
+.datagrid {
+    clr-dg-row:nth-child(even) {
+        background: #f9f9f9;
+    }
+    clr-dg-row:nth-child(odd) {
+        background: #FFF;
+    }
+
+    .datagrid-head {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .datagrid-body {
+        .datagrid-row {
+            border-top: 1px solid #ececec;
+        }
+    }
+}
+
+.datagrid-foot {
+    border-top: 0px solid #ccc;
+}
+
+.datagrid .datagrid-body .datagrid-row .datagrid-cell {
+    line-height: 24px;
+}

@@ -16,6 +16,7 @@ import {ROUTES} from './app.routes';
 import {SetlLoginModule} from '@setl/core-login';
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
+import {SetlBalancesModule} from '@setl/core-balances';
 import {UserAdminModule} from '@setl/core-useradmin';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {MemberSocketService} from '@setl/websocket-service';
@@ -46,6 +47,7 @@ describe('AppComponent', () => {
                 SetlLoginModule,
                 UserAdminModule,
                 SetlMessagesModule,
+                SetlBalancesModule,
                 AssetServicingModule
 
             ],

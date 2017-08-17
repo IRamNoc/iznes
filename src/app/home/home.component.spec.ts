@@ -9,6 +9,7 @@ import {BasicLayoutComponent} from '../core/layouts/basic/basic.component';
 import {SetlLoginComponent} from '@setl/core-login';
 import {NavigationTopbarComponent} from '../core/navigation-topbar/navigation-topbar.component';
 import {SetlMessagesComponent} from '@setl/core-messages';
+import {SetlBalancesComponent} from '@setl/core-balances';
 import {FormElementsComponent} from '../ui-elements/form-elements.component';
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
@@ -37,6 +38,7 @@ describe('HomeComponent', () => {
                 NavigationTopbarComponent,
                 BlankLayoutComponent,
                 SetlMessagesComponent,
+                SetlBalancesComponent,
                 SetlLoginComponent,
                 FormElementsComponent,
                 AdminUsersComponent,
