@@ -29,7 +29,7 @@ body {
   background: #f9f9f9; }
 
 header {
-  background-color: #282b38 !important;
+  background-color: #292e3c !important;
   flex: 0 0 75px;
   height: 75px; }
   header .header-actions .nav-link.nav-icon {
@@ -189,7 +189,8 @@ header .header-actions, header .branding + .search {
     margin: 0;
     padding: 12px;
     padding-left: 20px;
-    padding-right: 20px; }
+    padding-right: 20px;
+    font-size: 13px; }
     .sidenav .sidenav-content .nav-link i {
       padding-right: 5px;
       width: 20px !important; }
@@ -211,8 +212,8 @@ header .header-actions, header .branding + .search {
   .sidenav .sidenav-content .nav-list .nav-link:hover {
     background: #282b38; }
   .sidenav .label.label-success, .sidenav a.label.label-success {
-    background: rgba(87, 165, 227, 0.2);
-    color: #57a5e3;
+    background: #57a5e3;
+    color: white;
     border: 1px solid #57a5e3;
     margin-right: 0;
     float: right;
@@ -225,7 +226,8 @@ header .header-actions, header .branding + .search {
     margin: 0;
     padding: 12px;
     padding-left: 20px;
-    padding-right: 20px; }
+    padding-right: 20px;
+    font-size: 13px; }
     .sidenav .collapsible label::after {
       float: right; }
 
@@ -315,7 +317,29 @@ form, .form {
 .select::after {
   top: 13px; }
 
-clr-tab-content {
+/**
+ * New Tabs.
+ */
+clr-tabs.clr-tabs clr-tab-content {
+  display: none; }
+
+clr-tab > .nav-link.active {
+  background: white !important;
+  color: #383d48 !important;
+  box-shadow: 0 0 0 white inset !important;
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border: 1px solid #dce1eb !important;
+  border-bottom: 0px !important; }
+
+clr-tab > .nav-link {
+  margin-right: 0px !important; }
+
+/**
+ * Old Tabs.
+ */
+clr-tab-content,
+clr-tabs > section {
   float: left;
   width: calc(100% - 40px);
   margin: 20px;
@@ -323,6 +347,10 @@ clr-tab-content {
   border-radius: 4px;
   padding: 20px;
   border: 1px solid #dce1eb; }
+
+clr-tabs > section {
+  margin-top: 0;
+  border-top-left-radius: 0px; }
 
 clr-tab-content.active:first-of-type {
   border-top-left-radius: 0; }
@@ -474,8 +502,9 @@ clr-tab-content.active {
   margin-right: -10px !important;
   margin-top: 1px;
   z-index: 9999;
-  position: inherit;
-  background: white; }
+  position: absolute;
+  background: white;
+  right: 11px; }
 
 .ui-select-choices-row {
   font-size: 13px; }

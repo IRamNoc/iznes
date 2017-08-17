@@ -50,8 +50,9 @@
     margin-right: -10px !important;
     margin-top: 1px;
     z-index: 9999;
-    position: inherit;
+    position: absolute;
     background: white;
+    right: 11px;
 }
 
 .ui-select-choices-row {
