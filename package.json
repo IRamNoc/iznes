@@ -30,7 +30,7 @@
         "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#1.0.1",
         "@setl/core-useradmin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#1.0.7",
         "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#1.0.1",
-        "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#1.0.3",
+        "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#1.0.4",
         "@webcomponents/custom-elements": "1.0.0-alpha.3",
         "angular2-toaster": "^4.0.1",
         "clarity-angular": "^0.10.0-patch",
