@@ -166,28 +166,28 @@
   version "1.0.1"
   resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular-Module.git#52199fc878f10ba6c6dae0267a2a043b842df684"
 
-"@setl/core-login@http://si-nexus01.dev.setl.io/SETL_Modules/login.git#1.0.8":
+"@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#1.0.8":
   version "1.0.8"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/login.git#987c73914a131b7ee0867e3e354e12fcf9ae722c"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#987c73914a131b7ee0867e3e354e12fcf9ae722c"
 
-"@setl/core-messages@http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#1.0.1":
+"@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#1.0.1":
   version "1.0.1"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git#00956c2f9d45b272c11af4e2e2eac77fd0686c82"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#00956c2f9d45b272c11af4e2e2eac77fd0686c82"
 
-"@setl/core-req-services@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#1.0.1":
+"@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#1.0.1":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/core-req-services.git#a91c2028c5c66bbd4f3e120394853e1ee75f1c9e"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#a91c2028c5c66bbd4f3e120394853e1ee75f1c9e"
 
-"@setl/core-store@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#1.0.1":
+"@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#1.0.1":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/core-redux-store.git#b936cee0c97bee79d5d8875f0725a268470becef"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#b936cee0c97bee79d5d8875f0725a268470becef"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
 
-"@setl/core-useradmin@http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#1.0.7":
+"@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#1.0.7":
   version "1.0.7"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/core-useradmin.git#e9744365c2878d900f9ce3ba12760d293c92cedb"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#e9744365c2878d900f9ce3ba12760d293c92cedb"
   dependencies:
     "@angular/common" "^4.0.0"
     "@angular/core" "^4.0.0"
@@ -208,9 +208,9 @@
     sha256 "^0.2.0"
     socketcluster-client "^6.3.0"
 
-"@setl/utils@http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#1.0.1":
+"@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#1.0.1":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/utils.git#23a11397ee620b7c52c94e3fb8965eee7681e0a0"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#23a11397ee620b7c52c94e3fb8965eee7681e0a0"
   dependencies:
     ramda "^0.24.1"
     redux-saga "^0.15.6"
@@ -221,9 +221,9 @@
   dependencies:
     libsodium-wrappers "^0.5.2"
 
-"@setl/websocket-service@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#1.0.2":
+"@setl/websocket-service@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#1.0.2":
   version "1.0.2"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_services/websocket-service.git#e893882c1d20ecdb0eb028022da70a9a6f844661"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#e893882c1d20ecdb0eb028022da70a9a6f844661"
   dependencies:
     "@setl/socketcluster-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4"
     "@setl/vanilla-websocket-wrapper" "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0"
@@ -909,29 +909,15 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
-clarity-angular@^0.10.0-patch:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/clarity-angular/-/clarity-angular-0.10.0.tgz#737aa3b2d60c57516434dc712b6704d461a849ce"
-
 clarity-angular@^0.9.16:
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/clarity-angular/-/clarity-angular-0.9.16.tgz#45952162e52d3a84bf2818d1d90c90135bc3da80"
-
-clarity-icons@^0.10.0-patch:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/clarity-icons/-/clarity-icons-0.10.0.tgz#9925f932cf9adef47a463ecda8048b268bf2036a"
-  dependencies:
-    dompurify "^0.9.0"
 
 clarity-icons@^0.9.16:
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/clarity-icons/-/clarity-icons-0.9.16.tgz#9d72fcd1f50410fcea5d67ae07d015db62c29990"
   dependencies:
     dompurify "^0.9.0"
-
-clarity-ui@^0.10.0-patch:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/clarity-ui/-/clarity-ui-0.10.0.tgz#228ffe52e533ccb8a258f2da576e06502d0cb516"
 
 clarity-ui@^0.9.16:
   version "0.9.16"
@@ -2324,6 +2310,10 @@ img-stats@^0.5.2:
   dependencies:
     xmldom "^0.1.19"
 
+immutable@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
+
 in-publish@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.0.tgz#e20ff5e3a2afc2690320b6dc552682a9c7fadf51"
@@ -2366,8 +2356,8 @@ ini@^1.3.4, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.4.tgz#0537cb79daf59b59a1a517dff706c86ec039162e"
 
 inquirer@^3.0.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-3.2.1.tgz#06ceb0f540f45ca548c17d6840959878265fa175"
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-3.2.2.tgz#c2aaede1507cc54d826818737742d621bef2e823"
   dependencies:
     ansi-escapes "^2.0.0"
     chalk "^2.0.0"
@@ -4653,8 +4643,8 @@ source-map-loader@^0.2.0:
     source-map "~0.1.33"
 
 source-map-support@^0.4.0, source-map-support@^0.4.1, source-map-support@^0.4.2, source-map-support@~0.4.0:
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.15.tgz#03202df65c06d2bd8c7ec2362a193056fef8d3b1"
+  version "0.4.16"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.16.tgz#16fecf98212467d017d586a2af68d628b9421cd8"
   dependencies:
     source-map "^0.5.6"
 
