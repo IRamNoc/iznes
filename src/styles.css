@@ -377,7 +377,7 @@ form, .form {
 clr-tabs.clr-tabs clr-tab-content {
   display: none; }
 
-clr-tab > .nav-link.active {
+clr-tab.clr-tabs > .nav-link.active {
   background: white !important;
   color: #383d48 !important;
   box-shadow: 0 0 0 white inset !important;
@@ -386,7 +386,7 @@ clr-tab > .nav-link.active {
   border: 1px solid #dce1eb !important;
   border-bottom: 0px !important; }
 
-clr-tab > .nav-link {
+clr-tab.clr-tabs > .nav-link {
   margin-right: 0px !important; }
 
 /**
@@ -482,28 +482,27 @@ clr-tab-content.active {
   .nav .nav-link.btn {
     padding-left: 20px;
     padding-right: 20px;
-    height: 45px; }
-  .nav .nav-item.active > .nav-link {
+    height: 45px;
+    font-size: 13px;
+    margin-right: 1px; }
+  .nav .nav-link {
+    color: #a8a8a8;
+    line-height: 35px;
+    font-size: 13px;
+    margin-right: 1px; }
+  .nav .nav-link:hover, .nav .nav-link.active {
+    box-shadow: 0 0 0 #007cbb inset;
+    transition: box-shadow 0.2s ease-in;
+    outline: none;
+    color: #000; }
+  .nav .nav-link.active {
     background: white;
     color: #383d48;
     box-shadow: 0 0 0 white inset;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 1px solid #dce1eb;
-    border-bottom: 0px; }
-  .nav .nav-link.btn {
-    padding-left: 20px;
-    padding-right: 20px;
-    height: 45px;
-    font-size: 13px; }
-  .nav .nav-link {
-    color: #a8a8a8;
-    line-height: 35px; }
-  .nav .nav-link:hover, .nav .nav-link.active {
-    box-shadow: 0 0 0 #007cbb inset;
-    transition: box-shadow 0.2s ease-in;
-    outline: none;
-    color: #000; }
+    border-bottom: 0; }
   .nav .nav-link:focus {
     outline: none; }
   .nav .nav-link.active:focus {
@@ -721,7 +720,8 @@ clr-tab-content.active {
   height: 14px;
   width: 14px;
   border: 0 solid #000;
-  border-radius: 4px; }
+  border-radius: 4px;
+  background: red; }
 
 app-navigation-topbar {
   height: 75px; }
