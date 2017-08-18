@@ -6,7 +6,7 @@
 export const environment = {
     production: false,
     MEMBER_NODE_CONNECTION: {
-        host: '10.0.1.163',
+        host: 'localhost',
         port: 9788,
         path: 'db'
     },
