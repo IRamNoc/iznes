@@ -50,7 +50,7 @@ export class HomeComponent {
 
     public users;
 
-    private tabs: Array<any>;
+    public tabs: Array<any>;
 
     basic: boolean = false;
 
