@@ -303,7 +303,7 @@ export class SocketClusterWrapper {
                 console.log('Connection deauthenticated.');
             });
 
-            this.webSocketConn.destroy(this.socketClusterOption);
+            SocketCluster.destroy(this.socketClusterOption);
             this.resetConnectionData();
         }
     }
