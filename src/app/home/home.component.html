@@ -216,9 +216,10 @@
     <h1>Home</h1>
 </div>
 
+
 <clr-tabs class="clr-tabs">
     <clr-tab *ngFor="let tabdata of tabs; let id = index">
-        <button clrTabLink clrTabLinkId="link{{id}}">{{ tabdata.title }}</button>
+        <button clrTabLink id="link{{id}}">{{ tabdata.title }}</button>
         <clr-tab-content *clrIfActive>
             <ng-container *ngTemplateOutlet="dynamicTabContent; context: {'tab': tabdata}"></ng-container>
         </clr-tab-content>
@@ -230,6 +231,7 @@
         {{ tab.content }}
     </div>
 </ng-template>
+
 
 <clr-tabs class="clr-tabs">
     <clr-tab>
