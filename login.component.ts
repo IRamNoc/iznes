@@ -16,7 +16,6 @@ import {
     FormControl
 } from '@angular/forms';
 
-/* Login Service. */
 import {SagaHelper} from '@setl/utils';
 
 import {NgRedux} from '@angular-redux/store';
@@ -28,12 +27,6 @@ import {
     getAuthentication
 } from '@setl/core-store';
 
-
-function skuValidator(control: FormControl): { [s: string]: boolean } {
-    if (!control.value.match(/^123/)) {
-        return {invalidSku: true};
-    }
-}
 
 /* Dectorator. */
 @Component({
