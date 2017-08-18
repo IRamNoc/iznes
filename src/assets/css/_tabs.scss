@@ -6,7 +6,7 @@ clr-tabs.clr-tabs clr-tab-content {
     display: none;
 }
 
-clr-tab > .nav-link.active {
+clr-tab.clr-tabs > .nav-link.active {
     background: white !important;
     color: #383d48 !important;
     box-shadow: 0 0 0 white inset !important;
@@ -16,7 +16,7 @@ clr-tab > .nav-link.active {
     border-bottom: 0px !important;
 }
 
-clr-tab > .nav-link {
+clr-tab.clr-tabs > .nav-link {
     margin-right: 0px !important;
 }
 
@@ -136,28 +136,15 @@ clr-tab-content.active {
         padding-left: 20px;
         padding-right: 20px;
         height: 45px;
-    }
-
-    .nav-item.active > .nav-link {
-        background: white;
-        color: rgb(56, 61, 72);
-        box-shadow: 0 0 0 white inset;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        border: 1px solid rgb(220, 225, 235);
-        border-bottom: 0px;
-    }
-
-    .nav-link.btn {
-        padding-left: 20px;
-        padding-right: 20px;
-        height: 45px;
         font-size: 13px;
+        margin-right: 1px;
     }
 
     .nav-link {
         color: #a8a8a8;
         line-height: 35px;
+        font-size: 13px;
+        margin-right: 1px;
     }
 
     .nav-link:hover, .nav-link.active {
@@ -165,6 +152,16 @@ clr-tab-content.active {
         transition: box-shadow 0.2s ease-in;
         outline: none;
         color: #000;
+    }
+
+    .nav-link.active {
+        background: white;
+        color: rgb(56, 61, 72);
+        box-shadow: 0 0 0 white inset;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border: 1px solid rgb(220, 225, 235);
+        border-bottom: 0;
     }
 
     .nav-link:focus {

@@ -2,9 +2,9 @@
     <h1>Home</h1>
 </div>
 
-<clr-tabs class="clr-tabs">
+<clr-tabs>
     <clr-tab>
-        <button clrTabLink clrTabLinkId="link1"><i class="fa fa-table"></i> Datagrid</button>
+        <button clrTabLink><i class="fa fa-table"></i> Datagrid</button>
         <clr-tab-content *clrIfActive>
             <clr-datagrid>
                 <clr-dg-column>Actions</clr-dg-column>
@@ -59,7 +59,7 @@
     </clr-tab>
 
     <clr-tab>
-        <button clrTabLink clrTabLinkId="link2"><i class="fa fa-trash-o"></i> Random Stuff</button>
+        <button clrTabLink><i class="fa fa-trash-o"></i> Random Stuff</button>
         <clr-tab-content *clrIfActive>
             <p>This is a Clarity seed application. This is the default page that loads for the application.</p>
 
@@ -217,9 +217,9 @@
 </div>
 
 
-<clr-tabs class="clr-tabs">
+<clr-tabs>
     <clr-tab *ngFor="let tabdata of tabs; let id = index">
-        <button clrTabLink id="link{{id}}">{{ tabdata.title }}</button>
+        <button clrTabLink id="testlink{{id}}">{{ tabdata.title }}</button>
         <clr-tab-content *clrIfActive>
             <ng-container *ngTemplateOutlet="dynamicTabContent; context: {'tab': tabdata}"></ng-container>
         </clr-tab-content>
@@ -233,7 +233,7 @@
 </ng-template>
 
 
-<clr-tabs class="clr-tabs">
+<clr-tabs>
     <clr-tab>
         <button clrTabLink clrTabLinkId="link-1"><i class="fa fa-table"></i> Datagrid</button>
         <clr-tab-content *clrIfActive>
