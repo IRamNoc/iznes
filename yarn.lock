@@ -166,9 +166,9 @@
   version "1.0.1"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#52199fc878f10ba6c6dae0267a2a043b842df684"
 
-"@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#1.0.0":
-  version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#1cc0d20b1a09c63058b0d9f3b1fe108ebe3f5678"
+"@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#1.0.1":
+  version "1.0.1"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#ac1e80d0128497f41bea52d117acbcc4a09fb29c"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#1.0.8":
   version "1.0.8"
