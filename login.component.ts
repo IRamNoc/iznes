@@ -21,11 +21,11 @@ import {SagaHelper} from '@setl/utils';
 
 import {NgRedux} from '@angular-redux/store';
 
-import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
+import {MyUserService, WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    getMyDetail
+    getAuthentication
 } from '@setl/core-store';
 
 
@@ -50,7 +50,7 @@ export class SetlLoginComponent {
     public prompt: string;
     public buttonDisabled: boolean = false;
 
-    loginUser: string;
+    isLogin: boolean;
 
     loginForm: FormGroup;
     username: AbstractControl;
@@ -135,13 +135,18 @@ export class SetlLoginComponent {
     }
 
     updateState() {
-        const myDetail = getMyDetail(this.ngRedux.getState());
-        this.loginUser = myDetail.username;
+        const newState = this.ngRedux.getState();
+        const myAuthenData = getAuthentication(newState);
 
-        //
-
-        if (this.loginUser !== '') {
+        // When first Login, Perform initial actions.
+        if (!this.isLogin && myAuthenData.isLogin) {
             this.router.navigateByUrl('/home');
+
+            this.isLogin = true;
+
+            // Request initial data from wallet node.
+            InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, 2);
         }
+
     }
 }
