@@ -1,12 +1,14 @@
 import {
     MyWalletAddressState,
     MyWalletAddressReducer,
-    SET_WALLET_ADDRESSES
+    SET_WALLET_ADDRESSES,
+    getWalletAddressList
 } from './my-wallet-address';
 import {combineReducers, Reducer} from 'redux';
 
 export {
-    SET_WALLET_ADDRESSES
+    SET_WALLET_ADDRESSES,
+    getWalletAddressList
 };
 
 export interface WalletState {
