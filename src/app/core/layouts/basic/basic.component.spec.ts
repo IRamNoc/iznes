@@ -23,6 +23,7 @@ import {AdminPermissionsTableComponent} from '@setl/core-useradmin/permissions/s
 import {AdminWizardComponent} from '@setl/core-useradmin';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {RegisterIssuerComponent, RegisterAssetComponent, IssueAssetComponent} from '@setl/asset-servicing';
+import {SetlBalancesComponent} from '@setl/core-balances';
 
 describe('BasicComponent', () => {
     let component: BasicLayoutComponent;
@@ -48,7 +49,9 @@ describe('BasicComponent', () => {
                 AdminPermissionsTableComponent,
                 RegisterIssuerComponent,
                 RegisterAssetComponent,
-                IssueAssetComponent
+                IssueAssetComponent,
+                SetlBalancesComponent
+
             ],
             imports: [
                 CommonModule,

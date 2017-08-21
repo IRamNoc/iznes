@@ -51,7 +51,7 @@ describe('NavigationSidebarComponent', () => {
                 BasicLayoutComponent,
                 RegisterIssuerComponent,
                 RegisterAssetComponent,
-                IssueAssetComponent
+                IssueAssetComponent,
             ],
             imports: [
                 CommonModule,
