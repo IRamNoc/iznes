@@ -11,5 +11,7 @@ export {
     WalletState,
     walletReducer,
     SET_WALLET_ADDRESSES,
-    getWalletAddressList
+    getWalletAddressList,
+    SET_OWN_WALLETS,
+    getMyWalletList
 } from './wallet';

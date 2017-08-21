@@ -30,11 +30,11 @@ export const MyWalletAddressReducer = function (state: MyWalletAddressState = in
     }
 }
 
-function formatAddressResponse(rowAddressData: Array<any>): Array<AddressDetail> {
-    const rowAddressDataList = fromJS(rowAddressData);
+function formatAddressResponse(rawAddressData: Array<any>): Array<AddressDetail> {
+    const rawAddressDataList = fromJS(rawAddressData);
     let addressDetailList = List<AddressDetail>();
 
-    addressDetailList = rowAddressDataList.map(
+    addressDetailList = rawAddressDataList.map(
         function (thisAddressDetail) {
 
             const formattedDetail = {
