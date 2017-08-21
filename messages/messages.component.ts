@@ -16,13 +16,13 @@ export class SetlMessagesComponent implements OnInit {
 
         this.categories = [
             {
-                name: 'Inbox',
-                desc: 'All your messages',
+                name: 'All Messages',
+                desc: 'View your global inbox',
                 icon: 'inbox',
                 active: true
             },
             {
-                name: 'Actions',
+                name: 'Action Messages',
                 desc: 'Messages that require actions',
                 icon: 'balance',
                 active: false
@@ -35,7 +35,7 @@ export class SetlMessagesComponent implements OnInit {
             },
             {
                 name: 'Sent Messages',
-                desc: 'Messages sent from your account',
+                desc: 'Messages sent by your account',
                 icon: 'pop-out',
                 active: false
             },

@@ -1,15 +1,15 @@
-<div class="messages">
-    <div class="header-breadcrumbs">
+<div class="header-breadcrumbs">
 
-        <ul class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li class="active">Messages</li>
-        </ul>
-        <h1>Messages</h1>
-    </div>
+    <ul class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li class="active">Messages</li>
+    </ul>
+    <h1>Messages</h1>
+</div>
+<div class="messages">
 
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-sm-4 col-md-3 col-lg-2 col-categories">
             <div class="tile row">
                 <div class="tile-icon">
                     <clr-icon shape="edit" size="24"></clr-icon>
@@ -20,21 +20,23 @@
                 </div>
             </div>
 
-            <hr>
+            <hr class="message-hr">
 
-            <div class="tile row {{category.active && 'active'}}" *ngFor="let category of categories">
-                <div class="tile-icon">
-                    <clr-icon [attr.shape]="category.icon" size="24"></clr-icon>
-                </div>
-                <div class="tile-text">
-                    <h4>{{category.name}}</h4>
-                    <span>{{category.desc}}</span>
+            <div class="cat-tile" *ngFor="let category of categories">
+                <div class="tile row {{category.active && 'active'}}">
+                    <div class="tile-icon">
+                        <clr-icon [attr.shape]="category.icon" size="24"></clr-icon>
+                    </div>
+                    <div class="tile-text">
+                        <h4>{{category.name}}</h4>
+                        <span>{{category.desc}}</span>
+                    </div>
                 </div>
             </div>
 
 
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-8 col-md-9 col-lg-10 col-message-grid">
 
             <div class="message-grid">
                 <div class="row">
@@ -87,7 +89,10 @@
                                 <img class="message-img-sender" src="http://localhost:4200/assets/images/ollie.jpg">
                                 Ollie Kett
                             </b>
+
+
                             <h1>Thanks Ollie for joining.</h1>
+
                         </div>
                         <div class="message-text">
                             <p>
