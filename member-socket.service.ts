@@ -4,6 +4,7 @@ import {SocketClusterWrapper} from '@setl/socketcluster-wrapper';
 @Injectable()
 export class MemberSocketService {
     private socket: SocketClusterWrapper;
+    public accessToken: string;
 
     constructor(private hostname: string,
                 private port: string,
