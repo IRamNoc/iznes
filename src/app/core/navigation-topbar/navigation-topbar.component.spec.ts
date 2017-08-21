@@ -23,6 +23,7 @@ import {SidebarModule} from 'ng-sidebar';
 import {SelectModule} from 'ng2-select';
 import {ClarityModule} from 'clarity-angular';
 import {RegisterIssuerComponent, RegisterAssetComponent, IssueAssetComponent} from '@setl/asset-servicing';
+import {SetlBalancesComponent} from '@setl/core-balances';
 
 describe('NavigationTopbarComponent', () => {
     let component: NavigationTopbarComponent;
@@ -49,7 +50,8 @@ describe('NavigationTopbarComponent', () => {
                 BasicLayoutComponent,
                 RegisterIssuerComponent,
                 RegisterAssetComponent,
-                IssueAssetComponent
+                IssueAssetComponent,
+                SetlBalancesComponent
             ],
             imports: [
                 CommonModule,

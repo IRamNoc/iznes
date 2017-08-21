@@ -12,7 +12,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
 /* Core services*/
-import {MyUserService, WalletNodeRequestService} from '@setl/core-req-services';
+import {MyUserService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
 
 /* Routes. */
 import {ROUTES} from './app.routes';
@@ -103,6 +103,7 @@ import {environment} from '../environments/environment';
 
         WalletNodeSocketService,
         MyUserService,
+        MyWalletsService,
         WalletNodeRequestService,
         LoginGuardService,
         ToasterService
