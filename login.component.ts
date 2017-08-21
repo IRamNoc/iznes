@@ -20,12 +20,19 @@ import {SagaHelper} from '@setl/utils';
 
 import {NgRedux} from '@angular-redux/store';
 
-import {MyUserService, WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import {
+    MyUserService,
+    WalletNodeRequestService,
+    InitialisationService,
+    MyWalletsService
+} from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
     getAuthentication
 } from '@setl/core-store';
+
+import {MemberSocketService} from '@setl/websocket-service';
 
 
 /* Dectorator. */
@@ -59,6 +66,8 @@ export class SetlLoginComponent {
                 private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
                 private walletNodeRequestService: WalletNodeRequestService,
+                private memberSocketService: MemberSocketService,
+                private myWalletsService: MyWalletsService,
                 fb: FormBuilder,
                 private router: Router) {
         // Subscribe to app store
@@ -137,8 +146,15 @@ export class SetlLoginComponent {
 
             this.isLogin = true;
 
+            // Set token for membernode connection
+            const token = myAuthenData.token;
+            this.memberSocketService.token = token;
+
             // Request initial data from wallet node.
             InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, 2);
+
+            // Request initial data from member node.
+            InitialisationService.membernodeInitialisation(this.ngRedux, this.myWalletsService);
         }
 
     }
