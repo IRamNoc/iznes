@@ -2,31 +2,47 @@
   <h1><i class="fa fa-users"></i> Register Issuer</h1>
 </div>
 
-<div class="wrapper wrapper-content">
-
-  <div class="card">
-    <div class="card-block">
-      <form>
+<clr-tabs>
+  <clr-tab>
+    <button clrTabLink id="testlinkreg">bala</button>
+    <clr-tab-content *clrIfActive>
+      <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer(registerIssuerForm.value)">
         <section class="form-block">
-          <div class="form-group">
+          <div class="form-group col-sm-6">
             <label for="issuer-identifier">Issuer Identifier</label>
-            <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45">
+            <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45"
+                   [formControl]="issuerIdentifier">
           </div>
           <div class="form-group">
             <label class="control-label">
               Issuer Address
             </label>
             <ng-select
-              (selected)="selected('issuerAddress', $event.value)"
-              (removed)="removed('issueAddress')"
-              [items]="walletAddresses"
+              [items]="walletAddressSelectItems"
               [allowClear]="true"
-              placeholder="Select Issuer Address">
+              placeholder="Select Issuer Address"
+              [formControl]="issuerAddress"
+            >
             </ng-select>
           </div>
           <button type="submit" class="btn btn-primary">Register Issuer</button>
         </section>
       </form>
+    </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
+
+<clr-modal [(clrModalOpen)]="showRegIssuerRespModal" [clrModalSize]="'xl'">
+  <h3 class="modal-title">Extra large modal</h3>
+  <div class="modal-body">
+    <div *ngIf="currentRegisterIssuerResponse">
+      <div>{{currentRegisterIssuerResponse.issuerIdentifier}}</div>
+      <div>{{currentRegisterIssuerResponse.issuerAddress}}</div>
+      <div>{{currentRegisterIssuerResponse.txHash}}</div>
     </div>
   </div>
-</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="showRegIssuerRespModal = false">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="showRegIssuerRespModal = false">Ok</button>
+  </div>
+</clr-modal>
