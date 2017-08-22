@@ -15,6 +15,8 @@ export class AdminUsersService {
 
     public requestMyUsersList () {
 
+        console.log('Token: ', this.memberSocketService.token);
+
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
             token: this.memberSocketService.token
