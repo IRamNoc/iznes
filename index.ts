@@ -17,6 +17,15 @@ export {
 } from './wallet';
 
 export {
+    AssetState,
+    assetReducer,
+    REGISTER_ISSUER_SUCCESS,
+    REGISTER_ISSUER_FAIL,
+    getNewIssuerRequest,
+    finishRegisterIssuerNotification
+} from './assets';
+
+export {
     AdminUsersState,
     adminUserReducer,
     SET_ADMIN_USERLIST,
