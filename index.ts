@@ -15,3 +15,10 @@ export {
     SET_OWN_WALLETS,
     getMyWalletList
 } from './wallet';
+
+export {
+    AdminUsersState,
+    adminUserReducer,
+    SET_ADMIN_USERLIST,
+    getUsersList
+} from './useradmin';
