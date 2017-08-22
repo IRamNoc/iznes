@@ -512,7 +512,8 @@ clr-tab-content.active {
   margin: 0; }
 
 .messages {
-  padding: 0 40px; }
+  padding: 0 40px;
+  min-width: 996px; }
   .messages hr {
     border: 1px solid #eee; }
   .messages .tile {
@@ -638,6 +639,56 @@ clr-tab-content.active {
         .messages .message-grid .message-body .message-title h1 {
           margin-top: 10px; }
 
+@media only screen and (max-width: 2000px) {
+  .col-categories {
+    max-width: 20%;
+    width: 20%;
+    flex: 0 0 20%; }
+
+  .col-message-grid {
+    max-width: 80%;
+    width: 80%;
+    flex: 0 0 80%; } }
+@media only screen and (max-width: 1800px) {
+  .col-categories {
+    max-width: 100%;
+    width: 100%;
+    flex: 0 0 100%; }
+    .col-categories .cat-tile {
+      max-width: 20%;
+      width: 20%;
+      flex: 0 0 20%;
+      display: inline-flex;
+      padding: 0 10px; }
+      .col-categories .cat-tile .tile {
+        width: 100%; }
+        .col-categories .cat-tile .tile .tile-text span {
+          font-size: 12px;
+          line-height: 10px;
+          display: inline-block;
+          margin-top: 8px; }
+
+  .col-message-grid {
+    max-width: 100%;
+    width: 100%;
+    flex: 0 0 100%; } }
+@media only screen and (max-width: 1700px) {
+  .col-categories > div:first-of-type {
+    margin: 0 10px; }
+  .col-categories .cat-tile .tile .tile-text {
+    width: 70%;
+    min-height: 70px; }
+    .col-categories .cat-tile .tile .tile-text span {
+      display: none; }
+    .col-categories .cat-tile .tile .tile-text h4 {
+      line-height: 20px;
+      margin: 0 3px; }
+  .col-categories .cat-tile .tile .tile-icon {
+    width: 30%;
+    text-align: center; }
+
+  .message-hr {
+    display: none; } }
 /* Fix for ng2-select dropdowns. */
 .ui-select-toggle {
   width: 300px !important;
