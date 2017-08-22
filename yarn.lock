@@ -178,7 +178,7 @@
   version "1.0.2"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#317d52529f6552f99f605a171150c1667d2da395"
 
-"@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#1.0.1":
+"@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#1.0.2":
   version "1.0.0"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#48cf94a95d9ce2764e2699443f7e250ef8733448"
 
