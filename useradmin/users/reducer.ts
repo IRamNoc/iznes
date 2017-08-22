@@ -16,6 +16,7 @@ export const UsersReducer = function (state: UsersState = initialState,
                 We're setting the users list.
                 So first, lets's get the list from the socket response.
             */
+            console.log(action);
             const usersData = _.get(action, 'payload[1].Data', []);
             console.log(usersData);
 
