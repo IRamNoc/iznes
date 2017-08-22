@@ -15,3 +15,10 @@ export {
     SET_OWN_WALLETS,
     getMyWalletList
 } from './wallet';
+
+export {
+    MessageState,
+    messageReducer,
+    SET_MESSAGE_LIST,
+    getMyMessagesList
+} from './messages';
