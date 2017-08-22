@@ -1,4 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Pipe} from '@angular/core';
+
+import {SagaHelper, Common} from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
+
+import {
+    SET_MESSAGE_LIST, getMyMessagesList
+} from '@setl/core-store';
+
+
+import {MyMessagesService} from '@setl/core-req-services';
 
 @Component({
     selector: 'setl-messages',
@@ -8,12 +18,49 @@ import {Component, OnInit} from '@angular/core';
 export class SetlMessagesComponent implements OnInit {
 
     public messages;
+    public messages2;
     public categories;
 
     public iconTrash = 'trash'; // this.iconTrash
 
-    constructor() {
 
+    requestMessages() {
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myMessageService.requestOwnMessages(
+            0,
+            0,
+            2,
+            0,
+            0,
+            7,
+            0,
+            0,
+            0,
+            0,
+            0,
+            ''
+        );
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MESSAGE_LIST],
+            [],
+            asyncTaskPipe, {}));
+
+        return false;
+    }
+
+    constructor(private ngRedux: NgRedux<any>,
+                private myMessageService: MyMessagesService) {
+
+        ngRedux.subscribe(() => this.updateState());
+        this.updateState();
+
+        this.requestMessages();
         this.categories = [
             {
                 name: 'All Messages',
@@ -47,7 +94,7 @@ export class SetlMessagesComponent implements OnInit {
             },
         ];
 
-        this.messages = [
+        this.messages2 = [
             {
                 sender: 'SETL (Ipswich) Limited',
                 subject: 'Thanks Ollie for joining.',
@@ -122,6 +169,13 @@ export class SetlMessagesComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    updateState() {
+        const newState = this.ngRedux.getState();
+        this.messages = getMyMessagesList(newState);
+
+        console.log(this.messages);
     }
 
 }

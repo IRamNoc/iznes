@@ -4,7 +4,6 @@
         <li><a href="#">Home</a></li>
         <li class="active">Messages</li>
     </ul>
-    <h1>Messages</h1>
 </div>
 <div class="messages">
 
@@ -57,24 +56,25 @@
                             </button>
                         </div>
 
-                        <div class="message-highlight {{message.active && 'message-active'}} {{message.unread && 'message-unread'}}" *ngFor="let message of messages">
+                        <div class="message-highlight {{message.active && 'message-active'}} {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages">
                             <h6>
-                                <img class="message-img-sender" src="{{message.imgSender}}">
-                                {{message.sender}}
+                                <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
+
+                                {{ message.senderId }}
                             </h6>
 
-                            <h4><span class="message-unread-icon" *ngIf="message.unread"></span> {{message.subject}}
+                            <h4>
+                                <span class="message-unread-icon" *ngIf="!message.isRead"></span> {{message.subject | truncate: [40] }}
                             </h4>
                             <span class="message-date">
                                 <clr-icon shape="balance" *ngIf="message.action"></clr-icon>
                                 <clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>
                                 {{message.date | date}}
                             </span>
-                            <span class="message-preview">{{message.content}}</span>
+                            <span class="message-preview">{{message.content | truncate: [140] }}</span>
                         </div>
 
-                        <div class="message-highlight-footer">
-                            Display {{messages.length}} messages
+                        <div class="message-highlight-footer">Display {{messages.length}} messages
                         </div>
 
                     </div>
@@ -83,26 +83,19 @@
                             <span>from</span>
                             <b class="message-from">
                                 <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
-                                SETL (Ipswich) Limited
+                                {{messages[0].senderId }}
                             </b> to
                             <b class="message-to">
                                 <img class="message-img-sender" src="http://localhost:4200/assets/images/ollie.jpg">
                                 Ollie Kett
                             </b>
 
-
-                            <h1>Thanks Ollie for joining.</h1>
+                            <h1>{{messages[0].subject}}</h1>
 
                         </div>
                         <div class="message-text">
                             <p>
-                                Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.
-                            </p>
-                            <p>
-                                Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.
-                            </p>
-                            <p>
-                                Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.
+                                {{messages[0].content}}
                             </p>
 
 
