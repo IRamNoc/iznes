@@ -1,5 +1,18 @@
 import {Injectable} from '@angular/core';
 
+import {SagaHelper} from '@setl/utils';
+
+import {NgRedux} from '@angular-redux/store';
+
+import {
+    AdminUsersService
+} from '@setl/core-req-services';
+
+import {
+    SET_ADMIN_USERLIST,
+    getAuthentication
+} from '@setl/core-store';
+
 @Injectable()
 export class UserAdminService {
 
@@ -77,9 +90,55 @@ export class UserAdminService {
         }
     ];
 
+    public usersList:{};
+
     /* Constructor. */
-    constructor () {
+    constructor (
+        private adminUsersService:AdminUsersService,
+        private ngRedux: NgRedux<any>,
+    ) {
         /* Stub. */
+
+        /* This gets the data... */
+        const asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+
+        // Send a saga action to save data.
+        // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
+        // Actions to dispatch, when request fail:  None.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_ADMIN_USERLIST],
+                [],
+                asyncTaskPipe,
+                {}
+            )
+        );
+
+        /* Assign a update handler to watch changes in redux, then trigger once
+           manually. */
+        // setTimeout(() => {
+            ngRedux.subscribe(() => this.updateState());
+            this.updateState();
+        // })
+
+
+        // return false;
+    }
+
+    /**
+     * Update State
+     * Handles the updating of objects on this service when redux updates.
+     *
+     * @return {void}
+     */
+    private updateState () {
+        console.log('Updated something in redux.');
+        /* Retrieve the user list from the redux store. */
+        const newState = this.ngRedux.getState();
+        console.log(getAuthentication(newState));
+        console.log(newState)
     }
 
     /**

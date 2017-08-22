@@ -12,7 +12,8 @@ import {UserAdminService} from '../useradmin.service';
 /* Decorator. */
 @Component({
     selector: 'setl-admin-permissions',
-    templateUrl: 'permissions.component.html',
+    // templateUrl: 'permissions.component.html',
+    template: '',
     styleUrls: [ 'permissions.component.css' ],
     providers: [ UserAdminService, ToasterService ]
 })

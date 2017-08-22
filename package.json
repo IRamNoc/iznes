@@ -1,22 +1,11 @@
 {
   "name": "@setl/core-useradmin",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The vanilla users and permissions module.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Daniel Sarracayo",
-  "license": "ISC",
-  "dependencies" : {
-      "@angular/core": "^4.0.0",
-      "@angular/common": "^4.0.0",
-      "@angular/platform-browser": "^4.0.0",
-      "@angular/forms": "^4.0.0",
-      "@angular/router": "^4.0.0",
-      "ng2-select": "^1.2.0",
-      "clarity-angular": "^0.9.16",
-      "clarity-icons": "^0.9.16",
-      "clarity-ui": "^0.9.16"
-  }
+  "license": "ISC"
 }

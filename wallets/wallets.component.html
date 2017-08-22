@@ -4,78 +4,82 @@
 
 <div class="wrapper wrapper-content">
     <clr-tabs>
-        <!-- Tabs. -->
-        <clr-tab-link [clrTabLinkId]="'link1'" [clrTabLinkActive]="true"><i class="fa fa-search"></i> Search</clr-tab-link>
-        <clr-tab-link [clrTabLinkId]="'link2'" [clrTabLinkActive]="false"><i class="fa fa-plus"></i> Add Wallet</clr-tab-link>
+        <clr-tab>
+            <button clrTabLink id="wallet-list-tab"><i class="fa fa-search"></i> Search</button>
 
-        <!-- Content panels. -->
-        <clr-tab-content [clrTabContentId]="'content1'" [clrTabContentActive]="true">
-            <div class="panel-body">
-                <setl-admin-wallets-table
-                    [dataArray]="walletsData"
-                    (deleteEvent)="handleDelete($event)"
-                    (editEvent)="handleEdit($event)"
-                ></setl-admin-wallets-table>
-            </div>
-        </clr-tab-content>
-        <clr-tab-content [clrTabContentId]="'content2'" [clrTabContentActive]="false">
-            <div class="user-tab-panel-body panel-body">
-                <form (submit)="saveWallet($event)" role="form">
-                    <div class="form-horizontal">
+            <clr-tab-content id="wallet-list-content" *clrIfActive="true">
+                <div class="panel-body">
+                    <setl-admin-wallets-table
+                        [dataArray]="walletsData"
+                        (deleteEvent)="handleDelete($event)"
+                        (editEvent)="handleEdit($event)"
+                    ></setl-admin-wallets-table>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
 
-                        <div class="form-group">
-                            <div class="col-sm-9 col-sm-offset-3">
-                                <button type="submit" data-action="menu_leis" class="btn btn-primary createfromleisearch-btn"><i class="fa fa-building"></i> <span class="ml_translated" mltag="txt_createfromlei">Create From LEI Search</span></button>
+        <clr-tab>
+            <button clrTabLink id="wallet-new-form-tab"><i class="fa fa-plus"></i> Add Wallet</button>
+
+            <clr-tab-content id="wallet-new-form-content" *clrIfActive>
+                <div class="user-tab-panel-body panel-body">
+                    <form (submit)="saveWallet($event)" role="form">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="submit" data-action="menu_leis" class="btn btn-primary createfromleisearch-btn"><i class="fa fa-building"></i> <span class="ml_translated" mltag="txt_createfromlei">Create From LEI Search</span></button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-4 col-sm-offset-3"><span class="ml_translated" mltag="txt_walletdetails">Wallet Details</span></label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">
-                                <span class="ml_translated" mltag="txt_walletname">Wallet Name</span>
-                            </label>
-                            <div class="col-sm-9">
-                                <input [(ngModel)]="walletName" type="text" name='walletName' placeholder="Wallet Name" class="form-control newwalletname mlp_translated" mltag="txt_walletname">
+                            <div class="form-group">
+                                <label class="col-sm-4 col-sm-offset-3"><span class="ml_translated" mltag="txt_walletdetails">Wallet Details</span></label>
                             </div>
-                        </div>
 
-                        <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
-                            <div class="col-sm-9">
-                                <ng-select
-                                    (selected)="selected('accountType', $event)"
-                                    (removed)="removed('accountType', $event)"
-                                    [items]="accountTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type">
-                                </ng-select>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml_translated" mltag="txt_walletname">Wallet Name</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input [(ngModel)]="walletName" type="text" name='walletName' placeholder="Wallet Name" class="form-control newwalletname mlp_translated" mltag="txt_walletname">
+                                </div>
                             </div>
-                        </div>
 
-
-                        <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_wallettype">Wallet Type</span></label>
-                            <div class="col-sm-9">
-                                <ng-select
-                                    (selected)="selected('walletType', $event)"
-                                    (removed)="removed('walletType', $event)"
-                                    [items]="walletTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type">
-                                </ng-select>
+                            <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_account">Account</span></label>
+                                <div class="col-sm-9">
+                                    <ng-select
+                                        (selected)="selected('accountType', $event)"
+                                        (removed)="removed('accountType', $event)"
+                                        [items]="accountTypes"
+                                        [allowClear]="true"
+                                        placeholder="Select Type">
+                                    </ng-select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group button-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span></button>
+
+                            <div class="form-group"><label class="col-sm-3 control-label"><span class="ml_translated" mltag="txt_wallettype">Wallet Type</span></label>
+                                <div class="col-sm-9">
+                                    <ng-select
+                                        (selected)="selected('walletType', $event)"
+                                        (removed)="removed('walletType', $event)"
+                                        [items]="walletTypes"
+                                        [allowClear]="true"
+                                        placeholder="Select Type">
+                                    </ng-select>
+                                </div>
                             </div>
-                        </div>
 
-                    </div>
-                </form>
-            </div>
-        </clr-tab-content>
+                            <div class="form-group button-group">
+                                <div class="col-sm-offset-3 col-sm-9">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
     </clr-tabs>
 </div>
