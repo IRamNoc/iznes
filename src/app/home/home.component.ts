@@ -4,7 +4,7 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 import {StringFilter, Comparator} from "clarity-angular";
-import {Component} from "@angular/core";
+import {Component, AfterViewInit} from "@angular/core";
 
 interface User {
     id: number;
@@ -30,12 +30,6 @@ class ColorFilter implements StringFilter<User> {
     }
 }
 
-class MyComparator implements Comparator<User> {
-    compare(a: User, b: User) {
-        return a.id - b.id; // [clrDgSortBy]="myComparator"
-    }
-}
-
 @Component({
     styleUrls: ['./home.component.scss'],
     templateUrl: './home.component.html',
@@ -46,7 +40,6 @@ export class HomeComponent {
 
     public myFilter = new MyFilter();
     public colorFilter = new ColorFilter();
-    public myComparator = new MyComparator();
 
     public users;
 
@@ -56,6 +49,17 @@ export class HomeComponent {
 
     public constructor() {
 
+
+
+        //this.total = this.users.length;
+        //this.total = 10;
+    }
+
+    toggler() {
+        this.basic = !this.basic;
+    }
+
+    public ngAfterViewInit() {
         this.users = [
             {
                 id: '1',
@@ -143,31 +147,24 @@ export class HomeComponent {
             },
         ];
 
-        this.tabs = [
-            {
-                "title": "tab1",
-                "content": "tabcont1"
-            },
-            {
-                "title": "tab2",
-                "content": "tabcont2"
-            },
-            {
-                "title": "tab3",
-                "content": "tabcont3"
-            },
-            {
-                "title": "tab4",
-                "content": "tabcont4"
-            }
-        ];
-
-        //this.total = this.users.length;
-        //this.total = 10;
-    }
-
-    toggler() {
-        this.basic = !this.basic;
+        // this.tabs = [
+        //     {
+        //         "title": "tab1",
+        //         "content": "tabcont1"
+        //     },
+        //     {
+        //         "title": "tab2",
+        //         "content": "tabcont2"
+        //     },
+        //     {
+        //         "title": "tab3",
+        //         "content": "tabcont3"
+        //     },
+        //     {
+        //         "title": "tab4",
+        //         "content": "tabcont4"
+        //     }
+        // ];
     }
 
     onTabSelected() {
