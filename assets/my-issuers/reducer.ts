@@ -39,19 +39,19 @@ export const MyIssuersReducer = function (state: MyIssuersState = initialState,
                 newIssuerRequest
             });
 
-            return newState;
+            return state;
 
         case MyIssuersActions.FINISH_REGISTER_ISSUER_NOTIFICATION:
-            const needNotify = false;
+            const needNotify1 = false;
 
-            const newIssuerRequest = Object.assign({}, state.newIssuerRequest, {
-                needNotify
+            const newIssuerRequest1 = Object.assign({}, state.newIssuerRequest, {
+                needNotify: needNotify1
             });
-            const newState = Object.assign({}, state, {
-                newIssuerRequest
+            const newState1 = Object.assign({}, state, {
+                newIssuerRequest: newIssuerRequest1
             });
 
-            return newState;
+            return newState1;
 
         default:
             return state;
