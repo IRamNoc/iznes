@@ -421,7 +421,8 @@ clr-tabs > section {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  border: 1px solid #dce1eb; }
+  border: 1px solid #dce1eb;
+  border-top-left-radius: 0px; }
 
 clr-tabs > section {
   margin-top: 0;
