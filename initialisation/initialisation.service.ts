@@ -25,7 +25,7 @@ export class InitialisationService {
                                   walletId: number) {
         // Create a saga pipe.
         const asyncTaskPipes = walletNodeRequestService.walletAddressRequest({
-            walletId: 2,
+            walletId: 31,
         });
 
         // Send a saga action.
