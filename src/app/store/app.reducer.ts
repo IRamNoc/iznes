@@ -5,7 +5,8 @@ import {
 
 import {
     UserState, userReducer,
-    WalletState, walletReducer
+    WalletState, walletReducer,
+    AdminUsersState, adminUserReducer
 
 } from '@setl/core-store';
 
@@ -13,9 +14,11 @@ import {
 export interface AppState {
     user: UserState;
     wallet: WalletState;
+    userAdmin: AdminUsersState;
 }
 
 export const rootReducer: Reducer<any> = combineReducers<any>({
     user: userReducer,
-    wallet: walletReducer
+    wallet: walletReducer,
+    userAdmin: adminUserReducer
 });

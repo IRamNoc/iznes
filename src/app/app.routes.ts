@@ -34,6 +34,7 @@ import {SetlBalancesComponent} from '@setl/core-balances';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
     {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
 
     /* Blank layout components */
@@ -98,10 +99,26 @@ export const ROUTES: Routes = [
     {
         path: 'user-administration', component: BasicLayoutComponent,
         children: [
-            {path: 'users', component: AdminUsersComponent, canActivate: [LoginGuardService]},
-            {path: 'wallets', component: AdminWalletsComponent, canActivate: [LoginGuardService]},
-            {path: 'permissions', component: AdminPermissionsComponent, canActivate: [LoginGuardService]},
-            {path: 'wizard', component: AdminWizardComponent, canActivate: [LoginGuardService]}
+            {
+                path: 'users',
+                component: AdminUsersComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'wallets',
+                component: AdminWalletsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'permissions',
+                component: AdminPermissionsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'wizard',
+                component: AdminWizardComponent,
+                canActivate: [LoginGuardService]
+            }
 
         ],
         canActivate: [LoginGuardService]
