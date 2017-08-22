@@ -4,11 +4,16 @@ import {RegisterIssuerComponent} from './register-issuer/register-issuer.compone
 import {RegisterAssetComponent} from './register-asset/register-asset.component';
 import {IssueAssetComponent} from './issue-asset/issue-asset.component';
 import {SelectModule} from 'ng2-select';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ClarityModule} from 'clarity-angular';
 
 @NgModule({
     imports: [
         CommonModule,
-        SelectModule
+        SelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ClarityModule.forRoot()
     ],
     declarations: [
         RegisterIssuerComponent,
