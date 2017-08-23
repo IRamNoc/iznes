@@ -1,9 +1,6 @@
 /* Core imports. */
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit} from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
-
-/* Users table. */
-import { AdminUsersTableComponent } from './subcomponents/users-table.component';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -17,7 +14,9 @@ import {UserAdminService} from '../useradmin.service';
 })
 
 /* Class. */
-export class AdminUsersComponent {
+export class AdminUsersComponent implements AfterViewInit {
+
+    @ViewChild('usersDataGrid') usersDataGrid;
 
     public usersData:any = [
         {
@@ -55,12 +54,31 @@ export class AdminUsersComponent {
     public userTypes:any;
 
     /* Constructor. */
-    constructor (private userAdminService:UserAdminService) {
+    constructor (
+        private userAdminService:UserAdminService
+    ) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
 
         /* Get User Types. */
         this.userTypes = userAdminService.getUserTypes();
+
+        /* Link the users list to this user's data. */
+        this.userAdminService.usersListEvent.subscribe((usersList) => {
+            this.usersData = this.convertToArray(usersList);
+        });
+    }
+
+    ngAfterViewInit() {
+        this.usersDataGrid.resize();
+    }
+
+    public convertToArray (obj):Array<any> {
+        let key, newArray = [];
+        for (key in obj) {
+            newArray.push( obj[key] );
+        }
+        return newArray;
     }
 
     /* Handles a ng2-select selection. */

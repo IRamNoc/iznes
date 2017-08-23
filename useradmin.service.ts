@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Output, EventEmitter} from '@angular/core';
 
 import {SagaHelper} from '@setl/utils';
 
@@ -10,7 +10,7 @@ import {
 
 import {
     SET_ADMIN_USERLIST,
-    getAuthentication
+    getUsersList
 } from '@setl/core-store';
 
 @Injectable()
@@ -92,13 +92,14 @@ export class UserAdminService {
 
     public usersList:{};
 
+    @Output()
+    public usersListEvent:EventEmitter<{}> = new EventEmitter();
+
     /* Constructor. */
     constructor (
         private adminUsersService:AdminUsersService,
         private ngRedux: NgRedux<any>,
     ) {
-        /* Stub. */
-
         /* This gets the data... */
         const asyncTaskPipe = this.adminUsersService.requestMyUsersList();
 
@@ -118,13 +119,8 @@ export class UserAdminService {
 
         /* Assign a update handler to watch changes in redux, then trigger once
            manually. */
-        // setTimeout(() => {
-            ngRedux.subscribe(() => this.updateState());
-            this.updateState();
-        // })
-
-
-        // return false;
+        ngRedux.subscribe(() => this.updateState());
+        this.updateState();
     }
 
     /**
@@ -134,11 +130,10 @@ export class UserAdminService {
      * @return {void}
      */
     private updateState () {
-        console.log('Updated something in redux.');
         /* Retrieve the user list from the redux store. */
         const newState = this.ngRedux.getState();
-        console.log(getAuthentication(newState));
-        console.log(newState)
+        this.usersList = getUsersList(newState);
+        this.usersListEvent.emit(this.usersList);
     }
 
     /**

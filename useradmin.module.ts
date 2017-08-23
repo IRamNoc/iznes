@@ -18,7 +18,6 @@ import {AdminWizardComponent} from './wizard/wizard.component';
 
 /* Users components. */
 import {AdminUsersComponent} from './users/users.component';
-import {AdminUsersTableComponent} from './users/subcomponents/users-table.component';
 
 /* Wallets components. */
 import {AdminWalletsComponent} from './wallets/wallets.component';
@@ -33,7 +32,6 @@ import {AdminPermissionsTableComponent} from './permissions/subcomponents/permis
     declarations: [
         /* Users components. */
         AdminUsersComponent,
-        AdminUsersTableComponent,
 
         /* Wallets components. */
         AdminWalletsComponent,
@@ -49,7 +47,6 @@ import {AdminPermissionsTableComponent} from './permissions/subcomponents/permis
     exports: [
         /* Users components. */
         AdminUsersComponent,
-        AdminUsersTableComponent,
 
         /* Wallets components. */
         AdminWalletsComponent,
