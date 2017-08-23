@@ -48,18 +48,6 @@ export class HomeComponent {
     basic: boolean = false;
 
     public constructor() {
-
-
-
-        //this.total = this.users.length;
-        //this.total = 10;
-    }
-
-    toggler() {
-        this.basic = !this.basic;
-    }
-
-    public ngAfterViewInit() {
         this.users = [
             {
                 id: '1',
@@ -1994,25 +1982,10 @@ export class HomeComponent {
                 color: 'red'
             },
         ];
+    }
 
-        // this.tabs = [
-        //     {
-        //         "title": "tab1",
-        //         "content": "tabcont1"
-        //     },
-        //     {
-        //         "title": "tab2",
-        //         "content": "tabcont2"
-        //     },
-        //     {
-        //         "title": "tab3",
-        //         "content": "tabcont3"
-        //     },
-        //     {
-        //         "title": "tab4",
-        //         "content": "tabcont4"
-        //     }
-        // ];
+    toggler() {
+        this.basic = !this.basic;
     }
 
     onTabSelected() {
