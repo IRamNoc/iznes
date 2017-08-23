@@ -17,6 +17,22 @@ export {
 } from './wallet';
 
 export {
+    MessageState,
+    messageReducer,
+    SET_MESSAGE_LIST,
+    getMyMessagesList
+} from './messages';
+
+export {
+    AssetState,
+    assetReducer,
+    REGISTER_ISSUER_SUCCESS,
+    REGISTER_ISSUER_FAIL,
+    getNewIssuerRequest,
+    finishRegisterIssuerNotification
+} from './assets';
+
+export {
     AdminUsersState,
     adminUserReducer,
     SET_ADMIN_USERLIST,
