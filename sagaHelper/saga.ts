@@ -64,17 +64,21 @@ const runAsyncTask = async (descriptor, args) => {
  * @param failureTypes: List of action type when call is failt.
  * @param descriptor: Async call to make.
  * @param args: Arguments for the async call.
+ * @param successCallback: callback on successful.
+ * @param failureCallback: callback on failure.
  */
-function* doRunAsyncTask(successTypes, failureTypes, descriptor, args) {
+function* doRunAsyncTask(successTypes, failureTypes, descriptor, args, successCallback, failureCallback) {
     // console.log('hit do run task');
     const {resolved, rejected} = yield call(runAsyncTask, descriptor, args)
     if (resolved) {
         for (const successType of successTypes) {
             yield put({type: successType, payload: resolved});
+            successCallback(resolved);
         }
     } else {
         for (const failureType of failureTypes) {
             yield put({type: failureType, payload: rejected});
+            failureCallback(rejected);
         }
     }
 }
@@ -94,10 +98,11 @@ function* watchRunAsyncTasks() {
             , failureTypes
             , descriptor
             , args
+            , successCallback
+            , failureCallback
         } = yield take(RUN_ASYNC_TASK);
 
-        console.log(successTypes);
-        yield fork(doRunAsyncTask, successTypes, failureTypes, descriptor, args);
+        yield fork(doRunAsyncTask, successTypes, failureTypes, descriptor, args, successCallback, failureCallback);
 
     }
 }
