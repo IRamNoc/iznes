@@ -21,4 +21,5 @@ export * from './src/interfaces/alert-type';
     providers: [AlertsService],
     exports: [AlertsComponent]
 })
-export class JasperoAlertsModule {}
+export class JasperoAlertsModule {
+}
