@@ -82,6 +82,21 @@ ul.breadcrumb li a:hover {
   color: #57a5e3;
   text-decoration: underline; }
 
+.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto; }
+
 header {
   background-color: #292e3c !important;
   flex: 0 0 75px;
@@ -400,7 +415,8 @@ clr-tabs > section {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  border: 1px solid #dce1eb; }
+  border: 1px solid #dce1eb;
+  border-top-left-radius: 0px; }
 
 clr-tabs > section {
   margin-top: 0;
@@ -513,7 +529,7 @@ clr-tab-content.active {
 
 .messages {
   padding: 0 40px;
-  min-width: 996px; }
+  min-height: 1034px; }
   .messages hr {
     border: 1px solid #eee; }
   .messages .tile {
@@ -556,7 +572,7 @@ clr-tab-content.active {
     border: 1px solid #ccc;
     border-radius: 3px;
     margin: 20px auto;
-    min-height: 900px; }
+    min-height: 1034px; }
     .messages .message-grid .message-options {
       padding: 20px;
       border-bottom: 1px solid #ccc; }
@@ -569,7 +585,7 @@ clr-tab-content.active {
       vertical-align: text-bottom; }
     .messages .message-grid .message-highlights {
       border-right: 1px solid #ccc;
-      min-height: 900px;
+      min-height: 1034px;
       padding-right: 0; }
       .messages .message-grid .message-highlights .message-highlight {
         padding: 20px;
@@ -630,7 +646,7 @@ clr-tab-content.active {
         font-weight: 300;
         position: absolute;
         bottom: 0;
-        width: 98%; }
+        width: 98.2%; }
     .messages .message-grid .message-body {
       padding: 40px 55px 55px 40px; }
       .messages .message-grid .message-body .message-title {

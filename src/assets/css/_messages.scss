@@ -1,6 +1,6 @@
 .messages {
     padding: 0 40px;
-    min-width: 996px;
+    min-height: 1034px;
 
     hr {
         border: 1px solid #eee;
@@ -73,7 +73,7 @@
         border: 1px solid #ccc;
         border-radius: 3px;
         margin: 20px auto;
-        min-height: 900px;
+        min-height: 1034px;
 
         .message-options {
             padding: 20px;
@@ -93,7 +93,7 @@
 
         .message-highlights {
             border-right: 1px solid #ccc;
-            min-height: 900px;
+            min-height: 1034px;
             padding-right: 0;
 
             .message-highlight {
@@ -124,6 +124,7 @@
                     line-height: 16px;
                     margin-top: 2px;
                     display: block;
+                    @extend .dont-break-out;
                 }
 
                 .message-date {
@@ -181,7 +182,7 @@
                 font-weight: 300;
                 position: absolute;
                 bottom: 0;
-                width: 98%;
+                width: 98.2%;
             }
         }
 
@@ -197,6 +198,7 @@
             }
 
             .message-text {
+                @extend .dont-break-out;
             }
         }
 
@@ -257,7 +259,7 @@
     .col-categories {
         > div:first-of-type {
             margin: 0 10px;
-            
+
         }
         .cat-tile {
 
