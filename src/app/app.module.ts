@@ -64,7 +64,7 @@ import {environment} from '../environments/environment';
 @NgModule({
     declarations: [
         /* Components. */
-        AppComponent,
+        AppComponent
     ],
     imports: [
         /* Vendor/Angular */

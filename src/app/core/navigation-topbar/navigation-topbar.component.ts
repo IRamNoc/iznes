@@ -6,6 +6,10 @@ import {
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 
+import {MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
+
+// setActiveWallet
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -18,7 +22,9 @@ export class NavigationTopbarComponent implements OnInit {
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>,
+                private myWalletsService: MyWalletsService,
+                private walletNodeRequestService: WalletNodeRequestService) {
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
     }
@@ -39,6 +45,51 @@ export class NavigationTopbarComponent implements OnInit {
 
     public selected(value: any): void {
         console.log('Selected value is: ', value);
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myWalletsService.setActiveWallet(
+            value
+        );
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe, {},
+            function (data) {
+                console.log('success')
+                console.log(data);
+            },
+            function (data) {
+                console.log('error')
+                console.log(data);
+            })
+        );
+
+        // // Create a saga pipe.
+        // const asyncTaskPipes = this.walletNodeRequestService.walletAddressRequest({
+        //     walletId: 191,
+        // });
+        //
+        // // Send a saga action.
+        // // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // // saga pipe function descriptor.
+        // // Saga pipe function arguments.
+        // this.ngRedux.dispatch(SagaHelper.runAsync(
+        //     [],
+        //     [],
+        //     asyncTaskPipes,
+        //     {},
+        //     function (data) {
+        //         console.log('got address')
+        //         console.log(data);
+        //     }
+        // ));
     }
 
     public removed(value: any): void {
