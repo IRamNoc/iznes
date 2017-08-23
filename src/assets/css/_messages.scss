@@ -68,7 +68,7 @@
         }
     }
 
-    .message-grid {
+    .message-grid, .message-compose {
         background: white;
         border: 1px solid #ccc;
         border-radius: 3px;
@@ -202,6 +202,9 @@
             }
         }
 
+    }
+
+    .message-compose {
     }
 }
 

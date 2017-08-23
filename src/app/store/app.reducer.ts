@@ -6,7 +6,7 @@ import {
 import {
     UserState, userReducer,
     WalletState, walletReducer,
-    MessageState, messageReducer
+    MessageState, messageReducer,
     AdminUsersState, adminUserReducer,
     AssetState, assetReducer
 
