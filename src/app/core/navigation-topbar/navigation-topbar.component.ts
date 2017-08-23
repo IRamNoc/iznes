@@ -47,7 +47,7 @@ export class NavigationTopbarComponent implements OnInit {
 
         // Create a saga pipe.
         const asyncTaskPipe = this.myWalletsService.setActiveWallet(
-            value
+            value.id
         );
 
         // Get response from set active wallet
