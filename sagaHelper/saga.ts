@@ -73,13 +73,15 @@ function* doRunAsyncTask(successTypes, failureTypes, descriptor, args, successCa
     if (resolved) {
         for (const successType of successTypes) {
             yield put({type: successType, payload: resolved});
-            successCallback(resolved);
+
         }
+
+        successCallback(resolved);
     } else {
         for (const failureType of failureTypes) {
             yield put({type: failureType, payload: rejected});
-            failureCallback(rejected);
         }
+        failureCallback(rejected);
     }
 }
 
