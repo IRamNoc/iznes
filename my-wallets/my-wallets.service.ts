@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {RequestOwnWalletsMessageBody} from './my-wallets.service.model';
+import {RequestOwnWalletsMessageBody, SetActiveWalletMessageBody} from './my-wallets.service.model';
 
 
 @Injectable()
@@ -15,6 +15,17 @@ export class MyWalletsService {
         const messageBody: RequestOwnWalletsMessageBody = {
             RequestName: 'gmywa',
             token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    setActiveWallet(walletId: number): any {
+
+        const messageBody: SetActiveWalletMessageBody = {
+            RequestName: 'setactivewallet',
+            token: this.memberSocketService.token,
+            walletId: walletId
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
