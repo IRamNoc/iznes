@@ -7,6 +7,7 @@ import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
+import {FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
 
 import {
     MyMessagesService,
@@ -25,22 +26,31 @@ export class TruncatePipe implements PipeTransform {
 }
 
 @NgModule({
-    imports: [
-        CommonModule,
-        ClarityModule,
-        GravatarModule,
-    ],
-    declarations: [
-        SetlMessagesComponent,
-        TruncatePipe
-    ],
-    exports: [
-        SetlMessagesComponent,
-        TruncatePipe
-    ],
-    providers: [
-        MyMessagesService
-    ]
+    imports:
+        [
+            CommonModule,
+            ClarityModule,
+            GravatarModule,
+            [
+                FroalaEditorModule.forRoot(),
+                FroalaViewModule.forRoot()
+            ],
+        ],
+    declarations:
+        [
+            SetlMessagesComponent,
+            TruncatePipe
+        ],
+    exports:
+        [
+            SetlMessagesComponent,
+            TruncatePipe
+        ],
+    providers:
+        [
+            MyMessagesService
+        ]
 })
+
 export class SetlMessagesModule {
 }

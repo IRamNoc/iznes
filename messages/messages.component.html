@@ -8,8 +8,9 @@
 <div class="messages">
 
     <div class="row">
+        <!-- categories -->
         <div class="col-sm-4 col-md-3 col-lg-2 col-categories">
-            <div class="tile row">
+            <div class="tile row" (click)="showCategory(1337, true)" [ngClass]="{'active': 1337 === currentCategory}">
                 <div class="tile-icon">
                     <clr-icon shape="edit" size="24"></clr-icon>
                 </div>
@@ -21,8 +22,8 @@
 
             <hr class="message-hr">
 
-            <div class="cat-tile" *ngFor="let category of categories">
-                <div class="tile row {{category.active && 'active'}}">
+            <div class="cat-tile" *ngFor="let category of categories; let i = index">
+                <div class="tile row" (click)="showCategory(i)" [ngClass]="{'active': i === currentCategory}">
                     <div class="tile-icon">
                         <clr-icon [attr.shape]="category.icon" size="24"></clr-icon>
                     </div>
@@ -33,12 +34,21 @@
                 </div>
             </div>
 
-
         </div>
+
+        <!-- message highlights with message area -->
         <div class="col-sm-8 col-md-9 col-lg-10 col-message-grid">
 
-            <div class="message-grid">
+            <div *ngIf="composeSelected" class="message-compose">
+                <div class="message-options">
+                    <h2>Inbox - Compose Message</h2>
+                </div>
+                <div [froalaEditor]>Hello, Froala!</div>
+            </div>
+            <div *ngIf="!composeSelected" class="message-grid">
                 <div class="row">
+
+                    <!-- message highlights (previews -->
                     <div class="col-sm-4 message-highlights">
                         <div class="message-options">
                             <h2>Inbox - All Messages ({{messages.length}})</h2>
@@ -56,7 +66,7 @@
                             </button>
                         </div>
 
-                        <div class="message-highlight {{message.active && 'message-active'}} {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages">
+                        <div class="message-highlight {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
                                 <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
 
@@ -78,27 +88,27 @@
                         </div>
 
                     </div>
-                    <div class="col-sm-8 message-body">
+
+                    <!-- actual individual message area -->
+                    <div class="col-sm-8 message-body" *ngIf="currentMessage">
                         <div class="message-title">
                             <span>from</span>
                             <b class="message-from">
                                 <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
-                                {{messages[0].senderId }}
+                                {{currentMessage.senderId}}
                             </b> to
                             <b class="message-to">
                                 <img class="message-img-sender" src="http://localhost:4200/assets/images/ollie.jpg">
                                 Ollie Kett
                             </b>
 
-                            <h1>{{messages[0].subject}}</h1>
+                            <h1>{{currentMessage.subject}}</h1>
 
                         </div>
                         <div class="message-text">
                             <p>
-                                {{messages[0].content}}
+                                {{currentMessage.content}}
                             </p>
-
-
                         </div>
                     </div>
                 </div>

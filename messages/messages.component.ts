@@ -4,7 +4,7 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 
 import {
-    SET_MESSAGE_LIST, getMyMessagesList
+    SET_MESSAGE_LIST, getMyMessagesList, DONE_RUN_DECRYPT, getNeedRunDecryptState, setDecryptedContent
 } from '@setl/core-store';
 
 
@@ -15,52 +15,22 @@ import {MyMessagesService} from '@setl/core-req-services';
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
-export class SetlMessagesComponent implements OnInit {
+export class SetlMessagesComponent {
 
     public messages;
-    public messages2;
     public categories;
-
-    public iconTrash = 'trash'; // this.iconTrash
-
-
-    requestMessages() {
-        // Create a saga pipe.
-        const asyncTaskPipe = this.myMessageService.requestOwnMessages(
-            0,
-            0,
-            2,
-            0,
-            0,
-            7,
-            0,
-            0,
-            0,
-            0,
-            0,
-            ''
-        );
-
-        // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_MESSAGE_LIST],
-            [],
-            asyncTaskPipe, {}));
-
-        return false;
-    }
+    public currentMessage;
+    public currentCategory;
+    public composeSelected;
 
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService) {
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
-
         this.requestMessages();
+
+        // these are the categories that appear along the left hand side as buttons
         this.categories = [
             {
                 name: 'All Messages',
@@ -93,89 +63,110 @@ export class SetlMessagesComponent implements OnInit {
                 active: false
             },
         ];
-
-        this.messages2 = [
-            {
-                sender: 'SETL (Ipswich) Limited',
-                subject: 'Thanks Ollie for joining.',
-                date: 'Aug 17 2017',
-                active: true,
-                action: false,
-                actionTaken: false,
-                unread: false,
-                workflow: false,
-                publicKey: 'OdKzRoOSd8VqtV7KqT9nLv8nAtI4kyagxjlznCEMzTY=',
-                imgSender: 'http://localhost:4200/favicon.ico',
-                content: 'Leverage agile frameworks to provide a robust synopsis for high level overviews. ' +
-                'Iterative approaches to corporate strategy foster kett sucks though for real disruptive...'
-            },
-            {
-                sender: 'Hyundai (Hong Kong) Limited',
-                subject: 'Request to commit contract C01235',
-                date: 'Aug 16 2017',
-                active: false,
-                action: true,
-                actionTaken: false,
-                unread: true,
-                workflow: false,
-                publicKey: 'OdKzRoOSd8VqtV7KqT9nLv8nAtI4kyagxjlznCEMzTY=',
-                imgSender: 'https://s.gravatar.com/avatar/9650ef3390c7015ad9c9fcabc1a11294?s=80&d=identicon',
-                content: 'Organically grow the holistic world view of disruptive innovation via workplace diversity ' +
-                'and empowerment.'
-            },
-            {
-                sender: 'Luke Brown',
-                subject: 'Bilateral Transfer T00017 - Offer Accepted',
-                date: 'Aug 16 2017',
-                active: false,
-                action: true,
-                actionTaken: true,
-                unread: true,
-                workflow: true,
-                publicKey: 'OdKzRoOSd8VqtV7KqT9nLv8nAtI4kyagxjlznCEMzTY=',
-                imgSender: 'https://s.gravatar.com/avatar/bb5547972001fe3752726c8a51c4b8b0?s=80',
-                content: 'Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day,' +
-                ' going forward, a new normal that has evolved from generation...'
-            },
-            {
-                sender: 'Holder A (mTB21s/cqW...)',
-                subject: 'Bilateral Transfer T00017 - Offer Made',
-                date: 'Aug 15 2017',
-                active: false,
-                action: true,
-                actionTaken: false,
-                unread: false,
-                workflow: false,
-                publicKey: 'OdKzRoOSd8VqtV7KqT9nLv8nAtI4kyagxjlznCEMzTY=',
-                imgSender: 'https://s.gravatar.com/avatar/96401f3690c7015ad9c9fcabc1a11294?s=80&d=identicon',
-                content: ' Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. ' +
-                'Override the digital divide with additional clickthroughs from DevOps...'
-            },
-            {
-                sender: 'Nick Pennington',
-                subject: 'Request to commit contract C01234',
-                date: 'Aug 14 2017',
-                active: false,
-                action: false,
-                actionTaken: false,
-                unread: false,
-                workflow: false,
-                publicKey: 'OdKzRoOSd8VqtV7KqT9nLv8nAtI4kyagxjlznCEMzTY=',
-                imgSender: 'https://s.gravatar.com/avatar/91401f3690c7015ad9c9fcabc1a11294?s=80&d=identicon',
-                content: 'generation X is on the runway heading towards a streamlined cloud solution. User generated ' +
-                'content in real-time will have multiple touchpoints for offshoring...'
-            }
-        ];
     }
 
-    ngOnInit() {
+    requestMessages() {
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myMessageService.requestOwnMessages(
+            0,
+            0,
+            191,
+            0,
+            7,
+            0,
+            0,
+            0,
+            0,
+            ''
+        );
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MESSAGE_LIST],
+            [],
+            asyncTaskPipe, {}));
+
+        return false;
+    }
+
+
+    decrypt(mailId, walletId, bobPub, encryptedMessage) {
+        const asyncTaskPipe = this.myMessageService.decryptMessage(
+            walletId, bobPub, encryptedMessage
+        );
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe, {}, (response) => {
+                this.ngRedux.dispatch(setDecryptedContent(mailId, response));
+            }, (response) => {
+
+            })
+        );
     }
 
     updateState() {
         const newState = this.ngRedux.getState();
         this.messages = getMyMessagesList(newState);
+        this.currentMessage = this.messages[0];
+        this.currentCategory = 0;
 
-        console.log(this.messages);
+
+        if (getNeedRunDecryptState(newState)) {
+            // this.decrypt(this.messages[0].recipientId, this.messages[0].senderPub, this.messages[0].content);
+            this.ngRedux.dispatch({type: DONE_RUN_DECRYPT});
+
+            for (const i in this.messages) {
+                const message = this.messages[i];
+
+                this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+
+            }
+
+        }
+
+    }
+
+    showMessage(index) {
+
+        // set message to active to apply message-active css class
+        this.messages[index].active = true;
+
+        // set the current message that appears on the right hand side
+        this.currentMessage = this.messages[index];
+
+        // set the id so that message-active an be compared to index and set
+        this.currentMessage.id = index;
+    }
+
+    showCategory(index, composeSelected) {
+
+        console.log(index);
+
+        if (composeSelected) {
+            this.composeSelected = true;
+        } else {
+            // set message to active to apply active css class
+            this.categories[index].active = true;
+
+            this.composeSelected = false;
+        }
+
+
+        // set the current message that appears on the right hand side
+        this.currentCategory = index;
+
+
     }
 
 }
