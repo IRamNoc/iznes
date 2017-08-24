@@ -7,3 +7,12 @@ export interface RequestAdminUsersMessageBody extends MemberNodeMessageBody {
 export interface RequestOwnWalletsMessage extends MemberNodeRequest {
     MessageBody: RequestAdminUsersMessageBody;
 }
+
+export interface CreateUserMessageBody extends MemberNodeMessageBody {
+    token: string;
+    username: string;
+    email: string;
+    account: string;
+    userType: string;
+    password: string;
+}
