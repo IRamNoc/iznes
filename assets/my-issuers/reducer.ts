@@ -17,17 +17,26 @@ const initialState: MyIssuersState = {
 
 export const MyIssuersReducer = function (state: MyIssuersState = initialState,
                                           action: AsyncTaskResponseAction) {
+    let registerIssuerData;
+    let issuerIdentifier;
+    let issuerAddress;
+    let txHash;
+    let status;
+    let needNotify;
+    let newIssuerRequest;
+    let newState;
+
     switch (action.type) {
         case MyIssuersActions.REGISTER_ISSUER_SUCCESS:
-            const registerIssuerData = _.get(action, 'payload[1].data', []);
+            registerIssuerData = _.get(action, 'payload[1].data', []);
 
-            const issuerIdentifier = _.get(registerIssuerData, 'namespace', '');
-            const issuerAddress = _.get(registerIssuerData, 'fromaddr', '');
-            const txHash = _.get(registerIssuerData, 'hash', '');
-            const status = true;
-            const needNotify = true;
+            issuerIdentifier = _.get(registerIssuerData, 'namespace', '');
+            issuerAddress = _.get(registerIssuerData, 'fromaddr', '');
+            txHash = _.get(registerIssuerData, 'hash', '');
+            status = true;
+            needNotify = true;
 
-            const newIssuerRequest = {
+            newIssuerRequest = {
                 issuerIdentifier,
                 issuerAddress,
                 txHash,
@@ -35,23 +44,23 @@ export const MyIssuersReducer = function (state: MyIssuersState = initialState,
                 needNotify
             };
 
-            const newState = Object.assign({}, state, {
+            newState = Object.assign({}, state, {
                 newIssuerRequest
             });
 
-            return state;
+            return newState;
 
         case MyIssuersActions.FINISH_REGISTER_ISSUER_NOTIFICATION:
-            const needNotify1 = false;
+            needNotify = false;
 
-            const newIssuerRequest1 = Object.assign({}, state.newIssuerRequest, {
-                needNotify: needNotify1
+            newIssuerRequest = Object.assign({}, state.newIssuerRequest, {
+                needNotify
             });
-            const newState1 = Object.assign({}, state, {
-                newIssuerRequest: newIssuerRequest1
+            newState = Object.assign({}, state, {
+                newIssuerRequest
             });
 
-            return newState1;
+            return newState;
 
         default:
             return state;

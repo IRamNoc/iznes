@@ -8,37 +8,51 @@ const initialState: UsersState = {
     usersList: []
 };
 
-export const UsersReducer = function (state: UsersState = initialState,
-                                          action: AsyncTaskResponseAction) {
+export const UsersReducer = function (
+    state: UsersState = initialState,
+    action: AsyncTaskResponseAction
+) {
     switch (action.type) {
         case UsersActions.SET_ADMIN_USERLIST:
-            /*
-                We're setting the users list.
-                So first, lets's get the list from the socket response.
-            */
+            /* We're setting the users list.
+               So first, lets's get the list from the socket response. */
             const usersData = _.get(action, 'payload[1].Data', []);
-            console.log(usersData);
 
             /* Next we'll use a function to tidy the data up. */
             const usersList = formatUserList(usersData);
 
             /* Let's now assign differences to the current state. */
-            // const newState = Object.assign({}, state, {
-            //     usersList
-            // });
+            const newState = Object.assign({}, state, {
+                usersList
+            });
 
             /* And finally return the new state. */
-            return state;
+            return newState;
         default:
             return state;
     }
 };
 
-function formatUserList (rawResponse: Array<any>):Array<any> {
+/**
+ * Format User List
+ * A helper to format the raw user array given by the socket server.
+ *
+ * @param {rawResponse} array - The raw array given.
+ *
+ * @return {newStructure} object - The object of users by ID.
+ */
+function formatUserList (rawResponse: Array<any>):{} {
 
-    console.log( ' |--- Format User List' );
-    console.log( ' | rawResponse: ', rawResponse );
+    /* Lets define the new structure, an object. */
+    const newStructure = {};
 
-    return [];
+    /* We'll loop over the array and make it so each key is a user ID in the new
+       object, the value will be the user's data as an object. */
+    let i:number;
+    for (i = 0; i < rawResponse.length; i++) {
+        newStructure[ rawResponse[i].userID ] = rawResponse[i];
+    }
 
+    /* Lastly, return. */
+    return newStructure;
 }
