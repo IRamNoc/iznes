@@ -1922,73 +1922,10 @@ export class HomeComponent {
                 creation: '1988-10-13 00:00:00',
                 color: 'green'
             },
-            {
-                id: '5',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'yellow'
-            },
-            {
-                id: '6',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'purple'
-            },
-            {
-                id: '7',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'orange'
-            },
-            {
-                id: '8',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '9',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '10',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '11',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '12',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '13',
-                name: 'Dan',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '14',
-                name: 'Luke',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
         ];
-
-        //this.total = this.users.length;
-        //this.total = 10;
     }
 
-    toggler() {
+    toggler () {
         this.basic = !this.basic;
     }
 

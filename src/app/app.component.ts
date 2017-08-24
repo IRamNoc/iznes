@@ -10,6 +10,12 @@ export class AppComponent {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any;
+    JasperoAlertoptions: any = {
+        overlay: true,
+        overlayClickToClose: true,
+        showCloseButton: true,
+        duration: 500000
+    };
 
     constructor() {
 

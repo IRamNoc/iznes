@@ -6,6 +6,10 @@ import {
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 
+import {MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
+
+// setActiveWallet
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -18,7 +22,8 @@ export class NavigationTopbarComponent implements OnInit {
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>,
+                private myWalletsService: MyWalletsService) {
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
     }
@@ -39,6 +44,24 @@ export class NavigationTopbarComponent implements OnInit {
 
     public selected(value: any): void {
         console.log('Selected value is: ', value);
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myWalletsService.setActiveWallet(
+            value.id
+        );
+
+        // Get response from set active wallet
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe, {},
+            function (data) {
+                console.log(data);
+            },
+            function (data) {
+                console.log(data);
+            })
+        );
     }
 
     public removed(value: any): void {

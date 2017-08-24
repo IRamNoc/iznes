@@ -3,6 +3,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
+import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers/icon-and-types-service';
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
@@ -42,6 +43,7 @@ import {AppComponent} from './app.component';
  */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 import {SelectModule} from 'ng2-select';
+import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
 
 /**
  * App main state
@@ -64,7 +66,7 @@ import {environment} from '../environments/environment';
 @NgModule({
     declarations: [
         /* Components. */
-        AppComponent,
+        AppComponent
     ],
     imports: [
         /* Vendor/Angular */
@@ -76,6 +78,7 @@ import {environment} from '../environments/environment';
         RouterModule.forRoot(ROUTES),
         SelectModule,
         ToasterModule,
+        JasperoAlertsModule,
         NgReduxModule,
         ReactiveFormsModule,
 
@@ -112,7 +115,8 @@ import {environment} from '../environments/environment';
         WalletnodeTxService,
         WalletNodeRequestService,
         LoginGuardService,
-        ToasterService
+        ToasterService,
+        AlertIconAndTypesService
     ],
     bootstrap: [AppComponent]
 })
