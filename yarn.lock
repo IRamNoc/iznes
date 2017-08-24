@@ -214,7 +214,7 @@
 
 "@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#1.0.3":
   version "1.0.3"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#367a5c41b81118d5d6c8d91a0abfa63cd9fdc578"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#da016704f902cedfa99c67fb164930f082b8db86"
   dependencies:
     ramda "^0.24.1"
     redux-saga "^0.15.6"
