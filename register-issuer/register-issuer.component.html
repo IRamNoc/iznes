@@ -32,17 +32,3 @@
   </clr-tab>
 </clr-tabs>
 
-<clr-modal [(clrModalOpen)]="showRegIssuerRespModal" [clrModalSize]="'xl'">
-  <h3 class="modal-title">Extra large modal</h3>
-  <div class="modal-body">
-    <div *ngIf="currentRegisterIssuerResponse">
-      <div>{{currentRegisterIssuerResponse.issuerIdentifier}}</div>
-      <div>{{currentRegisterIssuerResponse.issuerAddress}}</div>
-      <div>{{currentRegisterIssuerResponse.txHash}}</div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="showRegIssuerRespModal = false">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="showRegIssuerRespModal = false">Ok</button>
-  </div>
-</clr-modal>
