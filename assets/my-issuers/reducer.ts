@@ -1,4 +1,4 @@
-import {AsyncTaskResponseAction} from '@setl/utils/SagaHelper/actions';
+import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyIssuersActions from './actions';
 import {MyIssuersState, IssuerDetail, NewIssuerRequest} from './model';
 import _ from 'lodash';

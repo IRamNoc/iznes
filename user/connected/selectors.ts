@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 import {UserState} from '../index';
-import {ConnectedState} from './index';
+import {ConnectedState} from './model';
 
 export const getUser = (state): UserState => state.user;
 

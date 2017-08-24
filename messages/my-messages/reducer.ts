@@ -1,4 +1,4 @@
-import {AsyncTaskResponseAction} from '@setl/utils/SagaHelper/actions';
+import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyMessageActions from './actions';
 import {MyMessagesState, MessageDetail} from './model';
 import {SagaHelper, Common} from '@setl/utils';
