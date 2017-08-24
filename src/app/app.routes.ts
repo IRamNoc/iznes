@@ -34,6 +34,7 @@ import {SetlBalancesComponent} from '@setl/core-balances';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
     {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
 
     /* Blank layout components */
@@ -46,63 +47,90 @@ export const ROUTES: Routes = [
         ]
     },
 
-    /* Root pages. */
+    /* Basic Layout pages. */
     {
-        path: '', component: BasicLayoutComponent,
+        path: '',
+        component: BasicLayoutComponent,
         children: [
             {
-                path: 'home', component: HomeComponent, canActivate: [LoginGuardService]
-            },
-            {
-                path: 'messages', component: SetlMessagesComponent, canActivate: [LoginGuardService]
-            },
-        ],
-        canActivate: [LoginGuardService]
-    },
-
-    /* Ui Element Pages. */
-    {
-        path: 'ui-elements', component: BasicLayoutComponent,
-        children: [
-            {
-                path: 'form', component: FormElementsComponent,
+                path: 'home',
+                component: HomeComponent,
                 canActivate: [LoginGuardService]
             },
+            {
+                path: 'messages',
+                component: SetlMessagesComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'ui-elements',
+                children: [
+                    {
+                        path: 'form',
+                        component: FormElementsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                ]
+            },
+            {
+                path: 'reports',
+                children: [
+                    {
+                        path: 'balances',
+                        component: SetlBalancesComponent,
+                        canActivate: [LoginGuardService]
+                    }
+                ]
+            },
+            {
+                path: 'asset-servicing',
+                children: [
+                    {
+                        path: 'register-issuer',
+                        component: RegisterIssuerComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'register-asset',
+                        component: RegisterAssetComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'issue-asset',
+                        component: IssueAssetComponent,
+                        canActivate: [LoginGuardService]
+                    }
 
-        ],
-        canActivate: [LoginGuardService]
-    },
+                ],
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'user-administration',
+                children: [
+                    {
+                        path: 'users',
+                        component: AdminUsersComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'wallets',
+                        component: AdminWalletsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'permissions',
+                        component: AdminPermissionsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'wizard',
+                        component: AdminWizardComponent,
+                        canActivate: [LoginGuardService]
+                    }
 
-    /* Balance Reports. */
-    {
-        path: 'reports', component: BasicLayoutComponent,
-        children: [
-            {path: 'balances', component: SetlBalancesComponent, canActivate: [LoginGuardService]}
-        ],
-        canActivate: [LoginGuardService]
-    },
-
-    /* Asset Servicing Pages. */
-    {
-        path: 'asset-servicing', component: BasicLayoutComponent,
-        children: [
-            {path: 'register-issuer', component: RegisterIssuerComponent, canActivate: [LoginGuardService]},
-            {path: 'register-asset', component: RegisterAssetComponent, canActivate: [LoginGuardService]},
-            {path: 'issue-asset', component: IssueAssetComponent, canActivate: [LoginGuardService]}
-
-        ],
-        canActivate: [LoginGuardService]
-    },
-
-    /* User Admin Pages. */
-    {
-        path: 'user-administration', component: BasicLayoutComponent,
-        children: [
-            {path: 'users', component: AdminUsersComponent, canActivate: [LoginGuardService]},
-            {path: 'wallets', component: AdminWalletsComponent, canActivate: [LoginGuardService]},
-            {path: 'permissions', component: AdminPermissionsComponent, canActivate: [LoginGuardService]},
-            {path: 'wizard', component: AdminWizardComponent, canActivate: [LoginGuardService]}
-
+                ],
+                canActivate: [LoginGuardService]
+            }
         ],
         canActivate: [LoginGuardService]
     }
