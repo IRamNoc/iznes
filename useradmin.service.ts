@@ -136,6 +136,26 @@ export class UserAdminService {
         this.usersListEvent.emit(this.usersList);
     }
 
+    public createNewUser (formState):void {
+        // Create a saga pipe.
+        const asyncTaskPipe = this.adminUsersService.createNewUser(
+            formState
+        );
+
+        // Get response from set active wallet
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            function (data) {
+                console.log(data); // success
+            },
+            function (data) {
+                console.log(data); // error
+            })
+        );
+
+        return;
+    }
+
     /**
      * Get Account Types
      * Returns the account types array.
