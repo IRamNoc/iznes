@@ -30,6 +30,7 @@
         "@setl/core-req-services": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#1.0.2",
         "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#1.0.3",
         "@setl/core-useradmin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#1.0.7",
+        "@setl/jaspero-ng2-alerts": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git#1.0.0",
         "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#1.0.3",
         "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#1.0.4",
         "@webcomponents/custom-elements": "1.0.0-alpha.3",
