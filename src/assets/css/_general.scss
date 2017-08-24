@@ -107,6 +107,32 @@ ul.breadcrumb li a:hover {
     text-decoration: underline;
 }
 
+.main-container {
+    .content-container {
+        display: block;
+        -webkit-box-flex: inherit;
+        -ms-flex: auto;
+        flex: auto;
+        min-height: inherit;
+        float: left;
+        width: 100%;
+        background: #373a49;
+        height: 100%;
+
+        .sidenav {
+            float: left;
+            width: 230px;
+            display: table;
+        }
+
+        .content-area {
+            float: left;
+            width: calc(100% - 230px);
+            height: 100%;
+        }
+    }
+}
+
 .dont-break-out {
     /* These are technically the same, but use both */
     overflow-wrap: break-word;
@@ -123,5 +149,4 @@ ul.breadcrumb li a:hover {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
-
 }
