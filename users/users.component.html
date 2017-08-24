@@ -4,147 +4,271 @@
 
 <div class="wrapper wrapper-content">
 
-    <clr-tabs>
-        <clr-tab>
-            <button clrTabLink id="users-list-tab"><i class="fa fa-search"></i> Search</button>
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="testlink{{id}}" [innerHTML]="tabdata.title"></button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- User list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container
+                        *ngTemplateOutlet="staticUserListTab"
+                    ></ng-container>
+                </ng-container>
 
-            <clr-tab-content id="users-list-content" *clrIfActive="true">
-                <div class="panel-body">
+                <!-- User add tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                        *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container>
+                </ng-container>
 
-                    <clr-datagrid #usersDataGrid>
-                        <clr-dg-column>Actions</clr-dg-column>
-                        <clr-dg-column>Username</clr-dg-column>
-                        <clr-dg-column>Email</clr-dg-column>
-                        <clr-dg-column>Account</clr-dg-column>
-                        <clr-dg-column>Status</clr-dg-column>
-
-                        <clr-dg-row *clrDgItems="let user of usersData">
-                            <clr-dg-cell>
-                                <div class="btn-group btn-sm">
-                                    <button (click)="handleDelete(i)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                                    <button (click)="handleDelete(i)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
-                                </div>
-                            </clr-dg-cell>
-                            <clr-dg-cell>{{user.userName}}</clr-dg-cell>
-                            <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
-                            <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
-                            <clr-dg-cell>
-                                    <span *ngIf="user.enabled" class="label label-success">Enabled</span>
-                                    <span *ngIf="!user.enabled" class="label label-warning">Disabled</span>
-                            </clr-dg-cell>
-                        </clr-dg-row>
-
-                        <clr-dg-footer>
-                            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                            of {{pagination.totalItems}} assets
-                            <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                        </clr-dg-footer>
-                    </clr-datagrid>
-                </div>
-            </clr-tab-content>
-        </clr-tab>
-
-        <clr-tab>
-            <button clrTabLink id="users-new-tab"><i class="fa fa-user"></i> Add User</button>
-
-            <clr-tab-content id="users-new-content" *clrIfActive>
-                <div class="user-tab-panel-body panel-body">
-                    <form>
-                        <div class="form-horizontal">
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span class="ml_translated" mltag="txt_username">Username</span>
-                                    </label>
-                                    <div>
-                                        <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span class="ml_translated" mltag="txt_email">Email</span>
-                                    </label>
-                                    <div>
-                                        <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span class="ml_translated" mltag="txt_account">Account</span>
-                                    </label>
-                                    <ng-select
-                                        (selected)="selected('accountType', $event)"
-                                        (removed)="removed('accountType', $event)"
-                                        [items]="accountTypes"
-                                        [allowClear]="true"
-                                        placeholder="Select Type">
-                                    </ng-select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span mltag="txt_usertype">User Type</span>
-                                    </label>
-                                    <ng-select
-                                        (selected)="selected('userType', $event)"
-                                        (removed)="removed('userType', $event)"
-                                        [items]="userTypes"
-                                        [allowClear]="true"
-                                        placeholder="Select Type">
-                                    </ng-select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span class="ml_translated" mltag="txt_password">Password</span>
-                                    </label>
-                                    <div>
-                                        <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label class="control-label">
-                                        <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
-                                    </label>
-                                    <div>
-                                        <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label">
-                                        <span class="ml" mltag="txt_access">Accès</span>
-                                    </label>
-                                    <div>
-                                        <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group button-group">
-                                <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <!-- User edit tabs. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container>
+                </ng-container>
             </clr-tab-content>
         </clr-tab>
     </clr-tabs>
+
+    <!-- User Data Table. -->
+    <ng-template #staticUserListTab>
+        <div class="panel-body">
+
+            <clr-datagrid #usersDataGrid>
+                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Username</clr-dg-column>
+                <clr-dg-column>Email</clr-dg-column>
+                <clr-dg-column>Account</clr-dg-column>
+                <clr-dg-column>Status</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let user of usersData; let i = index">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button (click)="handleEdit(i)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button (click)="handleDelete(i)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{user.userName}}</clr-dg-cell>
+                    <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
+                    <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
+                    <clr-dg-cell>
+                            <span *ngIf="user.accountLocked == 0" class="label label-success">Enabled</span>
+                            <span *ngIf="user.accountLocked != 0" class="label label-warning">Disabled</span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} users
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <!-- User Add Form. -->
+    <ng-template #staticUserAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Username</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Email</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_account">Account</span>
+                            </label>
+                            <ng-select
+                                (selected)="selected('accountType', $event)"
+                                (removed)="removed('accountType', $event)"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_usertype">User Type</span>
+                            </label>
+                            <ng-select
+                                (selected)="selected('userType', $event)"
+                                (removed)="removed('userType', $event)"
+                                [items]="userTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_password">Password</span>
+                            </label>
+                            <div>
+                                <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
+                            </label>
+                            <div>
+                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span class="ml" mltag="txt_access">Accès</span>
+                            </label>
+                            <div>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- User Edit Form. -->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div>
+            <button (click)="closeTab(tabid)" class="btn btn-primary">Close</button>
+            {{ context | json }}
+        </div>
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Username</span>
+                            </label>
+                            <div>
+                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Email</span>
+                            </label>
+                            <div>
+                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_account">Account</span>
+                            </label>
+                            <ng-select
+                                (selected)="selected('accountType', $event)"
+                                (removed)="removed('accountType', $event)"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['accountType']">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_usertype">User Type</span>
+                            </label>
+                            <ng-select
+                                (selected)="selected('userType', $event)"
+                                (removed)="removed('userType', $event)"
+                                [items]="userTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['userType']">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_password">Password</span>
+                            </label>
+                            <div>
+                                <input type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
+                            </label>
+                            <div>
+                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span class="ml" mltag="txt_access">Accès</span>
+                            </label>
+                            <div>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
 
     <!-- This nested tab set cannot be directly inside the main one :( -->
     <ng-template #accessAdminTabs>
