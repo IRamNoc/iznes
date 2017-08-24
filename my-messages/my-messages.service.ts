@@ -11,24 +11,23 @@ export class MyMessagesService {
     constructor(private memberSocketService: MemberSocketService) {
     }
 
-    requestOwnMessages(mailId, fromWalletId, toWalletId, sinceMessageId, pageCount, pageSize, arrangementId, arrangementStatus, isDraft, isDeleted, isAction, search): any {
+    requestOwnMessages(mailId, fromWalletId, toWalletId, pageCount, pageSize, arrangementId, arrangementStatus, isDeleted, isAction, search): any {
         const messageBody: RequestOwnMessagesBody = {
             RequestName: 'email_get',
             token: this.memberSocketService.token,
-            mailId: mailId,
-            fromWalletId: fromWalletId,
-            toWalletId: toWalletId,
-            sinceMessageId: sinceMessageId,
-            pageCount: pageCount,
-            pageSize: pageSize,
-            arrangementId: arrangementId,
-            isDraft: isDraft,
+            mailId: mailId, // specific id
+            fromWalletId: fromWalletId, // senders wallet id
+            toWalletId: toWalletId, // recipents wallet id
+            sinceMessageId: 0,
+            pageCount: pageCount, // which page to load
+            pageSize: pageSize, // how many message to load on that page
+            arrangementId: arrangementId, // workflow id
+            isDraft: 0,
             isDeleted: isDeleted,
             isAction: isAction,
-            search: search,
-            arrangementStatus: arrangementStatus,
+            search: search, // search doesn't work?
+            arrangementStatus: arrangementStatus, // workflow status
         };
-
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
