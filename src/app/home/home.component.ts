@@ -49,17 +49,6 @@ export class HomeComponent {
 
     public constructor() {
 
-
-
-        //this.total = this.users.length;
-        //this.total = 10;
-    }
-
-    toggler() {
-        this.basic = !this.basic;
-    }
-
-    public ngAfterViewInit() {
         this.users = [
             {
                 id: '1',
@@ -1994,6 +1983,16 @@ export class HomeComponent {
                 color: 'red'
             },
         ];
+
+        //this.total = this.users.length;
+        //this.total = 10;
+    }
+
+    toggler() {
+        this.basic = !this.basic;
+    }
+
+    public ngAfterViewInit() {
 
         // this.tabs = [
         //     {

@@ -421,8 +421,7 @@ clr-tabs > section {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  border: 1px solid #dce1eb;
-  border-top-left-radius: 0px; }
+  border: 1px solid #dce1eb; }
 
 clr-tabs > section {
   margin-top: 0;
@@ -446,7 +445,11 @@ clr-tab-content {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  margin-top: 0px; }
+  margin-top: 0px;
+  border-top-left-radius: 0px; }
+
+clr-tab-content clr-tab-content {
+  margin: 0; }
 
 clr-tab-link i {
   margin-right: 4px; }
