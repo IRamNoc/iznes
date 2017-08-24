@@ -45,4 +45,5 @@ yarn-error.log
 Thumbs.db
 
 # CSS Map
+src/styles.css
 src/styles.css.map

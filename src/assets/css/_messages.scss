@@ -114,6 +114,9 @@
                 h4 {
                     @extend .animate;
                     margin-top: 2px;
+                    span {
+                        font-size: 18px;
+                    }
 
                 }
                 span {
@@ -205,6 +208,17 @@
     }
 
     .message-compose {
+        label {
+            text-align: right !important;
+            padding: 11px 0 0;
+        }
+        .content-area form input[type], .content-area .form input[type] {
+            width: 100%;
+        }
+        .message-compose-buttons {
+            padding: 17px 15px 0;
+            float: right;
+        }
     }
 }
 
