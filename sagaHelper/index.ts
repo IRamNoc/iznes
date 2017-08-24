@@ -13,6 +13,7 @@ const pipe = (...ds) => ds.reduce((piped, d) => {
 }, {pipe: []});
 
 const runAsync = actions.runAsyncTask;
+const runAsyncCallback = actions.runAsyncTaskCallback;
 
 export
 {
@@ -21,6 +22,7 @@ export
     create,
     pipe,
     runAsync,
+    runAsyncCallback,
     preSagaMiddleWare,
     postSagaMiddleWare
 };

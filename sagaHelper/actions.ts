@@ -18,6 +18,21 @@ export const runAsyncTask = (successTypes,
     }
 );
 
+export const runAsyncTaskCallback = (descriptor,
+                                     successCallback = () => true,
+                                     failureCallback = () => true) => (
+    {
+        type: RUN_ASYNC_TASK,
+        successTypes: [],
+        failureTypes: [],
+        descriptor,
+        args: {},
+        successCallback,
+        failureCallback
+
+    }
+);
+
 export interface AsyncTaskResponseAction {
     type: string;
     payload: any;
