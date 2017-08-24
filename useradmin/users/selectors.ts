@@ -2,7 +2,7 @@ import {createSelector} from 'reselect';
 import {AdminUsersState} from '../index';
 import {UsersState} from './index';
 
-const getAdminUser = (state): AdminUsersState => state.adminUser;
+const getAdminUser = (state): AdminUsersState => state.userAdmin
 
 export const getUsers = createSelector(
     getAdminUser,
