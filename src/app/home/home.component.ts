@@ -4,7 +4,7 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 import {StringFilter, Comparator} from "clarity-angular";
-import {Component} from "@angular/core";
+import {Component, AfterViewInit} from "@angular/core";
 
 interface User {
     id: number;
@@ -30,12 +30,6 @@ class ColorFilter implements StringFilter<User> {
     }
 }
 
-class MyComparator implements Comparator<User> {
-    compare(a: User, b: User) {
-        return a.id - b.id; // [clrDgSortBy]="myComparator"
-    }
-}
-
 @Component({
     styleUrls: ['./home.component.scss'],
     templateUrl: './home.component.html',
@@ -46,7 +40,6 @@ export class HomeComponent {
 
     public myFilter = new MyFilter();
     public colorFilter = new ColorFilter();
-    public myComparator = new MyComparator();
 
     public users;
 
@@ -55,7 +48,6 @@ export class HomeComponent {
     basic: boolean = false;
 
     public constructor() {
-
         this.users = [
             {
                 id: '1',
@@ -81,89 +73,7 @@ export class HomeComponent {
                 creation: '1988-10-13 00:00:00',
                 color: 'green'
             },
-            {
-                id: '5',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'yellow'
-            },
-            {
-                id: '6',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'purple'
-            },
-            {
-                id: '7',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'orange'
-            },
-            {
-                id: '8',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '9',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '10',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '11',
-                name: 'Ollie Kett',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '12',
-                name: 'Mingrui Huang',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
-            {
-                id: '13',
-                name: 'Dan',
-                creation: '1993-02-08 00:00:00',
-                color: 'blue'
-            },
-            {
-                id: '14',
-                name: 'Luke',
-                creation: '1988-10-13 00:00:00',
-                color: 'red'
-            },
         ];
-
-        this.tabs = [
-            {
-                "title": "tab1",
-                "content": "tabcont1"
-            },
-            {
-                "title": "tab2",
-                "content": "tabcont2"
-            },
-            {
-                "title": "tab3",
-                "content": "tabcont3"
-            },
-            {
-                "title": "tab4",
-                "content": "tabcont4"
-            }
-        ];
-
-        //this.total = this.users.length;
-        //this.total = 10;
     }
 
     toggler() {

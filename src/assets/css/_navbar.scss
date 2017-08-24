@@ -8,7 +8,7 @@ header {
         .nav-link.nav-icon {
             @extend .animate;
             color: $setlHoverDarker;
-            width: 120px;
+            width: 100px;
             text-align: center;
             height: 75px;
             font-size: 90%;
@@ -43,6 +43,10 @@ header {
             &:last-of-type {
                 margin-right: 24px;
             }
+        }
+
+        .nav-link.nav-icon::after {
+            background: #7d7d7d;
         }
 
         // user icon and dropdown

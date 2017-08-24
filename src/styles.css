@@ -82,7 +82,26 @@ ul.breadcrumb li a:hover {
   color: #57a5e3;
   text-decoration: underline; }
 
-.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-compose .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text, .messages .message-compose .message-body .message-text {
+.main-container .content-container {
+  display: block;
+  -webkit-box-flex: inherit;
+  -ms-flex: auto;
+  flex: auto;
+  min-height: inherit;
+  float: left;
+  width: 100%;
+  background: #373a49;
+  height: 100%; }
+  .main-container .content-container .sidenav {
+    float: left;
+    width: 230px;
+    display: table; }
+  .main-container .content-container .content-area {
+    float: left;
+    width: calc(100% - 230px);
+    height: 100%; }
+
+.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text {
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -120,7 +139,7 @@ header {
   height: 75px; }
   header .header-actions .nav-link.nav-icon {
     color: #282b38;
-    width: 120px;
+    width: 100px;
     text-align: center;
     height: 75px;
     font-size: 90%; }
@@ -145,6 +164,8 @@ header {
       top: 40%; }
     header .header-actions .nav-link.nav-icon:last-of-type {
       margin-right: 24px; }
+  header .header-actions .nav-link.nav-icon::after {
+    background: #7d7d7d; }
   header .header-actions .user {
     float: left !important;
     border-left: 1px solid rgba(250, 250, 250, 0.15) !important;
