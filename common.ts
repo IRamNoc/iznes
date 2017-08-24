@@ -43,8 +43,7 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
     return SagaHelper.create(async () => {
         const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (messageId, data, userData) => {
-                // const status = _.get(data, 'Data[0].Status', 'Fail');
-                const status = 'OK';
+                const status = _.get(data, 'Status', 'Fail');
                 // status is ok -> success.
                 if (status === 'OK') {
                     // success
