@@ -13,3 +13,10 @@ export const getMyMessagesList = createSelector(
     getMyMessages,
     (state: MyMessagesState) => state.messageList
 );
+
+export const getNeedRunDecryptState = createSelector(
+    getMyMessages,
+    (state: MyMessagesState) => state.needRunDecrypt
+);
+
+

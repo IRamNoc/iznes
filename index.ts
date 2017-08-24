@@ -20,7 +20,10 @@ export {
     MessageState,
     messageReducer,
     SET_MESSAGE_LIST,
-    getMyMessagesList
+    getMyMessagesList,
+    DONE_RUN_DECRYPT,
+    getNeedRunDecryptState,
+    setDecryptedContent
 } from './messages';
 
 export {
