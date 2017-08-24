@@ -116,6 +116,10 @@ ul.breadcrumb li a:hover {
   -webkit-hyphens: auto;
   hyphens: auto; }
 
+.pagination > * {
+  width: 30px;
+  text-align: center; }
+
 header {
   background-color: #292e3c !important;
   flex: 0 0 75px;
