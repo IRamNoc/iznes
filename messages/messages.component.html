@@ -43,7 +43,47 @@
                 <div class="message-options">
                     <h2>Inbox - Compose Message</h2>
                 </div>
+                <form>
+                    <section class="form-block">
+                        <div class="form-group row">
+                            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
+                                <label for="gForm_3">To</label>
+                            </div>
+                            <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12">
+                                <div class="select form-control">
+                                    <select id="gForm_3">
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                        <option>Option 3</option>
+                                        <option>Option 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
+                                <label for="gForm_1">Subject</label>
+                            </div>
+                            <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
+                                <input class="form-control" type="text" id="gForm_1" placeholder="Enter value here" size="45">
+                            </div>
+                        </div>
+                    </section>
+                </form>
+
                 <div [froalaEditor]>Hello, Froala!</div>
+
+                <div class="message-compose-buttons">
+                    <button class="btn btn-primary">
+                        <clr-icon shape="plane"></clr-icon>
+                        Success
+                    </button>
+                    <button class="btn btn-danger-outline">
+                        <clr-icon shape="times"></clr-icon>
+                        Warning
+                    </button>
+                </div>
+
             </div>
             <div *ngIf="!composeSelected" class="message-grid">
                 <div class="row">
@@ -69,19 +109,19 @@
                         <div class="message-highlight {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
                                 <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
-
                                 {{ message.senderId }}
                             </h6>
 
                             <h4>
-                                <span class="message-unread-icon" *ngIf="!message.isRead"></span> {{message.subject | truncate: [40] }}
+                                <span class="message-unread-icon" *ngIf="!message.isRead"></span>
+                                <span [innerHtml]="message.subject | truncate: [100]"></span>
                             </h4>
                             <span class="message-date">
                                 <clr-icon shape="balance" *ngIf="message.action"></clr-icon>
                                 <clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>
                                 {{message.date | date}}
                             </span>
-                            <span class="message-preview">{{message.content | truncate: [140] }}</span>
+                            <span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>
                         </div>
 
                         <div class="message-highlight-footer">Display {{messages.length}} messages
@@ -102,13 +142,11 @@
                                 Ollie Kett
                             </b>
 
-                            <h1>{{currentMessage.subject}}</h1>
+                            <h1 [innerHtml]="currentMessage.subject"></h1>
 
                         </div>
                         <div class="message-text">
-                            <p>
-                                {{currentMessage.content}}
-                            </p>
+                            <p *ngIf="currentMessage.content" [innerHtml]="currentMessage.content"></p>
                         </div>
                     </div>
                 </div>
