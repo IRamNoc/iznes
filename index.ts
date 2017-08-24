@@ -4,7 +4,10 @@ export {
     getMyDetail,
 
     // authentication
-    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication
+    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication,
+
+    // connected
+    setConnectedWallet, getConnected, getConnectedChain, getConnectedWallet
 } from './user';
 
 export {
@@ -38,3 +41,4 @@ export {
     SET_ADMIN_USERLIST,
     getUsersList
 } from './useradmin';
+
