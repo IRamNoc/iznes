@@ -107,11 +107,10 @@ export class SetlLoginComponent {
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
-        // Saga pipe function arguments.
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
-            asyncTaskPipe, {}));
+            asyncTaskPipe));
 
         return false;
     }

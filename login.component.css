@@ -76,6 +76,14 @@ form .form-group input[type=text].error, form .form-group input[type=password].e
     margin-top: 20px;
 }
 
+.alert {
+    width: 100%;
+}
+
+.alert-items {
+    padding: 0px;
+}
+
 /**
 Small screen, portrait
  */
