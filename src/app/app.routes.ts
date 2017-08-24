@@ -82,7 +82,7 @@ export const ROUTES: Routes = [
         canActivate: [LoginGuardService]
     },
 
-    /* User Admin Pages. */
+    /* Asset Servicing Pages. */
     {
         path: 'asset-servicing', component: BasicLayoutComponent,
         children: [
