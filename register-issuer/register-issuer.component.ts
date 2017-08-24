@@ -16,6 +16,8 @@ import {
     finishRegisterIssuerNotification
 } from '@setl/core-store';
 
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+
 @Component({
     selector: 'app-register-issuer',
     templateUrl: './register-issuer.component.html',
@@ -28,12 +30,9 @@ export class RegisterIssuerComponent implements OnInit {
     issuerIdentifier: AbstractControl;
     issuerAddress: AbstractControl;
 
-    showRegIssuerRespModal: boolean;
-
-    currentRegisterIssuerResponse: any;
-
     constructor(private ngRedux: NgRedux<any>,
                 private walletnodeTxService: WalletnodeTxService,
+                private alertsService: AlertsService,
                 private fb: FormBuilder) {
 
         ngRedux.subscribe(() => this.updateState());
@@ -49,7 +48,6 @@ export class RegisterIssuerComponent implements OnInit {
 
         this.issuerIdentifier = this.registerIssuerForm.controls['issueIdentifier'];
         this.issuerAddress = this.registerIssuerForm.controls['issuerAddress'];
-
     }
 
 
@@ -104,11 +102,28 @@ export class RegisterIssuerComponent implements OnInit {
     }
 
     showResponseModal(currentRegisterIssuerRequest) {
-        this.showRegIssuerRespModal = true;
 
-        this.currentRegisterIssuerResponse = currentRegisterIssuerRequest;
+        this.alertsService.create('success', `
+            <table class="table grid">
 
-        // console.log(currentRegisterIssuerResponse);
+        <tbody>
+            <tr>
+                <td class="left">Issuer</td>
+                <td>${currentRegisterIssuerRequest.issuerIdentifier}</td>
+   
+            </tr>
+            <tr>
+                <td class="left">Address</td>
+                <td>${currentRegisterIssuerRequest.issuerAddress}</td>
+            </tr>
+            <tr>
+                <td class="left">Tx hash</td>
+                <td>${currentRegisterIssuerRequest.txHash}</td>
+            </tr>
+
+        </tbody>
+    </table>
+        `);
 
     }
 
