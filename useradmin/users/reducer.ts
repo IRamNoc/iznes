@@ -10,22 +10,24 @@ const initialState: UsersState = {
 
 export const UsersReducer = function (state: UsersState = initialState,
                                       action: AsyncTaskResponseAction) {
+
+    /* Local stuff. */
+    const usersData = _.get(action, 'payload[1].Data', []);
+    let newState:UsersState;
+
     switch (action.type) {
         case UsersActions.SET_ADMIN_USERLIST:
-            /* We're setting the users list.
-             So first, lets's get the list from the socket response. */
-            const usersData = _.get(action, 'payload[1].Data', []);
-
-            /* Next we'll use a function to tidy the data up. */
+            /* We'll use a function to tidy the data up. */
             const usersList = formatUserList(usersData);
 
             /* Let's now assign differences to the current state. */
-            const newState = Object.assign({}, state, {
+            newState = Object.assign({}, state, {
                 usersList
             });
 
             /* And finally return the new state. */
             return newState;
+
         default:
             return state;
     }
