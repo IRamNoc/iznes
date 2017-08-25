@@ -43,11 +43,11 @@
                 <clr-dg-column>Account</clr-dg-column>
                 <clr-dg-column>Status</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersData; let i = index">
+                <clr-dg-row *clrDgItems="let user of usersData">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(i)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                            <button (click)="handleDelete(i)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                            <button (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{user.userName}}</clr-dg-cell>
@@ -79,7 +79,7 @@
                                 <span class="ml_translated" mltag="txt_username">Username</span>
                             </label>
                             <div>
-                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
                             </div>
                         </div>
 
@@ -88,7 +88,7 @@
                                 <span class="ml_translated" mltag="txt_email">Email</span>
                             </label>
                             <div>
-                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
                             </div>
                         </div>
                     </div>
@@ -99,11 +99,10 @@
                                 <span class="ml_translated" mltag="txt_account">Account</span>
                             </label>
                             <ng-select
-                                (selected)="selected('accountType', $event)"
-                                (removed)="removed('accountType', $event)"
                                 [items]="accountTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type">
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['accountType']">
                             </ng-select>
                         </div>
                     </div>
@@ -114,11 +113,10 @@
                                 <span mltag="txt_usertype">User Type</span>
                             </label>
                             <ng-select
-                                (selected)="selected('userType', $event)"
-                                (removed)="removed('userType', $event)"
                                 [items]="userTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type">
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['userType']">
                             </ng-select>
                         </div>
                     </div>
@@ -129,7 +127,7 @@
                                 <span class="ml_translated" mltag="txt_password">Password</span>
                             </label>
                             <div>
-                                <input type="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                                <input type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
                             </div>
                         </div>
 
@@ -201,8 +199,6 @@
                                 <span class="ml_translated" mltag="txt_account">Account</span>
                             </label>
                             <ng-select
-                                (selected)="selected('accountType', $event)"
-                                (removed)="removed('accountType', $event)"
                                 [items]="accountTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
@@ -217,8 +213,6 @@
                                 <span mltag="txt_usertype">User Type</span>
                             </label>
                             <ng-select
-                                (selected)="selected('userType', $event)"
-                                (removed)="removed('userType', $event)"
                                 [items]="userTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"

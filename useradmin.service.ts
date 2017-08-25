@@ -28,6 +28,10 @@ export class UserAdminService {
             'id': '2',
             'text': 'Developement_Admin_Account',
         },
+        {
+            'id': '8',
+            'text': 'hkex_admin',
+        },
     ];
 
     /* Wallet Types. */
