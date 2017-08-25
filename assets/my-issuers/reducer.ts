@@ -50,6 +50,10 @@ export const MyIssuersReducer = function (state: MyIssuersState = initialState,
 
             return newState;
 
+        case MyIssuersActions.REGISTER_ISSUER_FAIL:
+            console.log(action);
+            return state;
+
         case MyIssuersActions.FINISH_REGISTER_ISSUER_NOTIFICATION:
             needNotify = false;
 

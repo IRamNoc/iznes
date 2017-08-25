@@ -27,7 +27,8 @@ export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication};
 
 
 // connected
-export {
+import {
+
     ConnectedReducer,
     ConnectedState,
     setConnectedWallet,
@@ -35,6 +36,13 @@ export {
     getConnectedChain,
     getConnectedWallet
 } from './connected';
+
+export {
+    setConnectedWallet,
+    getConnected,
+    getConnectedChain,
+    getConnectedWallet
+};
 
 
 export interface UserState {

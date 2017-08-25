@@ -13,7 +13,7 @@ export const ConnectedReducer = function (state: ConnectedState = initialState, 
 
     switch (action.type) {
         case ConnectedAction.SET_CONNECTED_WALLET:
-            const connectedWallet = _.get(action, 'connectedWallet', 0);
+            const connectedWallet = _.get(action, 'walletId', 0);
 
             newState = Object.assign({}, state, {
                 connectedWallet
