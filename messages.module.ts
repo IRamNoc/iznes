@@ -8,6 +8,7 @@ import {NgRedux} from '@angular-redux/store';
 import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
 import {FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
+import {SelectModule} from 'ng2-select';
 
 import {
     MyMessagesService,
@@ -31,6 +32,7 @@ export class TruncatePipe implements PipeTransform {
             CommonModule,
             ClarityModule,
             GravatarModule,
+            SelectModule,
             [
                 FroalaEditorModule.forRoot(),
                 FroalaViewModule.forRoot()

@@ -4,11 +4,18 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 
 import {
-    SET_MESSAGE_LIST, getMyMessagesList, DONE_RUN_DECRYPT, getNeedRunDecryptState, setDecryptedContent
+    SET_MESSAGE_LIST,
+    getMyMessagesList,
+    DONE_RUN_DECRYPT,
+    getNeedRunDecryptState,
+    setDecryptedContent,
+    getConnectedWallet,
+    getWalletDirectoryList
 } from '@setl/core-store';
 
 
 import {MyMessagesService} from '@setl/core-req-services';
+import {fromJS} from "immutable";
 
 @Component({
     selector: 'setl-messages',
@@ -22,6 +29,9 @@ export class SetlMessagesComponent {
     public currentMessage;
     public currentCategory;
     public composeSelected;
+    public currentWalletId;
+    public walletDirectoryList;
+    public walletWithCommuPub;
 
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService) {
@@ -65,12 +75,47 @@ export class SetlMessagesComponent {
         ];
     }
 
+
+    public items: Array<string> = [];
+
+    private value: any = ['Athens'];
+    private _disabledV: string = '0';
+    private disabled: boolean = false;
+
+    private get disabledV(): string {
+        return this._disabledV;
+    }
+
+    private set disabledV(value: string) {
+        this._disabledV = value;
+        this.disabled = this._disabledV === '1';
+    }
+
+    public selected(value: any): void {
+        console.log('Selected value is: ', value);
+    }
+
+    public removed(value: any): void {
+        console.log('Removed value is: ', value);
+    }
+
+    public refreshValue(value: any): void {
+        this.value = value;
+    }
+
+    public itemsToString(value: Array<any> = []): string {
+        return value
+            .map((item: any) => {
+                return item.text;
+            }).join(',');
+    }
+
     requestMessages() {
         // Create a saga pipe.
         const asyncTaskPipe = this.myMessageService.requestOwnMessages(
             0,
             0,
-            191,
+            this.currentWalletId,
             0,
             8,
             0,
@@ -121,6 +166,15 @@ export class SetlMessagesComponent {
         this.currentMessage = this.messages[0];
         this.currentCategory = 0;
 
+        this.currentWalletId = getConnectedWallet(newState);
+        this.walletDirectoryList = getWalletDirectoryList(newState);
+        this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
+
+        this.items = [this.walletWithCommuPub];
+
+        console.log(this.currentWalletId);
+        console.log(this.walletDirectoryList);
+        console.log(this.walletWithCommuPub);
 
         if (getNeedRunDecryptState(newState)) {
             // this.decrypt(this.messages[0].recipientId, this.messages[0].senderPub, this.messages[0].content);
@@ -167,6 +221,20 @@ export class SetlMessagesComponent {
         this.currentCategory = index;
 
 
+    }
+
+    walletListToSelectItem(walletsList: Array<any>): Array<any> {
+        const walletListImu = fromJS(walletsList);
+        const walletsSelectItem = walletListImu.map(
+            (thisWallet) => {
+                return {
+                    id: thisWallet.get('commuPub'),
+                    text: thisWallet.get('walletName')
+                };
+            }
+        );
+
+        return walletsSelectItem.toJS();
     }
 
 }

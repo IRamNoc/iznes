@@ -44,19 +44,20 @@
                     <h2>Inbox - Compose Message</h2>
                 </div>
                 <form>
-                    <section class="form-block">
-                        <div class="form-group row">
+                    <section class="">
+                        <div class=" row">
                             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
                                 <label for="gForm_3">To</label>
                             </div>
                             <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12">
                                 <div class="select form-control">
-                                    <select id="gForm_3">
-                                        <option>Option 1</option>
-                                        <option>Option 2</option>
-                                        <option>Option 3</option>
-                                        <option>Option 4</option>
-                                    </select>
+                                    <ng-select [multiple]="true"
+                                               [items]="items"
+                                               [disabled]="disabled"
+                                               (data)="refreshValue($event)"
+                                               (selected)="selected($event)"
+                                               (removed)="removed($event)"
+                                               placeholder="No city selected"></ng-select>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +75,7 @@
                 <div [froalaEditor]>Hello, Froala!</div>
 
                 <div class="message-compose-buttons">
+
                     <button class="btn btn-primary">
                         <clr-icon shape="plane"></clr-icon>
                         Success
