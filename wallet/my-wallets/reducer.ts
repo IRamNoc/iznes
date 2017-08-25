@@ -1,4 +1,4 @@
-import {AsyncTaskResponseAction} from '@setl/utils/SagaHelper/actions';
+import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletActions from './actions';
 import {MyWalletsState, WalletDetail} from './model';
 import _ from 'lodash';

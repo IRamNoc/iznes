@@ -26,13 +26,26 @@ import {
 export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication};
 
 
+// connected
+export {
+    ConnectedReducer,
+    ConnectedState,
+    setConnectedWallet,
+    getConnected,
+    getConnectedChain,
+    getConnectedWallet
+} from './connected';
+
+
 export interface UserState {
     myDetail: MyDetailState;
     authentication: AuthenticationState;
+    connected: ConnectedState;
 }
 
 export const userReducer: Reducer<UserState> = combineReducers<UserState>({
     myDetail: MyDetailReducer,
-    authentication: AuthenticationReducer
+    authentication: AuthenticationReducer,
+    connected: ConnectedReducer
 });
 

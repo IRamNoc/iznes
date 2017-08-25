@@ -5,7 +5,7 @@ import {
 
 import {name} from './__init__';
 import {Common, SagaHelper} from '@setl/utils';
-import {AsyncTaskResponseAction} from '@setl/utils/SagaHelper/actions';
+import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 
 /**
  * Login request action
