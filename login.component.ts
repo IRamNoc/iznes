@@ -115,26 +115,6 @@ export class SetlLoginComponent {
         return false;
     }
 
-
-    requestWalletAddress() {
-        // Create a saga pipe.
-        const asyncTaskPipe = this.walletNodeRequestService.walletAddressRequest({
-            walletId: 2,
-        });
-
-        // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [RESET_LOGIN_DETAIL],
-            [RESET_LOGIN_DETAIL],
-            asyncTaskPipe, {}));
-
-        return false;
-    }
-
     updateState() {
         const newState = this.ngRedux.getState();
         const myAuthenData = getAuthentication(newState);
@@ -148,9 +128,6 @@ export class SetlLoginComponent {
             // Set token for membernode connection
             const token = myAuthenData.token;
             this.memberSocketService.token = token;
-
-            // Request initial data from wallet node.
-            InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, 2);
 
             // Request initial data from member node.
             InitialisationService.membernodeInitialisation(this.ngRedux, this.myWalletsService);
