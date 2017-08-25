@@ -26,16 +26,10 @@ export class AdminUsersComponent implements AfterViewInit {
     public tabsControl:any;
 
     /* Account types select. */
-    public accountType:string;
     public accountTypes:any;
 
     /* User types select. */
-    public userType:string;
     public userTypes:any;
-
-    public editFormControls:any = {
-        "username": new FormControl('')
-    };
 
     /* Constructor. */
     constructor (
@@ -80,43 +74,56 @@ export class AdminUsersComponent implements AfterViewInit {
         this.changeDetectorRef.detectChanges();
     }
 
+    /**
+     * Convert To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
     public convertToArray (obj):Array<any> {
-        let key, newArray = [];
+        let i = 0, key, newArray = [];
         for (key in obj) {
             newArray.push( obj[key] );
+            newArray[ newArray.length - 1 ].index = i++;
         }
         return newArray;
     }
 
-    /* Handles a ng2-select selection. */
-    public selected(propertyName:string, value:any):void {
-        this[propertyName] = value;
-    }
-
-    /* Handles a ng2-select deletion. */
-    public removed(propertyName:string, value:any):void {
-        this[propertyName] = undefined;
-    }
-
     /**
      * Handle New User
+     * ---------------
      * Handles saving a new user.
      *
      * @param {tabid}
      * @return {void}
      */
     public handleNewUser (tabid:number):void {
+        console.log( " |--- Sending User Data" );
+        console.log( " | data: ", this.tabsControl[tabid].formControl.value );
+        /* Sort the data structure out. */
+        let
+        dataToSend = this.tabsControl[tabid].formControl.value;
+        dataToSend.userType = dataToSend.userType.length ? dataToSend.userType[0].id : 0;
+        dataToSend.accountType = dataToSend.accountType.length ? dataToSend.accountType[0].id : 0;
+
+        console.log( " | datasorted: ", dataToSend );
+
         /* Let's trigger the creation of the user. */
-        // this.userAdminService.createNewUser(
-        //     this.tabsControl[tabid].formControl.value
-        // );
-        //
-        // /* Return. */
-        // return;
+        this.userAdminService.createNewUser(
+            this.tabsControl[tabid].formControl.value
+        );
+
+        /* Return. */
+        return;
     }
 
      /**
       * Handle Edit User
+      * ----------------
       * Handles saving an edited user.
       *
       * @param {tabid} number - The formcontrol obbject that relates
@@ -134,6 +141,7 @@ export class AdminUsersComponent implements AfterViewInit {
 
      /**
       * Handle Delete
+      * -------------
       * Handles the deletion of a user.
       *
       * @param {deleteUserIndex} object - Contains the target user's index.
@@ -168,6 +176,7 @@ export class AdminUsersComponent implements AfterViewInit {
 
      /**
       * Handle Edit
+      * -----------
       * Handles the editting of a wallet.
       *
       * @param {editWalletIndex} number - The index of a wallet to be editted.
@@ -201,6 +210,7 @@ export class AdminUsersComponent implements AfterViewInit {
 
      /**
       * Clear Form
+      * ----------
       * Clears the new group form.
       *
       * @return {void}
@@ -211,6 +221,15 @@ export class AdminUsersComponent implements AfterViewInit {
           return;
       }
 
+      /**
+       * Close Tab
+       * ---------
+       * Removes a tab from the tabs control array, in effect, closing it.
+       *
+       * @param {index} number - the tab inded to close.
+       *
+       * @return {void}
+       */
       public closeTab (index) {
           /* Validate that we have index. */
           if ( ! index && index !== 0 ) {
@@ -230,6 +249,16 @@ export class AdminUsersComponent implements AfterViewInit {
           return;
       }
 
+      /**
+       * Set Tab Active
+       * --------------
+       * Sets all tabs to inactive other than the given index, this means the
+       * view is switched to the wanted tab.
+       *
+       * @param {index} number - the tab inded to close.
+       *
+       * @return {void}
+       */
       public setTabActive (index:number = 0) {
           /* Lets loop over all current tabs and switch them to not active. */
           this.tabsControl.map((i) => {
