@@ -12,6 +12,14 @@ import {
     getMyWalletList
 } from './my-wallets';
 
+import {
+    SET_WALLET_DIRECTORY,
+    WalletDirectoryReducer,
+    WalletDirectoryState,
+    getWalletDirectory,
+    getWalletDirectoryList
+} from './wallet-directory';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -24,12 +32,20 @@ export {
     getMyWalletList
 };
 
+export {
+    SET_WALLET_DIRECTORY,
+    getWalletDirectory,
+    getWalletDirectoryList
+};
+
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
+    walletDirectory: WalletDirectoryState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
     myWalletAddress: MyWalletAddressReducer,
-    myWallets: MyWalletsReducer
+    myWallets: MyWalletsReducer,
+    walletDirectory: WalletDirectoryReducer
 });
