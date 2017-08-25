@@ -23,7 +23,7 @@ export const WalletDirectoryReducer = function (state: WalletDirectoryState = in
                 walletList
             });
 
-            return state;
+            return newState;
 
         default:
             return state;
