@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SetlBalancesComponent} from './balances/balances.component';
+import {SetlIssueComponent} from './issue/issue.component';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
@@ -11,10 +12,12 @@ import {ClarityModule} from 'clarity-angular';
         ClarityModule
     ],
     declarations: [
-        SetlBalancesComponent
+        SetlBalancesComponent,
+        SetlIssueComponent
     ],
     exports: [
-        SetlBalancesComponent
+        SetlBalancesComponent,
+        SetlIssueComponent
     ]
 })
 export class SetlBalancesModule {

@@ -1,0 +1,269 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-th-list"></i> Issue Reports</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-th-list"></i> Issue Reports</button>
+        <clr-tab-content *clrIfActive>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Identifier</clr-dg-column>
+                <clr-dg-column>Asset</clr-dg-column>
+                <clr-dg-column>Total</clr-dg-column>
+                <clr-dg-column>Encumbered</clr-dg-column>
+                <clr-dg-column>Free</clr-dg-column>
+
+
+                <clr-dg-row *clrDgItems="let asset of assets">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button class="btn"><i class="fa fa-search"></i> View</button>
+                            <button class="btn"><i class="fa fa-history"></i> History</button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.asset}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.total}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.encumbered}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.free}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} assets
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-th-list"></i> EUR</button>
+        <clr-tab-content *clrIfActive>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Address</clr-dg-column>
+                <clr-dg-column>Total</clr-dg-column>
+                <clr-dg-column>Encumbered</clr-dg-column>
+                <clr-dg-column>Free</clr-dg-column>
+
+
+                <clr-dg-row *clrDgItems="let asset of singleAsset">
+                    <clr-dg-cell>{{asset.address}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.total}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.encumbered}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.free}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} assets
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-history"></i> EUR History</button>
+        <clr-tab-content *clrIfActive>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Tx ID</clr-dg-column>
+                <clr-dg-column>Asset</clr-dg-column>
+                <clr-dg-column>Amount</clr-dg-column>
+                <clr-dg-column>Time</clr-dg-column>
+                <clr-dg-column>Type</clr-dg-column>
+
+
+                <clr-dg-row *clrDgItems="let asset of singleAssetHistory">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button class="btn"><i class="fa fa-search"></i> View</button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{asset.txid}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.asset}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.amount}}</clr-dg-cell>
+                    <clr-dg-cell>{{asset.time}}</clr-dg-cell>
+                    <clr-dg-cell><span class="label label-success">{{asset.type}}</span></clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} assets
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-exchange"></i> 35fgughhy87byhiu</button>
+        <clr-tab-content *clrIfActive>
+
+            <form>
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Transaction Type</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Base Chain</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Transaction Hash</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">From Public Key</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">From Address</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Issuer</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Instrument</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">To Address</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Amount</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Transaction Signature</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Protocol</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_email">Block Height</span>
+                            </label>
+                            <div>
+                                <input type="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Coordinated Universal Time</span>
+                            </label>
+                            <div>
+                                <input type="text" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_username">Tx JSON</span>
+                            </label>
+                            <div>
+                                <textarea></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
