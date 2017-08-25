@@ -30,4 +30,13 @@ export class MyWalletsService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    requestWalletDirectory(): any {
+        const messageBody: RequestWalletDirectoryMessageBody = {
+            RequestName: 'gwd',
+            token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

@@ -3,7 +3,7 @@ import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService} from '../index';
 import {MyWalletsService} from '../index';
 import {ChannelService} from '../index';
-import {SET_WALLET_ADDRESSES, SET_OWN_WALLETS} from '@setl/core-store';
+import {SET_WALLET_ADDRESSES, SET_OWN_WALLETS, SET_WALLET_DIRECTORY} from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 
@@ -21,16 +21,18 @@ export class InitialisationService {
 
     static walletnodeInitialisation(ngRedux: NgRedux<any>,
                                     walletNodeRequestService: WalletNodeRequestService,
-                                    walletId: number): void {
+                                    walletId: number): boolean {
         // Request wallet address.
         // walletAddressRequest
         this.requestWalletAddresses(ngRedux, walletNodeRequestService, walletId);
+
+        return true;
 
     }
 
     static requestWalletAddresses(ngRedux: NgRedux<any>,
                                   walletNodeRequestService: WalletNodeRequestService,
-                                  walletId: number) {
+                                  walletId: number): boolean {
         // Create a saga pipe.
         const asyncTaskPipes = walletNodeRequestService.walletAddressRequest({
             walletId
@@ -46,21 +48,28 @@ export class InitialisationService {
             [],
             asyncTaskPipes, {}));
 
-        return false;
+        return true;
     }
 
 
     static membernodeInitialisation(ngRedux: NgRedux<any>,
                                     myWalletsService: MyWalletsService,
                                     memberSocketService: MemberSocketService,
-                                    channelService: ChannelService) {
+                                    channelService: ChannelService): boolean {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
+
+        // Request wallet directory
+        this.requestWalletDirectory(ngRedux, myWalletsService);
+
+        // Subscribe to my connection channel, target for my userId.
         this.subscribe(memberSocketService, channelService);
+
+        return true;
     }
 
     static requestMyOwnWallets(ngRedux: NgRedux<any>,
-                               myWalletsService: MyWalletsService) {
+                               myWalletsService: MyWalletsService): boolean {
         // Create a saga pipe.
         const asyncTaskPipes = myWalletsService.requestOwnWallets();
 
@@ -74,7 +83,21 @@ export class InitialisationService {
             [],
             asyncTaskPipes, {}));
 
-        return false;
+        return true;
+    }
+
+    static requestWalletDirectory(ngRedux: NgRedux<any>,
+                                  myWalletsService: MyWalletsService): boolean {
+        const asyncTaskPipes = myWalletsService.requestWalletDirectory();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_DIRECTORY],
+            [],
+            asyncTaskPipes,
+            {}
+        ));
+
+        return true;
     }
 
 }
