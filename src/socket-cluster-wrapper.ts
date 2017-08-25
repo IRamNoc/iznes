@@ -131,11 +131,7 @@ export class SocketClusterWrapper {
                         }
                     });
 
-                    if (this.webSocketConn.id) {
-                        this.subscribeToChannel(this.webSocketConn.id, function (data) {
-                            console.log('FROM CHANNEL: ', data);
-                        });
-                    }
+                    // Subscribe to Channel is now used in Channel Service
                 });
 
                 this.webSocketConn.on('error', (error) => {
@@ -209,8 +205,7 @@ export class SocketClusterWrapper {
 
         /* Validate. */
         if (!channelName) {
-            console.log('Channel name not passed ');
-            return;
+            channelName = this.webSocketConn.id;
         }
 
         /**
