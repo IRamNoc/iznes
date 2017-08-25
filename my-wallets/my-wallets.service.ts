@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {RequestOwnWalletsMessageBody, SetActiveWalletMessageBody} from './my-wallets.service.model';
+import {
+    RequestOwnWalletsMessageBody,
+    SetActiveWalletMessageBody,
+    RequestWalletDirectoryMessageBody
+} from './my-wallets.service.model';
 
 
 @Injectable()
