@@ -2,12 +2,13 @@ import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {
     getMyWalletList,
-
+    setConnectedWallet
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 
-import {MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
+import {MyWalletsService, WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
+import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 
 // setActiveWallet
 
@@ -19,13 +20,20 @@ import {SagaHelper} from '@setl/utils';
 export class NavigationTopbarComponent implements OnInit {
 
     walletSelectItems: Array<any>;
+    searchForm: FormGroup;
+    selectedWalletId = new FormControl();
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
     constructor(private ngRedux: NgRedux<any>,
-                private myWalletsService: MyWalletsService) {
+                private myWalletsService: MyWalletsService,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private fb: FormBuilder) {
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+
+        // Search form
+        this.searchForm = fb.group({});
     }
 
     updateState() {
@@ -33,6 +41,17 @@ export class NavigationTopbarComponent implements OnInit {
         const currentWalletsList = getMyWalletList(newState);
 
         this.walletSelectItems = walletListToSelectItem(currentWalletsList);
+
+        // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
+        if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+            this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                onlySelf: true,
+                emitEvent: true,
+                emitModelToViewChange: true,
+                emitViewToModelChange: true
+            });
+            this.selected(this.walletSelectItems[0]);
+        }
     }
 
     ngOnInit() {
@@ -44,6 +63,11 @@ export class NavigationTopbarComponent implements OnInit {
 
     public selected(value: any): void {
         console.log('Selected value is: ', value);
+        console.log(this.selectedWalletId);
+
+        // Set connected wallet in redux state.
+        this.ngRedux.dispatch(setConnectedWallet(value.id));
+
 
         // Create a saga pipe.
         const asyncTaskPipe = this.myWalletsService.setActiveWallet(
@@ -62,6 +86,9 @@ export class NavigationTopbarComponent implements OnInit {
                 console.log(data);
             })
         );
+
+        // Request initial data from wallet node.
+        InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, value.id);
     }
 
     public removed(value: any): void {
