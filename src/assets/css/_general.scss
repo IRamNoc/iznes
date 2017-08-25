@@ -107,6 +107,7 @@ ul.breadcrumb li a:hover {
     text-decoration: underline;
 }
 
+// contains text inside an area regardless if there isn't spaces
 .main-container {
     .content-container {
         display: block;
@@ -154,4 +155,77 @@ ul.breadcrumb li a:hover {
 .pagination > * {
     width: 30px;
     text-align: center;
+}
+
+// Angular Froala WYSIWYG Editor toolbar
+.fr-toolbar {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    background: #f3f3f3;
+    margin: -1px;
+}
+
+// Angular Froala WYSIWYG Editor textarea
+.fr-wrapper {
+    margin-top: -1px;
+    box-shadow: none !important;
+    height: 600px;
+    border-bottom: 1px solid #ccc !important;
+
+    p {
+        margin-top: 0;
+    }
+}
+
+.fr-element {
+    padding: 15px;
+    min-height: 600px;
+    max-height: 600px;
+}
+
+// Angular Froala WYSIWYG Editor word counter
+span.fr-counter {
+    border-top: 1px solid #ccc !important;
+    border-left: 1px solid #ccc !important;
+    margin: 0 1px 1px 0px !important;
+    padding: 5px 10px !important;
+}
+
+.login-inner-wrapper {
+    border: 1px solid #ccc;
+}
+
+// temp
+.login-container {
+    .m-t {
+        line-height: 15px;
+        padding-top: 15px;
+    }
+    button {
+
+        cursor: pointer;
+        display: inline-block;
+        -webkit-appearance: none !important;
+        border-radius: 3px;
+        border: 1px solid;
+        min-width: 72px;
+        max-width: 360px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        vertical-align: middle;
+        line-height: 36px;
+        letter-spacing: .12em;
+        font-size: 12px;
+        font-weight: 500;
+        height: 36px;
+        padding: 0 12px;
+        border-color: #007cbb;
+        background-color: transparent;
+        color: #007cbb;
+        width: 93%;
+    }
 }

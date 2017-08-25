@@ -17,8 +17,7 @@ import {
     MyUserService,
     WalletNodeRequestService,
     MyWalletsService,
-    WalletnodeTxService,
-    ChannelService
+    WalletnodeTxService
 } from '@setl/core-req-services';
 
 /* Routes. */
@@ -63,6 +62,8 @@ import {AppState} from './store/app.reducer';
  * Environment
  */
 import {environment} from '../environments/environment';
+
+import {APP_BASE_HREF} from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -117,8 +118,8 @@ import {environment} from '../environments/environment';
         WalletNodeRequestService,
         LoginGuardService,
         ToasterService,
-        ChannelService,
-        AlertIconAndTypesService
+        AlertIconAndTypesService,
+        {provide: APP_BASE_HREF, useValue: '/'}
     ],
     bootstrap: [AppComponent]
 })

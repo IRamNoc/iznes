@@ -1,4 +1,4 @@
-.animate, header .header-actions .nav-link.nav-icon, header .header-actions .wallet, header .header-actions .wallet .ui-select-container, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle, header .header-actions .wallet .ui-select-search, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .messages .tile, .messages .tile .tile-icon, .messages .tile .tile-text, .messages .message-grid .message-highlights .message-highlight, .messages .message-grid .message-highlights .message-highlight h4, .animate:hover, header .header-actions .nav-link.nav-icon:hover, header .header-actions .wallet:hover, header .header-actions .wallet .ui-select-container:hover, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:hover, header .header-actions .wallet .ui-select-search:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .messages .tile:hover, .messages .tile .tile-icon:hover, .messages .tile .tile-text:hover, .messages .message-grid .message-highlights .message-highlight:hover, .messages .message-grid .message-highlights .message-highlight h4:hover, .animate:focus, header .header-actions .nav-link.nav-icon:focus, header .header-actions .wallet:focus, header .header-actions .wallet .ui-select-container:focus, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:focus, header .header-actions .wallet .ui-select-search:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus, .messages .tile:focus, .messages .tile .tile-icon:focus, .messages .tile .tile-text:focus, .messages .message-grid .message-highlights .message-highlight:focus, .messages .message-grid .message-highlights .message-highlight h4:focus {
+.animate, header .header-actions .nav-link.nav-icon, header .header-actions .wallet, header .header-actions .wallet .ui-select-container, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle, header .header-actions .wallet .ui-select-search, .sidenav .sidenav-content .nav-list .nav-link, .sidenav .sidenav-content .nav-link, .sidenav .sidenav-content .nav-group, .sidenav .sidenav-content label, .select select, .messages .tile, .messages .tile .tile-icon, .messages .tile .tile-text, .messages .message-grid .message-highlights .message-highlight, .messages .message-compose .message-highlights .message-highlight, .messages .message-grid .message-highlights .message-highlight h4, .messages .message-compose .message-highlights .message-highlight h4, .animate:hover, header .header-actions .nav-link.nav-icon:hover, header .header-actions .wallet:hover, header .header-actions .wallet .ui-select-container:hover, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:hover, header .header-actions .wallet .ui-select-search:hover, .sidenav .sidenav-content .nav-link:hover, .sidenav .sidenav-content .nav-group:hover, .sidenav .sidenav-content label:hover, .select select:hover, .messages .tile:hover, .messages .tile .tile-icon:hover, .messages .tile .tile-text:hover, .messages .message-grid .message-highlights .message-highlight:hover, .messages .message-compose .message-highlights .message-highlight:hover, .messages .message-grid .message-highlights .message-highlight h4:hover, .messages .message-compose .message-highlights .message-highlight h4:hover, .animate:focus, header .header-actions .nav-link.nav-icon:focus, header .header-actions .wallet:focus, header .header-actions .wallet .ui-select-container:focus, header .header-actions .wallet .ui-select-container .dropdown .ui-select-toggle:focus, header .header-actions .wallet .ui-select-search:focus, .sidenav .sidenav-content .nav-link:focus, .sidenav .sidenav-content .nav-group:focus, .sidenav .sidenav-content label:focus, .select select:focus, .messages .tile:focus, .messages .tile .tile-icon:focus, .messages .tile .tile-text:focus, .messages .message-grid .message-highlights .message-highlight:focus, .messages .message-compose .message-highlights .message-highlight:focus, .messages .message-grid .message-highlights .message-highlight h4:focus, .messages .message-compose .message-highlights .message-highlight h4:focus {
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
@@ -101,7 +101,7 @@ ul.breadcrumb li a:hover {
     width: calc(100% - 230px);
     height: 100%; }
 
-.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text {
+.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-compose .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text, .messages .message-compose .message-body .message-text {
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -119,6 +119,63 @@ ul.breadcrumb li a:hover {
 .pagination > * {
   width: 30px;
   text-align: center; }
+
+.fr-toolbar {
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+  background: #f3f3f3;
+  margin: -1px; }
+
+.fr-wrapper {
+  margin-top: -1px;
+  box-shadow: none !important;
+  height: 600px;
+  border-bottom: 1px solid #ccc !important; }
+  .fr-wrapper p {
+    margin-top: 0; }
+
+.fr-element {
+  padding: 15px;
+  min-height: 600px;
+  max-height: 600px; }
+
+span.fr-counter {
+  border-top: 1px solid #ccc !important;
+  border-left: 1px solid #ccc !important;
+  margin: 0 1px 1px 0px !important;
+  padding: 5px 10px !important; }
+
+.login-inner-wrapper {
+  border: 1px solid #ccc; }
+
+.login-container .m-t {
+  line-height: 15px;
+  padding-top: 15px; }
+.login-container button {
+  cursor: pointer;
+  display: inline-block;
+  -webkit-appearance: none !important;
+  border-radius: 3px;
+  border: 1px solid;
+  min-width: 72px;
+  max-width: 360px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: middle;
+  line-height: 36px;
+  letter-spacing: .12em;
+  font-size: 12px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 12px;
+  border-color: #007cbb;
+  background-color: transparent;
+  color: #007cbb;
+  width: 93%; }
 
 header {
   background-color: #292e3c !important;
@@ -442,8 +499,7 @@ clr-tabs > section {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  border: 1px solid #dce1eb;
-  border-top-left-radius: 0px; }
+  border: 1px solid #dce1eb; }
 
 clr-tabs > section {
   margin-top: 0;
@@ -467,7 +523,11 @@ clr-tab-content {
   background: white;
   border-radius: 4px;
   padding: 20px;
-  margin-top: 0px; }
+  margin-top: 0px;
+  border-top-left-radius: 0px; }
+
+clr-tab-content clr-tab-content {
+  margin: 0; }
 
 clr-tab-link i {
   margin-right: 4px; }
@@ -594,27 +654,27 @@ clr-tab-content.active {
       font-weight: bold; }
     .messages .tile.active:hover {
       cursor: default; }
-  .messages .message-grid {
+  .messages .message-grid, .messages .message-compose {
     background: white;
     border: 1px solid #ccc;
     border-radius: 3px;
     margin: 20px auto;
     min-height: 1034px; }
-    .messages .message-grid .message-options {
+    .messages .message-grid .message-options, .messages .message-compose .message-options {
       padding: 20px;
       border-bottom: 1px solid #ccc; }
-      .messages .message-grid .message-options h2 {
+      .messages .message-grid .message-options h2, .messages .message-compose .message-options h2 {
         margin-top: 10px; }
-    .messages .message-grid .message-img-sender {
+    .messages .message-grid .message-img-sender, .messages .message-compose .message-img-sender {
       border: 1px solid #ccc;
       border-radius: 50px;
       max-height: 20px;
       vertical-align: text-bottom; }
-    .messages .message-grid .message-highlights {
+    .messages .message-grid .message-highlights, .messages .message-compose .message-highlights {
       border-right: 1px solid #ccc;
       min-height: 1034px;
       padding-right: 0; }
-      .messages .message-grid .message-highlights .message-highlight {
+      .messages .message-grid .message-highlights .message-highlight, .messages .message-compose .message-highlights .message-highlight {
         padding: 20px;
         border-bottom: 1px solid #ccc;
         border-left: 2px solid transparent;
@@ -623,49 +683,51 @@ clr-tab-content.active {
         padding-left: 19px;
         position: relative;
         opacity: 0.6; }
-        .messages .message-grid .message-highlights .message-highlight h6 {
+        .messages .message-grid .message-highlights .message-highlight h6, .messages .message-compose .message-highlights .message-highlight h6 {
           margin-top: 0;
           color: #888; }
-        .messages .message-grid .message-highlights .message-highlight h4 {
+        .messages .message-grid .message-highlights .message-highlight h4, .messages .message-compose .message-highlights .message-highlight h4 {
           margin-top: 2px; }
-        .messages .message-grid .message-highlights .message-highlight span {
+          .messages .message-grid .message-highlights .message-highlight h4 span, .messages .message-compose .message-highlights .message-highlight h4 span {
+            font-size: 18px; }
+        .messages .message-grid .message-highlights .message-highlight span, .messages .message-compose .message-highlights .message-highlight span {
           font-size: 12px; }
-        .messages .message-grid .message-highlights .message-highlight .message-preview {
+        .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-compose .message-highlights .message-highlight .message-preview {
           font-size: 12px;
           line-height: 16px;
           margin-top: 2px;
           display: block; }
-        .messages .message-grid .message-highlights .message-highlight .message-date {
+        .messages .message-grid .message-highlights .message-highlight .message-date, .messages .message-compose .message-highlights .message-highlight .message-date {
           position: absolute;
           top: 21px;
           right: 30px; }
-        .messages .message-grid .message-highlights .message-highlight .message-unread-icon {
+        .messages .message-grid .message-highlights .message-highlight .message-unread-icon, .messages .message-compose .message-highlights .message-highlight .message-unread-icon {
           width: 8px;
           height: 8px;
           background: #57a5e3;
           border-radius: 50%;
           display: inline-block;
           margin: 2px 0; }
-        .messages .message-grid .message-highlights .message-highlight:hover {
+        .messages .message-grid .message-highlights .message-highlight:hover, .messages .message-compose .message-highlights .message-highlight:hover {
           border-left: 2px solid #57a5e3;
           border-right: 2px solid #57a5e3;
           cursor: pointer;
           opacity: 1; }
-          .messages .message-grid .message-highlights .message-highlight:hover h4 {
+          .messages .message-grid .message-highlights .message-highlight:hover h4, .messages .message-compose .message-highlights .message-highlight:hover h4 {
             color: #57a5e3; }
-        .messages .message-grid .message-highlights .message-highlight.message-unread {
+        .messages .message-grid .message-highlights .message-highlight.message-unread, .messages .message-compose .message-highlights .message-highlight.message-unread {
           opacity: 1; }
-        .messages .message-grid .message-highlights .message-highlight.message-active {
+        .messages .message-grid .message-highlights .message-highlight.message-active, .messages .message-compose .message-highlights .message-highlight.message-active {
           border-right: 1px solid white;
           border-left: 2px solid transparent;
           margin-right: -1px;
           opacity: 1; }
-          .messages .message-grid .message-highlights .message-highlight.message-active h4 {
+          .messages .message-grid .message-highlights .message-highlight.message-active h4, .messages .message-compose .message-highlights .message-highlight.message-active h4 {
             font-weight: bold;
             color: #333; }
-          .messages .message-grid .message-highlights .message-highlight.message-active:hover {
+          .messages .message-grid .message-highlights .message-highlight.message-active:hover, .messages .message-compose .message-highlights .message-highlight.message-active:hover {
             cursor: default; }
-      .messages .message-grid .message-highlights .message-highlight-footer {
+      .messages .message-grid .message-highlights .message-highlight-footer, .messages .message-compose .message-highlights .message-highlight-footer {
         border-top: 1px solid #ccc;
         padding: 0 20px;
         background: #ccc;
@@ -674,13 +736,21 @@ clr-tab-content.active {
         position: absolute;
         bottom: 0;
         width: 98.2%; }
-    .messages .message-grid .message-body {
+    .messages .message-grid .message-body, .messages .message-compose .message-body {
       padding: 40px 55px 55px 40px; }
-      .messages .message-grid .message-body .message-title {
+      .messages .message-grid .message-body .message-title, .messages .message-compose .message-body .message-title {
         background: #f9f9f9;
         padding: 20px; }
-        .messages .message-grid .message-body .message-title h1 {
+        .messages .message-grid .message-body .message-title h1, .messages .message-compose .message-body .message-title h1 {
           margin-top: 10px; }
+  .messages .message-compose label {
+    text-align: right !important;
+    padding: 11px 0 0; }
+  .messages .message-compose .content-area form input[type], .messages .message-compose .content-area .form input[type] {
+    width: 100%; }
+  .messages .message-compose .message-compose-buttons {
+    padding: 17px 15px 0;
+    float: right; }
 
 @media only screen and (max-width: 2000px) {
   .col-categories {
@@ -775,7 +845,7 @@ clr-tab-content.active {
   min-width: 30px;
   margin-right: -10px !important;
   margin-top: 1px;
-  z-index: 9999;
+  z-index: 100;
   position: absolute;
   background: white;
   right: 11px;

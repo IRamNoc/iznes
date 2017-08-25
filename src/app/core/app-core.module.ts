@@ -11,6 +11,7 @@ import {RouterModule} from '@angular/router';
 import {SidebarModule} from 'ng-sidebar';
 import {SelectModule} from 'ng2-select';
 import {ClarityModule} from 'clarity-angular';
+import {ReactiveFormsModule} from '@angular/forms';
 
 /* Layout Components. */
 import {BlankLayoutComponent} from './layouts/blank/blank.component';
@@ -29,7 +30,8 @@ import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
         RouterModule,
         SidebarModule,
         SelectModule,
-        ClarityModule
+        ClarityModule,
+        ReactiveFormsModule
     ],
     declarations: [
         /* Directives. */

@@ -9,7 +9,6 @@ import {
     MessageState, messageReducer,
     AdminUsersState, adminUserReducer,
     AssetState, assetReducer
-
 } from '@setl/core-store';
 
 export interface AppState {
@@ -18,6 +17,7 @@ export interface AppState {
     message: MessageState;
     userAdmin: AdminUsersState;
     asset: AssetState;
+    adminUsers: AdminUsersState;
 }
 
 export const rootReducer: Reducer<any> = combineReducers<any>({
