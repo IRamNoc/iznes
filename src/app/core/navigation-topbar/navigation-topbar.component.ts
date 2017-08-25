@@ -92,7 +92,6 @@ export class NavigationTopbarComponent implements OnInit {
     public removed(value: any): void {
         console.log('Removed value is: ', value);
     }
-
 }
 
 /**
