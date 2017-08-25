@@ -51,15 +51,13 @@ export class NavigationTopbarComponent implements OnInit {
         );
 
         // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe, {},
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
             function (data) {
-                console.log(data);
+                console.log(data); // success
             },
             function (data) {
-                console.log(data);
+                console.log(data); // error
             })
         );
     }

@@ -56,6 +56,11 @@
     border: 0px;
 }
 
+.ui-select-match .btn a:hover {
+    border: 0px solid white !important;
+    background: white;
+}
+
 .ui-select-choices-row {
     font-size: 13px;
 }

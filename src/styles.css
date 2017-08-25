@@ -190,9 +190,9 @@ header {
     header .header-actions .wallet .wallet-tile {
       color: #57a5e3;
       position: absolute;
-      top: 28px;
-      font-size: 10px;
-      margin-left: 16px;
+      top: 27px;
+      font-size: 12px;
+      margin-left: 10px;
       z-index: 10; }
     header .header-actions .wallet .ui-select-container .dropdown-menu {
       margin-top: 20px !important; }
@@ -216,9 +216,11 @@ header {
       margin-top: 6px;
       padding: 10px 55px !important;
       font-size: 12.5px;
-      font-weight: bold;
+      font-weight: none;
       border-radius: 3px;
       background: none; }
+    header .header-actions .wallet .ui-select-search input:focus {
+      border: 1px solid red; }
     header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
       margin: -1px 2px !important; }
     header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
@@ -778,6 +780,10 @@ clr-tab-content.active {
   background: white;
   right: 11px;
   border: 0px; }
+
+.ui-select-match .btn a:hover {
+  border: 0px solid white !important;
+  background: white; }
 
 .ui-select-choices-row {
   font-size: 13px; }
