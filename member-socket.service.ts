@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SocketClusterWrapper} from '@setl/socketcluster-wrapper';
+import {NgRedux} from '@angular-redux/store';
 
 @Injectable()
 export class MemberSocketService {
@@ -8,7 +9,7 @@ export class MemberSocketService {
 
     constructor(private hostname: string,
                 private port: string,
-                private path: string,) {
+                private path: string) {
         this.socket = new SocketClusterWrapper(
             'ws',
             hostname,
@@ -22,6 +23,16 @@ export class MemberSocketService {
 
     sendRequest(Request, callBack) {
         this.socket.sendRequest([Request, callBack]);
+    }
+
+    /**
+     * Subscribe to Channel Callback using in Init
+     * @param callback
+     */
+    subscribeToChannel(callback) {
+        this.socket.subscribeToChannel(null, (data) => {
+            callback(data);
+        });
     }
 
 
