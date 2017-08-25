@@ -1,1 +1,1 @@
-import {PermissionGridModule} from './permission-grid.module';
+export {PermissionGridModule} from './permission-grid.module';
