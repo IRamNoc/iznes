@@ -24,7 +24,8 @@ import {
     MyUserService,
     WalletNodeRequestService,
     InitialisationService,
-    MyWalletsService
+    MyWalletsService,
+    ChannelService
 } from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
@@ -68,6 +69,7 @@ export class SetlLoginComponent {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private memberSocketService: MemberSocketService,
                 private myWalletsService: MyWalletsService,
+                private channelService: ChannelService,
                 fb: FormBuilder,
                 private router: Router) {
         // Subscribe to app store
@@ -153,7 +155,12 @@ export class SetlLoginComponent {
             InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, 2);
 
             // Request initial data from member node.
-            InitialisationService.membernodeInitialisation(this.ngRedux, this.myWalletsService);
+            InitialisationService.membernodeInitialisation(
+                this.ngRedux,
+                this.myWalletsService,
+                this.memberSocketService,
+                this.channelService
+            );
         }
 
     }
