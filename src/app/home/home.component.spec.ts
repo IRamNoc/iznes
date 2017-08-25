@@ -9,7 +9,7 @@ import {BasicLayoutComponent} from '../core/layouts/basic/basic.component';
 import {SetlLoginComponent} from '@setl/core-login';
 import {NavigationTopbarComponent} from '../core/navigation-topbar/navigation-topbar.component';
 import {SetlMessagesComponent} from '@setl/core-messages';
-import {SetlBalancesComponent} from '@setl/core-balances';
+import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 import {FormElementsComponent} from '../ui-elements/form-elements.component';
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
@@ -25,7 +25,6 @@ import {ClarityModule} from 'clarity-angular';
 import {RegisterIssuerComponent, RegisterAssetComponent, IssueAssetComponent} from '@setl/asset-servicing';
 import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
 import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers/icon-and-types-service';
-
 // describe('HomeComponent', () => {
 //     let component: HomeComponent;
 //     let fixture: ComponentFixture<HomeComponent>;
