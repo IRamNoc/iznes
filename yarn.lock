@@ -168,7 +168,7 @@
 
 "@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#d46fb27f1d7540d353f065d51c2625548831902d"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#944fd38e01462f6b12f213be4d8fbf0d355dba24"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
