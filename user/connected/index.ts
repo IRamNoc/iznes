@@ -1,7 +1,7 @@
-import {name} from './__init__';
-import {ConnectedReducer} from './reducer';
-import {ConnectedState} from './model';
-import {setConnectedWallet} from './actions';
-import {getConnected, getConnectedChain, getConnectedWallet} from './selectors';
+export {name} from './__init__';
+export {ConnectedReducer} from './reducer';
+export {ConnectedState} from './model';
+export {setConnectedWallet} from './actions';
+export {getConnected, getConnectedChain, getConnectedWallet} from './selectors';
 
 
