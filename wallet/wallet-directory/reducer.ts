@@ -23,7 +23,7 @@ export const WalletDirectoryReducer = function (state: WalletDirectoryState = in
                 walletList
             });
 
-            return newState;
+            return state;
 
         default:
             return state;
@@ -32,9 +32,8 @@ export const WalletDirectoryReducer = function (state: WalletDirectoryState = in
 
 function formatWalletDirectoryDataResponse(rawWalletDirectoryData: Array<any>): object {
     const rawWalletDirectoryDataList = fromJS(rawWalletDirectoryData);
-    let walletDirectoryObject = Map<{ [key: string]: WalletDirectoryDetail }>();
 
-    walletDirectoryObject = Map(rawWalletDirectoryDataList.reduce(
+    const walletDirectoryObject = Map(rawWalletDirectoryDataList.reduce(
         function (result, item) {
             result[item.get('walletID')] = item;
             return result;
