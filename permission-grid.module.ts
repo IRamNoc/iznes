@@ -8,11 +8,16 @@ import {ReactiveFormsModule} from '@angular/forms';
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 
+/* Components. */
+import {PermissionGridComponent} from './permission-grid/permission-grid.component';
+
 /* User admin service. */
 @NgModule({
     declarations: [
+        PermissionGridComponent
     ],
     exports: [
+        PermissionGridComponent
     ],
     imports: [
         CommonModule,
