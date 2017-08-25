@@ -2,13 +2,21 @@ import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService} from '../index';
 import {MyWalletsService} from '../index';
+import {ChannelService} from '../index';
 import {SET_WALLET_ADDRESSES, SET_OWN_WALLETS} from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
+import {MemberSocketService} from '@setl/websocket-service';
 
 @Injectable()
 export class InitialisationService {
 
     constructor() {
+    }
+
+    static subscribe(memberSocketService, channelService) {
+        memberSocketService.subscribeToChannel(function (data) {
+            channelService.resolveChannelMessage(data);
+        });
     }
 
     static walletnodeInitialisation(ngRedux: NgRedux<any>,
@@ -43,9 +51,12 @@ export class InitialisationService {
 
 
     static membernodeInitialisation(ngRedux: NgRedux<any>,
-                                    myWalletsService: MyWalletsService) {
+                                    myWalletsService: MyWalletsService,
+                                    memberSocketService: MemberSocketService,
+                                    channelService: ChannelService) {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
+        this.subscribe(memberSocketService, channelService);
     }
 
     static requestMyOwnWallets(ngRedux: NgRedux<any>,
