@@ -13,7 +13,8 @@ import {
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
     getNewIssuerRequest,
-    finishRegisterIssuerNotification
+    finishRegisterIssuerNotification,
+    getConnectedWallet
 } from '@setl/core-store';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -29,6 +30,7 @@ export class RegisterIssuerComponent implements OnInit {
     registerIssuerForm: FormGroup;
     issuerIdentifier: AbstractControl;
     issuerAddress: AbstractControl;
+    private connectedWalleId: number;
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletnodeTxService: WalletnodeTxService,
@@ -61,6 +63,9 @@ export class RegisterIssuerComponent implements OnInit {
         const currentWalletAddressList = getWalletAddressList(newState);
         this.walletAddressSelectItems = walletAddressListToSelectItem(currentWalletAddressList);
 
+        // Set connected walletId
+        this.connectedWalleId = getConnectedWallet(newState);
+
         // Get register Issuer response
         const currentRegisterIssuerRequest = getNewIssuerRequest(newState);
         if (currentRegisterIssuerRequest.needNotify) {
@@ -77,11 +82,13 @@ export class RegisterIssuerComponent implements OnInit {
             const issuerIdentifier = formValue.issueIdentifier;
             const issuerAddressSelectedArr = formValue.issuerAddress;
             const issuerAddress = issuerAddressSelectedArr[0].id;
+            const walletId = this.connectedWalleId;
 
             // Send register issuer request.
 
             // Create a saga pipe.
             const asyncTaskPipe = this.walletnodeTxService.registerIssuer({
+                walletId,
                 issuerIdentifier,
                 issuerAddress,
                 metaData: {}
