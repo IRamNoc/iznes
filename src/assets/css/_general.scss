@@ -150,7 +150,11 @@ ul.breadcrumb li a:hover {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
+}
 
+.pagination > * {
+    width: 30px;
+    text-align: center;
 }
 
 // Angular Froala WYSIWYG Editor toolbar

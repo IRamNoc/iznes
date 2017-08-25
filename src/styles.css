@@ -101,7 +101,7 @@ ul.breadcrumb li a:hover {
     width: calc(100% - 230px);
     height: 100%; }
 
-.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text {
+.dont-break-out, .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-compose .message-highlights .message-highlight .message-preview, .messages .message-grid .message-body .message-text, .messages .message-compose .message-body .message-text {
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -116,6 +116,10 @@ ul.breadcrumb li a:hover {
   -webkit-hyphens: auto;
   hyphens: auto; }
 
+.pagination > * {
+  width: 30px;
+  text-align: center; }
+
 .fr-toolbar {
   box-shadow: none !important;
   border: 1px solid #ccc !important;
@@ -125,13 +129,53 @@ ul.breadcrumb li a:hover {
 .fr-wrapper {
   margin-top: -1px;
   box-shadow: none !important;
-  border: 1px solid #ccc !important; }
+  height: 600px;
+  border-bottom: 1px solid #ccc !important; }
+  .fr-wrapper p {
+    margin-top: 0; }
+
+.fr-element {
+  padding: 15px;
+  min-height: 600px;
+  max-height: 600px; }
 
 span.fr-counter {
   border-top: 1px solid #ccc !important;
   border-left: 1px solid #ccc !important;
   margin: 0 1px 1px 0px !important;
   padding: 5px 10px !important; }
+
+.login-inner-wrapper {
+  border: 1px solid #ccc; }
+
+.login-container .m-t {
+  line-height: 15px;
+  padding-top: 15px; }
+.login-container button {
+  cursor: pointer;
+  display: inline-block;
+  -webkit-appearance: none !important;
+  border-radius: 3px;
+  border: 1px solid;
+  min-width: 72px;
+  max-width: 360px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: middle;
+  line-height: 36px;
+  letter-spacing: .12em;
+  font-size: 12px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 12px;
+  border-color: #007cbb;
+  background-color: transparent;
+  color: #007cbb;
+  width: 93%; }
 
 header {
   background-color: #292e3c !important;
@@ -203,9 +247,9 @@ header {
     header .header-actions .wallet .wallet-tile {
       color: #57a5e3;
       position: absolute;
-      top: 28px;
-      font-size: 10px;
-      margin-left: 16px;
+      top: 27px;
+      font-size: 12px;
+      margin-left: 10px;
       z-index: 10; }
     header .header-actions .wallet .ui-select-container .dropdown-menu {
       margin-top: 20px !important; }
@@ -229,9 +273,11 @@ header {
       margin-top: 6px;
       padding: 10px 55px !important;
       font-size: 12.5px;
-      font-weight: bold;
+      font-weight: none;
       border-radius: 3px;
       background: none; }
+    header .header-actions .wallet .ui-select-search input:focus {
+      border: 1px solid red; }
     header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
       margin: -1px 2px !important; }
     header .header-actions .wallet .ui-select-toggle .ui-select-placeholder, header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
@@ -642,6 +688,8 @@ clr-tab-content.active {
           color: #888; }
         .messages .message-grid .message-highlights .message-highlight h4, .messages .message-compose .message-highlights .message-highlight h4 {
           margin-top: 2px; }
+          .messages .message-grid .message-highlights .message-highlight h4 span, .messages .message-compose .message-highlights .message-highlight h4 span {
+            font-size: 18px; }
         .messages .message-grid .message-highlights .message-highlight span, .messages .message-compose .message-highlights .message-highlight span {
           font-size: 12px; }
         .messages .message-grid .message-highlights .message-highlight .message-preview, .messages .message-compose .message-highlights .message-highlight .message-preview {
@@ -695,6 +743,14 @@ clr-tab-content.active {
         padding: 20px; }
         .messages .message-grid .message-body .message-title h1, .messages .message-compose .message-body .message-title h1 {
           margin-top: 10px; }
+  .messages .message-compose label {
+    text-align: right !important;
+    padding: 11px 0 0; }
+  .messages .message-compose .content-area form input[type], .messages .message-compose .content-area .form input[type] {
+    width: 100%; }
+  .messages .message-compose .message-compose-buttons {
+    padding: 17px 15px 0;
+    float: right; }
 
 @media only screen and (max-width: 2000px) {
   .col-categories {
@@ -789,11 +845,15 @@ clr-tab-content.active {
   min-width: 30px;
   margin-right: -10px !important;
   margin-top: 1px;
-  z-index: 9999;
+  z-index: 100;
   position: absolute;
   background: white;
   right: 11px;
   border: 0px; }
+
+.ui-select-match .btn a:hover {
+  border: 0px solid white !important;
+  background: white; }
 
 .ui-select-choices-row {
   font-size: 13px; }

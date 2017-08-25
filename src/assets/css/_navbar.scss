@@ -96,9 +96,9 @@ header {
             .wallet-tile {
                 color: $setlSelected;
                 position: absolute;
-                top: 28px;
-                font-size: 10px;
-                margin-left: 16px;
+                top: 27px;
+                font-size: 12px;
+                margin-left: 10px;
                 z-index: 10;
             }
 
@@ -140,9 +140,13 @@ header {
                 margin-top: 6px;
                 padding: 10px 55px !important;
                 font-size: 12.5px;
-                font-weight: bold;
+                font-weight: none;
                 border-radius: 3px;
                 background: none;
+            }
+
+            .ui-select-search input:focus {
+                border: 1px solid red;
             }
 
             .ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
