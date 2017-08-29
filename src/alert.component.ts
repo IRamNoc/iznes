@@ -83,7 +83,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 
         .jaspero__dialog {
             min-width: 300px;
-            max-width: 400px;
+            max-width: 600px;
             max-height: 50%;
             display: -ms-flexbox;
             display: flex;
