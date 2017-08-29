@@ -16,3 +16,12 @@ export interface CreateUserMessageBody extends MemberNodeMessageBody {
     userType: string;
     password: string;
 }
+
+export interface EditUserMessageBody extends MemberNodeMessageBody {
+    token: string;
+    email: string;
+    account: string;
+    userType: string;
+    userId: string;
+    status: string;
+}

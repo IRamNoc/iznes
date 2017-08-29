@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {RequestAdminUsersMessageBody, CreateUserMessageBody} from './useradmin.service.model';
+import {
+    RequestAdminUsersMessageBody,
+    CreateUserMessageBody,
+    EditUserMessageBody
+} from './useradmin.service.model';
 
 @Injectable()
 export class AdminUsersService {
@@ -36,6 +40,25 @@ export class AdminUsersService {
             userType: userData.userType,
             password: userData.password
         };
+
+        console.log( "SENDING TO NEW USER: ", messageBody )
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public editUser (newData:any): any {
+
+        const messageBody: EditUserMessageBody = {
+            RequestName: 'udu',
+            token: this.memberSocketService.token,
+            'userId': newData.userId,
+            'email': newData.email,
+            'account': newData.account,
+            'userType': newData.userType,
+            'status': newData.status
+        };
+
+        console.log( "SENDING TO EDIT USER: ", messageBody )
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
