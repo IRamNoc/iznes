@@ -257,11 +257,11 @@ export class SocketClusterWrapper {
         /* Add a watcher to the channel, we'll do the decryption in here. */
         this.channels[channelName].watch((transmissionData) => {
             /* Now we can decrypt the data. */
-            console.log('|- Incoming Channel Publish...');
-            console.log('| TRANSMISSION DATA: ', transmissionData);
+            // console.log('|- Incoming Channel Publish...');
+            // console.log('| TRANSMISSION DATA: ', transmissionData);
             const decrypted = GibberishAES.dec(transmissionData, this.encryption.shareKey) || transmissionData;
 
-            console.log('| DESCRYPTED DATA: ', decrypted);
+            // console.log('| DESCRYPTED DATA: ', decrypted);
             /* Callback. */
             callback(decrypted);
         });
