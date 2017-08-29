@@ -13,3 +13,4 @@ export const getMyWalletList = createSelector(
     getMyWallets,
     (state: MyWalletsState) => state.walletList
 );
+

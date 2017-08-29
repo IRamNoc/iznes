@@ -16,7 +16,10 @@ export {
     SET_WALLET_ADDRESSES,
     getWalletAddressList,
     SET_OWN_WALLETS,
-    getMyWalletList
+    getMyWalletList,
+    SET_WALLET_HOLDING,
+    getWalletHoldingByAddress,
+    getWalletHoldingByAsset
 } from './wallet';
 
 export {

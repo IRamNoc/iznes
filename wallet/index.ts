@@ -12,6 +12,14 @@ import {
     getMyWalletList
 } from './my-wallets';
 
+import {
+    MyWalletHoldingState,
+    MyWalletHoldingReducer,
+    SET_WALLET_HOLDING,
+    getWalletHoldingByAsset,
+    getWalletHoldingByAddress
+} from './my-wallet-holding';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -24,12 +32,20 @@ export {
     getMyWalletList
 };
 
+export {
+    SET_WALLET_HOLDING,
+    getWalletHoldingByAddress,
+    getWalletHoldingByAsset
+};
+
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
+    myWalletHolding: MyWalletHoldingState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
     myWalletAddress: MyWalletAddressReducer,
-    myWallets: MyWalletsReducer
+    myWallets: MyWalletsReducer,
+    myWalletHolding: MyWalletHoldingReducer
 });
