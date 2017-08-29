@@ -15,5 +15,7 @@ export interface WalletDetail {
 }
 
 export interface MyWalletsState {
-    walletList: Array<WalletDetail>;
+    walletList: {
+        [key: string]: WalletDetail
+    };
 }

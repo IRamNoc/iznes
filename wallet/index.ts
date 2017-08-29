@@ -13,6 +13,14 @@ import {
 } from './my-wallets';
 
 import {
+    MyWalletHoldingState,
+    MyWalletHoldingReducer,
+    SET_WALLET_HOLDING,
+    getWalletHoldingByAsset,
+    getWalletHoldingByAddress
+} from './my-wallet-holding';
+
+import {
     SET_WALLET_DIRECTORY,
     WalletDirectoryReducer,
     WalletDirectoryState,
@@ -41,6 +49,12 @@ export {
 };
 
 export {
+    SET_WALLET_HOLDING,
+    getWalletHoldingByAddress,
+    getWalletHoldingByAsset
+};
+
+export {
     SET_WALLET_DIRECTORY,
     getWalletDirectory,
     getWalletDirectoryList
@@ -55,13 +69,17 @@ export {
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
+    myWalletHolding: MyWalletHoldingState;
     walletDirectory: WalletDirectoryState;
     managedWallets: ManagedWalletsState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
-    myWalletAddress: MyWalletAddressReducer,
-    myWallets: MyWalletsReducer,
-    walletDirectory: WalletDirectoryReducer,
-    managedWallets: ManagedWalletsReducer
-});
+        myWalletAddress: MyWalletAddressReducer,
+        myWallets: MyWalletsReducer,
+        myWalletHolding: MyWalletHoldingReducer,
+        walletDirectory: WalletDirectoryReducer,
+        managedWallets: ManagedWalletsReducer
+
+    }
+);

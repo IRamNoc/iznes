@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 const initialState: MyWalletsState = {
-    walletList: []
+    walletList: {}
 };
 
 export const MyWalletsReducer = function (state: MyWalletsState = initialState,
@@ -23,7 +23,6 @@ export const MyWalletsReducer = function (state: MyWalletsState = initialState,
             });
 
             return newState;
-
         default:
             return state;
     }
@@ -32,31 +31,27 @@ export const MyWalletsReducer = function (state: MyWalletsState = initialState,
 function formatWalletsDataResponse(rawWalletsData: Array<any>): Array<WalletDetail> {
 
     const rawWalletsDataList = fromJS(rawWalletsData);
-    let walletDetailList = List<WalletDetail>();
 
-    walletDetailList = rawWalletsDataList.map(
-        function (thisWalletDetail) {
-
-            const formattedDetail = {
-                    correspondenceAddress: thisWalletDetail.get('CorrespondenceAddress'),
-                    GLEI: thisWalletDetail.get('GLEI'),
-                    accountId: thisWalletDetail.get('accountID'),
-                    bankWalletId: thisWalletDetail.get('bankWalletID'),
-                    commuPub: thisWalletDetail.get('commuPub'),
-                    permission: thisWalletDetail.get('permission'),
-                    permissionDetail: thisWalletDetail.get('permissionDetail'),
-                    userId: thisWalletDetail.get('userID'),
-                    walletId: thisWalletDetail.get('walletID'),
-                    walletLocked: thisWalletDetail.get('walletLocked'),
-                    walletName: thisWalletDetail.get('walletName'),
-                    walletType: thisWalletDetail.get('walletType'),
-                    walletTypeName: thisWalletDetail.get('walletTypeName'),
-                }
-            ;
-
-            return formattedDetail;
-        }
-    );
+    const walletDetailList = Map(rawWalletsDataList.reduce(
+        function (result, item) {
+            result[item.get('walletID')] = {
+                correspondenceAddress: item.get('CorrespondenceAddress'),
+                GLEI: item.get('GLEI'),
+                accountId: item.get('accountID'),
+                bankWalletId: item.get('bankWalletID'),
+                commuPub: item.get('commuPub'),
+                permission: item.get('permission'),
+                permissionDetail: item.get('permissionDetail'),
+                userId: item.get('userID'),
+                walletId: item.get('walletID'),
+                walletLocked: item.get('walletLocked'),
+                walletName: item.get('walletName'),
+                walletType: item.get('walletType'),
+                walletTypeName: item.get('walletTypeName'),
+            };
+            return result;
+        },
+        {}));
 
     return walletDetailList.toJS();
 }
