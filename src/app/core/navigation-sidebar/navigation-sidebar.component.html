@@ -86,30 +86,6 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label menu-dropdown><i class="fa fa-cubes"></i> UI Elements</label>
-        <ul class="nav-list">
-            <li>
-                <a [routerLink]="['/ui-elements/form']" [ngClass]="{active: activeRoute('/ui-elements/form')}" class="nav-link"><i class="fa fa-pencil"></i> Form Elements</a>
-            </li>
-        </ul>
-    </section>
-
-    <section class="nav-group collapsible">
-        <label menu-dropdown><i class="fa fa-flag"></i> Reports</label>
-        <ul class="nav-list">
-            <li>
-                <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/balance-reports')}" class="nav-link"><i class="fa fa-user"></i> Balance Reports</a>
-            </li>
-            <li>
-                <a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/transaction-reports')}" class="nav-link"><i class="fa fa-briefcase"></i> Transaction Reports</a>
-            </li>
-            <li>
-                <a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/issues-reports')}" class="nav-link"><i class="fa fa-key"></i> Issues Reports</a>
-            </li>
-        </ul>
-    </section>
-
-    <section class="nav-group collapsible">
         <label menu-dropdown><i class="fa fa-cubes"></i> User Administration</label>
         <ul class="nav-list">
             <li>
@@ -143,31 +119,16 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label menu-dropdown><i class="fa fa-cubes"></i> Reports</label>
+        <label menu-dropdown><i class="fa fa-flag"></i> Reports</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link"><i class="fa fa-user"></i> Balances</a>
+                <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link"><i class="fa fa-th-list"></i> Balances Reports</a>
             </li>
             <li>
-                <a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link"><i class="fa fa-user"></i> Issue Reports</a>
-            </li>
-        </ul>
-    </section>
-
-    <section class="nav-group collapsible">
-        <label menu-dropdown><i class="fa-archive"></i> Test List</label>
-        <ul class="nav-list">
-            <li>
-                <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link"><i class="fa fa-user"></i> Users</a>
+                <a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link"><i class="fa fa-money"></i> Issue Reports</a>
             </li>
             <li>
-                <a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/user-administration/wallets')}" class="nav-link"><i class="fa fa-briefcase"></i> Wallets</a>
-            </li>
-            <li>
-                <a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/user-administration/permissions')}" class="nav-link"><i class="fa fa-key"></i> Permissions</a>
-            </li>
-            <li>
-                <a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link"><i class="fa fa-users"></i> Wizard</a>
+                <a [routerLink]="['/reports/transactions']" [ngClass]="{active: activeRoute('/reports/transactions')}" class="nav-link"><i class="fa fa-key"></i> Transactions Reports</a>
             </li>
         </ul>
     </section>

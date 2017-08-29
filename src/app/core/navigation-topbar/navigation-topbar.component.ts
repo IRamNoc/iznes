@@ -92,7 +92,6 @@ export class NavigationTopbarComponent implements OnInit {
     public removed(value: any): void {
         console.log('Removed value is: ', value);
     }
-
 }
 
 /**
@@ -100,7 +99,7 @@ export class NavigationTopbarComponent implements OnInit {
  * @param walletAddressList
  * @return {any}
  */
-function walletListToSelectItem(walletsList: Array<any>): Array<any> {
+function walletListToSelectItem(walletsList: object): Array<any> {
     const walletListImu = fromJS(walletsList);
     const walletsSelectItem = walletListImu.map(
         (thisWallet) => {
@@ -111,5 +110,5 @@ function walletListToSelectItem(walletsList: Array<any>): Array<any> {
         }
     );
 
-    return walletsSelectItem.toJS();
+    return walletsSelectItem.toArray();
 }
