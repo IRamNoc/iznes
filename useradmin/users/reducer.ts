@@ -13,7 +13,7 @@ export const UsersReducer = function (state: UsersState = initialState,
 
     /* Local stuff. */
     const usersData = _.get(action, 'payload[1].Data', []);
-    let newState:UsersState;
+    let newState: UsersState;
 
     switch (action.type) {
         case UsersActions.SET_ADMIN_USERLIST:
