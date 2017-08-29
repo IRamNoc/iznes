@@ -4,8 +4,6 @@ import {WalletNodeRequestService} from '../index';
 import {MyWalletsService} from '../index';
 import {ChannelService} from '../index';
 
-import {SET_WALLET_ADDRESSES, SET_OWN_WALLETS, SET_WALLET_HOLDING} from '@setl/core-store';
-
 import {AccountsService} from '../index';
 import {PermissionGroupService} from '../index';
 import {
@@ -15,7 +13,8 @@ import {
     SET_ACCOUNT_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_MANAGED_WALLETS
+    SET_MANAGED_WALLETS,
+    SET_WALLET_HOLDING
 } from '@setl/core-store';
 
 import {SagaHelper} from '@setl/utils';
