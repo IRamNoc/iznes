@@ -25,7 +25,9 @@ import {
     WalletNodeRequestService,
     InitialisationService,
     MyWalletsService,
-    ChannelService
+    ChannelService,
+    AccountsService,
+    PermissionGroupService
 } from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
@@ -70,6 +72,8 @@ export class SetlLoginComponent {
                 private memberSocketService: MemberSocketService,
                 private myWalletsService: MyWalletsService,
                 private channelService: ChannelService,
+                private accountsService: AccountsService,
+                private permissionGroupService: PermissionGroupService,
                 fb: FormBuilder,
                 private router: Router) {
         // Subscribe to app store
@@ -136,7 +140,9 @@ export class SetlLoginComponent {
                 this.ngRedux,
                 this.myWalletsService,
                 this.memberSocketService,
-                this.channelService
+                this.channelService,
+                this.accountsService,
+                this.permissionGroupService
             );
         }
 
