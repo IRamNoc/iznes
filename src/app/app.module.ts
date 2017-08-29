@@ -31,6 +31,7 @@ import {SetlMessagesModule} from '@setl/core-messages';
 import {SetlBalancesModule} from '@setl/core-balances';
 import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
+import {PermissionGridModule} from '@setl/permission-grid';
 
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
@@ -92,7 +93,8 @@ import {environment} from '../environments/environment';
         UserAdminModule,
         SetlMessagesModule,
         AssetServicingModule,
-        SetlBalancesModule
+        SetlBalancesModule,
+        PermissionGridModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

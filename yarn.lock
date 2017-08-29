@@ -197,6 +197,10 @@
   version "0.0.6"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git#6d3d49354591b55a0cd7ff39f80a0e7d1a0f528a"
 
+"@setl/permission-grid@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git":
+  version "1.0.0"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git#b116c25343853aec5c3c9893d709ea34680242e3"
+
 "@setl/socketcluster-wrapper@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
   version "1.0.4"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#b09c7de8ced5d42da84ce27dd0106f9122829250"
