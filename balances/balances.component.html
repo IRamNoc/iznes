@@ -23,7 +23,7 @@
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
-                    <clr-dg-cell>{{asset.asset}}</clr-dg-cell>
+                    <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
                     <clr-dg-cell>{{asset.total}}</clr-dg-cell>
                     <clr-dg-cell>{{asset.encumbered}}</clr-dg-cell>
                     <clr-dg-cell>{{asset.free}}</clr-dg-cell>
