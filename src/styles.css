@@ -177,6 +177,13 @@ span.fr-counter {
   color: #007cbb;
   width: 93%; }
 
+.asset-pipe {
+  color: #bfbfbf;
+  padding-left: 8px;
+  padding-right: 8px;
+  /* background: blue; */
+  font-weight: bold; }
+
 header {
   background-color: #292e3c !important;
   flex: 0 0 75px;
