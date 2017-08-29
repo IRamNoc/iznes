@@ -45,22 +45,27 @@ export class AdminUsersComponent implements AfterViewInit {
         /* Link the users list to this user's data. */
         this.userAdminService.usersListEvent.subscribe((usersList) => {
             this.usersData = this.convertToArray(usersList);
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
         });
 
         /* Default tabs. */
         this.tabsControl = [
             {
                 "title": "<i class='fa fa-search'></i> Search",
+                "userId": -1,
                 "active": true
             },
             {
                 "title": "<i class='fa fa-user'></i> Add User",
+                "userId": -1,
                 "formControl": new FormGroup(
                     {
                         "username": new FormControl(''),
                         "email": new FormControl(''),
-                        "accountType": new FormControl(''),
-                        "userType": new FormControl(''),
+                        "accountType": new FormControl( [] ),
+                        "userType": new FormControl( [] ),
                         "password": new FormControl('')
                     }
                 ),
@@ -102,20 +107,19 @@ export class AdminUsersComponent implements AfterViewInit {
      * @return {void}
      */
     public handleNewUser (tabid:number):void {
-        console.log( " |--- Sending User Data" );
-        console.log( " | data: ", this.tabsControl[tabid].formControl.value );
         /* Sort the data structure out. */
         let
         dataToSend = this.tabsControl[tabid].formControl.value;
         dataToSend.userType = dataToSend.userType.length ? dataToSend.userType[0].id : 0;
         dataToSend.accountType = dataToSend.accountType.length ? dataToSend.accountType[0].id : 0;
 
-        console.log( " | datasorted: ", dataToSend );
-
         /* Let's trigger the creation of the user. */
         this.userAdminService.createNewUser(
             this.tabsControl[tabid].formControl.value
         );
+
+        /* Clear the form. */
+        this.clearNewUser(1, false);
 
         /* Return. */
         return;
@@ -131,12 +135,21 @@ export class AdminUsersComponent implements AfterViewInit {
       * @return {void}
       */
      public handleEditUser (tabid:number):void {
+         /* Sort the data structure out. */
+         let formData = this.tabsControl[tabid].formControl.value;
+         let dataToSend = {
+            'userId': this.tabsControl[tabid].userId.toString(),
+            'email': formData.email,
+            'userType': formData.userType.length ? formData.userType[0].id : 0,
+            'account': formData.accountType.length ? formData.accountType[0].id : 0,
+            'status': 0
+         };
 
-         console.log(
-             JSON.stringify(
-                 this.tabsControl[tabid].formControl.value
-             )
-         );
+         /* Let's send the edit out. */
+         this.userAdminService.editUser( dataToSend );
+
+         /* Return */
+         return;
      }
 
      /**
@@ -179,27 +192,42 @@ export class AdminUsersComponent implements AfterViewInit {
       * -----------
       * Handles the editting of a wallet.
       *
-      * @param {editWalletIndex} number - The index of a wallet to be editted.
+      * @param {editUserIndex} number - The index of a wallet to be editted.
       *
       * @return {void}
       */
-     public handleEdit ( editWalletIndex ):void {
+     public handleEdit ( editUserIndex ):void {
+         /* Check if the tab is already open. */
+         let i;
+         for ( i = 0; i < this.tabsControl.length; i++ ) {
+             if ( this.tabsControl[i].userId === this.usersData[editUserIndex].userID ) {
+                 /* Found the index for that tab, lets activate it... */
+                 this.setTabActive(i);
+
+                 /* And return. */
+                 return;
+             }
+         }
+
          /* Push the edit tab into the array. */
+         let user = this.usersData[editUserIndex];
+         let accountType = this.userAdminService.resolveAccountType( { text: user.accountName } );
+         let userType = this.userAdminService.resolveUserType( { id: user.userType } );
+
+         /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
-             "title": "<i class='fa fa-user'></i> "+ this.usersData[ editWalletIndex ].userName,
+             "title": "<i class='fa fa-user'></i> "+ this.usersData[ editUserIndex ].userName,
+             "userId": user.userID,
              "formControl": new FormGroup(
                  {
-                     "username": new FormControl(''),
-                     "email": new FormControl(''),
-                     "accountType": new FormControl(''),
-                     "userType": new FormControl(''),
-                     "password": new FormControl(''),
+                     "username": new FormControl( user.userName ),
+                     "email": new FormControl( user.emailAddress ),
+                     "accountType": new FormControl( accountType ),
+                     "userType": new FormControl( userType )
                  }
              ),
              "active": false // this.editFormControls
          });
-
-         console.log( this.tabsControl[this.tabsControl.length - 1] );
 
          /* Activate the new tab. */
          this.setTabActive( this.tabsControl.length - 1 );
@@ -207,19 +235,6 @@ export class AdminUsersComponent implements AfterViewInit {
          /* Return. */
          return;
      }
-
-     /**
-      * Clear Form
-      * ----------
-      * Clears the new group form.
-      *
-      * @return {void}
-      */
-      public clearForm ():void {
-
-          /* Return. */
-          return;
-      }
 
       /**
        * Close Tab
@@ -271,8 +286,39 @@ export class AdminUsersComponent implements AfterViewInit {
           /* Set the list active. */
           this.tabsControl[index].active = true;
 
+          /* Yes, we have to call this again to get it to work, trust me... */
+          this.changeDetectorRef.detectChanges();
+      }
+
+      /**
+       * Clear New User
+       * --------------
+       * Clears the new user form, i.e, sets all inputs to not filled.
+       *
+       * @param {tabid} number - the tabs to clear (will always be 1).
+       *
+       * @return {void}
+       */
+      public clearNewUser (tabid, event):void {
+          /* Prevent submit. */
+          if ( event ) event.preventDefault();
+
+          /* Let's set all the values in the form controls. */
+          this.tabsControl[tabid].formControl = new FormGroup(
+              {
+                  "username": new FormControl(''),
+                  "email": new FormControl(''),
+                  "accountType": new FormControl( [] ),
+                  "userType": new FormControl( [] ),
+                  "password": new FormControl('')
+              }
+          );
+
           /* Override the changes. */
           this.changeDetectorRef.detectChanges();
+
+          /* Return. */
+          return;
       }
 
 }
