@@ -8,7 +8,8 @@ import {
     WalletState, walletReducer,
     MessageState, messageReducer,
     AdminUsersState, adminUserReducer,
-    AssetState, assetReducer
+    AssetState, assetReducer,
+    AccountState, AccountReducer
 } from '@setl/core-store';
 
 export interface AppState {
@@ -18,6 +19,7 @@ export interface AppState {
     userAdmin: AdminUsersState;
     asset: AssetState;
     adminUsers: AdminUsersState;
+    account: AccountState;
 }
 
 export const rootReducer: Reducer<any> = combineReducers<any>({
@@ -25,5 +27,6 @@ export const rootReducer: Reducer<any> = combineReducers<any>({
     wallet: walletReducer,
     message: messageReducer,
     userAdmin: adminUserReducer,
-    asset: assetReducer
+    asset: assetReducer,
+    account: AccountReducer
 });
