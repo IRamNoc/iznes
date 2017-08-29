@@ -20,6 +20,22 @@ import {
     getWalletHoldingByAddress
 } from './my-wallet-holding';
 
+import {
+    SET_WALLET_DIRECTORY,
+    WalletDirectoryReducer,
+    WalletDirectoryState,
+    getWalletDirectory,
+    getWalletDirectoryList
+} from './wallet-directory';
+
+import {
+    ManagedWalletsState,
+    ManagedWalletsReducer,
+    SET_MANAGED_WALLETS,
+    getManagedWallets,
+    getManageWalletList
+} from './managed-wallets';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -38,14 +54,32 @@ export {
     getWalletHoldingByAsset
 };
 
+export {
+    SET_WALLET_DIRECTORY,
+    getWalletDirectory,
+    getWalletDirectoryList
+};
+
+export {
+    SET_MANAGED_WALLETS,
+    getManagedWallets,
+    getManageWalletList
+};
+
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
     myWalletHolding: MyWalletHoldingState;
+    walletDirectory: WalletDirectoryState;
+    managedWallets: ManagedWalletsState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
-    myWalletAddress: MyWalletAddressReducer,
-    myWallets: MyWalletsReducer,
-    myWalletHolding: MyWalletHoldingReducer
-});
+        myWalletAddress: MyWalletAddressReducer,
+        myWallets: MyWalletsReducer,
+        myWalletHolding: MyWalletHoldingReducer,
+        walletDirectory: WalletDirectoryReducer,
+        managedWallets: ManagedWalletsReducer
+
+    }
+);
