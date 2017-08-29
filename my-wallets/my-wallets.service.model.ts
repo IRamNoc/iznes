@@ -16,3 +16,7 @@ export interface SetActiveWalletMessageBody extends MemberNodeMessageBody {
 export interface RequestWalletDirectoryMessageBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface RequestManagedWalletsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
