@@ -157,6 +157,9 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
+                            <button (click)="clearNewUser(tabid, $event)" class="btn btn-secondary">
+                                Clear
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -167,7 +170,7 @@
     <!-- User Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
         <div>
-            <button (click)="closeTab(tabid)" class="btn btn-primary">Close</button>
+
             {{ context | json }}
         </div>
         <div class="user-tab-panel-body panel-body">
@@ -222,26 +225,6 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_password">Password</span>
-                            </label>
-                            <div>
-                                <input type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
-                            </label>
-                            <div>
-                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
                                 <span class="ml" mltag="txt_access">Accès</span>
@@ -256,6 +239,9 @@
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                Close
                             </button>
                         </div>
                     </div>
