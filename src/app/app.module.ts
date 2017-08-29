@@ -18,7 +18,9 @@ import {
     WalletNodeRequestService,
     MyWalletsService,
     WalletnodeTxService,
-    ChannelService
+    ChannelService,
+    AccountsService,
+    PermissionGroupService
 } from '@setl/core-req-services';
 
 /* Routes. */
@@ -118,7 +120,9 @@ import {environment} from '../environments/environment';
         LoginGuardService,
         ToasterService,
         ChannelService,
-        AlertIconAndTypesService
+        AlertIconAndTypesService,
+        AccountsService,
+        PermissionGroupService
     ],
     bootstrap: [AppComponent]
 })
