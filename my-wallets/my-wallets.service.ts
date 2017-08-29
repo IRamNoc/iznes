@@ -5,7 +5,8 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
     RequestOwnWalletsMessageBody,
     SetActiveWalletMessageBody,
-    RequestWalletDirectoryMessageBody
+    RequestWalletDirectoryMessageBody,
+    RequestManagedWalletsMessageBody
 } from './my-wallets.service.model';
 
 
@@ -43,4 +44,14 @@ export class MyWalletsService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    requestManagedWallets(): any {
+        const messageBody: RequestManagedWalletsMessageBody = {
+            RequestName: 'gwl',
+            token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
 }

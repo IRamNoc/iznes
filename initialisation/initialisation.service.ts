@@ -3,7 +3,17 @@ import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService} from '../index';
 import {MyWalletsService} from '../index';
 import {ChannelService} from '../index';
-import {SET_WALLET_ADDRESSES, SET_OWN_WALLETS, SET_WALLET_DIRECTORY} from '@setl/core-store';
+import {AccountsService} from '../index';
+import {PermissionGroupService} from '../index';
+import {
+    SET_WALLET_ADDRESSES,
+    SET_OWN_WALLETS,
+    SET_WALLET_DIRECTORY,
+    SET_ACCOUNT_LIST,
+    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_MANAGED_WALLETS
+} from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 
@@ -55,12 +65,23 @@ export class InitialisationService {
     static membernodeInitialisation(ngRedux: NgRedux<any>,
                                     myWalletsService: MyWalletsService,
                                     memberSocketService: MemberSocketService,
-                                    channelService: ChannelService): boolean {
+                                    channelService: ChannelService,
+                                    accountsService: AccountsService,
+                                    permissionGroupService: PermissionGroupService): boolean {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
 
         // Request wallet directory
         this.requestWalletDirectory(ngRedux, myWalletsService);
+
+        // Request account list
+        this.requestAccountList(ngRedux, accountsService);
+
+        // Request permission group list (include administrative and transactional
+        this.requestPermissionGroupList(ngRedux, permissionGroupService);
+
+        // Request managed wallet list
+        this.requestManagedWalletList(ngRedux, myWalletsService);
 
         // Subscribe to my connection channel, target for my userId.
         this.subscribe(memberSocketService, channelService);
@@ -100,4 +121,57 @@ export class InitialisationService {
         return true;
     }
 
+    static requestAccountList(ngRedux: NgRedux<any>,
+                              accountsService: AccountsService): boolean {
+        const asyncTaskPipes = accountsService.requestAccountList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ACCOUNT_LIST],
+            [],
+            asyncTaskPipes,
+            {},
+            function (data) {
+                console.log('account list', data);
+            }
+        ));
+
+        return true;
+    }
+
+    static requestPermissionGroupList(ngRedux: NgRedux<any>,
+                                      permissionGroupService: PermissionGroupService): boolean {
+        const asyncTaskPipes = permissionGroupService.requestPermissionGroupList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST],
+            [],
+            asyncTaskPipes,
+            {},
+            function (data) {
+                console.log('permission group list', data);
+            }
+        ));
+
+        return true;
+    }
+
+    static requestManagedWalletList(ngRedux: NgRedux<any>,
+                                    myWalletsService: MyWalletsService): boolean {
+        const asyncTaskPipes = myWalletsService.requestManagedWallets();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MANAGED_WALLETS],
+            [],
+            asyncTaskPipes,
+            {},
+            function (data) {
+                console.log('wallet group list', data);
+            },
+            function (data) {
+                console.log('fail wallet group', data);
+            }
+        ));
+
+        return true;
+    }
 }
