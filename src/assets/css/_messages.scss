@@ -75,6 +75,14 @@
         margin: 20px auto;
         min-height: 1034px;
 
+        .ui-select-container.ui-select-multiple {
+            border: 1px solid #ccc !important;
+            margin: 10px auto;
+            padding: 7px 10px 2px !important;
+            border-radius: 4px;
+            width: 95%;
+        }
+
         .message-options {
             padding: 20px;
             border-bottom: 1px solid #ccc;
