@@ -21,7 +21,6 @@ export class AdminUsersComponent implements AfterViewInit {
 
     /* User data. */
     public usersData:any;
-    public activeEditUser:any;
 
     public tabsControl:any;
 

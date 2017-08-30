@@ -25,7 +25,6 @@ import {AdminWalletsTableComponent} from './wallets/subcomponents/wallets-table.
 
 /* Permissions components. */
 import {AdminPermissionsComponent} from './permissions/permissions.component';
-import {AdminPermissionsTableComponent} from './permissions/subcomponents/permissions-table.component';
 
 /* User admin service. */
 @NgModule({
@@ -39,7 +38,6 @@ import {AdminPermissionsTableComponent} from './permissions/subcomponents/permis
 
         /* Permissions components. */
         AdminPermissionsComponent,
-        AdminPermissionsTableComponent,
 
         /* Wizard component. */
         AdminWizardComponent,
@@ -54,7 +52,6 @@ import {AdminPermissionsTableComponent} from './permissions/subcomponents/permis
 
         /* Permissions components. */
         AdminPermissionsComponent,
-        AdminPermissionsTableComponent,
 
         /* Wizard component. */
         AdminWizardComponent,
