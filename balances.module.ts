@@ -5,26 +5,17 @@ import {SetlIssueComponent} from './issue/issue.component';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
-
-@Pipe({
-    name: 'asset'
-})
-export class AssetPipe implements PipeTransform {
-    transform(value: string, args: string[]): string {
-        value = value.replace('|', '<span class="asset-pipe">|</span>');
-        return value;
-    }
-}
+import {SetlPipesModule} from '@setl/utils';
 
 @NgModule({
     imports: [
         CommonModule,
-        ClarityModule
+        ClarityModule,
+        SetlPipesModule
     ],
     declarations: [
         SetlBalancesComponent,
         SetlIssueComponent,
-        AssetPipe
     ],
     exports: [
         SetlBalancesComponent,
