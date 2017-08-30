@@ -4,6 +4,8 @@ import {
     AfterViewInit
 } from '@angular/core';
 
+import { MenuDropdownService } from './menu-dropdown.service';
+
 /**
  * DropDown
  * If placed on an item with a ul as the next sibling, the ul will be shown/hidden on click.
@@ -16,11 +18,13 @@ export class DropdownDirective {
     public isOpen:boolean = false;
 
     private list:any;
+    private identifier:number;
     private targetHeight:string;
 
     /* Constructor. */
     constructor (
-        private label: ElementRef
+        private label: ElementRef,
+        private menuDropdownService:MenuDropdownService
     ) {
         /* Check if the isOpen property was set... */
         let prop = label.nativeElement.getAttribute('isOpen');
@@ -28,6 +32,15 @@ export class DropdownDirective {
             /*Set it, if it was true. */
             this.isOpen = prop;
         }
+
+        /* Register this dropdown, this returns an ID and lets the service know
+           who we are. */
+        this.identifier = this.menuDropdownService.registerDropdown();
+
+        /* Listen to the event, and call switch whenever it's broadcast. */
+        this.menuDropdownService.activationEvent.subscribe((event) => {
+            this.switch(event);
+        })
     }
 
     /**
@@ -43,7 +56,11 @@ export class DropdownDirective {
 
             /* Assign click handler. */
             this.label.nativeElement.addEventListener('click', () => {
-                this.switch();
+                if ( ! this.isOpen ) {
+                    this.menuDropdownService.requestActivation( this.identifier );
+                } else {
+                    this.menuDropdownService.requestDeactivation( this.identifier );
+                }
             });
 
             /* Workout height. */
@@ -82,9 +99,9 @@ export class DropdownDirective {
      * Switch
      * Trigger the state to switch.
      */
-    public switch ():void {
+    public switch (activated):void {
         /* Toggle the state, ad update the list class. */
-        this.isOpen = this.isOpen ? false : true;
+        this.isOpen = activated.id === this.identifier ? true : false;
 
         /* Re-render. */
         this.render();

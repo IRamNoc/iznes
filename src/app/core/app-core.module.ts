@@ -24,6 +24,9 @@ import {NavigationTopbarComponent} from './navigation-topbar/navigation-topbar.c
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 
+/* Services. */
+import {MenuDropdownService} from './menu-dropdown/menu-dropdown.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -55,6 +58,7 @@ import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
     ],
     providers: [
         /* Services. */
+        MenuDropdownService
     ],
 })
 export class AppCoreModule {
