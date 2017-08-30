@@ -10,3 +10,11 @@ export interface RegisterIssuerMessageBody extends WalletNodeMessageBody {
 export interface RegisterIssuerMessage extends WalletNodeRequest {
     MessageBody: RegisterIssuerMessageBody;
 }
+
+export interface RegisterAssetMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metadata: object;
+}
