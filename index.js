@@ -6,4 +6,4 @@ export {
     SagaHelper,
 };
 
-// export {SetlPipesModule} from './pipes';
+export {SetlPipesModule} from './pipes';
