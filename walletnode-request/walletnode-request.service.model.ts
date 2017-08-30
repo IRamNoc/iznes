@@ -24,3 +24,7 @@ export interface RequestWalletHoldingMessageBody extends WalletNodeMessageBody {
     classid?: string;
     address?: string;
 }
+
+export interface WalletInstrumentRequestMessageBody extends WalletAddressRequestMessageBody {
+    walletid: number;
+}
