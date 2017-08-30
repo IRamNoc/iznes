@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 
+
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 
@@ -29,199 +30,14 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
     public holdingByAsset;
     public currentWalletId;
 
-    constructor(private ngRedux: NgRedux<any>) {
+    public tabsControl: any;
+
+    constructor(private ngRedux: NgRedux<any>, private changeDetectorRef: ChangeDetectorRef) {
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        // this.assets = [
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        //     {
-        //         id: '3',
-        //         identifier: 'EUR',
-        //         asset: 'Payment_Bank1|EUR',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        // ];
-        //
-        // this.singleAsset = [
-        //     {
-        //         id: '1',
-        //         address: 'd332bad22159a6ea1122f032b57cfd92',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
-        //     {
-        //         id: '2',
-        //         address: '2219a822bf8087aa5e82788ec2a87cc5',
-        //         total: '100',
-        //         encumbered: '1',
-        //         free: '99'
-        //     },
-        // ];
-        //
+
         // this.singleAssetHistory = [
         //     {
         //         id: '1',
@@ -248,16 +64,43 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
         //         type: 'Contract Commitment'
         //     }
         // ];
+
+        /* Default tabs. */
+        this.tabsControl = this.defaultTabControl();
     }
 
+    /**
+     * Current Redux State
+     */
     updateState() {
         const newState = this.ngRedux.getState();
-        this.currentWalletId = getConnectedWallet(newState);
+
+        const newWalletId = getConnectedWallet(newState);
+
+        if (newWalletId !== this.currentWalletId) {
+            this.tabsControl = this.defaultTabControl();
+        }
+
+        this.currentWalletId = newWalletId;
         this.holdingByAsset = getWalletHoldingByAsset(newState);
 
-        console.log(this.holdingByAsset);
-
         this.assets = this.formatHolding();
+        this.assets = this.convertToArray(this.assets);
+    }
+
+    /**
+     * Default Tab Control Array
+     *
+     * @returns {[{title: string; asset: number; active: boolean}]}
+     */
+    defaultTabControl() {
+        return [
+            {
+                'title': "<i class='fa fa-th-list'></i> Balances",
+                'asset': -1,
+                'active': true
+            },
+        ];
     }
 
     ngOnInit() {
@@ -283,23 +126,146 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
         const holdingListImu = fromJS(holdingForWallet);
         const holdingList = holdingListImu.map(
             (thisHolding, thisHoldingKey) => {
+                const identifier = thisHoldingKey.split('|')[1];
                 return {
                     asset: thisHoldingKey,
+                    identifier: identifier,
                     total: thisHolding.get('total'),
-                };
+                    encumbered: thisHolding.get('totalencumbered'),
+                    free: thisHolding.get('total') - thisHolding.get('totalencumbered'),
+                    breakdown: this.formatBreakdown(thisHolding.get('breakdown'))
+                }
             }
         );
 
         return holdingList.toArray();
+    }
 
-        //         //     {
-        //         id: '1',
-        //         identifier: 'FR0001',
-        //         asset: 'LEI0001|OFI RS Dynamique C D',
-        //         total: '987,654,321',
-        //         encumbered: '321',
-        //         free: '987,654,000'
-        //     },
+    formatBreakdown(breakDown) {
+        const breakDownImu = fromJS(breakDown);
+        const breakDownList = breakDownImu.map(
+            (thisBreakdown, thisBreakdownKey) => {
+                return {
+                    address: thisBreakdownKey,
+                    total: thisBreakdown.get(0),
+                    encumbered: thisBreakdown.get(1),
+                    free: thisBreakdown.get(0) - thisBreakdown.get(1),
+                };
+            }
+        );
+        return breakDownList.toArray();
+    }
+
+
+    /**
+     * Handle View
+     *
+     * @param {index} number - The index of a wallet to be editted.
+     *
+     * @return {void}
+     */
+    public handleView(index): void {
+        /* Check if the tab is already open. */
+        let i;
+        for (i = 0; i < this.tabsControl.length; i++) {
+            if (this.tabsControl[i].asset === this.assets[index].asset) {
+                /* Found the index for that tab, lets activate it... */
+                this.setTabActive(i);
+
+                /* And return. */
+                return;
+            }
+        }
+
+        /* Push the edit tab into the array. */
+        let asset = this.assets[index];
+
+        /* And also prefill the form... let's sort some of the data out. */
+        this.tabsControl.push({
+            "title": "<i class='fa fa-th-list'></i> " + this.assets[index].identifier,
+            "asset": asset.asset,
+            "assetObject": asset,
+            "active": false // this.editFormControls
+        });
+
+        /* Activate the new tab. */
+        this.setTabActive(this.tabsControl.length - 1);
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Convert To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
+    public convertToArray(obj): Array<any> {
+        let i = 0, key, newArray = [];
+        for (key in obj) {
+            newArray.push(obj[key]);
+            newArray[newArray.length - 1].index = i++;
+        }
+        return newArray;
+    }
+
+    /**
+     * Close Tab
+     * ---------
+     * Removes a tab from the tabs control array, in effect, closing it.
+     *
+     * @param {index} number - the tab inded to close.
+     *
+     * @return {void}
+     */
+    public closeTab(index) {
+        /* Validate that we have index. */
+        if (!index && index !== 0) {
+            return;
+        }
+
+        /* Remove the object from the tabsControl. */
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        /* Reset tabs. */
+        this.setTabActive(0);
+
+        /* Return */
+        return;
+    }
+
+    /**
+     * Set Tab Active
+     * --------------
+     * Sets all tabs to inactive other than the given index, this means the
+     * view is switched to the wanted tab.
+     *
+     * @param {index} number - the tab inded to close.
+     *
+     * @return {void}
+     */
+    public setTabActive(index: number = 0) {
+        /* Lets loop over all current tabs and switch them to not active. */
+        this.tabsControl.map((i) => {
+            i.active = false;
+        });
+
+        /* Override the changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* Set the list active. */
+        this.tabsControl[index].active = true;
+
+        /* Yes, we have to call this again to get it to work, trust me... */
+        this.changeDetectorRef.detectChanges();
     }
 
 }
