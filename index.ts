@@ -36,12 +36,31 @@ export {
 } from './messages';
 
 export {
+    // State and reducer
     AssetState,
     assetReducer,
+
+    // Actions and action creators
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
+    finishRegisterIssuerNotification,
+    SET_WALLET_ISSUER_LIST,
+
+    REGISTER_ASSET_SUCCESS,
+    REGISTER_ASSET_FAIL,
+    finishRegisterInstrumentNotification,
+    setRequestedWalletInstrument,
+    SET_MY_INSTRUMENTS_LIST,
+
+
+    // Selectors
     getNewIssuerRequest,
-    finishRegisterIssuerNotification
+    getRequestedIssuerState,
+    setRequestedWalletIssuer,
+    getWalletIssuerDetail,
+
+    getNewInstrumentRequest,
+    getRequestedInstrumentState
 } from './assets';
 
 export {

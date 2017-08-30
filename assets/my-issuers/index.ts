@@ -3,6 +3,8 @@ export {MyIssuersReducer} from './reducer';
 export {MyIssuersState} from './model';
 export {
     REGISTER_ISSUER_SUCCESS, REGISTER_ISSUER_FAIL,
-    finishRegisterIssuerNotification
+    finishRegisterIssuerNotification,
+    setRequestedWalletIssuer,
+    SET_WALLET_ISSUER_LIST
 } from './actions';
-export {getNewIssuerRequest} from './selectors';
+export {getNewIssuerRequest, getRequestedIssuerState, getWalletIssuerDetail} from './selectors';

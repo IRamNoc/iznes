@@ -1,5 +1,6 @@
 export interface IssuerDetail {
     issuer: string;
+    issuerAddress: string;
 }
 
 export interface NewIssuerRequest {
@@ -12,6 +13,11 @@ export interface NewIssuerRequest {
 
 export interface MyIssuersState {
     issuerList: Array<IssuerDetail>;
+    requestedWalletIssuer: boolean;
     newIssuerRequest: NewIssuerRequest;
+    walletIssuerDetail: {
+        walletIssuer: string;
+        walletIssuerAddress: string;
+    };
 }
 
