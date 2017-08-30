@@ -154,8 +154,7 @@ export class SetlMessagesComponent {
             [],
             asyncTaskPipe, {}, (response) => {
                 this.ngRedux.dispatch(setDecryptedContent(mailId, response));
-            }, (response) => {
-
+                return true;
             })
         );
     }
