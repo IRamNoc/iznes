@@ -48,6 +48,7 @@ export {
     REGISTER_ISSUER_FAIL,
     finishRegisterIssuerNotification,
     SET_WALLET_ISSUER_LIST,
+    setRequestedWalletIssuer,
 
     REGISTER_ASSET_SUCCESS,
     REGISTER_ASSET_FAIL,
@@ -59,11 +60,11 @@ export {
     // Selectors
     getNewIssuerRequest,
     getRequestedIssuerState,
-    setRequestedWalletIssuer,
     getWalletIssuerDetail,
 
     getNewInstrumentRequest,
-    getRequestedInstrumentState
+    getRequestedInstrumentState,
+    getMyInstrumentsList
 } from './assets';
 
 export {

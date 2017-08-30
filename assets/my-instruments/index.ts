@@ -7,4 +7,4 @@ export {
     setRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST
 } from './actions';
-export {getNewInstrumentRequest, getRequestedInstrumentState} from './selectors';
+export {getNewInstrumentRequest, getRequestedInstrumentState, getMyInstrumentsList} from './selectors';

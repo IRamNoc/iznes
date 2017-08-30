@@ -32,9 +32,9 @@ export const AccountListReducer = function (state: AccountListState = initialSta
 function formatAccountListData(rawAccountListData: Array<any>): {
     [key: number]: AccountDetail
 } {
-    const RawAccountDataList = fromJS(rawAccountListData);
+    const rawAccountDataList = fromJS(rawAccountListData);
 
-    const accountDataList = Map(RawAccountDataList.reduce(
+    const accountDataList = Map(rawAccountDataList.reduce(
         function (result, item) {
             result[item.get('accountID')] = {
                 accountId: item.get('accountID'),

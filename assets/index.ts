@@ -28,6 +28,7 @@ import {
     // Selectors
     getNewInstrumentRequest,
     getRequestedInstrumentState,
+    getMyInstrumentsList
 } from './my-instruments';
 
 export {
@@ -50,7 +51,8 @@ export {
     setRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
     getNewInstrumentRequest,
-    getRequestedInstrumentState
+    getRequestedInstrumentState,
+    getMyInstrumentsList
 };
 
 export interface AssetState {
