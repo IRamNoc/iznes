@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'setl-permission-grid',
@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PermissionGridComponent implements OnInit {
 
-  constructor() { }
+    /* Imports. */
+    @Input()
+    dataStructure:any;
 
-  ngOnInit() {
-  }
+    constructor () {
+
+    }
+
+    ngOnInit () {
+
+    }
 
 }
