@@ -9,49 +9,34 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
 import {FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
 import {SelectModule} from 'ng2-select';
+import {SetlPipesModule} from '@setl/utils';
 
 import {
     MyMessagesService,
 } from '@setl/core-req-services';
 
 
-@Pipe({
-    name: 'truncate'
-})
-export class TruncatePipe implements PipeTransform {
-    transform(value: string, args: string[]): string {
-        const limit = args.length > 0 ? parseInt(args[0], 10) : 20;
-        const trail = args.length > 1 ? args[1] : '...';
-        return value.length > limit ? value.substring(0, limit).trim() + trail : value;
-    }
-}
-
 @NgModule({
-    imports:
+    imports: [
+        CommonModule,
+        ClarityModule,
+        GravatarModule,
+        SelectModule,
         [
-            CommonModule,
-            ClarityModule,
-            GravatarModule,
-            SelectModule,
-            [
-                FroalaEditorModule.forRoot(),
-                FroalaViewModule.forRoot()
-            ],
+            FroalaEditorModule.forRoot(),
+            FroalaViewModule.forRoot()
         ],
-    declarations:
-        [
-            SetlMessagesComponent,
-            TruncatePipe
-        ],
-    exports:
-        [
-            SetlMessagesComponent,
-            TruncatePipe
-        ],
-    providers:
-        [
-            MyMessagesService
-        ]
+        SetlPipesModule
+    ],
+    declarations: [
+        SetlMessagesComponent,
+    ],
+    exports: [
+        SetlMessagesComponent,
+    ],
+    providers: [
+        MyMessagesService
+    ]
 })
 
 export class SetlMessagesModule {
