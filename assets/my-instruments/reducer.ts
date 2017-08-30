@@ -54,7 +54,7 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
                 newInstrumentRequest
             });
 
-            return state;
+            return newState;
 
         case MyInstrumentActions.SET_REQUESTED_WALLET_INSTRUMENT:
             return state;
