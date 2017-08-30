@@ -46,13 +46,13 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
 
         case MyInstrumentActions.FINISH_REGISTER_INSTRUMENT_NOTIFICATION:
             needNotify = false;
-            //
-            // newIssuerRequest = Object.assign({}, state.newIssuerRequest, {
-            //     needNotify
-            // });
-            // newState = Object.assign({}, state, {
-            //     newIssuerRequest
-            // });
+
+            newInstrumentRequest = Object.assign({}, state.newInstrumentRequest, {
+                needNotify
+            });
+            newState = Object.assign({}, state, {
+                newInstrumentRequest
+            });
 
             return state;
 
