@@ -3,6 +3,7 @@ import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService} from '../index';
 import {MyWalletsService} from '../index';
 import {ChannelService} from '../index';
+
 import {AccountsService} from '../index';
 import {PermissionGroupService} from '../index';
 import {
@@ -12,8 +13,10 @@ import {
     SET_ACCOUNT_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_MANAGED_WALLETS
+    SET_MANAGED_WALLETS,
+    SET_WALLET_HOLDING
 } from '@setl/core-store';
+
 import {SagaHelper} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 
@@ -35,6 +38,9 @@ export class InitialisationService {
         // Request wallet address.
         // walletAddressRequest
         this.requestWalletAddresses(ngRedux, walletNodeRequestService, walletId);
+
+        // Request Wallet Balances
+        this.requestWalletHolding(ngRedux, walletNodeRequestService, walletId);
 
         return true;
 
@@ -59,6 +65,27 @@ export class InitialisationService {
             asyncTaskPipes, {}));
 
         return true;
+    }
+
+    static requestWalletHolding(ngRedux: NgRedux<any>,
+                                walletNodeRequestService: WalletNodeRequestService,
+                                walletId: number) {
+        // Create a saga pipe.
+        const asyncTaskPipes = walletNodeRequestService.requestWalletHolding({
+            walletId
+        });
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_HOLDING],
+            [],
+            asyncTaskPipes, {}));
+
+        return false;
     }
 
 

@@ -17,4 +17,10 @@ export interface WalletIssuerRequestMessageBody extends WalletNodeMessageBody {
     address: string;
 }
 
-
+export interface RequestWalletHoldingMessageBody extends WalletNodeMessageBody {
+    topic: string;
+    walletid: number;
+    namespace?: string;
+    classid?: string;
+    address?: string;
+}
