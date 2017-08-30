@@ -125,13 +125,7 @@ export class RegisterAssetComponent implements OnInit {
             [REGISTER_ASSET_SUCCESS],
             [REGISTER_ASSET_FAIL],
             asyncTaskPipe,
-            {},
-            function (data) {
-
-            },
-            function (data) {
-                console.log('fail', data);
-            }
+            {}
         ));
 
     }
