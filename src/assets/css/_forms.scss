@@ -94,6 +94,10 @@ form, .form {
                 background: white;
             }
         }
+
+        input[type=text].error, form .form-group input[type=password].error {
+            border: 1px solid #ebafa6;
+        }
     }
 
     select {
@@ -131,4 +135,13 @@ form, .form {
     &::after {
         top: 13px;
     }
+}
+
+.alert {
+    width: 100%;
+    padding: 5px;
+}
+
+.alert-items {
+    padding: 0px;
 }
