@@ -113,23 +113,22 @@ export class RegisterIssuerComponent implements OnInit {
         this.alertsService.create('success', `
             <table class="table grid">
 
-        <tbody>
-            <tr>
-                <td class="left">Issuer</td>
-                <td>${currentRegisterIssuerRequest.issuerIdentifier}</td>
-   
-            </tr>
-            <tr>
-                <td class="left">Address</td>
-                <td>${currentRegisterIssuerRequest.issuerAddress}</td>
-            </tr>
-            <tr>
-                <td class="left">Tx hash</td>
-                <td>${currentRegisterIssuerRequest.txHash}</td>
-            </tr>
+                <tbody>
+                    <tr>
+                        <td class="left"><b>Issuer:</b></td>
+                        <td>${currentRegisterIssuerRequest.issuerIdentifier}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Address:</b></td>
+                        <td>${currentRegisterIssuerRequest.issuerAddress}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Tx hash:</b></td>
+                        <td>${currentRegisterIssuerRequest.txHash.substring(0, 10)}...</td>
+                    </tr>
 
-        </tbody>
-    </table>
+                </tbody>
+            </table>
         `);
 
     }

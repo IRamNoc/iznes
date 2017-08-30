@@ -2,32 +2,62 @@
   <h1><i class="fa fa-users"></i> Register Asset</h1>
 </div>
 
-<!--<clr-tabs>-->
-<!--<clr-tab>-->
-<!--<button clrTabLink id="testlinkreg">Register Asset Form</button>-->
-<!--<clr-tab-content *clrIfActive>-->
-<!--<form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer(registerIssuerForm.value)">-->
-<!--<section class="form-block">-->
-<!--<div class="form-group col-sm-6">-->
-<!--<label for="issuer-identifier">Issuer Identifier</label>-->
-<!--<input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45"-->
-<!--[formControl]="issuerIdentifier">-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<label class="control-label">-->
-<!--Issuer Address-->
-<!--</label>-->
-<!--<ng-select-->
-<!--[items]="walletAddressSelectItems"-->
-<!--[allowClear]="true"-->
-<!--placeholder="Select Issuer Address"-->
-<!--[formControl]="issuerAddress"-->
-<!--&gt;-->
-<!--</ng-select>-->
-<!--</div>-->
-<!--<button type="submit" class="btn btn-primary">Register Issuer</button>-->
-<!--</section>-->
-<!--</form>-->
-<!--</clr-tab-content>-->
-<!--</clr-tab>-->
-<!--</clr-tabs>-->
+<clr-tabs>
+  <clr-tab>
+    <button clrTabLink>Register Asset Form</button>
+    <clr-tab-content *clrIfActive>
+      <form [formGroup]="registerAssetForm" (ngSubmit)="registerAsset()">
+        <section class="form-block">
+          <div class="form-group col-sm-6">
+            <label for="issuer-identifier">Issuer Identifier</label>
+            <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45"
+                   [formControl]="registerAssetForm.controls['issuerIdentifier']"
+                   [class.error]="!registerAssetForm.controls['issuerIdentifier'].valid &&
+                   registerAssetForm.controls['issuerIdentifier'].touched" [readonly]="true">
+          </div>
+          <div class="form-group col-sm-6">
+            <label class="control-label" for="instrument-identifier">
+              Instrument
+            </label>
+            <input type="text" id="instrument-identifier" placeholder="Instrument Identifier" size="45"
+                   [formControl]="registerAssetForm.controls['instrumentIdentifier']"
+                   [class.error]="!registerAssetForm.controls['instrumentIdentifier'].valid &&
+                   registerAssetForm.controls['instrumentIdentifier'].touched">
+          </div>
+          <button type="submit" class="btn btn-primary">Register Asset</button>
+
+          <div *ngIf="!registerAssetForm.controls['issuerIdentifier'].valid &&
+          registerAssetForm.controls['issuerIdentifier'].touched" class="alert-items col-sm-5">
+
+            <div class="alert alert-danger">
+              <div class="alert-items">
+                <div class="alert-item">
+                <span class="alert-text">
+                  Issuer Identifier is required
+                </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="!registerAssetForm.controls['instrumentIdentifier'].valid &&
+           registerAssetForm.controls['instrumentIdentifier'].touched" class="alert-items col-sm-5">
+
+            <div class="alert alert-danger">
+              <div class="alert-items">
+                <div class="alert-item">
+                <span class="alert-text">
+                  Instrument Identifier is required
+                </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+      </form>
+    </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
