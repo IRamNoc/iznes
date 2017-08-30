@@ -156,10 +156,7 @@ export class InitialisationService {
             [SET_ACCOUNT_LIST],
             [],
             asyncTaskPipes,
-            {},
-            function (data) {
-                console.log('account list', data);
-            }
+            {}
         ));
 
         return true;
@@ -173,10 +170,7 @@ export class InitialisationService {
             [SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST],
             [],
             asyncTaskPipes,
-            {},
-            function (data) {
-                console.log('permission group list', data);
-            }
+            {}
         ));
 
         return true;
@@ -190,13 +184,7 @@ export class InitialisationService {
             [SET_MANAGED_WALLETS],
             [],
             asyncTaskPipes,
-            {},
-            function (data) {
-                console.log('wallet group list', data);
-            },
-            function (data) {
-                console.log('fail wallet group', data);
-            }
+            {}
         ));
 
         return true;
