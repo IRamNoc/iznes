@@ -14,4 +14,14 @@ export const getNewIssuerRequest = createSelector(
     (state: MyIssuersState) => state.newIssuerRequest
 );
 
+export const getRequestedIssuerState = createSelector(
+    getMyIssuers,
+    (state: MyIssuersState) => state.requestedWalletIssuer
+);
+
+export const getWalletIssuerDetail = createSelector(
+    getMyIssuers,
+    (state: MyIssuersState) => state.walletIssuerDetail
+);
+
 
