@@ -44,38 +44,38 @@ export class IssueAssetComponent implements OnInit {
     }
 
     issueAsset() {
-        const walletId = this.connectedWalletId;
-        const metaData = {};
-        const address = this.walletIssuerDetail.walletIssuerAddress;
-        const namespace = this.registerAssetForm.value.issuerIdentifier;
-        const instrument = this.registerAssetForm.value.instrumentIdentifier;
-
-        // Create a saga pipe.
-        const asyncTaskPipe = this.walletnodeTxService.registerAsset({
-            walletId,
-            address,
-            namespace,
-            instrument,
-            metaData
-        });
-
-        // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [REGISTER_ASSET_SUCCESS],
-            [REGISTER_ASSET_FAIL],
-            asyncTaskPipe,
-            {},
-            function (data) {
-
-            },
-            function (data) {
-                console.log('fail', data);
-            }
-        ));
+        // const walletId = this.connectedWalletId;
+        // const metaData = {};
+        // const address = this.walletIssuerDetail.walletIssuerAddress;
+        // const namespace = this.registerAssetForm.value.issuerIdentifier;
+        // const instrument = this.registerAssetForm.value.instrumentIdentifier;
+        //
+        // // Create a saga pipe.
+        // const asyncTaskPipe = this.walletnodeTxService.registerAsset({
+        //     walletId,
+        //     address,
+        //     namespace,
+        //     instrument,
+        //     metaData
+        // });
+        //
+        // // Send a saga action.
+        // // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // // saga pipe function descriptor.
+        // // Saga pipe function arguments.
+        // this.ngRedux.dispatch(SagaHelper.runAsync(
+        //     [REGISTER_ASSET_SUCCESS],
+        //     [REGISTER_ASSET_FAIL],
+        //     asyncTaskPipe,
+        //     {},
+        //     function (data) {
+        //
+        //     },
+        //     function (data) {
+        //         console.log('fail', data);
+        //     }
+        // ));
 
     }
 
