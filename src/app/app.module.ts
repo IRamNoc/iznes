@@ -7,6 +7,7 @@ import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
+import {SetlPipesModule} from '@setl/utils';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -96,7 +97,8 @@ import {environment} from '../environments/environment';
         SetlMessagesModule,
         AssetServicingModule,
         SetlBalancesModule,
-        PermissionGridModule
+        PermissionGridModule,
+        SetlPipesModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
