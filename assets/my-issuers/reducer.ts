@@ -85,6 +85,15 @@ export const MyIssuersReducer = function (state: MyIssuersState = initialState,
 
             return newState;
 
+        case MyIssuersActions.CLEAR_REQUESTED_WALLET_ISSUER:
+            requestedWalletIssuer = false;
+
+            newState = Object.assign({}, state, {
+                requestedWalletIssuer
+            });
+
+            return newState;
+
         case MyIssuersActions.SET_WALLET_ISSUER_LIST:
             issuerListData = _.get(action, 'payload[1][data]');
             issuerList = formatToWalletIssuerList(issuerListData);

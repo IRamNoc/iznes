@@ -19,3 +19,9 @@ export const getRequestedInstrumentState = createSelector(
     (state: MyInstrumentsState) => state.requestedWalletInstrument
 );
 
+export const getMyInstrumentsList = createSelector(
+    getMyInstruments,
+    (state: MyInstrumentsState) => state.instrumentList
+);
+
+

@@ -1,6 +1,7 @@
 export interface InstrumentDetail {
     issuer: string;
     instrument: string;
+    issuerAddress: string;
 }
 
 export interface NewInstrumentRequest {
@@ -13,7 +14,9 @@ export interface NewInstrumentRequest {
 }
 
 export interface MyInstrumentsState {
-    instrumentList: Array<InstrumentDetail>;
+    instrumentList: {
+        [key: string]: InstrumentDetail
+    };
     requestedWalletInstrument: boolean;
     newInstrumentRequest: NewInstrumentRequest;
 }
