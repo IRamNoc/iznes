@@ -1,11 +1,7 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
-
-
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
-
 import _ from 'lodash';
-
 import {fromJS} from "immutable";
 
 import {
@@ -36,7 +32,6 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
-
 
         // this.singleAssetHistory = [
         //     {
