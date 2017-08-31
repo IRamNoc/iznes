@@ -81,23 +81,26 @@ export class RegisterAssetComponent implements OnInit {
     }
 
     requestWalletIssuer() {
-        const walletId = this.connectedWalletId;
+        if (this.registerAssetForm.valid) {
 
-        // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
-        this.ngRedux.dispatch(setRequestedWalletIssuer());
+            const walletId = this.connectedWalletId;
 
-        // Create a saga pipe.
-        const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
-            walletId
-        });
+            // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
+            this.ngRedux.dispatch(setRequestedWalletIssuer());
 
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_WALLET_ISSUER_LIST],
-            [],
-            asyncTaskPipe,
-            {}
-        ));
+            // Create a saga pipe.
+            const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
+                walletId
+            });
+
+            // Send a saga action.
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_WALLET_ISSUER_LIST],
+                [],
+                asyncTaskPipe,
+                {}
+            ));
+        }
     }
 
     registerAsset() {
