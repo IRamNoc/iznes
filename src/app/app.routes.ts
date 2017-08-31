@@ -1,8 +1,8 @@
 import {Routes} from '@angular/router';
 
 /* Layouts. */
-import {BasicLayoutComponent} from '../../setl_modules/core-layout/layouts/basic/basic.component';
-import {BlankLayoutComponent} from '../../setl_modules/core-layout/layouts/blank/blank.component';
+import {BasicLayoutComponent} from '@setl/core-layout';
+import {BlankLayoutComponent} from '@setl/core-layout';
 
 /* Components. */
 import {HomeComponent} from './home/home.component';
