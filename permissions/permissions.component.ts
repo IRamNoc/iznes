@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component, ChangeDetectorRef} from '@angular/core';
+import {Component, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 
@@ -15,7 +15,7 @@ import {UserAdminService} from '../useradmin.service';
 })
 
 /* Class. */
-export class AdminPermissionsComponent {
+export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
     public permissionsData:any = [];
 
@@ -62,6 +62,17 @@ export class AdminPermissionsComponent {
     /* Handles a ng2-select deletion. */
     public removed(propertyName:string, value:any):void {
         this[propertyName] = undefined;
+    }
+
+    ngAfterViewInit() {
+        /* Override the changes. */
+        this.changeDetectorRef.detectChanges();
+    }
+
+    ngOnDestroy ():void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+        console.log( "detaching change detector." );
     }
 
     /**

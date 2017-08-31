@@ -1,5 +1,8 @@
 import {Injectable, Output, EventEmitter} from '@angular/core';
 
+import {Observable} from 'rxjs/Observable'
+import {Subject} from 'rxjs/Subject'
+
 import {SagaHelper} from '@setl/utils';
 
 import {NgRedux} from '@angular-redux/store';
@@ -10,13 +13,12 @@ import {
 
 import {
     SET_ADMIN_USERLIST,
-    getUsersList
+    getUsersList,
+    getTranPermissionGroup
 } from '@setl/core-store';
 
 @Injectable()
 export class UserAdminService {
-
-    /* Properties. */
 
     /* Account types. */
     public accountTypes:any = [
@@ -97,20 +99,24 @@ export class UserAdminService {
     public usersList:{};
 
     @Output()
-    public usersListEvent:EventEmitter<{}> = new EventEmitter();
+    public usersListSubject = new Subject<any>();
+
+    public getUserListSubject () {
+        return this.usersListSubject.asObservable();
+    }
 
     /* Constructor. */
     constructor (
         private adminUsersService:AdminUsersService,
         private ngRedux: NgRedux<any>,
     ) {
-        /* This gets the data... */
+        /* Let's request the user's list, this is the saga pipe function. */
         const asyncTaskPipe = this.adminUsersService.requestMyUsersList();
 
-        // Send a saga action to save data.
+        // Send a saga action to save the users list.
         // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
         // Actions to dispatch, when request fail:  None.
-        // saga pipe function descriptor.
+        // Saga pipe function descriptor.
         // Saga pipe function arguments.
         this.ngRedux.dispatch(
             SagaHelper.runAsync(
@@ -121,6 +127,8 @@ export class UserAdminService {
             )
         );
 
+        /* TODO - pull in the arrays on this object dynamically. */
+
         /* Assign a update handler to watch changes in redux, then trigger once
            manually. */
         ngRedux.subscribe(() => this.updateState());
@@ -130,15 +138,21 @@ export class UserAdminService {
     /**
      * Update State
      * ------------
-     * Handles the updating of objects on this service when redux updates.
+     * Handles the updating of objects on this service when redux has data
+     * updated.
      *
      * @return {void}
      */
     private updateState () {
-        /* Retrieve the user list from the redux store. */
+        /* Retrieve the redux store. */
         const newState = this.ngRedux.getState();
+
+        /* Get user list, and send a message to the users observable. */
         this.usersList = getUsersList(newState);
-        this.usersListEvent.emit(this.usersList);
+        this.usersListSubject.next(this.usersList);
+
+        /* TODO - Get Permissions list and send a message to the permissions
+         * observable. */
     }
 
     public createNewUser (formState):void {
@@ -233,7 +247,8 @@ export class UserAdminService {
      * Resolve Account Type
      * --------------------
      * Accepts an object that then is used to lookup the account type and return
-     * a full object of it.
+     * a full object of it, this is useful for when you need to set the value of
+     * an ng2-select but only have the id or the text of what was selected.
      *
      * @param {query} - the incomplete object of the account type.
      *
@@ -267,7 +282,8 @@ export class UserAdminService {
      * Resolve User Type
      * -----------------
      * Accepts an object that then is used to lookup the user type and return
-     * a full object of it.
+     * a full object of it, this is useful for when you need to set the value of
+     * an ng2-select but only have the id or the text of what was selected.
      *
      * @param {query} - the incomplete object of the user type.
      *

@@ -3,6 +3,8 @@ import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular
 import { JsonPipe } from '@angular/common';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 
+import { OnDestroy } from '@angular/core';
+
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
 
@@ -15,7 +17,7 @@ import {UserAdminService} from '../useradmin.service';
 })
 
 /* Class. */
-export class AdminUsersComponent implements AfterViewInit {
+export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('usersDataGrid') usersDataGrid;
 
@@ -30,6 +32,8 @@ export class AdminUsersComponent implements AfterViewInit {
     /* User types select. */
     public userTypes:any;
 
+    private userListSubscription:any;
+
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
@@ -42,7 +46,7 @@ export class AdminUsersComponent implements AfterViewInit {
         this.userTypes = userAdminService.getUserTypes();
 
         /* Link the users list to this user's data. */
-        this.userAdminService.usersListEvent.subscribe((usersList) => {
+        this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((usersList) => {
             this.usersData = this.convertToArray(usersList);
 
             /* Override the changes. */
@@ -63,8 +67,8 @@ export class AdminUsersComponent implements AfterViewInit {
                     {
                         "username": new FormControl(''),
                         "email": new FormControl(''),
-                        "accountType": new FormControl( [] ),
-                        "userType": new FormControl( [] ),
+                        "accountType": new FormControl([]),
+                        "userType": new FormControl([]),
                         "password": new FormControl('')
                     }
                 ),
@@ -73,9 +77,17 @@ export class AdminUsersComponent implements AfterViewInit {
         ]
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit():void {
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
+    }
+
+    ngOnDestroy ():void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+
+        /* Unsunscribe Observables. */
+        this.userListSubscription.unsubscribe();
     }
 
     /**
@@ -102,7 +114,8 @@ export class AdminUsersComponent implements AfterViewInit {
      * ---------------
      * Handles saving a new user.
      *
-     * @param {tabid}
+     * @param {tabid} - the tab id that the form is in.
+     *
      * @return {void}
      */
     public handleNewUser (tabid:number):void {
