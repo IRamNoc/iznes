@@ -24,6 +24,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     /* User data. */
     public usersData:any;
 
+    /* Tabs control */
     public tabsControl:any;
 
     /* Account types select. */
@@ -32,6 +33,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     /* User types select. */
     public userTypes:any;
 
+    /* Subscriptions from service observables. */
     private userListSubscription:any;
 
     /* Constructor. */
@@ -45,9 +47,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Get User Types. */
         this.userTypes = userAdminService.getUserTypes();
 
-        /* Link the users list to this user's data. */
-        this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((usersList) => {
-            this.usersData = this.convertToArray(usersList);
+        /* Subscribe to the admin user list observable. */
+        this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((list) => {
+            this.usersData = this.convertToArray(list);
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();

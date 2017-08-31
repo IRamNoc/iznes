@@ -14,7 +14,8 @@ import {
 import {
     SET_ADMIN_USERLIST,
     getUsersList,
-    getTranPermissionGroup
+    getTranPermissionGroup,
+    getAdminPermissionGroup
 } from '@setl/core-store';
 
 @Injectable()
@@ -97,12 +98,18 @@ export class UserAdminService {
     ];
 
     public usersList:{};
+    public adminGroupList:{};
 
     @Output()
     public usersListSubject = new Subject<any>();
-
     public getUserListSubject () {
         return this.usersListSubject.asObservable();
+    }
+
+    @Output()
+    public adminGroupListSubject = new Subject<any>();
+    public getAdminGroupListSubject () {
+        return this.adminGroupListSubject.asObservable();
     }
 
     /* Constructor. */
@@ -145,20 +152,22 @@ export class UserAdminService {
      */
     private updateState () {
         /* Retrieve the redux store. */
-        const newState = this.ngRedux.getState();
+        const state = this.ngRedux.getState();
 
         /* Get user list, and send a message to the users observable. */
-        this.usersList = getUsersList(newState);
+        this.usersList = getUsersList(state);
         this.usersListSubject.next(this.usersList);
 
         /* TODO - Get Permissions list and send a message to the permissions
          * observable. */
+        this.adminGroupList = getAdminPermissionGroup(state);
+        this.adminGroupListSubject.next(this.adminGroupList);
     }
 
-    public createNewUser (formState):void {
+    public createNewUser (data):void {
         // Create a saga pipe.
         const asyncTaskPipe = this.adminUsersService.createNewUser(
-            formState
+            data
         );
 
         // Get response from set active wallet
@@ -175,10 +184,10 @@ export class UserAdminService {
         return;
     }
 
-    public editUser (newData):void {
+    public editUser (data):void {
         // Create a saga pipe.
         const asyncTaskPipe = this.adminUsersService.editUser(
-            newData
+            data
         );
 
         // Get response from set active wallet
@@ -306,6 +315,43 @@ export class UserAdminService {
             /* Loop over each and check if they have the same id. */
             if ( query[identifier].toString() === this.userTypes[i][identifier] ) {
                 return [this.userTypes[i]];
+            }
+        }
+
+        /* If nothing, just return nothing again. */
+        return [];
+    }
+
+    /**
+     * Resolve User Type
+     * -----------------
+     * Accepts an object that then is used to lookup the user type and return
+     * a full object of it, this is useful for when you need to set the value of
+     * an ng2-select but only have the id or the text of what was selected.
+     *
+     * @param {query} - the incomplete object of the user type.
+     *
+     * @return {userType} - the complete object of the user type.
+     */
+    public resolveAdminGroupType ( query ):any {
+        /* Let's first check which we have. */
+        let identifier = "";
+        if ( query.groupId ) identifier = "groupId";
+        if ( query.groupName ) identifier = "groupName";
+
+        console.log( "identifier: ", identifier );
+
+        /* If there was nothing, return. */
+        if ( identifier === "" ) {
+            return [];
+        }
+
+        /* Ok, lets check if we have the account type. */
+        let key;
+        for ( key in this.adminGroupList ) {
+            /* Loop over each one and check the identifier. */
+            if ( this.adminGroupList[key][identifier].toString() === query[identifier] ) {
+                return [ this.adminGroupList[key] ];
             }
         }
 

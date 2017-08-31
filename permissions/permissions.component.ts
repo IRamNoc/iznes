@@ -16,13 +16,17 @@ import {UserAdminService} from '../useradmin.service';
 
 /* Class. */
 export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
+    /* Group list. */
+    public adminGroupList:any;
 
-    public permissionsData:any = [];
-
+    /* Tabs control */
     public tabsControl:any;
 
     /* Account types select. */
     public groupTypes:any;
+
+    /* Subscriptions from service observables. */
+    private adminGroupListSubscription:any;
 
     /* Constructor. */
     constructor (
@@ -31,6 +35,14 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     ) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
+
+        /* Subscribe to the admin group list observable. */
+        this.adminGroupListSubscription = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+            this.adminGroupList = this.convertAdminGroupsToArray(list);
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
 
         /* Default tabs. */
         this.tabsControl = [
@@ -72,7 +84,34 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy ():void {
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
-        console.log( "detaching change detector." );
+
+        /* Unsunscribe Observables. */
+        this.adminGroupListSubscription.unsubscribe();
+    }
+
+    /**
+     * Convert Groups To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
+    public convertAdminGroupsToArray (obj):Array<any> {
+        let i = 0, key, newArray = [];
+        for (key in obj) {
+            /* Push the new object. */
+            newArray.push( obj[key] );
+
+            /* Index for tab control. */
+            newArray[ newArray.length - 1 ].index = i++;
+
+            /* Make these all admin type groups. */
+            newArray[ newArray.length - 1 ].category = 1;
+        }
+        return newArray;
     }
 
     /**
@@ -99,12 +138,15 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      public handleDelete (index):void {
          console.log( "Deleting "+ index );
          /* Check that the array has a length... */
-         if ( ! this.permissionsData.length || ! index ) {
+         if ( ! this.adminGroupList.length || ! index ) {
              return;
          }
 
          /* Set the array to an identical array, lacking the asked index. */
-         this.permissionsData = [ ...this.permissionsData.slice(0, index - 1), ...this.permissionsData.slice(index, this.permissionsData.length) ];
+         this.adminGroupList = [
+             ...this.adminGroupList.slice(0, index - 1),
+             ...this.adminGroupList.slice(index, this.adminGroupList.length)
+         ];
 
          /* Return. */
          return;
@@ -112,14 +154,48 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
      /**
       * Handle Edit
-      * Edits a group.
+      * -----------
+      * Handles the creation of a new tab with a new group form for a dynamic
+      * edit form tab.
       *
-      * @param {index}
+      * @param {index} - The index of which group we're editting.
+      *
       * @return {void}
       */
      public handleEdit (index):void {
-         /* Console log */
-         console.log( "Editting "+ index );
+         /* Check if the tab is already open. */
+         let i;
+         for ( i = 0; i < this.tabsControl.length; i++ ) {
+             if ( this.tabsControl[i].groupId === this.adminGroupList[index].groupId ) {
+                 /* Found the index for that tab, lets activate it... */
+                 this.setTabActive(i);
+
+                 /* And return. */
+                 return;
+             }
+         }
+
+         /* Push the edit tab into the array. */
+         let group = this.adminGroupList[index];
+         console.log( "GROUP: ", group);
+         let groupType = [{ id: group.groupId, text: group.groupName }];
+
+         /* And also prefill the form... let's sort some of the data out. */
+         this.tabsControl.push({
+             "title": "<i class='fa fa-pencil'></i> "+ this.adminGroupList[ index ].groupName,
+             "groupId": group.userId,
+             "formControl": new FormGroup(
+                 {
+                     "name": new FormControl( group.groupName ),
+                     "description": new FormControl( group.groupDescription ),
+                     "type": new FormControl( groupType )
+                 }
+             ),
+             "active": false // this.editFormControls
+         });
+
+         /* Activate the new tab. */
+         this.setTabActive( this.tabsControl.length - 1 );
 
          /* Return. */
          return;
