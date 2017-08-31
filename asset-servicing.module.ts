@@ -6,6 +6,7 @@ import {IssueAssetComponent} from './issue-asset/issue-asset.component';
 import {SelectModule} from 'ng2-select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
+import {SetlPipesModule} from '@setl/utils';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import {ClarityModule} from 'clarity-angular';
         SelectModule,
         FormsModule,
         ReactiveFormsModule,
-        ClarityModule.forRoot()
+        ClarityModule.forRoot(),
+        SetlPipesModule
     ],
     declarations: [
         RegisterIssuerComponent,

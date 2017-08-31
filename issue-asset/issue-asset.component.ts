@@ -4,9 +4,14 @@ import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
 import {
-    getWalletAddressList
+    getConnectedWallet,
+    getRequestedInstrumentState,
+    setRequestedWalletInstrument,
+    SET_MY_INSTRUMENTS_LIST,
+    getMyInstrumentsList
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {fromJS} from 'immutable';
 
 @Component({
     selector: 'app-issue-asset',
@@ -21,6 +26,8 @@ export class IssueAssetComponent implements OnInit {
         walletIssuerAddress: string;
     };
 
+    walletInstrumentsSelectItems: Array<any>;
+
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
@@ -32,7 +39,9 @@ export class IssueAssetComponent implements OnInit {
          * Issuer Asset form
          */
         this.issueAssetForm = new FormGroup({
-
+            asset: new FormControl('', Validators.required),
+            recipient: new FormControl('', Validators.required),
+            amount: new FormControl('', Validators.required)
         });
     }
 
@@ -41,9 +50,48 @@ export class IssueAssetComponent implements OnInit {
 
     updateState() {
         const newState = this.ngRedux.getState();
+
+        // Set connected WalletId
+        this.connectedWalletId = getConnectedWallet(newState);
+
+        // If my issuer list is not yet requested,
+        // Request wallet issuers
+        const RequestedIssuerState = getRequestedInstrumentState(newState);
+        if (!RequestedIssuerState) {
+            this.requestWalletInstruments();
+        }
+
+        const walletInstruments = getMyInstrumentsList(newState);
+
+        this.walletInstrumentsSelectItems = walletInstrumentListToSelectItem(walletInstruments);
+        console.log('items', this.walletInstrumentsSelectItems);
+    }
+
+    requestWalletInstruments() {
+
+        const walletId = this.connectedWalletId;
+
+        // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
+        this.ngRedux.dispatch(setRequestedWalletInstrument());
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.walletNodeRequestService.walletInstrumentRequest({
+            walletId
+        });
+
+        // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MY_INSTRUMENTS_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     issueAsset() {
+        if (this.issueAssetForm.valid) {
+            console.log(this.issueAssetForm.value);
+        }
         // const walletId = this.connectedWalletId;
         // const metaData = {};
         // const address = this.walletIssuerDetail.walletIssuerAddress;
@@ -106,4 +154,26 @@ export class IssueAssetComponent implements OnInit {
         `);
 
     }
+
+}
+
+/**
+ * Convert wallet instruments to an array the select2 can use to render a list a wallet instrument.
+ * @param walletInstrumetnList
+ * @return {any}
+ */
+function walletInstrumentListToSelectItem(walletInstrumentList: object): Array<any> {
+    const walletInstrumentListImu = fromJS(walletInstrumentList);
+    const walletInstrumentSelectItem = walletInstrumentListImu.reduce(
+        (result, thisWalletInstrument, key) => {
+            result.push({
+                id: key,
+                text: key
+            });
+
+            return result;
+        }, []
+    );
+
+    return walletInstrumentSelectItem;
 }
