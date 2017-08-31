@@ -14,18 +14,18 @@ import {ClarityModule} from 'clarity-angular';
 import {ReactiveFormsModule} from '@angular/forms';
 
 /* Layout Components. */
-import {BlankLayoutComponent} from './layouts/blank/blank.component';
-import {BasicLayoutComponent} from './layouts/basic/basic.component';
+import {BlankLayoutComponent} from '@setl/core-layout';
+import {BasicLayoutComponent} from '@setl/core-layout';
 
 /* Navigation Components. */
-import {NavigationSidebarComponent} from './navigation-sidebar/navigation-sidebar.component';
-import {NavigationTopbarComponent} from './navigation-topbar/navigation-topbar.component';
+import {NavigationSidebarComponent} from '@setl/core-layout';
+import {NavigationTopbarComponent} from '@setl/core-layout';
 
 /* Directives. */
-import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
+import {DropdownDirective} from '@setl/core-layout';
 
 /* Services. */
-import {MenuDropdownService} from './menu-dropdown/menu-dropdown.service';
+import {MenuDropdownService} from '@setl/core-layout';
 
 @NgModule({
     imports: [

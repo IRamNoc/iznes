@@ -1,13 +1,13 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HomeComponent} from './home.component';
-import {NavigationSidebarComponent} from '../core/navigation-sidebar/navigation-sidebar.component';
+import {NavigationSidebarComponent} from '../../../setl_modules/core-layout/navigation-sidebar/navigation-sidebar.component';
 import {RouterModule} from '@angular/router';
 import {ROUTES} from '../app.routes';
-import {BlankLayoutComponent} from '../core/layouts/blank/blank.component';
-import {BasicLayoutComponent} from '../core/layouts/basic/basic.component';
+import {BlankLayoutComponent} from '../../../setl_modules/core-layout/layouts/blank/blank.component';
+import {BasicLayoutComponent} from '../../../setl_modules/core-layout/layouts/basic/basic.component';
 import {SetlLoginComponent} from '@setl/core-login';
-import {NavigationTopbarComponent} from '../core/navigation-topbar/navigation-topbar.component';
+import {NavigationTopbarComponent} from '../../../setl_modules/core-layout/navigation-topbar/navigation-topbar.component';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 import {FormElementsComponent} from '../ui-elements/form-elements.component';
