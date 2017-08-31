@@ -5,7 +5,8 @@ import {createWalletNodeSagaRequest} from '@setl/utils/common';
 import {
     WalletAddressRequestMessageBody,
     WalletIssuerRequestMessageBody,
-    RequestWalletHoldingMessageBody
+    RequestWalletHoldingMessageBody,
+    WalletInstrumentRequestMessageBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
 
@@ -19,6 +20,10 @@ interface RequestWalletAddress {
 interface RequestWalletIssuer {
     walletId: number;
     address?: string;
+}
+
+interface RequestWalletInstrument {
+    walletId: number;
 }
 
 @Injectable()
@@ -46,6 +51,16 @@ export class WalletNodeRequestService {
             topic: 'issuers',
             walletid: _.get(requestData, 'walletId', 0),
             address: _.get(requestData, 'address', '')
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
+    }
+
+    walletInstrumentRequest(requestData: RequestWalletInstrument): any {
+
+        const messageBody: WalletInstrumentRequestMessageBody = {
+            topic: 'instruments',
+            walletid: _.get(requestData, 'walletId', 0),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
