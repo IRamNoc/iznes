@@ -283,7 +283,7 @@ export class UserAdminService {
             }
         }
 
-        /* If nothing, just return nothing again. */
+        /* If nothing matched, just return nothing. */
         return [];
     }
 
@@ -318,22 +318,23 @@ export class UserAdminService {
             }
         }
 
-        /* If nothing, just return nothing again. */
+        /* If nothing matched, just return nothing. */
         return [];
     }
 
     /**
-     * Resolve User Type
+     * Resolve Admin Group
      * -----------------
-     * Accepts an object that then is used to lookup the user type and return
-     * a full object of it, this is useful for when you need to set the value of
-     * an ng2-select but only have the id or the text of what was selected.
+     * Accepts an object that then is used to lookup the admin group and
+     * return a full object of it, this is useful for when you need to set the
+     * value of an ng2-select but only have the id or the text of what was
+     * selected.
      *
-     * @param {query} - the incomplete object of the user type.
+     * @param {query} - the incomplete object of the group.
      *
-     * @return {userType} - the complete object of the user type.
+     * @return {groupType} - the complete object of the group.
      */
-    public resolveAdminGroupType ( query ):any {
+    public resolveAdminGroup ( query ):any {
         /* Let's first check which we have. */
         let identifier = "";
         if ( query.groupId ) identifier = "groupId";
@@ -355,7 +356,46 @@ export class UserAdminService {
             }
         }
 
-        /* If nothing, just return nothing again. */
+        /* If nothing matched, just return nothing. */
+        return [];
+    }
+
+    /**
+     * Resolve Admin Group Type
+     * -----------------
+     * Accepts an object that then is used to lookup the admin group type and
+     * return a full object of it, this is useful for when you need to set the
+     * value of an ng2-select but only have the id or the text of what was
+     * selected.
+     *
+     * @param {query} - the incomplete object of the group type.
+     *
+     * @return {groupType} - the complete object of the group type.
+     */
+    public resolveAdminGroupType ( query ):any {
+        /* Let's first check which we have. */
+        let identifier = "";
+        if ( query.id ) identifier = "id";
+        if ( query.text ) identifier = "text";
+
+        console.log( "identifier: ", identifier );
+
+        /* If there was nothing, return. */
+        if ( identifier === "" ) {
+            return [];
+        }
+
+        /* Ok, lets check if we have the account type. */
+        let i;
+        for ( i = 0; i < this.groupTypes.length; i++ ) {
+            /* Loop over each one and check the identifier. */
+            console.log( this.groupTypes[i][identifier].toString() +" === "+ query[identifier] );
+            if ( this.groupTypes[i][identifier] === query[identifier].toString() ) {
+                return [ this.groupTypes[i] ];
+            }
+        }
+
+        /* If nothing matched, just return nothing. */
         return [];
     }
 

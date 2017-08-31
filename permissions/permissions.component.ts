@@ -178,7 +178,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Push the edit tab into the array. */
          let group = this.adminGroupList[index];
          console.log( "GROUP: ", group);
-         let groupType = [{ id: group.groupId, text: group.groupName }];
+         let groupType = this.userAdminService.resolveAdminGroupType( { id: group.category } );
 
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
