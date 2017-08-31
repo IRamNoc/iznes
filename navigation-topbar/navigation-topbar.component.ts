@@ -2,7 +2,8 @@ import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {
     getMyWalletList,
-    setConnectedWallet
+    setConnectedWallet,
+    getMyDetail
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 
@@ -23,6 +24,9 @@ export class NavigationTopbarComponent implements OnInit {
     searchForm: FormGroup;
     selectedWalletId = new FormControl();
 
+    public currentUserDetails;
+    public username;
+
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
     constructor(private ngRedux: NgRedux<any>,
@@ -41,6 +45,9 @@ export class NavigationTopbarComponent implements OnInit {
         const currentWalletsList = getMyWalletList(newState);
 
         this.walletSelectItems = walletListToSelectItem(currentWalletsList);
+
+        this.currentUserDetails = getMyDetail(newState);
+        this.username = this.currentUserDetails.username;
 
         // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
         if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
