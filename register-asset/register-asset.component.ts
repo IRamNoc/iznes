@@ -81,56 +81,56 @@ export class RegisterAssetComponent implements OnInit {
     }
 
     requestWalletIssuer() {
-        if (this.registerAssetForm.valid) {
 
-            const walletId = this.connectedWalletId;
-
-            // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
-            this.ngRedux.dispatch(setRequestedWalletIssuer());
-
-            // Create a saga pipe.
-            const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
-                walletId
-            });
-
-            // Send a saga action.
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [SET_WALLET_ISSUER_LIST],
-                [],
-                asyncTaskPipe,
-                {}
-            ));
-        }
-    }
-
-    registerAsset() {
         const walletId = this.connectedWalletId;
-        const metaData = {};
-        const address = this.walletIssuerDetail.walletIssuerAddress;
-        const namespace = this.registerAssetForm.value.issuerIdentifier;
-        const instrument = this.registerAssetForm.value.instrumentIdentifier;
+
+        // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
+        this.ngRedux.dispatch(setRequestedWalletIssuer());
 
         // Create a saga pipe.
-        const asyncTaskPipe = this.walletnodeTxService.registerAsset({
-            walletId,
-            address,
-            namespace,
-            instrument,
-            metaData
+        const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
+            walletId
         });
 
         // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [REGISTER_ASSET_SUCCESS],
-            [REGISTER_ASSET_FAIL],
+            [SET_WALLET_ISSUER_LIST],
+            [],
             asyncTaskPipe,
             {}
         ));
+    }
 
+    registerAsset() {
+        if (this.registerAssetForm.valid) {
+            const walletId = this.connectedWalletId;
+            const metaData = {};
+            const address = this.walletIssuerDetail.walletIssuerAddress;
+            const namespace = this.registerAssetForm.value.issuerIdentifier;
+            const instrument = this.registerAssetForm.value.instrumentIdentifier;
+
+            // Create a saga pipe.
+            const asyncTaskPipe = this.walletnodeTxService.registerAsset({
+                walletId,
+                address,
+                namespace,
+                instrument,
+                metaData
+            });
+
+            // Send a saga action.
+            // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+            // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+            // saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [REGISTER_ASSET_SUCCESS],
+                [REGISTER_ASSET_FAIL],
+                asyncTaskPipe,
+                {}
+            ));
+
+        }
     }
 
     showResponseModal(currentRegisterInstrumentRequest) {
