@@ -1,3 +1,30 @@
-<p>
-  permission-grid works!
-</p>
+<div class="permission-grid">
+    <table class="table">
+        <thead *ngIf="permissionLevels.length">
+            <th></th>
+            <!-- Permission Levels Headers. -->
+            <th
+            *ngFor="let level of permissionLevels">
+                {{level.text}}
+            </th>
+        </thead>
+
+        <tbody *ngIf="permissionAreas.length">
+            <!-- Each Permission Row. -->
+            <tr *ngFor="let area of permissionAreas">
+                <td class="v-middle">
+                    <span>{{area.text}}</span>
+                </td>
+                <td *ngFor="let level of permissionLevels">
+                    <select
+                    [(ngModel)]="rawComponentData[area.id][level.id]"
+                    (change)="triggerDataEmit()">
+                        <option value="1">Allow</option>
+                        <option value="0">Do Not Allow</option>
+                        <option value="2">Forbid</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
