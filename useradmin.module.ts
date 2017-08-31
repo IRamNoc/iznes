@@ -26,6 +26,8 @@ import {AdminWalletsTableComponent} from './wallets/subcomponents/wallets-table.
 /* Permissions components. */
 import {AdminPermissionsComponent} from './permissions/permissions.component';
 
+import {PermissionGridModule} from '@setl/permission-grid';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -62,7 +64,8 @@ import {AdminPermissionsComponent} from './permissions/permissions.component';
         BrowserModule,
         FormsModule,
         ClarityModule,
-        SelectModule
+        SelectModule,
+        PermissionGridModule
     ],
     providers: [ AdminUsersService ]
 })

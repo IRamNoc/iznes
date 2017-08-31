@@ -6,6 +6,9 @@ import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
 
+/* Use the permissions grid. */
+import {PermissionGridComponent} from '@setl/permission-grid';
+
 /* Decorator. */
 @Component({
     selector: 'setl-admin-permissions',
@@ -27,6 +30,42 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
     /* Subscriptions from service observables. */
     private adminGroupListSubscription:any;
+
+    public permissionAreasList = [
+        {
+            "id": 1,
+            "text": "permission1"
+        },
+        {
+            "id": 2,
+            "text": "permission2"
+        }
+    ]
+    public permissionLevelsList = [
+        {
+            'id': 'canDelegate',
+            'text': 'Delegate'
+        },
+        {
+            'id': 'canRead',
+            'text': 'Read'
+        },
+        {
+            'id': 'canInsert',
+            'text': 'Insert'
+        },
+        {
+            'id': 'canUpdate',
+            'text': 'Update'
+        },
+        {
+            'id': 'canDelete',
+            'text': 'Delete'
+        },
+    ]
+    public handlePermissionUpdate (data):void {
+        console.log(" > Permission Update Data: ", data);
+    }
 
     /* Constructor. */
     constructor (

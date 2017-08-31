@@ -112,6 +112,12 @@
                             </button>
                         </div>
                     </div>
+
+                    <setl-permission-grid
+                        [permissionAreas]="permissionAreasList"
+                        [permissionLevels]="permissionLevelsList"
+                        (updateEvent)="handlePermissionUpdate($event)"
+                    ></setl-permission-grid>
                 </div>
             </form>
         </div>
