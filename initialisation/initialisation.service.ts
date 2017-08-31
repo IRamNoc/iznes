@@ -14,7 +14,9 @@ import {
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
-    SET_WALLET_HOLDING
+    SET_WALLET_HOLDING,
+    clearRequestedWalletIssuer,
+    clearRequestedWalletInstrument
 } from '@setl/core-store';
 
 import {SagaHelper} from '@setl/utils';
@@ -42,6 +44,10 @@ export class InitialisationService {
         // Request Wallet Balances
         this.requestWalletHolding(ngRedux, walletNodeRequestService, walletId);
 
+
+        // Set requested data states to false
+        this.clearWalletNodeRequestedStates(ngRedux);
+
         return true;
 
     }
@@ -62,7 +68,15 @@ export class InitialisationService {
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_ADDRESSES],
             [],
-            asyncTaskPipes, {}));
+            asyncTaskPipes, {},
+            function (data) {
+                console.log(data);
+            },
+
+            function (data) {
+                console.log(data);
+            },
+        ));
 
         return true;
     }
@@ -188,5 +202,19 @@ export class InitialisationService {
         ));
 
         return true;
+    }
+
+    /**
+     * Clear (set to false) the walletnode requested states.
+     * So the component will request the data, when they need it.
+     * @param ngRedux
+     */
+    static clearWalletNodeRequestedStates(ngRedux: NgRedux<any>): void {
+
+        // clear (set to false) the state of requested wallet issuers
+        ngRedux.dispatch(clearRequestedWalletIssuer());
+
+        // clear (set to false) the state of requested wallet instruments
+        ngRedux.dispatch(clearRequestedWalletInstrument());
     }
 }
