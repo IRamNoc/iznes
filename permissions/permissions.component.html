@@ -38,25 +38,18 @@
 
             <clr-datagrid #usersDataGrid>
                 <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Username</clr-dg-column>
-                <clr-dg-column>Email</clr-dg-column>
-                <clr-dg-column>Account</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column>Group Name</clr-dg-column>
+                <clr-dg-column>Group Type</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersData">
+                <clr-dg-row *clrDgItems="let group of adminGroupList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                            <button (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                            <button (click)="handleEdit(group.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button (click)="handleDelete(group.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{user.userName}}</clr-dg-cell>
-                    <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
-                    <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>
-                            <span *ngIf="user.accountLocked == 0" class="label label-success">Enabled</span>
-                            <span *ngIf="user.accountLocked != 0" class="label label-warning">Disabled</span>
-                    </clr-dg-cell>
+                    <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
+                    <clr-dg-cell>{{group.groupDescription}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -76,7 +69,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
+                                <span class="ml_translated" mltag="txt_groupname">Group Name</span>
                             </label>
                             <div>
                                 <input type="text" formControlName="name" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
@@ -132,19 +125,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
+                                <span class="ml_translated" mltag="txt_groupname">Group Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div>
-                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input type="text" formControlName="name" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
                             </div>
                         </div>
                     </div>
@@ -152,39 +136,25 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_account">Account</span>
+                                <span class="ml_translated" mltag="txt_groupdescription">Group Description</span>
+                            </label>
+                            <div>
+                                <input type="text" formControlName="description" name="description" placeholder="Group Description" class="form-control groupdescription mlp_translated" mltag="txt_groupdescription">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_grouptype">Group Type</span>
                             </label>
                             <ng-select
-                                [items]="accountTypes"
+                                [items]="groupTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['accountType']">
+                                placeholder="Choose Group Tag"
+                                [formControl]="formControl.controls['type']">
                             </ng-select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
-                            <ng-select
-                                [items]="userTypes"
-                                [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['userType']">
-                            </ng-select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
-                            </label>
-                            <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
-                            </div>
                         </div>
                     </div>
 
@@ -192,9 +162,6 @@
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                Close
                             </button>
                         </div>
                     </div>
