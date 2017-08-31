@@ -1,10 +1,7 @@
 /* Core imports. */
-import {Component} from '@angular/core';
-import {FormsModule, NgModel} from '@angular/forms';
+import {Component, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
-
-/* Users table. */
-import {AdminPermissionsTableComponent} from './subcomponents/permissions-table.component';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -12,33 +9,49 @@ import {UserAdminService} from '../useradmin.service';
 /* Decorator. */
 @Component({
     selector: 'setl-admin-permissions',
-    // templateUrl: 'permissions.component.html',
-    template: '',
+    templateUrl: 'permissions.component.html',
     styleUrls: [ 'permissions.component.css' ],
     providers: [ UserAdminService, ToasterService ]
 })
 
 /* Class. */
-export class AdminPermissionsComponent {
+export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
     public permissionsData:any = [];
 
-    /* Form variables. */
-    public formGroupName:string = "";
-    public formGroupDesc:string = "";
-    public formGroupType:string = "";
+    public tabsControl:any;
 
     /* Account types select. */
-    public groupType:string;
     public groupTypes:any;
 
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
-        private toasterService:ToasterService
+        private changeDetectorRef:ChangeDetectorRef
     ) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
+
+        /* Default tabs. */
+        this.tabsControl = [
+            {
+                "title": "<i class='fa fa-search'></i> Search",
+                "userId": -1,
+                "active": true
+            },
+            {
+                "title": "<i class='fa fa-plus'></i> Add New Group",
+                "userId": -1,
+                "formControl": new FormGroup(
+                    {
+                        "name": new FormControl(''),
+                        "description": new FormControl(''),
+                        "type": new FormControl( [] )
+                    }
+                ),
+                "active": false
+            }
+        ]
     }
 
     /* Handles a ng2-select selection. */
@@ -51,6 +64,17 @@ export class AdminPermissionsComponent {
         this[propertyName] = undefined;
     }
 
+    ngAfterViewInit() {
+        /* Override the changes. */
+        this.changeDetectorRef.detectChanges();
+    }
+
+    ngOnDestroy ():void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+        console.log( "detaching change detector." );
+    }
+
     /**
      * Handle Save
      * Handles the user saving a group.
@@ -60,29 +84,6 @@ export class AdminPermissionsComponent {
      */
      public handleSave ( event ):void {
          /* Validate the group information. */
-         if ( ! this.formGroupName ) {
-             this.toasterService.pop('warning', 'Invalid Name', 'The group name you entered was invalid.');
-             return;
-         }
-         if ( ! this.formGroupDesc ) {
-             this.toasterService.pop('warning', 'Invalid Description', 'The group description you entered was invalid.');
-             return;
-         }
-         if ( ! this.formGroupType ) {
-             this.toasterService.pop('warning', 'Invalid Type', 'The group type you entered was invalid.');
-             return;
-         }
-
-         /* All is good, so lets push it and tell the user. */
-        //  this.toasterService.pop('success', 'Permissions Group', 'Added group successfully!');
-         this.permissionsData.push({
-            'name': this.formGroupName,
-            'type': this.formGroupType,
-            'desc': this.formGroupDesc,
-         });
-
-         /* Tidy the form up. */
-         this.clearForm();
 
          /* Return. */
          return;
@@ -125,19 +126,119 @@ export class AdminPermissionsComponent {
      }
 
      /**
-      * Clear Form
-      * Clears the new group form.
+      * Handle New Group
+      * ---------------
+      * Handles saving a new group.
+      *
+      * @param {tabid}
+      * @return {void}
+      */
+     public handleNewGroup (tabid:number):void {
+         /* Sort the data structure out. */
+         let
+         formData = this.tabsControl[tabid].formControl.value,
+         dataToSend = {};
+
+         dataToSend['name'] = formData.name;
+         dataToSend['description'] = formData.description;
+         dataToSend['type'] = formData.description.type ? formData.description.type.id || 0 : 0;
+
+         /* Let's trigger the creation of the user. */
+        //  this.userAdminService.createNewUser(
+        //      this.tabsControl[tabid].formControl.value
+        //  );
+
+        console.log( " | new group: ", dataToSend );
+
+         /* Clear the form. */
+         this.clearNewGroup(1, false); // send false in to disable the preventDefault.
+
+         /* Return. */
+         return;
+     }
+
+     /**
+      * Clear New Group
+      * --------------
+      * Clears the new group form, i.e, sets all inputs to not filled.
+      *
+      * @param {tabid} number - the tab to clear (will always be 1).
       *
       * @return {void}
       */
-      public clearForm ():void {
-          /* Set all properties to a string. */
-          this.formGroupName = "";
-          this.formGroupDesc = "";
-          this.formGroupType = "";
+     public clearNewGroup (tabid, event):void {
+         /* Prevent submit. */
+         if ( event ) event.preventDefault();
 
-          /* Return. */
+         /* Let's set all the values in the form controls. */
+         this.tabsControl[tabid].formControl = new FormGroup(
+             {
+                 "name": new FormControl(''),
+                 "description": new FormControl(''),
+                 "type": new FormControl( [] )
+             }
+         );
+
+         /* Override the changes. */
+         this.changeDetectorRef.detectChanges();
+
+         /* Return. */
+         return;
+     }
+
+
+      /**
+       * Close Tab
+       * ---------
+       * Removes a tab from the tabs control array, in effect, closing it.
+       *
+       * @param {index} number - the tab inded to close.
+       *
+       * @return {void}
+       */
+      public closeTab (index) {
+          /* Validate that we have index. */
+          if ( ! index && index !== 0 ) {
+              return;
+          }
+
+          /* Remove the object from the tabsControl. */
+          this.tabsControl = [
+              ...this.tabsControl.slice(0, index),
+              ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+          ];
+
+          /* Reset tabs. */
+          this.setTabActive(0);
+
+          /* Return */
           return;
+      }
+
+      /**
+       * Set Tab Active
+       * --------------
+       * Sets all tabs to inactive other than the given index, this means the
+       * view is switched to the wanted tab.
+       *
+       * @param {index} number - the tab inded to close.
+       *
+       * @return {void}
+       */
+      public setTabActive (index:number = 0) {
+          /* Lets loop over all current tabs and switch them to not active. */
+          this.tabsControl.map((i) => {
+             i.active = false;
+          });
+
+          /* Override the changes. */
+          this.changeDetectorRef.detectChanges();
+
+          /* Set the list active. */
+          this.tabsControl[index].active = true;
+
+          /* Yes, we have to call this again to get it to work, trust me... */
+          this.changeDetectorRef.detectChanges();
       }
 
 }
