@@ -1,5 +1,18 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
+import {SagaHelper, Common} from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
+import _ from 'lodash';
+import {fromJS} from "immutable";
+import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
 
+import {
+    getWalletHoldingByAsset,
+    getConnectedWallet,
+    getWalletIssuerDetail,
+    getRequestedIssuerState,
+    setRequestedWalletIssuer,
+    SET_WALLET_ISSUER_LIST
+} from '@setl/core-store';
 
 @Component({
     selector: 'setl-issue',
@@ -10,40 +23,69 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
 
-    public assets
+    public issues
     public singleAsset;
     public singleAssetHistory;
 
     public tabsControl: any;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) {
+    public issuesList;
+    public currentWalletId;
 
-        this.assets = [
-            {
-                id: '1',
-                identifier: 'FR0001',
-                asset: 'LEI0001|OFI RS Dynamique C D',
-                total: '987,654,321',
-                encumbered: '321',
-                free: '987,654,000'
-            },
-            {
-                id: '2',
-                identifier: 'EUR',
-                asset: 'Payment_Bank1|EUR',
-                total: '100',
-                encumbered: '1',
-                free: '99'
-            },
-            {
-                id: '3',
-                identifier: 'EUR',
-                asset: 'Payment_Bank1|EUR',
-                total: '100',
-                encumbered: '1',
-                free: '99'
-            },
-        ];
+    constructor(private ngRedux: NgRedux<any>,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private changeDetectorRef: ChangeDetectorRef) {
+
+        ngRedux.subscribe(() => this.updateState());
+        this.updateState();
+
+        /*
+
+        function requestIssuedAssetBalance(issuer, instrument, callBack, userData, walletID) {
+            var deferred = $.Deferred();
+
+            if (document.SetlWalletNodeSocket) { // Websocket
+
+                var messageID = document.SetlWalletNodeSocketCallback.getUniqueID();
+
+                document.SetlWalletNodeSocketCallback.addHandler(messageID,
+                    function (ID, message, UserData) {
+                        deferred.resolve(message.data);
+                        if (message.status == "OK") {
+                            var issuedAssetBalance = message.data;
+                            callBack(userData, issuedAssetBalance);
+                        } else {
+                            showWarning(
+                                getTranslation('txt_getissuerfail', 'Get Issuer Fail'),
+                                message.data.status
+                            );
+                        }
+                    }, {});
+
+                var Request =
+                    {
+                        messageType: 'request',
+                        messageHeader: '',
+                        requestID: messageID,
+                        messageBody: {
+                            topic: 'holders',
+                            walletid: walletID || parseInt(document.dataCache.inUseWallet),
+                            // address : '',
+                            namespace: issuer,
+                            classid: instrument
+                        }
+                    };
+
+                document.SetlWalletNodeSocket.sendRequest(Request);
+
+            }
+            else {
+                showError('Socket Error', 1001);
+            }
+
+            return deferred.promise();
+        }
+         */
 
         this.singleAsset = [
             {
@@ -97,6 +139,143 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
                 "active": true
             },
         ];
+
+        /* Default tabs. */
+        this.tabsControl = this.defaultTabControl();
+    }
+
+    /**
+     * Current Redux State
+     */
+    updateState() {
+        const newState = this.ngRedux.getState();
+
+        // If my issuer list is not yet requested,
+        // Request wallet issuers
+        const RequestedIssuerState = getRequestedIssuerState(newState);
+        if (!RequestedIssuerState) {
+            this.requestWalletIssuer();
+        }
+
+        const walletIssuerDetails = getWalletIssuerDetail(newState);
+
+        console.log(walletIssuerDetails);
+
+        const newWalletId = getConnectedWallet(newState);
+
+        if (newWalletId !== this.currentWalletId) {
+            this.tabsControl = this.defaultTabControl();
+        }
+
+        this.currentWalletId = newWalletId;
+
+        this.issuesList = getWalletHoldingByAsset(newState);
+
+        this.issues = this.formatIssues(walletIssuerDetails);
+        this.issues = this.convertToArray(this.issues);
+    }
+
+
+    requestWalletIssuer() {
+        const walletId = this.currentWalletId;
+
+        // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
+        this.ngRedux.dispatch(setRequestedWalletIssuer());
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
+            walletId
+        });
+
+        // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_ISSUER_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
+     * Default Tab Control Array
+     *
+     * @returns {[{title: string; asset: number; active: boolean}]}
+     */
+    defaultTabControl() {
+        return [
+            {
+                "title": "<i class='fa fa-money'></i> Issue Reports",
+                "asset": -1,
+                "active": true
+            },
+        ];
+    }
+
+
+    formatIssues(issueDetails) {
+        let issues = this.issuesList;
+        const walletId = this.currentWalletId;
+        issues = issues[walletId];
+
+        if (_.isEmpty(issues)) {
+            return [];
+        }
+
+        const myIssuer = issueDetails.walletIssuer;
+        const listImu = fromJS(issues);
+        const list = listImu.reduce(
+            (data, item, key) => {
+                if (key) {
+                    const identifier = key.split('|')[0];
+                    if (myIssuer == identifier) {
+                        const breakdown = this.formatBreakdown(item.get('breakdown'));
+                        data.push({
+                            asset: key,
+                            total: -breakdown[0].free,
+                            encumbered: item.get('totalencumbered'),
+                            free: item.get('total') - item.get('totalencumbered'),
+                        });
+                    }
+                }
+                return data;
+            },
+            []
+        );
+        return list;
+    }
+
+    formatBreakdown(breakDown) {
+        const breakDownImu = fromJS(breakDown);
+        const breakDownList = breakDownImu.map(
+            (thisBreakdown, thisBreakdownKey) => {
+                return {
+                    address: thisBreakdownKey,
+                    total: thisBreakdown.get(0),
+                    encumbered: thisBreakdown.get(1),
+                    free: thisBreakdown.get(0) - thisBreakdown.get(1),
+                };
+            }
+        );
+        return breakDownList.toArray();
+    }
+
+    /**
+     * Convert To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
+    public convertToArray(obj): Array<any> {
+        let i = 0, key, newArray = [];
+        for (key in obj) {
+            newArray.push(obj[key]);
+            newArray[newArray.length - 1].index = i++;
+        }
+        return newArray;
     }
 
     ngOnInit() {
@@ -115,15 +294,29 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
      *
      * @return {void}
      */
-    public handleView(viewIssueIndex): void {
+    public handleView(index): void {
+        /* Check if the tab is already open. */
+        let i;
+        for (i = 0; i < this.tabsControl.length; i++) {
+            if (this.tabsControl[i].asset === this.issues[index].asset) {
+                /* Found the index for that tab, lets activate it... */
+                this.setTabActive(i);
+
+                /* And return. */
+                return;
+            }
+        }
 
         /* Push the edit tab into the array. */
+        let issues = this.issues[index];
+
+        /* And also prefill the form... let's sort some of the data out. */
         this.tabsControl.push({
-            "title": "<i class='fa fa-user'></i> " + viewIssueIndex,
+            "title": "<i class='fa fa-th-list'></i> " + this.issues[index].asset,
+            "asset": issues.asset,
+            "assetObject": issues,
             "active": false // this.editFormControls
         });
-
-        console.log(this.tabsControl[this.tabsControl.length - 1]);
 
         /* Activate the new tab. */
         this.setTabActive(this.tabsControl.length - 1);
