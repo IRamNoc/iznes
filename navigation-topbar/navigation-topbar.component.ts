@@ -76,13 +76,7 @@ export class NavigationTopbarComponent implements OnInit {
 
         // Get response from set active wallet
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            function (data) {
-                console.log(data); // success
-            },
-            function (data) {
-                console.log(data); // error
-            })
+            asyncTaskPipe)
         );
 
         // Request initial data from wallet node.
