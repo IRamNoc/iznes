@@ -18,19 +18,18 @@ export class AdminUsersService {
     }
 
     public requestMyUsersList () {
-
-        console.log('Token: ', this.memberSocketService.token);
-
+        /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
             token: this.memberSocketService.token
         };
 
+        /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     public createNewUser (userData:any): any {
-
+        /* Setup the message body. */
         const messageBody: CreateUserMessageBody = {
             RequestName: 'nu',
             token: this.memberSocketService.token,
@@ -41,13 +40,13 @@ export class AdminUsersService {
             password: userData.password
         };
 
-        console.log( "SENDING TO NEW USER: ", messageBody )
-
+        console.log( "SENDING TO NEW USER: ", messageBody );
+        /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     public editUser (newData:any): any {
-
+        /* Setup the message body. */
         const messageBody: EditUserMessageBody = {
             RequestName: 'udu',
             token: this.memberSocketService.token,
@@ -58,8 +57,9 @@ export class AdminUsersService {
             'status': newData.status
         };
 
-        console.log( "SENDING TO EDIT USER: ", messageBody )
+        console.log( "SENDING TO EDIT USER: ", messageBody );
 
+        /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
