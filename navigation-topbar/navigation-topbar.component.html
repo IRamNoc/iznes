@@ -1,0 +1,70 @@
+<header class="header-6">
+
+    <div class="branding">
+        <a href="..." class="nav-link">
+            <!--<clr-icon shape="vm-bug"></clr-icon>-->
+            <!--<span class="title">Project Clarity</span>-->
+            <img src="assets/images/setl_Logo_01.png" style="height: 50%;">
+        </a>
+    </div>
+    <form class="search" [formGroup]="searchForm">
+        <label for="search_input">
+            <input id="search_input" type="text" placeholder="Search for keywords...">
+        </label>
+    </form>
+    <div class="header-actions">
+        <div class="wallet">
+            <div class="wallet-tile">Wallet:</div>
+            <ng-select [allowClear]="false"
+                       [items]="walletSelectItems"
+                       (selected)="selected($event)"
+                       (removed)="removed($event)"
+                       placeholder="No wallet selected"
+                       [formControl]="selectedWalletId"
+                       [multiple]="false">
+            </ng-select>
+        </div>
+
+
+        <clr-dropdown>
+            <!--<button class="btn btn-outline-primary" >-->
+            <!--Dropdown-->
+            <!--<clr-icon shape="caret down"></clr-icon>-->
+            <!--</button>-->
+            <div class="user" clrDropdownToggle>
+                <img src="assets/images/ollie.jpg">
+                <p>Ollie Kett <i class="fa fa-angle-down"></i></p>
+                <span>Last 21/08/2017 15:33</span>
+            </div>
+
+            <div class="dropdown-menu">
+                <label class="dropdown-header">Dropdown header</label>
+                <a href="javascript://" clrDropdownItem>Action 1</a>
+                <a href="javascript://" clrDropdownItem>Action 2</a>
+                <a href="javascript://" class="disabled" clrDropdownItem>Disabled</a>
+                <div class="dropdown-divider"></div>
+                <a href="javascript://" clrDropdownItem>Link 1</a>
+                <a href="javascript://" clrDropdownItem>Link 2</a>
+            </div>
+        </clr-dropdown>
+
+        <a [routerLink]="['/messages']" class="nav-link nav-icon">
+            <clr-icon shape="email" class="is-solid has-badge"></clr-icon>
+            <label>Messages</label>
+        </a>
+
+        <a class="nav-link nav-icon" (click)="callToggleSidebar($event)">
+            <clr-icon shape="cog"></clr-icon>
+            <label>Settings</label>
+        </a>
+
+        <a [routerLink]="['/logout']" class="nav-link nav-icon">
+            <clr-icon shape="logout"></clr-icon>
+            <label>Logout</label>
+        </a>
+
+        <button class="header-overflow-trigger" type="button">
+            <span></span>
+        </button>
+    </div>
+</header>
