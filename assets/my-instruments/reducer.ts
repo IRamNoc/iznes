@@ -63,6 +63,16 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
 
             return newState;
 
+
+        case MyInstrumentActions.CLEAR_REQUESTED_WALLET_INSTRUMENT:
+            requestedWalletInstrument = false;
+
+            newState = Object.assign({}, state, {
+                requestedWalletInstrument
+            });
+
+            return newState;
+
         case MyInstrumentActions.SET_MY_INSTRUMENTS_LIST:
             instrumentListRawData = _.get(action, 'payload[1]data', []);
 

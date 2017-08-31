@@ -49,11 +49,13 @@ export {
     finishRegisterIssuerNotification,
     SET_WALLET_ISSUER_LIST,
     setRequestedWalletIssuer,
+    clearRequestedWalletIssuer,
 
     REGISTER_ASSET_SUCCESS,
     REGISTER_ASSET_FAIL,
     finishRegisterInstrumentNotification,
     setRequestedWalletInstrument,
+    clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
 
 

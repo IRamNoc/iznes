@@ -20,10 +20,18 @@ export const finishRegisterIssuerNotification = kAction(FINISH_REGISTER_ISSUER_N
 
 
 /**
- * Set requested wallet issuer to true.
+ * Set (Set to true) request wallet issuer state
+ * Flag that to indicate we do not need to request it again.
  */
 export const SET_REQUESTED_WALLET_ISSUER = `${name}/SET_REQUESTED_WALLET_ISSUER`;
 export const setRequestedWalletIssuer = kAction(SET_REQUESTED_WALLET_ISSUER);
+
+/**
+ * Clear (Set to false) request wallet issuer state
+ * Flag that to indicate we will need to request when we need it.
+ */
+export const CLEAR_REQUESTED_WALLET_ISSUER = `${name}/CLEAR_REQUESTED_WALLET_ISSUER`;
+export const clearRequestedWalletIssuer = kAction(CLEAR_REQUESTED_WALLET_ISSUER);
 
 /**
  * Set my issuers list

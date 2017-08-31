@@ -9,6 +9,7 @@ import {
     finishRegisterIssuerNotification,
     getRequestedIssuerState,
     setRequestedWalletIssuer,
+    clearRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
     getWalletIssuerDetail
 } from './my-issuers';
@@ -23,6 +24,7 @@ import {
     REGISTER_ASSET_FAIL,
     finishRegisterInstrumentNotification,
     setRequestedWalletInstrument,
+    clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
 
     // Selectors
@@ -38,6 +40,7 @@ export {
     finishRegisterIssuerNotification,
     getRequestedIssuerState,
     setRequestedWalletIssuer,
+    clearRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
     getWalletIssuerDetail
 };
@@ -49,6 +52,7 @@ export {
     REGISTER_ASSET_FAIL,
     finishRegisterInstrumentNotification,
     setRequestedWalletInstrument,
+    clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
     getNewInstrumentRequest,
     getRequestedInstrumentState,
