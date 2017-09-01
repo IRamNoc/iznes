@@ -73,11 +73,13 @@ export {
     AdminUsersState,
     adminUserReducer,
     SET_ADMIN_USERLIST,
-    getUsersList,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_ADMIN_PERMISSION_AREAS_LIST,
+    getUsersList,
     getTranPermissionGroup,
-    getAdminPermissionGroup
+    getAdminPermissionGroup,
+    getAdminPermAreaList
 } from './useradmin';
 
 export {
@@ -86,4 +88,3 @@ export {
     SET_ACCOUNT_LIST,
     getMyAccountList
 } from './account';
-
