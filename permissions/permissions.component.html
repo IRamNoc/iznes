@@ -111,17 +111,16 @@
                     [ngSwitch]="formControl.controls['type']._value[0].id">
 
                         <setl-permission-grid *ngSwitchCase="'1'"
-                            [permissionAreas]="permissionAreasList"
+                            [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="handlePermissionUpdate($event)"
                         ></setl-permission-grid>
 
-                        <!-- TODO get the tx permissions stuff and tick it in here. -->
-                        <!-- <setl-permission-grid *ngSwitchCase="'2'"
-                            [permissionAreas]="permissionAreasList"
+                        <setl-permission-grid *ngSwitchCase="'2'"
+                            [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="handlePermissionUpdate($event)"
-                        ></setl-permission-grid> -->
+                        ></setl-permission-grid>
 
                     </div>
 
@@ -190,17 +189,16 @@
                     [ngSwitch]="formControl.controls['type']._value[0].id">
 
                         <setl-permission-grid *ngSwitchCase="'1'"
-                            [permissionAreas]="permissionAreasList"
+                            [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="handlePermissionUpdate($event)"
                         ></setl-permission-grid>
 
-                        <!-- TODO get the tx permissions stuff and tick it in here. -->
-                        <!-- <setl-permission-grid *ngSwitchCase="'2'"
-                            [permissionAreas]="permissionAreasList"
+                        <setl-permission-grid *ngSwitchCase="'2'"
+                            [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="handlePermissionUpdate($event)"
-                        ></setl-permission-grid> -->
+                        ></setl-permission-grid>
 
                     </div>
 

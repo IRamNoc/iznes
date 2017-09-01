@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 
@@ -19,32 +19,23 @@ import {PermissionGridComponent} from '@setl/permission-grid';
 
 /* Class. */
 export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
-    /* Groups list. */
-    public allGroupList:any;
-
     /* Tabs control */
     public tabsControl:any;
 
     /* Account types select. */
     public groupTypes:any;
 
-    /* Subscriptions from service observables. */
-    private adminGroupListSubscription:any;
-    private adminPermAreaListSubscription:any;
+    /* Subs from service observables. */
+    private adminGroupListSub:any;
+    private adminPermAreaListSub:any;
+    private txPermAreaListSub:any;
 
-    public permissionAreasList = [
-        {
-            "id": 1,
-            "text": "permission1"
-        },
-        {
-            "id": 2,
-            "text": "permission2"
-        }
-    ];
+    /* Lists set by thos observables. */
+    public allGroupList:any; // All lists.
+    public adminPermAreasList:any;
+    public txPermAreasList:any;
 
-    public permissionAreasListTwo:any;
-
+    /* The permission levels list. */
     public permissionLevelsList = [
         {
             'id': 'canDelegate',
@@ -68,6 +59,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         },
     ];
 
+    /* Old areas list. */
+    public filteredAdminAreaList = [];
+    public filteredTxAreaList = [];
+
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
@@ -77,7 +72,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         this.groupTypes = userAdminService.getGroupTypes();
 
         /* Subscribe to the admin group list observable. */
-        this.adminGroupListSubscription = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+        this.adminGroupListSub = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+            /* TODO - get the tx group list too and merge it with the admin list. */
             this.allGroupList = this.convertAdminGroupsToArray(list);
 
             /* Override the changes. */
@@ -85,9 +81,23 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         });
 
         /* Subscribe to the admin group list observable. */
-        this.adminPermAreaListSubscription = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
-            this.permissionAreasListTwo = list;
-            console.log( "New perm area list", list )
+        this.adminPermAreaListSub = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.adminPermAreasList = list;
+
+            /* Call to filter lists for UI. */
+            this.filterAreaLists();
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.txPermAreaListSub = this.userAdminService.getTxPermAreaListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.txPermAreasList = list;
+
+            /* Call to filter lists for UI. */
+            this.filterAreaLists();
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -115,28 +125,44 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         ]
     }
 
-    /* Handles a ng2-select selection. */
-    public selected(propertyName:string, value:any):void {
-        this[propertyName] = value;
-    }
-
-    /* Handles a ng2-select deletion. */
-    public removed(propertyName:string, value:any):void {
-        this[propertyName] = undefined;
-    }
-
-    ngAfterViewInit() {
+    ngAfterViewInit():void {
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
     }
 
-    ngOnDestroy ():void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
+    /**
+     * Filter Area Lists
+     * -----------------
+     * Updates the filtered lists used by UI elements.
+     *
+     * @return {void}
+     */
+    private filterAreaLists ():void {
+        /* Let's do admin areas first. */
+        if ( Array.isArray(this.adminPermAreasList) ) {
+            this.filteredAdminAreaList = this.adminPermAreasList.map(this.extractArea)
+        }
 
-        /* Unsunscribe Observables. */
-        this.adminGroupListSubscription.unsubscribe();
-        this.adminPermAreaListSubscription.unsubscribe();
+        /* Then let's do the tx areas. */
+        if ( Array.isArray(this.txPermAreasList) ) {
+            this.filteredTxAreaList = this.txPermAreasList.map(this.extractArea);
+        }
+    }
+
+    /**
+     * Extract area
+     * ------------
+     * Extracts an area from a more complex object.
+     *
+     * @param {area} - the complex area object.
+     *
+     * @return {extractedArea} - the less complex object.
+     */
+    private extractArea (area):{id: string, text: string} {
+        return {
+            'id': area.permissionID,
+            'text': area.permissionName
+        }
     }
 
     /**
@@ -365,4 +391,12 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
           this.changeDetectorRef.detectChanges();
       }
 
+      ngOnDestroy ():void {
+          /* Detach the change detector on destroy. */
+          this.changeDetectorRef.detach();
+
+          /* Unsunscribe Observables. */
+          this.adminGroupListSub.unsubscribe();
+          this.adminPermAreaListSub.unsubscribe();
+      }
 }
