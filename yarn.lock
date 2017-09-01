@@ -147,8 +147,8 @@
     tsickle "^0.21.0"
 
 "@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.30":
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-1.0.0-beta.2.tgz#3d4b567b0334a9ee631b73c72156cd3a9d3cd29f"
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-1.0.0-beta.3.tgz#c1fdd8d727f54830b6d470c0d9f9fc32d45494f9"
 
 "@ngtools/json-schema@1.1.0":
   version "1.1.0"
@@ -164,11 +164,15 @@
 
 "@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#122a1c54664053781663b7488911ec496c9967a1"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#0b6bce0098ca11c262bf9fd8b0959587dee17354"
 
 "@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#d44268e13700bba70280ff600b37fd9c7b9483c9"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#d632a0a1d11a794d83d2841bdca353a6d92d18bc"
+
+"@setl/core-layout@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git":
+  version "1.0.0"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#9c9cbe78357ba17243c47af682d8b562a6baa068"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
@@ -176,22 +180,22 @@
 
 "@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#01751fd7c1fbeab200b798a6eef3a61a341764b7"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#7f5d64776e03e0f5683174827e179bdb9651fad6"
 
 "@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#34d24a7f7d62880d4640c84f5082f1488b96ea65"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#43da2c8de43d7cf8e2457a44a6244bd74845a2b5"
 
 "@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#07627b72f52f7a0e7c5ad1fe05e8fe1bc1a7ac4c"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#68f9506bf5d622f877df12aecfea585d25885583"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
 
 "@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git":
   version "1.0.8"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#3cf769ab63842250cfb6ff7bb72bfe0af92171fe"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#c231a6e0d55a0b802e2cfd7737858a3bab6d3242"
 
 "@setl/jaspero-ng2-alerts@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git":
   version "0.0.6"
@@ -199,7 +203,7 @@
 
 "@setl/permission-grid@http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git":
   version "1.0.0"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git#597801417f7b7113b314d17fd4d0223d67d70143"
+  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git#61ccd7be1fce333b05079093f0d7f8d5c2cfda2e"
 
 "@setl/socketcluster-wrapper@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
   version "1.0.4"
@@ -212,7 +216,7 @@
 
 "@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git":
   version "1.0.3"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#dc941dc5679e4e5b3e239b4bb82c0d5cb75d8917"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#671fa06e838089674e12b2c89a7b78460dbbecab"
   dependencies:
     ramda "^0.24.1"
     redux-saga "^0.15.6"
@@ -1303,8 +1307,8 @@ css-color-names@0.0.4:
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
 css-loader@^0.28.1:
-  version "0.28.5"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.5.tgz#dd02bb91b94545710212ef7f6aaa66663113d754"
+  version "0.28.7"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.7.tgz#5f2ee989dd32edd907717f953317656160999c1b"
   dependencies:
     babel-code-frame "^6.11.0"
     css-selector-tokenizer "^0.7.0"
@@ -1618,8 +1622,8 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 electron-to-chromium@^1.2.7:
-  version "1.3.18"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.18.tgz#3dcc99da3e6b665f6abbc71c28ad51a2cd731a9c"
+  version "1.3.19"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.19.tgz#73d97b0e8b05aa776cedf3cdce7fdc0538037675"
 
 elliptic@^6.0.0:
   version "6.4.0"
@@ -5162,8 +5166,8 @@ supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2, supports-co
     has-flag "^1.0.0"
 
 supports-color@^4.0.0, supports-color@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.2.1.tgz#65a4bb2631e90e02420dba5554c375a4754bb836"
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
     has-flag "^2.0.0"
 
