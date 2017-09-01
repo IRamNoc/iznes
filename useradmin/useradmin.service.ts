@@ -5,7 +5,8 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
     RequestAdminUsersMessageBody,
     CreateUserMessageBody,
-    EditUserMessageBody
+    EditUserMessageBody,
+    GetPermissionAreaListBody
 } from './useradmin.service.model';
 
 @Injectable()
@@ -62,4 +63,18 @@ export class AdminUsersService {
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    public getPermissionAreaList (): any {
+        /* Setup the message body. */
+        const messageBody: GetPermissionAreaListBody = {
+            RequestName: 'gpal',
+            token: this.memberSocketService.token
+        };
+
+        console.log( "SENDING TO GET PERMISSION AREA LIST: ", messageBody );
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
 }
