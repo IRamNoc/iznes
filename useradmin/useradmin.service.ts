@@ -41,7 +41,6 @@ export class AdminUsersService {
             password: userData.password
         };
 
-        console.log( "SENDING TO NEW USER: ", messageBody );
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -58,20 +57,31 @@ export class AdminUsersService {
             'status': newData.status
         };
 
-        console.log( "SENDING TO EDIT USER: ", messageBody );
-
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public getPermissionAreaList (): any {
+    public getAdminPermAreaList (): any {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gpal',
             token: this.memberSocketService.token
         };
 
-        console.log( "SENDING TO GET PERMISSION AREA LIST: ", messageBody );
+        console.log( "SENDING TO GET ADMIN PERM AREA LIST: ", messageBody );
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public getTxPermAreaList (): any {
+        /* Setup the message body. */
+        const messageBody: GetPermissionAreaListBody = {
+            RequestName: 'gtpal',
+            token: this.memberSocketService.token
+        };
+
+        console.log( "SENDING TO GET TX PERM AREA LIST: ", messageBody );
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
