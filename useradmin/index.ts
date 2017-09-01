@@ -14,6 +14,13 @@ import {
     getTranPermissionGroup
 } from './permission-group';
 
+import {
+    AdminPermAreasState,
+    PermissionAreasReducer,
+    SET_ADMIN_PERMISSION_AREAS_LIST,
+    getAdminPermAreaList
+} from './permission-areas';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -24,16 +31,20 @@ export {
 export {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+    SET_ADMIN_PERMISSION_AREAS_LIST,
     getAdminPermissionGroup,
-    getTranPermissionGroup
+    getTranPermissionGroup,
+    getAdminPermAreaList
 };
 
 export interface AdminUsersState {
     users: UsersState;
     permissionGroup: PermissionGroupState;
+    permAreaList: AdminPermAreasState;
 }
 
 export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminUsersState>({
     users: UsersReducer,
-    permissionGroup: PermissionGroupReducer
+    permissionGroup: PermissionGroupReducer,
+    permAreaList: PermissionAreasReducer
 });
