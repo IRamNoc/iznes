@@ -2,23 +2,48 @@ import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 
+import {
+    SET_ADMIN_USERLIST
+} from '@setl/core-store';
+
 @Injectable()
 export class ChannelService {
 
-    constructor() {
+    constructor (
+        private ngRedux: NgRedux<any>
+    ) {
+
     }
 
     /**
      * Resolve Channel Message
-     * Works out what data has been emitted on the channel and dispatches the correct saga event.*/
+     * Works out what data has been emitted on the channel and dispatches
+     * the correct saga event.
+     *
+     * @param {data} object - an object detailing an update that needs to happen
+     * to the store.
+     *
+     * @return {void}
+     */
     public resolveChannelMessage(data: any): void {
-
-        console.log('--- Im finally in channel service');
-        console.log(data);
+        /* Parse the data. */
+        data = JSON.parse( data );
 
         // The Hench Switch Statement of Channels.
-        switch (data.messageName) {
-            case 'update_user_message':
+        console.log(" | Resolving request name: ", data.Request);
+        switch (data.Request) {
+            case 'nu':
+            case 'udu':
+                /* Let's get the new user object. */
+                console.log(' | NEW USERS LIST: ', data);
+
+                /* Let's now dispatch the append acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ADMIN_USERLIST,
+                        payload: [ null, data, null ]
+                    }
+                );
 
                 break;
 
