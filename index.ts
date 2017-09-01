@@ -72,14 +72,22 @@ export {
 export {
     AdminUsersState,
     adminUserReducer,
+
+    /* Users list. */
     SET_ADMIN_USERLIST,
+    getUsersList,
+
+    /* Permission groups. */
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_ADMIN_PERMISSION_AREAS_LIST,
-    getUsersList,
     getTranPermissionGroup,
     getAdminPermissionGroup,
-    getAdminPermAreaList
+
+    /* Group area lists. */
+    SET_ADMIN_PERM_AREAS_LIST,
+    SET_TX_PERM_AREAS_LIST,
+    getAdminPermAreaList,
+    getTxPermAreaList,
 } from './useradmin';
 
 export {
