@@ -117,7 +117,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                     {
                         "name": new FormControl(''),
                         "description": new FormControl(''),
-                        "type": new FormControl( [] )
+                        "type": new FormControl( [] ),
+                        "permissions": new FormControl([])
                     }
                 ),
                 "active": false
@@ -254,6 +255,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Push the edit tab into the array. */
          let group = this.allGroupList[index];
 
+         console.log( "EDITTING GROUP: ", group );
+
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
              "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
@@ -262,7 +265,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                  {
                      "name": new FormControl( group.groupName ),
                      "description": new FormControl( group.groupDescription ),
-                     "type": new FormControl( group.category )
+                     "type": new FormControl( group.category ),
+                     "permissions": new FormControl([])
                  }
              ),
              "active": false // this.editFormControls
@@ -325,7 +329,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              {
                  "name": new FormControl(''),
                  "description": new FormControl(''),
-                 "type": new FormControl( [] )
+                 "type": new FormControl([]),
+                 "permissions": new FormControl([])
              }
          );
 
@@ -336,34 +341,33 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          return;
      }
 
-
-      /**
-       * Close Tab
-       * ---------
-       * Removes a tab from the tabs control array, in effect, closing it.
-       *
-       * @param {index} number - the tab inded to close.
-       *
-       * @return {void}
-       */
-      public closeTab (index) {
-          /* Validate that we have index. */
-          if ( ! index && index !== 0 ) {
-              return;
-          }
-
-          /* Remove the object from the tabsControl. */
-          this.tabsControl = [
-              ...this.tabsControl.slice(0, index),
-              ...this.tabsControl.slice(index + 1, this.tabsControl.length)
-          ];
-
-          /* Reset tabs. */
-          this.setTabActive(0);
-
-          /* Return */
+    /**
+     * Close Tab
+     * ---------
+     * Removes a tab from the tabs control array, in effect, closing it.
+     *
+     * @param {index} number - the tab inded to close.
+     *
+     * @return {void}
+     */
+    public closeTab (index) {
+        /* Validate that we have index. */
+        if ( ! index && index !== 0 ) {
           return;
-      }
+        }
+
+        /* Remove the object from the tabsControl. */
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        /* Reset tabs. */
+        this.setTabActive(0);
+
+        /* Return */
+        return;
+    }
 
       /**
        * Set Tab Active

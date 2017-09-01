@@ -12,12 +12,17 @@ import {
 } from '@setl/core-req-services';
 
 import {
+    /* Users list. */
     SET_ADMIN_USERLIST,
-    SET_ADMIN_PERM_AREAS_LIST,
-    SET_TX_PERM_AREAS_LIST,
     getUsersList,
+
+    /* Permission groups - (fetched on init) */
     getAdminPermissionGroup,
     getTranPermissionGroup,
+
+    /* Permission areas. */
+    SET_ADMIN_PERM_AREAS_LIST,
+    SET_TX_PERM_AREAS_LIST,
     getAdminPermAreaList,
     getTxPermAreaList,
 } from '@setl/core-store';
@@ -402,8 +407,6 @@ export class UserAdminService {
         if ( query.groupId ) identifier = "groupId";
         if ( query.groupName ) identifier = "groupName";
 
-        console.log( "identifier: ", identifier );
-
         /* If there was nothing, return. */
         if ( identifier === "" ) {
             return [];
@@ -440,8 +443,6 @@ export class UserAdminService {
         if ( query.id ) identifier = "id";
         if ( query.text ) identifier = "text";
 
-        console.log( "identifier: ", identifier );
-
         /* If there was nothing, return. */
         if ( identifier === "" ) {
             return [];
@@ -451,7 +452,6 @@ export class UserAdminService {
         let i;
         for ( i = 0; i < this.groupTypes.length; i++ ) {
             /* Loop over each one and check the identifier. */
-            console.log( this.groupTypes[i][identifier].toString() +" === "+ query[identifier] );
             if ( this.groupTypes[i][identifier] === query[identifier].toString() ) {
                 return [ this.groupTypes[i] ];
             }

@@ -113,13 +113,13 @@
                         <setl-permission-grid *ngSwitchCase="'1'"
                             [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="handlePermissionUpdate($event)"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                         <setl-permission-grid *ngSwitchCase="'2'"
                             [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="handlePermissionUpdate($event)"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                     </div>
@@ -191,13 +191,13 @@
                         <setl-permission-grid *ngSwitchCase="'1'"
                             [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="handlePermissionUpdate($event)"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                         <setl-permission-grid *ngSwitchCase="'2'"
                             [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="handlePermissionUpdate($event)"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                     </div>
