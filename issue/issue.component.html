@@ -64,13 +64,13 @@
             <clr-dg-column>Encumbered</clr-dg-column>
             <clr-dg-column>Free</clr-dg-column>
 
-            <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
-                <clr-dg-cell>{{breakdown.wallet}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.address}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.percentHolding}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.total | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.encumbered | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
+            <clr-dg-row *clrDgItems="let holder of asset">
+                <clr-dg-cell></clr-dg-cell>
+                <clr-dg-cell>{{holder.address}}</clr-dg-cell>
+                <clr-dg-cell></clr-dg-cell>
+                <clr-dg-cell>{{holder.total | moneyValue}}</clr-dg-cell>
+                <clr-dg-cell></clr-dg-cell>
+                <clr-dg-cell></clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>

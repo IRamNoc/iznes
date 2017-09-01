@@ -129,7 +129,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
                     encumbered: thisHolding.get('totalencumbered'),
                     free: thisHolding.get('total') - thisHolding.get('totalencumbered'),
                     breakdown: this.formatBreakdown(thisHolding.get('breakdown'))
-                }
+                };
             }
         );
 
