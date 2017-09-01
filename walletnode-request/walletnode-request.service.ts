@@ -10,6 +10,12 @@ import {
 } from './walletnode-request.service.model';
 import _ from 'lodash';
 
+interface RequestIssueHolding {
+    walletId: number;
+    issuer: string;
+    instrument: string;
+}
+
 interface RequestWalletAddress {
     walletId: number;
     namespace?: string;
@@ -66,6 +72,12 @@ export class WalletNodeRequestService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
+    /**
+     * Request Wallet Holding for a Wallet ID
+     *
+     * @param {RequestWalletAddress} requestData {walletId}
+     * @returns {any}
+     */
     requestWalletHolding(requestData: RequestWalletAddress): any {
 
         const messageBody: RequestWalletHoldingMessageBody = {
@@ -74,6 +86,24 @@ export class WalletNodeRequestService {
             namespace: _.get(requestData, 'namespace', ''),
             classid: _.get(requestData, 'classId', ''),
             address: _.get(requestData, 'address', '')
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
+    }
+
+    /**
+     * Request Issue Holding for Asset {Issue|Instrument}
+     *
+     * @param {RequestWalletAddress} requestData {walletId, issuer, instrument}
+     * @returns {any}
+     */
+    requestWalletIssueHolding(requestData: RequestIssueHolding): any {
+
+        const messageBody: RequestWalletHoldingMessageBody = {
+            topic: 'holders',
+            walletid: _.get(requestData, 'walletId', 0),
+            namespace: _.get(requestData, 'issuer', ''),
+            classid: _.get(requestData, 'instrument', ''),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
