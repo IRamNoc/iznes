@@ -17,7 +17,8 @@ import {
     MyWalletHoldingReducer,
     SET_WALLET_HOLDING,
     getWalletHoldingByAsset,
-    getWalletHoldingByAddress
+    getWalletHoldingByAddress,
+    SET_ISSUE_HOLDING
 } from './my-wallet-holding';
 
 import {
@@ -51,7 +52,8 @@ export {
 export {
     SET_WALLET_HOLDING,
     getWalletHoldingByAddress,
-    getWalletHoldingByAsset
+    getWalletHoldingByAsset,
+    SET_ISSUE_HOLDING
 };
 
 export {

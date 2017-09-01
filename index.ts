@@ -25,7 +25,8 @@ export {
     getWalletDirectory,
     getWalletDirectoryList,
     getManagedWallets,
-    getManageWalletList
+    getManageWalletList,
+    SET_ISSUE_HOLDING
 } from './wallet';
 
 export {
