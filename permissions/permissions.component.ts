@@ -29,6 +29,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     private adminGroupListSub:any;
     private adminPermAreaListSub:any;
     private txPermAreaListSub:any;
+    private subscriptions = {};
 
     /* Lists set by thos observables. */
     public allGroupList:any; // All lists.
@@ -72,7 +73,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         this.groupTypes = userAdminService.getGroupTypes();
 
         /* Subscribe to the admin group list observable. */
-        this.adminGroupListSub = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+        this.subscriptions['adminGroupList'] = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
             /* TODO - get the tx group list too and merge it with the admin list. */
             this.allGroupList = this.convertAdminGroupsToArray(list);
 
@@ -81,7 +82,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         });
 
         /* Subscribe to the admin group list observable. */
-        this.adminPermAreaListSub = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
+        this.subscriptions['adminPermAreaList'] = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
             /* Set the list. */
             this.adminPermAreasList = list;
 
@@ -92,7 +93,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         });
 
-        this.txPermAreaListSub = this.userAdminService.getTxPermAreaListSubject().subscribe((list) => {
+        this.subscriptions['txPermAreaList'] = this.userAdminService.getTxPermAreaListSubject().subscribe((list) => {
             /* Set the list. */
             this.txPermAreasList = list;
 
@@ -129,6 +130,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit():void {
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
+
+        /* Ask for update from the service above. */
+        this.userAdminService.updateState();
     }
 
     /**
@@ -215,7 +219,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      public handleDelete (index):void {
          console.log( "Deleting "+ index );
          /* Check that the array has a length... */
-         if ( ! this.allGroupList.length || ! index ) {
+         if ( ! this.allGroupList.length || (! index && index !== 0) ) {
              return;
          }
 
@@ -255,6 +259,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Push the edit tab into the array. */
          let group = this.allGroupList[index];
 
+         /* TODO - get the permissions for this group. */
          console.log( "EDITTING GROUP: ", group );
 
          /* And also prefill the form... let's sort some of the data out. */
@@ -399,8 +404,12 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
           /* Detach the change detector on destroy. */
           this.changeDetectorRef.detach();
 
-          /* Unsunscribe Observables. */
-          this.adminGroupListSub.unsubscribe();
-          this.adminPermAreaListSub.unsubscribe();
+          /* Unsunscribe all Observables. */
+          let key;
+          for ( key in this.subscriptions ) {
+              if ( this.subscriptions[key].unsubscribe ) {
+                  this.subscriptions[key].unsubscribe();
+              }
+          }
       }
 }

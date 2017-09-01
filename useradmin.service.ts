@@ -142,56 +142,64 @@ export class UserAdminService {
         private ngRedux: NgRedux<any>,
     ) {
         let asyncTaskPipe;
-        /* Let's request the user's list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+        const state = this.ngRedux.getState();
 
-        // Send a saga action to save the users list.
-        // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_ADMIN_USERLIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+        /* Let's request the user's list, this is the saga pipe function. */
+        if ( ! Object.keys(getUsersList(state))[0] ) {
+            asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+
+            // Send a saga action to save the users list.
+            // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_ADMIN_USERLIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* Let's request the admin perm area list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
+        if ( ! getAdminPermAreaList(state).length ) {
+            asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
 
-        // Send a saga action to save the admin perm area list.
-        // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_ADMIN_PERM_AREAS_LIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+            // Send a saga action to save the admin perm area list.
+            // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_ADMIN_PERM_AREAS_LIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* Let's request the tx perm area list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
+        if ( ! getTxPermAreaList(state).length ) {
+            asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
 
-        // Send a saga action to save the tx perm area list.
-        // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_TX_PERM_AREAS_LIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+            // Send a saga action to save the tx perm area list.
+            // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_TX_PERM_AREAS_LIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* TODO - pull in the arrays on this object dynamically. */
 
@@ -209,7 +217,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    private updateState () {
+    public updateState () {
         /* Retrieve the redux store. */
         const state = this.ngRedux.getState();
 
@@ -217,8 +225,7 @@ export class UserAdminService {
         this.usersList = getUsersList(state);
         this.usersListSubject.next(this.usersList);
 
-        /* TODO - Get Permissions list and send a message to the permissions
-         * observable. */
+        /* Get adminGroupList groups list. */
         this.adminGroupList = getAdminPermissionGroup(state);
         this.adminGroupListSubject.next(this.adminGroupList);
 

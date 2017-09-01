@@ -82,6 +82,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit():void {
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
+
+        /* Ask for update from the service above. */
+        this.userAdminService.updateState();
     }
 
     ngOnDestroy ():void {
