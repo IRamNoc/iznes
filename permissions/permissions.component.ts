@@ -1,10 +1,13 @@
 /* Core imports. */
-import {Component, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
+
+/* Use the permissions grid. */
+import {PermissionGridComponent} from '@setl/permission-grid';
 
 /* Decorator. */
 @Component({
@@ -16,17 +19,49 @@ import {UserAdminService} from '../useradmin.service';
 
 /* Class. */
 export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
-    /* Group list. */
-    public adminGroupList:any;
-
     /* Tabs control */
     public tabsControl:any;
 
     /* Account types select. */
     public groupTypes:any;
 
-    /* Subscriptions from service observables. */
-    private adminGroupListSubscription:any;
+    /* Subs from service observables. */
+    private adminGroupListSub:any;
+    private adminPermAreaListSub:any;
+    private txPermAreaListSub:any;
+
+    /* Lists set by thos observables. */
+    public allGroupList:any; // All lists.
+    public adminPermAreasList:any;
+    public txPermAreasList:any;
+
+    /* The permission levels list. */
+    public permissionLevelsList = [
+        {
+            'id': 'canDelegate',
+            'text': 'Delegate'
+        },
+        {
+            'id': 'canRead',
+            'text': 'Read'
+        },
+        {
+            'id': 'canInsert',
+            'text': 'Insert'
+        },
+        {
+            'id': 'canUpdate',
+            'text': 'Update'
+        },
+        {
+            'id': 'canDelete',
+            'text': 'Delete'
+        },
+    ];
+
+    /* Old areas list. */
+    public filteredAdminAreaList = [];
+    public filteredTxAreaList = [];
 
     /* Constructor. */
     constructor (
@@ -37,8 +72,32 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         this.groupTypes = userAdminService.getGroupTypes();
 
         /* Subscribe to the admin group list observable. */
-        this.adminGroupListSubscription = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
-            this.adminGroupList = this.convertAdminGroupsToArray(list);
+        this.adminGroupListSub = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+            /* TODO - get the tx group list too and merge it with the admin list. */
+            this.allGroupList = this.convertAdminGroupsToArray(list);
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        /* Subscribe to the admin group list observable. */
+        this.adminPermAreaListSub = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.adminPermAreasList = list;
+
+            /* Call to filter lists for UI. */
+            this.filterAreaLists();
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.txPermAreaListSub = this.userAdminService.getTxPermAreaListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.txPermAreasList = list;
+
+            /* Call to filter lists for UI. */
+            this.filterAreaLists();
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -58,7 +117,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                     {
                         "name": new FormControl(''),
                         "description": new FormControl(''),
-                        "type": new FormControl( [] )
+                        "type": new FormControl( [] ),
+                        "permissions": new FormControl([])
                     }
                 ),
                 "active": false
@@ -66,27 +126,44 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         ]
     }
 
-    /* Handles a ng2-select selection. */
-    public selected(propertyName:string, value:any):void {
-        this[propertyName] = value;
-    }
-
-    /* Handles a ng2-select deletion. */
-    public removed(propertyName:string, value:any):void {
-        this[propertyName] = undefined;
-    }
-
-    ngAfterViewInit() {
+    ngAfterViewInit():void {
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
     }
 
-    ngOnDestroy ():void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
+    /**
+     * Filter Area Lists
+     * -----------------
+     * Updates the filtered lists used by UI elements.
+     *
+     * @return {void}
+     */
+    private filterAreaLists ():void {
+        /* Let's do admin areas first. */
+        if ( Array.isArray(this.adminPermAreasList) ) {
+            this.filteredAdminAreaList = this.adminPermAreasList.map(this.extractArea)
+        }
 
-        /* Unsunscribe Observables. */
-        this.adminGroupListSubscription.unsubscribe();
+        /* Then let's do the tx areas. */
+        if ( Array.isArray(this.txPermAreasList) ) {
+            this.filteredTxAreaList = this.txPermAreasList.map(this.extractArea);
+        }
+    }
+
+    /**
+     * Extract area
+     * ------------
+     * Extracts an area from a more complex object.
+     *
+     * @param {area} - the complex area object.
+     *
+     * @return {extractedArea} - the less complex object.
+     */
+    private extractArea (area):{id: string, text: string} {
+        return {
+            'id': area.permissionID,
+            'text': area.permissionName
+        }
     }
 
     /**
@@ -109,7 +186,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             newArray[ newArray.length - 1 ].index = i++;
 
             /* Make these all admin type groups. */
-            newArray[ newArray.length - 1 ].category = 1;
+            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: 1 } );
         }
         return newArray;
     }
@@ -138,14 +215,14 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      public handleDelete (index):void {
          console.log( "Deleting "+ index );
          /* Check that the array has a length... */
-         if ( ! this.adminGroupList.length || ! index ) {
+         if ( ! this.allGroupList.length || ! index ) {
              return;
          }
 
          /* Set the array to an identical array, lacking the asked index. */
-         this.adminGroupList = [
-             ...this.adminGroupList.slice(0, index - 1),
-             ...this.adminGroupList.slice(index, this.adminGroupList.length)
+         this.allGroupList = [
+             ...this.allGroupList.slice(0, index - 1),
+             ...this.allGroupList.slice(index, this.allGroupList.length)
          ];
 
          /* Return. */
@@ -166,7 +243,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Check if the tab is already open. */
          let i;
          for ( i = 0; i < this.tabsControl.length; i++ ) {
-             if ( this.tabsControl[i].groupId === this.adminGroupList[index].groupId ) {
+             if ( this.tabsControl[i].groupId === this.allGroupList[index].groupId ) {
                  /* Found the index for that tab, lets activate it... */
                  this.setTabActive(i);
 
@@ -176,19 +253,20 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          }
 
          /* Push the edit tab into the array. */
-         let group = this.adminGroupList[index];
-         console.log( "GROUP: ", group);
-         let groupType = this.userAdminService.resolveAdminGroupType( { id: group.category } );
+         let group = this.allGroupList[index];
+
+         console.log( "EDITTING GROUP: ", group );
 
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
-             "title": "<i class='fa fa-pencil'></i> "+ this.adminGroupList[ index ].groupName,
+             "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
              "groupId": group.userId,
              "formControl": new FormGroup(
                  {
                      "name": new FormControl( group.groupName ),
                      "description": new FormControl( group.groupDescription ),
-                     "type": new FormControl( groupType )
+                     "type": new FormControl( group.category ),
+                     "permissions": new FormControl([])
                  }
              ),
              "active": false // this.editFormControls
@@ -251,7 +329,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              {
                  "name": new FormControl(''),
                  "description": new FormControl(''),
-                 "type": new FormControl( [] )
+                 "type": new FormControl([]),
+                 "permissions": new FormControl([])
              }
          );
 
@@ -262,34 +341,33 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          return;
      }
 
-
-      /**
-       * Close Tab
-       * ---------
-       * Removes a tab from the tabs control array, in effect, closing it.
-       *
-       * @param {index} number - the tab inded to close.
-       *
-       * @return {void}
-       */
-      public closeTab (index) {
-          /* Validate that we have index. */
-          if ( ! index && index !== 0 ) {
-              return;
-          }
-
-          /* Remove the object from the tabsControl. */
-          this.tabsControl = [
-              ...this.tabsControl.slice(0, index),
-              ...this.tabsControl.slice(index + 1, this.tabsControl.length)
-          ];
-
-          /* Reset tabs. */
-          this.setTabActive(0);
-
-          /* Return */
+    /**
+     * Close Tab
+     * ---------
+     * Removes a tab from the tabs control array, in effect, closing it.
+     *
+     * @param {index} number - the tab inded to close.
+     *
+     * @return {void}
+     */
+    public closeTab (index) {
+        /* Validate that we have index. */
+        if ( ! index && index !== 0 ) {
           return;
-      }
+        }
+
+        /* Remove the object from the tabsControl. */
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        /* Reset tabs. */
+        this.setTabActive(0);
+
+        /* Return */
+        return;
+    }
 
       /**
        * Set Tab Active
@@ -317,4 +395,12 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
           this.changeDetectorRef.detectChanges();
       }
 
+      ngOnDestroy ():void {
+          /* Detach the change detector on destroy. */
+          this.changeDetectorRef.detach();
+
+          /* Unsunscribe Observables. */
+          this.adminGroupListSub.unsubscribe();
+          this.adminPermAreaListSub.unsubscribe();
+      }
 }
