@@ -4,6 +4,10 @@ export interface RequestAdminUsersMessageBody extends MemberNodeMessageBody {
     token: string;
 }
 
+export interface GetPermissionAreaListBody extends MemberNodeMessageBody {
+    token: string;
+}
+
 export interface RequestOwnWalletsMessage extends MemberNodeRequest {
     MessageBody: RequestAdminUsersMessageBody;
 }
@@ -15,4 +19,13 @@ export interface CreateUserMessageBody extends MemberNodeMessageBody {
     account: string;
     userType: string;
     password: string;
+}
+
+export interface EditUserMessageBody extends MemberNodeMessageBody {
+    token: string;
+    email: string;
+    account: string;
+    userType: string;
+    userId: string;
+    status: string;
 }
