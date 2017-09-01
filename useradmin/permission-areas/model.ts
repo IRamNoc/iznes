@@ -8,8 +8,21 @@ export interface AdminPermAreaDetail {
     permissionName:string;
 }
 
-export interface AdminPermAreasState {
+export interface TxPermAreaDetail {
+    canDelegate:number;
+    canDelete:number;
+    canInsert:number;
+    canRead:number;
+    canUpdate:number;
+    permissionID:number;
+    permissionName:string;
+}
+
+export interface PermAreasState {
     adminPermAreaList: {
         [key: number]: AdminPermAreaDetail
+    };
+    txPermAreaList: {
+        [key: number]: TxPermAreaDetail
     };
 }

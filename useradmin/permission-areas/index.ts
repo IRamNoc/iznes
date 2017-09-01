@@ -2,15 +2,19 @@
 export {name} from './__init__';
 
 /* Reducer. */
-export {PermissionAreasReducer} from './reducer';
+export {PermAreasReducer} from './reducer';
 
 /* State. */
-export {AdminPermAreasState} from './model';
+export {PermAreasState} from './model';
 
 /* Actions. */
 export {
-    SET_ADMIN_PERMISSION_AREAS_LIST,
+    SET_ADMIN_PERM_AREAS_LIST,
+    SET_TX_PERM_AREAS_LIST,
 } from './actions';
 
 /* Selectors. */
-export {getAdminPermAreaList} from './selectors';
+export {
+    getAdminPermAreaList,
+    getTxPermAreaList
+} from './selectors';
