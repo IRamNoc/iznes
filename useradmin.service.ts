@@ -13,9 +13,13 @@ import {
 
 import {
     SET_ADMIN_USERLIST,
+    SET_ADMIN_PERM_AREAS_LIST,
+    SET_TX_PERM_AREAS_LIST,
     getUsersList,
+    getAdminPermissionGroup,
     getTranPermissionGroup,
-    getAdminPermissionGroup
+    getAdminPermAreaList,
+    getTxPermAreaList,
 } from '@setl/core-store';
 
 @Injectable()
@@ -99,6 +103,8 @@ export class UserAdminService {
 
     public usersList:{};
     public adminGroupList:{};
+    public adminPermAreaList:{};
+    public txPermAreaList:{};
 
     @Output()
     public usersListSubject = new Subject<any>();
@@ -112,13 +118,27 @@ export class UserAdminService {
         return this.adminGroupListSubject.asObservable();
     }
 
+    @Output()
+    public adminPermAreaListSubject = new Subject<any>();
+    public getAdminPermAreaListSubject () {
+        return this.adminPermAreaListSubject.asObservable();
+    }
+
+    @Output()
+    public txPermAreaListSubject = new Subject<any>();
+    public getTxPermAreaListSubject () {
+        return this.txPermAreaListSubject.asObservable();
+    }
+
+
     /* Constructor. */
     constructor (
         private adminUsersService:AdminUsersService,
         private ngRedux: NgRedux<any>,
     ) {
+        let asyncTaskPipe;
         /* Let's request the user's list, this is the saga pipe function. */
-        const asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+        asyncTaskPipe = this.adminUsersService.requestMyUsersList();
 
         // Send a saga action to save the users list.
         // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
@@ -128,6 +148,40 @@ export class UserAdminService {
         this.ngRedux.dispatch(
             SagaHelper.runAsync(
                 [SET_ADMIN_USERLIST],
+                [],
+                asyncTaskPipe,
+                {}
+            )
+        );
+
+        /* Let's request the admin perm area list, this is the saga pipe function. */
+        asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
+
+        // Send a saga action to save the admin perm area list.
+        // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
+        // Actions to dispatch, when request fail:  None.
+        // Saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_ADMIN_PERM_AREAS_LIST],
+                [],
+                asyncTaskPipe,
+                {}
+            )
+        );
+
+        /* Let's request the tx perm area list, this is the saga pipe function. */
+        asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
+
+        // Send a saga action to save the tx perm area list.
+        // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
+        // Actions to dispatch, when request fail:  None.
+        // Saga pipe function descriptor.
+        // Saga pipe function arguments.
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_TX_PERM_AREAS_LIST],
                 [],
                 asyncTaskPipe,
                 {}
@@ -162,6 +216,14 @@ export class UserAdminService {
          * observable. */
         this.adminGroupList = getAdminPermissionGroup(state);
         this.adminGroupListSubject.next(this.adminGroupList);
+
+        /* Get admin perm area list and send message out. */
+        this.adminPermAreaList = getAdminPermAreaList(state);
+        this.adminPermAreaListSubject.next(this.adminPermAreaList);
+
+        /* Get tx perm area list and send message out. */
+        this.txPermAreaList = getTxPermAreaList(state);
+        this.txPermAreaListSubject.next(this.txPermAreaList);
     }
 
     public createNewUser (data):void {
@@ -372,7 +434,7 @@ export class UserAdminService {
      *
      * @return {groupType} - the complete object of the group type.
      */
-    public resolveAdminGroupType ( query ):any {
+    public resolveGroupType ( query ):any {
         /* Let's first check which we have. */
         let identifier = "";
         if ( query.id ) identifier = "id";

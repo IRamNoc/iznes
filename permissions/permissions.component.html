@@ -41,7 +41,7 @@
                 <clr-dg-column>Group Name</clr-dg-column>
                 <clr-dg-column>Group Type</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let group of adminGroupList">
+                <clr-dg-row *clrDgItems="let group of allGroupList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button (click)="handleEdit(group.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
@@ -49,7 +49,7 @@
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
-                    <clr-dg-cell>{{group.groupDescription}}</clr-dg-cell>
+                    <clr-dg-cell>{{group.category.text }}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -102,6 +102,29 @@
                         </div>
                     </div>
 
+                    <!--
+                        Permissions grids,
+                        1 - group or 2 - transactional.
+                    -->
+                    <div
+                    *ngIf="formControl.controls['type']._value[0]"
+                    [ngSwitch]="formControl.controls['type']._value[0].id">
+
+                        <setl-permission-grid *ngSwitchCase="'1'"
+                            [permissionAreas]="permissionAreasList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="handlePermissionUpdate($event)"
+                        ></setl-permission-grid>
+
+                        <!-- TODO get the tx permissions stuff and tick it in here. -->
+                        <!-- <setl-permission-grid *ngSwitchCase="'2'"
+                            [permissionAreas]="permissionAreasList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="handlePermissionUpdate($event)"
+                        ></setl-permission-grid> -->
+
+                    </div>
+
                     <div class="form-group button-group">
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary">
@@ -112,12 +135,6 @@
                             </button>
                         </div>
                     </div>
-
-                    <setl-permission-grid
-                        [permissionAreas]="permissionAreasList"
-                        [permissionLevels]="permissionLevelsList"
-                        (updateEvent)="handlePermissionUpdate($event)"
-                    ></setl-permission-grid>
                 </div>
             </form>
         </div>
@@ -164,10 +181,36 @@
                         </div>
                     </div>
 
+                    <!--
+                        Permissions grids,
+                        1 - group or 2 - transactional.
+                    -->
+                    <div
+                    *ngIf="formControl.controls['type']._value[0]"
+                    [ngSwitch]="formControl.controls['type']._value[0].id">
+
+                        <setl-permission-grid *ngSwitchCase="'1'"
+                            [permissionAreas]="permissionAreasList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="handlePermissionUpdate($event)"
+                        ></setl-permission-grid>
+
+                        <!-- TODO get the tx permissions stuff and tick it in here. -->
+                        <!-- <setl-permission-grid *ngSwitchCase="'2'"
+                            [permissionAreas]="permissionAreasList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="handlePermissionUpdate($event)"
+                        ></setl-permission-grid> -->
+
+                    </div>
+
                     <div class="form-group button-group">
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                <i class="fa fa-cancel"></i> <span class="ml_translated" mltag="txt_cancel">Cancel</span>
                             </button>
                         </div>
                     </div>
