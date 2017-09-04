@@ -12,7 +12,7 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {fromJS} from 'immutable';
-import {Subscription} from "rxjs/Subscription";
+import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'app-issue-asset',
@@ -38,7 +38,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     ];
 
     // Redux unsubscription
-    reduxUnsubscribe: Subscription<any>;
+    reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,

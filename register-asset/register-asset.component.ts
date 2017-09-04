@@ -15,7 +15,7 @@ import {
     finishRegisterInstrumentNotification
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Subscription} from 'rxjs/Subscription';
+import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'app-register-asset',
@@ -31,7 +31,7 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     };
 
     // Redux Unsubscription
-    reduxUnsubscribe: Subscription<any>;
+    reduxUnsubscribe: Unsubscribe;
 
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,

@@ -19,6 +19,7 @@ import {
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Subscription} from "rxjs/Subscription";
+import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'app-register-issuer',
@@ -34,7 +35,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     private connectedWalleId: number;
 
     // Redux Unsubscription
-    reduxUnsubscribe: Subscription<any>;
+    reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletnodeTxService: WalletnodeTxService,
