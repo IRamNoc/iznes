@@ -1,0 +1,54 @@
+<div class="form-group">
+  <label class="control-label">
+    Recipient Type
+  </label>
+  <ng-select
+    [items]="addressTypes"
+    [allowClear]="true"
+    placeholder="Select Address Type"
+    [formControl]="addressTypeSelect"
+    (selected)="setSelectedAddressType($event)"
+  >
+  </ng-select>
+</div>
+
+<div [ngSwitch]="selectedAddressType">
+  <div class="form-group" *ngSwitchCase="1">
+    <label class="control-label">
+      Relationship
+    </label>
+    <ng-select
+      [items]="relationshipArray"
+      [allowClear]="true"
+      placeholder="Select Relationship"
+      (selected)="writeValue($event.id)"
+      (blur)="onBlur()"
+      [formControl]="relationshipSelect"
+    >
+    </ng-select>
+  </div>
+
+  <div class="form-group" *ngSwitchCase="2">
+    <label class="control-label">
+      Owned Address
+    </label>
+    <ng-select
+      [items]="ownWalletAddressArray"
+      [allowClear]="true"
+      placeholder="Select Owned Address"
+      (selected)="writeValue($event.id)"
+      (blur)="onBlur()"
+      [formControl]="owndAddressSelect"
+    >
+    </ng-select>
+  </div>
+
+  <div class="form-group col-sm-6" *ngSwitchCase="3">
+    <label class="control-label">
+      Other Address
+    </label>
+    <input type="text" placehoder="Enter address" (change)="writeValue($event.target.value)"
+           (blur)="onBlur()"
+           [formControl]="otherAddress"/>
+  </div>
+</div>
