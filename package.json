@@ -33,7 +33,7 @@
         "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git",
         "@setl/core-useradmin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git",
         "@setl/jaspero-ng2-alerts": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git",
-        "@setl/permission-grid": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular_components/permission-grid.git",
+        "@setl/permission-grid": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git",
         "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git",
         "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git",
         "@webcomponents/custom-elements": "1.0.0-alpha.3",
