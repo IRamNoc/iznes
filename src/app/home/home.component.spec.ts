@@ -1,13 +1,13 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HomeComponent} from './home.component';
-import {NavigationSidebarComponent} from '../../../setl_modules/core-layout/navigation-sidebar/navigation-sidebar.component';
+import {NavigationSidebarComponent} from '@setl/core-layout';
 import {RouterModule} from '@angular/router';
 import {ROUTES} from '../app.routes';
-import {BlankLayoutComponent} from '../../../setl_modules/core-layout/layouts/blank/blank.component';
-import {BasicLayoutComponent} from '../../../setl_modules/core-layout/layouts/basic/basic.component';
+import {BlankLayoutComponent} from '@setl/core-layout';
+import {BasicLayoutComponent} from '@setl/core-layout';
 import {SetlLoginComponent} from '@setl/core-login';
-import {NavigationTopbarComponent} from '../../../setl_modules/core-layout/navigation-topbar/navigation-topbar.component';
+import {NavigationTopbarComponent} from '@setl/core-layout';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 import {FormElementsComponent} from '../ui-elements/form-elements.component';
@@ -15,7 +15,6 @@ import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
 import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWalletsTableComponent} from '@setl/core-useradmin/wallets/subcomponents/wallets-table.component';
-import {AdminPermissionsTableComponent} from '@setl/core-useradmin/permissions/subcomponents/permissions-table.component';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule, APP_BASE_HREF} from '@angular/common';
