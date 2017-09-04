@@ -16,7 +16,8 @@ import {
     SET_MANAGED_WALLETS,
     SET_WALLET_HOLDING,
     clearRequestedWalletIssuer,
-    clearRequestedWalletInstrument
+    clearRequestedWalletInstrument,
+    SET_MY_INSTRUMENTS_LIST
 } from '@setl/core-store';
 
 import {SagaHelper} from '@setl/utils';
@@ -195,6 +196,25 @@ export class InitialisationService {
         ));
 
         return true;
+    }
+
+
+    static requestWalletInstruments(ngRedux: NgRedux<any>,
+                                    walletNodeRequestService: WalletNodeRequestService,
+                                    walletId: number): void {
+
+        // Create a saga pipe.
+        const asyncTaskPipe = walletNodeRequestService.walletInstrumentRequest({
+            walletId
+        });
+
+        // Send a saga action.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MY_INSTRUMENTS_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**
