@@ -62,7 +62,7 @@ export class WalletNodeSocketService {
         try {
 
             // Instantiate WebSocket object.
-            this.websocket = new SetlWebSocket('ws:', '127.0.0.1', 13535, '', this.callBackRegister, true, ['authenticate']);
+            this.websocket = new SetlWebSocket('ws:', '10.0.1.106', 13535, '', this.callBackRegister, true, ['authenticate']);
 
             this.websocket.openWebSocket();
 
