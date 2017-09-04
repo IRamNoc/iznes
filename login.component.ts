@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormsModule, NgModel} from '@angular/forms';
 
 /* Notifications. */
@@ -36,6 +36,7 @@ import {
 } from '@setl/core-store';
 
 import {MemberSocketService} from '@setl/websocket-service';
+import {Subscription} from "rxjs/Subscription";
 
 
 /* Dectorator. */
@@ -47,7 +48,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 })
 
 /* Class. */
-export class SetlLoginComponent {
+export class SetlLoginComponent implements OnDestroy {
 
     public toasterconfig: any;
     public prompt: string;
@@ -58,6 +59,9 @@ export class SetlLoginComponent {
     loginForm: FormGroup;
     username: AbstractControl;
     password: AbstractControl;
+
+    // Redux unsubscription
+    reduxUnsubscribe: Subscription<any>;
 
     // @select(state =>
     //     state.user.myDetail.username
@@ -77,7 +81,7 @@ export class SetlLoginComponent {
                 fb: FormBuilder,
                 private router: Router) {
         // Subscribe to app store
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
@@ -146,5 +150,9 @@ export class SetlLoginComponent {
             );
         }
 
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
     }
 }
