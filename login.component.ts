@@ -36,7 +36,7 @@ import {
 } from '@setl/core-store';
 
 import {MemberSocketService} from '@setl/websocket-service';
-import {Subscription} from "rxjs/Subscription";
+import {Unsubscribe} from 'redux';
 
 
 /* Dectorator. */
@@ -61,7 +61,7 @@ export class SetlLoginComponent implements OnDestroy {
     password: AbstractControl;
 
     // Redux unsubscription
-    reduxUnsubscribe: Subscription<any>;
+    reduxUnsubscribe: Unsubscribe;
 
     // @select(state =>
     //     state.user.myDetail.username
