@@ -4,9 +4,13 @@ import {RegisterIssuerComponent} from './register-issuer/register-issuer.compone
 import {RegisterAssetComponent} from './register-asset/register-asset.component';
 import {IssueAssetComponent} from './issue-asset/issue-asset.component';
 import {SelectModule} from 'ng2-select';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
-import {SetlPipesModule} from '@setl/utils';
+import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+
 
 @NgModule({
     imports: [
@@ -15,12 +19,13 @@ import {SetlPipesModule} from '@setl/utils';
         FormsModule,
         ReactiveFormsModule,
         ClarityModule.forRoot(),
-        SetlPipesModule
+        SetlPipesModule,
+        SetlComponentsModule
     ],
     declarations: [
         RegisterIssuerComponent,
         RegisterAssetComponent,
-        IssueAssetComponent
+        IssueAssetComponent,
     ],
     exports: [
         RegisterIssuerComponent,

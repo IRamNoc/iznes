@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
@@ -12,13 +12,14 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {fromJS} from 'immutable';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'app-issue-asset',
     templateUrl: './issue-asset.component.html',
     styleUrls: ['./issue-asset.component.css']
 })
-export class IssueAssetComponent implements OnInit {
+export class IssueAssetComponent implements OnInit, OnDestroy {
     issueAssetForm: FormGroup;
     connectedWalletId: number;
     walletIssuerDetail: {
@@ -28,11 +29,22 @@ export class IssueAssetComponent implements OnInit {
 
     walletInstrumentsSelectItems: Array<any>;
 
+    toRelationshipArray = [
+        {id: 'relationship1', text: 'relationsihp1'}
+    ];
+
+    ownedAddressArray = [
+        {id: 'address1', text: 'addresss1'}
+    ];
+
+    // Redux unsubscription
+    reduxUnsubscribe: Subscription<any>;
+
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService) {
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
@@ -41,7 +53,7 @@ export class IssueAssetComponent implements OnInit {
         this.issueAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required)
+            amount: new FormControl('', Validators.required),
         });
     }
 
@@ -89,6 +101,7 @@ export class IssueAssetComponent implements OnInit {
     }
 
     issueAsset() {
+        console.log(this.issueAssetForm)
         if (this.issueAssetForm.valid) {
             console.log(this.issueAssetForm.value);
         }
@@ -125,6 +138,10 @@ export class IssueAssetComponent implements OnInit {
         //     }
         // ));
 
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
     }
 
     showResponseModal(currentRegisterInstrumentRequest) {
