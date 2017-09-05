@@ -1,18 +1,32 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {SagaHelper} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
-import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
+import {SagaHelper, walletHelper} from '@setl/utils';
+import {NgRedux, select} from '@angular-redux/store';
+import {
+    WalletNodeRequestService,
+    WalletnodeTxService,
+    InitialisationService,
+    MyWalletsService
+} from '@setl/core-req-services';
 import {
     getConnectedWallet,
     getRequestedInstrumentState,
     setRequestedWalletInstrument,
-    SET_MY_INSTRUMENTS_LIST,
-    getMyInstrumentsList
+    getMyInstrumentsList,
+    getWalletAddressList,
+    getRequestWalletToRelationshipState,
+    getWalletToRelationshipList,
+    setRequestedWalletToRelationship,
+    getWalletDirectoryList,
+    ISSUE_ASSET_SUCCESS,
+    ISSUE_ASSET_FAIL,
+    getNewIssueAssetRequest,
+    finishIssueAssetNotification
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {fromJS} from 'immutable';
 import {Unsubscribe} from 'redux';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-issue-asset',
@@ -29,13 +43,13 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
     walletInstrumentsSelectItems: Array<any>;
 
-    toRelationshipArray = [
-        {id: 'relationship1', text: 'relationsihp1'}
-    ];
+    walletAddressSelectItems: Array<any>;
 
-    ownedAddressArray = [
-        {id: 'address1', text: 'addresss1'}
-    ];
+    toRelationshipSelectItems: Array<any>;
+
+    @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
+    @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -43,7 +57,8 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService) {
+                private walletnodeTxService: WalletnodeTxService,
+                private myWalletsServie: MyWalletsService) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
@@ -55,6 +70,10 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             recipient: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
         });
+
+        this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState));
+        this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState));
+        this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => this.showResponseModal(newIssueAssetRequest));
     }
 
     ngOnInit() {
@@ -66,77 +85,77 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         // Set connected WalletId
         this.connectedWalletId = getConnectedWallet(newState);
 
-        // If my issuer list is not yet requested,
-        // Request wallet issuers
-        const RequestedIssuerState = getRequestedInstrumentState(newState);
-        if (!RequestedIssuerState) {
-            this.requestWalletInstruments();
-        }
+        // Get wallet addresses and update wallet address items list
+        const currentWalletAddressList = getWalletAddressList(newState);
+        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
 
         const walletInstruments = getMyInstrumentsList(newState);
 
-        this.walletInstrumentsSelectItems = walletInstrumentListToSelectItem(walletInstruments);
-        console.log('items', this.walletInstrumentsSelectItems);
+        this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
+
+        const walletToRelationship = getWalletToRelationshipList(newState);
+        const walletDirectoryList = getWalletDirectoryList(newState);
+
+        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
     }
 
-    requestWalletInstruments() {
+    requestWalletInstruments(requestedInstrumentState) {
 
-        const walletId = this.connectedWalletId;
+        if (!requestedInstrumentState) {
+            const walletId = this.connectedWalletId;
 
-        // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
-        this.ngRedux.dispatch(setRequestedWalletInstrument());
+            // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
+            this.ngRedux.dispatch(setRequestedWalletInstrument());
 
-        // Create a saga pipe.
-        const asyncTaskPipe = this.walletNodeRequestService.walletInstrumentRequest({
-            walletId
-        });
+            InitialisationService.requestWalletInstruments(this.ngRedux, this.walletNodeRequestService, walletId);
+        }
+    }
 
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_MY_INSTRUMENTS_LIST],
-            [],
-            asyncTaskPipe,
-            {}
-        ));
+    requestWalletToRelationship(requestedInstrumentState) {
+
+        if (!requestedInstrumentState) {
+            const walletId = this.connectedWalletId;
+
+            // Set request wallet to-relationship flag to true, to indicate that we have already requested wallet to
+            // relationship.
+            this.ngRedux.dispatch(setRequestedWalletToRelationship());
+
+            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsServie, walletId);
+        }
     }
 
     issueAsset() {
-        console.log(this.issueAssetForm)
         if (this.issueAssetForm.valid) {
-            console.log(this.issueAssetForm.value);
+            const walletId = this.connectedWalletId;
+            const address = this.issueAssetForm.value.recipient;
+            const fullAssetId = _.get(this.issueAssetForm.value.asset, '[0].id', '');
+            const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
+            const namespace = fullAssetIdSplit.issuer;
+            const instrument = fullAssetIdSplit.instrument;
+            const amount = this.issueAssetForm.value.amount;
+
+            // Create a saga pipe.
+            const asyncTaskPipe = this.walletnodeTxService.issueAsset({
+                walletId,
+                address,
+                namespace,
+                instrument,
+                amount
+            });
+
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [ISSUE_ASSET_SUCCESS],
+                [ISSUE_ASSET_FAIL],
+                asyncTaskPipe,
+                {},
+                function (data) {
+                    console.log('issue asset:', data);
+                },
+                function (data) {
+                    console.log('fail', data);
+                }
+            ));
         }
-        // const walletId = this.connectedWalletId;
-        // const metaData = {};
-        // const address = this.walletIssuerDetail.walletIssuerAddress;
-        // const namespace = this.registerAssetForm.value.issuerIdentifier;
-        // const instrument = this.registerAssetForm.value.instrumentIdentifier;
-        //
-        // // Create a saga pipe.
-        // const asyncTaskPipe = this.walletnodeTxService.registerAsset({
-        //     walletId,
-        //     address,
-        //     namespace,
-        //     instrument,
-        //     metaData
-        // });
-        //
-        // // Send a saga action.
-        // // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // // saga pipe function descriptor.
-        // // Saga pipe function arguments.
-        // this.ngRedux.dispatch(SagaHelper.runAsync(
-        //     [REGISTER_ASSET_SUCCESS],
-        //     [REGISTER_ASSET_FAIL],
-        //     asyncTaskPipe,
-        //     {},
-        //     function (data) {
-        //
-        //     },
-        //     function (data) {
-        //         console.log('fail', data);
-        //     }
-        // ));
 
     }
 
@@ -144,53 +163,47 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         this.reduxUnsubscribe();
     }
 
-    showResponseModal(currentRegisterInstrumentRequest) {
-
-        this.alertsService.create('success', `
+    showResponseModal(issuerAssetResponse) {
+        if (issuerAssetResponse.needNotify) {
+            this.alertsService.create('success', `
             <table class="table grid">
 
                 <tbody>
                     <tr>
                         <td class="left"><b>Issuer:</b></td>
-                        <td>${currentRegisterInstrumentRequest.issuerIdentifier}</td>
+                        <td>${issuerAssetResponse.issuerIdentifier}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Instrument:</b></td>
-                        <td>${currentRegisterInstrumentRequest.instrument}</td>
+                        <td>${issuerAssetResponse.instrument}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Address:</b></td>
-                        <td>${currentRegisterInstrumentRequest.issuerAddress}</td>
+                        <td class="left"><b>Issuer Address:</b></td>
+                        <td>${issuerAssetResponse.issuerAddress}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>To Address:</b></td>
+                        <td>${issuerAssetResponse.toAddress}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Amount</b></td>
+                        <td>${issuerAssetResponse.amount}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Tx hash:</b></td>
-                        <td>${currentRegisterInstrumentRequest.txHash.substring(0, 10)}...</td>
+                        <td>${issuerAssetResponse.txHash.substring(0, 10)}...</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Tx hash:</b></td>
+                        <td>${issuerAssetResponse.needNotify}</td>
                     </tr>
                 </tbody>
             </table>
         `);
 
+            // this.ngRedux.dispatch(finishIssueAssetNotification());
+        }
     }
 
 }
 
-/**
- * Convert wallet instruments to an array the select2 can use to render a list a wallet instrument.
- * @param walletInstrumetnList
- * @return {any}
- */
-function walletInstrumentListToSelectItem(walletInstrumentList: object): Array<any> {
-    const walletInstrumentListImu = fromJS(walletInstrumentList);
-    const walletInstrumentSelectItem = walletInstrumentListImu.reduce(
-        (result, thisWalletInstrument, key) => {
-            result.push({
-                id: key,
-                text: key
-            });
-
-            return result;
-        }, []
-    );
-
-    return walletInstrumentSelectItem;
-}

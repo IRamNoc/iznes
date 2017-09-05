@@ -22,8 +22,8 @@
           </div>
 
           <various-address-select [formControl]="issueAssetForm.controls['recipient']"
-                                  [relationshipArray]="toRelationshipArray"
-                                  [ownWalletAddressArray]="ownedAddressArray"
+                                  [relationshipArray]="toRelationshipSelectItems"
+                                  [ownWalletAddressArray]="walletAddressSelectItems"
                                   [class.error]="!issueAssetForm.controls['recipient'].valid &&
                    issueAssetForm.controls['recipient'].touched"></various-address-select>
 

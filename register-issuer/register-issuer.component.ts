@@ -8,7 +8,7 @@ import {List, Map, fromJS} from 'immutable';
 import {
     WalletnodeTxService
 } from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, walletHelper} from '@setl/utils';
 import {
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
@@ -18,7 +18,6 @@ import {
 } from '@setl/core-store';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Subscription} from "rxjs/Subscription";
 import {Unsubscribe} from 'redux';
 
 @Component({
@@ -66,7 +65,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
         // Get wallet addresses and update wallet address items list
         const currentWalletAddressList = getWalletAddressList(newState);
-        this.walletAddressSelectItems = walletAddressListToSelectItem(currentWalletAddressList);
+        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
 
         // Set connected walletId
         this.connectedWalleId = getConnectedWallet(newState);
