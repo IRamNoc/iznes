@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {FormBuilder, FormGroup, AbstractControl, Validators} from '@angular/forms';
 import {
@@ -8,7 +8,7 @@ import {List, Map, fromJS} from 'immutable';
 import {
     WalletnodeTxService
 } from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, walletHelper} from '@setl/utils';
 import {
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
@@ -18,13 +18,14 @@ import {
 } from '@setl/core-store';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'app-register-issuer',
     templateUrl: './register-issuer.component.html',
     styleUrls: ['./register-issuer.component.css']
 })
-export class RegisterIssuerComponent implements OnInit {
+export class RegisterIssuerComponent implements OnInit, OnDestroy {
     walletAddressSelectItems: Array<any>;
 
     registerIssuerForm: FormGroup;
@@ -32,12 +33,15 @@ export class RegisterIssuerComponent implements OnInit {
     issuerAddress: AbstractControl;
     private connectedWalleId: number;
 
+    // Redux Unsubscription
+    reduxUnsubscribe: Unsubscribe;
+
     constructor(private ngRedux: NgRedux<any>,
                 private walletnodeTxService: WalletnodeTxService,
                 private alertsService: AlertsService,
                 private fb: FormBuilder) {
 
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
@@ -61,7 +65,7 @@ export class RegisterIssuerComponent implements OnInit {
 
         // Get wallet addresses and update wallet address items list
         const currentWalletAddressList = getWalletAddressList(newState);
-        this.walletAddressSelectItems = walletAddressListToSelectItem(currentWalletAddressList);
+        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
 
         // Set connected walletId
         this.connectedWalleId = getConnectedWallet(newState);
@@ -106,6 +110,10 @@ export class RegisterIssuerComponent implements OnInit {
 
         }
         return false;
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
     }
 
     showResponseModal(currentRegisterIssuerRequest) {

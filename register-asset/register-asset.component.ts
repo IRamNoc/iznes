@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
@@ -15,13 +15,14 @@ import {
     finishRegisterInstrumentNotification
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'app-register-asset',
     templateUrl: './register-asset.component.html',
     styleUrls: ['./register-asset.component.css']
 })
-export class RegisterAssetComponent implements OnInit {
+export class RegisterAssetComponent implements OnInit, OnDestroy {
     registerAssetForm: FormGroup;
     connectedWalletId: number;
     walletIssuerDetail: {
@@ -29,11 +30,14 @@ export class RegisterAssetComponent implements OnInit {
         walletIssuerAddress: string;
     };
 
+    // Redux Unsubscription
+    reduxUnsubscribe: Unsubscribe;
+
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService) {
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
@@ -131,6 +135,10 @@ export class RegisterAssetComponent implements OnInit {
             ));
 
         }
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
     }
 
     showResponseModal(currentRegisterInstrumentRequest) {
