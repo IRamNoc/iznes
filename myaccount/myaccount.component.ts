@@ -12,7 +12,7 @@ import {Component, AfterViewInit} from "@angular/core";
 })
 
 
-export class MyAccountComponent {
+export class SetlMyAccountComponent {
 
     public constructor() {
     }
