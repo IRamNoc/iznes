@@ -17,7 +17,8 @@ import {
     MyWalletHoldingReducer,
     SET_WALLET_HOLDING,
     getWalletHoldingByAsset,
-    getWalletHoldingByAddress
+    getWalletHoldingByAddress,
+    SET_ISSUE_HOLDING
 } from './my-wallet-holding';
 
 import {
@@ -36,6 +37,18 @@ import {
     getManageWalletList
 } from './managed-wallets';
 
+import {
+    WalletRelationshipState,
+    WalletRelationshipReducer,
+    SET_WALLET_TO_RELATIONSHIP,
+    setRequestedWalletToRelationship,
+    clearRequestedWalletToRelationship,
+
+    getWalletRelationship,
+    getWalletToRelationshipList,
+    getRequestWalletToRelationshipState
+} from './wallet-relationship';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -51,13 +64,14 @@ export {
 export {
     SET_WALLET_HOLDING,
     getWalletHoldingByAddress,
-    getWalletHoldingByAsset
+    getWalletHoldingByAsset,
+    SET_ISSUE_HOLDING
 };
 
 export {
     SET_WALLET_DIRECTORY,
     getWalletDirectory,
-    getWalletDirectoryList
+    getWalletDirectoryList,
 };
 
 export {
@@ -66,12 +80,22 @@ export {
     getManageWalletList
 };
 
+export {
+    SET_WALLET_TO_RELATIONSHIP,
+    setRequestedWalletToRelationship,
+    clearRequestedWalletToRelationship,
+    getWalletRelationship,
+    getWalletToRelationshipList,
+    getRequestWalletToRelationshipState
+};
+
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
     myWalletHolding: MyWalletHoldingState;
     walletDirectory: WalletDirectoryState;
     managedWallets: ManagedWalletsState;
+    walletRelationship: WalletRelationshipState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
@@ -79,7 +103,8 @@ export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
         myWallets: MyWalletsReducer,
         myWalletHolding: MyWalletHoldingReducer,
         walletDirectory: WalletDirectoryReducer,
-        managedWallets: ManagedWalletsReducer
+        managedWallets: ManagedWalletsReducer,
+        walletRelationship: WalletRelationshipReducer
 
     }
 );

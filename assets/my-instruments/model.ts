@@ -13,11 +13,23 @@ export interface NewInstrumentRequest {
     needNotify: boolean;
 }
 
+export interface NewIssueAssetRequest {
+    issuerIdentifier: string;
+    issuerAddress: string;
+    instrument: string;
+    toAddress: string;
+    amount: number;
+    txHash: string;
+    status: boolean;
+    needNotify: boolean;
+}
+
 export interface MyInstrumentsState {
     instrumentList: {
         [key: string]: InstrumentDetail
     };
     requestedWalletInstrument: boolean;
     newInstrumentRequest: NewInstrumentRequest;
+    newIssueAssetRequest: NewIssueAssetRequest;
 }
 
