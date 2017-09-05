@@ -2,12 +2,19 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
+import {StringFilter} from "clarity-angular";
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
 
 /* Use the permissions grid. */
 import {PermissionGridComponent} from '@setl/permission-grid';
+
+class TypeFilter implements StringFilter<any> {
+    accepts(group:any, search: string): boolean {
+        return group.category[0].text.toLowerCase().indexOf(search) >= 0;
+    }
+}
 
 /* Decorator. */
 @Component({
@@ -21,6 +28,7 @@ import {PermissionGridComponent} from '@setl/permission-grid';
 export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     /* Tabs control */
     public tabsControl:any;
+    public typeFilter = new TypeFilter();
 
     /* Account types select. */
     public groupTypes:any;
@@ -73,9 +81,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         this.groupTypes = userAdminService.getGroupTypes();
 
         /* Subscribe to the admin group list observable. */
-        this.subscriptions['adminGroupList'] = this.userAdminService.getAdminGroupListSubject().subscribe((list) => {
+        this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
             /* TODO - get the tx group list too and merge it with the admin list. */
-            this.allGroupList = this.convertAdminGroupsToArray(list);
+            this.allGroupList = this.convertGroupsToArray(list);
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -180,7 +188,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public convertAdminGroupsToArray (obj):Array<any> {
+    public convertGroupsToArray (obj):Array<any> {
         let i = 0, key, newArray = [];
         for (key in obj) {
             /* Push the new object. */
@@ -190,24 +198,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             newArray[ newArray.length - 1 ].index = i++;
 
             /* Make these all admin type groups. */
-            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: 1 } );
+            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: obj[key].type } );
         }
         return newArray;
     }
-
-    /**
-     * Handle Save
-     * Handles the user saving a group.
-     *
-     * @param {event}
-     * @return {void}
-     */
-     public handleSave ( event ):void {
-         /* Validate the group information. */
-
-         /* Return. */
-         return;
-     }
 
      /**
       * Handle Delete
@@ -259,18 +253,26 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Push the edit tab into the array. */
          let group = this.allGroupList[index];
 
+         /* Let's get the permission data. */
+         this.userAdminService.requestPermissions({
+             entityId: group.groupId,
+             isGroup: 1,
+             permissionId: 0, // get all.
+             includeGroup: 0  // not sure what this is.
+         });
+
          /* TODO - get the permissions for this group. */
          console.log( "EDITTING GROUP: ", group );
 
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
              "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
-             "groupId": group.userId,
+             "groupId": group.groupId,
              "formControl": new FormGroup(
                  {
                      "name": new FormControl( group.groupName ),
                      "description": new FormControl( group.groupDescription ),
-                     "type": new FormControl( group.category ),
+                     "type": new FormControl( { value: group.category, disabled: false } ),
                      "permissions": new FormControl([])
                  }
              ),
@@ -293,24 +295,107 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
       * @return {void}
       */
      public handleNewGroup (tabid:number):void {
-         /* Sort the data structure out. */
+         /*
+            1. Create Group
+            Let's sort the data structure for creating a new group.
+         */
          let
          formData = this.tabsControl[tabid].formControl.value,
          dataToSend = {};
 
+         /* Assign the data to send. */
          dataToSend['name'] = formData.name;
          dataToSend['description'] = formData.description;
-         dataToSend['type'] = formData.description.type ? formData.description.type.id || 0 : 0;
+         dataToSend['type'] = formData.type[0] ? formData.type[0].id || 0 : 0;
 
-         /* Let's trigger the creation of the user. */
-        //  this.userAdminService.createNewUser(
-        //      this.tabsControl[tabid].formControl.value
-        //  );
+         /* Let's trigger the creation of the group. */
+         this.userAdminService.createNewGroup( dataToSend ).then((response) => {
+             console.log( " | new group: ", dataToSend );
 
-        console.log( " | new group: ", dataToSend );
+             /*
+                2. Update permissions for this group.
+                Let's build the data structure again.
+             */
+             let permissionsData = {},
+             //  Tidy up the permissions to be acceptable for the update call.
+             permissionsReformed = formData['permissions'];
+
+             /* Assign all the data. */
+             permissionsData['entityid'] = response.groupID;
+             permissionsData['isgroup'] = 1;
+             permissionsData['toadd'] = permissionsReformed;
+             permissionsData['toupdate'] = {}; // we're only adding as we're creating.
+             permissionsData['todelete'] = {}; // we're only adding as we're creating.
+
+             console.log(" >> new group response", response);
+             /* Send the request. */
+             this.userAdminService.updatePermissions(permissionsData);
+         }).catch((response) => {
+             // Deal with any errors.
+             console.warn("Creating a group failed: ", response);
+         });
+
+
 
          /* Clear the form. */
          this.clearNewGroup(1, false); // send false in to disable the preventDefault.
+
+         /* Return. */
+         return;
+     }
+
+     /**
+      * Handle Edit Group
+      * ---------------
+      * Handles updating a group.
+      *
+      * @param {tabid}
+      * @return {void}
+      */
+     public handleEditGroup (tabid:number):void {
+         /*
+            1. Update Group
+            Let's sort the data structure for the edit group call.
+         */
+         let
+         formData = this.tabsControl[tabid].formControl.value,
+         dataToSend = {};
+
+         /* Assign the data to send. */
+         dataToSend['groupId'] = this.tabsControl[tabid].groupId;
+         dataToSend['name'] = formData.name;
+         dataToSend['description'] = formData.description;
+         dataToSend['type'] = formData.type[0] ? formData.type[0].id || 0 : 0;
+
+         /* Let's trigger the creation of the group. */
+         this.userAdminService.updateGroup( dataToSend ).then((response) => {
+             console.log(" >> edit group response", response);
+             /*
+                2. Update permissions for this group.
+                Let's build the data structure again.
+             */
+             let permissionsData = {},
+             //  Tidy up the permissions to be acceptable for the update call.
+             permissionsReformed = formData['permissions'];
+
+             /* Assign all the data. */
+             permissionsData['entityid'] = response.groupID;
+             permissionsData['isgroup'] = 1;
+             permissionsData['toadd'] = permissionsReformed;
+             permissionsData['toupdate'] = {};
+             permissionsData['todelete'] = {};
+
+             /* Send the request. */
+             // this.userAdminService.updatePermissions(permissionsData);
+         }).catch((response) => {
+             // Deal with any errors.
+             console.warn("Creating a group failed: ", response);
+         });
+
+
+
+         /* Clear the form. */
+        //  this.clearNewGroup(1, false); // send false in to disable the preventDefault.
 
          /* Return. */
          return;
@@ -344,6 +429,46 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
          /* Return. */
          return;
+     }
+
+     /**
+      * Extract Permissions to Update
+      * -----------------------------
+      * Converts the object of updated permissions into grouped levels then by
+      * IDs and their value.
+      *
+      * @param {permissions} - the permissions object from the form.
+      *
+      * @return {levels} - and object detailing permissions by level then key
+      * pairs of ID and value.
+      */
+     public extractPermissionsToUpdate ( permissions ):any {
+         let
+         i, permissionLevel, permissionID,
+         newStructure = {};
+
+         /* Firstly, lets loop over the permission levels and create an array
+            for each. */
+         for (i = 0; i < this.permissionLevelsList.length; i++) {
+             permissionLevel = this.permissionLevelsList[i].id;
+
+             /* Set the empty object. */
+             newStructure[permissionLevel] = {};
+         }
+
+         /* Now let's loop over each permission and assign it's ID to any
+            object it should be in.  */
+         for (permissionID in permissions) {
+             for (i = 0; i < this.permissionLevelsList.length; i++) {
+                 permissionLevel = this.permissionLevelsList[i].id;
+
+                 /* Assign the permission ID with the level's value. */
+                 newStructure[permissionLevel][permissionID] = permissions[permissionID][permissionLevel];
+             }
+         }
+
+         /* Return. */
+         return newStructure;
      }
 
     /**
