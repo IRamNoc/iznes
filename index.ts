@@ -1,1 +1,2 @@
-export {SetlMyAccountModule} from './myaccount/myaccount.module';
+export {SetlAccountModule} from './account.module';
+export {SetlMyAccountComponent} from './myaccount/myaccount.component';
