@@ -6,8 +6,10 @@ import {
     RequestOwnWalletsMessageBody,
     SetActiveWalletMessageBody,
     RequestWalletDirectoryMessageBody,
-    RequestManagedWalletsMessageBody
+    RequestManagedWalletsMessageBody,
+    RequestWalletToRelationshipMessageBody
 } from './my-wallets.service.model';
+import _ from 'lodash';
 
 
 @Injectable()
@@ -49,6 +51,22 @@ export class MyWalletsService {
         const messageBody: RequestManagedWalletsMessageBody = {
             RequestName: 'gwl',
             token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     *  Request wallet to relationship.
+     * @return {any}
+     */
+    requestWalletToRelationship(requestData: object): any {
+        const walletId = _.get(requestData, 'walletId', 0);
+
+        const messageBody: RequestWalletToRelationshipMessageBody = {
+            RequestName: 'glrtl',
+            token: this.memberSocketService.token,
+            senderLei: walletId
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

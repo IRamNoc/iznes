@@ -1,7 +1,11 @@
 import {Injectable} from '@angular/core';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {createWalletNodeSagaRequest} from '@setl/utils/common';
-import {RegisterIssuerMessageBody, RegisterAssetMessageBody} from './walletnode-request.service.model';
+import {
+    RegisterIssuerMessageBody,
+    RegisterAssetMessageBody,
+    IssueAssetMessageBody
+} from './walletnode-request.service.model';
 import _ from 'lodash';
 
 interface RegisterIssuer {
@@ -19,6 +23,13 @@ interface RegisterAsset {
     metaData: object;
 }
 
+interface IssueAsset {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    amount: number;
+}
 
 @Injectable()
 export class WalletnodeTxService {
@@ -46,6 +57,19 @@ export class WalletnodeTxService {
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
             metadata: _.get(requestData, 'metadata', {})
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    issueAsset(requestData: IssueAsset): any {
+        const messageBody: IssueAssetMessageBody = {
+            topic: 'asiss',
+            walletid: _.get(requestData, 'walletId', 0),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            address: _.get(requestData, 'address', ''),
+            amount: _.get(requestData, 'amount', 0)
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
