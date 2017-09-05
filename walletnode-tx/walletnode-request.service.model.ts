@@ -18,3 +18,11 @@ export interface RegisterAssetMessageBody extends WalletNodeMessageBody {
     instrument: string;
     metadata: object;
 }
+
+export interface IssueAssetMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    namespace: string;
+    instrument: string;
+    address: string;
+    amount: number;
+}
