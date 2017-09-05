@@ -32,6 +32,7 @@ import {
     /* Entity Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
+    getPermissions,
     getAdminPermissions,
     getTranPermissions,
 } from '@setl/core-store';
@@ -145,6 +146,14 @@ export class UserAdminService {
         return this.txPermAreaListSubject.asObservable();
     }
 
+    public permissionsList:{};
+    @Output()
+    public permissionsListSubject = new Subject<any>();
+    public getPermissionsListSubject () {
+        return this.txPermAreaListSubject.asObservable();
+    }
+
+
     /* Constructor. */
     constructor (
         private adminUsersService:AdminUsersService,
@@ -252,6 +261,11 @@ export class UserAdminService {
         /* Get tx perm area list and send message out. */
         this.txPermAreaList = getTxPermAreaList(state);
         this.txPermAreaListSubject.next(this.txPermAreaList);
+
+        /* Get permissions list by entities. */
+        this.permissionsList = getPermissions(state);
+        console.log('updated permissions: ', this.permissionsList);
+        this.permissionsListSubject.next(this.permissionsList);
     }
 
     /**
@@ -418,41 +432,60 @@ export class UserAdminService {
      *
      * @param {entity} - the entity data.
      *
-     * @return {void}
+     * @return {any} - returns
      */
-    requestPermissions (entity):void {
-        // Get my detail to add is admin to the request.
-        const
-        state = this.ngRedux.getState(),
-        myDetail = getMyDetail(state);
-        entity.isadmin = myDetail.admin ? "1": "0";
+    requestPermissions (entity):Promise<any> {
+        return new Promise((resolve, reject) => {
+            /* Ok, so we need to get the permissions for this group and if asked,
+               the specific permission by ID.
+               Let's start by checking if we already have this in the store...
+            */
+            let
+            state = this.ngRedux.getState(),
+            currentPermissions = getPermissions(state),
+            /* Check if we're looking in admin or tx. */
+            location:string = entity.isTx ? "transPermissions" : "adminPermissions";
 
-        // Create a saga pipe.
-        const asyncTaskPipe = this.adminUsersService.requestPermissions(
-            entity
-        );
+            /* Now lets check if the entity has permissions and if we need to get a
+               specific one... */
+            if ( currentPermissions[ location ][ entity.entityId ] ) {
+                /* Check if the permissionID was requested and if it exists... */
+                if ( entity.permissionId >= 1 && currentPermissions[ location ][ entity.entityId ][ entity.permissionId ] ) {
+                    /* Force update the observables. */
+                    resolve();
+                    return;
+                } else if ( entity.permissionId === 0 ) {
+                    /* Force update the observables. */
+                    resolve();
+                    return;
+                }
+            }
 
-        /* Get response from the request, but first check if we're getting an
-           admin entity or a tx one. */
-        if ( entity.isTx ) {
+            /* Ok, so we didn't have it... now let's just request it. */
+            const asyncTaskPipe = this.adminUsersService.requestPermissions(
+                entity
+            );
+
+            /* Get response from the request, but first check if we're getting an
+               admin entity or a tx one. */
+            let action = entity.isTx ? SET_TX_PERMISSIONS : SET_ADMIN_PERMISSIONS;
             this.ngRedux.dispatch(
                 SagaHelper.runAsync(
-                    [SET_TX_PERMISSIONS],
+                    [ action ],
                     [],
                     asyncTaskPipe,
-                    {}
+                    {},
+                    (data) => {
+                        resolve();
+                    },
+                    (error) => {
+                        reject(error);
+                    }
                 )
             );
-        } else {
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    [SET_ADMIN_PERMISSIONS],
-                    [],
-                    asyncTaskPipe,
-                    {}
-                )
-            );
-        }
+
+            /* Return. */
+        });
     }
 
     /**

@@ -43,6 +43,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     public allGroupList:any; // All lists.
     public adminPermAreasList:any;
     public txPermAreasList:any;
+    public permissionsList:any;
 
     /* The permission levels list. */
     public permissionLevelsList = [
@@ -107,6 +108,14 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
             /* Call to filter lists for UI. */
             this.filterAreaLists();
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.permissionsList = list;
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -258,7 +267,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              entityId: group.groupId,
              isGroup: 1,
              permissionId: 0, // get all.
-             includeGroup: 0  // not sure what this is.
+             includeGroup: 0,  // not sure what this is.
+             isTx: group.type === 1 ? false : true
+         }).then(() => {
+             console.log( "Just got the go ahead: ", this.permissionsList );
          });
 
          /* TODO - get the permissions for this group. */
