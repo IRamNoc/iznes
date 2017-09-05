@@ -1,1 +1,1 @@
-export const name = 'permission-group';
+export const name = 'permission-areas';
