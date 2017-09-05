@@ -31,7 +31,7 @@ export {
     clearRequestedWalletToRelationship,
     getWalletRelationship,
     getWalletToRelationshipList,
-    getRequestWalletToRelationshipState
+    getRequestWalletToRelationshipState,
     SET_ISSUE_HOLDING
 } from './wallet';
 
