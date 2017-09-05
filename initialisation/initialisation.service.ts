@@ -16,7 +16,9 @@ import {
     SET_MANAGED_WALLETS,
     SET_WALLET_HOLDING,
     clearRequestedWalletIssuer,
-    clearRequestedWalletInstrument
+    clearRequestedWalletInstrument,
+    SET_MY_INSTRUMENTS_LIST,
+    SET_WALLET_TO_RELATIONSHIP
 } from '@setl/core-store';
 
 import {SagaHelper} from '@setl/utils';
@@ -68,14 +70,7 @@ export class InitialisationService {
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_ADDRESSES],
             [],
-            asyncTaskPipes, {},
-            function (data) {
-                console.log(data);
-            },
-
-            function (data) {
-                console.log(data);
-            },
+            asyncTaskPipes, {}
         ));
 
         return true;
@@ -202,6 +197,54 @@ export class InitialisationService {
         ));
 
         return true;
+    }
+
+    /**
+     * Request wallet instruments.
+     * @param ngRedux
+     * @param walletNodeRequestService
+     * @param walletId
+     */
+    static requestWalletInstruments(ngRedux: NgRedux<any>,
+                                    walletNodeRequestService: WalletNodeRequestService,
+                                    walletId: number): void {
+
+        // Create a saga pipe.
+        const asyncTaskPipe = walletNodeRequestService.walletInstrumentRequest({
+            walletId
+        });
+
+        // Send a saga action.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MY_INSTRUMENTS_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
+     * Request To-relationship.
+     * @param ngRedux
+     * @param myWalletsService
+     * @param walletId
+     */
+    static requestToRelationship(ngRedux: NgRedux<any>,
+                                 myWalletsService: MyWalletsService,
+                                 walletId: number): void {
+
+        // Create a saga pipe.
+        const asyncTaskPipe = myWalletsService.requestWalletToRelationship({
+            walletId
+        });
+
+        // Send a saga action.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_TO_RELATIONSHIP],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**

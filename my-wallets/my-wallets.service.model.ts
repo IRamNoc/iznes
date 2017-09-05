@@ -20,3 +20,8 @@ export interface RequestWalletDirectoryMessageBody extends MemberNodeMessageBody
 export interface RequestManagedWalletsMessageBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface RequestWalletToRelationshipMessageBody extends MemberNodeMessageBody {
+    token: string;
+    senderLei: number;
+}
