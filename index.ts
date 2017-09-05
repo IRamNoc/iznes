@@ -88,6 +88,12 @@ export {
     SET_TX_PERM_AREAS_LIST,
     getAdminPermAreaList,
     getTxPermAreaList,
+
+    /* Entity Permissions */
+    SET_ADMIN_PERMISSIONS,
+    SET_TX_PERMISSIONS,
+    getAdminPermissions,
+    getTranPermissions,
 } from './useradmin';
 
 export {
