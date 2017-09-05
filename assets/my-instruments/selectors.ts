@@ -24,4 +24,9 @@ export const getMyInstrumentsList = createSelector(
     (state: MyInstrumentsState) => state.instrumentList
 );
 
+export const getNewIssueAssetRequest = createSelector(
+    getMyInstruments,
+    (state: MyInstrumentsState) => state.newIssueAssetRequest
+);
+
 
