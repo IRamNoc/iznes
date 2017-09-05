@@ -91,8 +91,8 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
                     return true;
                 }
                 ng2SelectValue = this.relationshipArray.reduce(
-                    (result, currentValue, currentId) => {
-                        if (currentId === value) {
+                    (result, currentValue) => {
+                        if (currentValue.id === value) {
                             result.push(currentValue);
                         }
                         return result;
@@ -107,8 +107,8 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
                     return true;
                 }
                 ng2SelectValue = this.ownWalletAddressArray.reduce(
-                    (result, currentValue, currentId) => {
-                        if (currentId === value) {
+                    (result, currentValue) => {
+                        if (currentValue.id === value) {
                             result.push(currentValue);
                         }
                         return result;

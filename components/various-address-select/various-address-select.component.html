@@ -4,7 +4,7 @@
   </label>
   <ng-select
     [items]="addressTypes"
-    [allowClear]="true"
+    [allowClear]="false"
     placeholder="Select Address Type"
     [formControl]="addressTypeSelect"
     (selected)="setSelectedAddressType($event)"
