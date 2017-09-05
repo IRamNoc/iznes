@@ -13,70 +13,102 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
                                                 action: AsyncTaskResponseAction) {
     switch (action.type) {
         case MyWalletHoldingActions.SET_WALLET_HOLDING:
-            console.log(action);
+            return setWalletHolding(action, state);
 
-
-            const payload = _.get(action, 'payload[1]', []);
-            const walletId = payload.request.walletid;
-
-            const holdingByAddress = {};
-            const holdingByAddressBalances = _.get(action, 'payload[1].data.balances', []);
-
-            const holdingByAsset = {};
-            const holdingByAssetBalances = holdingByAddressToByAsset(holdingByAddressBalances);
-
-            holdingByAddress[walletId] = holdingByAddressBalances;
-            holdingByAsset[walletId] = holdingByAssetBalances;
-
-            const newState = Object.assign({}, state, {
-                holdingByAddress,
-                holdingByAsset
-            });
-
-            return newState;
+        case MyWalletHoldingActions.SET_ISSUE_HOLDING:
+            return setIssueHolding(action, state);
 
         default:
             return state;
     }
-};
 
-function holdingByAddressToByAsset(holdingByAddress: Array<any>): object {
 
-    const holdingByAsset = {};
+    function setWalletHolding(action, state) {
+        let payload = _.get(action, 'payload[1]', []);
+        let walletId = payload.request.walletid;
 
-    for (const addr in holdingByAddress) {
-        if (!holdingByAddress.hasOwnProperty(addr)) {
-            continue;
-        }
+        const holdingByAddress = state.holdingByAddress;
+        const holdingByAddressBalances = _.get(action, 'payload[1].data.balances', []);
 
-        const assetsBalances = holdingByAddress[addr];
+        let holdingByAsset = state.holdingByAsset;
+        const holdingByAssetBalances = holdingByAddressToByAsset(holdingByAddressBalances);
 
-        for (const asset in assetsBalances) {
-            if (!assetsBalances.hasOwnProperty(asset)) {
+        holdingByAddress[walletId] = holdingByAddressBalances;
+        holdingByAsset[walletId] = holdingByAssetBalances;
+
+        const newState = Object.assign({}, state, {
+            holdingByAddress,
+            holdingByAsset,
+        });
+
+        return newState;
+    }
+
+    function setIssueHolding(action, state) {
+        console.log(action);
+
+        let payload = _.get(action, 'payload[1]', []);
+        let walletId = payload.request.walletid;
+
+        let issuer = _.get(action, 'payload[1].request.namespace', []);
+        let insturement = _.get(action, 'payload[1].request.classid', []);
+
+        let asset = issuer + '|' + insturement;
+
+        const holders = _.get(action, 'payload[1].data.holders', []);
+
+        let holdingByAsset = state.holdingByAsset;
+
+        holdingByAsset[walletId][asset].holders = holders;
+
+        const newState = Object.assign({}, state, {
+            holdingByAsset
+        });
+
+        return newState;
+    }
+
+    function holdingByAddressToByAsset(holdingByAddress: Array<any>): object {
+
+        const holdingByAsset = {};
+
+        for (const addr in holdingByAddress) {
+            if (!holdingByAddress.hasOwnProperty(addr)) {
                 continue;
             }
 
-            const balance = assetsBalances[asset][0];
-            const encumbrance = assetsBalances[asset][1];
+            const assetsBalances = holdingByAddress[addr];
 
-            if (typeof holdingByAsset[asset] == 'undefined') {
-                holdingByAsset[asset] = {
-                    'total': 0,
-                    'totalencumbered': 0,
-                    'breakdown': {}
-                };
-            }
+            for (const asset in assetsBalances) {
+                if (!assetsBalances.hasOwnProperty(asset)) {
+                    continue;
+                }
 
-            if (balance > 0) { // ignore those negative balance (normally is the master address of the asset.)
-                holdingByAsset[asset]['total'] += balance;
-            }
+                const balance = assetsBalances[asset][0];
+                const encumbrance = assetsBalances[asset][1];
 
-            if (encumbrance > 0) { // ignore those negative balance (normally is the master address of the asset.)
-                holdingByAsset[asset]['totalencumbered'] += encumbrance;
+                if (typeof holdingByAsset[asset] == 'undefined') {
+                    holdingByAsset[asset] = {
+                        'total': 0,
+                        'totalencumbered': 0,
+                        'breakdown': {}
+                    };
+                }
+
+                if (balance > 0) { // ignore those negative balance (normally is the master address of the asset.)
+                    holdingByAsset[asset]['total'] += balance;
+                }
+
+                if (encumbrance > 0) { // ignore those negative balance (normally is the master address of the asset.)
+                    holdingByAsset[asset]['totalencumbered'] += encumbrance;
+                }
+                holdingByAsset[asset]['breakdown'][addr] = [balance, encumbrance];
             }
-            holdingByAsset[asset]['breakdown'][addr] = [balance, encumbrance];
         }
-    }
 
-    return holdingByAsset;
-}
+        return holdingByAsset;
+    }
+};
+
+
+

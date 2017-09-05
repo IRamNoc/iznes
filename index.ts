@@ -32,6 +32,7 @@ export {
     getWalletRelationship,
     getWalletToRelationshipList,
     getRequestWalletToRelationshipState
+    SET_ISSUE_HOLDING
 } from './wallet';
 
 export {
@@ -81,12 +82,22 @@ export {
 export {
     AdminUsersState,
     adminUserReducer,
+
+    /* Users list. */
     SET_ADMIN_USERLIST,
     getUsersList,
+
+    /* Permission groups. */
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     getTranPermissionGroup,
-    getAdminPermissionGroup
+    getAdminPermissionGroup,
+
+    /* Group area lists. */
+    SET_ADMIN_PERM_AREAS_LIST,
+    SET_TX_PERM_AREAS_LIST,
+    getAdminPermAreaList,
+    getTxPermAreaList,
 } from './useradmin';
 
 export {
@@ -95,4 +106,3 @@ export {
     SET_ACCOUNT_LIST,
     getMyAccountList
 } from './account';
-
