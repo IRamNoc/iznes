@@ -38,3 +38,18 @@ export const clearRequestedWalletInstrument = kAction(CLEAR_REQUESTED_WALLET_INS
  */
 export const SET_MY_INSTRUMENTS_LIST = `${name}/SET_MY_INSTRUMENTS_LIST`;
 
+/**
+ * Issue new asset success
+ */
+export const ISSUE_ASSET_SUCCESS = `${name}/ISSUE_ASSET_SUCCESS`;
+
+/**
+ * Issue new asset fail.
+ */
+export const ISSUE_ASSET_FAIL = `${name}/ISSUE_ASSET_FAIL`;
+
+/**
+ * Finish issuer new Asset notification
+ */
+export const FINISH_ISSUE_ASSET_NOTIFICATION = `${name}/FINISH_ISSUE_ASSET_NOTIFICATION`;
+export const finishIssueAssetNotification = kAction(FINISH_ISSUE_ASSET_NOTIFICATION);

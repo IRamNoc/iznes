@@ -26,6 +26,12 @@ export {
     getWalletDirectoryList,
     getManagedWallets,
     getManageWalletList,
+    setRequestedWalletToRelationship,
+    SET_WALLET_TO_RELATIONSHIP,
+    clearRequestedWalletToRelationship,
+    getWalletRelationship,
+    getWalletToRelationshipList,
+    getRequestWalletToRelationshipState
     SET_ISSUE_HOLDING
 } from './wallet';
 
@@ -58,7 +64,9 @@ export {
     setRequestedWalletInstrument,
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
-
+    ISSUE_ASSET_SUCCESS,
+    ISSUE_ASSET_FAIL,
+    finishIssueAssetNotification,
 
     // Selectors
     getNewIssuerRequest,
@@ -67,7 +75,8 @@ export {
 
     getNewInstrumentRequest,
     getRequestedInstrumentState,
-    getMyInstrumentsList
+    getMyInstrumentsList,
+    getNewIssueAssetRequest
 } from './assets';
 
 export {

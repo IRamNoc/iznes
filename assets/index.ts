@@ -26,11 +26,15 @@ import {
     setRequestedWalletInstrument,
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
+    ISSUE_ASSET_SUCCESS,
+    ISSUE_ASSET_FAIL,
+    finishIssueAssetNotification,
 
     // Selectors
     getNewInstrumentRequest,
     getRequestedInstrumentState,
-    getMyInstrumentsList
+    getMyInstrumentsList,
+    getNewIssueAssetRequest
 } from './my-instruments';
 
 export {
@@ -54,9 +58,13 @@ export {
     setRequestedWalletInstrument,
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
+    ISSUE_ASSET_SUCCESS,
+    ISSUE_ASSET_FAIL,
     getNewInstrumentRequest,
     getRequestedInstrumentState,
-    getMyInstrumentsList
+    getMyInstrumentsList,
+    getNewIssueAssetRequest,
+    finishIssueAssetNotification
 };
 
 export interface AssetState {

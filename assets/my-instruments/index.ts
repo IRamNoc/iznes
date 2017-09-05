@@ -6,6 +6,14 @@ export {
     finishRegisterInstrumentNotification,
     setRequestedWalletInstrument,
     clearRequestedWalletInstrument,
-    SET_MY_INSTRUMENTS_LIST
+    SET_MY_INSTRUMENTS_LIST,
+    ISSUE_ASSET_SUCCESS,
+    ISSUE_ASSET_FAIL,
+    finishIssueAssetNotification
 } from './actions';
-export {getNewInstrumentRequest, getRequestedInstrumentState, getMyInstrumentsList} from './selectors';
+export {
+    getNewInstrumentRequest,
+    getRequestedInstrumentState,
+    getMyInstrumentsList,
+    getNewIssueAssetRequest
+} from './selectors';

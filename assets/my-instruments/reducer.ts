@@ -14,6 +14,16 @@ const initialState: MyInstrumentsState = {
         txHash: '',
         status: false,
         needNotify: false
+    },
+    newIssueAssetRequest: {
+        issuerIdentifier: '',
+        issuerAddress: '',
+        instrument: '',
+        toAddress: '',
+        amount: 0,
+        txHash: '',
+        status: false,
+        needNotify: false
     }
 };
 
@@ -26,6 +36,8 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
     let requestedWalletInstrument;
     let instrumentListRawData;
     let instrumentList;
+    let issueAssetRawData;
+    let newIssueAssetRequest;
 
     switch (action.type) {
         case MyInstrumentActions.REGISTER_ASSET_SUCCESS:
@@ -80,6 +92,57 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
 
             newState = Object.assign({}, state, {
                 instrumentList
+            });
+
+            return newState;
+
+        case MyInstrumentActions.ISSUE_ASSET_SUCCESS:
+            issueAssetRawData = _.get(action, 'payload[1]data', []);
+
+            newIssueAssetRequest = {
+                issuerIdentifier: _.get(issueAssetRawData, 'namespace', ''),
+                issuerAddress: _.get(issueAssetRawData, 'fromaddr', ''),
+                instrument: _.get(issueAssetRawData, 'classid', ''),
+                toAddress: _.get(issueAssetRawData, 'toaddr', ''),
+                amount: _.get(issueAssetRawData, 'amount', ''),
+                txHash: _.get(issueAssetRawData, 'hash', ''),
+                status: true,
+                needNotify: true
+            };
+
+            newState = Object.assign({}, state, {
+                newIssueAssetRequest
+            });
+
+            return newState;
+
+        case MyInstrumentActions.ISSUE_ASSET_FAIL:
+            newIssueAssetRequest = {
+                issuerIdentifier: '',
+                issuerAddress: '',
+                instrument: '',
+                toAddress: '',
+                amount: 0,
+                txHash: '',
+                status: false,
+                needNotify: false
+            };
+
+            newState = Object.assign({}, state, {
+                newIssueAssetRequest
+            });
+
+            return newState;
+
+
+        case MyInstrumentActions.FINISH_ISSUE_ASSET_NOTIFICATION:
+            needNotify = false;
+
+            newIssueAssetRequest = Object.assign({}, state.newIssueAssetRequest, {
+                needNotify
+            });
+            newState = Object.assign({}, state, {
+                newIssueAssetRequest
             });
 
             return newState;
