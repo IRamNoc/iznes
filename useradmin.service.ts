@@ -12,6 +12,9 @@ import {
 } from '@setl/core-req-services';
 
 import {
+    /* User data */
+    getMyDetail,
+
     /* Users list. */
     SET_ADMIN_USERLIST,
     getUsersList,
@@ -25,6 +28,12 @@ import {
     SET_TX_PERM_AREAS_LIST,
     getAdminPermAreaList,
     getTxPermAreaList,
+
+    /* Entity Permissions */
+    SET_ADMIN_PERMISSIONS,
+    SET_TX_PERMISSIONS,
+    getAdminPermissions,
+    getTranPermissions,
 } from '@setl/core-store';
 
 @Injectable()
@@ -107,34 +116,34 @@ export class UserAdminService {
     ];
 
     public usersList:{};
-    public adminGroupList:{};
-    public adminPermAreaList:{};
-    public txPermAreaList:{};
-
     @Output()
     public usersListSubject = new Subject<any>();
     public getUserListSubject () {
         return this.usersListSubject.asObservable();
     }
 
+    public adminGroupList:{};
+    public txGroupList:{};
     @Output()
-    public adminGroupListSubject = new Subject<any>();
-    public getAdminGroupListSubject () {
-        return this.adminGroupListSubject.asObservable();
+    public allGroupListSubject = new Subject<any>();
+    /* Admin and TX group list observable. */
+    public getGroupListSubject () {
+        return this.allGroupListSubject.asObservable();
     }
 
+    public adminPermAreaList:{};
     @Output()
     public adminPermAreaListSubject = new Subject<any>();
     public getAdminPermAreaListSubject () {
         return this.adminPermAreaListSubject.asObservable();
     }
 
+    public txPermAreaList:{};
     @Output()
     public txPermAreaListSubject = new Subject<any>();
     public getTxPermAreaListSubject () {
         return this.txPermAreaListSubject.asObservable();
     }
-
 
     /* Constructor. */
     constructor (
@@ -142,56 +151,64 @@ export class UserAdminService {
         private ngRedux: NgRedux<any>,
     ) {
         let asyncTaskPipe;
-        /* Let's request the user's list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+        const state = this.ngRedux.getState();
 
-        // Send a saga action to save the users list.
-        // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_ADMIN_USERLIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+        /* Let's request the user's list, this is the saga pipe function. */
+        if ( ! Object.keys(getUsersList(state))[0] ) {
+            asyncTaskPipe = this.adminUsersService.requestMyUsersList();
+
+            // Send a saga action to save the users list.
+            // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_ADMIN_USERLIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* Let's request the admin perm area list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
+        if ( ! getAdminPermAreaList(state).length ) {
+            asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
 
-        // Send a saga action to save the admin perm area list.
-        // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_ADMIN_PERM_AREAS_LIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+            // Send a saga action to save the admin perm area list.
+            // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_ADMIN_PERM_AREAS_LIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* Let's request the tx perm area list, this is the saga pipe function. */
-        asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
+        if ( ! getTxPermAreaList(state).length ) {
+            asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
 
-        // Send a saga action to save the tx perm area list.
-        // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
-        // Actions to dispatch, when request fail:  None.
-        // Saga pipe function descriptor.
-        // Saga pipe function arguments.
-        this.ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_TX_PERM_AREAS_LIST],
-                [],
-                asyncTaskPipe,
-                {}
-            )
-        );
+            // Send a saga action to save the tx perm area list.
+            // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
+            // Actions to dispatch, when request fail:  None.
+            // Saga pipe function descriptor.
+            // Saga pipe function arguments.
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_TX_PERM_AREAS_LIST],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
 
         /* TODO - pull in the arrays on this object dynamically. */
 
@@ -209,18 +226,24 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    private updateState () {
+    public updateState () {
         /* Retrieve the redux store. */
         const state = this.ngRedux.getState();
+        let key;
 
         /* Get user list, and send a message to the users observable. */
         this.usersList = getUsersList(state);
         this.usersListSubject.next(this.usersList);
 
-        /* TODO - Get Permissions list and send a message to the permissions
-         * observable. */
+        /* Get adminGroupList groups list. */
         this.adminGroupList = getAdminPermissionGroup(state);
-        this.adminGroupListSubject.next(this.adminGroupList);
+        /* Get adminGroupList groups list. */
+        this.txGroupList = getTranPermissionGroup(state);
+
+        /* Combine the groups and emit. */
+        for (key in this.adminGroupList) this.adminGroupList[key].type = 1;
+        for (key in this.txGroupList) this.txGroupList[key].type = 2;
+        this.allGroupListSubject.next( Object.assign({}, this.txGroupList, this.adminGroupList) );
 
         /* Get admin perm area list and send message out. */
         this.adminPermAreaList = getAdminPermAreaList(state);
@@ -231,6 +254,15 @@ export class UserAdminService {
         this.txPermAreaListSubject.next(this.txPermAreaList);
     }
 
+    /**
+     * Create New User
+     * ----------------
+     * Creates a new User.
+     *
+     * @param {data} - the new user data.
+     *
+     * @return {void}
+     */
     public createNewUser (data):void {
         // Create a saga pipe.
         const asyncTaskPipe = this.adminUsersService.createNewUser(
@@ -251,6 +283,15 @@ export class UserAdminService {
         return;
     }
 
+    /**
+     * Edit User
+     * ----------------
+     * Creates a new User.
+     *
+     * @param {data} - the new user data.
+     *
+     * @return {void}
+     */
     public editUser (data):void {
         // Create a saga pipe.
         const asyncTaskPipe = this.adminUsersService.editUser(
@@ -269,6 +310,149 @@ export class UserAdminService {
         );
 
         return;
+    }
+
+    /**
+     * Create New Group
+     * ----------------
+     * Creates a new Group.
+     *
+     * @param {data} - the new group data.
+     *
+     * @return {void}
+     */
+    public createNewGroup (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.createNewGroup(
+                data
+            );
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (data) {
+                    if ( data[1].Data[0] ) {
+                        resolve( data[1].Data[0] ); // success
+                    } else {
+                        reject(data); // no data
+                    }
+                },
+                function (data) {
+                    reject(data); // error
+                })
+            );
+        });
+    }
+
+    /**
+     * Update Group
+     * ----------------
+     * Updates a Group.
+     *
+     * @param {data} - the new group data.
+     *
+     * @return {void}
+     */
+    public updateGroup (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.updateGroup(
+                data
+            );
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (data) {
+                    if ( data[1].Data[0] ) {
+                        resolve( data[1].Data[0] ); // success
+                    } else {
+                        reject(data); // no data
+                    }
+                },
+                function (data) {
+                    reject(data); // error
+                })
+            );
+        });
+    }
+
+    /**
+     * Update Permissions
+     * ----------------
+     * Updates an entity's permissions.
+     *
+     * @param {data} - the permission data.
+     *
+     * @return {void}
+     */
+    updatePermissions (data):void {
+        // Get my detail to add is admin to the request.
+        const
+        state = this.ngRedux.getState(),
+        myDetail = getMyDetail(state);
+        data.isadmin = myDetail.admin ? "1": "0";
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.adminUsersService.updateAdminPermissions(
+            data
+        );
+
+        // Get response from set active wallet
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            function (data) {
+                console.log(data) // success
+            },
+            function (data) {
+                console.log(data) // error
+            })
+        );
+    }
+
+    /**
+     * Request Permissions
+     * ----------------
+     * Requests an entity's permissions or all, used on click for editing a group.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {void}
+     */
+    requestPermissions (entity):void {
+        // Get my detail to add is admin to the request.
+        const
+        state = this.ngRedux.getState(),
+        myDetail = getMyDetail(state);
+        entity.isadmin = myDetail.admin ? "1": "0";
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.adminUsersService.requestPermissions(
+            entity
+        );
+
+        /* Get response from the request, but first check if we're getting an
+           admin entity or a tx one. */
+        if ( entity.isTx ) {
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_TX_PERMISSIONS],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        } else {
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_ADMIN_PERMISSIONS],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                )
+            );
+        }
     }
 
     /**

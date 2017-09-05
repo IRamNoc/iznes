@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Manage User</h1>
+    <h1><i class="fa fa-users"></i> Manage Groups</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -39,7 +39,11 @@
             <clr-datagrid #usersDataGrid>
                 <clr-dg-column>Actions</clr-dg-column>
                 <clr-dg-column>Group Name</clr-dg-column>
-                <clr-dg-column>Group Type</clr-dg-column>
+                <clr-dg-column>
+                    Group Type
+                    <clr-dg-string-filter [clrDgStringFilter]="typeFilter"
+                    ></clr-dg-string-filter>
+                </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let group of allGroupList">
                     <clr-dg-cell>
@@ -49,12 +53,12 @@
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
-                    <clr-dg-cell>{{group.category.text }}</clr-dg-cell>
+                    <clr-dg-cell>{{group.category[0].text}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{pagination.totalItems}} users
+                    of {{pagination.totalItems}} groups
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -142,7 +146,7 @@
     <!-- User Edit Form. -->
     <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+            <form (ngSubmit)="handleEditGroup(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -171,6 +175,10 @@
                             <label class="control-label">
                                 <span mltag="txt_grouptype">Group Type</span>
                             </label>
+                            <!--
+                                Disabled is added to this select by it's form
+                                control in the handleEdit function.
+                            -->
                             <ng-select
                                 [items]="groupTypes"
                                 [allowClear]="true"
