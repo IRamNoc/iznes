@@ -1,0 +1,8 @@
+{
+  "name": "@setl/core-account",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-account.git",
+  "author": "Laurent HAUCK <laurent.hauck@setl.io>",
+  "license": "MIT"
+}
