@@ -9,10 +9,15 @@ const initialState: MyDetailState = {
     emailAddress: '',
     userId: 0,
     lastLogin: '',
-    userType: 0
+    userType: 0,
+    firstName: '',
+    lastName: '',
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
+
+    let newState = {};
+
     switch (action.type) {
         case MyDetailActions.LOGIN_REQUEST:
             return state;
@@ -27,12 +32,26 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const userType = _.get(loginedData, 'userType', '');
 
 
-            const newState = Object.assign({}, state, {
+            newState = Object.assign({}, state, {
                 username,
                 emailAddress,
                 userId,
                 lastLogin,
                 userType
+            });
+
+            return newState;
+
+        case MyDetailActions.SET_USER_DETAILS:
+
+            const userDetailsData = _.get(action, 'payload[1].Data[0]', {});
+
+            const firstName = _.get(userDetailsData, 'firstName', '');
+            const lastName = _.get(userDetailsData, 'lastName', '');
+
+            newState = Object.assign({}, state, {
+                firstName,
+                lastName
             });
 
             return newState;
@@ -43,5 +62,9 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
         default:
             return state;
     }
+
+
+
+
 }
 

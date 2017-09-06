@@ -6,12 +6,13 @@ import {
     SET_LOGIN_DETAIL,
     RESET_LOGIN_DETAIL,
     loginRequestAC,
-    getMyDetail
+    getMyDetail,
+    SET_USER_DETAILS
 } from './my-detail';
 import {combineReducers, Reducer} from 'redux';
 
 export {
-    LOGIN_REQUEST, SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
+    LOGIN_REQUEST, SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC, SET_USER_DETAILS,
     getMyDetail
 };
 
