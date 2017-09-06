@@ -28,6 +28,7 @@
         "@setl/core-balances": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git",
         "@setl/core-layout": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git",
         "@setl/core-login": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git",
+        "@setl/core-manage-member": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git",
         "@setl/core-messages": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git",
         "@setl/core-req-services": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git",
         "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git",
