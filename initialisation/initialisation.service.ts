@@ -260,4 +260,5 @@ export class InitialisationService {
         // clear (set to false) the state of requested wallet instruments
         ngRedux.dispatch(clearRequestedWalletInstrument());
     }
+
 }
