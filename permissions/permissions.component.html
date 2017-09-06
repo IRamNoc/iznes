@@ -25,7 +25,7 @@
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                        *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -144,7 +144,7 @@
     </ng-template>
 
     <!-- User Edit Form. -->
-    <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid">
+    <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid" let-permissionsEmitter="permissionsEmitter">
         <div class="user-tab-panel-body panel-body">
             <form (ngSubmit)="handleEditGroup(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
@@ -197,12 +197,14 @@
                     [ngSwitch]="formControl.controls['type']._value[0].id">
 
                         <setl-permission-grid *ngSwitchCase="'1'"
+                            [initData]="permissionsEmitter"
                             [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                         <setl-permission-grid *ngSwitchCase="'2'"
+                            [initData]="permissionsEmitter"
                             [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="formControl.controls['permissions'].patchValue($event)"

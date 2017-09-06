@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy, EventEmitter} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 import {StringFilter} from "clarity-angular";
@@ -43,6 +43,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     public allGroupList:any; // All lists.
     public adminPermAreasList:any;
     public txPermAreasList:any;
+    public permissionsList:any;
 
     /* The permission levels list. */
     public permissionLevelsList = [
@@ -107,6 +108,14 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
             /* Call to filter lists for UI. */
             this.filterAreaLists();
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.permissionsList = list;
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -258,7 +267,28 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              entityId: group.groupId,
              isGroup: 1,
              permissionId: 0, // get all.
-             includeGroup: 0  // not sure what this is.
+             includeGroup: 0,  // not sure what this is.
+             isTx: group.type === 1 ? false : true
+         }).then(() => {
+             let
+             i,
+             location = group.type === 1 ? 'adminPermissions' : 'transPermissions' ;
+
+             /* Loop over tabs and find this group tab. */
+             for ( i = 0; i < this.tabsControl.length; i++ ) {
+                 console.log( this.tabsControl[i] );
+                 if ( this.tabsControl[i].groupId === group.groupId ) {
+                     /* Then patch the permissions value. */
+                     console.log( "emit: ", new Date() );
+                     this.tabsControl[i].permissionsEmitter.emit( this.permissionsList[ location ][ group.groupId ] );
+
+                     /* Then show the changes. */
+                     this.changeDetectorRef.detectChanges();
+
+                     /* Break. */
+                     break;
+                 }
+             }
          });
 
          /* TODO - get the permissions for this group. */
@@ -276,6 +306,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                      "permissions": new FormControl([])
                  }
              ),
+             "permissionsEmitter": new EventEmitter(),
              "active": false // this.editFormControls
          });
 
