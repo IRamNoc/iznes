@@ -142,6 +142,7 @@ export class SetlLoginComponent {
                 this.memberSocketService,
                 this.channelService,
                 this.accountsService,
+                this.myUserService,
                 this.permissionGroupService
             );
         }
