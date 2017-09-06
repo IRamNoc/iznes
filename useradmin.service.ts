@@ -263,7 +263,6 @@ export class UserAdminService {
 
         /* Get permissions list by entities. */
         this.permissionsList = getPermissions(state);
-        console.log('updated permissions: ', this.permissionsList);
         this.permissionsListSubject.next(this.permissionsList);
     }
 
