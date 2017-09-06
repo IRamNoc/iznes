@@ -102,6 +102,7 @@ export {
     /* Entity Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
+    getPermissions,
     getAdminPermissions,
     getTranPermissions,
 } from './useradmin';
