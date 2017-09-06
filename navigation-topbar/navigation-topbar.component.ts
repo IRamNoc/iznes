@@ -47,7 +47,7 @@ export class NavigationTopbarComponent implements OnInit {
         this.walletSelectItems = walletListToSelectItem(currentWalletsList);
 
         this.currentUserDetails = getMyDetail(newState);
-        this.username = this.currentUserDetails.username;
+        this.username = this.currentUserDetails.firstName;
 
         // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
         if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
