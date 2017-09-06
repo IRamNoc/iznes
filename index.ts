@@ -1,13 +1,24 @@
 export {
     // my-detail
-    UserState, userReducer, SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, LOGIN_REQUEST, loginRequestAC,
+    UserState,
+    userReducer,
+    SET_LOGIN_DETAIL,
+    RESET_LOGIN_DETAIL,
+    LOGIN_REQUEST,
+    loginRequestAC,
+    SET_USER_DETAILS,
     getMyDetail,
 
     // authentication
-    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication,
+    SET_AUTH_LOGIN_DETAIL,
+    RESET_AUTH_LOGIN_DETAIL,
+    getAuthentication,
 
     // connected
-    setConnectedWallet, getConnected, getConnectedChain, getConnectedWallet
+    setConnectedWallet,
+    getConnected,
+    getConnectedChain,
+    getConnectedWallet
 } from './user';
 
 export {
@@ -32,7 +43,7 @@ export {
     getWalletRelationship,
     getWalletToRelationshipList,
     getRequestWalletToRelationshipState,
-    SET_ISSUE_HOLDING
+    SET_ISSUE_HOLDING,
 } from './wallet';
 
 export {

@@ -4,5 +4,7 @@ export interface MyDetailState {
     userId: number;
     lastLogin: string;
     userType: number;
+    firstName: string;
+    lastName: string;
     admin: boolean;
 }

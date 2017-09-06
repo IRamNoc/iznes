@@ -32,3 +32,9 @@ export const resetLoginDetail: ActionCreator<AsyncTaskResponseAction> = (payload
     payload: payload
 });
 
+/**
+ * Set User Details
+ * @type {string}
+ */
+export const SET_USER_DETAILS = `${name}/SET_USER_DETAILS`;
+
