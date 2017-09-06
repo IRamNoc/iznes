@@ -150,9 +150,8 @@ export class UserAdminService {
     @Output()
     public permissionsListSubject = new Subject<any>();
     public getPermissionsListSubject () {
-        return this.txPermAreaListSubject.asObservable();
+        return this.permissionsListSubject.asObservable();
     }
-
 
     /* Constructor. */
     constructor (
