@@ -4,9 +4,22 @@ import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
     RequestAdminUsersMessageBody,
+
+    /* Users */
     CreateUserMessageBody,
     EditUserMessageBody,
-    GetPermissionAreaListBody
+
+    /* Permissions. */
+    GetPermissionAreaListBody,
+    UpdateAdminPermissionsBody,
+    UpdateTxPermissionsBody,
+
+    /* Groups. */
+    CreateNewGroupBody,
+    UpdateGroupBody,
+
+    /* Enttiy permission. */
+    RequestPermissionBody,
 } from './useradmin.service.model';
 
 @Injectable()
@@ -18,6 +31,10 @@ export class AdminUsersService {
         /* Stub. */
     }
 
+    /*
+        User Functions.
+        ===============
+    */
     public requestMyUsersList () {
         /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
@@ -61,14 +78,16 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    /*
+        Permission Meta.
+        ================
+    */
     public getAdminPermAreaList (): any {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gpal',
             token: this.memberSocketService.token
         };
-
-        console.log( "SENDING TO GET ADMIN PERM AREA LIST: ", messageBody );
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -81,7 +100,101 @@ export class AdminUsersService {
             token: this.memberSocketService.token
         };
 
-        console.log( "SENDING TO GET TX PERM AREA LIST: ", messageBody );
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /*
+        Permission Groups.
+        ==================
+    */
+    public createNewGroup ( data ):any {
+        /* Setup the message body. */
+        const messageBody: CreateNewGroupBody = {
+            RequestName: 'ng',
+            token: this.memberSocketService.token,
+            groupName: data.name,
+            groupDescription: data.description,
+            groupType: data.type
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateGroup ( data ):any {
+        /* Setup the message body. */
+        const messageBody: UpdateGroupBody = {
+            RequestName: 'udg',
+            token: this.memberSocketService.token,
+            groupId: data.groupId,
+            groupName: data.name,
+            groupDescription: data.description,
+            groupType: data.type
+        };
+
+        console.log('SENDING UDG: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateAdminPermissions ( data ):any {
+        /* Setup the message body. */
+        const messageBody: UpdateAdminPermissionsBody = {
+            RequestName: 'udap',
+            token: this.memberSocketService.token,
+            entityId: data.entityid,
+            isGroup: data.isgroup,
+            toAdd: data.toadd,
+            toUpdate: data.toupdate,
+            toDelete: data.todelete,
+            isAdmin: data.isadmin
+        };
+
+        console.log('SENDING UDAP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateTxPermissions ( data ):any {
+        /* Setup the message body. */
+        const messageBody: UpdateTxPermissionsBody = {
+            RequestName: 'udap',
+            token: this.memberSocketService.token,
+            entityId: data.entityId,
+            isGroup: data.isGroup,
+            chainId: data.chainId,
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete,
+            isAdmin: data.isAdmin
+
+        };
+
+        console.log('SENDING UDAP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /*
+        Entity Permissions
+        ==================
+    */
+    public requestPermissions ( entity ):any {
+        /* Setup the message body. */
+        const messageBody: RequestPermissionBody = {
+            RequestName: 'gp',
+            token: this.memberSocketService.token,
+            entityId: entity.entityId,
+            isGroup: entity.isGroup,
+            permissionId: entity.permissionId,
+            includeGroup: entity.includeGroup
+        };
+
+        console.log('SENDING GP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
