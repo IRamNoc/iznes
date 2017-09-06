@@ -12,6 +12,7 @@ const initialState: MyDetailState = {
     userType: 0,
     firstName: '',
     lastName: '',
+    admin: false
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
@@ -30,14 +31,15 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const userId = _.get(loginedData, 'UserID', 0);
             const lastLogin = _.get(loginedData, 'lastLogin', '');
             const userType = _.get(loginedData, 'userType', '');
-
+            const admin = _.get(loginedData, 'admin', 0) ? true : false;
 
             newState = Object.assign({}, state, {
                 username,
                 emailAddress,
                 userId,
                 lastLogin,
-                userType
+                userType,
+                admin
             });
 
             return newState;
@@ -62,9 +64,4 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
         default:
             return state;
     }
-
-
-
-
 }
-

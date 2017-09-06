@@ -6,6 +6,5 @@ export interface MyDetailState {
     userType: number;
     firstName: string;
     lastName: string;
-
+    admin: boolean;
 }
-
