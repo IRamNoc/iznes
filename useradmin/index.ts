@@ -28,6 +28,7 @@ import {
     PermissionsReducer,
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
+    getPermissions,
     getAdminPermissions,
     getTranPermissions,
 } from './permissions';
@@ -50,6 +51,7 @@ export {
     getTranPermissionGroup,
     getAdminPermAreaList,
     getTxPermAreaList,
+    getPermissions,
     getAdminPermissions,
     getTranPermissions
 };

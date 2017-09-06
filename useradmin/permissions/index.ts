@@ -14,4 +14,4 @@ export {
 } from './actions';
 
 /* Selectors. */
-export {getAdminPermissions, getTranPermissions} from './selectors';
+export {getPermissions, getAdminPermissions, getTranPermissions} from './selectors';
