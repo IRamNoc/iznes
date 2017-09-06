@@ -26,6 +26,15 @@ import {
 } from '@setl/asset-servicing';
 
 /**
+ * Manage member module.
+ */
+import {
+    ManageChainMembershipComponent,
+    ManageMemberComponent,
+    ManageAccountComponent
+} from '@setl/core-manage-member';
+
+/**
  * Login Guard service
  */
 import {LoginGuardService} from '@setl/core-login';
@@ -138,6 +147,27 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService]
                     }
 
+                ],
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'chain-admin',
+                children: [
+                    {
+                        path: 'manage-member',
+                        component: ManageMemberComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'manage-account',
+                        component: ManageAccountComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'chain-membership',
+                        component: ManageChainMembershipComponent,
+                        canActivate: [LoginGuardService]
+                    }
                 ],
                 canActivate: [LoginGuardService]
             }
