@@ -6,6 +6,7 @@ import {BlankLayoutComponent} from '@setl/core-layout';
 
 /* Components. */
 import {HomeComponent} from './home/home.component';
+import {SetlMyAccountComponent} from '@setl/core-account';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
@@ -68,6 +69,11 @@ export const ROUTES: Routes = [
             {
                 path: 'messages',
                 component: SetlMessagesComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'my-account',
+                component: SetlMyAccountComponent,
                 canActivate: [LoginGuardService]
             },
             {
