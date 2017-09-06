@@ -3,7 +3,8 @@ import {NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 
 import {
-    SET_ADMIN_USERLIST
+    SET_ADMIN_USERLIST,
+    SET_USER_DETAILS
 } from '@setl/core-store';
 
 @Injectable()
@@ -47,6 +48,17 @@ export class ChannelService {
 
                 break;
 
+            case 'ud':
+                console.log(' | UPDATE USERDETAILS: ', data);
+
+                /* Let's now dispatch the append acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_USER_DETAILS,
+                        payload: [ null, data, null ]
+                    }
+                );
+                break;
             default:
                 break;
         }

@@ -5,6 +5,7 @@ import {MyWalletsService} from '../index';
 import {ChannelService} from '../index';
 
 import {AccountsService} from '../index';
+import {MyUserService} from '../index';
 import {PermissionGroupService} from '../index';
 import {
     SET_WALLET_ADDRESSES,
@@ -18,8 +19,11 @@ import {
     clearRequestedWalletIssuer,
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
-    SET_WALLET_TO_RELATIONSHIP
+    SET_WALLET_TO_RELATIONSHIP,
+    SET_USER_DETAILS
 } from '@setl/core-store';
+
+
 
 import {SagaHelper} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
@@ -103,6 +107,7 @@ export class InitialisationService {
                                     memberSocketService: MemberSocketService,
                                     channelService: ChannelService,
                                     accountsService: AccountsService,
+                                    myUserService: MyUserService,
                                     permissionGroupService: PermissionGroupService): boolean {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
@@ -119,10 +124,33 @@ export class InitialisationService {
         // Request managed wallet list
         this.requestManagedWalletList(ngRedux, myWalletsService);
 
+        // Request User Details
+        this.requestUserDetails(ngRedux, myUserService);
+
         // Subscribe to my connection channel, target for my userId.
         this.subscribe(memberSocketService, channelService);
 
         return true;
+    }
+
+    static requestUserDetails(ngRedux: NgRedux<any>,
+                              myUserService: MyUserService) {
+
+        // Create a saga pipe.
+        const asyncTaskPipes = myUserService.requestMyUserDetails();
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_USER_DETAILS],
+            [],
+            asyncTaskPipes, {}));
+
+        return true;
+
     }
 
     static requestMyOwnWallets(ngRedux: NgRedux<any>,
