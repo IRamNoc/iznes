@@ -164,19 +164,23 @@
 
 "@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#0b6bce0098ca11c262bf9fd8b0959587dee17354"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#94b483effec5286691943f6413ff4330d735396d"
 
 "@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#7b0ab7bb5a9ef9644e73dd45b63deb49792f4a4a"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#0ca42890fb7a6642660e63cc984341bfef3b82b9"
 
 "@setl/core-layout@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#a12e46e5336851182662c9a0b8c4db81b0323a5d"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#9ba4b15c39fa3b248293111ce8f47f382129ba28"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#380c3fea9a2089b97cc7090615c41625818aac37"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#772c780b6a8d578f24ae042261f05fa7dc4fe2af"
+
+"@setl/core-manage-member@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git":
+  version "1.0.0"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git#3bfac256dbfe50d53a1cdccc16ce45d68c17dcbc"
 
 "@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git":
   version "1.0.2"
@@ -184,18 +188,18 @@
 
 "@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#c3d6082c860240149fa284cac1323c4675605577"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#fbeda1d82b7596d52b90177119d89fa7d9d46668"
 
 "@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#564676e3c40c9e81f6340db75ea3ae3957562f78"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#020f973f65b1d419a6b1cc79af1093a2cfe156b6"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
 
 "@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git":
   version "1.0.8"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#fe8254b4ea41a348c3867047596a8b3afc580aa5"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#37b02e51e5dda3321348f8c9ec42453f77f9bd45"
 
 "@setl/jaspero-ng2-alerts@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git":
   version "0.0.6"
@@ -203,7 +207,7 @@
 
 "@setl/permission-grid@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git#e0f074601f657c0f87aa120d975696ff3f32c210"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git#b8493d00cb48d89a4f526bad53e6f7bc5890f1e8"
 
 "@setl/socketcluster-wrapper@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
   version "1.0.4"
@@ -216,7 +220,7 @@
 
 "@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git":
   version "1.0.3"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#671fa06e838089674e12b2c89a7b78460dbbecab"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#e70d9f9863e49053c7b0e4d6a3491520daaa78e1"
   dependencies:
     ramda "^0.24.1"
     redux-saga "^0.15.6"
@@ -229,7 +233,7 @@
 
 "@setl/websocket-service@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git":
   version "1.0.4"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#fb6953455f8e220c5c4516d2e21ee5ec0d32c699"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#dfeec51207c1dd7ffa3347382ab78f6f0ec3cb7e"
   dependencies:
     "@setl/socketcluster-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4"
     "@setl/vanilla-websocket-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#1.0.0"
@@ -631,7 +635,7 @@ babel-types@^6.18.0, babel-types@^6.26.0:
     lodash "^4.17.4"
     to-fast-properties "^1.0.3"
 
-babylon@^6.17.4, babylon@^6.18.0:
+babylon@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
@@ -762,14 +766,15 @@ brorand@^1.0.1:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/browserify-aes/-/browserify-aes-1.0.6.tgz#5e7725dbdef1fd5930d4ebab48567ce451c48a0a"
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/browserify-aes/-/browserify-aes-1.0.8.tgz#c8fa3b1b7585bb7ba77c5560b60996ddec6d5309"
   dependencies:
-    buffer-xor "^1.0.2"
+    buffer-xor "^1.0.3"
     cipher-base "^1.0.0"
     create-hash "^1.1.0"
-    evp_bytestokey "^1.0.0"
+    evp_bytestokey "^1.0.3"
     inherits "^2.0.1"
+    safe-buffer "^5.0.1"
 
 browserify-cipher@^1.0.0:
   version "1.0.0"
@@ -819,7 +824,7 @@ browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
     caniuse-db "^1.0.30000639"
     electron-to-chromium "^1.2.7"
 
-buffer-xor@^1.0.2:
+buffer-xor@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
 
@@ -887,8 +892,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000722"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000722.tgz#e0bc209d91a578319103b50749f2aa7e4a672a79"
+  version "1.0.30000726"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000726.tgz#9bb742f8d026a62df873bc03c06843d2255b60d7"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -1765,9 +1770,9 @@ eventsource@0.1.6:
   dependencies:
     original ">=0.0.5"
 
-evp_bytestokey@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/evp_bytestokey/-/evp_bytestokey-1.0.2.tgz#f66bb88ecd57f71a766821e20283ea38c68bf80a"
+evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/evp_bytestokey/-/evp_bytestokey-1.0.3.tgz#7fcbdb198dc71959432efe13842684e0525acb02"
   dependencies:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
@@ -2706,14 +2711,14 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
 istanbul-api@^1.1.8:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/istanbul-api/-/istanbul-api-1.1.13.tgz#7197f64413600ebdfec6347a2dc3d4e03f97ed5a"
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/istanbul-api/-/istanbul-api-1.1.14.tgz#25bc5701f7c680c0ffff913de46e3619a3a6e680"
   dependencies:
     async "^2.1.4"
     fileset "^2.0.2"
     istanbul-lib-coverage "^1.1.1"
     istanbul-lib-hook "^1.0.7"
-    istanbul-lib-instrument "^1.7.5"
+    istanbul-lib-instrument "^1.8.0"
     istanbul-lib-report "^1.1.1"
     istanbul-lib-source-maps "^1.2.1"
     istanbul-reports "^1.1.2"
@@ -2740,15 +2745,15 @@ istanbul-lib-hook@^1.0.7:
   dependencies:
     append-transform "^0.4.0"
 
-istanbul-lib-instrument@^1.1.3, istanbul-lib-instrument@^1.7.5:
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-1.7.5.tgz#adb596f8f0cb8b95e739206351a38a586af21b1e"
+istanbul-lib-instrument@^1.1.3, istanbul-lib-instrument@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-1.8.0.tgz#66f6c9421cc9ec4704f76f2db084ba9078a2b532"
   dependencies:
     babel-generator "^6.18.0"
     babel-template "^6.16.0"
     babel-traverse "^6.18.0"
     babel-types "^6.18.0"
-    babylon "^6.17.4"
+    babylon "^6.18.0"
     istanbul-lib-coverage "^1.1.1"
     semver "^5.3.0"
 
@@ -4165,12 +4170,12 @@ postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.
     supports-color "^3.2.3"
 
 postcss@^6.0.1:
-  version "6.0.10"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.10.tgz#c311b89734483d87a91a56dc9e53f15f4e6e84e4"
+  version "6.0.11"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.11.tgz#f48db210b1d37a7f7ab6499b7a54982997ab6f72"
   dependencies:
     chalk "^2.1.0"
     source-map "^0.5.7"
-    supports-color "^4.2.1"
+    supports-color "^4.4.0"
 
 prepend-http@^1.0.0:
   version "1.0.4"
@@ -5160,7 +5165,7 @@ supports-color@^3.1.0, supports-color@^3.1.1, supports-color@^3.1.2, supports-co
   dependencies:
     has-flag "^1.0.0"
 
-supports-color@^4.0.0, supports-color@^4.2.1:
+supports-color@^4.0.0, supports-color@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"
   dependencies:
