@@ -3,6 +3,6 @@
     "version": "1.0.2",
     "main": "index.js",
     "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git",
-    "author": "Luke Brown <luke.brown@setl.io>",
+    "author": "Ollie Kett <ollie.kett@setl.io>",
     "license": "MIT"
 }
