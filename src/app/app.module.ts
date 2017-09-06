@@ -21,7 +21,8 @@ import {
     WalletnodeTxService,
     ChannelService,
     AccountsService,
-    PermissionGroupService
+    PermissionGroupService,
+    MemberService
 } from '@setl/core-req-services';
 
 /* Routes. */
@@ -35,6 +36,7 @@ import {SetlBalancesModule} from '@setl/core-balances';
 import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
+import {CoreManageMemberModule} from '@setl/core-manage-member';
 
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
@@ -98,7 +100,8 @@ import {environment} from '../environments/environment';
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,
-        SetlPipesModule
+        SetlPipesModule,
+        CoreManageMemberModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -126,7 +129,8 @@ import {environment} from '../environments/environment';
         ChannelService,
         AlertIconAndTypesService,
         AccountsService,
-        PermissionGroupService
+        PermissionGroupService,
+        MemberService
     ],
     bootstrap: [AppComponent]
 })
