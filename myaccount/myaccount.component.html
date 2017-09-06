@@ -1,1 +1,42 @@
-my-account work!
+<div class="header-breadcrumbs">
+    <h1>My Account</h1>
+</div>
+
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink><i class="fa fa-table"></i> Datagrid</button>
+        <clr-tab-content *clrIfActive>
+            <clr-datagrid>
+                <clr-dg-column>Data</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let user of users">
+                    <clr-dg-cell>{{user.id}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} datas
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="link3"><i class="fa fa-pencil"></i> Form</button>
+        <clr-tab-content *clrIfActive>
+
+                <section class="form-block">
+                    <label>My Form</label>
+                    <div class="form-group">
+                        <label for="myvalue">Value</label>
+                        <input type="text" id="myvalue" placeholder="Enter value here" size="45" [(ngModel)]="myValue">
+                    </div>
+                    <span class="btn btn-success" (click)="submit()">Send</span>
+                </section>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
