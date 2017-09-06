@@ -6,6 +6,7 @@ import {BlankLayoutComponent} from '@setl/core-layout';
 
 /* Components. */
 import {HomeComponent} from './home/home.component';
+import {SetlMyAccountComponent} from '@setl/core-account';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
@@ -23,6 +24,15 @@ import {
     RegisterAssetComponent,
     IssueAssetComponent
 } from '@setl/asset-servicing';
+
+/**
+ * Manage member module.
+ */
+import {
+    ManageChainMembershipComponent,
+    ManageMemberComponent,
+    ManageAccountComponent
+} from '@setl/core-manage-member';
 
 /**
  * Login Guard service
@@ -59,6 +69,11 @@ export const ROUTES: Routes = [
             {
                 path: 'messages',
                 component: SetlMessagesComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'my-account',
+                component: SetlMyAccountComponent,
                 canActivate: [LoginGuardService]
             },
             {
@@ -132,6 +147,27 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService]
                     }
 
+                ],
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'chain-admin',
+                children: [
+                    {
+                        path: 'manage-member',
+                        component: ManageMemberComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'manage-account',
+                        component: ManageAccountComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'chain-membership',
+                        component: ManageChainMembershipComponent,
+                        canActivate: [LoginGuardService]
+                    }
                 ],
                 canActivate: [LoginGuardService]
             }
