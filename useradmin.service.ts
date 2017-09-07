@@ -391,6 +391,39 @@ export class UserAdminService {
     }
 
     /**
+     * Delete Group
+     * ----------------
+     * Deletes a Group.
+     *
+     * @param {data} - the group data, only requires a groupId key.
+     *
+     * @return {void}
+     */
+    public deleteGroup (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.deleteGroup(
+                data
+            );
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (data) {
+                    if ( data[1].Data[0] ) {
+                        resolve( data[1].Data[0] ); // success
+                    } else {
+                        reject(data); // no data
+                    }
+                },
+                function (data) {
+                    reject(data); // error
+                })
+            );
+        });
+    }
+
+    /**
      * Update AdminPermissions
      * ----------------
      * Updates an entity's permissions.
@@ -405,7 +438,7 @@ export class UserAdminService {
             const
             state = this.ngRedux.getState(),
             myDetail = getMyDetail(state);
-            data.isadmin = myDetail.admin ? "1": "0";
+            data.isAdmin = myDetail.admin ? "1": "0";
 
             // Create a saga pipe.
             const asyncTaskPipe = this.adminUsersService.updateAdminPermissions(
@@ -485,18 +518,18 @@ export class UserAdminService {
 
             /* Now lets check if the entity has permissions and if we need to get a
                specific one... */
-            if ( currentPermissions[ location ][ entity.entityId ] ) {
-                /* Check if the permissionID was requested and if it exists... */
-                if ( entity.permissionId >= 1 && currentPermissions[ location ][ entity.entityId ][ entity.permissionId ] ) {
-                    /* Force update the observables. */
-                    resolve();
-                    return;
-                } else if ( entity.permissionId === 0 ) {
-                    /* Force update the observables. */
-                    resolve();
-                    return;
-                }
-            }
+            // if ( currentPermissions[ location ][ entity.entityId ] ) {
+            //     /* Check if the permissionID was requested and if it exists... */
+            //     if ( entity.permissionId >= 1 && currentPermissions[ location ][ entity.entityId ][ entity.permissionId ] ) {
+            //         /* Force update the observables. */
+            //         resolve();
+            //         return;
+            //     } else if ( entity.permissionId === 0 ) {
+            //         /* Force update the observables. */
+            //         resolve();
+            //         return;
+            //     }
+            // }
 
             /* Ok, so we didn't have it... now let's just request it. */
             console.log("request: ", entity);
