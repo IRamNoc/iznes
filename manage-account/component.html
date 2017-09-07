@@ -8,21 +8,21 @@
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
             <clr-tab-content *clrIfActive="tabdata.active">
-                <!-- Member list tab. -->
+                <!-- Account list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="staticUserListTab"
+                        *ngTemplateOutlet="accountListTab"
                     ></ng-container>
                 </ng-container>
 
-                <!-- Member add tab. -->
+                <!-- Account add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
                         *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
 
-                <!-- Member edit tabs. -->
+                <!-- Account edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
                         *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
@@ -32,39 +32,34 @@
         </clr-tab>
     </clr-tabs>
 
-    <!-- User Data Table. -->
-    <ng-template #staticUserListTab>
+    <!-- Account Data Table. -->
+    <ng-template #accountListTab>
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid>
                 <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Username</clr-dg-column>
-                <clr-dg-column>Email</clr-dg-column>
-                <clr-dg-column>Account</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column>Account Name</clr-dg-column>
+                <clr-dg-column>Description</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersData">
+
+                <clr-dg-row *clrDgItems="let account of accountList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(user.index)" class="btn">
+                            <button (click)="handleEdit(account.index)" class="btn">
                                 <i class="fa fa-pencil-square-o"></i> Edit
                             </button>
-                            <button (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete
+                            <button (click)="handleDelete(account.index)" class="btn">
+                                <i class="fa fa-trash-o"></i> Delete
                             </button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{user.userName}}</clr-dg-cell>
-                    <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
-                    <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span *ngIf="user.accountLocked == 0" class="label label-success">Enabled</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning">Disabled</span>
-                    </clr-dg-cell>
+                    <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
+                    <clr-dg-cell>{{account.description}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{pagination.totalItems}} users
+                    of {{pagination.totalItems}} accounts
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
