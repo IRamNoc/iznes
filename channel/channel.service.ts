@@ -4,7 +4,9 @@ import {SagaHelper} from '@setl/utils';
 
 import {
     SET_ADMIN_USERLIST,
-    SET_USER_DETAILS
+    SET_USER_DETAILS,
+    SET_ADMIN_PERMISSIONS,
+    SET_TX_PERMISSIONS
 } from '@setl/core-store';
 
 @Injectable()
@@ -55,6 +57,29 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_USER_DETAILS,
+                        payload: [ null, data, null ]
+                    }
+                );
+                break;
+
+            case 'ng':
+            case 'upg':
+            case 'dpg':
+                console.log(' | UPDATE PERMISSION GROUPS: ', data);
+
+                /* Let's now dispatch the admin acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ADMIN_PERMISSIONS,
+                        payload: [ null, data, null ]
+                    }
+                );
+
+                /* and the tx action. */
+                /* Let's now dispatch the append acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_TX_PERMISSIONS,
                         payload: [ null, data, null ]
                     }
                 );
