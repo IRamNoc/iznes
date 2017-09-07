@@ -146,6 +146,7 @@ export class SetlLoginComponent implements OnDestroy {
                 this.memberSocketService,
                 this.channelService,
                 this.accountsService,
+                this.myUserService,
                 this.permissionGroupService
             );
         }
