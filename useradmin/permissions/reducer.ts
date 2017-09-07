@@ -67,6 +67,8 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
             /* Pull the data from the message body. */
             newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
+            console.log(" | requested permissions: ", newEntityPermissions);
+
             /* Now tidy the data up. */
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
