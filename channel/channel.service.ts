@@ -5,8 +5,8 @@ import {SagaHelper} from '@setl/utils';
 import {
     SET_ADMIN_USERLIST,
     SET_USER_DETAILS,
-    SET_ADMIN_PERMISSIONS,
-    SET_TX_PERMISSIONS
+    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST
 } from '@setl/core-store';
 
 @Injectable()
@@ -70,7 +70,7 @@ export class ChannelService {
                 /* Let's now dispatch the admin acion. */
                 this.ngRedux.dispatch(
                     {
-                        type: SET_ADMIN_PERMISSIONS,
+                        type: SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
                         payload: [ null, data, null ]
                     }
                 );
@@ -79,7 +79,7 @@ export class ChannelService {
                 /* Let's now dispatch the append acion. */
                 this.ngRedux.dispatch(
                     {
-                        type: SET_TX_PERMISSIONS,
+                        type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
                         payload: [ null, data, null ]
                     }
                 );
