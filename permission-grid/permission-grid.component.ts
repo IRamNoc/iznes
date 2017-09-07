@@ -7,10 +7,13 @@ import {
     EventEmitter
 } from '@angular/core';
 
+/* Import the option list. */
+import { OptionListComponent } from '../option-list/option-list.component'
+
 @Component({
   selector: 'setl-permission-grid',
   templateUrl: './permission-grid.component.html',
-  styleUrls: ['./permission-grid.component.scss']
+  styleUrls: ['./permission-grid.component.css']
 })
 export class PermissionGridComponent implements OnInit, AfterViewInit {
 

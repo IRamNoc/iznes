@@ -10,14 +10,17 @@ import {ClarityModule} from 'clarity-angular';
 
 /* Components. */
 import {PermissionGridComponent} from './permission-grid/permission-grid.component';
+import {OptionListComponent} from './option-list/option-list.component';
 
 /* User admin service. */
 @NgModule({
     declarations: [
-        PermissionGridComponent
+        PermissionGridComponent,
+        OptionListComponent
     ],
     exports: [
-        PermissionGridComponent
+        PermissionGridComponent,
+        OptionListComponent
     ],
     imports: [
         CommonModule,

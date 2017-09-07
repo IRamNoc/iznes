@@ -16,13 +16,10 @@
                     <span>{{area.text}}</span>
                 </td>
                 <td *ngFor="let level of permissionLevels">
-                    <select
-                    [(ngModel)]="rawComponentData[area.id][level.id]"
-                    (change)="triggerDataEmit()">
-                        <option value="1">Allow</option>
-                        <option value="0">Do Not Allow</option>
-                        <option value="2">Forbid</option>
-                    </select>
+                    <!-- Option List, defaults to this grid. -->
+                    <options-list
+                        (selected)="rawComponentData[area.id][level.id] = $event.id"
+                    ></options-list>
                 </td>
             </tr>
         </tbody>
