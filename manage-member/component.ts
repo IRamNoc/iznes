@@ -16,7 +16,7 @@ import {
 } from '@setl/core-store';
 
 @Component({
-    selector: 'app-manage-member',
+selector: 'app-manage-member',
     templateUrl: './component.html',
     styleUrls: ['./component.css']
 })
@@ -88,5 +88,5 @@ export class ManageMemberComponent implements OnInit {
             ));
 
         }
-    }
+}
 }
