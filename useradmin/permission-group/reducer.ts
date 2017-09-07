@@ -57,7 +57,7 @@ function formatToAdminPermGroupList(rawPermissionGroupList) {
 
     const adminPermObject = Map(rawAdminPermGroupDataList.reduce(function (result, item) {
 
-        const groupIsTx = item.get('groupIsTx') === 1;
+        const groupIsTx = item.get('groupIsTx') === 2;
 
         if (!groupIsTx) {
             const canDelegate = item.get('canDelegate') === 1;
@@ -81,7 +81,7 @@ function formatToTranPermGroupList(rawPermissionGroupList) {
 
     const adminPermObject = Map(rawAdminPermGroupDataList.reduce(function (result, item) {
 
-        const groupIsTx = item.get('groupIsTx') === 1;
+        const groupIsTx = item.get('groupIsTx') === 2;
 
         if (groupIsTx) {
             const canDelegate = item.get('canDelegate') === 1;
