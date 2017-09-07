@@ -8,6 +8,7 @@ import {
     EditAccountMessageBody,
     DeleteAccountMessageBody
 } from './account.service.model';
+import _ from 'lodash';
 
 interface AddAccountRequest {
     accountName: string;
@@ -16,9 +17,9 @@ interface AddAccountRequest {
 }
 
 interface EditAccountRequest {
-    accountId: number,
+    accountId: number;
     accountName: string;
-    accountDescription: string;
+    description: string;
     walletId: number;
 }
 
@@ -44,7 +45,10 @@ export class AccountsService {
     addAccount(requestData: AddAccountRequest): any {
         const messageBody: AddAccountMessageBody = {
             RequestName: 'na',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
+            accountName: _.get(requestData, 'accountName', ''),
+            accountDescription: _.get(requestData, 'accountDescription', ''),
+            accountMember: _.get(requestData, 'memberId', 0)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -53,7 +57,11 @@ export class AccountsService {
     editAccount(requestData: EditAccountRequest): any {
         const messageBody: EditAccountMessageBody = {
             RequestName: 'upa',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
+            accountID: _.get(requestData, 'accountId', 0),
+            accountName: _.get(requestData, 'accountName', ''),
+            description: _.get(requestData, 'description', ''),
+            wallet: _.get(requestData, 'walletId', 0)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -62,7 +70,8 @@ export class AccountsService {
     deleteAccount(requestData: DeleteAccountRequest): any {
         const messageBody: DeleteAccountMessageBody = {
             RequestName: 'da',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
+            accountid: _.get(requestData, 'accountId', 0)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

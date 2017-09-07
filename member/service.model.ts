@@ -6,17 +6,17 @@ export interface RequestManageMemberListMessageBody extends MemberNodeMessageBod
 
 export interface AddMemberMessageBody extends MemberNodeMessageBody {
     token: string;
-    membername: string;
+    memberName: string;
     email: string;
 }
 
 export interface EditMemberMessageBody extends MemberNodeMessageBody {
     token: string;
-    memberid: number;
-    membername: string;
+    memberId: number;
+    memberName: string;
 }
 
 export interface DeleteMemberMessageBody extends MemberNodeMessageBody {
     token: string;
-    memberid: number;
+    memberId: number;
 }

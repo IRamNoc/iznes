@@ -8,7 +8,7 @@ import {
     EditMemberMessageBody,
     DeleteMemberMessageBody
 } from './service.model';
-import _ from 'immutable';
+import _ from 'lodash';
 
 interface AddMemberRequest {
     memberName: string;
@@ -43,7 +43,7 @@ export class MemberService {
         const messageBody: AddMemberMessageBody = {
             RequestName: 'nm',
             token: this.memberSocketService.token,
-            membername: _.get(requestData, 'memberName', ''),
+            memberName: _.get(requestData, 'memberName', ''),
             email: _.get(requestData, 'email', '')
         };
 
@@ -54,8 +54,8 @@ export class MemberService {
         const messageBody: EditMemberMessageBody = {
             RequestName: 'udm',
             token: this.memberSocketService.token,
-            memberid: _.get(requestData, 'memberId', 0),
-            membername: _.get(requestData, 'memberName', ''),
+            memberId: _.get(requestData, 'memberId', 0),
+            memberName: _.get(requestData, 'memberName', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -65,7 +65,7 @@ export class MemberService {
         const messageBody: DeleteMemberMessageBody = {
             RequestName: 'udm',
             token: this.memberSocketService.token,
-            memberid: _.get(requestData, 'memberId', 0),
+            memberId: _.get(requestData, 'memberId', 0),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

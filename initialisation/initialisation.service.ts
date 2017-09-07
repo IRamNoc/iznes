@@ -20,10 +20,9 @@ import {
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
     SET_WALLET_TO_RELATIONSHIP,
-    setRequestedAccountList
+    setRequestedAccountList,
     SET_USER_DETAILS
 } from '@setl/core-store';
-
 
 
 import {SagaHelper} from '@setl/utils';
