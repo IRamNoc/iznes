@@ -391,7 +391,7 @@ export class UserAdminService {
     }
 
     /**
-     * Update Permissions
+     * Update AdminPermissions
      * ----------------
      * Updates an entity's permissions.
      *
@@ -399,28 +399,67 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    updatePermissions (data):void {
-        // Get my detail to add is admin to the request.
-        const
-        state = this.ngRedux.getState(),
-        myDetail = getMyDetail(state);
-        data.isadmin = myDetail.admin ? "1": "0";
+    updateAdminPermissions (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Get my detail to add is admin to the request.
+            const
+            state = this.ngRedux.getState(),
+            myDetail = getMyDetail(state);
+            data.isadmin = myDetail.admin ? "1": "0";
 
-        // Create a saga pipe.
-        const asyncTaskPipe = this.adminUsersService.updateAdminPermissions(
-            data
-        );
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.updateAdminPermissions(
+                data
+            );
 
-        // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            function (data) {
-                console.log(data) // success
-            },
-            function (data) {
-                console.log(data) // error
-            })
-        );
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (data) {
+                    resolve(data);
+                },
+                function (error) {
+                    reject(error);
+                })
+            );
+        });
+    }
+
+    /**
+     * Update Tx Permissions
+     * ----------------
+     * Updates an entity's permissions.
+     *
+     * @param {data} - the permission data.
+     *
+     * @return {void}
+     */
+    updateTxPermissions (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            /* Get my detail to add is admin to the request. */
+            const
+            state = this.ngRedux.getState(),
+            myDetail = getMyDetail(state);
+
+            /* Figure the admin bit out. */
+            data.isAdmin = myDetail.admin ? "1": "0";
+
+            /* Create a saga pipe. */
+            const asyncTaskPipe = this.adminUsersService.updateTxPermissions(
+                data
+            );
+
+            /* Get response from set active wallet. */
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (data) {
+                    resolve(data);
+                },
+                function (error) {
+                    reject(error);
+                })
+            );
+        });
     }
 
     /**
@@ -460,13 +499,24 @@ export class UserAdminService {
             }
 
             /* Ok, so we didn't have it... now let's just request it. */
-            const asyncTaskPipe = this.adminUsersService.requestPermissions(
-                entity
-            );
+            console.log("request: ", entity);
+            let
+            asyncTaskPipe;
+            if ( entity.isTx ) {
+                asyncTaskPipe = this.adminUsersService.requestTxPermissions(
+                    entity
+                );
+            } else {
+                asyncTaskPipe = this.adminUsersService.requestAdminPermissions(
+                    entity
+                );
+            }
 
-            /* Get response from the request, but first check if we're getting an
+
+            /* Save response from the request, but first check if we're getting an
                admin entity or a tx one. */
             let action = entity.isTx ? SET_TX_PERMISSIONS : SET_ADMIN_PERMISSIONS;
+            console.log("action: ", action);
             this.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     [ action ],
@@ -474,6 +524,7 @@ export class UserAdminService {
                     asyncTaskPipe,
                     {},
                     (data) => {
+                        console.log('reply: ', data);
                         resolve();
                     },
                     (error) => {
@@ -674,6 +725,58 @@ export class UserAdminService {
 
         /* If nothing matched, just return nothing. */
         return [];
+    }
+
+    /**
+     * Get Permissions Difference.
+     * ---------------------------
+     * Figures out what to send to update permissions, i.e which to add,
+     * delete or update.
+     *
+     * @param {oldPermissions} - the old permissions object.
+     * @param {newPermissions} - the new permissions object.
+     *
+     * @return {diff}
+     */
+    public getPermissionsDiff(oldPermissions, newPermissions) {
+        console.log("Old Permissions: ", oldPermissions);
+        console.log("New Permissions: ", newPermissions);
+        var differences = {};
+        var toAdd = {};
+        var toUpdate = {};
+        var toDelete = [];
+
+
+        for (var i in newPermissions) {
+            /* Add it if it didn't exist. */
+            if (typeof oldPermissions[i] == 'undefined') {
+                toAdd[i] = newPermissions[i];
+            }
+            /* Else, if there's differences, add it to update. */
+            else {
+                if (oldPermissions[i]['canDelegate'] != newPermissions[i]['canDelegate'] ||
+                    oldPermissions[i]['canDelete'] != newPermissions[i]['canDelete'] ||
+                    oldPermissions[i]['canInsert'] != newPermissions[i]['canInsert'] ||
+                    oldPermissions[i]['canRead'] != newPermissions[i]['canRead'] ||
+                    oldPermissions[i]['canUpdate'] != newPermissions[i]['canUpdate']
+                ) {
+                    toUpdate[i] = newPermissions[i];
+                }
+            }
+        }
+
+        /* Figure out which are needed to be removed. */
+        for (var i in oldPermissions) {
+            if (typeof newPermissions[i] == 'undefined') {
+                toDelete.push(i);
+            }
+        }
+
+        return {
+            'toAdd': toAdd,
+            'toUpdate': toUpdate,
+            'toDelete': toDelete
+        };
     }
 
 }
