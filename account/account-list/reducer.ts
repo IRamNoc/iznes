@@ -1,11 +1,16 @@
-import * as AccountListActions from './actions';
+import {
+    SET_ACCOUNT_LIST,
+    SET_REQUESTED_ACCOUNT_LIST,
+    CLEAR_REQUESTED_ACCOUNT_LIST
+} from './actions';
 import {AccountDetail, AccountListState} from './model';
 import _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 
 const initialState: AccountListState = {
-    accountList: {}
+    accountList: {},
+    requestedAccountList: false
 };
 
 export const AccountListReducer = function (state: AccountListState = initialState,
@@ -14,7 +19,7 @@ export const AccountListReducer = function (state: AccountListState = initialSta
     let accountList: object;
 
     switch (action.type) {
-        case AccountListActions.SET_ACCOUNT_LIST:
+        case SET_ACCOUNT_LIST:
             const accountListData = _.get(action, 'payload[1].Data', []);
             accountList = formatAccountListData(accountListData);
 
@@ -23,6 +28,12 @@ export const AccountListReducer = function (state: AccountListState = initialSta
             });
 
             return newState;
+
+        case SET_REQUESTED_ACCOUNT_LIST:
+            return handleSetRequestedAccountList(action, state);
+
+        case CLEAR_REQUESTED_ACCOUNT_LIST:
+            return handleClearRequestedAccountList(action, state);
 
         default:
             return state;
@@ -47,4 +58,27 @@ function formatAccountListData(rawAccountListData: Array<any>): {
         }, {}));
 
     return accountDataList.toJS();
+}
+
+function handleSetRequestedAccountList(action, state) {
+    let newState: AccountListState;
+    const requestedAccountList = true;
+
+    newState = Object.assign({}, state, {
+        requestedAccountList
+    });
+
+    return newState;
+}
+
+function handleClearRequestedAccountList(action, state) {
+
+    let newState: AccountListState;
+    const requestedAccountList = false;
+
+    newState = Object.assign({}, state, {
+        requestedAccountList
+    });
+
+    return newState;
 }
