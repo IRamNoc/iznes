@@ -17,6 +17,7 @@ import {
     /* Groups. */
     CreateNewGroupBody,
     UpdateGroupBody,
+    DeleteGroupBody,
 
     /* Enttiy permission. */
     RequestAdminPermissionBody,
@@ -140,17 +141,31 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    public deleteGroup ( data ):any {
+        /* Setup the message body. */
+        const messageBody: DeleteGroupBody = {
+            RequestName: 'dpg',
+            token: this.memberSocketService.token,
+            groupId: data.groupId
+        };
+
+        console.log('SENDING UDG: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     public updateAdminPermissions ( data ):any {
         /* Setup the message body. */
         const messageBody: UpdateAdminPermissionsBody = {
             RequestName: 'udap',
             token: this.memberSocketService.token,
-            entityId: data.entityid,
-            isGroup: data.isgroup,
-            toAdd: data.toadd,
-            toUpdate: data.toupdate,
-            toDelete: data.todelete,
-            isAdmin: data.isadmin
+            entityId: data.entityId,
+            isGroup: data.isGroup,
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete,
+            isAdmin: data.isAdmin
         };
 
         console.log('SENDING UDAP: ', messageBody);

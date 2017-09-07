@@ -54,6 +54,11 @@ export interface UpdateGroupBody extends MemberNodeMessageBody {
     groupType: string;
 }
 
+export interface DeleteGroupBody extends MemberNodeMessageBody {
+    token: string;
+    groupId: string;
+}
+
 export interface UpdateAdminPermissionsBody extends MemberNodeMessageBody {
     token: string;
     entityId: number;
@@ -62,6 +67,7 @@ export interface UpdateAdminPermissionsBody extends MemberNodeMessageBody {
     toUpdate: any;
     toDelete: any;
     isAdmin: string;
+    chainId?: number;
 }
 
 export interface UpdateTxPermissionsBody extends MemberNodeMessageBody {
