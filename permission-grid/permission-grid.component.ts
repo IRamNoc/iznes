@@ -68,6 +68,12 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
             // console.log(" | init data emitter is set.");
             // console.log( "subscribe: ", new Date() );
             this.initData.subscribe((data) => {
+                /* Check if we have data. */
+                if ( ! data ) {
+                    console.warn("Permission Grid: Emitted data to initData, but it was undefined.");
+                    return;
+                }
+
                 /* Loop over the object and set this raw data to it, then emit data again. */
                 // console.log(" | < got new init data: ", data);
                 let i, j;
@@ -86,6 +92,9 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
                     }
                     /* Done! */
                 }
+
+                /* Emit. */
+                this.triggerDataEmit();
             });
         }
     }
@@ -109,6 +118,9 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
             score = 0;
 
             for ( levelId in this.rawComponentData[areaId] ) {
+                /* Convert to string. */
+                this.rawComponentData[areaId][levelId] = this.rawComponentData[areaId][levelId].toString();
+
                 /* If one of them is not 0, then add to score. */
                 if ( this.rawComponentData[areaId][levelId] !== "0" ) {
                     // console.log(" | > ", areaId+"-"+levelId+" as not 0");
