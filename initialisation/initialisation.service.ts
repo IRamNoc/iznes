@@ -20,9 +20,9 @@ import {
     clearRequestedWalletInstrument,
     SET_MY_INSTRUMENTS_LIST,
     SET_WALLET_TO_RELATIONSHIP,
+    setRequestedAccountList,
     SET_USER_DETAILS
 } from '@setl/core-store';
-
 
 
 import {SagaHelper} from '@setl/utils';
@@ -187,6 +187,9 @@ export class InitialisationService {
 
     static requestAccountList(ngRedux: NgRedux<any>,
                               accountsService: AccountsService): boolean {
+
+        ngRedux.dispatch(setRequestedAccountList());
+
         const asyncTaskPipes = accountsService.requestAccountList();
 
         ngRedux.dispatch(SagaHelper.runAsync(
