@@ -1,6 +1,7 @@
 div.option-wrap {
     position: relative;
     display: inline-block;
+    user-select: none;
 }
 
 div.option-box {
@@ -11,12 +12,13 @@ div.option-box {
     cursor: pointer;
     height: 30px;
     width: 30px;
+    line-height: 20px;
 }
 
 ul.option-list {
     position: absolute;
-    top: 30px;
-    left: 30px;
+    top: 32px;
+    left: 0px;
     height: 0;
     overflow: hidden;
     list-style-type: none;
