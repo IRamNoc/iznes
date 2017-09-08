@@ -24,9 +24,9 @@ import {fromJS} from "immutable";
 })
 export class SetlMessagesComponent {
 
-    @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
+    @select(['message', 'myMessages', 'messageList']) getMessageList;
 
-    public messages;
+    public messages = [];
     public categories;
     public currentMessage;
     public currentCategory;
@@ -44,6 +44,13 @@ export class SetlMessagesComponent {
 
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService) {
+
+        this.getMessageList.subscribe(
+            (messageListData) => {
+                this.messages = messageListData;
+                console.log(this.messages);
+            }
+        );
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -87,7 +94,7 @@ export class SetlMessagesComponent {
             },
         ];
 
-        this.currentCategory = 0;
+        this.resetMessages();
     }
 
 
@@ -171,17 +178,18 @@ export class SetlMessagesComponent {
 
         if (newWalletId !== this.currentWalletId) {
             console.log('i shouldnt hit here');
+            this.resetMessages();
             this.currentWalletId = newWalletId;
             this.requestMessages();
-
-            this.walletDirectoryList = getWalletDirectoryList(newState);
-            this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
-
-            this.items = [this.walletWithCommuPub];
-
-            console.log('messages ------');
-            console.log(this.messages);
         }
+
+        this.walletDirectoryList = getWalletDirectoryList(newState);
+        this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
+
+        this.items = [this.walletWithCommuPub];
+
+        console.log('messages ------');
+        console.log(this.messages);
 
         // if (getNeedRunDecryptState(newState) && newMessages !== this.messages) {
         //     // this.decrypt(this.messages[0].recipientId, this.messages[0].senderPub, this.messages[0].content);
@@ -196,11 +204,8 @@ export class SetlMessagesComponent {
         //     }
         // }
 
-
-        if (newMessages.length > 0) {
-            this.messages = newMessages;
-
-            if (typeof this.currentMessage == "undefined") {
+        if (this.messages.length > 0) {
+            if (this.currentMessage[Object.keys(this.currentMessage)[0]] == 0) {
                 this.currentMessage = this.messages[0];
                 this.showMessage(0);
                 return;
@@ -208,6 +213,7 @@ export class SetlMessagesComponent {
 
             const id = this.currentMessage.id;
             this.currentMessage = this.messages[id];
+            this.currentMessage.id = id;
         }
     }
 
@@ -227,16 +233,22 @@ export class SetlMessagesComponent {
         // set the id so that message-active an be compared to index and set
         this.currentMessage.id = index;
 
-        this.currentMessage.hello = 'Ming';
-
         const message = this.currentMessage;
 
-        this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+        if (!message.isDecrypted) {
+            this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+        }
     }
 
+    /**
+     * Switch Between Mail Box Option (Category)
+     *
+     * @param index
+     * @param {boolean} composeSelected
+     */
     showCategory(index, composeSelected = false) {
 
-        console.log(index);
+        this.resetMessages();
 
         if (composeSelected) {
             this.composeSelected = true;
@@ -266,7 +278,6 @@ export class SetlMessagesComponent {
                 );
             }
         }
-
         // set the current message that appears on the right hand side
         this.currentCategory = index;
     }
@@ -283,6 +294,16 @@ export class SetlMessagesComponent {
         );
 
         return walletsSelectItem.toJS();
+    }
+
+    resetMessages() {
+        // Default current category
+        this.currentCategory = 0;
+
+        // Default current message
+        this.currentMessage = {
+            id: 0
+        };
     }
 
 
