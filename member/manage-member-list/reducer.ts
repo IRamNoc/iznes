@@ -45,7 +45,7 @@ export const ManageMemberListReducer = function (state: ManageMemberListState = 
 
 function handleAction(actionType, action, state) {
     const handler = {
-        [SET_MANAGE_MEMBER_LIST]: function (thisAction, thisState) {
+        [SET_MANAGE_MEMBER_LIST]: function (thisAction, thisState): ManageMemberListState {
 
             let newState: ManageMemberListState;
             const memberListData = _.get(thisAction, 'payload[1].Data');
@@ -58,7 +58,7 @@ function handleAction(actionType, action, state) {
 
                 result[memberId] = {
                     memberId,
-                    memberName
+                    memberName,
                 };
 
                 return result;
@@ -71,7 +71,7 @@ function handleAction(actionType, action, state) {
             return newState;
         },
 
-        [SET_REQUESTED_MANAGE_MEMBER_LIST]: function (thisAction, thisState) {
+        [SET_REQUESTED_MANAGE_MEMBER_LIST]: function (thisAction, thisState): ManageMemberListState {
             let newState: ManageMemberListState;
             const requestedManagedMemberList = true;
 
@@ -82,7 +82,7 @@ function handleAction(actionType, action, state) {
             return newState;
         },
 
-        [CLEAR_REQUESTED_MANAGE_MEMBER_LIST]: function (thisAction, thisState) {
+        [CLEAR_REQUESTED_MANAGE_MEMBER_LIST]: function (thisAction, thisState): ManageMemberListState {
             let newState: ManageMemberListState;
             const requestedManagedMemberList = false;
 
