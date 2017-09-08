@@ -11,19 +11,19 @@
                 <!-- Member list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="memberListTab"
+                        *ngTemplateOutlet="staticMemberListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                        *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member edit tabs. -->
-                <ng-container *ngIf="id >= 2">
+                <ng-container *ngIf="id >= 2 && isSymAdmin">
                     <ng-container
                         *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
@@ -33,20 +33,19 @@
     </clr-tabs>
 
     <!-- Member Data Table. -->
-    <ng-template #memberListTab>
+    <ng-template #staticMemberListTab>
         <div class="panel-body">
 
             <clr-datagrid #membersDataGrid>
-                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column *ngIf="isSymAdmin">Actions</clr-dg-column>
                 <clr-dg-column>Member Name</clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let member of manageMembersList">
-                    <clr-dg-cell>
+                <clr-dg-row *clrDgItems="let member of manageMembersList; let i = index">
+                    <clr-dg-cell *ngIf="isSymAdmin">
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(member.memberId)" class="btn">
+                            <button (click)="handleEdit(i)" class="btn">
                                 <i class="fa fa-pencil-square-o"></i> Edit
                             </button>
-                            <button (click)="handleDelete(member.memberId)" class="btn">
+                            <button (click)="handleDelete(i)" class="btn">
                                 <i class="fa fa-trash-o"></i> Delete
                             </button>
                         </div>
@@ -63,95 +62,41 @@
         </div>
     </ng-template>
 
-    <!-- User Add Form. -->
-    <ng-template #staticUserAddTab let-formControl="formControl" let-tabid="tabid">
+    <!-- Member Add Form. -->
+    <ng-template #staticMemberAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl">
+            <form (ngSubmit)="handleAddMember(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
-                            </label>
-                            <div>
-                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated">Member name</span>
+                                </label>
+                                <div>
+                                    <input type="text" formControlName="memberName" placeholder="Member Name" class="form-control mlp_translated">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="ml_translated">Admin Email</span>
+                                </label>
+                                <div>
+                                    <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div>
-                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                        <div class="form-group button-group">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_account">Account</span>
-                            </label>
-                            <ng-select
-                                [items]="accountTypes"
-                                [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['accountType']">
-                            </ng-select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
-                            <ng-select
-                                [items]="userTypes"
-                                [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['userType']">
-                            </ng-select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_password">Password</span>
-                            </label>
-                            <div>
-                                <input type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
-                            </label>
-                            <div>
-                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
-                            </label>
-                            <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -159,82 +104,35 @@
         </div>
     </ng-template>
 
-    <!-- User Edit Form. -->
+    <!-- Member Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
-        <div>
-
-            {{ context | json }}
-        </div>
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+            <form (ngSubmit)="handleEditMember(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
+                                <span class="ml_translated">Member Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div>
-                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input type="text" formControlName="memberName" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_account">Account</span>
-                            </label>
-                            <ng-select
-                                [items]="accountTypes"
-                                [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['accountType']">
-                            </ng-select>
-                        </div>
-                    </div>
+                </div>
 
+                <div class="form-horizontal">
                     <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
-                            <ng-select
-                                [items]="userTypes"
-                                [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['userType']">
-                            </ng-select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
-                            </label>
-                            <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                        <div class="form-group button-group">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                </button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                    Close
+                                </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                Close
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -242,112 +140,4 @@
         </div>
     </ng-template>
 
-    <!-- This nested tab set cannot be directly inside the main one :( -->
-    <ng-template #accessAdminTabs>
-        <clr-tabs>
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Administrative</button>
-                <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        Administrative
-                        <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Transactional</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        Transactional
-                        <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-briefcase"></i> Wallets</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        Wallets
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-chain"></i> Chains</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        Chains
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-        </clr-tabs>
-    </ng-template>
-
-    <!-- Same goes for this nested tabset. -->
-    <ng-template #accessAdminSubTabs>
-        <clr-tabs>
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Groups</button>
-                <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Individual</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        big grid thing needs to be here...
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-        </clr-tabs>
-    </ng-template>
-
-    <!-- Same goes for this nested tabset. -->
-    <ng-template #accessTransactionSubTabs>
-        <clr-tabs>
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Groups</button>
-                <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        1
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        2
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Individual</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        big grid thing again...
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-        </clr-tabs>
-    </ng-template>
 </div>
