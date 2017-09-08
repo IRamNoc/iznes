@@ -48,12 +48,36 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
 
             const userDetailsData = _.get(action, 'payload[1].Data[0]', {});
 
+            const displayName = _.get(userDetailsData, 'displayName', '');
             const firstName = _.get(userDetailsData, 'firstName', '');
             const lastName = _.get(userDetailsData, 'lastName', '');
+            const mobilePhone = _.get(userDetailsData, 'mobilePhone', '');
+            const addressPrefix = _.get(userDetailsData, 'addressPrefix', '');
+            const address1 = _.get(userDetailsData, 'address1', '');
+            const address2 = _.get(userDetailsData, 'address2', '');
+            const address3 = _.get(userDetailsData, 'address3', '');
+            const address4 = _.get(userDetailsData, 'address4', '');
+            const postalCode = _.get(userDetailsData, 'postalCode', '');
+            const country = _.get(userDetailsData, 'country', '');
+            const memorableQuestion = _.get(userDetailsData, 'memorableQuestion', '');
+            const memorableAnswer = _.get(userDetailsData, 'memorableAnswer', '');
+            const profileText = _.get(userDetailsData, 'profileText', '');
 
             newState = Object.assign({}, state, {
+                displayName,
                 firstName,
-                lastName
+                lastName,
+                mobilePhone,
+                addressPrefix,
+                address1,
+                address2,
+                address3,
+                address4,
+                postalCode,
+                country,
+                memorableQuestion,
+                memorableAnswer,
+                profileText
             });
 
             return newState;

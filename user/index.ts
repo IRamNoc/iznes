@@ -22,9 +22,10 @@ import {
     AuthenticationReducer,
     SET_AUTH_LOGIN_DETAIL,
     RESET_AUTH_LOGIN_DETAIL,
-    getAuthentication
+    getAuthentication,
+    SET_NEW_PASSWORD,
 } from './authentication';
-export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication};
+export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD};
 
 
 // connected
