@@ -166,6 +166,10 @@
   version "1.0.1"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#94b483effec5286691943f6413ff4330d735396d"
 
+"@setl/core-account@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git":
+  version "1.0.0"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git#71e6ac202756b27ac78003b5cf7f5dc88cdea1fd"
+
 "@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git":
   version "1.0.1"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#0ca42890fb7a6642660e63cc984341bfef3b82b9"
@@ -180,7 +184,7 @@
 
 "@setl/core-manage-member@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git#3bfac256dbfe50d53a1cdccc16ce45d68c17dcbc"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git#a798789f9cb70d6107cd83ed19eb0d3d5f96dcc9"
 
 "@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git":
   version "1.0.2"
@@ -188,18 +192,18 @@
 
 "@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#fbeda1d82b7596d52b90177119d89fa7d9d46668"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#c14d9ab9951a44ba206715cf709fc18cea8845b7"
 
 "@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#020f973f65b1d419a6b1cc79af1093a2cfe156b6"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#e3028d5cf162b6f6c0456228c942f74ab8a38f37"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
 
 "@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git":
   version "1.0.8"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#37b02e51e5dda3321348f8c9ec42453f77f9bd45"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#9508b5f19b48cfe89ad7569ed3a6a1c511908a56"
 
 "@setl/jaspero-ng2-alerts@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git":
   version "0.0.6"
@@ -207,7 +211,7 @@
 
 "@setl/permission-grid@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git#b8493d00cb48d89a4f526bad53e6f7bc5890f1e8"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git#c8ca2ff6d8fced550ce49a5104ec8e1b8a5d0d5f"
 
 "@setl/socketcluster-wrapper@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#1.0.4":
   version "1.0.4"

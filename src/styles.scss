@@ -359,3 +359,11 @@ body > .ui-select-bootstrap.open {
 .ui-select-container[theme="bootstrap"].direction-up .ui-select-dropdown {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
 }
+
+.v-middle {
+    vertical-align: middle !important;
+}
+
+.v-middle span {
+    display: inline-block;
+}
