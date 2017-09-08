@@ -17,9 +17,11 @@ import {
     /* Groups. */
     CreateNewGroupBody,
     UpdateGroupBody,
+    DeleteGroupBody,
 
     /* Enttiy permission. */
-    RequestPermissionBody,
+    RequestAdminPermissionBody,
+    RequestTxPermissionBody
 } from './useradmin.service.model';
 
 @Injectable()
@@ -139,17 +141,31 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    public deleteGroup ( data ):any {
+        /* Setup the message body. */
+        const messageBody: DeleteGroupBody = {
+            RequestName: 'dpg',
+            token: this.memberSocketService.token,
+            groupId: data.groupId
+        };
+
+        console.log('SENDING UDG: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     public updateAdminPermissions ( data ):any {
         /* Setup the message body. */
         const messageBody: UpdateAdminPermissionsBody = {
             RequestName: 'udap',
             token: this.memberSocketService.token,
-            entityId: data.entityid,
-            isGroup: data.isgroup,
-            toAdd: data.toadd,
-            toUpdate: data.toupdate,
-            toDelete: data.todelete,
-            isAdmin: data.isadmin
+            entityId: data.entityId,
+            isGroup: data.isGroup,
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete,
+            isAdmin: data.isAdmin
         };
 
         console.log('SENDING UDAP: ', messageBody);
@@ -160,8 +176,9 @@ export class AdminUsersService {
 
     public updateTxPermissions ( data ):any {
         /* Setup the message body. */
+        console.log(data);
         const messageBody: UpdateTxPermissionsBody = {
-            RequestName: 'udap',
+            RequestName: 'udtp',
             token: this.memberSocketService.token,
             entityId: data.entityId,
             isGroup: data.isGroup,
@@ -173,7 +190,7 @@ export class AdminUsersService {
 
         };
 
-        console.log('SENDING UDAP: ', messageBody);
+        console.log('SENDING UDTP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -183,9 +200,9 @@ export class AdminUsersService {
         Entity Permissions
         ==================
     */
-    public requestPermissions ( entity ):any {
+    public requestAdminPermissions ( entity ):any {
         /* Setup the message body. */
-        const messageBody: RequestPermissionBody = {
+        const messageBody: RequestAdminPermissionBody = {
             RequestName: 'gp',
             token: this.memberSocketService.token,
             entityId: entity.entityId,
@@ -195,6 +212,24 @@ export class AdminUsersService {
         };
 
         console.log('SENDING GP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestTxPermissions ( entity ):any {
+        /* Setup the message body. */
+        const messageBody: RequestTxPermissionBody = {
+            RequestName: 'gtp',
+            token: this.memberSocketService.token,
+            entityId: entity.entityId,
+            chainId: entity.chainId,
+            isGroup: entity.isGroup,
+            permissionId: entity.permissionId,
+            includeGroup: entity.includeGroup
+        };
+
+        console.log('SENDING GTP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

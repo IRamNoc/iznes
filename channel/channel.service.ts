@@ -4,7 +4,9 @@ import {SagaHelper} from '@setl/utils';
 
 import {
     SET_ADMIN_USERLIST,
-    SET_USER_DETAILS
+    SET_USER_DETAILS,
+    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST
 } from '@setl/core-store';
 
 @Injectable()
@@ -74,6 +76,30 @@ export class ChannelService {
                 if (this.changedPassword !== true){
                     document.location.reload(true);
                 }
+                break;
+
+
+            case 'ng':
+            case 'upg':
+            case 'dpg':
+                console.log(' | UPDATE PERMISSION GROUPS: ', data);
+
+                /* Let's now dispatch the admin acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+                        payload: [ null, data, null ]
+                    }
+                );
+
+                /* and the tx action. */
+                /* Let's now dispatch the append acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+                        payload: [ null, data, null ]
+                    }
+                );
                 break;
 
             default:
