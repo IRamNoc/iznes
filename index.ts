@@ -13,6 +13,7 @@ export {
     SET_AUTH_LOGIN_DETAIL,
     RESET_AUTH_LOGIN_DETAIL,
     getAuthentication,
+    SET_NEW_PASSWORD,
 
     // connected
     setConnectedWallet,
@@ -138,4 +139,5 @@ export {
     // Combine reducer
     MemberReducer
 } from './member';
+
 

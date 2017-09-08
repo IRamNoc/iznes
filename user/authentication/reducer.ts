@@ -30,6 +30,19 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         case AuthenticationAction.RESET_AUTH_LOGIN_DETAIL:
             return initialState;
 
+        case AuthenticationAction.SET_NEW_PASSWORD:
+
+            const tokenData = _.get(action, 'payload[1].Data[0]', {});
+            const newToken = _.get(tokenData, 'Token', '');
+            const changedPassword = true;
+
+            const newTokenState = Object.assign({}, state, {
+                newToken,
+                changedPassword
+            });
+
+            return newTokenState;
+
         default:
             return state;
     }
