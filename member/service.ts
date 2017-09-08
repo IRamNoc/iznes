@@ -63,7 +63,7 @@ export class MemberService {
 
     deleteMember(requestData: DeleteMemberRequest): any {
         const messageBody: DeleteMemberMessageBody = {
-            RequestName: 'udm',
+            RequestName: 'dm',
             token: this.memberSocketService.token,
             memberId: _.get(requestData, 'memberId', 0),
         };
