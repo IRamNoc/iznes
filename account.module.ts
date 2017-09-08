@@ -1,18 +1,21 @@
 import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SetlMyAccountComponent} from './myaccount/myaccount.component';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 import {SetlPipesModule} from '@setl/utils';
+import {SelectModule} from 'ng2-select';
 
 @NgModule({
     imports: [
         CommonModule,
         ClarityModule,
         SetlPipesModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        SelectModule
     ],
     declarations: [
         SetlMyAccountComponent,
