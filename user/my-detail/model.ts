@@ -7,4 +7,6 @@ export interface MyDetailState {
     firstName: string;
     lastName: string;
     admin: boolean;
+    accountId: number;
+    memberId: number;
 }
