@@ -92,7 +92,7 @@
                     <!-- message highlights (previews -->
                     <div class="col-sm-5 message-highlights">
                         <div class="message-options">
-                            <h2>Inbox - All Messages ({{messages.length}})</h2>
+                            <h2>InboxX All Messages ({{messages.length || 0}})</h2>
                             <button class="btn btn-outline btn-sm">
                                 <clr-icon shape="refresh"></clr-icon>
                                 Refresh
@@ -147,7 +147,7 @@
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content" [innerHtml]="currentMessage.content"></p>
+                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted == true" [innerHtml]="currentMessage.content"></p>
                         </div>
                     </div>
                 </div>
