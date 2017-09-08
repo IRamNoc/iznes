@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 
 import {
@@ -10,10 +10,18 @@ import {
 @Injectable()
 export class ChannelService {
 
+    @select(['user', 'authentication', 'changedPassword']) checkChangedPassword;
+
+    changedPassword = false;
+
     constructor (
         private ngRedux: NgRedux<any>
     ) {
-
+        this.checkChangedPassword.subscribe(
+            (data) => {
+                this.changedPassword = data;
+            }
+        );
     }
 
     /**
@@ -59,6 +67,15 @@ export class ChannelService {
                     }
                 );
                 break;
+
+            case 'setpassword':
+                console.log(' | UPDATE USER PASSWORD: ', data);
+                console.log(this.changedPassword);
+                if (this.changedPassword !== true){
+                    document.location.reload(true);
+                }
+                break;
+
             default:
                 break;
         }

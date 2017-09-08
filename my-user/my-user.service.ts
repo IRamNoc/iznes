@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {LoginRequestMessageBody, UserDetailsRequestMessageBody, SaveUserDetailsRequestBody} from './my-user.service.model';
+import {LoginRequestMessageBody, UserDetailsRequestMessageBody, SaveUserDetailsRequestBody, SaveNewPasswordRequestBody} from './my-user.service.model';
 
 interface LoginRequestData {
     username: string;
@@ -24,6 +24,11 @@ interface UserDetailsData {
     memorableQuestion: string;
     memorableAnswer: string;
     profileText: string;
+}
+
+interface NewPasswordData {
+    oldPassword: string;
+    newPassword: string;
 }
 
 @Injectable()
@@ -70,6 +75,17 @@ export class MyUserService {
             memorableQuestion: userData.memorableQuestion,
             memorableAnswer: userData.memorableAnswer,
             profileText: userData.profileText
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    saveNewPassword(userData: NewPasswordData): any {
+        const messageBody: SaveNewPasswordRequestBody = {
+            RequestName: 'setpassword',
+            token: this.memberSocketService.token,
+            oldPassword: userData.oldPassword,
+            newPassword: userData.newPassword
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
