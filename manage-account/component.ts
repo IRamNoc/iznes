@@ -17,6 +17,7 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-manage-account',
@@ -24,11 +25,11 @@ import {SagaHelper} from '@setl/utils';
 })
 
 export class ManageAccountComponent implements OnInit {
-    tabsControl: Array<object>;
-    accountList: Array<object>;
+    tabsControl: Array<any>;
+    accountList: Array<any>;
     managedMemberList: Array<any>;
     managedMemberListObject: object;
-    managedWalletList: Array<object>;
+    managedWalletList: Array<any>;
     isSymAdmin: boolean;
 
     @select(['account', 'accountList', 'accountList']) accountListOb;
