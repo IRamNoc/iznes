@@ -92,7 +92,8 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 isActive: thisMessageDetail.get('isActive'),
                 isRead: thisMessageDetail.get('isRead'),
                 content: content,
-                action: null
+                action: null,
+                isDecrypted: false
             };
 
 
@@ -114,9 +115,10 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                 const decryptedObject = JSON.parse(newContent);
                 const content = atob(decryptedObject.general);
                 const action = decryptedObject.action;
+                const isDecrypted = true;
 
                 return Object.assign({}, thisMessageDetail, {
-                    content, action
+                    content, action, isDecrypted
                 });
             } else {
                 return thisMessageDetail;

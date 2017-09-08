@@ -12,7 +12,7 @@ export interface MessageDetail {
     isRead: boolean;
     content: string;
     action: string;
-
+    isDecrypted: boolean;
 }
 
 export interface MyMessagesState {
