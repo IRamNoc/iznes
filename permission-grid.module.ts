@@ -12,6 +12,9 @@ import {ClarityModule} from 'clarity-angular';
 import {PermissionGridComponent} from './permission-grid/permission-grid.component';
 import {OptionListComponent} from './option-list/option-list.component';
 
+/* Services. */
+import {OptionListService} from './option-list/option-list.service';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -29,7 +32,7 @@ import {OptionListComponent} from './option-list/option-list.component';
         FormsModule,
         ClarityModule,
     ],
-    providers: [ ]
+    providers: [ OptionListService ]
 })
 
 export class PermissionGridModule {

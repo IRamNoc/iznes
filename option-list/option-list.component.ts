@@ -5,6 +5,10 @@ import {
     EventEmitter
 } from '@angular/core';
 
+import {
+    OptionListService
+} from './option-list.service';
+
 /* Option Interface. */
 interface Option {
     id: number;
@@ -51,11 +55,23 @@ export class OptionListComponent {
     @Output()
     selected:EventEmitter<Option> = new EventEmitter();
 
+    /* Subscription. */
+    private closeSubscription:any;
+
     /* Ui properties. */
     public uiListOpen:boolean = false;
 
-    constructor () {
-        /* Stub. */
+    constructor (
+        private optionListService: OptionListService
+    ) {
+        /* Subscribe to the close event. */
+        this.closeSubscription = optionListService.getCloseEmitter().subscribe((data) => {
+            /* If data and we're open... */
+            if ( data === 1 && this.uiListOpen === true) {
+                /* ...toggle this state. */
+                this.toggleOpen();
+            }
+        })
     }
 
     /**
@@ -90,8 +106,11 @@ export class OptionListComponent {
      * @return {void}
      */
     public toggleOpen () {
-        /* Toggle state. */
-        this.uiListOpen = this.uiListOpen ? false : true;
+        /* If we're not open, ask others to close before we open. */
+        if ( ! this.uiListOpen ) this.optionListService.emitClose();
+
+        /* Close all lists. */
+        this.uiListOpen = this.uiListOpen ? false : true
 
         /* Return. */
         return;
