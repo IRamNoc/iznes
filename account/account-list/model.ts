@@ -10,4 +10,5 @@ export interface AccountListState {
     accountList: {
         [key: string]: AccountDetail
     };
+    requestedAccountList: boolean;
 }
