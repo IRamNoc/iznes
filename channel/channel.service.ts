@@ -43,8 +43,9 @@ export class ChannelService {
         // The Hench Switch Statement of Channels.
         console.log(" | Resolving request name: ", data.Request);
         switch (data.Request) {
-            case 'nu':
-            case 'udu':
+            case 'nu': // new user
+            case 'udu': // update user
+            case 'du': // delete user
                 /* Let's get the new user object. */
                 console.log(' | NEW USERS LIST: ', data);
 
@@ -58,7 +59,7 @@ export class ChannelService {
 
                 break;
 
-            case 'ud':
+            case 'ud': // update details
                 console.log(' | UPDATE USERDETAILS: ', data);
 
                 /* Let's now dispatch the append acion. */
@@ -70,7 +71,7 @@ export class ChannelService {
                 );
                 break;
 
-            case 'setpassword':
+            case 'setpassword': // guess...
                 console.log(' | UPDATE USER PASSWORD: ', data);
                 console.log(this.changedPassword);
                 if (this.changedPassword !== true){
@@ -79,9 +80,9 @@ export class ChannelService {
                 break;
 
 
-            case 'ng':
-            case 'upg':
-            case 'dpg':
+            case 'ng': // new group
+            case 'upg': // update permissions group
+            case 'dpg': // delete permissions group
                 console.log(' | UPDATE PERMISSION GROUPS: ', data);
 
                 /* Let's now dispatch the admin acion. */
@@ -93,7 +94,6 @@ export class ChannelService {
                 );
 
                 /* and the tx action. */
-                /* Let's now dispatch the append acion. */
                 this.ngRedux.dispatch(
                     {
                         type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
