@@ -181,6 +181,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      * @return {extractedArea} - the less complex object.
      */
     private extractArea (area):{id: string, text: string} {
+        /* Return a new object. */
         return {
             'id': area.permissionID,
             'text': area.permissionName
@@ -220,7 +221,6 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleDelete (index):void {
-        console.log( "Deleting "+ index );
         /* Find the group Id o that's to be deleted. */
         if ( this.allGroupList[index] ) {
             /* Build the request. */
@@ -228,11 +228,16 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             request['groupId'] = this.allGroupList[index].groupId;
 
             /* Send request. */
-            this.userAdminService.deleteGroup(request).then((data) => {
-                console.log('Deleted group: ', data);
-            }).catch((data) => {
-                console.log('Deleted group failed: ', data);
-            });
+            /* TODO - Add a better confirm in here. */
+            if (confirm("Are you sure you want to delete "+ this.allGroupList[index].groupName +"?")) {
+                this.userAdminService.deleteGroup(request).then((data) => {
+                    /* TODO - Implement a success message. */
+                    console.log('Deleted group: ', data);
+                }).catch((data) => {
+                    /* TODO - Implement an error message. */
+                    console.log('Deleted group failed: ', data);
+                });
+            }
         }
 
         /* Return. */
@@ -265,6 +270,22 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Push the edit tab into the array. */
          let group = this.allGroupList[index];
 
+         /* And also prefill the form... let's sort some of the data out. */
+         this.tabsControl.push({
+             "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
+             "groupId": group.groupId,
+             "formControl": new FormGroup(
+                 {
+                     "name": new FormControl( group.groupName ),
+                     "description": new FormControl( group.groupDescription ),
+                     "type": new FormControl( { value: group.category, disabled: false } ),
+                     "permissions": new FormControl([])
+                 }
+             ),
+             "permissionsEmitter": new EventEmitter(), // This will be used to pass permissions in.
+             "active": false // this.editFormControls
+         });
+
          /* Let's get the permission data. */
          this.userAdminService.requestPermissions({
              entityId: group.groupId,
@@ -274,6 +295,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              isTx: group.type === 1 ? false : true,
              chainId: 0,
          }).then(() => {
+             /* Then let's find the tab and emit the data to the
+                permission component using that event emitter. */
              let
              i,
              location = group.type === 1 ? 'adminPermissions' : 'transPermissions' ;
@@ -298,22 +321,6 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                      break;
                  }
              }
-         });
-
-         /* And also prefill the form... let's sort some of the data out. */
-         this.tabsControl.push({
-             "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
-             "groupId": group.groupId,
-             "formControl": new FormGroup(
-                 {
-                     "name": new FormControl( group.groupName ),
-                     "description": new FormControl( group.groupDescription ),
-                     "type": new FormControl( { value: group.category, disabled: false } ),
-                     "permissions": new FormControl([])
-                 }
-             ),
-             "permissionsEmitter": new EventEmitter(),
-             "active": false // this.editFormControls
          });
 
          /* Activate the new tab. */
@@ -345,10 +352,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          dataToSend['description'] = formData.description;
          dataToSend['type'] = formData.type[0].id === '1' ? '0' : '1';
 
-         console.log( " | new group: ", dataToSend );
-
          /* Let's trigger the creation of the group. */
          this.userAdminService.createNewGroup( dataToSend ).then((response) => {
+             /* TODO - Implement a success message for creating the group. */
+             console.log("Created a new group.", response);
              /*
                 2. Update permissions for this group.
                 Let's build the data structure again.
@@ -364,21 +371,22 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsData['toUpdate'] = {}; // we're only adding as we're creating.
              permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
-             console.log(" >> new group response", response);
-             /* Send the request. */
-             console.log(" | type: ", dataToSend['type']);
-
+             /* Figure out which function to call. */
              let functionCall = response.groupIsTx === 2 ? 'updateTxPermissions' : 'updateAdminPermissions';
-             this.userAdminService[functionCall](permissionsData).then((data) => {
-                 console.log('response from new group perm update: ', data)
-             }).catch((data) => {
-                 console.log('failed to update new group perms.', data);
+
+             /* Then send the request. */
+             this.userAdminService[functionCall](permissionsData).then((response) => {
+                 /* TODO - Implement a success message for setting the group's permissions. */
+                 console.log('Set new group permissions.', response);
+             }).catch((error) => {
+                 /* TODO - Implement an error message for failing to set the group's permissions. */
+                 console.log('Failed to set new group permissions.', error);
              });
 
              /* TODO - clear the add form. */
-         }).catch((response) => {
-             // Deal with any errors.
-             console.warn("Creating a group failed: ", response);
+         }).catch((error) => {
+             /* TODO - Implement an error message for failing to create the group. */
+             console.log("Failed to create new group.", error);
          });
 
 
@@ -413,13 +421,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          dataToSend['description'] = formData.description;
          dataToSend['type'] = formData.type[0] ? formData.type[0].id || 0 : 0;
 
-         console.log(' |--- Updating Group.');
-         console.log(' | 1.1 updating meta.');
-         console.log(' | 1.2 meta: ', dataToSend);
-
          /* Let's trigger the creation of the group. */
          this.userAdminService.updateGroup( dataToSend ).then((response) => {
-             console.log(' | 1.3 got response: ', response);
+             /* TODO - Implement a success message for updating the group. */
+             console.log("Updated the group.", response);
              /*
                 2. Update permissions for this group.
                 Let's build the data structure again.
@@ -436,8 +441,6 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                 newPermissions
              );
 
-             console.log(' | 1.4 diffed permissions: ', differences);
-
              /* Assign all the data. */
              permissionsData['entityId'] = response.groupID;
              permissionsData['isGroup'] = 1;
@@ -446,21 +449,24 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsData['toUpdate'] = differences['toUpdate'];
              permissionsData['toDelete'] = differences['toDelete'];
 
-             console.log(' | 1.5 sending group permission update: ', permissionsData);
-
+             /* Figure out which call to make. */
              let functionCall = response.groupIsTx === 2 ? 'updateTxPermissions' : 'updateAdminPermissions';
+
              /* Send the request. */
-             this.userAdminService[functionCall](permissionsData).then((data) => {
-                 /* Then make the old permissions the new ones. */
-                 console.log(' | 1.6 got response: ', data);
-                 console.log(' | 1.7 update local perms: a => b ', this.tabsControl[tabid].oldPermissions, newPermissions);
+             this.userAdminService[functionCall](permissionsData).then((response) => {
+                 /* TODO - Implement a success message for updating the group permissions. */
+                 console.log("Updated the group permissions.", response);
+
+                 /* Lastly, make the old permissions the new ones so the user can revert them and have differences to send. */
                  this.tabsControl[tabid].oldPermissions = newPermissions;
              }).catch((error) => {
-                 console.warn('Failed to update group permissions: ', error);
+                 /* TODO - Implement an error message for failing to update the group permissions. */
+                 console.log("Failed to update the group permissions.", response);
              });
+
          }).catch((response) => {
-             // Deal with any errors.
-             console.warn("Creating a group failed: ", response);
+             /* TODO - Implement an error message for failing to update the group. */
+             console.log("Failed to update the group.", response);
          });
 
 

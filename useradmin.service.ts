@@ -275,24 +275,24 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public createNewUser (data):void {
-        // Create a saga pipe.
-        const asyncTaskPipe = this.adminUsersService.createNewUser(
-            data
-        );
+    public createNewUser (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.createNewUser(
+                data
+            );
 
-        // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            function (data) {
-                console.log(data); // success
-            },
-            function (data) {
-                console.log(data); // error
-            })
-        );
-
-        return;
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (response) {
+                    resolve(response);
+                },
+                function (error) {
+                    reject(error);
+                })
+            );
+        });
     }
 
     /**
@@ -304,24 +304,53 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public editUser (data):void {
-        // Create a saga pipe.
-        const asyncTaskPipe = this.adminUsersService.editUser(
-            data
-        );
+    public editUser (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.editUser(
+                data
+            );
 
-        // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            function (data) {
-                console.log(data); // success
-            },
-            function (data) {
-                console.log(data); // error
-            })
-        );
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (response) {
+                    resolve(response);
+                },
+                function (error) {
+                    reject(error);
+                })
+            );
+        });
+    }
 
-        return;
+    /**
+     * Delete User
+     * ----------------
+     * Creates a new User.
+     *
+     * @param {data} - the new user data.
+     *
+     * @return {void}
+     */
+    public deleteUser (data):Promise<any> {
+        return new Promise((resolve, reject) => {
+            // Create a saga pipe.
+            const asyncTaskPipe = this.adminUsersService.deleteUser(
+                data
+            );
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                function (response) {
+                    resolve(response);
+                },
+                function (error) {
+                    reject(error);
+                })
+            );
+        });
     }
 
     /**
@@ -513,26 +542,11 @@ export class UserAdminService {
             let
             state = this.ngRedux.getState(),
             currentPermissions = getPermissions(state),
+
             /* Check if we're looking in admin or tx. */
             location:string = entity.isTx ? "transPermissions" : "adminPermissions";
 
-            /* Now lets check if the entity has permissions and if we need to get a
-               specific one... */
-            // if ( currentPermissions[ location ][ entity.entityId ] ) {
-            //     /* Check if the permissionID was requested and if it exists... */
-            //     if ( entity.permissionId >= 1 && currentPermissions[ location ][ entity.entityId ][ entity.permissionId ] ) {
-            //         /* Force update the observables. */
-            //         resolve();
-            //         return;
-            //     } else if ( entity.permissionId === 0 ) {
-            //         /* Force update the observables. */
-            //         resolve();
-            //         return;
-            //     }
-            // }
-
             /* Ok, so we didn't have it... now let's just request it. */
-            console.log("request: ", entity);
             let
             asyncTaskPipe;
             if ( entity.isTx ) {
@@ -549,7 +563,6 @@ export class UserAdminService {
             /* Save response from the request, but first check if we're getting an
                admin entity or a tx one. */
             let action = entity.isTx ? SET_TX_PERMISSIONS : SET_ADMIN_PERMISSIONS;
-            console.log("action: ", action);
             this.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     [ action ],
@@ -557,8 +570,7 @@ export class UserAdminService {
                     asyncTaskPipe,
                     {},
                     (data) => {
-                        console.log('reply: ', data);
-                        resolve();
+                        resolve(data);
                     },
                     (error) => {
                         reject(error);
