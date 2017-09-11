@@ -29,6 +29,11 @@ export interface EditUserMessageBody extends MemberNodeMessageBody {
     status: string;
 }
 
+export interface DeleteUserMessageBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+}
+
 /*
     Permissions Areas
 */

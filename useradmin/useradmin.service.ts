@@ -8,6 +8,7 @@ import {
     /* Users */
     CreateUserMessageBody,
     EditUserMessageBody,
+    DeleteUserMessageBody,
 
     /* Permissions. */
     GetPermissionAreaListBody,
@@ -74,6 +75,19 @@ export class AdminUsersService {
             'account': newData.account,
             'userType': newData.userType,
             'status': newData.status
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public deleteUser (data:any): any {
+        console.log(data);
+        /* Setup the message body. */
+        const messageBody: DeleteUserMessageBody = {
+            RequestName: 'du',
+            token: this.memberSocketService.token,
+            'userId': data.userId
         };
 
         /* Return the new member node saga request. */
