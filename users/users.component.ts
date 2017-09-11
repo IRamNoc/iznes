@@ -22,7 +22,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     @ViewChild('usersDataGrid') usersDataGrid;
 
     /* User data. */
-    public usersData:any;
+    public usersList:any;
 
     /* Tabs control */
     public tabsControl:any;
@@ -49,7 +49,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Subscribe to the admin user list observable. */
         this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((list) => {
-            this.usersData = this.convertToArray(list);
+            this.usersList = this.convertToArray(list);
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -76,7 +76,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 ),
                 "active": false
             }
-        ]
+        ];
     }
 
     ngAfterViewInit():void {
@@ -109,7 +109,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         let i = 0, key, newArray = [];
         for (key in obj) {
             newArray.push( obj[key] );
-            newArray[ newArray.length - 1 ].index = i++;
+            newArray[ newArray.length - 1 ].index = i++; // used to maintain order.
         }
         return newArray;
     }
@@ -131,9 +131,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         dataToSend.accountType = dataToSend.accountType.length ? dataToSend.accountType[0].id : 0;
 
         /* Let's trigger the creation of the user. */
-        this.userAdminService.createNewUser(
-            this.tabsControl[tabid].formControl.value
-        );
+        this.userAdminService.createNewUser( dataToSend ).then((response) => {
+            /* Now we've edited the user, we need to send any changes to the groups. */
+
+            /* TODO - handle success message. */
+            console.log('Successfully created user.', response);
+        }).catch((error) => {
+            /* TODO - handle error message. */
+            console.log('Failed to create user.', error);
+        });
 
         /* Clear the form. */
         this.clearNewUser(1, false);
@@ -162,8 +168,16 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             'status': 0
          };
 
-         /* Let's send the edit out. */
-         this.userAdminService.editUser( dataToSend );
+         /* Let's send the edit request. */
+         this.userAdminService.editUser( dataToSend ).then((response) => {
+             /* Now we've edited the user, we need to send any changes to the groups. */
+
+             /* TODO - handle success message. */
+             console.log('Successfully edited user.', response);
+         }).catch((error) => {
+             /* TODO - handle error message. */
+             console.log('Failed to edit user.', error);
+         });
 
          /* Return */
          return;
@@ -179,26 +193,22 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
       * @return {void}
       */
      public handleDelete ( deleteUserIndex ):void {
-         /* Check we have the wallet's index... */
-         if ( (! deleteUserIndex && deleteUserIndex !== 0) || this.usersData.length === 0 ) {
-             return;
-         }
+         /* Get the user's data. */
+         let dataToSend = {};
+         console.log(this.usersList, deleteUserIndex);
+         dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
 
-         /*
-             ...so we do, lets remove it from the data by setting the data to an
-             array with everything before and everything after.
-         */
-         /* TODO update this to dispatch a redux action. */
-         console.log(' |--- Requested a delete.');
-         console.log(' | index: ', deleteUserIndex);
-         console.log(' | data length: ', this.usersData.length );
-         console.log(' | all before: ', this.usersData.slice(0, deleteUserIndex) );
-         console.log(' | to delete: ', this.usersData[deleteUserIndex] );
-         console.log(' | all after: ', this.usersData.slice(deleteUserIndex + 1, this.usersData.length) );
-         this.usersData = [
-             ...this.usersData.slice(0, deleteUserIndex),
-             ...this.usersData.slice(deleteUserIndex + 1, this.usersData.length)
-         ];
+         /* Send the request. */
+         /* TODO - Add a better confirm in here. */
+         if (confirm("Are you sure you want to delete "+ this.usersList[deleteUserIndex].userName +"?")) {
+             this.userAdminService.deleteUser( dataToSend ).then((response) => {
+                 /* TODO - handle succes message. */
+                 console.log('Deleted user successfully.', response)
+             }).catch((error) => {
+                 /* TODO - Handle error message. */
+                 console.log('Failed to deleted user.', error);
+             });
+         }
 
          /* Return. */
          return;
@@ -217,7 +227,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
          /* Check if the tab is already open. */
          let i;
          for ( i = 0; i < this.tabsControl.length; i++ ) {
-             if ( this.tabsControl[i].userId === this.usersData[editUserIndex].userID ) {
+             if ( this.tabsControl[i].userId === this.usersList[editUserIndex].userID ) {
                  /* Found the index for that tab, lets activate it... */
                  this.setTabActive(i);
 
@@ -227,13 +237,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
          }
 
          /* Push the edit tab into the array. */
-         let user = this.usersData[editUserIndex];
+         let user = this.usersList[editUserIndex];
          let accountType = this.userAdminService.resolveAccountType( { text: user.accountName } );
          let userType = this.userAdminService.resolveUserType( { id: user.userType } );
 
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
-             "title": "<i class='fa fa-user'></i> "+ this.usersData[ editUserIndex ].userName,
+             "title": "<i class='fa fa-user'></i> "+ this.usersList[ editUserIndex ].userName,
              "userId": user.userID,
              "formControl": new FormGroup(
                  {

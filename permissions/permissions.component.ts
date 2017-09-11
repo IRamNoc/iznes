@@ -228,13 +228,16 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             request['groupId'] = this.allGroupList[index].groupId;
 
             /* Send request. */
-            this.userAdminService.deleteGroup(request).then((data) => {
-                /* TODO - Implement a success message. */
-                console.log('Deleted group: ', data);
-            }).catch((data) => {
-                /* TODO - Implement an error message. */
-                console.log('Deleted group failed: ', data);
-            });
+            /* TODO - Add a better confirm in here. */
+            if (confirm("Are you sure you want to delete "+ this.allGroupList[index].groupName +"?")) {
+                this.userAdminService.deleteGroup(request).then((data) => {
+                    /* TODO - Implement a success message. */
+                    console.log('Deleted group: ', data);
+                }).catch((data) => {
+                    /* TODO - Implement an error message. */
+                    console.log('Deleted group failed: ', data);
+                });
+            }
         }
 
         /* Return. */

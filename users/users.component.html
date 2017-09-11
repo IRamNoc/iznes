@@ -6,7 +6,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="testlink{{id}}" [innerHTML]="tabdata.title"></button>
+            <button clrTabLink id="user-tab-{{id}}" [innerHTML]="tabdata.title"></button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
@@ -43,7 +43,7 @@
                 <clr-dg-column>Account</clr-dg-column>
                 <clr-dg-column>Status</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersData">
+                <clr-dg-row *clrDgItems="let user of usersList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
@@ -71,7 +71,7 @@
     <!-- User Add Form. -->
     <ng-template #staticUserAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl">
+            <form id="new-user-form" (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -79,7 +79,7 @@
                                 <span class="ml_translated" mltag="txt_username">Username</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <input id="new-user-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
                             </div>
                         </div>
 
@@ -88,7 +88,7 @@
                                 <span class="ml_translated" mltag="txt_email">Email</span>
                             </label>
                             <div>
-                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input id="new-user-email" type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
                             </div>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                 <span class="ml_translated" mltag="txt_password">Password</span>
                             </label>
                             <div>
-                                <input type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                                <input id="new-user-password" type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
                             </div>
                         </div>
 
@@ -136,7 +136,7 @@
                                 <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
                             </label>
                             <div>
-                                <input type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                <input id="new-user-password-repeat" type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
                             </div>
                         </div>
                     </div>
@@ -166,12 +166,8 @@
 
     <!-- User Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
-        <div>
-
-            {{ context | json }}
-        </div>
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -179,7 +175,7 @@
                                 <span class="ml_translated" mltag="txt_username">Username</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
                             </div>
                         </div>
 
@@ -188,7 +184,7 @@
                                 <span class="ml_translated" mltag="txt_email">Email</span>
                             </label>
                             <div>
-                                <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
                             </div>
                         </div>
                     </div>
@@ -251,27 +247,25 @@
     <ng-template #accessAdminTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Administrative</button>
+                <a clrTabLink><i class="fa fa-users"></i> Administrative</a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
-                        Administrative
-                        <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
+                        Administrative Groups they belong to.
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Transactional</button>
+                <a clrTabLink><i class="fa fa-user"></i> Transactional</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        Transactional
-                        <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
+                        Transactional Groups they belong to.
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-briefcase"></i> Wallets</button>
+                <a clrTabLink><i class="fa fa-briefcase"></i> Wallets</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         Wallets
@@ -280,76 +274,10 @@
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-chain"></i> Chains</button>
+                <a clrTabLink><i class="fa fa-chain"></i> Chains</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         Chains
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-        </clr-tabs>
-    </ng-template>
-
-    <!-- Same goes for this nested tabset. -->
-    <ng-template #accessAdminSubTabs>
-        <clr-tabs>
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Groups</button>
-                <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Individual</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        big grid thing needs to be here...
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-        </clr-tabs>
-    </ng-template>
-
-    <!-- Same goes for this nested tabset. -->
-    <ng-template #accessTransactionSubTabs>
-        <clr-tabs>
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> Groups</button>
-                <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        1
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        2
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                    </div>
-                </clr-tab-content>
-            </clr-tab>
-
-            <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> Individual</button>
-                <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        <select>
-                            <option value="">Select One</option>
-                            <option value="1">Group 1</option>
-                            <option value="2">Group 2</option>
-                        </select>
-                        big grid thing again...
                     </div>
                 </clr-tab-content>
             </clr-tab>
