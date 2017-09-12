@@ -1,8 +1,8 @@
-/* Core imports. */
+/* Angular/vendor imports. */
 import { Directive, ElementRef, Input, AfterViewInit } from '@angular/core';
 
-/* Import the translations list. */
-import { Translations } from './translations';
+/* Package imports. */
+import { MultilingualService } from './multilingual.service';
 
 /* Decorator. */
 @Directive({
@@ -13,7 +13,8 @@ import { Translations } from './translations';
 export class MultiLingualDirective {
     /* Constructor. */
     constructor(
-        private el: ElementRef
+        private el: ElementRef,
+        private multilingualService:MultilingualService
     ) {
         /* Stub. */
     }
@@ -21,26 +22,9 @@ export class MultiLingualDirective {
     public ngAfterViewInit () {
         let
         tag = this.el.nativeElement.getAttribute('mltag'),
-        translation = this.getTranslation(tag);
+        translation = this.multilingualService.getTranslation(tag);
         if ( translation !== tag ) {
             this.el.nativeElement.innerHTML = translation;
         }
-    }
-
-    /**
-     * Get Translation
-     * Looks up a translation in the translations json.
-     * @param  {mltag}:string       - The reference tag.
-     * @return {translation}:string - The translation.
-     */
-    private getTranslation (mlcode:string):string {
-        /* Look for translation... */
-        if ( Translations['eng'][mlcode] ) {
-            console.log('translation found: ', Translations['eng'][mlcode]);
-            return Translations['eng'][mlcode];
-        }
-
-        /* ...otherwise return origin string. */
-        return mlcode;
     }
 }
