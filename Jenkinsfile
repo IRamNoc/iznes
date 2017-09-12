@@ -11,15 +11,17 @@ node
 
     stage('Build & Test'){
 
-      sh '''yarn upgrade && 
-              yarn test-single'''
+      sh '''yarn upgrade &&
+              yarn test-single &&
+              cd src &&
+              sass styles.scss:styles.css'''
 
     }
 
     stage('Sonar Scan'){
-      withSonarQubeEnv {
+          withSonarQubeEnv {
 
-        sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
-      }
-    }
+            sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
+          }
+        }
   }
