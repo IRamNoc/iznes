@@ -29,12 +29,18 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
     /* Account types select. */
     public accountTypes:any;
+    private allGroupList:any;
 
     /* User types select. */
     public userTypes:any;
 
     /* Subscriptions from service observables. */
     private subscriptions:{[key: string]: any} = {};
+
+    /* Filtered groups list. */
+    public filteredAdminGroupsList = [];
+    public filteredTxGroupsList = [];
+
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
@@ -49,6 +55,18 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
             this.usersList = this.convertToArray(list);
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        /* Subscribe to the admin group list observable. */
+        this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
+            /* Set raw list. */
+            this.allGroupList = this.convertGroupsToArray(list);
+
+            /* Filter the list. */
+            this.filterGroupLists();
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -101,6 +119,61 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         for (key in obj) {
             newArray.push( obj[key] );
             newArray[ newArray.length - 1 ].index = i++; // used to maintain order.
+        }
+        return newArray;
+    }
+
+    /**
+     * Filter Groups Lists
+     * -----------------
+     * Updates the filtered group lists used by UI elements.
+     *
+     * @return {void}
+     */
+    private filterGroupLists ():void {
+        /* Let's do admin areas first. */
+        if ( Array.isArray(this.allGroupList) ) {
+            /* Loop groups. */
+            for ( let index in this.allGroupList ) {
+                /* Sort group data. */
+                let group = this.allGroupList[index];
+                group = {
+                    id: group.groupID,
+                    text: group.groupName,
+                };
+
+                /* Push into correct list. */
+                if ( this.allGroupList[index].groupIsTx ) {
+                    this.filteredTxGroupsList.push(group);
+                } else {
+                    this.filteredAdminGroupsList.push(group);
+                }
+            }
+        }
+    }
+
+    /**
+     * Convert Groups To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
+    public convertGroupsToArray (obj):Array<any> {
+        let i = 0, key, newArray = [];
+        for (key in obj) {
+            /* Push the new object. */
+            newArray.push( obj[key] );
+
+            /* Index for tab control. */
+            newArray[ newArray.length - 1 ].index = i++;
+
+            /* Make these all admin type groups. */
+            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: obj[key].groupIsTx } );
+            if ( ! newArray[ newArray.length - 1 ].category.length ) newArray[ newArray.length - 1 ].category = [{text: 'No group.'}];
         }
         return newArray;
     }

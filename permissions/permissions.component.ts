@@ -69,7 +69,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         },
     ];
 
-    /* Old areas list. */
+    /* Filtered areas list. */
     public filteredAdminAreaList = [];
     public filteredTxAreaList = [];
 
@@ -155,7 +155,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     /**
      * Filter Area Lists
      * -----------------
-     * Updates the filtered lists used by UI elements.
+     * Updates the filtered areas lists used by UI elements.
      *
      * @return {void}
      */
