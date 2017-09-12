@@ -1,6 +1,3 @@
-/* Module. */
-export {MultiLingualModule} from './multilingual.module';
-
 /* Service. */
 export {MultilingualService} from './multilingual.service';
 
