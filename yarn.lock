@@ -209,9 +209,9 @@
   version "0.0.6"
   resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git#b55f9cfdd8ece052b084d8bb3910d275a83f2d4d"
 
-"@setl/multilingual@http://si-nexus01.dev.setl.io/SETL_Modules/multilingual.git":
+"@setl/multilingual@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/multilingual.git":
   version "1.0.2"
-  resolved "http://si-nexus01.dev.setl.io/SETL_Modules/multilingual.git#580020b2bf5d60c104fb7971cb900db6ba45f02d"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/multilingual.git#580020b2bf5d60c104fb7971cb900db6ba45f02d"
 
 "@setl/permission-grid@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git":
   version "1.0.0"
