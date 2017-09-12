@@ -12,7 +12,9 @@ const initialState: MyDetailState = {
     userType: 0,
     firstName: '',
     lastName: '',
-    admin: false
+    admin: false,
+    accountId: 0,
+    memberId: 0
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
@@ -32,6 +34,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const lastLogin = _.get(loginedData, 'lastLogin', '');
             const userType = _.get(loginedData, 'userType', '');
             const admin = _.get(loginedData, 'admin', 0) ? true : false;
+            const accountId = _.get(loginedData, 'accountId', '');
+            const memberId = _.get(loginedData, 'memberID', '');
 
             newState = Object.assign({}, state, {
                 username,
@@ -39,7 +43,9 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 userId,
                 lastLogin,
                 userType,
-                admin
+                admin,
+                accountId,
+                memberId
             });
 
             return newState;
