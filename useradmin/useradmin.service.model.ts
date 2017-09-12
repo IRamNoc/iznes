@@ -102,3 +102,9 @@ export interface RequestTxPermissionBody extends MemberNodeMessageBody {
     permissionId: string;
     includeGroup: string;
 }
+
+export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
+    token: string;
+    entityId: number;
+    isTx: number;
+}
