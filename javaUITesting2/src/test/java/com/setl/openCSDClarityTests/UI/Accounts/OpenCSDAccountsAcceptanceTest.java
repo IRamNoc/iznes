@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.acceptCookies;
-import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
 
@@ -38,34 +37,24 @@ public class OpenCSDAccountsAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         testSetUp();
-        loginAndNavigateToPage(adminuser, adminuserPassword, "menu_accounts");
-        acceptCookies();
-        navigateToAddAccountTab();
         screenshotRule.setDriver(driver);
     }
 
     @Test
-    public void shouldCreateNewAccount() throws IOException, InterruptedException {
-        String accountDetails[] = generateRandomAccountDetails();
-        populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
-        verifyPopupMessageText("Account Added Successfully", "Added Success message not displayed ");
-        logger.info("Account created: " + accountDetails[0] + " ");
+    public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
     }
-
-//  @Test
-//  public void shouldCreateNewAccount() throws IOException, InterruptedException {
-//    String accountDetails[] = generateRandomAccountDetails();
-//    populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
-//    verifyPopupMessageText("Account Added Successfully", "Added Success message not displayed ");
-//    logger.info("Account created: " + accountDetails[0] + " ");
-//  }
-
     @Test
-    public void shouldCreateAccount() throws IOException, InterruptedException {
-        String accountDetails[] = generateRandomAccountDetails();
-        populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
-        verifyPopupMessageText("Account Added Successfully", "Added Success message not displayed ");
-        logger.info("Account created: " + accountDetails[0] + " ");
+    public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      logout();
     }
+
+//    @Test
+//    public void shouldCreateAccount() throws IOException, InterruptedException {
+//        String accountDetails[] = generateRandomAccountDetails();
+//        populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
+//        logger.info("Account created: " + accountDetails[0] + " ");
+//    }
 
 }
