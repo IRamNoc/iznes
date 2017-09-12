@@ -25,6 +25,11 @@ import {
     MemberService
 } from '@setl/core-req-services';
 
+import {
+    MultilingualService,
+    MultilingualDirective
+} from '@setl/multilingual';
+
 /* Routes. */
 import {ROUTES} from './app.routes';
 
@@ -132,7 +137,8 @@ import {environment} from '../environments/environment';
         AlertIconAndTypesService,
         AccountsService,
         PermissionGroupService,
-        MemberService
+        MemberService,
+        MultilingualService
     ],
     bootstrap: [AppComponent]
 })

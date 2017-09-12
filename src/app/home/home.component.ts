@@ -6,6 +6,8 @@
 import {StringFilter, Comparator} from "clarity-angular";
 import {Component, AfterViewInit} from "@angular/core";
 
+import {fromJS} from 'immutable';
+
 interface User {
     id: number;
     name: string;
