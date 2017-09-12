@@ -22,7 +22,8 @@ import {
 
     /* Enttiy permission. */
     RequestAdminPermissionBody,
-    RequestTxPermissionBody
+    RequestTxPermissionBody,
+    RequestUserPermissionsBody
 } from './useradmin.service.model';
 
 @Injectable()
@@ -244,6 +245,21 @@ export class AdminUsersService {
         };
 
         console.log('SENDING GTP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserPermissions ( entity ):any {
+        /* Setup the message body. */
+        const messageBody: RequestUserPermissionsBody = {
+            RequestName: 'gug',
+            token: this.memberSocketService.token,
+            entityId: entity.entityId,
+            isTx: entity.isTx ? 2 : 1,
+        };
+
+        console.log('SENDING GUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
