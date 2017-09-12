@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.setl.openCSDClarityTests.UI.Accounts.OpenCSDAccountsAcceptanceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-09-11T10:42:25" hostname="Bills-iMac.local" time="20.183">
+  <properties/>
+  <testcase name="shouldCreateNewAccount" classname="com.setl.openCSDClarityTests.UI.Accounts.OpenCSDAccountsAcceptanceTest" time="10.234"/>
+  <testcase name="shouldCreateAccount" classname="com.setl.openCSDClarityTests.UI.Accounts.OpenCSDAccountsAcceptanceTest" time="9.949"/>
+  <system-out><![CDATA[
+[TEST shouldCreateNewAccount STARTING] 
+[TEST ENDED] Time elapsed: 10.099 sec
+
+[TEST shouldCreateAccount STARTING] 
+[TEST ENDED] Time elapsed: 9.816 sec
+]]></system-out>
+  <system-err><![CDATA[Starting ChromeDriver 2.30.477690 (c53f4ad87510ee97b5c3425a14c0e79780cdf262) on port 16006
+Only local connections are allowed.
+Sep 11, 2017 11:42:26 AM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: OSS
+Starting ChromeDriver 2.30.477690 (c53f4ad87510ee97b5c3425a14c0e79780cdf262) on port 4574
+Only local connections are allowed.
+Sep 11, 2017 11:42:35 AM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: OSS
+]]></system-err>
+</testsuite>
