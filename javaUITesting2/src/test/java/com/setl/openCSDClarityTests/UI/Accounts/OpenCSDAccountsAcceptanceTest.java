@@ -52,6 +52,14 @@ public class OpenCSDAccountsAcceptanceTest {
         logger.info("Account created: " + accountDetails[0] + " ");
     }
 
+//  @Test
+//  public void shouldCreateNewAccount() throws IOException, InterruptedException {
+//    String accountDetails[] = generateRandomAccountDetails();
+//    populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
+//    verifyPopupMessageText("Account Added Successfully", "Added Success message not displayed ");
+//    logger.info("Account created: " + accountDetails[0] + " ");
+//  }
+
     @Test
     public void shouldCreateAccount() throws IOException, InterruptedException {
         String accountDetails[] = generateRandomAccountDetails();
