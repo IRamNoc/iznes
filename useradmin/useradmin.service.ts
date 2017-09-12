@@ -35,6 +35,32 @@ export class AdminUsersService {
         /* Stub. */
     }
 
+    public buildRequest (request) {
+        /* Check for request pipe. */
+        if ( ! request.taskPipe ) {
+            return;
+        }
+
+        /* Build new promise. */
+        return new Promise((resolve, reject) => {
+            /* Dispatch. */
+            request.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    request.successActions || [],
+                    request.failActions    || [],
+                    request.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
+
     /*
         User Functions.
         ===============
