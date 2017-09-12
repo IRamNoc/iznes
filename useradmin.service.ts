@@ -35,6 +35,13 @@ import {
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
+
+    /* Group permissions */
+    SET_USERS_ADMIN_PERMISSIONS,
+    SET_USERS_TX_PERMISSIONS,
+    getUsersPermissions,
+    getUsersAdminPermissions,
+    getUsersTxPermissions
 } from '@setl/core-store';
 
 @Injectable()
@@ -107,11 +114,11 @@ export class UserAdminService {
     /* Group Types. */
     public groupTypes:any = [
         {
-            'id': '1',
+            'id': '0',
             'text': 'Administrative',
         },
         {
-            'id': '2',
+            'id': '1',
             'text': 'Transactional',
         }
     ];
@@ -163,59 +170,29 @@ export class UserAdminService {
 
         /* Let's request the user's list, this is the saga pipe function. */
         if ( ! Object.keys(getUsersList(state))[0] ) {
-            asyncTaskPipe = this.adminUsersService.requestMyUsersList();
-
-            // Send a saga action to save the users list.
-            // Actions to dispatch, when request success:  SET_ADMIN_USERLIST.
-            // Actions to dispatch, when request fail:  None.
-            // Saga pipe function descriptor.
-            // Saga pipe function arguments.
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    [SET_ADMIN_USERLIST],
-                    [],
-                    asyncTaskPipe,
-                    {}
-                )
-            );
+            this.adminUsersService.buildRequest({
+                ngRedux: this.ngRedux,
+                taskPipe: this.adminUsersService.requestMyUsersList(),
+                successActions: [ SET_ADMIN_USERLIST ]
+            });
         }
 
         /* Let's request the admin perm area list, this is the saga pipe function. */
         if ( ! getAdminPermAreaList(state).length ) {
-            asyncTaskPipe = this.adminUsersService.getAdminPermAreaList();
-
-            // Send a saga action to save the admin perm area list.
-            // Actions to dispatch, when request success:  SET_ADMIN_PERM_AREAS_LIST.
-            // Actions to dispatch, when request fail:  None.
-            // Saga pipe function descriptor.
-            // Saga pipe function arguments.
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    [SET_ADMIN_PERM_AREAS_LIST],
-                    [],
-                    asyncTaskPipe,
-                    {}
-                )
-            );
+            this.adminUsersService.buildRequest({
+                ngRedux: this.ngRedux,
+                taskPipe: this.adminUsersService.getAdminPermAreaList(),
+                successActions: [ SET_ADMIN_PERM_AREAS_LIST ]
+            });
         }
 
         /* Let's request the tx perm area list, this is the saga pipe function. */
         if ( ! getTxPermAreaList(state).length ) {
-            asyncTaskPipe = this.adminUsersService.getTxPermAreaList();
-
-            // Send a saga action to save the tx perm area list.
-            // Actions to dispatch, when request success:  SET_TX_PERM_AREAS_LIST.
-            // Actions to dispatch, when request fail:  None.
-            // Saga pipe function descriptor.
-            // Saga pipe function arguments.
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    [SET_TX_PERM_AREAS_LIST],
-                    [],
-                    asyncTaskPipe,
-                    {}
-                )
-            );
+            this.adminUsersService.buildRequest({
+                ngRedux: this.ngRedux,
+                taskPipe: this.adminUsersService.getTxPermAreaList(),
+                successActions: [ SET_TX_PERM_AREAS_LIST ]
+            });
         }
 
         /* TODO - pull in the arrays on this object dynamically. */
@@ -249,8 +226,6 @@ export class UserAdminService {
         this.txGroupList = getTranPermissionGroup(state);
 
         /* Combine the groups and emit. */
-        for (key in this.adminGroupList) this.adminGroupList[key].type = 1;
-        for (key in this.txGroupList) this.txGroupList[key].type = 2;
         this.allGroupListSubject.next( Object.assign({}, this.txGroupList, this.adminGroupList) );
 
         /* Get admin perm area list and send message out. */
@@ -276,22 +251,9 @@ export class UserAdminService {
      * @return {void}
      */
     public createNewUser (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.createNewUser(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (response) {
-                    resolve(response);
-                },
-                function (error) {
-                    reject(error);
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.createNewUser(data)
         });
     }
 
@@ -305,22 +267,9 @@ export class UserAdminService {
      * @return {void}
      */
     public editUser (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.editUser(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (response) {
-                    resolve(response);
-                },
-                function (error) {
-                    reject(error);
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.editUser(data)
         });
     }
 
@@ -334,22 +283,9 @@ export class UserAdminService {
      * @return {void}
      */
     public deleteUser (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.deleteUser(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (response) {
-                    resolve(response);
-                },
-                function (error) {
-                    reject(error);
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.deleteUser(data)
         });
     }
 
@@ -363,26 +299,9 @@ export class UserAdminService {
      * @return {void}
      */
     public createNewGroup (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.createNewGroup(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (data) {
-                    if ( data[1].Data[0] ) {
-                        resolve( data[1].Data[0] ); // success
-                    } else {
-                        reject(data); // no data
-                    }
-                },
-                function (data) {
-                    reject(data); // error
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.createNewGroup(data)
         });
     }
 
@@ -396,26 +315,9 @@ export class UserAdminService {
      * @return {void}
      */
     public updateGroup (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.updateGroup(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (data) {
-                    if ( data[1].Data[0] ) {
-                        resolve( data[1].Data[0] ); // success
-                    } else {
-                        reject(data); // no data
-                    }
-                },
-                function (data) {
-                    reject(data); // error
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateGroup(data)
         });
     }
 
@@ -429,26 +331,9 @@ export class UserAdminService {
      * @return {void}
      */
     public deleteGroup (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.deleteGroup(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (data) {
-                    if ( data[1].Data[0] ) {
-                        resolve( data[1].Data[0] ); // success
-                    } else {
-                        reject(data); // no data
-                    }
-                },
-                function (data) {
-                    reject(data); // error
-                })
-            );
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.deleteGroup(data)
         });
     }
 
@@ -462,28 +347,16 @@ export class UserAdminService {
      * @return {void}
      */
     updateAdminPermissions (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            // Get my detail to add is admin to the request.
-            const
-            state = this.ngRedux.getState(),
-            myDetail = getMyDetail(state);
-            data.isAdmin = myDetail.admin ? "1": "0";
+        /* Add isAdmin to data. */
+        const
+        state = this.ngRedux.getState(),
+        myDetail = getMyDetail(state);
+        data.isAdmin = myDetail.admin ? "1": "0";
 
-            // Create a saga pipe.
-            const asyncTaskPipe = this.adminUsersService.updateAdminPermissions(
-                data
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (data) {
-                    resolve(data);
-                },
-                function (error) {
-                    reject(error);
-                })
-            );
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateAdminPermissions(data)
         });
     }
 
@@ -497,30 +370,18 @@ export class UserAdminService {
      * @return {void}
      */
     updateTxPermissions (data):Promise<any> {
-        return new Promise((resolve, reject) => {
-            /* Get my detail to add is admin to the request. */
-            const
-            state = this.ngRedux.getState(),
-            myDetail = getMyDetail(state);
+        /* Get my detail to add is admin to the request. */
+        const
+        state = this.ngRedux.getState(),
+        myDetail = getMyDetail(state);
 
-            /* Figure the admin bit out. */
-            data.isAdmin = myDetail.admin ? "1": "0";
+        /* Figure the admin bit out. */
+        data.isAdmin = myDetail.admin ? "1": "0";
 
-            /* Create a saga pipe. */
-            const asyncTaskPipe = this.adminUsersService.updateTxPermissions(
-                data
-            );
-
-            /* Get response from set active wallet. */
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                function (data) {
-                    resolve(data);
-                },
-                function (error) {
-                    reject(error);
-                })
-            );
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateTxPermissions(data)
         });
     }
 
@@ -534,51 +395,42 @@ export class UserAdminService {
      * @return {any} - returns
      */
     requestPermissions (entity):Promise<any> {
-        return new Promise((resolve, reject) => {
-            /* Ok, so we need to get the permissions for this group and if asked,
-               the specific permission by ID.
-               Let's start by checking if we already have this in the store...
-            */
-            let
-            state = this.ngRedux.getState(),
-            currentPermissions = getPermissions(state),
+        /* Return. */
+        let
+        action,
+        asynTaskPipe;
 
-            /* Check if we're looking in admin or tx. */
-            location:string = entity.isTx ? "transPermissions" : "adminPermissions";
+        if ( entity.isTx ) {
+            asynTaskPipe = this.adminUsersService.requestTxPermissions( entity );
+            action = SET_TX_PERMISSIONS;
+        } else {
+            asynTaskPipe = this.adminUsersService.requestAdminPermissions( entity );
+            action = SET_ADMIN_PERMISSIONS;
+        }
 
-            /* Ok, so we didn't have it... now let's just request it. */
-            let
-            asyncTaskPipe;
-            if ( entity.isTx ) {
-                asyncTaskPipe = this.adminUsersService.requestTxPermissions(
-                    entity
-                );
-            } else {
-                asyncTaskPipe = this.adminUsersService.requestAdminPermissions(
-                    entity
-                );
-            }
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: asynTaskPipe,
+            successActions: [ action ]
+        });
+    }
 
-
-            /* Save response from the request, but first check if we're getting an
-               admin entity or a tx one. */
-            let action = entity.isTx ? SET_TX_PERMISSIONS : SET_ADMIN_PERMISSIONS;
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    [ action ],
-                    [],
-                    asyncTaskPipe,
-                    {},
-                    (data) => {
-                        resolve(data);
-                    },
-                    (error) => {
-                        reject(error);
-                    }
-                )
-            );
-
-            /* Return. */
+    /**
+     * Request User Permissions
+     * ----------------
+     * Requests a user's permissions or all, used on click for editing a user.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    requestUserPermissions (entity):Promise<any> {
+        let action = entity.isTx ? SET_USERS_TX_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS;
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestUserPermissions(entity),
+            successActions: [ action ]
         });
     }
 
@@ -751,7 +603,7 @@ export class UserAdminService {
     public resolveGroupType ( query ):any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.id ) identifier = "id";
+        if ( query.id || query.id === 0 ) identifier = "id";
         if ( query.text ) identifier = "text";
 
         /* If there was nothing, return. */

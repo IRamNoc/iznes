@@ -29,12 +29,17 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
     /* Account types select. */
     public accountTypes:any;
+    private allGroupList:any;
 
     /* User types select. */
     public userTypes:any;
 
     /* Subscriptions from service observables. */
-    private userListSubscription:any;
+    private subscriptions:{[key: string]: any} = {};
+
+    /* Filtered groups list. */
+    public filteredAdminGroupsList = [];
+    public filteredTxGroupsList = [];
 
     /* Constructor. */
     constructor (
@@ -48,8 +53,20 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userTypes = userAdminService.getUserTypes();
 
         /* Subscribe to the admin user list observable. */
-        this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((list) => {
+        this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
             this.usersList = this.convertToArray(list);
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        /* Subscribe to the admin group list observable. */
+        this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
+            /* Set raw list. */
+            this.allGroupList = this.convertGroupsToArray(list);
+
+            /* Filter the list. */
+            this.filterGroupLists();
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -87,14 +104,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userAdminService.updateState();
     }
 
-    ngOnDestroy ():void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        this.userListSubscription.unsubscribe();
-    }
-
     /**
      * Convert To Array
      * ---------------
@@ -110,6 +119,61 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         for (key in obj) {
             newArray.push( obj[key] );
             newArray[ newArray.length - 1 ].index = i++; // used to maintain order.
+        }
+        return newArray;
+    }
+
+    /**
+     * Filter Groups Lists
+     * -----------------
+     * Updates the filtered group lists used by UI elements.
+     *
+     * @return {void}
+     */
+    private filterGroupLists ():void {
+        /* Let's do admin areas first. */
+        if ( Array.isArray(this.allGroupList) ) {
+            /* Loop groups. */
+            for ( let index in this.allGroupList ) {
+                /* Sort group data. */
+                let group = this.allGroupList[index];
+                group = {
+                    id: group.groupID,
+                    text: group.groupName,
+                };
+
+                /* Push into correct list. */
+                if ( this.allGroupList[index].groupIsTx ) {
+                    this.filteredTxGroupsList.push(group);
+                } else {
+                    this.filteredAdminGroupsList.push(group);
+                }
+            }
+        }
+    }
+
+    /**
+     * Convert Groups To Array
+     * ---------------
+     * Converts an object that holds objects in keys into an array of those same
+     * objects.
+     *
+     * @param {obj} object - the object to be converted.
+     *
+     * @return {void}
+     */
+    public convertGroupsToArray (obj):Array<any> {
+        let i = 0, key, newArray = [];
+        for (key in obj) {
+            /* Push the new object. */
+            newArray.push( obj[key] );
+
+            /* Index for tab control. */
+            newArray[ newArray.length - 1 ].index = i++;
+
+            /* Make these all admin type groups. */
+            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: obj[key].groupIsTx } );
+            if ( ! newArray[ newArray.length - 1 ].category.length ) newArray[ newArray.length - 1 ].category = [{text: 'No group.'}];
         }
         return newArray;
     }
@@ -132,7 +196,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Let's trigger the creation of the user. */
         this.userAdminService.createNewUser( dataToSend ).then((response) => {
-            /* Now we've edited the user, we need to send any changes to the groups. */
+            /* Now we've edited the user, we need to send any changes to the groups, wallet access and chain access. */
+
+            /* TODO - Save admin group access. */
+
+            /* TODO - Save tx group access. */
+
+            /* TODO - Save wallet access. */
+
+            /* TODO - Save chain access. */
 
             /* TODO - handle success message. */
             console.log('Successfully created user.', response);
@@ -195,7 +267,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      public handleDelete ( deleteUserIndex ):void {
          /* Get the user's data. */
          let dataToSend = {};
-         console.log(this.usersList, deleteUserIndex);
          dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
 
          /* Send the request. */
@@ -254,6 +325,33 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                  }
              ),
              "active": false // this.editFormControls
+         });
+
+         /* TODO - get user meta;
+            [ ] Admin groups.
+            [ ] Tx groups.
+            [ ] Wallet access.
+            [ ] Chain access.
+         */
+
+         /* Get Admin permissions. */
+         this.userAdminService.requestUserPermissions({
+             entityId: user.userID,
+             isTx: false,
+         }).then((response) => {
+             console.log( "Editing user, got admin permissions: ", response );
+         }).catch((error) => {
+             console.log( "Editing user, admin permissions error: ", error );
+         });
+
+         /* Get Tx permissions. */
+         this.userAdminService.requestUserPermissions({
+             entityId: user.userID,
+             isTx: true,
+         }).then((response) => {
+             console.log( "Editing user, got tx permissions: ", response );
+         }).catch((error) => {
+             console.log( "Editing user, tx permissions error: ", error );
          });
 
          /* Activate the new tab. */
@@ -348,4 +446,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
           return;
       }
 
+      ngOnDestroy ():void {
+          /* Detach the change detector on destroy. */
+          this.changeDetectorRef.detach();
+
+          /* Unsunscribe Observables. */
+          for ( var key in this.subscriptions ) {
+              this.subscriptions[key].unsubscribe();
+          }
+      }
 }

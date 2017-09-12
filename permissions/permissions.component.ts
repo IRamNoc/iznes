@@ -69,7 +69,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         },
     ];
 
-    /* Old areas list. */
+    /* Filtered areas list. */
     public filteredAdminAreaList = [];
     public filteredTxAreaList = [];
 
@@ -155,7 +155,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     /**
      * Filter Area Lists
      * -----------------
-     * Updates the filtered lists used by UI elements.
+     * Updates the filtered areas lists used by UI elements.
      *
      * @return {void}
      */
@@ -208,7 +208,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             newArray[ newArray.length - 1 ].index = i++;
 
             /* Make these all admin type groups. */
-            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: obj[key].type } );
+            newArray[ newArray.length - 1 ].category = this.userAdminService.resolveGroupType( { id: obj[key].groupIsTx } );
+            if ( ! newArray[ newArray.length - 1 ].category.length ) newArray[ newArray.length - 1 ].category = [{text: 'No group.'}];
         }
         return newArray;
     }
@@ -286,20 +287,22 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              "active": false // this.editFormControls
          });
 
+         console.log(group.groupIsTx);
+
          /* Let's get the permission data. */
          this.userAdminService.requestPermissions({
              entityId: group.groupId,
              isGroup: 1,
              permissionId: 0, // get all.
              includeGroup: 0,  // not sure what this is.
-             isTx: group.type === 1 ? false : true,
+             isTx: group.groupIsTx === 1 ? true : false,
              chainId: 0,
          }).then(() => {
              /* Then let's find the tab and emit the data to the
                 permission component using that event emitter. */
              let
              i,
-             location = group.type === 1 ? 'adminPermissions' : 'transPermissions' ;
+             location = group.groupIsTx === 1 ? 'transPermissions' : 'adminPermissions' ;
 
              /* Loop over tabs and find this group tab. */
              for ( i = 0; i < this.tabsControl.length; i++ ) {
@@ -350,7 +353,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          /* Assign the data to send. */
          dataToSend['name'] = formData.name;
          dataToSend['description'] = formData.description;
-         dataToSend['type'] = formData.type[0].id === '1' ? '0' : '1';
+         dataToSend['type'] = formData.type[0].id === '0' ? '0' : '1';
 
          /* Let's trigger the creation of the group. */
          this.userAdminService.createNewGroup( dataToSend ).then((response) => {
@@ -372,7 +375,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
              /* Figure out which function to call. */
-             let functionCall = response.groupIsTx === 2 ? 'updateTxPermissions' : 'updateAdminPermissions';
+             let functionCall = response.groupIsTx === 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
 
              /* Then send the request. */
              this.userAdminService[functionCall](permissionsData).then((response) => {
@@ -419,7 +422,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
          dataToSend['groupId'] = this.tabsControl[tabid].groupId;
          dataToSend['name'] = formData.name;
          dataToSend['description'] = formData.description;
-         dataToSend['type'] = formData.type[0] ? formData.type[0].id || 0 : 0;
+         dataToSend['type'] = formData.type[0] ? formData.type[0].id : 0;
 
          /* Let's trigger the creation of the group. */
          this.userAdminService.updateGroup( dataToSend ).then((response) => {
@@ -456,6 +459,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              this.userAdminService[functionCall](permissionsData).then((response) => {
                  /* TODO - Implement a success message for updating the group permissions. */
                  console.log("Updated the group permissions.", response);
+
+                 /* Re-emit the permissions. */
+                 this.tabsControl[tabid].permissionsEmitter.emit( newPermissions );
 
                  /* Lastly, make the old permissions the new ones so the user can revert them and have differences to send. */
                  this.tabsControl[tabid].oldPermissions = newPermissions;
