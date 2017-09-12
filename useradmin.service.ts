@@ -35,6 +35,13 @@ import {
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
+
+    /* Group permissions */
+    SET_USERS_ADMIN_PERMISSIONS,
+    SET_USERS_TX_PERMISSIONS,
+    getUsersPermissions,
+    getUsersAdminPermissions,
+    getUsersTxPermissions
 } from '@setl/core-store';
 
 @Injectable()
@@ -107,11 +114,11 @@ export class UserAdminService {
     /* Group Types. */
     public groupTypes:any = [
         {
-            'id': '1',
+            'id': '0',
             'text': 'Administrative',
         },
         {
-            'id': '2',
+            'id': '1',
             'text': 'Transactional',
         }
     ];
@@ -249,8 +256,6 @@ export class UserAdminService {
         this.txGroupList = getTranPermissionGroup(state);
 
         /* Combine the groups and emit. */
-        for (key in this.adminGroupList) this.adminGroupList[key].type = 1;
-        for (key in this.txGroupList) this.txGroupList[key].type = 2;
         this.allGroupListSubject.next( Object.assign({}, this.txGroupList, this.adminGroupList) );
 
         /* Get admin perm area list and send message out. */
@@ -537,14 +542,7 @@ export class UserAdminService {
         return new Promise((resolve, reject) => {
             /* Ok, so we need to get the permissions for this group and if asked,
                the specific permission by ID.
-               Let's start by checking if we already have this in the store...
             */
-            let
-            state = this.ngRedux.getState(),
-            currentPermissions = getPermissions(state),
-
-            /* Check if we're looking in admin or tx. */
-            location:string = entity.isTx ? "transPermissions" : "adminPermissions";
 
             /* Ok, so we didn't have it... now let's just request it. */
             let
@@ -563,6 +561,52 @@ export class UserAdminService {
             /* Save response from the request, but first check if we're getting an
                admin entity or a tx one. */
             let action = entity.isTx ? SET_TX_PERMISSIONS : SET_ADMIN_PERMISSIONS;
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [ action ],
+                    [],
+                    asyncTaskPipe,
+                    {},
+                    (data) => {
+                        resolve(data);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+
+            /* Return. */
+        });
+    }
+
+    /**
+     * Request User Permissions
+     * ----------------
+     * Requests a user's permissions or all, used on click for editing a user.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    requestUserPermissions (entity):Promise<any> {
+        console.time("promise for user perms");
+        return new Promise((resolve, reject) => {
+            console.timeEnd("promise for user perms");
+            console.log(entity);
+            /* Ok, so we need to get the permissions for this group and if asked,
+               the specific permission by ID.
+            */
+
+            /* Ok, so we didn't have it... now let's just request it. */
+            const asyncTaskPipe = this.adminUsersService.requestUserPermissions(
+                entity
+            );
+
+
+            /* Save response from the request, but first check if we're getting an
+               admin entity or a tx one. */
+            let action = entity.isTx ? SET_USERS_TX_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS;
             this.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     [ action ],
@@ -751,7 +795,7 @@ export class UserAdminService {
     public resolveGroupType ( query ):any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.id ) identifier = "id";
+        if ( query.id || query.id === 0 ) identifier = "id";
         if ( query.text ) identifier = "text";
 
         /* If there was nothing, return. */

@@ -34,8 +34,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public userTypes:any;
 
     /* Subscriptions from service observables. */
-    private userListSubscription:any;
-
+    private subscriptions:{[key: string]: any} = {};
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
@@ -48,7 +47,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userTypes = userAdminService.getUserTypes();
 
         /* Subscribe to the admin user list observable. */
-        this.userListSubscription = this.userAdminService.getUserListSubject().subscribe((list) => {
+        this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
             this.usersList = this.convertToArray(list);
 
             /* Override the changes. */
@@ -85,14 +84,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
-    }
-
-    ngOnDestroy ():void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        this.userListSubscription.unsubscribe();
     }
 
     /**
@@ -132,7 +123,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Let's trigger the creation of the user. */
         this.userAdminService.createNewUser( dataToSend ).then((response) => {
-            /* Now we've edited the user, we need to send any changes to the groups. */
+            /* Now we've edited the user, we need to send any changes to the groups, wallet access and chain access. */
+
+            /* TODO - Save admin group access. */
+
+            /* TODO - Save tx group access. */
+
+            /* TODO - Save wallet access. */
+
+            /* TODO - Save chain access. */
 
             /* TODO - handle success message. */
             console.log('Successfully created user.', response);
@@ -195,7 +194,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      public handleDelete ( deleteUserIndex ):void {
          /* Get the user's data. */
          let dataToSend = {};
-         console.log(this.usersList, deleteUserIndex);
          dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
 
          /* Send the request. */
@@ -254,6 +252,33 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                  }
              ),
              "active": false // this.editFormControls
+         });
+
+         /* TODO - get user meta;
+            [ ] Admin groups.
+            [ ] Tx groups.
+            [ ] Wallet access.
+            [ ] Chain access.
+         */
+
+         /* Get Admin permissions. */
+         this.userAdminService.requestUserPermissions({
+             entityId: user.userID,
+             isTx: false,
+         }).then((response) => {
+             console.log( "Editing user, got admin permissions: ", response );
+         }).catch((error) => {
+             console.log( "Editing user, admin permissions error: ", error );
+         });
+
+         /* Get Tx permissions. */
+         this.userAdminService.requestUserPermissions({
+             entityId: user.userID,
+             isTx: true,
+         }).then((response) => {
+             console.log( "Editing user, got tx permissions: ", response );
+         }).catch((error) => {
+             console.log( "Editing user, tx permissions error: ", error );
          });
 
          /* Activate the new tab. */
@@ -348,4 +373,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
           return;
       }
 
+      ngOnDestroy ():void {
+          /* Detach the change detector on destroy. */
+          this.changeDetectorRef.detach();
+
+          /* Unsunscribe Observables. */
+          for ( var key in this.subscriptions ) {
+              this.subscriptions[key].unsubscribe();
+          }
+      }
 }

@@ -114,13 +114,13 @@
                     *ngIf="formControl.controls['type']._value[0]"
                     [ngSwitch]="formControl.controls['type']._value[0].id">
 
-                        <setl-permission-grid *ngSwitchCase="'1'"
+                        <setl-permission-grid *ngSwitchCase="'0'"
                             [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid *ngSwitchCase="'2'"
+                        <setl-permission-grid *ngSwitchCase="'1'"
                             [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="formControl.controls['permissions'].patchValue($event)"
@@ -197,14 +197,14 @@
                     *ngIf="formControl.controls['type']._value[0]"
                     [ngSwitch]="formControl.controls['type']._value[0].id">
 
-                        <setl-permission-grid *ngSwitchCase="'1'"
+                        <setl-permission-grid *ngSwitchCase="'0'"
                             [initData]="permissionsEmitter"
                             [permissionAreas]="filteredAdminAreaList"
                             [permissionLevels]="permissionLevelsList"
                             (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid *ngSwitchCase="'2'"
+                        <setl-permission-grid *ngSwitchCase="'1'"
                             [initData]="permissionsEmitter"
                             [permissionAreas]="filteredTxAreaList"
                             [permissionLevels]="permissionLevelsList"
