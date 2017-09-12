@@ -111,12 +111,19 @@ export {
     getAdminPermAreaList,
     getTxPermAreaList,
 
-    /* Entity Permissions */
+    /* Group Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
+
+    /* Users permissions */
+    SET_USERS_ADMIN_PERMISSIONS,
+    SET_USERS_TX_PERMISSIONS,
+    getUsersPermissions,
+    getUsersAdminPermissions,
+    getUsersTxPermissions
 } from './useradmin';
 
 export {
@@ -141,5 +148,3 @@ export {
     // Combine reducer
     MemberReducer
 } from './member';
-
-
