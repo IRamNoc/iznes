@@ -34,7 +34,7 @@ public class LoginAndNavigationHelper {
     public static void waitForLoginPageToLoad() throws InterruptedException {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            WebElement usernameInput = driver.findElement(By.id("login_username"));
+            WebElement usernameInput = driver.findElement(By.id("username-field"));
             wait.until(visibilityOf(usernameInput));
             wait.until(elementToBeClickable(usernameInput));
         }catch(Exception e){
@@ -42,7 +42,7 @@ public class LoginAndNavigationHelper {
         }
 
         try {
-            WebElement passwordInput = driver.findElement(By.id("login_password"));
+            WebElement passwordInput = driver.findElement(By.id("password-field"));
             wait.until(visibilityOf(passwordInput));
             wait.until(elementToBeClickable(passwordInput));
         } catch (Exception i) {
@@ -50,7 +50,7 @@ public class LoginAndNavigationHelper {
         }
 
         try {
-            WebElement loginButton = driver.findElement(By.id("login_btn"));
+            WebElement loginButton = driver.findElement(By.id("login-submit"));
             wait.until(visibilityOf(loginButton));
             wait.until(elementToBeClickable(loginButton));
         } catch (Exception o) {
@@ -61,7 +61,7 @@ public class LoginAndNavigationHelper {
     public static void enterLoginCredentialsUserName(String username) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement name = driver.findElement(By.id("login_username"));
+            WebElement name = driver.findElement(By.id("username-field"));
             wait.until(visibilityOf(name));
             wait.until(elementToBeClickable(name));
             name.clear();
@@ -73,7 +73,7 @@ public class LoginAndNavigationHelper {
     public static void enterLoginCredentialsPassword(String password) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement login_password = driver.findElement(By.id("login_password"));
+            WebElement login_password = driver.findElement(By.id("password-field"));
             wait.until(visibilityOf(login_password));
             wait.until(elementToBeClickable(login_password));
             login_password.clear();
@@ -86,7 +86,7 @@ public class LoginAndNavigationHelper {
     public static void clickLoginButton(){
         try{
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement login = driver.findElement(By.id("login_btn"));
+            WebElement login = driver.findElement(By.id("login-submit"));
             wait.until(visibilityOf(login));
             wait.until(elementToBeClickable(login));
             login.click();
@@ -99,11 +99,8 @@ public class LoginAndNavigationHelper {
     public static boolean verifyHomePageIsDisplayed() throws InterruptedException {
             try {
                 WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-                WebElement LogoffButton = driver.findElement(By.id("menu_logoff"));
+                WebElement LogoffButton = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/a[3]"));
                 wait.until(visibilityOf(LogoffButton));
-                wait.until(elementToBeClickable(LogoffButton));
-                driver.findElement(By.xpath(".//*[@id='page-wrapper']/div[2]/div/h2/span[2]"));
-                driver.findElement(By.xpath(".//*[@id='page-wrapper']/div[1]/nav/ul/li[3]/a/span"));
             } catch (Exception e) {
                 return false;
         }
@@ -178,7 +175,6 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
         clickLoginButton();
         assertTrue(verifyHomePageIsDisplayed());
-        assertTrue(verifyUserNameIsDisplayedInTitle(username));
     }
 
     public static void loginToPhoenixAndVerifySuccess(String username, String password) throws InterruptedException, IOException {
@@ -193,7 +189,7 @@ public class LoginAndNavigationHelper {
     public static void logout() throws InterruptedException {
         try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement logOff = driver.findElement(By.cssSelector("#menu_logoff > span.nav-label > span.ml"));
+            WebElement logOff = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/a[3]"));
             wait.until(visibilityOf(logOff));
             wait.until(elementToBeClickable(logOff));
             logOff.click();
