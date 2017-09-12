@@ -57,7 +57,7 @@ function formatToAdminPermGroupList(rawPermissionGroupList) {
 
     const adminPermObject = Map(rawAdminPermGroupDataList.reduce(function (result, item) {
 
-        const groupIsTx = item.get('groupIsTx') === 2;
+        const groupIsTx = item.get('groupIsTx') === 1;
 
         if (!groupIsTx) {
             const canDelegate = item.get('canDelegate') === 1;
@@ -66,6 +66,7 @@ function formatToAdminPermGroupList(rawPermissionGroupList) {
                 groupId: item.get('groupID'),
                 groupName: item.get('groupName'),
                 groupDescription: item.get('groupDescription'),
+                groupIsTx: item.get('groupIsTx'),
                 canDelegate: canDelegate
             };
         }
@@ -81,7 +82,7 @@ function formatToTranPermGroupList(rawPermissionGroupList) {
 
     const adminPermObject = Map(rawAdminPermGroupDataList.reduce(function (result, item) {
 
-        const groupIsTx = item.get('groupIsTx') === 2;
+        const groupIsTx = item.get('groupIsTx') === 1;
 
         if (groupIsTx) {
             const canDelegate = item.get('canDelegate') === 1;
@@ -91,6 +92,7 @@ function formatToTranPermGroupList(rawPermissionGroupList) {
                 groupName: item.get('groupName'),
                 groupDescription: item.get('groupDescription'),
                 chainId: item.get('chainID'),
+                groupIsTx: item.get('groupIsTx'),
                 canDelegate: canDelegate
             };
         }
