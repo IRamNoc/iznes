@@ -9,19 +9,22 @@ node
                     url: 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
     }
 
-    stage('Build & Test'){
+    stage('Build & Unit Test'){
 
       sh '''yarn upgrade &&
               yarn test-single &&
               cd src &&
-              sass styles.scss:styles.css'''
-
+              sass styles.scss:styles.css &&
+              cd ../ '''
+               junit allowEmptyResults: true, keepLongStdio: true,
+                        testResults: '/TESTS-Headless**'
     }
 
-    stage('Sonar Scan'){
-          withSonarQubeEnv {
 
-            sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
-          }
-        }
+    stage('Sonar Scan'){
+      withSonarQubeEnv {
+
+        sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
+      }
+    }
   }
