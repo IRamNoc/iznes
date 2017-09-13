@@ -16,13 +16,15 @@ node
               cd src &&
               sass styles.scss:styles.css &&
               cd ../ '''
-
+               junit allowEmptyResults: true, keepLongStdio: true,
+                        testResults: '/TESTS-Headless**'
     }
 
-    stage('Sonar Scan'){
-          withSonarQubeEnv {
 
-            sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
-          }
-        }
+    stage('Sonar Scan'){
+      withSonarQubeEnv {
+
+        sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
+      }
+    }
   }
