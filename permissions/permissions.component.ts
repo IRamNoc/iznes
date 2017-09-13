@@ -232,6 +232,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             /* TODO - Add a better confirm in here. */
             if (confirm("Are you sure you want to delete "+ this.allGroupList[index].groupName +"?")) {
                 this.userAdminService.deleteGroup(request).then((data) => {
+                    /* TODO - close any edit tabs created for this group. */
+
                     /* TODO - Implement a success message. */
                     console.log('Deleted group: ', data);
                 }).catch((data) => {

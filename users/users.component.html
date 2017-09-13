@@ -147,7 +147,7 @@
                                 <span class="ml" mltag="txt_access">Accès</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl}"></ng-container>
                             </div>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                                 <span class="ml_translated" mltag="txt_username">Username</span>
                             </label>
                             <div>
-                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username" readonly="readonly">
                             </div>
                         </div>
 
@@ -223,7 +223,7 @@
                                 <span class="ml" mltag="txt_access">Accès</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs"></ng-container>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl}"></ng-container>
                             </div>
                         </div>
                     </div>
@@ -244,7 +244,7 @@
     </ng-template>
 
     <!-- This nested tab set cannot be directly inside the main one :( -->
-    <ng-template #accessAdminTabs>
+    <ng-template #accessAdminTabs let-formControl="formControl">
         <clr-tabs>
             <clr-tab>
                 <a clrTabLink><i class="fa fa-users"></i> Administrative</a>
@@ -252,6 +252,13 @@
                     <div class="panel-body">
                         Administrative Groups they belong to.
                     </div>
+                    <ng-select
+                        [items]="filteredAdminGroupsList"
+                        [multiple]="true"
+                        [allowClear]="true"
+                        placeholder="Select Type"
+                        [formControl]="formControl.controls['adminGroups']">
+                    </ng-select>
                 </clr-tab-content>
             </clr-tab>
 
@@ -261,6 +268,13 @@
                     <div class="panel-body">
                         Transactional Groups they belong to.
                     </div>
+                    <ng-select
+                        [items]="filteredTxGroupsList"
+                        [multiple]="true"
+                        [allowClear]="true"
+                        placeholder="Select Type"
+                        [formControl]="formControl.controls['txGroups']">
+                    </ng-select>
                 </clr-tab-content>
             </clr-tab>
 

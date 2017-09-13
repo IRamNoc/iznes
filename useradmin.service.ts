@@ -132,6 +132,7 @@ export class UserAdminService {
 
     public adminGroupList:{};
     public txGroupList:{};
+    public allGroupsList:{};
     @Output()
     public allGroupListSubject = new Subject<any>();
     /* Admin and TX group list observable. */
@@ -159,6 +160,14 @@ export class UserAdminService {
     public getPermissionsListSubject () {
         return this.permissionsListSubject.asObservable();
     }
+
+    public usersPermissionsList:{};
+    @Output()
+    public usersPermissionsListSubject = new Subject<any>();
+    public getUsersPermissionsListSubject () {
+        return this.usersPermissionsListSubject.asObservable();
+    }
+
 
     /* Constructor. */
     constructor (
@@ -226,7 +235,8 @@ export class UserAdminService {
         this.txGroupList = getTranPermissionGroup(state);
 
         /* Combine the groups and emit. */
-        this.allGroupListSubject.next( Object.assign({}, this.txGroupList, this.adminGroupList) );
+        this.allGroupsList = Object.assign({}, this.txGroupList, this.adminGroupList);
+        this.allGroupListSubject.next( this.allGroupsList );
 
         /* Get admin perm area list and send message out. */
         this.adminPermAreaList = getAdminPermAreaList(state);
@@ -236,9 +246,13 @@ export class UserAdminService {
         this.txPermAreaList = getTxPermAreaList(state);
         this.txPermAreaListSubject.next(this.txPermAreaList);
 
-        /* Get permissions list by entities. */
+        /* Get permissions list by groupId. */
         this.permissionsList = getPermissions(state);
         this.permissionsListSubject.next(this.permissionsList);
+
+        /* Get permissions list by userId. */
+        this.usersPermissionsList = getUsersPermissions(state);
+        this.usersPermissionsListSubject.next(this.usersPermissionsList);
     }
 
     /**
@@ -310,7 +324,7 @@ export class UserAdminService {
      * ----------------
      * Updates a Group.
      *
-     * @param {data} - the new group data.
+     * @param {data} - the group's new data.
      *
      * @return {void}
      */
@@ -435,6 +449,23 @@ export class UserAdminService {
     }
 
     /**
+     * Update User Permissions
+     * -----------------------
+     * Update a user's groups or all, used on click for editing a user.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    updateUserGroups (entity):Promise<any> {
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateUserGroups(entity)
+        });
+    }
+
+    /**
      * Get Account Types
      * -----------------
      * Returns the account types array.
@@ -553,9 +584,9 @@ export class UserAdminService {
     }
 
     /**
-     * Resolve Admin Group
+     * Resolve Group
      * -----------------
-     * Accepts an object that then is used to lookup the admin group and
+     * Accepts an object that then is used to lookup the group and
      * return a full object of it, this is useful for when you need to set the
      * value of an ng2-select but only have the id or the text of what was
      * selected.
@@ -564,7 +595,7 @@ export class UserAdminService {
      *
      * @return {groupType} - the complete object of the group.
      */
-    public resolveAdminGroup ( query ):any {
+    public resolveGroup ( query ):any {
         /* Let's first check which we have. */
         let identifier = "";
         if ( query.groupId ) identifier = "groupId";
@@ -577,10 +608,10 @@ export class UserAdminService {
 
         /* Ok, lets check if we have the account type. */
         let key;
-        for ( key in this.adminGroupList ) {
+        for ( key in this.allGroupsList ) {
             /* Loop over each one and check the identifier. */
-            if ( this.adminGroupList[key][identifier].toString() === query[identifier] ) {
-                return [ this.adminGroupList[key] ];
+            if ( this.allGroupsList[key][identifier].toString() === query[identifier].toString() ) {
+                return [ this.allGroupsList[key] ];
             }
         }
 
@@ -636,9 +667,6 @@ export class UserAdminService {
      * @return {diff}
      */
     public getPermissionsDiff(oldPermissions, newPermissions) {
-        console.log("Old Permissions: ", oldPermissions);
-        console.log("New Permissions: ", newPermissions);
-        var differences = {};
         var toAdd = {};
         var toUpdate = {};
         var toDelete = [];
