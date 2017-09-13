@@ -2,7 +2,8 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter
+    EventEmitter,
+    AfterViewInit
 } from '@angular/core';
 
 import {
@@ -23,7 +24,7 @@ interface Option {
   styleUrls: ['./option-list.component.css']
 })
 
-export class OptionListComponent {
+export class OptionListComponent implements AfterViewInit {
     /* The option list, needs to follow the interface above. */
     @Input()
     optionsList:Array<Option> = [
@@ -55,6 +56,13 @@ export class OptionListComponent {
     @Output()
     selected:EventEmitter<Option> = new EventEmitter();
 
+    /* Init value. */
+    @Input()
+    initData:any;
+
+    @Input()
+    metaData:any;
+
     /* Subscription. */
     private closeSubscription:any;
 
@@ -70,6 +78,34 @@ export class OptionListComponent {
             if ( data === 1 && this.uiListOpen === true) {
                 /* ...toggle this state. */
                 this.toggleOpen();
+            }
+        });
+    }
+
+    ngAfterViewInit () {
+        if (!this.initData) {
+            /* No data. */
+            return;
+        }
+
+        this.initData.subscribe((rawData) => {
+            /* Get our own data. */
+            let value = 0;
+            if (
+                rawData &&
+                rawData[ this.metaData['permissionId'] ] &&
+                rawData[ this.metaData['permissionId'] ][ this.metaData['levelId'] ]
+            ) {
+                value = rawData[ this.metaData['permissionId'] ][ this.metaData['levelId'] ];
+            }
+
+            /* Find the init value in the list. */
+            for ( let i in this.optionsList ) {
+                if (this.optionsList[i].id == value) {
+                    /* Then set and return. */
+                    this.optionSelect = this.optionsList[i];
+                    return;
+                }
             }
         })
     }
