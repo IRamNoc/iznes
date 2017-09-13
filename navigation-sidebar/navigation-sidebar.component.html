@@ -7,12 +7,12 @@
         <label menu-dropdown><i class="fa fa-bar-chart"></i> Asset Manager Panel</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> Fund Holidings</a>
+                <a [routerLink]="['/asset-managment/fund-holdings']" [ngClass]="{active: activeRoute('/asset-managment/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> Fund Holidings</a>
             </li>
         </ul>
     </section>
 
-    <a class="nav-link" [routerLink]="['/home']" [ngClass]="{active: activeRoute('wallets')}">
+    <a class="nav-link" [routerLink]="['/wallets']" [ngClass]="{active: activeRoute('wallets')}">
         <i class="fa fa-briefcase"></i> Wallets
     </a>
 
@@ -24,13 +24,19 @@
         <label menu-dropdown><i class="fa fa-user"></i> Account Module</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/my-account']" [ngClass]="{active: activeRoute('/my-account')}" class="nav-link"><i class="fa fa-user"></i> My Account</a>
+                <a [routerLink]="['/account/my-account']" [ngClass]="{active: activeRoute('/account/my-account')}" class="nav-link">
+                    <i class="fa fa-user"></i> My Account
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/relationships')}" class="nav-link"><i class="fa fa-users"></i> Relationships</a>
+                <a [routerLink]="['/account/relationships']" [ngClass]="{active: activeRoute('/account/relationships')}" class="nav-link">
+                    <i class="fa fa-users"></i> Relationships
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/documents')}" class="nav-link"><i class="fa fa-book"></i> Documents</a>
+                <a [routerLink]="['/account/documents']" [ngClass]="{active: activeRoute('/account/documents')}" class="nav-link">
+                    <i class="fa fa-book"></i> Documents
+                </a>
             </li>
         </ul>
     </section>
@@ -44,21 +50,29 @@
         <label menu-dropdown><i class="fa fa-industry"></i> Product Module</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/managment-company')}" class="nav-link"><i class="fa fa-university"></i> Managment Company</a>
+                <a [routerLink]="['/product-module/managment-company']" [ngClass]="{active: activeRoute('/product-module/managment-company')}" class="nav-link">
+                    <i class="fa fa-university"></i> Managment Company
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/sicav')}" class="nav-link"><i class="fa fa-users"></i> SICAV</a>
+                <a [routerLink]="['/product-module/sicav']" [ngClass]="{active: activeRoute('/product-module/sicav')}" class="nav-link">
+                    <i class="fa fa-users"></i> SICAV
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/fund')}" class="nav-link"><i class="fa fa-area-chart"></i> Fund</a>
+                <a [routerLink]="['/product-module/fund']" [ngClass]="{active: activeRoute('/product-module/fund')}" class="nav-link">
+                    <i class="fa fa-area-chart"></i> Fund
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/net-asset-value')}" class="nav-link"><i class="fa fa-ellipsis-h"></i> Net Asset Value</a>
+                <a [routerLink]="['/product-module/net-asset-value']" [ngClass]="{active: activeRoute('/product-module/net-asset-value')}" class="nav-link">
+                    <i class="fa fa-ellipsis-h"></i> Net Asset Value
+                </a>
             </li>
         </ul>
     </section>
 
-    <a class="nav-link" [routerLink]="['/home']" [ngClass]="{active: activeRoute('orders')}">
+    <a class="nav-link" [routerLink]="['/orders']" [ngClass]="{active: activeRoute('/orders')}">
         <i class="fa fa-pencil"></i> Manage Orders
     </a>
 
@@ -66,22 +80,34 @@
         <label menu-dropdown><i class="fa fa-university"></i> Corporate Actions</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/create-resolution')}" class="nav-link"><i class="fa fa-plus"></i> Create Resolution</a>
+                <a [routerLink]="['/corporate-actions/create-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/create-resolution')}" class="nav-link">
+                    <i class="fa fa-plus"></i> Create Resolution
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/issue-resolution')}" class="nav-link"><i class="fa fa-check"></i> Issue Resolution</a>
+                <a [routerLink]="['/corporate-actions/issue-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/issue-resolution')}" class="nav-link">
+                    <i class="fa fa-check"></i> Issue Resolution
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/distribution')}" class="nav-link"><i class="fa fa-ellipsis-h"></i> Distribution</a>
+                <a [routerLink]="['/corporate-actions/distribution']" [ngClass]="{active: activeRoute('/corporate-actions/distribution')}" class="nav-link">
+                    <i class="fa fa-ellipsis-h"></i> Distribution
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/merger-absorption')}" class="nav-link"><i class="fa fa-compress"></i> Merger/Absorption</a>
+                <a [routerLink]="['/corporate-actions/merger-absorption']" [ngClass]="{active: activeRoute('/corporate-actions/merger-absorption')}" class="nav-link">
+                    <i class="fa fa-compress"></i> Merger/Absorption
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/coupon-payment')}" class="nav-link"><i class="fa fa-briefcase"></i> Coupon Payment</a>
+                <a [routerLink]="['/corporate-actions/coupon-payment']" [ngClass]="{active: activeRoute('/corporate-actions/coupon-payment')}" class="nav-link">
+                    <i class="fa fa-briefcase"></i> Coupon Payment
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/home']" [ngClass]="{active: activeRoute('/split')}" class="nav-link"><i class="fa fa-arrows-h"></i> Split</a>
+                <a [routerLink]="['/corporate-actions/split']" [ngClass]="{active: activeRoute('/corporate-actions/split')}" class="nav-link">
+                    <i class="fa fa-arrows-h"></i> Split
+                </a>
             </li>
         </ul>
     </section>
@@ -90,16 +116,24 @@
         <label menu-dropdown><i class="fa fa-cubes"></i> User Administration</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link"><i class="fa fa-user"></i> Users</a>
+                <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link">
+                    <i class="fa fa-user"></i> Users
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/user-administration/wallets')}" class="nav-link"><i class="fa fa-briefcase"></i> Wallets</a>
+                <a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/user-administration/wallets')}" class="nav-link">
+                    <i class="fa fa-briefcase"></i> Wallets
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/user-administration/permissions')}" class="nav-link"><i class="fa fa-key"></i> Permissions</a>
+                <a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/user-administration/permissions')}" class="nav-link">
+                    <i class="fa fa-key"></i> Permissions
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link"><i class="fa fa-users"></i> Wizard</a>
+                <a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link">
+                    <i class="fa fa-users"></i> Wizard
+                </a>
             </li>
         </ul>
     </section>
@@ -108,13 +142,19 @@
         <label menu-dropdown><i class="fa fa-archive"></i> Asset Servicing</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/asset-servicing/register-issuer']" [ngClass]="{active: activeRoute('/asset-servicing/register-issuer')}" class="nav-link"><i class="fa fa-user-plus"></i> Register Issuer</a>
+                <a [routerLink]="['/asset-servicing/register-issuer']" [ngClass]="{active: activeRoute('/asset-servicing/register-issuer')}" class="nav-link">
+                    <i class="fa fa-user-plus"></i> Register Issuer
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/asset-servicing/register-asset']" [ngClass]="{active: activeRoute('/asset-servicing/register-asset')}" class="nav-link"><i class="fa fa-plus-circle"></i> Register Asset</a>
+                <a [routerLink]="['/asset-servicing/register-asset']" [ngClass]="{active: activeRoute('/asset-servicing/register-asset')}" class="nav-link">
+                    <i class="fa fa-plus-circle"></i> Register Asset
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/asset-servicing/issue-asset']" [ngClass]="{active: activeRoute('/asset-servicing/issue-asset')}" class="nav-link"><i class="fa fa-paper-plane"></i> Issue Asset</a>
+                <a [routerLink]="['/asset-servicing/issue-asset']" [ngClass]="{active: activeRoute('/asset-servicing/issue-asset')}" class="nav-link">
+                    <i class="fa fa-paper-plane"></i> Issue Asset
+                </a>
             </li>
         </ul>
     </section>
@@ -123,13 +163,19 @@
         <label menu-dropdown><i class="fa fa-flag"></i> Reports</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link"><i class="fa fa-th-list"></i> Balances Reports</a>
+                <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link">
+                    <i class="fa fa-th-list"></i> Balances Reports
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link"><i class="fa fa-money"></i> Issue Reports</a>
+                <a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link">
+                    <i class="fa fa-money"></i> Issue Reports
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/reports/transactions']" [ngClass]="{active: activeRoute('/reports/transactions')}" class="nav-link"><i class="fa fa-key"></i> Transactions Reports</a>
+                <a [routerLink]="['/reports/transactions']" [ngClass]="{active: activeRoute('/reports/transactions')}" class="nav-link">
+                    <i class="fa fa-key"></i> Transactions Reports
+                </a>
             </li>
         </ul>
     </section>
@@ -138,13 +184,19 @@
         <label menu-dropdown><i class="fa fa-chain"></i> Chain Administration</label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/chain-admin/manage-member']" [ngClass]="{active: activeRoute('/chain-admin/manage-member')}" class="nav-link"><i class="fa fa-address-card"></i> Member</a>
+                <a [routerLink]="['/chain-admin/manage-member']" [ngClass]="{active: activeRoute('/chain-admin/manage-member')}" class="nav-link">
+                    <i class="fa fa-address-card"></i> Member
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/chain-admin/manage-account']" [ngClass]="{active: activeRoute('/chain-admin/manage-account')}" class="nav-link"><i class="fa fa-user-o"></i> Account</a>
+                <a [routerLink]="['/chain-admin/manage-account']" [ngClass]="{active: activeRoute('/chain-admin/manage-account')}" class="nav-link">
+                    <i class="fa fa-user-o"></i> Account
+                </a>
             </li>
             <li>
-                <a [routerLink]="['/chain-admin/chain-membership']" [ngClass]="{active: activeRoute('/chain-admin/chain-membership')}" class="nav-link"><i class="fa fa-handshake-o"></i> Chain Membership</a>
+                <a [routerLink]="['/chain-admin/chain-membership']" [ngClass]="{active: activeRoute('/chain-admin/chain-membership')}" class="nav-link">
+                    <i class="fa fa-handshake-o"></i> Chain Membership
+                </a>
             </li>
         </ul>
     </section>
