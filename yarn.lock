@@ -180,7 +180,7 @@
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#772c780b6a8d578f24ae042261f05fa7dc4fe2af"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#e36c3d09aabe032a5c01b1d68cd5e34dbd556273"
 
 "@setl/core-manage-member@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git":
   version "1.0.0"
@@ -192,18 +192,18 @@
 
 "@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#9663c7f161972b67877f69ccaa4c27c0c85a7211"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#22204f8e1b1c14a41708e3a83000be56ebfb8810"
 
 "@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#5bd45a4b828b49212332eceafcb7cb6843af74e0"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#bf20140c0696cf6e13c0b1b51fddcc4f4ebfc73a"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
 
 "@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git":
   version "1.0.8"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#ead632270d2d4a6e6e415841d3cf2407f7e8c234"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#d77be58ccdc9e66f7153c55a4fa262f08b8daeb1"
 
 "@setl/jaspero-ng2-alerts@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git":
   version "0.0.6"
@@ -3029,6 +3029,13 @@ karma-jasmine-html-reporter@^0.2.2:
 karma-jasmine@^1.0.2, karma-jasmine@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.0.tgz#22e4c06bf9a182e5294d1f705e3733811b810acf"
+
+karma-junit-reporter@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/karma-junit-reporter/-/karma-junit-reporter-1.2.0.tgz#4f9c40cedfb1a395f8aef876abf96189917c6396"
+  dependencies:
+    path-is-absolute "^1.0.0"
+    xmlbuilder "8.2.2"
 
 karma-source-map-support@^1.2.0:
   version "1.2.0"
@@ -5940,6 +5947,10 @@ xml2js@^0.4.17:
   dependencies:
     sax ">=0.6.0"
     xmlbuilder "~9.0.1"
+
+xmlbuilder@8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
 
 xmlbuilder@>=1.0.0, xmlbuilder@~9.0.1:
   version "9.0.4"
