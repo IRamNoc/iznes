@@ -18,7 +18,9 @@
                 <td *ngFor="let level of permissionLevels">
                     <!-- Option List, defaults to this grid. -->
                     <options-list
-                        (selected)="rawComponentData[area.id][level.id] = $event.id"
+                        (selected)="updateValue( area.id, level.id, $event.id)"
+                        [initData]="updateEvent"
+                        [metaData]="{ 'permissionId': area.id, 'levelId': level.id }"
                     ></options-list>
                 </td>
             </tr>

@@ -62,9 +62,7 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
             /* Done! */
         }
         // console.log(' | < setup raw data: ', this.rawComponentData);
-    }
 
-    ngAfterViewInit () {
         /* Subscribe to the initData event. */
         // console.log(" | init data: ", this.initData);
         if ( this.initData ) {
@@ -100,6 +98,32 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
                 this.triggerDataEmit();
             });
         }
+    }
+
+    ngAfterViewInit () {
+
+    }
+
+    /**
+     * Update Value
+     * ------------
+     * Updates a permission value, then triggers an update event.
+     *
+     * @param  {permissionId} string - the permissionId that relates to this value.
+     * @param  {levelId} string - the levelId that relates to this value.
+     * @param  {newValue} string - the new value it should be.
+     *
+     * @return {void}
+     */
+    public updateValue (permissionId, levelId, newValue) {
+        /* Update the value... */
+        this.rawComponentData[permissionId][levelId] = newValue;
+
+        /* ...then emit... */
+        this.triggerDataEmit();
+
+        /* ...and return.*/
+        return;
     }
 
     /**
