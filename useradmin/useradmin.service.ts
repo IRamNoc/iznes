@@ -303,7 +303,7 @@ export class AdminUsersService {
             chainId: entity.chainId
         };
 
-        console.log('SENDING GUG: ', messageBody);
+        console.log('SENDING UDUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
