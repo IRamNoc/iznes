@@ -121,3 +121,11 @@ export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
     entityId: number;
     isTx: number;
 }
+
+export interface UpdateUserGroupsBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+    toAdd: any;
+    toDelete: any;
+    chainId: string;
+}
