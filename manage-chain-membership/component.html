@@ -22,14 +22,16 @@
     <!-- Manage Chain Access. -->
     <ng-template #manageChainAccessTab>
         <div class="panel-body">
-            <form action="">
+            <form action="" [formGroup]="membershipForm" (ngSubmit)="handleUpdateChainMembership()">
                 <div class="form-horizontal">
                     <div class="form-group col-sm-6">
                         <label class="control-label"><span class="ml" mltag="txt_chains">Chains</span></label>
                         <ng-select
-                            [items]="['phoenix']"
+                            [items]="chainList"
                             [allowClear]="false"
                             placeholder="Select Chain"
+                            (selected)="selectChain($event)"
+                            formControlName="chain"
                         >
                         </ng-select>
                     </div>
@@ -41,8 +43,7 @@
                     </div>
 
                     <div class="member-chain-access-wrapper">
-                        <div class="form-group member-chain-access-item">
-
+                        <div class="form-group member-chain-access-item" *ngFor="let thisFormGroup of membershipForm.controls['membershipArr'].controls; let i = index;">
                             <div class="row">
 
                                 <div class="form-group col-sm-4">
@@ -51,6 +52,8 @@
                                         [items]="memberList"
                                         [allowClear]="false"
                                         placeholder="Select Member"
+                                        [formControl]="thisFormGroup.controls['member']"
+                                        (selected)="selectMember()"
                                     >
                                     </ng-select>
                                 </div>
@@ -60,19 +63,21 @@
                                         [items]="chainMemberShipTypeItems"
                                         [allowClear]="false"
                                         placeholder="Select Membership Type"
+                                        [formControl]="thisFormGroup.controls['memberType']"
                                     >
                                     </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-4">
                                     <ng-select
-                                        [items]="['phoenix']"
+                                        [items]="currentChainWalletNodeList"
                                         [allowClear]="false"
                                         placeholder="Select Wallet Node"
+                                        [formControl]="thisFormGroup.controls['node']"
                                     >
                                     </ng-select>
 
-                                    <div class="float-sm-left delete-times-btn">
+                                    <div class="float-sm-left delete-times-btn" (click)="removeMembershipItem(i)">
                                         <i class="fa fa-times"></i>
                                     </div>
                                 </div>
@@ -84,7 +89,7 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-default member_chain_access-add-btn">
+                        <button type="button" class="btn btn-default member_chain_access-add-btn" (click)="addMembershipItem()">
                             <i class="fa fa-plus"></i>
                             <span class="ml" mltag="txt_newmemberaccess">New Member Access </span></button>
                         &nbsp;
