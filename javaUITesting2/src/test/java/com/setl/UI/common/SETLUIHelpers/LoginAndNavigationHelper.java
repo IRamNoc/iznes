@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
+import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -9,6 +10,7 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPres
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
@@ -19,10 +21,13 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
-    public static void navigateToPhoenixLoginPage() throws InterruptedException, IOException {
-        driver.get(phoenixBaseUrl);
-        waitForLoginPageToLoad();
-
+    public static void navigateToPage(String pageHref) {
+      try {
+        driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']")).click();
+      }catch (Error e){
+        System.out.println(pageHref + "page not present");
+        fail("goodjob");
+      }
     }
 
     public static void navigateToIncorrectUrl(String restOfURL, String headerText) throws InterruptedException {
@@ -174,16 +179,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
-        assertTrue(verifyHomePageIsDisplayed());
-    }
-
-    public static void loginToPhoenixAndVerifySuccess(String username, String password) throws InterruptedException, IOException {
-        navigateToPhoenixLoginPage();
-        enterLoginCredentialsUserName(username);
-        enterLoginCredentialsPassword(password);
-        clickLoginButton();
-        assertTrue(verifyHomePageIsDisplayed());
-        assertTrue(verifyUserNameIsDisplayedInTitle(username));
+        //assertTrue(verifyHomePageIsDisplayed());
     }
 
     public static void logout() throws InterruptedException {
@@ -203,4 +199,14 @@ public class LoginAndNavigationHelper {
 
         }
     }
+
+  public static void navigateToDropdown(String dropdownID) throws InterruptedException {
+    try {
+      driver.findElement(By.id(dropdownID)).click();
+    }catch (Error e){
+      System.out.println(dropdownID + "not present");
+      fail();
+    }
+    Thread.sleep(750);
+  }
 }
