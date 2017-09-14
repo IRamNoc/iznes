@@ -23,7 +23,8 @@ import {
     /* Enttiy permission. */
     RequestAdminPermissionBody,
     RequestTxPermissionBody,
-    RequestUserPermissionsBody
+    RequestUserPermissionsBody,
+    UpdateUserGroupsBody
 } from './useradmin.service.model';
 
 @Injectable()
@@ -282,10 +283,27 @@ export class AdminUsersService {
             RequestName: 'gug',
             token: this.memberSocketService.token,
             entityId: entity.entityId,
-            isTx: entity.isTx ? 2 : 1,
+            isTx: entity.isTx ? 1 : 0,
         };
 
         console.log('SENDING GUG: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateUserGroups ( entity ):any {
+        /* Setup the message body. */
+        const messageBody: UpdateUserGroupsBody = {
+            RequestName: 'udug',
+            token: this.memberSocketService.token,
+            userId: entity.userId,
+            toAdd: entity.toAdd,
+            toDelete: entity.toDelete,
+            chainId: entity.chainId
+        };
+
+        console.log('SENDING UDUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
