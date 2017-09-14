@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Manage User</h1>
+    <h1 id="manage-users"><i class="fa fa-users"></i> Manage User</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -46,8 +46,8 @@
                 <clr-dg-row *clrDgItems="let user of usersList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                            <button (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
+                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{user.userName}}</clr-dg-cell>
@@ -99,6 +99,7 @@
                                 <span class="ml_translated" mltag="txt_account">Account</span>
                             </label>
                             <ng-select
+                                id="new-user-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
@@ -113,6 +114,7 @@
                                 <span mltag="txt_usertype">User Type</span>
                             </label>
                             <ng-select
+                                id="new-user-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
@@ -147,14 +149,14 @@
                                 <span class="ml" mltag="txt_access">Accès</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl}"></ng-container>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
+                            <button id="new-user-submit" type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
                         </div>
@@ -195,6 +197,7 @@
                                 <span class="ml_translated" mltag="txt_account">Account</span>
                             </label>
                             <ng-select
+                                id="edit-user{{tabid}}-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
@@ -209,6 +212,7 @@
                                 <span mltag="txt_usertype">User Type</span>
                             </label>
                             <ng-select
+                                id="edit-user{{tabid}}-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
@@ -223,7 +227,7 @@
                                 <span class="ml" mltag="txt_access">Accès</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl}"></ng-container>
+                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                             </div>
                         </div>
                     </div>
@@ -244,13 +248,13 @@
     </ng-template>
 
     <!-- This nested tab set cannot be directly inside the main one :( -->
-    <ng-template #accessAdminTabs let-formControl="formControl">
+    <ng-template #accessAdminTabs let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
                 <a clrTabLink><i class="fa fa-users"></i> Administrative</a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
-                        Administrative Groups they belong to.
+                        Administrative Groups
                     </div>
                     <ng-select
                         [items]="filteredAdminGroupsList"
@@ -266,10 +270,19 @@
                 <a clrTabLink><i class="fa fa-user"></i> Transactional</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        Transactional Groups they belong to.
+                        Group in Chain
                     </div>
                     <ng-select
-                        [items]="filteredTxGroupsList"
+                        [items]="filteredChainList"
+                        [allowClear]="true"
+                        placeholder="Select Chain"
+                        (selected)="setFormChainId(tabid, $event)">
+                    </ng-select>
+                    <div class="panel-body">
+                        Transactional Groups
+                    </div>
+                    <ng-select
+                        [items]="tabsControl[tabid].filteredTxList"
                         [multiple]="true"
                         [allowClear]="true"
                         placeholder="Select Type"
