@@ -115,7 +115,7 @@ export class ManageChainMembershipComponent implements OnInit {
 
     clearMembershipItem() {
         let i;
-        const numItem = this.membershipForm.controls['membershipArr'].length;
+        const numItem = this.membershipForm.controls['membershipArr']['length'];
         for (i = 0; i < numItem; i++) {
             this.membershipForm.controls['membershipArr']['removeAt'](0);
         }
@@ -214,7 +214,7 @@ export class ManageChainMembershipComponent implements OnInit {
     }
 
     selectMember() {
-
+        console.log(this.getSelectedMember());
 
     }
 
@@ -223,7 +223,7 @@ export class ManageChainMembershipComponent implements OnInit {
         const membershipValueImu = fromJS(membershipValue);
 
         const selectedMember = membershipValue.reduce(function (result, item) {
-            result.push(item.member)
+            result.push(item.member[0].id);
             return result;
         }, []);
 
