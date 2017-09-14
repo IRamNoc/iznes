@@ -17,7 +17,7 @@ export {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     getAdminPermissionGroup,
-    getTranPermissionGroup,
+    getTranPermissionGroup
 } from './permission-group';
 
 /* Permission areas. */
@@ -45,11 +45,43 @@ export {
     getTranPermissions,
 } from './permissions';
 
+import {
+    WalletNodeState,
+    WalletNodeReducer,
+    SET_WALLET_NODE_LIST,
+    setRequestedWalletNodeList,
+    clearRequestedWalletNodeList,
+    getWalletNodeList
+} from './wallet-nodes';
+
+import {
+    ChainsState,
+    ChainReducer,
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList
+} from './chains';
+
+import {
+    ChainMembershipState,
+    ChainMembershipReducer,
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList
+} from './chainMembership';
+
+import {combineReducers, Reducer} from 'redux';
+
+export {
+    SET_ADMIN_USERLIST,
+    getUsersList
+};
+
 /* Users permissions. */
 import {
     UsersPermissionsState,
     UsersPermissionsReducer,
 } from './users-permissions';
+
 export {
     SET_USERS_ADMIN_PERMISSIONS,
     SET_USERS_TX_PERMISSIONS,
@@ -58,12 +90,33 @@ export {
     getUsersTxPermissions,
 } from './users-permissions';
 
+export {
+    SET_WALLET_NODE_LIST,
+    setRequestedWalletNodeList,
+    clearRequestedWalletNodeList,
+    getWalletNodeList
+};
+
+export {
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList
+};
+
+export {
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList
+};
+
 /* Define this branch of the app redux store. */
 export interface AdminUsersState {
     users: UsersState;
     permissionGroup: PermissionGroupState;
     permAreaList: PermAreasState;
     permissions: PermissionsState;
+    walletNode: WalletNodeState;
+    chains: ChainsState;
+    chainMembership: ChainMembershipState;
     usersPermissions: UsersPermissionsState;
 }
 
@@ -76,5 +129,8 @@ export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminU
     permissionGroup: PermissionGroupReducer,
     permAreaList: PermAreasReducer,
     permissions: PermissionsReducer,
+    walletNode: WalletNodeReducer,
+    chains: ChainReducer,
+    chainMembership: ChainMembershipReducer,
     usersPermissions: UsersPermissionsReducer,
 });
