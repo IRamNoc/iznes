@@ -82,3 +82,49 @@
     top: 6px !important;
     background: none;
 }
+
+.ui-select-container.ui-select-multiple {
+
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    margin: 5px;
+    padding: 0 4px !important;
+    width: 100% !important;
+
+    .ui-select-match {
+        display: block;
+        width: 100%;
+        margin: 0;
+
+        span {
+            width: auto !important;
+        }
+    }
+
+    .ui-select-match-item {
+        outline: 0;
+        margin: 0 3px 3px 0;
+        line-height: 19px;
+        height: 20px;
+        padding-right: 30px;
+        position: relative;
+        color: #007cbb;
+
+        a {
+            margin-right: -25px !important;
+            padding: 2px 0 !important;
+            background: none !important;
+            display: inline-block;
+        }
+    }
+
+    .ui-select-search {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 25px;
+        &:focus {
+            background: transparent !important;
+        }
+    }
+}
