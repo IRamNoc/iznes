@@ -2,12 +2,12 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
 
 // Internal
 import {MemberService} from '@setl/core-req-services';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {
     setRequestedManageMemberList,
     SET_REQUESTED_MANAGE_MEMBER_LIST,

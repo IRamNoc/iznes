@@ -1,0 +1,19 @@
+.delete-times-btn {
+    width: 40px;
+    padding: 5px;
+    line-height: 40px;
+    text-align: right;
+    font-size: 20px;
+}
+
+.delete-times-btn:hover {
+    color: #f0ad4e;
+}
+
+.hr-line-dashed {
+    border-top: 1px dashed #e7eaec;
+    color: #fff;
+    background-color: #fff;
+    height: 1px;
+    margin: 20px 0;
+}
