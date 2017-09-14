@@ -23,15 +23,14 @@ import {
     /* Enttiy permission. */
     RequestAdminPermissionBody,
     RequestTxPermissionBody,
-    RequestUserPermissionsBody
+    RequestUserPermissionsBody,
 
     /* Wallet node list */
     RequestWalletNodeListBody,
 
     /* Chain list */
     RequestChainListBody,
-    RequestMemberChainAccessBody
-    RequestUserPermissionsBody,
+    RequestMemberChainAccessBody,
     UpdateUserGroupsBody
 } from './useradmin.service.model';
 import {
