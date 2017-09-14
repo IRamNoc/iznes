@@ -11,9 +11,4 @@ public class LoginAndNavigateToPage {
         LoginAndNavigationHelper.loginAndVerifySuccess(user, password);
         PageHelper.selectNewPageToNavigateTo(pageId);
     }
-
-    public static void loginToPhoenixAndNavigateToPage(String user, String password, String pageId) throws IOException, InterruptedException {
-        LoginAndNavigationHelper.loginToPhoenixAndVerifySuccess(user, password);
-        PageHelper.selectNewPageToNavigateTo(pageId);
-    }
 }

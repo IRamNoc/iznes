@@ -14,30 +14,6 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class PageHelper extends LoginAndNavigationHelper {
 
-    public static boolean verifyCorrectPageIsDisplayed(String pageElement) throws InterruptedException {
-
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement page = driver.findElement(By.cssSelector(pageElement));
-            wait.until(visibilityOf(page));
-            wait.until(elementToBeClickable(page));
-
-
-        boolean isDisplayed = page.isDisplayed();
-        if (!isDisplayed) fail("Incorrect Page Displayed");
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean verifyPageIsNotDisplayed(String pageElement) throws InterruptedException {
-        Thread.sleep(1000);
-        WebElement page = driver.findElement(By.cssSelector(pageElement));
-        boolean isDisplayed = page.isDisplayed();
-        if (isDisplayed) fail(pageElement + " page has been displayed and should not have been");
-        return false;
-    }
 
     public static void verifyLoginPageIsDisplayed() throws InterruptedException {
         try {
@@ -45,19 +21,6 @@ public class PageHelper extends LoginAndNavigationHelper {
         }catch (Exception e){
             System.out.println("login page was not displayed");
         }
-    }
-
-    public static void selectNewPageToNavigateToOld(String newPageId) throws InterruptedException {
-        for (int second = 0; ; second++) {
-            if (second >= 5) fail("Link to " + newPageId + " is not ready");
-            try {
-                if (isElementPresent(By.id(newPageId))) break;
-            } catch (Exception e) {
-                System.out.println("Link to  " + newPageId + " is not ready " + e);
-            }
-            Thread.sleep(500);
-        }
-        driver.findElement(By.id(newPageId)).click();
     }
 
     public static void selectNewPageToNavigateTo(String newPageId) throws InterruptedException {

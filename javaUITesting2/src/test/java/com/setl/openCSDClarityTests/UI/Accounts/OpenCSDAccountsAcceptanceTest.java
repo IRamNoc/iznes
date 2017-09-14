@@ -15,8 +15,10 @@ import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.acceptCookies;
+import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
+import static org.junit.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 public class OpenCSDAccountsAcceptanceTest {
@@ -25,13 +27,10 @@ public class OpenCSDAccountsAcceptanceTest {
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
-
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
-
     @Rule
     public Timeout globalTimeout = Timeout.seconds(300);
-
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -41,25 +40,20 @@ public class OpenCSDAccountsAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
 
-  @Test
-  public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-    System.out.println("Wooohooo! Login page was found!");
-  }
-
-//    @Test
-//    public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
-//      loginAndVerifySuccess(adminuser, adminuserPassword);
-//    }
-//    @Test
-//    public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
-//      loginAndVerifySuccess(adminuser, adminuserPassword);
-//      logout();
-//    }
-//    @Test
-//    public void shouldCreateAccount() throws IOException, InterruptedException {
-//        String accountDetails[] = generateRandomAccountDetails();
-//        populateNewAccountFields(accountDetails[0], accountDetails[1], "2");
-//        logger.info("Account created: " + accountDetails[0] + " ");
-//    }
-
+    @Test
+    public void shouldLandOnLoginPage() throws IOException, InterruptedException {
+        System.out.println("Wooohooo! Login page was found!");
+    }
+    @Test
+    public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+    }
+    @Test
+    public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        logout();
+    }
+    @Test
+    public void shouldCreateNewAccount() throws IOException, InterruptedException {
+    }
 }

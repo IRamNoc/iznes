@@ -266,35 +266,6 @@ public class PasswordResetHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void bruteForcePassword(String[] memberDetails) throws InterruptedException, IOException {
-        boolean run = true;
-        while(run) {
-            String cracker = generatePassword();
-            enterLoginCredentialsUserName(memberDetails[0]);
-            enterLoginCredentialsPassword(cracker);
-            clickLoginButton();
-            waitForInvalidCredentialsMessage();
-
-            boolean lock = false;
-
-            if (driver.findElement(By.cssSelector("label.loginerror")).getText().equals("Sorry, your account has been locked. Please contact Setl support."))
-            {
-                lock = true;
-            }
-
-            if(lock)
-            {
-                run = false;
-            }
-
-            try {
-                navigateToPhoenixLoginPage();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static void bruteForceOpenCSDPassword(String[] memberDetails) throws InterruptedException, IOException {
         boolean run = true;
         while(run) {
