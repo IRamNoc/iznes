@@ -23,17 +23,73 @@ import {
     /* Enttiy permission. */
     RequestAdminPermissionBody,
     RequestTxPermissionBody,
+    RequestUserPermissionsBody
+
+    /* Wallet node list */
+    RequestWalletNodeListBody,
+
+    /* Chain list */
+    RequestChainListBody,
+    RequestMemberChainAccessBody
     RequestUserPermissionsBody,
     UpdateUserGroupsBody
 } from './useradmin.service.model';
+import {
+    SET_WALLET_NODE_LIST,
+    setRequestedWalletNodeList,
+    setRequestedChainList,
+    SET_CHAIN_LIST
+} from '@setl/core-store';
+import {NgRedux} from '@angular-redux/store';
+import _ from 'lodash';
 
 @Injectable()
 export class AdminUsersService {
 
-    constructor(
-        private memberSocketService: MemberSocketService
-    ) {
+    constructor(private memberSocketService: MemberSocketService) {
         /* Stub. */
+    }
+
+    /**
+     * Default static call to get wallet node list, and dispatch default actions, and other
+     * default task.
+     *
+     * @param adminUserService
+     * @param ngRedux
+     */
+    static defaultRequestWalletNodeList(adminUserService: AdminUsersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedWalletNodeList());
+
+        // Request the list.
+        const asyncTaskPipe = adminUserService.requestWalletNodeList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_NODE_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
+     * Default static call to get chain list.
+     * @param adminUserService
+     * @param ngRedux
+     */
+    static defaultRequestChainList(adminUserService: AdminUsersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedChainList());
+
+        // Request the list.
+        const asyncTaskPipe = adminUserService.requestChainList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CHAIN_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     public buildRequest (request) {
@@ -63,10 +119,10 @@ export class AdminUsersService {
     }
 
     /*
-        User Functions.
-        ===============
-    */
-    public requestMyUsersList () {
+     User Functions.
+     ===============
+     */
+    public requestMyUsersList() {
         /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
@@ -77,7 +133,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public createNewUser (userData:any): any {
+    public createNewUser(userData: any): any {
         /* Setup the message body. */
         const messageBody: CreateUserMessageBody = {
             RequestName: 'nu',
@@ -93,7 +149,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public editUser (newData:any): any {
+    public editUser(newData: any): any {
         /* Setup the message body. */
         const messageBody: EditUserMessageBody = {
             RequestName: 'udu',
@@ -109,7 +165,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public deleteUser (data:any): any {
+    public deleteUser(data: any): any {
         console.log(data);
         /* Setup the message body. */
         const messageBody: DeleteUserMessageBody = {
@@ -123,10 +179,10 @@ export class AdminUsersService {
     }
 
     /*
-        Permission Meta.
-        ================
-    */
-    public getAdminPermAreaList (): any {
+     Permission Meta.
+     ================
+     */
+    public getAdminPermAreaList(): any {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gpal',
@@ -137,7 +193,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public getTxPermAreaList (): any {
+    public getTxPermAreaList(): any {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gtpal',
@@ -149,10 +205,10 @@ export class AdminUsersService {
     }
 
     /*
-        Permission Groups.
-        ==================
-    */
-    public createNewGroup ( data ):any {
+     Permission Groups.
+     ==================
+     */
+    public createNewGroup(data): any {
         /* Setup the message body. */
         const messageBody: CreateNewGroupBody = {
             RequestName: 'ng',
@@ -166,7 +222,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateGroup ( data ):any {
+    public updateGroup(data): any {
         /* Setup the message body. */
         const messageBody: UpdateGroupBody = {
             RequestName: 'udg',
@@ -183,7 +239,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public deleteGroup ( data ):any {
+    public deleteGroup(data): any {
         /* Setup the message body. */
         const messageBody: DeleteGroupBody = {
             RequestName: 'dpg',
@@ -197,7 +253,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateAdminPermissions ( data ):any {
+    public updateAdminPermissions(data): any {
         /* Setup the message body. */
         const messageBody: UpdateAdminPermissionsBody = {
             RequestName: 'udap',
@@ -216,7 +272,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateTxPermissions ( data ):any {
+    public updateTxPermissions(data): any {
         /* Setup the message body. */
         console.log(data);
         const messageBody: UpdateTxPermissionsBody = {
@@ -239,10 +295,10 @@ export class AdminUsersService {
     }
 
     /*
-        Entity Permissions
-        ==================
-    */
-    public requestAdminPermissions ( entity ):any {
+     Entity Permissions
+     ==================
+     */
+    public requestAdminPermissions(entity): any {
         /* Setup the message body. */
         const messageBody: RequestAdminPermissionBody = {
             RequestName: 'gp',
@@ -259,7 +315,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public requestTxPermissions ( entity ):any {
+    public requestTxPermissions(entity): any {
         /* Setup the message body. */
         const messageBody: RequestTxPermissionBody = {
             RequestName: 'gtp',
@@ -269,9 +325,43 @@ export class AdminUsersService {
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
             includeGroup: entity.includeGroup
-        };
+            };
 
         console.log('SENDING GTP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestWalletNodeList(): any {
+        /* Setup the message body. */
+        const messageBody: RequestWalletNodeListBody = {
+            RequestName: 'gwnl',
+            token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestChainList(): any {
+        /* Setup the message body. */
+        const messageBody: RequestChainListBody = {
+            RequestName: 'gmcl',
+            token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestMemberChainAccessList(requestData): any {
+        /* Setup the message body. */
+        const messageBody: RequestMemberChainAccessBody = {
+            RequestName: 'gmca',
+            token: this.memberSocketService.token,
+            chainId: _.get(requestData, 'chainId', 0)
+        };
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
