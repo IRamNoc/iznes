@@ -111,7 +111,7 @@ export {
     getAdminPermAreaList,
     getTxPermAreaList,
 
-    /* Entity Permissions */
+    /* Group Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
     getPermissions,
@@ -131,8 +131,14 @@ export {
 
     /* Chain membership */
     SET_CHAIN_MEMBERSHIP_LIST,
-    getCurrentChainMembershipList
+    getCurrentChainMembershipList,
 
+    /* Users permissions */
+    SET_USERS_ADMIN_PERMISSIONS,
+    SET_USERS_TX_PERMISSIONS,
+    getUsersPermissions,
+    getUsersAdminPermissions,
+    getUsersTxPermissions
 } from './useradmin';
 
 export {
@@ -160,5 +166,3 @@ export {
     // Combine reducer
     MemberReducer
 } from './member';
-
-
