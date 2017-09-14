@@ -69,13 +69,6 @@ import {
     getCurrentChainMembershipList
 } from './chainMembership';
 
-import {combineReducers, Reducer} from 'redux';
-
-export {
-    SET_ADMIN_USERLIST,
-    getUsersList
-};
-
 /* Users permissions. */
 import {
     UsersPermissionsState,
