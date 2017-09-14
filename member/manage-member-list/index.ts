@@ -7,4 +7,4 @@ export {
     SET_REQUESTED_MANAGE_MEMBER_LIST,
     SET_MANAGE_MEMBER_LIST
 } from './actions';
-
+export {getMemberList} from './selectors';

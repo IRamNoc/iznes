@@ -33,6 +33,30 @@ import {
     getTranPermissions,
 } from './permissions';
 
+import {
+    WalletNodeState,
+    WalletNodeReducer,
+    SET_WALLET_NODE_LIST,
+    setRequestedWalletNodeList,
+    clearRequestedWalletNodeList,
+    getWalletNodeList
+} from './wallet-nodes';
+
+import {
+    ChainsState,
+    ChainReducer,
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList
+} from './chains';
+
+import {
+    ChainMembershipState,
+    ChainMembershipReducer,
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList
+} from './chainMembership';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -56,16 +80,40 @@ export {
     getTranPermissions
 };
 
+export {
+    SET_WALLET_NODE_LIST,
+    setRequestedWalletNodeList,
+    clearRequestedWalletNodeList,
+    getWalletNodeList
+};
+
+export {
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList
+};
+
+export {
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList
+};
+
 export interface AdminUsersState {
     users: UsersState;
     permissionGroup: PermissionGroupState;
     permAreaList: PermAreasState;
     permissions: PermissionsState;
+    walletNode: WalletNodeState;
+    chains: ChainsState;
+    chainMembership: ChainMembershipState;
 }
 
 export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminUsersState>({
     users: UsersReducer,
     permissionGroup: PermissionGroupReducer,
     permAreaList: PermAreasReducer,
-    permissions: PermissionsReducer
+    permissions: PermissionsReducer,
+    walletNode: WalletNodeReducer,
+    chains: ChainReducer,
+    chainMembership: ChainMembershipReducer
 });

@@ -117,6 +117,22 @@ export {
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
+
+    /* Wallet node */
+    SET_WALLET_NODE_LIST,
+    clearRequestedWalletNodeList,
+    setRequestedWalletNodeList,
+    getWalletNodeList,
+
+    /* Chains */
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList,
+
+    /* Chain membership */
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList
+
 } from './useradmin';
 
 export {
@@ -134,6 +150,9 @@ export {
     setRequestedManageMemberList,
     clearRequestedManageMemberList,
     SET_MANAGE_MEMBER_LIST,
+
+    // Selectors
+    getMemberList,
 
     // Combine state
     MemberState,
