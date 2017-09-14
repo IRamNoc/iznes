@@ -23,6 +23,7 @@ import {
     /* Enttiy permission. */
     RequestAdminPermissionBody,
     RequestTxPermissionBody,
+    RequestUserPermissionsBody
 
     /* Wallet node list */
     RequestWalletNodeListBody,
@@ -87,6 +88,32 @@ export class AdminUsersService {
             asyncTaskPipe,
             {}
         ));
+    }
+
+    public buildRequest (request) {
+        /* Check for request pipe. */
+        if ( ! request.taskPipe ) {
+            return;
+        }
+
+        /* Build new promise. */
+        return new Promise((resolve, reject) => {
+            /* Dispatch. */
+            request.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    request.successActions || [],
+                    request.failActions    || [],
+                    request.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
     }
 
     /*
@@ -296,14 +323,13 @@ export class AdminUsersService {
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
             includeGroup: entity.includeGroup
-        };
+            };
 
         console.log('SENDING GTP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
 
     public requestWalletNodeList(): any {
         /* Setup the message body. */
@@ -334,6 +360,21 @@ export class AdminUsersService {
             token: this.memberSocketService.token,
             chainId: _.get(requestData, 'chainId', 0)
         };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserPermissions ( entity ):any {
+        /* Setup the message body. */
+        const messageBody: RequestUserPermissionsBody = {
+            RequestName: 'gug',
+            token: this.memberSocketService.token,
+            entityId: entity.entityId,
+            isTx: entity.isTx ? 2 : 1,
+        };
+
+        console.log('SENDING GUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

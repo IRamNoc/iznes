@@ -115,3 +115,9 @@ export interface RequestMemberChainAccessBody extends MemberNodeMessageBody {
     token: string;
     chainId: number;
 }
+
+export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
+    token: string;
+    entityId: number;
+    isTx: number;
+}
