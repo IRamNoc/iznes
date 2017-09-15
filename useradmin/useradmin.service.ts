@@ -30,8 +30,11 @@ import {
 
     /* Chain list */
     RequestChainListBody,
+    UpdateUserGroupsBody,
+
+    /* Member chain access */
     RequestMemberChainAccessBody,
-    UpdateUserGroupsBody
+    UpdateMemberChainAccessBody
 } from './useradmin.service.model';
 import {
     SET_WALLET_NODE_LIST,
@@ -91,9 +94,9 @@ export class AdminUsersService {
         ));
     }
 
-    public buildRequest (request) {
+    public buildRequest(request) {
         /* Check for request pipe. */
-        if ( ! request.taskPipe ) {
+        if (!request.taskPipe) {
             return;
         }
 
@@ -103,7 +106,7 @@ export class AdminUsersService {
             request.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     request.successActions || [],
-                    request.failActions    || [],
+                    request.failActions || [],
                     request.taskPipe,
                     {},
                     (response) => {
@@ -324,7 +327,7 @@ export class AdminUsersService {
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
             includeGroup: entity.includeGroup
-            };
+        };
 
         console.log('SENDING GTP: ', messageBody);
 
@@ -366,7 +369,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public requestUserPermissions ( entity ):any {
+    public requestUserPermissions(entity): any {
         /* Setup the message body. */
         const messageBody: RequestUserPermissionsBody = {
             RequestName: 'gug',
@@ -381,7 +384,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateUserGroups ( entity ):any {
+    public updateUserGroups(entity): any {
         /* Setup the message body. */
         const messageBody: UpdateUserGroupsBody = {
             RequestName: 'udug',
@@ -395,6 +398,21 @@ export class AdminUsersService {
         console.log('SENDING UDUG: ', messageBody);
 
         /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateMemberChainAccess(requestData): any {
+        /* Setup the message body. */
+        const messageBody: UpdateMemberChainAccessBody = {
+            RequestName: 'umca',
+            token: this.memberSocketService.token,
+            chainId: _.get(requestData, 'chainId', 0),
+            toUpdate: _.get(requestData, 'toUpdate', {}),
+            toAdd: _.get(requestData, 'toAdd', {}),
+            toDelete: _.get(requestData, 'toDelete', [])
+        };
+
+        /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
