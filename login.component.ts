@@ -1,22 +1,18 @@
-/* Core imports. */
+// Vendors
 import {Component, OnDestroy} from '@angular/core';
-
-/* Notifications. */
-import {ToasterService} from 'angular2-toaster';
-
 import {Router} from '@angular/router';
-
 import {
     FormGroup,
     Validators,
     AbstractControl,
     FormControl
 } from '@angular/forms';
-
-import {SagaHelper} from '@setl/utils';
-
 import {NgRedux} from '@angular-redux/store';
+import {Unsubscribe} from 'redux';
+import _ from 'lodash';
 
+// Internals
+import {SagaHelper} from '@setl/utils';
 import {
     MyUserService,
     InitialisationService,
@@ -30,9 +26,9 @@ import {
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
     getAuthentication
 } from '@setl/core-store';
-
 import {MemberSocketService} from '@setl/websocket-service';
-import {Unsubscribe} from 'redux';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+
 
 /* Dectorator. */
 @Component({
@@ -60,7 +56,8 @@ export class SetlLoginComponent implements OnDestroy {
                 private channelService: ChannelService,
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
-                private router: Router) {
+                private router: Router,
+                private alertsService: AlertsService) {
         // Subscribe to app store
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -99,7 +96,15 @@ export class SetlLoginComponent implements OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
-            asyncTaskPipe));
+            asyncTaskPipe,
+            {},
+            () => {
+            },
+            // Fail to login
+            (data) => {
+                this.handleLoginFailMessage(data);
+            }
+        ));
 
         return false;
     }
@@ -134,5 +139,31 @@ export class SetlLoginComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.reduxUnsubscribe();
+    }
+
+    handleLoginFailMessage(data) {
+        const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
+
+        switch (responseStatus) {
+            case 'fail':
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_loginerror" class="text-warning">Sorry, login details incorrect, please try again.</span>'
+                );
+                break;
+            case 'locked':
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. Please contact Setl support.</span>'
+                );
+                break;
+            default:
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+                );
+                break;
+        }
+    }
+
+    showLoginErrorMessage(msg) {
+        this.alertsService.create('error', msg);
     }
 }
