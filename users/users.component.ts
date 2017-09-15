@@ -398,8 +398,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userAdminService.editUser(dataToSend).then((response) => {
             /* Now we've edited the user, we need to send any changes to the groups. */
             let
-                adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(formData.adminGroups)),
-                txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups));
+            adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(formData.adminGroups)),
+            txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups));
 
             console.log('groups to update: ', adminGroupChanges, txGroupChanges);
             /* Save admin group access. */
@@ -451,7 +451,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     private diffUserGroups(oldGroups, newGroups): { toAdd: Array<{}>, toDelete: Array<{}> } {
         /* Variables. */
         let
-            key,
+            key, groupFetch,
             toAdd = [],
             toDelete = [];
 
@@ -462,11 +462,34 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Get the added ones. */
         for (key in newGroups) {
-            if (!oldGroups[key]) toAdd.push(newGroups[key]);
+            if (!oldGroups[key]) {
+                groupFetch = this.getGroupById( newGroups[key].id );
+                if (groupFetch.groupId) toAdd.push( groupFetch );
+            };
         }
 
         /* Return. */
         return {toAdd, toDelete};
+    }
+
+    /**
+     * Get Group By Id
+     * ---------------
+     * Get a full group object by Id.
+     *
+     * @param  {id} number - th group id.
+     * @return {void}
+     */
+    public getGroupById (id) {
+        /* Look for the group and return it... */
+        for (let key in this.allGroupList) {
+            if ( this.allGroupList[key].groupId == id ) {
+                return this.allGroupList[key];
+            }
+        }
+
+        /* ...else return nothing. */
+        return {};
     }
 
     /**
