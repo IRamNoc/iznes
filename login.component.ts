@@ -1,15 +1,12 @@
 /* Core imports. */
 import {Component, OnDestroy} from '@angular/core';
-import {FormsModule, NgModel} from '@angular/forms';
 
 /* Notifications. */
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToasterService} from 'angular2-toaster';
 
 import {Router} from '@angular/router';
 
 import {
-    FormBuilder,
     FormGroup,
     Validators,
     AbstractControl,
@@ -22,7 +19,6 @@ import {NgRedux} from '@angular-redux/store';
 
 import {
     MyUserService,
-    WalletNodeRequestService,
     InitialisationService,
     MyWalletsService,
     ChannelService,
@@ -38,22 +34,15 @@ import {
 import {MemberSocketService} from '@setl/websocket-service';
 import {Unsubscribe} from 'redux';
 
-
 /* Dectorator. */
 @Component({
     selector: 'app-login',
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css'],
-    providers: [ToasterService]
+    styleUrls: ['login.component.css']
 })
 
 /* Class. */
 export class SetlLoginComponent implements OnDestroy {
-
-    public toasterconfig: any;
-    public prompt: string;
-    public buttonDisabled: boolean = false;
-
     isLogin: boolean;
 
     loginForm: FormGroup;
@@ -63,22 +52,14 @@ export class SetlLoginComponent implements OnDestroy {
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
 
-    // @select(state =>
-    //     state.user.myDetail.username
-    // )
-    // loginUser;
-
     /* Constructor. */
-    constructor(private toasterService: ToasterService,
-                private ngRedux: NgRedux<any>,
+    constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
-                private walletNodeRequestService: WalletNodeRequestService,
                 private memberSocketService: MemberSocketService,
                 private myWalletsService: MyWalletsService,
                 private channelService: ChannelService,
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
-                fb: FormBuilder,
                 private router: Router) {
         // Subscribe to app store
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
@@ -87,13 +68,11 @@ export class SetlLoginComponent implements OnDestroy {
         /**
          * Form control setup
          */
-        this.loginForm = fb.group({
-            'username': ['', Validators.required],
-            'password': ['', Validators.required]
+        this.loginForm = new FormGroup({
+            username: new FormControl('', Validators.required),
+            password: new FormControl('', Validators.required)
         });
 
-        this.username = this.loginForm.controls['username'];
-        this.password = this.loginForm.controls['password'];
     }
 
     login(value) {
