@@ -53,7 +53,7 @@
                                         [allowClear]="false"
                                         placeholder="Select Member"
                                         [formControl]="thisFormGroup.controls['member']"
-                                        (selected)="selectMember()"
+                                        (selected)="selectMember($event, i)"
                                     >
                                     </ng-select>
                                 </div>
