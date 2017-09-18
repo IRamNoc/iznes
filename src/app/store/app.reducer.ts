@@ -19,7 +19,6 @@ export interface AppState {
     message: MessageState;
     userAdmin: AdminUsersState;
     asset: AssetState;
-    adminUsers: AdminUsersState;
     account: AccountState;
     member: MemberState;
 }

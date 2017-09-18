@@ -72,9 +72,14 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'my-account',
-                component: SetlMyAccountComponent,
-                canActivate: [LoginGuardService]
+                path: 'account',
+                children: [
+                        {
+                            path: 'my-account',
+                            component: SetlMyAccountComponent,
+                            canActivate: [LoginGuardService],
+                        }
+                ]
             },
             {
                 path: 'ui-elements',

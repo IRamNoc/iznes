@@ -89,7 +89,9 @@ form, .form {
             &:not([readonly]) {
                 &:focus {
                     border-bottom: 0px solid #b9b9b9;
-                    border: 1px solid #96c8f1 !important;
+                    &:not(.ui-select-search) {
+                        border: 1px solid #96c8f1 !important;
+                    }
                 }
                 background: white;
             }
@@ -153,7 +155,3 @@ various-address-select {
 form various-address-select.error .form-group input[type=text] {
     border: 1px solid #ebafa6 !important;
 }
-
-
-
-
