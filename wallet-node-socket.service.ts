@@ -2,12 +2,6 @@ import {Injectable} from '@angular/core';
 import {SetlCallbackRegister, SetlWebSocket} from '@setl/vanilla-websocket-wrapper';
 import {ToasterService} from 'angular2-toaster';
 import _ from 'lodash';
-import {NgRedux} from '@angular-redux/store';
-import {
-    getAuthentication,
-    getMyDetail
-} from '@setl/core-store';
-
 
 @Injectable()
 export class WalletNodeSocketService {
@@ -15,31 +9,18 @@ export class WalletNodeSocketService {
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
 
-    constructor(private toasterService: ToasterService,
-                private ngRedux: NgRedux<any>) {
-        ngRedux.subscribe(() => this.connectToNode());
+    constructor(private toasterService: ToasterService) {
     }
 
     /**
      * Connect to walletnode
      */
-    connectToNode() {
-        /**
-         * Get Authentication and user data from app store,
-         * use them to connect to walletnode.
-         */
-        const newState = this.ngRedux.getState();
-        const authenData = getAuthentication(newState);
-        const myDetail = getMyDetail(newState);
+    connectToNode(protocol: string = 'ws', hostName: string = '127.0.0.1', port: number = 13535, nodePath = '', userId, apiKey) {
+        const resolveConnect;
+        const rejectConnect;
 
-        const userId = myDetail.userId;
-        const {isLogin, apiKey} = authenData;
-
-        // If websocket instance is not created and user is not login.
-        // return.
-        if (this.websocket || !isLogin) {
-            return;
-        }
+        // Clear current connection.
+        this.clearConnection();
 
         this.callBackRegister = new SetlCallbackRegister();
 
@@ -62,7 +43,7 @@ export class WalletNodeSocketService {
         try {
 
             // Instantiate WebSocket object.
-            this.websocket = new SetlWebSocket('ws:', '127.0.0.1', 13535, '', this.callBackRegister, true, ['authenticate']);
+            this.websocket = new SetlWebSocket(protocol + ':', hostName, port, nodePath, this.callBackRegister, true, ['authenticate']);
 
             this.websocket.openWebSocket();
 
@@ -81,6 +62,9 @@ export class WalletNodeSocketService {
                                     if (thisToken !== '') {
                                         this.walletNodeSubscribeForUpdate(ID1, message1, UserData1);
                                     }
+
+                                    // Done connection and authenticate. can resolve here.
+                                    resolveConnect();
 
                                 }
                             }, {}
@@ -107,6 +91,12 @@ export class WalletNodeSocketService {
         } catch (e) {
             console.log('Connection failed!');
         }
+
+        // Connection promise
+        return new Promise((resolve, reject) => {
+            resolveConnect = resolve;
+            rejectConnect = reject;
+        });
     }
 
     walletNodeSubscribeForUpdate(ID, message, UserData) {
@@ -182,6 +172,21 @@ export class WalletNodeSocketService {
         const thisRequest = Object.assign({}, request, {requestID: messageId});
 
         this.websocket.sendRequest(thisRequest);
+    }
+
+    clearConnection() {
+        // Close the current connection if any.
+        if (this.websocket && this.websocket.webSocketConn) {
+            try {
+                this.websocket.webSocketConn.onclose = () => true;
+                this.websocket.webSocketConn.close();
+            } catch (e) {
+                console.error('Fail to close websocket (walletnode).');
+            }
+        }
+
+        // Clear the callback register.
+        this.callBackRegister = undefined;
     }
 }
 
