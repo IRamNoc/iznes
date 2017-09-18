@@ -42,7 +42,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-        System.out.println("Wooohooo! Login page was found!");
+        loginAndVerifySuccess(adminuser, adminuserPassword);
     }
     @Test
     public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
@@ -53,7 +53,11 @@ public class OpenCSDAccountsAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         logout();
     }
+    @Ignore
     @Test
-    public void shouldCreateNewAccount() throws IOException, InterruptedException {
+    public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
+      navigateToLoginPage();
+      enterLoginCredentialsUserName("Emmanuel");
+      driver.findElement(By.id("login-submit")).click();
     }
 }

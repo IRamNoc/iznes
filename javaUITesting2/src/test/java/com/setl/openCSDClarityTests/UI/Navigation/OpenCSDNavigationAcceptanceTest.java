@@ -239,4 +239,84 @@ public class OpenCSDNavigationAcceptanceTest {
     navigateToDropdown("menu-corporate-actions");
     navigateToPage("corporate-actions/split");
   }
+
+  @Test
+  public void shouldNavigateToMessagesFromTopButtons() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      try {
+        driver.findElement(By.xpath("//a[@href='#/messages']")).click();
+      }catch (Error e){
+        System.out.println("logout button not present");
+        fail();
+      }
+  }
+
+  @Test
+  public void shouldNavigateToHomeTabRandomStuff() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      Thread.sleep(750);
+      driver.findElement(By.id("clr-tab-link-1")).click();
+  }
+
+  @Test
+  public void shouldNavigateToHomeTabForm() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    Thread.sleep(750);
+    driver.findElement(By.id("clr-tab-link-2")).click();
+  }
+
+  @Test
+  public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-user-administation");
+    navigateToPage("user-administration/users");
+    Thread.sleep(750);
+    driver.findElement(By.id("user-tab-1")).click();
+  }
+
+  @Test
+  public void shouldNavigateToUserAdminTabAddWallets() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-user-administation");
+    navigateToPage("user-administration/wallets");
+    Thread.sleep(750);
+    driver.findElement(By.id("wallet-new-form-tab")).click();
+  }
+
+  @Test
+  public void shouldNavigateToUserAdminTabAddPermissions() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-user-administation");
+    navigateToPage("user-administration/permissions");
+    Thread.sleep(750);
+    driver.findElement(By.id("testlink1")).click();
+  }
+
+  @Test
+  public void shouldNavigateToChainAdminTabMember() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-chain-administration");
+    navigateToPage("chain-admin/manage-member");
+    Thread.sleep(750);
+    driver.findElement(By.id("link1")).click();
+  }
+
+  @Test
+  public void shouldNavigateToChainAdminTabAccount() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-chain-administration");
+    navigateToPage("chain-admin/manage-account");
+    Thread.sleep(750);
+    driver.findElement(By.id("link1")).click();
+  }
+
+  @Test
+  public void shouldNavigateToChainAdminTabChainMembership() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-chain-administration");
+    navigateToPage("chain-admin/chain-membership");
+    Thread.sleep(750);
+    driver.findElement(By.id("link1")).click();
+  }
+
 }
