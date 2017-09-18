@@ -7,6 +7,7 @@ import {ChannelService} from '../index';
 import {AccountsService} from '../index';
 import {MyUserService} from '../index';
 import {PermissionGroupService} from '../index';
+import {ChainService} from '../index';
 import {
     SET_WALLET_ADDRESSES,
     SET_OWN_WALLETS,
@@ -21,7 +22,9 @@ import {
     SET_MY_INSTRUMENTS_LIST,
     SET_WALLET_TO_RELATIONSHIP,
     setRequestedAccountList,
-    SET_USER_DETAILS
+    SET_USER_DETAILS,
+    setRequestedMyChainAccess,
+    SET_MY_CHAIN_ACCESS
 } from '@setl/core-store';
 
 
@@ -49,7 +52,6 @@ export class InitialisationService {
 
         // Request Wallet Balances
         this.requestWalletHolding(ngRedux, walletNodeRequestService, walletId);
-
 
         // Set requested data states to false
         this.clearWalletNodeRequestedStates(ngRedux);
@@ -108,7 +110,8 @@ export class InitialisationService {
                                     channelService: ChannelService,
                                     accountsService: AccountsService,
                                     myUserService: MyUserService,
-                                    permissionGroupService: PermissionGroupService): boolean {
+                                    permissionGroupService: PermissionGroupService,
+                                    chainService: ChainService): boolean {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
 
@@ -126,6 +129,9 @@ export class InitialisationService {
 
         // Request User Details
         this.requestUserDetails(ngRedux, myUserService);
+
+        // Request my chain access
+        this.requestMyChainAccess(ngRedux, chainService);
 
         // Subscribe to my connection channel, target for my userId.
         this.subscribe(memberSocketService, channelService);
@@ -290,6 +296,35 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested wallet instruments
         ngRedux.dispatch(clearRequestedWalletInstrument());
+    }
+
+
+    /**
+     * Default static call to get my chain access, and dispatch default actions, and other
+     * default task.
+     *
+     * @param chainService
+     * @param ngRedux
+     */
+    static requestMyChainAccess(ngRedux: NgRedux<any>, chainService: ChainService) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedMyChainAccess());
+
+        // Request the list.
+        const asyncTaskPipe = chainService.requestMyChainAccess();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MY_CHAIN_ACCESS],
+            [],
+            asyncTaskPipe,
+            {},
+            function (data) {
+                console.log('successfully get access', data);
+            },
+            function (data) {
+                console.log('fail to get access', data);
+            }
+        ));
     }
 
 }
