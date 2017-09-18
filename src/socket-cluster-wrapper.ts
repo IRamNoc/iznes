@@ -36,6 +36,7 @@ export class SocketClusterWrapper {
     errorCallback = () => true;
     disconnectCallback = () => true;
     connectCallback = () => true;
+    reconnecteInterval: any;
 
     constructor(protocol, hostname, port, route) {
         this.defaultProtocol = window.location.protocol === 'https' ? 'wws' : 'ws';
@@ -146,9 +147,16 @@ export class SocketClusterWrapper {
                      * Reconnect when error. Hopefully, the make the connection more stable.
                      */
 
-                    this.closeWebSocket();
                     console.error('socket error: ', error);
                     this.errorCallback();
+                    try {
+                        if (this.reconnecteInterval) {
+                            clearInterval(this.reconnecteInterval);
+                        }
+                    } catch (e) {
+                    }
+
+                    this.closeWebSocket();
 
                     const reconnecteInterval = setInterval(() => {
                         if (!this.hasConnected) {
@@ -164,9 +172,17 @@ export class SocketClusterWrapper {
                     /**
                      * Reconnect when error. Hopefully, the make the connection more stable.
                      */
-                    this.closeWebSocket();
                     console.error('socket disconnect: ', error);
                     this.disconnectCallback();
+
+                    try {
+                        if (this.reconnecteInterval) {
+                            clearInterval(this.reconnecteInterval);
+                        }
+                    } catch (e) {
+                    }
+
+                    this.closeWebSocket();
 
                     const reconnecteInterval = setInterval(() => {
                         if (!this.hasConnected) {
