@@ -6,7 +6,7 @@ export interface RequestAccountListMessageBody extends MemberNodeMessageBody {
 
 export interface EditAccountMessageBody extends MemberNodeMessageBody {
     token: string;
-    accountID: number;
+    accountId: number;
     accountName: string;
     description: string;
     wallet: number;
@@ -21,6 +21,6 @@ export interface AddAccountMessageBody extends MemberNodeMessageBody {
 
 export interface DeleteAccountMessageBody extends MemberNodeMessageBody {
     token: string;
-    accountid: number;
+    accountId: number;
 }
 

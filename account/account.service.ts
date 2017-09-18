@@ -56,9 +56,9 @@ export class AccountsService {
 
     editAccount(requestData: EditAccountRequest): any {
         const messageBody: EditAccountMessageBody = {
-            RequestName: 'upa',
+            RequestName: 'uda',
             token: this.memberSocketService.token,
-            accountID: _.get(requestData, 'accountId', 0),
+            accountId: _.get(requestData, 'accountId', 0),
             accountName: _.get(requestData, 'accountName', ''),
             description: _.get(requestData, 'description', ''),
             wallet: _.get(requestData, 'walletId', 0)
@@ -71,7 +71,7 @@ export class AccountsService {
         const messageBody: DeleteAccountMessageBody = {
             RequestName: 'da',
             token: this.memberSocketService.token,
-            accountid: _.get(requestData, 'accountId', 0)
+            accountId: _.get(requestData, 'accountId', 0)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
