@@ -1,9 +1,10 @@
 // Vendor
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {fromJS, Set} from 'immutable';
 import _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
 
 // Internal
 import {MemberService, AdminUsersService} from '@setl/core-req-services';
@@ -24,7 +25,7 @@ import {SagaHelper} from '@setl/utils';
     styleUrls: ['./component.css']
 })
 
-export class ManageChainMembershipComponent implements OnInit {
+export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     tabsControl: Array<object>;
     testArr = [{id: 1, text: 'phoenix'}];
     chainMemberShipTypeItems: Array<any> = [
@@ -37,7 +38,6 @@ export class ManageChainMembershipComponent implements OnInit {
         {id: 8, text: 'Central Bank'}
     ];
     memberList: Array<any>;
-    unSelectedMemberList: Array<any>;
     memberListObject: object;
 
     walletNodeListObject: object;
@@ -48,12 +48,7 @@ export class ManageChainMembershipComponent implements OnInit {
 
     membershipForm: FormGroup;
 
-
-    multiple0 = false;
-    multiple1 = true;
-    options0: Array<any> = [];
-    options1: Array<any> = [];
-    selection: Array<string>;
+    subscriptionsArry: Array<Subscription> = [];
 
     @select(['member', 'manageMemberList', 'memberList']) manageMemberListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
@@ -74,12 +69,17 @@ export class ManageChainMembershipComponent implements OnInit {
             }
         ];
 
-        this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList));
-        this.requestedManagedMemberListOb.subscribe((requestedState) => this.requestManagedMemberList(requestedState));
-        this.walletNodeListOb.subscribe((walletNodeList) => this.updateWalletNodeList(walletNodeList));
-        this.requestedWalletNodeListOb.subscribe((requestedState) => this.requestWalletNodeList(requestedState));
-        this.chainListOb.subscribe((chainList) => this.updateChainList(chainList));
-        this.requestedChainListOb.subscribe((requestedState) => this.requestChainList(requestedState));
+        this.subscriptionsArry.push(this.manageMemberListOb.subscribe(
+            (memberList) => this.updateMemberList(memberList)));
+        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe(
+            (requestedState) => this.requestManagedMemberList(requestedState)));
+        this.subscriptionsArry.push(this.walletNodeListOb.subscribe(
+            (walletNodeList) => this.updateWalletNodeList(walletNodeList)));
+        this.subscriptionsArry.push(this.requestedWalletNodeListOb.subscribe(
+            (requestedState) => this.requestWalletNodeList(requestedState)));
+        this.subscriptionsArry.push(this.chainListOb.subscribe((chainList) => this.updateChainList(chainList)));
+        this.subscriptionsArry.push(this.requestedChainListOb.subscribe(
+            (requestedState) => this.requestChainList(requestedState)));
 
         // Chain membership items
 
@@ -91,6 +91,13 @@ export class ManageChainMembershipComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    ngOnDestroy() {
+
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
     addMembershipItem(memberValue = [], memberTypeValue = [], nodeValue = []) {
@@ -133,7 +140,7 @@ export class ManageChainMembershipComponent implements OnInit {
             return resultList;
         }, []);
 
-        this.unSelectedMemberList = this.memberList.slice();
+        console.log('member list --', this.memberList);
     }
 
     requestManagedMemberList(requestedState: boolean): void {
@@ -206,15 +213,21 @@ export class ManageChainMembershipComponent implements OnInit {
                 // Repaint member chain membership wrapper.
                 this.repaintChainMembershipWrapper();
             },
-            (data) => {
+            () => {
             }
         ));
 
         this.updateCurrentChainWalletNodeList(chainId);
     }
 
-    selectMember() {
-        console.log(this.getSelectedMember());
+    selectMember($event, index) {
+        const selectedId = $event.id;
+        const currentSelectedMemberIds = this.getSelectedMember();
+
+        if (currentSelectedMemberIds.includes(selectedId)) {
+            this.membershipForm.controls['membershipArr']['at'](index)['patchValue']({member: []});
+            this.alertsService.create('warning', 'Member is selected from other entry');
+        }
 
     }
 
@@ -222,8 +235,8 @@ export class ManageChainMembershipComponent implements OnInit {
         const membershipValue = this.membershipForm.value.membershipArr;
         const membershipValueImu = fromJS(membershipValue);
 
-        const selectedMember = membershipValue.reduce(function (result, item) {
-            result.push(item.member[0].id);
+        const selectedMember = membershipValueImu.reduce(function (result, item) {
+            result.push(item.getIn(['member', '0', 'id']));
             return result;
         }, []);
 
@@ -242,6 +255,7 @@ export class ManageChainMembershipComponent implements OnInit {
             }
             return result;
         }, []);
+
     }
 
     repaintChainMembershipWrapper() {
@@ -259,6 +273,7 @@ export class ManageChainMembershipComponent implements OnInit {
         let nodeValue;
         for (memberId of Object.keys(currentChainMembershipList)) {
 
+            memberId = parseInt(memberId, 10);
             memberTypeId = _.get(currentChainMembershipList, [memberId, 'memberType'], 0);
             nodeId = _.get(currentChainMembershipList, [memberId, 'nodeId'], 0);
 
@@ -275,11 +290,33 @@ export class ManageChainMembershipComponent implements OnInit {
     }
 
     handleUpdateChainMembership() {
-        console.log(this.membershipForm.value)
         const newState = this.ngRedux.getState();
         const currentChainMembershipListObject = getCurrentChainMembershipList(newState);
 
-        console.log(this.getChainMembershipToAdd(currentChainMembershipListObject, this.membershipForm.value.membershipArr));
+        const chainId = this.membershipForm.value.chain[0]['id'];
+        const toAdd = this.getChainMembershipToAdd(currentChainMembershipListObject);
+        const toDelete = this.getChainMembershipToDelete(currentChainMembershipListObject);
+        const toUpdate = this.getChainMembershipToUpdate(currentChainMembershipListObject);
+
+        const asyncTaskPipe = this.adminUsersService.updateMemberChainAccess(
+            {
+                chainId,
+                toUpdate,
+                toAdd,
+                toDelete
+            }
+        );
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                this.showSuccessResponse('Chain Membership is updated');
+            },
+            (data) => {
+                this.showErrorResponse(data);
+                console.log(data);
+            }
+        ));
     }
 
     /**
@@ -298,17 +335,97 @@ export class ManageChainMembershipComponent implements OnInit {
         return '';
     }
 
-    getChainMembershipToAdd(currentMembershipListObject, newMembershipList) {
-        let thisMembership;
+    getChainMembershipToAdd(currentMembershipListObject) {
+        let thisMembership = {};
         let thisMemberId;
-        const toAdd = [];
-        for (thisMembership of newMembershipList) {
+        let thisMemberType;
+        let thisNode;
+        const toAdd = {};
+        for (thisMembership of this.membershipForm.value.membershipArr) {
             thisMemberId = _.get(thisMembership, ['member', 0, 'id'], 0);
+            thisMemberType = _.get(thisMembership, ['memberType', 0, 'id'], 0);
+            thisNode = _.get(thisMembership, ['node', 0, 'id'], 0);
             if (!currentMembershipListObject.hasOwnProperty(thisMemberId)) {
-                toAdd.push(thisMembership);
+                toAdd[thisMemberId] = {
+                    nodeID: thisNode,
+                    memberType: thisMemberType
+                };
             }
         }
 
         return toAdd;
+    }
+
+    getChainMembershipToDelete(currentMembershipListObject) {
+        let thisMemberId;
+        const toDelete = [];
+        const currentSelectMemberIds = this.getSelectedMember();
+        for (thisMemberId of Object.keys(currentMembershipListObject)) {
+            thisMemberId = parseInt(thisMemberId, 10);
+            if (!currentSelectMemberIds.includes(thisMemberId)) {
+                toDelete.push(thisMemberId);
+            }
+        }
+
+        return toDelete;
+    }
+
+    getChainMembershipToUpdate(currentMembershipListObject) {
+        let thisMembership;
+        let thisMembershipId;
+        let thisOldMemberType;
+        let thisNewMemberType;
+        let thisOldNode;
+        let thisNewNode;
+        const toUpdate = {};
+        const newMembershipList = this.membershipForm.value.membershipArr;
+        for (thisMembership of newMembershipList) {
+            thisMembershipId = thisMembership.member[0].id + '';
+            if (currentMembershipListObject.hasOwnProperty(thisMembershipId)) {
+                thisOldMemberType = currentMembershipListObject[thisMembershipId]['memberType'];
+                thisOldNode = currentMembershipListObject[thisMembershipId]['nodeId'];
+                thisNewMemberType = thisMembership.memberType[0].id;
+                thisNewNode = thisMembership.node[0].id;
+
+                if (thisOldMemberType !== thisNewMemberType || thisOldNode !== thisNewNode) {
+                    toUpdate[thisMembershipId] = {
+                        nodeID: thisNewNode,
+                        memberType: thisNewMemberType
+                    };
+                }
+            }
+        }
+
+        return toUpdate;
+    }
+
+    showErrorResponse(response) {
+
+        const message = _.get(response, '[1].Data[0].Message', '');
+
+        this.alertsService.create('error', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
+    }
+
+    showSuccessResponse(message) {
+
+        this.alertsService.create('success', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-success">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
     }
 }
