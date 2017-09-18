@@ -33,6 +33,9 @@ export class SocketClusterWrapper {
     connectTries: number;
     channels: Array<any>;
     onConnectionInterval: any;
+    errorCallback = () => true;
+    disconnectCallback = () => true;
+    connectCallback = () => true;
 
     constructor(protocol, hostname, port, route) {
         this.defaultProtocol = window.location.protocol === 'https' ? 'wws' : 'ws';
@@ -102,6 +105,10 @@ export class SocketClusterWrapper {
                 this.webSocketConn.on('connect', () => {
                     this.hasConnected = true;
 
+                    // On connection:
+                    this.connectCallback();
+                    console.log('connected');
+
                     // Generate my public-private key pair.
                     this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
                     this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
@@ -135,24 +142,40 @@ export class SocketClusterWrapper {
                 });
 
                 this.webSocketConn.on('error', (error) => {
-                    /* Set back to initialising */
-                    // Todo
-                    // Need investigate why do we need to set this.initialising for make it work.
-                    // the connect and handshake should happen even without setting it to true.
-                    //
-                    // However, when the flag is not set to true here, the browser clash with an error
-                    this.initialising = true;
+                    /**
+                     * Reconnect when error. Hopefully, the make the connection more stable.
+                     */
+
+                    this.closeWebSocket();
                     console.error('socket error: ', error);
+                    this.errorCallback();
+
+                    const reconnecteInterval = setInterval(() => {
+                        if (!this.hasConnected) {
+                            this.openWebSocket();
+                            console.log('error: reconnect');
+                        } else {
+                            clearInterval(reconnecteInterval);
+                        }
+                    }, 2000);
                 });
 
                 this.webSocketConn.on('disconnect', (error) => {
-                    /* Set back to initialising */
-                    // Todo
-                    // Same as on  error
-                    this.closeWebSocket()
-                    this.openWebSocket();
-                    console.log('comehere')
+                    /**
+                     * Reconnect when error. Hopefully, the make the connection more stable.
+                     */
+                    this.closeWebSocket();
                     console.error('socket disconnect: ', error);
+                    this.disconnectCallback();
+
+                    const reconnecteInterval = setInterval(() => {
+                        if (!this.hasConnected) {
+                            this.openWebSocket();
+                            console.log('disconnect: reconnect');
+                        } else {
+                            clearInterval(reconnecteInterval);
+                        }
+                    }, 2000);
                 });
 
                 this.defaultOnOpen();
@@ -267,25 +290,6 @@ export class SocketClusterWrapper {
         });
     }
 
-    onConnection() {
-        /**
-         * On Connection.
-         * Returns a promise that resolves as soon as the socket has connected.
-         * @return {promise} Promise.
-         */
-        return new Promise((resolve, reject) => {
-            /* Set the interval. */
-            this.onConnectionInterval = setInterval(() => {
-                /* Check if we have connected. */
-                if (this.hasConnected) {
-                    /* Clear and resolve if so. */
-                    clearInterval(this.onConnectionInterval);
-                    resolve();
-                }
-            }, 50);
-        });
-    }
-
     defaultOnOpen() {
         console.log('Connection established to web socket server!');
     }
@@ -309,7 +313,6 @@ export class SocketClusterWrapper {
         this.encryption = {};
         this.messageQueue = [];
         this.hasConnected = false;
-        this.connectTries = 0;
         this.channels = [];
     }
 
