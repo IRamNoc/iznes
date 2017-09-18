@@ -1,30 +1,30 @@
 import {Action} from 'redux';
 import * as PermissionsActions from './actions';
 import {
-    PermissionsState,
-    AdminPermissonDetail,
-    TransPermissonDetail
+    UsersPermissionsState,
+    UsersAdminPermissonDetail,
+    UsersTxPermissonDetail
 } from './model';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 import { getAdminPermissions, getTranPermissions } from '@setl/core-store'
 
-const initialState: PermissionsState = {
-    adminPermissions: {},
-    transPermissions: {}
+const initialState: UsersPermissionsState = {
+    usersAdminPermissions: {},
+    usersTxPermissions: {}
 };
 
-export const PermissionsReducer = function (state: PermissionsState = initialState,
+export const UsersPermissionsReducer = function (state: UsersPermissionsState = initialState,
                                                 action: Action) {
 
     /* Local variables. */
-    let newState: PermissionsState;
-    let adminPermissions: {
-        [key: number]: AdminPermissonDetail
+    let newState: UsersPermissionsState;
+    let usersAdminPermissions: {
+        [key: number]: UsersAdminPermissonDetail
     };
-    let transPermissions: {
-        [key: number]: TransPermissonDetail
+    let usersTxPermissions: {
+        [key: number]: UsersTxPermissonDetail
     };
     let newEntityPermissions:any;
 
@@ -38,7 +38,7 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
          *
          * @payload {entityPermissions} - an object of permissions for an entity.
          */
-        case PermissionsActions.SET_ADMIN_PERMISSIONS:
+        case PermissionsActions.SET_USERS_ADMIN_PERMISSIONS:
             /* Pull the data from the message body. */
             newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
@@ -46,11 +46,11 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
             /* Assign the new permissions with the old ones. */
-            adminPermissions = Object.assign({}, state.adminPermissions, newEntityPermissions );
+            usersAdminPermissions = Object.assign({}, state.usersAdminPermissions, newEntityPermissions );
 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
-                adminPermissions
+                usersAdminPermissions
             });
 
             /* Return the new state. */
@@ -63,7 +63,7 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
          *
          * @payload {entityPermissions} - an object of permissions for an entity.
          */
-        case PermissionsActions.SET_TX_PERMISSIONS:
+        case PermissionsActions.SET_USERS_TX_PERMISSIONS:
             /* Pull the data from the message body. */
             newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
@@ -71,11 +71,11 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
             /* Assign the new permissions with the old ones. */
-            transPermissions = Object.assign({}, state.transPermissions, newEntityPermissions );
+            usersTxPermissions = Object.assign({}, state.usersTxPermissions, newEntityPermissions );
 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
-                transPermissions
+                usersTxPermissions
             });
 
             /* Return the new state. */
@@ -113,13 +113,15 @@ function sortPermissionsArray ( permissions ) {
     i,
     newStructure = {};
 
+    console.log("Sorting permissions structure: ", permissions);
+
     /* Let's flatten the array into an object of permissions by permission ID. */
     for ( i = 0; i < permissions.length; i++ ) {
         /* Handle the entity object not existing. */
-        if ( ! newStructure[ permissions[i].entityID ] ) newStructure[ permissions[i].entityID ] = {};
+        if ( ! newStructure[ permissions[i].userID ] ) newStructure[ permissions[i].userID ] = {};
 
         /* Assign the permission by ID. */
-        newStructure[ permissions[i].entityID ][ permissions[i].permissionID ] = permissions[i];
+        newStructure[ permissions[i].userID ][ permissions[i].groupID ] = permissions[i];
     }
 
     /* Return. */

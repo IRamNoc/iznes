@@ -19,4 +19,6 @@ export interface MyDetailState {
     memorableAnswer?: string;
     profileText?: string;
     admin: boolean;
+    accountId: number;
+    memberId: number;
 }

@@ -11,14 +11,18 @@ import {
     ManageMemberListState,
 
     // Reducer
-    ManageMemberListReducer
+    ManageMemberListReducer,
+
+    // Selectors
+    getMemberList
 } from './manage-member-list';
 
 export {
     SET_REQUESTED_MANAGE_MEMBER_LIST,
     setRequestedManageMemberList,
     clearRequestedManageMemberList,
-    SET_MANAGE_MEMBER_LIST
+    SET_MANAGE_MEMBER_LIST,
+    getMemberList
 };
 
 export interface MemberState {

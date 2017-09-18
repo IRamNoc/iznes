@@ -111,12 +111,34 @@ export {
     getAdminPermAreaList,
     getTxPermAreaList,
 
-    /* Entity Permissions */
+    /* Group Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
+
+    /* Wallet node */
+    SET_WALLET_NODE_LIST,
+    clearRequestedWalletNodeList,
+    setRequestedWalletNodeList,
+    getWalletNodeList,
+
+    /* Chains */
+    SET_CHAIN_LIST,
+    setRequestedChainList,
+    clearRequestedChainList,
+
+    /* Chain membership */
+    SET_CHAIN_MEMBERSHIP_LIST,
+    getCurrentChainMembershipList,
+
+    /* Users permissions */
+    SET_USERS_ADMIN_PERMISSIONS,
+    SET_USERS_TX_PERMISSIONS,
+    getUsersPermissions,
+    getUsersAdminPermissions,
+    getUsersTxPermissions
 } from './useradmin';
 
 export {
@@ -135,11 +157,12 @@ export {
     clearRequestedManageMemberList,
     SET_MANAGE_MEMBER_LIST,
 
+    // Selectors
+    getMemberList,
+
     // Combine state
     MemberState,
 
     // Combine reducer
     MemberReducer
 } from './member';
-
-
