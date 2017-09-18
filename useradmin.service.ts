@@ -48,7 +48,7 @@ import {
 export class UserAdminService {
 
     /* Account types. */
-    public accountTypes:any = [
+    public accountTypes: any = [
         {
             'id': '1',
             'text': 'SETL Private Admin',
@@ -64,7 +64,7 @@ export class UserAdminService {
     ];
 
     /* Wallet Types. */
-    public walletTypes:any = [
+    public walletTypes: any = [
         {
             'id': '1',
             'text': 'Legal Entity',
@@ -80,7 +80,7 @@ export class UserAdminService {
     ];
 
     /* User Types. */
-    public userTypes:any = [
+    public userTypes: any = [
         {
             'id': '15',
             'text': 'System Admin',
@@ -112,7 +112,7 @@ export class UserAdminService {
     ];
 
     /* Group Types. */
-    public groupTypes:any = [
+    public groupTypes: any = [
         {
             'id': '0',
             'text': 'Administrative',
@@ -123,93 +123,100 @@ export class UserAdminService {
         }
     ];
 
-    public usersList:{};
+    public usersList: {};
     @Output()
     public usersListSubject = new Subject<any>();
-    public getUserListSubject () {
+
+    public getUserListSubject() {
         return this.usersListSubject.asObservable();
     }
 
-    public adminGroupList:{};
-    public txGroupList:{};
-    public allGroupsList:{};
+    public adminGroupList: {};
+    public txGroupList: {};
+    public allGroupsList: {};
     @Output()
     public allGroupListSubject = new Subject<any>();
     /* Admin and TX group list observable. */
-    public getGroupListSubject () {
+    public getGroupListSubject() {
         return this.allGroupListSubject.asObservable();
     }
 
-    public adminPermAreaList:{};
+    public adminPermAreaList: {};
     @Output()
     public adminPermAreaListSubject = new Subject<any>();
-    public getAdminPermAreaListSubject () {
+
+    public getAdminPermAreaListSubject() {
         return this.adminPermAreaListSubject.asObservable();
     }
 
-    public txPermAreaList:{};
+    public txPermAreaList: {};
     @Output()
     public txPermAreaListSubject = new Subject<any>();
-    public getTxPermAreaListSubject () {
+
+    public getTxPermAreaListSubject() {
         return this.txPermAreaListSubject.asObservable();
     }
 
-    public permissionsList:{};
+    public permissionsList: {};
     @Output()
     public permissionsListSubject = new Subject<any>();
-    public getPermissionsListSubject () {
+
+    public getPermissionsListSubject() {
         return this.permissionsListSubject.asObservable();
     }
 
-    public usersPermissionsList:{};
+    public usersPermissionsList: {};
     @Output()
     public usersPermissionsListSubject = new Subject<any>();
-    public getUsersPermissionsListSubject () {
+
+    public getUsersPermissionsListSubject() {
         return this.usersPermissionsListSubject.asObservable();
     }
 
 
     /* Constructor. */
-    constructor (
-        private adminUsersService:AdminUsersService,
-        private ngRedux: NgRedux<any>,
-    ) {
+    constructor(private adminUsersService: AdminUsersService,
+                private ngRedux: NgRedux<any>,) {
         let asyncTaskPipe;
         const state = this.ngRedux.getState();
 
         /* Let's request the user's list, this is the saga pipe function. */
-        if ( ! Object.keys(getUsersList(state))[0] ) {
+        if (!Object.keys(getUsersList(state))[0]) {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.requestMyUsersList(),
-                successActions: [ SET_ADMIN_USERLIST ]
+                successActions: [SET_ADMIN_USERLIST]
             });
         }
 
         /* Let's request the admin perm area list, this is the saga pipe function. */
-        if ( ! getAdminPermAreaList(state).length ) {
+        if (!getAdminPermAreaList(state).length) {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getAdminPermAreaList(),
-                successActions: [ SET_ADMIN_PERM_AREAS_LIST ]
+                successActions: [SET_ADMIN_PERM_AREAS_LIST]
             });
         }
 
         /* Let's request the tx perm area list, this is the saga pipe function. */
-        if ( ! getTxPermAreaList(state).length ) {
+        if (!getTxPermAreaList(state).length) {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getTxPermAreaList(),
-                successActions: [ SET_TX_PERM_AREAS_LIST ]
+                successActions: [SET_TX_PERM_AREAS_LIST]
             });
         }
 
         /* TODO - pull in the arrays on this object dynamically. */
 
         /* Assign a update handler to watch changes in redux, then trigger once
-           manually. */
+         manually. */
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+    }
+
+    public requestChainList(): void {
+        AdminUsersService.defaultRequestChainList(this.adminUsersService, this.ngRedux);
     }
 
     /**
@@ -220,7 +227,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public updateState () {
+    public updateState() {
         /* Retrieve the redux store. */
         const state = this.ngRedux.getState();
         let key;
@@ -236,7 +243,7 @@ export class UserAdminService {
 
         /* Combine the groups and emit. */
         this.allGroupsList = Object.assign({}, this.txGroupList, this.adminGroupList);
-        this.allGroupListSubject.next( this.allGroupsList );
+        this.allGroupListSubject.next(this.allGroupsList);
 
         /* Get admin perm area list and send message out. */
         this.adminPermAreaList = getAdminPermAreaList(state);
@@ -264,7 +271,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public createNewUser (data):Promise<any> {
+    public createNewUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.createNewUser(data)
@@ -280,7 +287,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public editUser (data):Promise<any> {
+    public editUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.editUser(data)
@@ -296,7 +303,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public deleteUser (data):Promise<any> {
+    public deleteUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.deleteUser(data)
@@ -312,7 +319,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public createNewGroup (data):Promise<any> {
+    public createNewGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.createNewGroup(data)
@@ -328,7 +335,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public updateGroup (data):Promise<any> {
+    public updateGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.updateGroup(data)
@@ -344,7 +351,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public deleteGroup (data):Promise<any> {
+    public deleteGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.deleteGroup(data)
@@ -360,12 +367,12 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    updateAdminPermissions (data):Promise<any> {
+    updateAdminPermissions(data): Promise<any> {
         /* Add isAdmin to data. */
         const
-        state = this.ngRedux.getState(),
-        myDetail = getMyDetail(state);
-        data.isAdmin = myDetail.admin ? "1": "0";
+            state = this.ngRedux.getState(),
+            myDetail = getMyDetail(state);
+        data.isAdmin = myDetail.admin ? "1" : "0";
 
         /* Return. */
         return this.adminUsersService.buildRequest({
@@ -383,14 +390,14 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    updateTxPermissions (data):Promise<any> {
+    updateTxPermissions(data): Promise<any> {
         /* Get my detail to add is admin to the request. */
         const
-        state = this.ngRedux.getState(),
-        myDetail = getMyDetail(state);
+            state = this.ngRedux.getState(),
+            myDetail = getMyDetail(state);
 
         /* Figure the admin bit out. */
-        data.isAdmin = myDetail.admin ? "1": "0";
+        data.isAdmin = myDetail.admin ? "1" : "0";
 
         /* Return. */
         return this.adminUsersService.buildRequest({
@@ -408,24 +415,24 @@ export class UserAdminService {
      *
      * @return {any} - returns
      */
-    requestPermissions (entity):Promise<any> {
+    requestPermissions(entity): Promise<any> {
         /* Return. */
         let
-        action,
-        asynTaskPipe;
+            action,
+            asynTaskPipe;
 
-        if ( entity.isTx ) {
-            asynTaskPipe = this.adminUsersService.requestTxPermissions( entity );
+        if (entity.isTx) {
+            asynTaskPipe = this.adminUsersService.requestTxPermissions(entity);
             action = SET_TX_PERMISSIONS;
         } else {
-            asynTaskPipe = this.adminUsersService.requestAdminPermissions( entity );
+            asynTaskPipe = this.adminUsersService.requestAdminPermissions(entity);
             action = SET_ADMIN_PERMISSIONS;
         }
 
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: asynTaskPipe,
-            successActions: [ action ]
+            successActions: [action]
         });
     }
 
@@ -438,13 +445,13 @@ export class UserAdminService {
      *
      * @return {any} - returns
      */
-    requestUserPermissions (entity):Promise<any> {
+    requestUserPermissions(entity): Promise<any> {
         let action = entity.isTx ? SET_USERS_TX_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS;
         /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserPermissions(entity),
-            successActions: [ action ]
+            successActions: [action]
         });
     }
 
@@ -457,7 +464,7 @@ export class UserAdminService {
      *
      * @return {any} - returns
      */
-    updateUserGroups (entity):Promise<any> {
+    updateUserGroups(entity): Promise<any> {
         /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
@@ -472,7 +479,7 @@ export class UserAdminService {
      *
      * @return {accountTypes} - array.
      */
-    public getAccountTypes():any {
+    public getAccountTypes(): any {
         /* Return the array. */
         return this.accountTypes;
     }
@@ -484,7 +491,7 @@ export class UserAdminService {
      *
      * @return {walletTypes} - array.
      */
-    public getWalletTypes():any {
+    public getWalletTypes(): any {
         /* Return the array. */
         return this.walletTypes;
     }
@@ -496,7 +503,7 @@ export class UserAdminService {
      *
      * @return {userTypes} - array.
      */
-    public getUserTypes():any {
+    public getUserTypes(): any {
         /* Return the array. */
         return this.userTypes;
     }
@@ -508,7 +515,7 @@ export class UserAdminService {
      *
      * @return {groupTypes} - array.
      */
-    public getGroupTypes():any {
+    public getGroupTypes(): any {
         /* Return the array. */
         return this.groupTypes;
     }
@@ -524,22 +531,22 @@ export class UserAdminService {
      *
      * @return {accountType} - the complete object of the account type.
      */
-    public resolveAccountType ( query ):any {
+    public resolveAccountType(query): any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.id ) identifier = "id";
-        if ( query.text ) identifier = "text";
+        if (query.id) identifier = "id";
+        if (query.text) identifier = "text";
 
         /* If there was nothing, return. */
-        if ( identifier === "" ) {
+        if (identifier === "") {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for ( i = 0; i < this.accountTypes.length; i++ ) {
+        for (i = 0; i < this.accountTypes.length; i++) {
             /* Loop over each and check if they have the same id. */
-            if ( query[identifier] === this.accountTypes[i][identifier] ) {
+            if (query[identifier] === this.accountTypes[i][identifier]) {
                 return [this.accountTypes[i]];
             }
         }
@@ -559,22 +566,22 @@ export class UserAdminService {
      *
      * @return {userType} - the complete object of the user type.
      */
-    public resolveUserType ( query ):any {
+    public resolveUserType(query): any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.id ) identifier = "id";
-        if ( query.text ) identifier = "text";
+        if (query.id) identifier = "id";
+        if (query.text) identifier = "text";
 
         /* If there was nothing, return. */
-        if ( identifier === "" ) {
+        if (identifier === "") {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for ( i = 0; i < this.userTypes.length; i++ ) {
+        for (i = 0; i < this.userTypes.length; i++) {
             /* Loop over each and check if they have the same id. */
-            if ( query[identifier].toString() === this.userTypes[i][identifier] ) {
+            if (query[identifier].toString() === this.userTypes[i][identifier]) {
                 return [this.userTypes[i]];
             }
         }
@@ -595,23 +602,23 @@ export class UserAdminService {
      *
      * @return {groupType} - the complete object of the group.
      */
-    public resolveGroup ( query ):any {
+    public resolveGroup(query): any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.groupId ) identifier = "groupId";
-        if ( query.groupName ) identifier = "groupName";
+        if (query.groupId) identifier = "groupId";
+        if (query.groupName) identifier = "groupName";
 
         /* If there was nothing, return. */
-        if ( identifier === "" ) {
+        if (identifier === "") {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let key;
-        for ( key in this.allGroupsList ) {
+        for (key in this.allGroupsList) {
             /* Loop over each one and check the identifier. */
-            if ( this.allGroupsList[key][identifier].toString() === query[identifier].toString() ) {
-                return [ this.allGroupsList[key] ];
+            if (this.allGroupsList[key][identifier].toString() === query[identifier].toString()) {
+                return [this.allGroupsList[key]];
             }
         }
 
@@ -631,23 +638,23 @@ export class UserAdminService {
      *
      * @return {groupType} - the complete object of the group type.
      */
-    public resolveGroupType ( query ):any {
+    public resolveGroupType(query): any {
         /* Let's first check which we have. */
         let identifier = "";
-        if ( query.id || query.id === 0 ) identifier = "id";
-        if ( query.text ) identifier = "text";
+        if (query.id || query.id === 0) identifier = "id";
+        if (query.text) identifier = "text";
 
         /* If there was nothing, return. */
-        if ( identifier === "" ) {
+        if (identifier === "") {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for ( i = 0; i < this.groupTypes.length; i++ ) {
+        for (i = 0; i < this.groupTypes.length; i++) {
             /* Loop over each one and check the identifier. */
-            if ( this.groupTypes[i][identifier] === query[identifier].toString() ) {
-                return [ this.groupTypes[i] ];
+            if (this.groupTypes[i][identifier] === query[identifier].toString()) {
+                return [this.groupTypes[i]];
             }
         }
 

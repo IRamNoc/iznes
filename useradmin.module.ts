@@ -67,7 +67,7 @@ import {PermissionGridModule} from '@setl/permission-grid';
         SelectModule,
         PermissionGridModule
     ],
-    providers: [ AdminUsersService ]
+    providers: [AdminUsersService]
 })
 
 export class UserAdminModule {
