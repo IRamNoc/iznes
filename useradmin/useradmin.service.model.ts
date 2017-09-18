@@ -129,3 +129,11 @@ export interface UpdateUserGroupsBody extends MemberNodeMessageBody {
     toDelete: any;
     chainId: string;
 }
+
+export interface UpdateMemberChainAccessBody extends MemberNodeMessageBody{
+    token: string;
+    chainId: number;
+    toUpdate: object;
+    toAdd: object;
+    toDelete: Array<number>;
+}
