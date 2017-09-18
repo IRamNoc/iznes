@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
 import {SocketClusterWrapper} from '@setl/socketcluster-wrapper';
-import {NgRedux} from '@angular-redux/store';
 
 @Injectable()
 export class MemberSocketService {
     private socket: SocketClusterWrapper;
     public accessToken: string;
+    public disconnectCallback: any;
+    public errorCallback: any;
+    public connectCallback: any;
+    public reconnectCallback: any;
 
     constructor(private hostname: string,
                 private port: string,
@@ -17,7 +20,23 @@ export class MemberSocketService {
             path
         );
 
+        this.socket.disconnectCallback = () => {
+            this.disconnectCallback();
+        };
+
+        this.socket.errorCallback = () => {
+            this.errorCallback();
+        };
+
+        this.socket.connectCallback = () => {
+            if (this.socket.connectTries > 1) {
+                this.reconnectCallback();
+            }
+        };
+
+
         this.socket.openWebSocket();
+
 
     }
 
