@@ -166,3 +166,20 @@ export {
     // Combine reducer
     MemberReducer
 } from './member';
+
+export {
+    // Actions.
+    clearRequestedMyChainAccess,
+    setRequestedMyChainAccess,
+    SET_MY_CHAIN_ACCESS,
+
+    // Selectors
+    getDefaultMyChainAccess,
+
+    // Combined state.
+    ChainState,
+
+    // Combine reducer.
+    ChainReducer
+
+} from './chain';
