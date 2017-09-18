@@ -1,28 +1,20 @@
-/* Core imports. */
-import {Component} from '@angular/core';
-import {FormsModule, NgModel} from '@angular/forms';
-
-/* Notifications. */
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ToasterService} from 'angular2-toaster';
-
+// Vendors
+import {Component, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {
-    FormBuilder,
     FormGroup,
     Validators,
     AbstractControl,
     FormControl
 } from '@angular/forms';
-
-import {SagaHelper} from '@setl/utils';
-
 import {NgRedux} from '@angular-redux/store';
+import {Unsubscribe} from 'redux';
+import _ from 'lodash';
 
+// Internals
+import {SagaHelper} from '@setl/utils';
 import {
     MyUserService,
-    WalletNodeRequestService,
     InitialisationService,
     MyWalletsService,
     ChannelService,
@@ -34,62 +26,50 @@ import {
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
     getAuthentication
 } from '@setl/core-store';
-
 import {MemberSocketService} from '@setl/websocket-service';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 
 /* Dectorator. */
 @Component({
     selector: 'app-login',
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css'],
-    providers: [ToasterService]
+    styleUrls: ['login.component.css']
 })
 
 /* Class. */
-export class SetlLoginComponent {
-
-    public toasterconfig: any;
-    public prompt: string;
-    public buttonDisabled: boolean = false;
-
+export class SetlLoginComponent implements OnDestroy {
     isLogin: boolean;
 
     loginForm: FormGroup;
     username: AbstractControl;
     password: AbstractControl;
 
-    // @select(state =>
-    //     state.user.myDetail.username
-    // )
-    // loginUser;
+    // Redux unsubscription
+    reduxUnsubscribe: Unsubscribe;
 
     /* Constructor. */
-    constructor(private toasterService: ToasterService,
-                private ngRedux: NgRedux<any>,
+    constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
-                private walletNodeRequestService: WalletNodeRequestService,
                 private memberSocketService: MemberSocketService,
                 private myWalletsService: MyWalletsService,
                 private channelService: ChannelService,
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
-                fb: FormBuilder,
-                private router: Router) {
+                private router: Router,
+                private alertsService: AlertsService) {
         // Subscribe to app store
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
          * Form control setup
          */
-        this.loginForm = fb.group({
-            'username': ['', Validators.required],
-            'password': ['', Validators.required]
+        this.loginForm = new FormGroup({
+            username: new FormControl('', Validators.required),
+            password: new FormControl('', Validators.required)
         });
 
-        this.username = this.loginForm.controls['username'];
-        this.password = this.loginForm.controls['password'];
     }
 
     login(value) {
@@ -116,7 +96,15 @@ export class SetlLoginComponent {
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
-            asyncTaskPipe));
+            asyncTaskPipe,
+            {},
+            () => {
+            },
+            // Fail to login
+            (data) => {
+                this.handleLoginFailMessage(data);
+            }
+        ));
 
         return false;
     }
@@ -147,5 +135,35 @@ export class SetlLoginComponent {
             );
         }
 
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
+    }
+
+    handleLoginFailMessage(data) {
+        const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
+
+        switch (responseStatus) {
+            case 'fail':
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_loginerror" class="text-warning">Sorry, login details incorrect, please try again.</span>'
+                );
+                break;
+            case 'locked':
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. Please contact Setl support.</span>'
+                );
+                break;
+            default:
+                this.showLoginErrorMessage(
+                    '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+                );
+                break;
+        }
+    }
+
+    showLoginErrorMessage(msg) {
+        this.alertsService.create('error', msg);
     }
 }
