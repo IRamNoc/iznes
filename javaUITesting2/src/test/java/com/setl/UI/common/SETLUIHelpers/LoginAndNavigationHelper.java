@@ -180,6 +180,13 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
+      Thread.sleep(750);
+      try {
+        driver.findElement(By.xpath("//a[@href='#/login']")).isDisplayed();
+      }catch (Error e){
+        System.out.println("logout button not present");
+        fail();
+      }
         //assertTrue(verifyHomePageIsDisplayed());
     }
 
