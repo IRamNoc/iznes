@@ -19,7 +19,8 @@ import {
     MyWalletsService,
     ChannelService,
     AccountsService,
-    PermissionGroupService
+    PermissionGroupService,
+    ChainService
 } from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
@@ -57,7 +58,8 @@ export class SetlLoginComponent implements OnDestroy {
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
-                private alertsService: AlertsService) {
+                private alertsService: AlertsService,
+                private chainService: ChainService) {
         // Subscribe to app store
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -131,7 +133,8 @@ export class SetlLoginComponent implements OnDestroy {
                 this.channelService,
                 this.accountsService,
                 this.myUserService,
-                this.permissionGroupService
+                this.permissionGroupService,
+                this.chainService
             );
         }
 
