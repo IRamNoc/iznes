@@ -113,8 +113,6 @@ function sortPermissionsArray ( permissions ) {
     i,
     newStructure = {};
 
-    console.log("Sorting permissions structure: ", permissions);
-
     /* Let's flatten the array into an object of permissions by permission ID. */
     for ( i = 0; i < permissions.length; i++ ) {
         /* Handle the entity object not existing. */
