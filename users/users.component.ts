@@ -35,6 +35,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public accountTypes: any;
     private allGroupList: any;
     private usersPermissionsList: any;
+    private usersWalletPermissions: any;
 
     /* User types select. */
     public userTypes: any;
@@ -93,6 +94,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['usersPermissionsList'] = this.userAdminService.getUsersPermissionsListSubject().subscribe((list) => {
             /* Set raw list. */
             this.usersPermissionsList = list;
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+        /* Subscribe to the user wallet permissions observable. */
+        this.subscriptions['usersWalletPermissions'] = this.userAdminService.getUsersWalletPermissionsSubject().subscribe((list) => {
+            /* Set raw list. */
+            this.usersWalletPermissions = list;
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -169,6 +179,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         this.subscriptions['manageWalletList'] = this.manageWalletsListOb.subscribe((manageWalletList) => {
             /* Set raw list. */
+            console.log("got list: ", manageWalletList);
             this.manageWalletList = manageWalletList;
 
             /* Override the changes. */
@@ -260,10 +271,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Ok, first, lets save the account Id that is selcted. */
         let selectedAccount = thisTab['selectedAccount'] = data;
 
+        console.log(selectedAccount, this.manageWalletList);
+
         /* And now filter the new list to the new account. */
         let key, filteredWallets = [];
         for ( key in this.manageWalletList ) {
             /* Check the id. */
+            console.log( selectedAccount.text +" == "+ this.manageWalletList[ key ].accountName )
             if ( selectedAccount.text == this.manageWalletList[ key ].accountName ) {
                 /* Push if it's a match. */
                 filteredWallets.push({
@@ -273,8 +287,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }
         }
 
+        console.log( "Setting tab "+ tabid +" to have wallets lists: ", filteredWallets )
+
         /* Now assign that to both the dropdowns. */
         thisTab['filteredWalletsByAccount'] = [ ...filteredWallets ];
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
@@ -531,10 +550,22 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s transactional groups.');
             })
 
+            /* Save wallet access. */
+            this.userAdminService.updateUserWalletPermissions({
+                userId: thisTab.userId.toString(),
+                walletAccess: this.getWalletAccessFromTab(formData),
+            }).then((response) => {
+                console.log('updated user wallet permissions.', response);
+            }).catch((error) => {
+                console.log('error updating user wallet permissions.', error);
+                this.showError('Failed to update this user\'s wallet permissions.');
+            })
+
+
             /* TODO - update user meta;
              [x] Admin groups.
              [x] Tx groups.
-             [ ] Wallet access.
+             [x] Wallet access.
              [ ] Chain access.
              */
 
@@ -575,6 +606,24 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         return {toAdd, toDelete};
     }
 
+    private getWalletAccessFromTab (formData):{ [walletId: number]: number } {
+        /* Object of changes. */
+        let i, j, walletAccess = {};
+
+        /* Get each wallet and push into wallet access. */
+        for (i in formData['walletsRead']) {
+            walletAccess[ formData['walletsRead'][i].id ] = 1;
+        }
+
+        for (j in formData['walletsFull']) {
+            walletAccess[ formData['walletsFull'][j].id ] = 3;
+        }
+
+        /* Return. */
+        console.log("built walletAccess: ", walletAccess);
+        return walletAccess;
+    }
+
     /**
      * Get Group By Id
      * ---------------
@@ -588,6 +637,26 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         for (let key in this.allGroupList) {
             if ( this.allGroupList[key].groupId == id ) {
                 return this.allGroupList[key];
+            }
+        }
+
+        /* ...else return nothing. */
+        return {};
+    }
+
+    /**
+     * Get Wallet By Id
+     * ---------------
+     * Get a full wallet object by Id.
+     *
+     * @param  {id} number - th group id.
+     * @return {void}
+     */
+    public getWalletById (id) {
+        /* Look for the wallet and return it... */
+        for (let key in this.manageWalletList) {
+            if ( this.manageWalletList[key].walletID == id ) {
+                return this.manageWalletList[key];
             }
         }
 
@@ -683,13 +752,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         });
 
         const thisTab = this.tabsControl[this.tabsControl.length - 1];
-
-        /* TODO - get user meta;
-         [x] Admin groups.
-         [x] Tx groups.
-         [ ] Wallet access.
-         [ ] Chain access.
-         */
+        const newTabId = this.tabsControl.length - 1;
 
         /* Get Admin permissions. */
         this.userAdminService.requestUserPermissions({
@@ -721,12 +784,59 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             thisTab['allocatedTxList'] = this.groupsToArray(userTxPermissions);
 
             /* Update the chain ID. */
-            this.setFormChainId(this.tabsControl.length - 1, 0);
+            this.setFormChainId(newTabId, 0);
         }).catch((error) => {
             /* Handle the error message */
             console.log("Editing user, tx permissions error: ", error);
             this.showError('Failed to fetch this user\'s transactional permissions.');
         });
+
+        this.userAdminService.requestUserWalletPermissions({
+            'userId': user.userID,
+        }).then((response) => {
+            /* So now, we have access to the data in redux. */
+            const userWalletPermissions = this.usersWalletPermissions[user.userID] || {};
+            console.log('Got user wallet permission: ', userWalletPermissions)
+
+            /* So first let's set the account ID on the tab... */
+            this.setFormAccountId(newTabId, accountType[0]);
+
+            /* ...then filter and preset the read wallets...  */
+            let readAccessWallets = userWalletPermissions
+                .filter(wallet => wallet.permission == 1)
+                .map((wallet) => {
+                    wallet = this.getWalletById( wallet.WalletID );
+                    return {
+                        id: wallet.walletId,
+                        text: wallet.walletName
+                    }
+                });
+            thisTab.formControl.controls['walletsRead'].patchValue( readAccessWallets );
+
+            /* ...and lastly the same for the full access wallets. */
+            let fullAccessWallets = userWalletPermissions
+                .filter(wallet => wallet.permission == 3)
+                .map((wallet) => {
+                    wallet = this.getWalletById( wallet.WalletID );
+                    return {
+                        id: wallet.walletId,
+                        text: wallet.walletName
+                    }
+                });
+            thisTab.formControl.controls['walletsFull'].patchValue( fullAccessWallets );
+
+        }).catch((error) => {
+            /* Handle the error message */
+            console.log("Editing user, tx permissions error: ", error);
+            this.showError('Failed to fetch this user\'s transactional permissions.');
+        });
+
+        /* TODO - get user meta;
+         [x] Admin groups.
+         [x] Tx groups.
+         [x] Wallet access.
+         [ ] Chain access.
+         */
 
         /* Activate the new tab. */
         this.setTabActive(this.tabsControl.length - 1);
