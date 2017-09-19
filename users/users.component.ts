@@ -55,6 +55,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     @select(['user', 'myDetail']) myDetailOb;
     public myDetail:any;
 
+    @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
+    private manageWalletList:any;
+
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
                 private ngRedux: NgRedux<any>,
@@ -114,24 +117,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                         "password": new FormControl(''),
                         "adminGroups": new FormControl([]),
                         "txGroups": new FormControl([]),
+                        "walletsFull": new FormControl([]),
+                        "walletsRead": new FormControl([]),
                     }
                 ),
                 "selectedChain": 0,
-                "filteredTxList": [],
-                "selectedTxList": [],
-                "allocatedTxList": [],
+                "filteredTxList": [], // filtered groups of this chainid.
+                "selectedTxList": [], // groups to show as selected.
+                "allocatedTxList": [], // all groups assigned to the user.
+                "filteredWalletsByAccount": [], // filtered wallets by account.
                 "active": false
             }
         ];
     }
 
     ngAfterViewInit(): void {
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Ask for update from the service above. */
-        this.userAdminService.updateState();
-
         this.subscriptions['chainList'] = this.chainListObservable.subscribe((chainList) => {
             /* Varibales. */
             let chainId;
@@ -164,6 +164,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
         });
+
+        /* Subscribe to the wallets list. */
+
+        this.subscriptions['manageWalletList'] = this.manageWalletsListOb.subscribe((manageWalletList) => {
+            /* Set raw list. */
+            this.manageWalletList = manageWalletList;
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
+
+        /* Override the changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* Ask for update from the service above. */
+        this.userAdminService.updateState();
     }
 
     /**
@@ -226,6 +243,92 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Return. */
         return;
+    }
+
+    /**
+     * Set Form Account Id
+     * -----------------
+     * Sets the account Id on a tab object, to be used by the tab forms.
+     *
+     * @param  {tabid} number - The tab id to be set.
+     * @param  {data} object - The event object that ng2 select gives off.
+     *
+     * @return {void}
+     */
+    public setFormAccountId( tabid, data ):void {
+        const thisTab = this.tabsControl[tabid];
+        /* Ok, first, lets save the account Id that is selcted. */
+        let selectedAccount = thisTab['selectedAccount'] = data;
+
+        /* And now filter the new list to the new account. */
+        let key, filteredWallets = [];
+        for ( key in this.manageWalletList ) {
+            /* Check the id. */
+            if ( selectedAccount.text == this.manageWalletList[ key ].accountName ) {
+                /* Push if it's a match. */
+                filteredWallets.push({
+                    id: this.manageWalletList[ key ].walletId,
+                    text: this.manageWalletList[ key ].walletName,
+                });
+            }
+        }
+
+        /* Now assign that to both the dropdowns. */
+        thisTab['filteredWalletsByAccount'] = [ ...filteredWallets ];
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Added Wallet Selection
+     * ------------------------
+     * Adds a wallet selection form the opposite wallet dropdown.
+     *
+     * @param {fullAccess} number - A 1 is full access was changed, 0 not.
+     * @param {tabid} number - the tab id that the form is in.
+     * @param {data} object - the ng2 select object.
+     *
+     * @return {void}
+     */
+    public addedWalletSelection (fullAccess, tabid, data):void {
+        /* Pointers. */
+        const
+        thisTab = this.tabsControl[tabid],
+        controls = thisTab.formControl.controls;
+
+        /* Varibales. */
+        let
+        i, j;
+
+        /* So let's figure out if they've added duplicate wallets... */
+        setTimeout(() => {
+            for ( i in controls["walletsFull"].value ) {
+                for ( j in controls["walletsRead"].value ) {
+                    /* If we have a duplicate wallet... */
+                    if ( controls["walletsRead"].value[j] != undefined && controls["walletsFull"].value[i] != undefined ) {
+                        if ( controls["walletsRead"].value[j].id == controls["walletsFull"].value[i].id ) {
+                            /* ...then we should remove it from the other select and tell the user. */
+                            if ( fullAccess ) {
+                                delete controls["walletsRead"].value[j];
+                                controls["walletsRead"].patchValue(
+                                    controls["walletsRead"].value.filter(thing => !!thing)
+                                );
+                                this.showWarning('You changed access to \''+ controls["walletsFull"].value[i].text +'\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
+                            } else {
+                                delete controls["walletsFull"].value[i];
+                                controls["walletsFull"].patchValue(
+                                    controls["walletsFull"].value.filter(thing => !!thing)
+                                );
+
+                                this.showWarning('You changed access to \''+ controls["walletsRead"].value[j].text +'\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
+                            }
+                        }
+                    }
+                }
+            }
+        }, 50);
+
     }
 
     /**
@@ -565,6 +668,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     "userType": new FormControl(userType),
                     "adminGroups": new FormControl([]),
                     "txGroups": new FormControl([]),
+                    "walletsFull": new FormControl([]),
+                    "walletsRead": new FormControl([]),
                 }
             ),
             "oldAdminGroups": {},
@@ -573,6 +678,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             "filteredTxList": [], // filtered groups of this chainid.
             "selectedTxList": [], // groups to show as selected.
             "allocatedTxList": [], // all groups assigned to the user.
+            "filteredWalletsByAccount": [], // filtered wallets by account.
             "active": false // this.editFormControls
         });
 
@@ -613,6 +719,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Next we can set it to the old and allocatedTxList, which will be used on chain change. */
             thisTab['oldTxGroups'] = userTxPermissions; // used to diff later.
             thisTab['allocatedTxList'] = this.groupsToArray(userTxPermissions);
+
+            /* Update the chain ID. */
+            this.setFormChainId(this.tabsControl.length - 1, 0);
         }).catch((error) => {
             /* Handle the error message */
             console.log("Editing user, tx permissions error: ", error);
@@ -762,6 +871,27 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                   <tbody>
                       <tr>
                           <td class="text-center text-danger">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
+    }
+
+    /**
+     * Show Warning Message
+     * ------------------
+     * Shows a warning popup.
+     *
+     * @param  {message} string - the string to be shown in the message.
+     * @return {void}
+     */
+    showWarning(message) {
+        /* Show the error. */
+        this.alertsService.create('warning', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-warning">${message}</td>
                       </tr>
                   </tbody>
               </table>

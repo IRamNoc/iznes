@@ -103,7 +103,8 @@
                                 [items]="accountTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
-                                [formControl]="formControl.controls['accountType']">
+                                [formControl]="formControl.controls['accountType']"
+                                (selected)="setFormAccountId( tabid, $event )">
                             </ng-select>
                         </div>
                     </div>
@@ -201,7 +202,8 @@
                                 [items]="accountTypes"
                                 [allowClear]="true"
                                 placeholder="Select Type"
-                                [formControl]="formControl.controls['accountType']">
+                                [formControl]="formControl.controls['accountType']"
+                                (selected)="setFormAccountId( tabid, $event )">
                             </ng-select>
                         </div>
                     </div>
@@ -255,14 +257,14 @@
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         Administrative Groups
+                        <ng-select
+                            [items]="filteredAdminGroupsList"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="Select Type"
+                            [formControl]="formControl.controls['adminGroups']">
+                        </ng-select>
                     </div>
-                    <ng-select
-                        [items]="filteredAdminGroupsList"
-                        [multiple]="true"
-                        [allowClear]="true"
-                        placeholder="Select Type"
-                        [formControl]="formControl.controls['adminGroups']">
-                    </ng-select>
                 </clr-tab-content>
             </clr-tab>
 
@@ -271,23 +273,22 @@
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         Group in Chain
-                    </div>
-                    <ng-select
-                        [items]="filteredChainList"
-                        [allowClear]="true"
-                        placeholder="Select Chain"
-                        (selected)="setFormChainId(tabid, $event)">
-                    </ng-select>
-                    <div class="panel-body">
+                        <ng-select
+                            [items]="filteredChainList"
+                            [allowClear]="true"
+                            placeholder="Select Chain"
+                            (selected)="setFormChainId(tabid, $event)">
+                        </ng-select>
+
                         Transactional Groups
+                        <ng-select
+                            [items]="tabsControl[tabid].filteredTxList"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="Select Type"
+                            [formControl]="formControl.controls['txGroups']">
+                        </ng-select>
                     </div>
-                    <ng-select
-                        [items]="tabsControl[tabid].filteredTxList"
-                        [multiple]="true"
-                        [allowClear]="true"
-                        placeholder="Select Type"
-                        [formControl]="formControl.controls['txGroups']">
-                    </ng-select>
                 </clr-tab-content>
             </clr-tab>
 
@@ -295,7 +296,25 @@
                 <a clrTabLink><i class="fa fa-briefcase"></i> Wallets</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        Wallets
+                        Full Access Wallets
+                        <ng-select
+                            [items]="tabsControl[tabid].filteredWalletsByAccount"
+                            (selected)="addedWalletSelection(1, tabid, $event)"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="Choose Wallets"
+                            [formControl]="formControl.controls['walletsFull']">
+                        </ng-select>
+
+                        Read Only Wallets
+                        <ng-select
+                            [items]="tabsControl[tabid].filteredWalletsByAccount"
+                            (selected)="addedWalletSelection(0, tabid, $event)"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="Choose Wallets"
+                            [formControl]="formControl.controls['walletsRead']">
+                        </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
@@ -305,6 +324,13 @@
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         Chains
+                        <ng-select
+                            [items]=""
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="Choose Wallets"
+                            [formControl]="">
+                        </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
