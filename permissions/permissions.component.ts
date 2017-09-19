@@ -455,7 +455,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsData['toDelete'] = differences['toDelete'];
 
              /* Figure out which call to make. */
-             let functionCall = response.groupIsTx === 2 ? 'updateTxPermissions' : 'updateAdminPermissions';
+             let functionCall = response.groupIsTx === 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
 
              /* Send the request. */
              this.userAdminService[functionCall](permissionsData).then((response) => {

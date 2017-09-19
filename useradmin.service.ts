@@ -41,7 +41,11 @@ import {
     SET_USERS_TX_PERMISSIONS,
     getUsersPermissions,
     getUsersAdminPermissions,
-    getUsersTxPermissions
+    getUsersTxPermissions,
+
+    /* Group permissions */
+    SET_USERS_WALLET_PERMISSIONS,
+    getUsersWalletPermissions,
 } from '@setl/core-store';
 
 @Injectable()
@@ -173,6 +177,15 @@ export class UserAdminService {
         return this.usersPermissionsListSubject.asObservable();
     }
 
+    public usersWalletPermissions: {};
+    @Output()
+    public usersWalletPermissionsSubject = new Subject<any>();
+
+    public getUsersWalletPermissionsSubject() {
+        return this.usersWalletPermissionsSubject.asObservable();
+    }
+
+
 
     /* Constructor. */
     constructor(private adminUsersService: AdminUsersService,
@@ -260,6 +273,10 @@ export class UserAdminService {
         /* Get permissions list by userId. */
         this.usersPermissionsList = getUsersPermissions(state);
         this.usersPermissionsListSubject.next(this.usersPermissionsList);
+
+        /* Get permissions list by userId. */
+        this.usersWalletPermissions = getUsersWalletPermissions(state);
+        this.usersWalletPermissionsSubject.next(this.usersWalletPermissions);
     }
 
     /**
@@ -403,6 +420,42 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.updateTxPermissions(data)
+        });
+    }
+
+    /**
+     * Request Permissions
+     * ----------------
+     * Requests an entity's permissions or all, used on click for editing a group.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    requestUserWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestUserWalletPermissions(data),
+            successActions: [ SET_USERS_WALLET_PERMISSIONS ]
+        });
+    }
+
+    /**
+     * Update Permissions
+     * ----------------
+     * Requests an entity's permissions or all, used on click for editing a group.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    updateUserWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        console.log('building update wallet access: ', data);
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
         });
     }
 
