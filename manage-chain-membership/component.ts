@@ -140,7 +140,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             return resultList;
         }, []);
 
-        console.log('member list --', this.memberList);
     }
 
     requestManagedMemberList(requestedState: boolean): void {
@@ -222,7 +221,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
     selectMember($event, index) {
         const selectedId = $event.id;
-        const currentSelectedMemberIds = this.getSelectedMember();
+        const currentSelectedMemberIds = this.getSelectedMember(index);
 
         if (currentSelectedMemberIds.includes(selectedId)) {
             this.membershipForm.controls['membershipArr']['at'](index)['patchValue']({member: []});
@@ -231,12 +230,34 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
     }
 
-    getSelectedMember() {
+    getSelectedMember(excludeIndex) {
         const membershipValue = this.membershipForm.value.membershipArr;
         const membershipValueImu = fromJS(membershipValue);
 
-        const selectedMember = membershipValueImu.reduce(function (result, item) {
-            result.push(item.getIn(['member', '0', 'id']));
+        const selectedMember = membershipValueImu.reduce((result, item, index) => {
+
+            // Excluding specific index.
+            if (excludeIndex === index) {
+                return result;
+            }
+            /**
+             * The extra check in here is for a weird issue caused by ng2-select.
+             *
+             * The value get the pre-paint select(those fill with) of "new FormControl(memberValue, Validators.required)"
+             * Those one value is different with the one that initialise with "new FormControl([], Validators.required)".
+             *
+             * For the first instance, item.getIn(['member', '0']) is an object. the second instance item.getIn(['member', '0'])
+             * is an ng2-select "selectItem" object.
+             */
+            let memberId;
+            memberId = item.getIn(['member', '0']).id;
+
+            if (typeof memberId === 'undefined') {
+                memberId = item.getIn(['member', '0', 'id']);
+            }
+
+            result.push(memberId);
+
             return result;
         }, []);
 
@@ -359,7 +380,8 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     getChainMembershipToDelete(currentMembershipListObject) {
         let thisMemberId;
         const toDelete = [];
-        const currentSelectMemberIds = this.getSelectedMember();
+        // passing in -1, so we select all the items, not excluding any.
+        const currentSelectMemberIds = this.getSelectedMember(-1);
         for (thisMemberId of Object.keys(currentMembershipListObject)) {
             thisMemberId = parseInt(thisMemberId, 10);
             if (!currentSelectMemberIds.includes(thisMemberId)) {
