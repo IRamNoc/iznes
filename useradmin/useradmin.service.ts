@@ -9,6 +9,8 @@ import {
     CreateUserMessageBody,
     EditUserMessageBody,
     DeleteUserMessageBody,
+    RequestUserWalletPermissions,
+    UpdateUserWalletPermissions,
 
     /* Permissions. */
     GetPermissionAreaListBody,
@@ -156,11 +158,11 @@ export class AdminUsersService {
         const messageBody: EditUserMessageBody = {
             RequestName: 'udu',
             token: this.memberSocketService.token,
-            'userId': newData.userId,
-            'email': newData.email,
-            'account': newData.account,
-            'userType': newData.userType,
-            'status': newData.status
+            userId: newData.userId,
+            email: newData.email,
+            account: newData.account,
+            userType: newData.userType,
+            status: newData.status
         };
 
         /* Return the new member node saga request. */
@@ -168,12 +170,38 @@ export class AdminUsersService {
     }
 
     public deleteUser(data: any): any {
-        console.log(data);
         /* Setup the message body. */
         const messageBody: DeleteUserMessageBody = {
             RequestName: 'du',
             token: this.memberSocketService.token,
-            'userId': data.userId
+            userId: data.userId
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserWalletPermissions (data):any {
+
+        /* Setup the message body. */
+        const messageBody: RequestUserWalletPermissions = {
+            RequestName: 'guwp',
+            token: this.memberSocketService.token,
+            userId: data.userId
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateUserWalletPermissions (data):any {
+
+        /* Setup the message body. */
+        const messageBody: UpdateUserWalletPermissions = {
+            RequestName: 'uduwp',
+            token: this.memberSocketService.token,
+            userId: data.userId,
+            walletAccess: data.walletAccess
         };
 
         /* Return the new member node saga request. */
