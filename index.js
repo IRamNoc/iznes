@@ -11,3 +11,6 @@ export {SetlPipesModule} from './pipes';
 export {SetlComponentsModule} from './components';
 
 export {walletHelper} from './helper';
+
+export {APP_CONFIG} from './appConfig/appConfig';
+export {AppConfig} from './appConfig/appConfig.model';
