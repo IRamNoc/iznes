@@ -34,6 +34,31 @@ export interface DeleteUserMessageBody extends MemberNodeMessageBody {
     userId: string;
 }
 
+export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
+    token: string;
+    entityId: number;
+    isTx: number;
+}
+
+export interface UpdateUserGroupsBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+    toAdd: any;
+    toDelete: any;
+    chainId: string;
+}
+
+export interface RequestUserWalletPermissions extends MemberNodeMessageBody {
+    token: string;
+    userId: number;
+}
+
+export interface UpdateUserWalletPermissions extends MemberNodeMessageBody {
+    token: string;
+    userId: number;
+    walletAccess: { [walletId: number]: number }
+}
+
 /*
  Permissions Areas
  */
@@ -114,20 +139,6 @@ export interface RequestChainListBody extends MemberNodeMessageBody {
 export interface RequestMemberChainAccessBody extends MemberNodeMessageBody {
     token: string;
     chainId: number;
-}
-
-export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
-    token: string;
-    entityId: number;
-    isTx: number;
-}
-
-export interface UpdateUserGroupsBody extends MemberNodeMessageBody {
-    token: string;
-    userId: string;
-    toAdd: any;
-    toDelete: any;
-    chainId: string;
 }
 
 export interface UpdateMemberChainAccessBody extends MemberNodeMessageBody{
