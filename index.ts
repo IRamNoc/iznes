@@ -143,6 +143,10 @@ export {
     /* Users wallet permissions */
     SET_USERS_WALLET_PERMISSIONS,
     getUsersWalletPermissions,
+
+    /* Users chain access */
+    SET_USERS_CHAIN_ACCESS,
+    getUsersChainAccess,
 } from './useradmin';
 
 export {
