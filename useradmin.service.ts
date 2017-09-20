@@ -46,6 +46,10 @@ import {
     /* Group permissions */
     SET_USERS_WALLET_PERMISSIONS,
     getUsersWalletPermissions,
+
+    /* Group permissions */
+    SET_USERS_CHAIN_ACCESS,
+    getUsersChainAccess,
 } from '@setl/core-store';
 
 @Injectable()
@@ -185,7 +189,13 @@ export class UserAdminService {
         return this.usersWalletPermissionsSubject.asObservable();
     }
 
+    public usersChainAccess: {};
+    @Output()
+    public usersChainAccessSubject = new Subject<any>();
 
+    public getUsersChainAccessSubject() {
+        return this.usersChainAccessSubject.asObservable();
+    }
 
     /* Constructor. */
     constructor(private adminUsersService: AdminUsersService,
@@ -274,9 +284,13 @@ export class UserAdminService {
         this.usersPermissionsList = getUsersPermissions(state);
         this.usersPermissionsListSubject.next(this.usersPermissionsList);
 
-        /* Get permissions list by userId. */
+        /* Get wallet permissions list by userId. */
         this.usersWalletPermissions = getUsersWalletPermissions(state);
         this.usersWalletPermissionsSubject.next(this.usersWalletPermissions);
+
+        /* Get chain access list by userId. */
+        this.usersChainAccess = getUsersChainAccess(state);
+        this.usersChainAccessSubject.next(this.usersChainAccess);
     }
 
     /**
@@ -382,6 +396,41 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
+        });
+    }
+
+    /**
+     * Update User Chain Access
+     * ----------------
+     * Updates a user's chain access.
+     *
+     * @param {data} - the update data.
+     *
+     * @return {any} - returns
+     */
+    updateUserChainAccess(data): Promise<any> {
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateUserChainAccess(data)
+        });
+    }
+
+    /**
+     * Request User Chain Access
+     * ----------------
+     * Request a user's chain access.
+     *
+     * @param {data} - the request data.
+     *
+     * @return {any} - returns
+     */
+    requestUserChainAccess(data): Promise<any> {
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestUserChainAccess(data),
+            successActions: [ SET_USERS_CHAIN_ACCESS ]
         });
     }
 
@@ -814,7 +863,7 @@ export class UserAdminService {
      *
      * @return {differences} object - an object of differences.
      */
-    public getWalletAccessDiff (oldAccess, newAccess) {
+    public getWalletAccessDiff (oldAccess, newAccess):any {
         /* Variables. */
         let
         i, j, k,
