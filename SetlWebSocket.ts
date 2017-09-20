@@ -123,7 +123,7 @@ export class SetlWebSocket {
             }
         }
 
-        id = _.get(message, 'requestid', 0);
+        id = _.get(message, 'requestid', 0) || _.get(message, 'RequestID', 0);
 
         // Only process callbacks if id is the initMessageID or encryption is in place
 
