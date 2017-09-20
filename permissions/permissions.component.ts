@@ -370,14 +370,14 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsReformed = formData['permissions'];
 
              /* Assign all the data. */
-             permissionsData['entityId'] = response.groupID;
+             permissionsData['entityId'] = response[1].Data[0].groupID;
              permissionsData['isGroup'] = 1;
              permissionsData['toAdd'] = permissionsReformed;
              permissionsData['toUpdate'] = {}; // we're only adding as we're creating.
              permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
              /* Figure out which function to call. */
-             let functionCall = response.groupIsTx === 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
+             let functionCall = dataToSend['type'] == 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
 
              /* Then send the request. */
              this.userAdminService[functionCall](permissionsData).then((response) => {
@@ -447,7 +447,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              );
 
              /* Assign all the data. */
-             permissionsData['entityId'] = response.groupID;
+             permissionsData['entityId'] = dataToSend['groupId'];
              permissionsData['isGroup'] = 1;
              permissionsData['chainId'] = 0;
              permissionsData['toAdd'] = differences['toAdd'];
@@ -455,7 +455,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
              permissionsData['toDelete'] = differences['toDelete'];
 
              /* Figure out which call to make. */
-             let functionCall = response.groupIsTx === 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
+             let functionCall = dataToSend['type'] == 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
 
              /* Send the request. */
              this.userAdminService[functionCall](permissionsData).then((response) => {
