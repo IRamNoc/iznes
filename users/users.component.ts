@@ -487,7 +487,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* TODO - update user meta;
              [x] Admin groups.
              [x] Tx groups.
-             [ ] Wallet access.
+             [x] Wallet access.
              [ ] Chain access.
              */
 
@@ -561,12 +561,22 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s transactional groups.');
             })
 
-            /* Save wallet access. */
+            /* Save wallet access, first diff, then set the new ones to the old ones. */
+            let
+            newWallerAccess = this.getWalletAccessFromTab(formData),
+            diffWalletAccess = this.userAdminService.getWalletAccessDiff(
+                thisTab['oldWalletAccess'],
+                newWallerAccess
+            );
             this.userAdminService.updateUserWalletPermissions({
                 userId: thisTab.userId.toString(),
-                walletAccess: this.getWalletAccessFromTab(formData),
+                toAdd: diffWalletAccess.toAdd,
+                toUpdate: diffWalletAccess.toUpdate,
+                toDelete: diffWalletAccess.toDelete,
             }).then((response) => {
+                /* Overwrite the old permissions, to allow diffing. */
                 console.log('updated user wallet permissions.', response);
+                thisTab['oldWalletAccess'] = newWallerAccess;
             }).catch((error) => {
                 console.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
@@ -631,7 +641,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Return. */
-        console.log("built walletAccess: ", walletAccess);
         return walletAccess;
     }
 
@@ -666,7 +675,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public getWalletById (id) {
         /* Look for the wallet and return it... */
         for (let key in this.manageWalletList) {
-            if ( this.manageWalletList[key].walletID == id ) {
+            if ( this.manageWalletList[key].walletId == id ) {
                 return this.manageWalletList[key];
             }
         }
@@ -807,7 +816,14 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }).then((response) => {
             /* So now, we have access to the data in redux. */
             const userWalletPermissions = this.usersWalletPermissions[user.userID] || {};
-            console.log('Got user wallet permission: ', userWalletPermissions)
+            console.log('Got user wallet permission: ', userWalletPermissions);
+
+            /* Set the old wallet access, this'll be used to diff later. */
+            thisTab['oldWalletAccess'] = {};
+            userWalletPermissions.map((wallet) => {
+                /* Build the structure in the old  */
+                thisTab['oldWalletAccess'][ wallet.walletID ] = wallet.permission;
+            });
 
             /* So first let's set the account ID on the tab... */
             this.setFormAccountId(newTabId, accountType[0]);
@@ -816,7 +832,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             let readAccessWallets = userWalletPermissions
                 .filter(wallet => wallet.permission == 1)
                 .map((wallet) => {
-                    wallet = this.getWalletById( wallet.WalletID );
+                    wallet = this.getWalletById( wallet.walletID );
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
@@ -828,7 +844,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             let fullAccessWallets = userWalletPermissions
                 .filter(wallet => wallet.permission == 3)
                 .map((wallet) => {
-                    wallet = this.getWalletById( wallet.WalletID );
+                    wallet = this.getWalletById( wallet.walletID );
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
