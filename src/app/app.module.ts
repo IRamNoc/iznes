@@ -7,7 +7,7 @@ import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {SetlPipesModule} from '@setl/utils';
+import {SetlPipesModule, APP_CONFIG} from '@setl/utils';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -22,7 +22,8 @@ import {
     ChannelService,
     AccountsService,
     PermissionGroupService,
-    MemberService
+    MemberService,
+    ChainService
 } from '@setl/core-req-services';
 
 import {
@@ -128,6 +129,11 @@ import {environment} from '../environments/environment';
             }
         },
 
+        {
+            provide: APP_CONFIG,
+            useValue: environment
+        },
+
         WalletNodeSocketService,
         MyUserService,
         MyWalletsService,
@@ -140,6 +146,7 @@ import {environment} from '../environments/environment';
         AccountsService,
         PermissionGroupService,
         MemberService,
+        ChainService,
         MultilingualService
     ],
     bootstrap: [AppComponent]
