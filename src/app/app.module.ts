@@ -38,6 +38,7 @@ import {SetlLoginModule} from '@setl/core-login';
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
 import {SetlAccountModule} from '@setl/core-account';
+import {SetlProductModule} from './product/product.module';
 import {SetlBalancesModule} from '@setl/core-balances';
 import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
@@ -104,6 +105,7 @@ import {environment} from '../environments/environment';
         UserAdminModule,
         SetlMessagesModule,
         SetlAccountModule,
+        SetlProductModule,
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,

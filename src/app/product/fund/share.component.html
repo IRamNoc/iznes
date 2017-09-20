@@ -1,0 +1,647 @@
+<div class="container-fluid text-left m-0 p-0" [formGroup]="shareForm">
+    <div class="row">
+        <div class="col-sm-2 m-0 p-0">
+            <div *ngFor="let item of navItems; let i = index" class="customHTab" [class.customHTabActive]="subLevel == i" (click)="changeSubLevel(i)">
+                <!-- (click)="changeSubLevel(0)"-->
+                <i class="fa fa-plus mr-1"></i> {{item}}
+            </div>
+        </div>
+        <div class="col-sm-10 form-group m-0 p-0">
+            <div [ngSwitch]="subLevel" class="tabContent">
+                <div *ngSwitchCase="0">
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fisin" class="text-right pt-1">
+                                ISIN
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fisin" class="form-control" formControlName="isin" placeholder="ISIN">
+                            <div *ngIf="shareForm.controls.isin.hasError('required') && shareForm.controls.isin.touched" class="text-danger">ISIN is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fportfolioCode" class="text-right pt-1">
+                                Code du portefeuille
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fportfolioCode" class="form-control" formControlName="portfolioCode" placeholder="Code ">
+                            <div *ngIf="shareForm.controls.portfolioCode.hasError('required') && shareForm.controls.portfolioCode.touched" class="text-danger">Code du portefeuille is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fshareName" class="text-right pt-1">
+                                Nom de la part
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fshareName" class="form-control" formControlName="shareName" placeholder="Nom de la part">
+                            <div *ngIf="shareForm.controls.shareName.hasError('required') && shareForm.controls.shareName.touched" class="text-danger">Nom de la part is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundShareStatus" class="text-right pt-1">
+                                Statut
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundShareStatus" class="form-control" formControlName="fundShareStatus" placeholder="Statut">
+                            <div *ngIf="shareForm.controls.fundShareStatus.hasError('required') && shareForm.controls.fundShareStatus.touched" class="text-danger">Statut is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundAddressPrefix" class="text-right pt-1">
+                                Appartement ou Maison
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundAddressPrefix" class="form-control" formControlName="fundAddressPrefix" placeholder="Appartement ou Maison">
+                            <div *ngIf="shareForm.controls.fundAddressPrefix.hasError('required') && shareForm.controls.fundAddressPrefix.touched" class="text-danger">Appartement ou Maison is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundAddress1" class="text-right pt-1">
+                                Adresse 1
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundAddress1" class="form-control" formControlName="fundAddress1" placeholder="Adresse 1">
+                            <div *ngIf="shareForm.controls.fundAddress1.hasError('required') && shareForm.controls.fundAddress1.touched" class="text-danger">Adresse 1 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundAddress2" class="text-right pt-1">
+                                Adresse 2
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundAddress2" class="form-control" formControlName="fundAddress2" placeholder="Adresse 2">
+                            <div *ngIf="shareForm.controls.fundAddress2.hasError('required') && shareForm.controls.fundAddress2.touched" class="text-danger">Adresse 2 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundAddress3" class="text-right pt-1">
+                                Ville
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundAddress3" class="form-control" formControlName="fundAddress3" placeholder="Ville">
+                            <div *ngIf="shareForm.controls.fundAddress3.hasError('required') && shareForm.controls.fundAddress3.touched" class="text-danger">Ville is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundAddress4" class="text-right pt-1">
+                                &Eacute;tat
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundAddress4" class="form-control" formControlName="fundAddress4" placeholder="&Eacute;tat">
+                            <div *ngIf="shareForm.controls.fundAddress4.hasError('required') && shareForm.controls.fundAddress4.touched" class="text-danger">&Eacute;tat is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundCodePostal" class="text-right pt-1">
+                                Code Postal
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundCodePostal" class="form-control" formControlName="fundCodePostal" placeholder="Code Postal">
+                            <div *ngIf="shareForm.controls.fundCodePostal.hasError('required') && shareForm.controls.fundCodePostal.touched" class="text-danger">Code Postal is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fleiCode" class="text-right pt-1">
+                               LEI
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fleiCode" class="form-control" formControlName="leiCode" placeholder="LEI">
+                            <div *ngIf="shareForm.controls.leiCode.hasError('required') && shareForm.controls.leiCode.touched" class="text-danger">LEI is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fshareType" class="text-right pt-1">
+                                Type de la part
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fshareType" class="form-control" formControlName="shareType" placeholder="Type de la part">
+                            <div *ngIf="shareForm.controls.shareType.hasError('required') && shareForm.controls.shareType.touched" class="text-danger">Type de la part is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fincomeAllocation" class="text-right pt-1">
+                                Affectation du résultat
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fincomeAllocation" class="form-control" formControlName="incomeAllocation" placeholder="Affectation du résultat">
+                            <div *ngIf="shareForm.controls.incomeAllocation.hasError('required') && shareForm.controls.incomeAllocation.touched" class="text-danger">Affectation du résultat is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fshareCurrency" class="text-right pt-1">
+                                Currency of Share
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fshareCurrency" class="form-control" formControlName="shareCurrency" placeholder="Currency of Share">
+                            <div *ngIf="shareForm.controls.shareCurrency.hasError('required') && shareForm.controls.shareCurrency.touched" class="text-danger">Currency of Share is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fportfolioCurrency" class="text-right pt-1">
+                                Portfolio Currency
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fportfolioCurrency" class="form-control" formControlName="portfolioCurrency" placeholder="Portfolio Currency">
+                            <div *ngIf="shareForm.controls.portfolioCurrency.hasError('required') && shareForm.controls.portfolioCurrency.touched" class="text-danger">Portfolio Currency is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fapprovalDate" class="text-right pt-1">
+                                Date d'acceptation
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fapprovalDate" class="form-control" formControlName="approvalDate" placeholder="Date d'acceptation">
+                            <div *ngIf="shareForm.controls.approvalDate.hasError('required') && shareForm.controls.approvalDate.touched" class="text-danger">Date d'acceptation is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fcreationDate" class="text-right pt-1">
+                                Date de création
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fcreationDate" class="form-control" formControlName="creationDate" placeholder="Date de création">
+                            <div *ngIf="shareForm.controls.creationDate.hasError('required') && shareForm.controls.creationDate.touched" class="text-danger">Date de création is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdissolutionDate" class="text-right pt-1">
+                                Date de dissolution
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdissolutionDate" class="form-control" formControlName="dissolutionDate" placeholder="Date de dissolution">
+                            <div *ngIf="shareForm.controls.dissolutionDate.hasError('required') && shareForm.controls.dissolutionDate.touched" class="text-danger">Date de dissolution is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fsidePocket" class="text-right pt-1">
+                                Side Pocket
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fsidePocket" class="form-control" formControlName="sidePocket" placeholder="Side Pocket">
+                            <div *ngIf="shareForm.controls.sidePocket.hasError('required') && shareForm.controls.sidePocket.touched" class="text-danger">Side Pocket is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundInLiquidation" class="text-right pt-1">
+                                En liquidation
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundInLiquidation" class="form-control" formControlName="fundInLiquidation" placeholder="En liquidation">
+                            <div *ngIf="shareForm.controls.fundInLiquidation.hasError('required') && shareForm.controls.fundInLiquidation.touched" class="text-danger">En liquidation is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fvaluationFrequency" class="text-right pt-1">
+                                Valuation Frequency
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fvaluationFrequency" class="form-control" formControlName="valuationFrequency" placeholder="Valuation Frequency">
+                            <div *ngIf="shareForm.controls.valuationFrequency.hasError('required') && shareForm.controls.valuationFrequency.touched" class="text-danger">Valuation Frequency is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundBusinessDayRule" class="text-right pt-1">
+                                Règle jour ouvré
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundBusinessDayRule" class="form-control" formControlName="fundBusinessDayRule" placeholder="Règle jour ouvré">
+                            <div *ngIf="shareForm.controls.fundBusinessDayRule.hasError('required') && shareForm.controls.fundBusinessDayRule.touched" class="text-danger">Règle jour ouvré is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fapplicableRight" class="text-right pt-1">
+                                Droit applicable
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fapplicableRight" class="form-control" formControlName="applicableRight" placeholder="Droit applicable">
+                            <div *ngIf="shareForm.controls.applicableRight.hasError('required') && shareForm.controls.applicableRight.touched" class="text-danger">Droit applicable is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="ffundEstimated" class="text-right pt-1">
+                                Valeur liquidative estimée
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="ffundEstimated" class="form-control" formControlName="fundEstimated" placeholder="Valeur liquidative estimée">
+                            <div *ngIf="shareForm.controls.fundEstimated.hasError('required') && shareForm.controls.fundEstimated.touched" class="text-danger">Valeur liquidative estimée is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="festimatedNavDate" class="text-right pt-1">
+                                Date de VL estimative
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="festimatedNavDate" class="form-control" formControlName="estimatedNavDate" placeholder="Date de VL estimative">
+                            <div *ngIf="shareForm.controls.estimatedNavDate.hasError('required') && shareForm.controls.estimatedNavDate.touched" class="text-danger">Date de VL estimative is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="famfDisclosure" class="text-right pt-1">
+                                Regulator Disclosure
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="famfDisclosure" class="form-control" formControlName="amfDisclosure" placeholder="Regulator Disclosure">
+                            <div *ngIf="shareForm.controls.amfDisclosure.hasError('required') && shareForm.controls.amfDisclosure.touched" class="text-danger">Regulator Disclosure is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="freportingCountry" class="text-right pt-1">
+                                Reporting Country
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="freportingCountry" class="form-control" formControlName="reportingCountry" placeholder="Reporting Country">
+                            <div *ngIf="shareForm.controls.reportingCountry.hasError('required') && shareForm.controls.reportingCountry.touched" class="text-danger">Reporting Country is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fendOfFirstYearDate" class="text-right pt-1">
+                                Date de clôture du premier exercice social
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fendOfFirstYearDate" class="form-control" formControlName="endOfFirstYearDate" placeholder="Date de clôture du premier exercice social">
+                            <div *ngIf="shareForm.controls.endOfFirstYearDate.hasError('required') && shareForm.controls.endOfFirstYearDate.touched" class="text-danger">Date de clôture du premier exercice social is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fclosingDate" class="text-right pt-1">
+                                Date de clôture
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fclosingDate" class="form-control" formControlName="closingDate" placeholder="Date de clôture">
+                            <div *ngIf="shareForm.controls.closingDate.hasError('required') && shareForm.controls.closingDate.touched" class="text-danger">Date de clôture is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="1">
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyAddressPrefix" class="text-right pt-1">
+                                Appartement ou Maison
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyAddressPrefix" class="form-control" formControlName="managementCompanyAddressPrefix" placeholder="Appartement ou Maison">
+                            <div *ngIf="shareForm.controls.managementCompanyAddressPrefix.hasError('required') && shareForm.controls.managementCompanyAddressPrefix.touched" class="text-danger">Appartement ou Maison is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyAddress1" class="text-right pt-1">
+                                Adresse 1
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyAddress1" class="form-control" formControlName="managementCompanyAddress1" placeholder="Adresse 1">
+                            <div *ngIf="shareForm.controls.managementCompanyAddress1.hasError('required') && shareForm.controls.managementCompanyAddress1.touched" class="text-danger">Adresse 1 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyAddress2" class="text-right pt-1">
+                                Adresse 2
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyAddress2" class="form-control" formControlName="managementCompanyAddress2" placeholder="Adresse 2">
+                            <div *ngIf="shareForm.controls.managementCompanyAddress2.hasError('required') && shareForm.controls.managementCompanyAddress2.touched" class="text-danger">Adresse 2 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyAddress3" class="text-right pt-1">
+                                Ville
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyAddress3" class="form-control" formControlName="managementCompanyAddress3" placeholder="Ville">
+                            <div *ngIf="shareForm.controls.managementCompanyAddress3.hasError('required') && shareForm.controls.managementCompanyAddress3.touched" class="text-danger">Ville is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyAddress4" class="text-right pt-1">
+                                &Eacute;tat
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyAddress4" class="form-control" formControlName="managementCompanyAddress4" placeholder="&Eacute;tat">
+                            <div *ngIf="shareForm.controls.managementCompanyAddress4.hasError('required') && shareForm.controls.managementCompanyAddress4.touched" class="text-danger">&Eacute;tat is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fmanagementCompanyCodePostal" class="text-right pt-1">
+                                Code Postal
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fmanagementCompanyCodePostal" class="form-control" formControlName="managementCompanyCodePostal" placeholder="Code Postal">
+                            <div *ngIf="shareForm.controls.managementCompanyCodePostal.hasError('required') && shareForm.controls.managementCompanyCodePostal.touched" class="text-danger">Code Postal is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedAssetManagementCompany" class="text-right pt-1">
+                                Selectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedAssetManagementCompany" class="form-control" formControlName="delegatedAssetManagementCompany" placeholder="Selectionner">
+                            <div *ngIf="shareForm.controls.delegatedAssetManagementCompany.hasError('required') && shareForm.controls.delegatedAssetManagementCompany.touched" class="text-danger">Selectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyAddressPrefix" class="text-right pt-1">
+                                Appartement ou Maison
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyAddressPrefix" class="form-control" formControlName="delegatedManagementCompanyAddressPrefix" placeholder="Appartement ou Maison">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyAddressPrefix.hasError('required') && shareForm.controls.delegatedManagementCompanyAddressPrefix.touched" class="text-danger">Appartement ou Maison is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyAddress1" class="text-right pt-1">
+                                Adresse 1
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyAddress1" class="form-control" formControlName="delegatedManagementCompanyAddress1" placeholder="Adresse 1">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyAddress1.hasError('required') && shareForm.controls.delegatedManagementCompanyAddress1.touched" class="text-danger">Adresse 1 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyAddress2" class="text-right pt-1">
+                                Adresse 2
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyAddress2" class="form-control" formControlName="delegatedManagementCompanyAddress2" placeholder="Adresse 2">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyAddress2.hasError('required') && shareForm.controls.delegatedManagementCompanyAddress2.touched" class="text-danger">Adresse 2 is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyAddress3" class="text-right pt-1">
+                                Ville
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyAddress3" class="form-control" formControlName="delegatedManagementCompanyAddress3" placeholder="Ville">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyAddress3.hasError('required') && shareForm.controls.delegatedManagementCompanyAddress3.touched" class="text-danger">Ville is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyAddress4" class="text-right pt-1">
+                                &Eacute;tat
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyAddress4" class="form-control" formControlName="delegatedManagementCompanyAddress4" placeholder="&Eacute;tat">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyAddress4.hasError('required') && shareForm.controls.delegatedManagementCompanyAddress4.touched" class="text-danger">&Eacute;tat is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegatedManagementCompanyCodePostal" class="text-right pt-1">
+                                Code Postal
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegatedManagementCompanyCodePostal" class="form-control" formControlName="delegatedManagementCompanyCodePostal" placeholder="Code Postal">
+                            <div *ngIf="shareForm.controls.delegatedManagementCompanyCodePostal.hasError('required') && shareForm.controls.delegatedManagementCompanyCodePostal.touched" class="text-danger">Code Postal is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fdelegationFxTreasury" class="text-right pt-1">
+                                Délégation de change et trésorerie
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fdelegationFxTreasury" class="form-control" formControlName="delegationFxTreasury" placeholder="Délégation de change et trésorerie">
+                            <div *ngIf="shareForm.controls.delegationFxTreasury.hasError('required') && shareForm.controls.delegationFxTreasury.touched" class="text-danger">Délégation de change et trésorerie is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fpromoter" class="text-right pt-1">
+                                Promoteur
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fpromoter" class="form-control" formControlName="promoter" placeholder="Promoteur">
+                            <div *ngIf="shareForm.controls.promoter.hasError('required') && shareForm.controls.promoter.touched" class="text-danger">Promoteur is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <div class="col-sm-3">
+                            <label for="fassetManagementCompany" class="text-right pt-1">
+                                Sélectionner
+                            </label>
+                        </div>
+                        <div class="col-sm-9 text-right">
+                            <input type="text" id="fassetManagementCompany" class="form-control" formControlName="assetManagementCompany" placeholder="Sélectionner">
+                            <div *ngIf="shareForm.controls.assetManagementCompany.hasError('required') && shareForm.controls.assetManagementCompany.touched" class="text-danger">Sélectionner is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="2">cat</div>
+                <div *ngSwitchCase="3">juridique</div>
+            </div>
+        </div>
+    </div>
+</div>

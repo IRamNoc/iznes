@@ -16,6 +16,9 @@ import {AdminWalletsComponent} from '@setl/core-useradmin';
 import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 
+/* Product */
+import {SetlFundComponent} from './product/fund/fund.component';
+
 /**
  * Asset serving module
  */
@@ -77,6 +80,16 @@ export const ROUTES: Routes = [
                         {
                             path: 'my-account',
                             component: SetlMyAccountComponent,
+                            canActivate: [LoginGuardService],
+                        }
+                ]
+            },
+            {
+                path: 'product-module',
+                children: [
+                        {
+                            path: 'fund',
+                            component: SetlFundComponent,
                             canActivate: [LoginGuardService],
                         }
                 ]
