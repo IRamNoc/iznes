@@ -325,11 +325,11 @@
                     <div class="panel-body">
                         Chains
                         <ng-select
-                            [items]=""
+                            [items]="filteredChainList"
                             [multiple]="true"
                             [allowClear]="true"
-                            placeholder="Choose Wallets"
-                            [formControl]="">
+                            placeholder="Choose Chains"
+                            [formControl]="formControl.controls['chainAccess']">
                         </ng-select>
                     </div>
                 </clr-tab-content>

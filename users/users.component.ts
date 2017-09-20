@@ -35,7 +35,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public accountTypes: any;
     private allGroupList: any;
     private usersPermissionsList: any;
-    private usersWalletPermissions: any;
+    private usersWalletPermissions: any;;
+    private usersChainAccess: any;
 
     /* User types select. */
     public userTypes: any;
@@ -48,16 +49,16 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public filteredTxGroupsList = [];
 
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
-    public chainList:{[chainId: number]: { chainId:number|string, chainName:string }} = {};
-    public filteredChainList:Array<{id: number|string, text:string}> = [];
+    public chainList: { [chainId: number]: { chainId: number | string, chainName: string } } = {};
+    public filteredChainList: Array<{ id: number | string, text: string }> = [];
 
     @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
 
     @select(['user', 'myDetail']) myDetailOb;
-    public myDetail:any;
+    public myDetail: any;
 
     @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
-    private manageWalletList:any;
+    private manageWalletList: any;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -108,6 +109,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         });
 
+        /* Subscribe to the user wallet permissions observable. */
+        this.subscriptions['usersChainAccess'] = this.userAdminService.getUsersChainAccessSubject().subscribe((list) => {
+            /* Set raw list. */
+            this.usersChainAccess = list;
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
         /* Default tabs. */
         this.tabsControl = [
             {
@@ -129,6 +139,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                         "txGroups": new FormControl([]),
                         "walletsFull": new FormControl([]),
                         "walletsRead": new FormControl([]),
+                        "chainAccess": new FormControl([]),
                     }
                 ),
                 "selectedChain": 0,
@@ -136,6 +147,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 "selectedTxList": [], // groups to show as selected.
                 "allocatedTxList": [], // all groups assigned to the user.
                 "filteredWalletsByAccount": [], // filtered wallets by account.
+                "oldChainAccess": {},
                 "active": false
             }
         ];
@@ -151,12 +163,14 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
             /* Update the fitered list. */
             this.filteredChainList = [];
-            for ( chainId in chainList ) {
+            for (chainId in chainList) {
                 this.filteredChainList.push({
                     id: chainId,
                     text: chainList[chainId].chainName
                 });
             }
+
+            console.log("chain list: ", this.filteredChainList);
         });
 
         this.subscriptions['requestedChainList'] = this.requestedChainListOb.subscribe((requestedState) => {
@@ -203,7 +217,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public setFormChainId( tabid, data ):void {
+    public setFormChainId(tabid, data): void {
         const thisTab = this.tabsControl[tabid];
         /* Ok, first, lets save the chainId that is selcted. */
         let selectedChainId = thisTab['selectedChain'] = data.id;
@@ -213,7 +227,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Check if group is tx. */
             if (group.groupIsTx) {
                 /* If we're admin, ignore chainId... */
-                if ( this.myDetail.admin == 1 ) return true;
+                if (this.myDetail.admin == 1) return true;
 
                 /* ...else check if the group belongs to this one. */
                 return group.chainId == selectedChainId;
@@ -233,23 +247,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         thisTab.filteredTxList = groupsOfThisChain;
 
         /* Now let's get the list of groups this user is in and filter them against
-           the groups we have in this chain's filtered list. */
+         the groups we have in this chain's filtered list. */
         let
-        i, allocatedTxList = this.tabsControl[tabid].allocatedTxList,
-        filteredAllocatedGroups = groupsOfThisChain.filter((group) => {
-            // loop over each group they're in and check if it's in this chain...
-            for ( i in allocatedTxList ) {
-                if ( allocatedTxList[i].id == group.id ) {
-                    return true;
+            i, allocatedTxList = this.tabsControl[tabid].allocatedTxList,
+            filteredAllocatedGroups = groupsOfThisChain.filter((group) => {
+                // loop over each group they're in and check if it's in this chain...
+                for (i in allocatedTxList) {
+                    if (allocatedTxList[i].id == group.id) {
+                        return true;
+                    }
                 }
-            }
 
-            // ...else return negative.
-            return false;
-        });
+                // ...else return negative.
+                return false;
+            });
 
         /* Now set the selected groups to the allocated groups filtered byt this chain. */
-        thisTab.formControl.controls['txGroups'].patchValue( filteredAllocatedGroups );
+        thisTab.formControl.controls['txGroups'].patchValue(filteredAllocatedGroups);
 
         /* Return. */
         return;
@@ -265,7 +279,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public setFormAccountId( tabid, data ):void {
+    public setFormAccountId(tabid, data): void {
         const thisTab = this.tabsControl[tabid];
         /* Ok, first, lets save the account Id that is selcted. */
         let selectedAccount = thisTab['selectedAccount'] = data;
@@ -274,22 +288,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* And now filter the new list to the new account. */
         let key, filteredWallets = [];
-        for ( key in this.manageWalletList ) {
+        for (key in this.manageWalletList) {
             /* Check the id. */
-            console.log( selectedAccount.text +" == "+ this.manageWalletList[ key ].accountName )
-            if ( selectedAccount.text == this.manageWalletList[ key ].accountName ) {
+            if (selectedAccount.text == this.manageWalletList[key].accountName) {
                 /* Push if it's a match. */
                 filteredWallets.push({
-                    id: this.manageWalletList[ key ].walletId,
-                    text: this.manageWalletList[ key ].walletName,
+                    id: this.manageWalletList[key].walletId,
+                    text: this.manageWalletList[key].walletName,
                 });
             }
         }
 
-        console.log( "Setting tab "+ tabid +" to have wallets lists: ", filteredWallets )
+        console.log("Setting tab " + tabid + " to have wallets lists: ", filteredWallets)
 
         /* Now assign that to both the dropdowns. */
-        thisTab['filteredWalletsByAccount'] = [ ...filteredWallets ];
+        thisTab['filteredWalletsByAccount'] = [...filteredWallets];
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -309,37 +322,37 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public addedWalletSelection (fullAccess, tabid, data):void {
+    public addedWalletSelection(fullAccess, tabid, data): void {
         /* Pointers. */
         const
-        thisTab = this.tabsControl[tabid],
-        controls = thisTab.formControl.controls;
+            thisTab = this.tabsControl[tabid],
+            controls = thisTab.formControl.controls;
 
         /* Varibales. */
         let
-        i, j;
+            i, j;
 
         /* So let's figure out if they've added duplicate wallets... */
         setTimeout(() => {
-            for ( i in controls["walletsFull"].value ) {
-                for ( j in controls["walletsRead"].value ) {
+            for (i in controls["walletsFull"].value) {
+                for (j in controls["walletsRead"].value) {
                     /* If we have a duplicate wallet... */
-                    if ( controls["walletsRead"].value[j] != undefined && controls["walletsFull"].value[i] != undefined ) {
-                        if ( controls["walletsRead"].value[j].id == controls["walletsFull"].value[i].id ) {
+                    if (controls["walletsRead"].value[j] != undefined && controls["walletsFull"].value[i] != undefined) {
+                        if (controls["walletsRead"].value[j].id == controls["walletsFull"].value[i].id) {
                             /* ...then we should remove it from the other select and tell the user. */
-                            if ( fullAccess ) {
+                            if (fullAccess) {
                                 delete controls["walletsRead"].value[j];
                                 controls["walletsRead"].patchValue(
                                     controls["walletsRead"].value.filter(thing => !!thing)
                                 );
-                                this.showWarning('You changed access to \''+ controls["walletsFull"].value[i].text +'\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
+                                this.showWarning('You changed access to \'' + controls["walletsFull"].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
                             } else {
                                 delete controls["walletsFull"].value[i];
                                 controls["walletsFull"].patchValue(
                                     controls["walletsFull"].value.filter(thing => !!thing)
                                 );
 
-                                this.showWarning('You changed access to \''+ controls["walletsRead"].value[j].text +'\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
+                                this.showWarning('You changed access to \'' + controls["walletsRead"].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
                             }
                         }
                     }
@@ -440,7 +453,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         const thisTab = this.tabsControl[tabid];
         /* Sort the data structure out. */
         let
-        newUser = thisTab.formControl.value;
+            newUser = thisTab.formControl.value;
 
         newUser.userType = (newUser.userType.length ? newUser.userType[0].id : 0);
         newUser.accountType = (newUser.accountType.length ? newUser.accountType[0].id : 0);
@@ -448,10 +461,11 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Let's trigger the creation of the user. */
         this.userAdminService.createNewUser(newUser).then((response) => {
             /* Now we've edited the user, we need to send any changes to the groups, wallet access and chain access. */
+            let userId = response[1].Data[0].userID.toString();
 
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
-                userId: response[1].Data[0].userID,
+                userId: userId,
                 toAdd: this.arrayToGroups(newUser.adminGroups),
                 toDelete: [],
                 chainId: '0'
@@ -463,7 +477,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
             /* Save tx group access. */
             this.userAdminService.updateUserGroups({
-                userId: response[1].Data[0].userID,
+                userId: userId,
                 toAdd: this.arrayToGroups(newUser.txGroups),
                 toDelete: [],
                 chainId: '2000'
@@ -475,14 +489,26 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
             /* Save wallet access. */
             this.userAdminService.newUserWalletPermissions({
-                userId: thisTab.userId.toString(),
+                userId: userId,
                 walletAccess: this.getWalletAccessFromTab(newUser),
             }).then((response) => {
                 console.log('updated user wallet permissions.', response);
             }).catch((error) => {
                 console.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
-            })
+            });
+
+            /* Save the chain access. */
+            this.userAdminService.updateUserChainAccess({
+                userId: userId,
+                toAdd: this.getChainAccessFromTab(newUser),
+                toDelete: [],
+            }).then((response) => {
+                console.log('updated user chain access.', response);
+            }).catch((error) => {
+                console.log('failed to update user chain access.', error);
+                this.showError('Failed to update this user\'s chain access.');
+            });
 
             /* TODO - update user meta;
              [x] Admin groups.
@@ -531,10 +557,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userAdminService.editUser(dataToSend).then((response) => {
             /* Now we've edited the user, we need to send any changes to the groups. */
             let
-            adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(formData.adminGroups)),
-            txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups));
+                adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(formData.adminGroups)),
+                txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups));
 
-            console.log('groups to update: ', adminGroupChanges, txGroupChanges);
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
                 userId: thisTab.userId.toString(),
@@ -563,11 +588,11 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
             /* Save wallet access, first diff, then set the new ones to the old ones. */
             let
-            newWallerAccess = this.getWalletAccessFromTab(formData),
-            diffWalletAccess = this.userAdminService.getWalletAccessDiff(
-                thisTab['oldWalletAccess'],
-                newWallerAccess
-            );
+                newWalletAccess = this.getWalletAccessFromTab(formData),
+                diffWalletAccess = this.userAdminService.getWalletAccessDiff(
+                    thisTab['oldWalletAccess'],
+                    newWalletAccess
+                );
             this.userAdminService.updateUserWalletPermissions({
                 userId: thisTab.userId.toString(),
                 toAdd: diffWalletAccess.toAdd,
@@ -576,19 +601,36 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }).then((response) => {
                 /* Overwrite the old permissions, to allow diffing. */
                 console.log('updated user wallet permissions.', response);
-                thisTab['oldWalletAccess'] = newWallerAccess;
+                thisTab['oldWalletAccess'] = newWalletAccess;
             }).catch((error) => {
                 console.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
-            })
+            });
 
-
-            /* TODO - update user meta;
-             [x] Admin groups.
-             [x] Tx groups.
-             [x] Wallet access.
-             [ ] Chain access.
-             */
+            /* Now we'll save chain access, first get the diffs. */
+            let
+                newChainAccess = this.getChainAccessFromTab(formData),
+                diffChainAccess = this.diffChainAccess(
+                    thisTab['oldChainAccess'],
+                    newChainAccess
+                );
+            this.userAdminService.updateUserChainAccess({
+                userId: thisTab.userId.toString(),
+                toAdd: diffChainAccess.toAdd,
+                toDelete: diffChainAccess.toDelete,
+            }).then((response) => {
+                /* Overwrite the old permissions, to allow diffing future changes. */
+                thisTab['oldChainAccess'] = newChainAccess.map(chain => {
+                    return {
+                        id: chain.chainId,
+                        text: chain.chainName
+                    }
+                });
+                console.log('updated user chain access: ', response);
+            }).catch((error) => {
+                console.log('error updating user wallet permissions.', error);
+                this.showError('Failed to update this user\'s wallet permissions.');
+            });
 
             /* Handle success message. */
             console.log('Successfully edited user.', response);
@@ -601,6 +643,44 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Return */
         return;
+    }
+
+    private diffChainAccess (oldAccessArr, newAccessArr):any {
+        /* Convert the arrays to objects. */
+        let
+        oldAccess = {},
+        newAccess = {};
+        oldAccessArr.map(chain => { oldAccess[chain.id] = chain });
+        newAccessArr.map(chain => { newAccess[chain.chainId] = chain });
+
+        /* Variables. */
+        let
+        i, j, res,
+        differences = {
+            toAdd: [],
+            toDelete: []
+        }
+
+        /* First, let's see what's new. */
+        for (i in newAccess) {
+            /* If it's not in the old one, the add it. */
+            if ( ! oldAccess[i] ) {
+                res = this.getChainById( newAccess[i].chainId );
+                differences.toAdd.push(res);
+            }
+        }
+
+        /* Lastly, let's check if any were deleted. */
+        for (j in oldAccess) {
+            /* If it's not in the new access, it's been deleted. */
+            if ( ! newAccess[j] ) {
+                res = this.getChainById( oldAccess[j].id );
+                differences.toDelete.push(res);
+            }
+        }
+
+        /* Return. */
+        return differences;
     }
 
     private diffUserGroups(oldGroups, newGroups): { toAdd: Array<{}>, toDelete: Array<{}> } {
@@ -618,30 +698,44 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Get the added ones. */
         for (key in newGroups) {
             if (!oldGroups[key]) {
-                groupFetch = this.getGroupById( newGroups[key].id );
-                if (groupFetch.groupId) toAdd.push( groupFetch );
-            };
+                groupFetch = this.getGroupById(newGroups[key].groupId);
+                if (groupFetch.groupId) toAdd.push(groupFetch);
+            }
         }
 
         /* Return. */
         return {toAdd, toDelete};
     }
 
-    private getWalletAccessFromTab (formData):{ [walletId: number]: number } {
+    private getWalletAccessFromTab(formData): { [walletId: number]: number } {
         /* Object of changes. */
         let i, j, walletAccess = {};
 
         /* Get each wallet and push into wallet access. */
         for (i in formData['walletsRead']) {
-            walletAccess[ formData['walletsRead'][i].id ] = 1;
+            walletAccess[formData['walletsRead'][i].id] = 1;
         }
 
         for (j in formData['walletsFull']) {
-            walletAccess[ formData['walletsFull'][j].id ] = 3;
+            walletAccess[formData['walletsFull'][j].id] = 3;
         }
 
         /* Return. */
         return walletAccess;
+    }
+
+    private getChainAccessFromTab(formData):any {
+        /* Object of changes. */
+        let i, resolution, chainAccess = [];
+
+        /* Get each wallet and push into wallet access. */
+        for (i in formData['chainAccess']) {
+            resolution = this.getChainById( formData['chainAccess'][i].id );
+            chainAccess.push(resolution);
+        }
+
+        /* Return. */
+        return chainAccess;
     }
 
     /**
@@ -652,11 +746,31 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @param  {id} number - th group id.
      * @return {void}
      */
-    public getGroupById (id) {
+    public getGroupById(id) {
         /* Look for the group and return it... */
         for (let key in this.allGroupList) {
-            if ( this.allGroupList[key].groupId == id ) {
+            if (this.allGroupList[key].groupId == id) {
                 return this.allGroupList[key];
+            }
+        }
+
+        /* ...else return nothing. */
+        return {};
+    }
+
+    /**
+     * Get Chain By Id
+     * ---------------
+     * Get a full chain object by Id.
+     *
+     * @param  {id} number - th chain id.
+     * @return {void}
+     */
+    public getChainById(id) {
+        /* Look for the group and return it... */
+        for (let key in this.chainList) {
+            if (this.chainList[key].chainId == id) {
+                return this.chainList[key];
             }
         }
 
@@ -672,10 +786,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @param  {id} number - th group id.
      * @return {void}
      */
-    public getWalletById (id) {
+    public getWalletById(id) {
         /* Look for the wallet and return it... */
         for (let key in this.manageWalletList) {
-            if ( this.manageWalletList[key].walletId == id ) {
+            if (this.manageWalletList[key].walletId == id) {
                 return this.manageWalletList[key];
             }
         }
@@ -759,6 +873,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     "txGroups": new FormControl([]),
                     "walletsFull": new FormControl([]),
                     "walletsRead": new FormControl([]),
+                    "chainAccess": new FormControl([]),
                 }
             ),
             "oldAdminGroups": {},
@@ -768,6 +883,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             "selectedTxList": [], // groups to show as selected.
             "allocatedTxList": [], // all groups assigned to the user.
             "filteredWalletsByAccount": [], // filtered wallets by account.
+            "oldChainAccess": {},
             "active": false // this.editFormControls
         });
 
@@ -816,46 +932,75 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }).then((response) => {
             /* So now, we have access to the data in redux. */
             const userWalletPermissions = this.usersWalletPermissions[user.userID] || {};
-            console.log('Got user wallet permission: ', userWalletPermissions);
-
-            /* Set the old wallet access, this'll be used to diff later. */
             thisTab['oldWalletAccess'] = {};
-            userWalletPermissions.map((wallet) => {
-                /* Build the structure in the old  */
-                thisTab['oldWalletAccess'][ wallet.walletID ] = wallet.permission;
-            });
+            console.log('Got user wallet permission: ', userWalletPermissions);
 
             /* So first let's set the account ID on the tab... */
             this.setFormAccountId(newTabId, accountType[0]);
+
+            /* If this user has no wallet permissions... bail. */
+            if (!Object.keys(userWalletPermissions).length) {
+                return;
+            }
+
+            /* Set the old wallet access, this'll be used to diff later. */
+            userWalletPermissions.map((wallet) => {
+                /* Build the structure in the old  */
+                thisTab['oldWalletAccess'][wallet.walletID] = wallet.permission;
+            });
 
             /* ...then filter and preset the read wallets...  */
             let readAccessWallets = userWalletPermissions
                 .filter(wallet => wallet.permission == 1)
                 .map((wallet) => {
-                    wallet = this.getWalletById( wallet.walletID );
+                    wallet = this.getWalletById(wallet.walletID);
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
                     }
                 });
-            thisTab.formControl.controls['walletsRead'].patchValue( readAccessWallets );
+            thisTab.formControl.controls['walletsRead'].patchValue(readAccessWallets);
 
             /* ...and lastly the same for the full access wallets. */
             let fullAccessWallets = userWalletPermissions
                 .filter(wallet => wallet.permission == 3)
                 .map((wallet) => {
-                    wallet = this.getWalletById( wallet.walletID );
+                    wallet = this.getWalletById(wallet.walletID);
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
                     }
                 });
-            thisTab.formControl.controls['walletsFull'].patchValue( fullAccessWallets );
+            thisTab.formControl.controls['walletsFull'].patchValue(fullAccessWallets);
 
         }).catch((error) => {
             /* Handle the error message */
             console.log("Editing user, tx permissions error: ", error);
-            this.showError('Failed to fetch this user\'s transactional permissions.');
+            this.showError('Failed to fetch this user\'s wallet permissions.');
+        });
+
+        /* Now we need to get the user's wallet access. */
+        this.userAdminService.requestUserChainAccess({
+            userId: user.userID
+        }).then((response) => {
+            console.log('got chain access: ', response );
+            /* So we've requested the data, now we can access it. */
+            let resolution, userChainAccess = this.usersChainAccess[ user.userID ] || [];
+
+            /* Let's tidy it up for the ng2-select and patch the value... */
+            userChainAccess = userChainAccess.map((chain) => {
+                resolution = this.getChainById(chain.chainID);
+                return {
+                    id: resolution.chainId,
+                    text: resolution.chainName,
+                };
+            });
+            thisTab['oldChainAccess'] = userChainAccess;
+            thisTab.formControl.controls['chainAccess'].patchValue(userChainAccess);
+        }).catch((error) => {
+            /* Handle the error message */
+            console.log("Failed to fetch user's chain access: ", error);
+            this.showError('Failed to fetch this user\'s chain access.');
         });
 
         /* TODO - get user meta;
@@ -896,10 +1041,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (i in groupsArray) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsArray[i].id})[0];
-            newObject[groupsArray[i].id] = {
-                id: resolution.groupId,
-                text: resolution.groupName,
-            };
+            newObject[groupsArray[i].id] = resolution;
         }
 
         /* Return. */
@@ -983,6 +1125,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 "password": new FormControl(''),
                 "adminGroups": new FormControl([]),
                 "txGroups": new FormControl([]),
+                "walletsFull": new FormControl([]),
+                "walletsRead": new FormControl([]),
+                "chainAccess": new FormControl([]),
             }
         );
 
