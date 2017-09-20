@@ -196,7 +196,6 @@ export class AdminUsersService {
     }
 
     public newUserWalletPermissions (data):any {
-
         /* Setup the message body. */
         const messageBody: NewUserWalletPermissions = {
             RequestName: 'nuwa',
@@ -205,19 +204,24 @@ export class AdminUsersService {
             walletAccess: data.walletAccess
         };
 
+        console.log("SENDING nuwa: ", messageBody);
+
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     public updateUserWalletPermissions (data):any {
-
         /* Setup the message body. */
         const messageBody: UpdateUserWalletPermissions = {
             RequestName: 'uduwp',
             token: this.memberSocketService.token,
             userId: data.userId,
-            walletAccess: data.walletAccess
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete,
         };
+
+        console.log("SENDING uduwp: ", messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
