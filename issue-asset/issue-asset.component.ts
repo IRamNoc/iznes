@@ -201,7 +201,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             </table>
         `);
 
-            // this.ngRedux.dispatch(finishIssueAssetNotification());
+            this.ngRedux.dispatch(finishIssueAssetNotification());
         }
     }
 
