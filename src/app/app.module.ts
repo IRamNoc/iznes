@@ -45,6 +45,9 @@ import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
 
+/* OFI Modules */
+import {OfiProductModule} from '@ofi/product';
+
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
 import {AppViewsModule} from './app-views.module';
@@ -105,6 +108,7 @@ import {environment} from '../environments/environment';
         UserAdminModule,
         SetlMessagesModule,
         SetlAccountModule,
+        OfiProductModule,
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,
