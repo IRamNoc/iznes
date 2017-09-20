@@ -7,7 +7,7 @@ import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {SetlPipesModule} from '@setl/utils';
+import {SetlPipesModule, APP_CONFIG} from '@setl/utils';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -125,6 +125,11 @@ import {environment} from '../environments/environment';
                     environment.MEMBER_NODE_CONNECTION.path
                 );
             }
+        },
+
+        {
+            provide: APP_CONFIG,
+            useValue: environment
         },
 
         WalletNodeSocketService,
