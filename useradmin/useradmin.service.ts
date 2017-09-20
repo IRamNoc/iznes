@@ -12,6 +12,8 @@ import {
     RequestUserWalletPermissions,
     NewUserWalletPermissions,
     UpdateUserWalletPermissions,
+    RequestUserChainAccessBody,
+    UpdateUserChainAccessBody,
 
     /* Permissions. */
     GetPermissionAreaListBody,
@@ -224,6 +226,36 @@ export class AdminUsersService {
         console.log("SENDING uduwp: ", messageBody);
 
         /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateUserChainAccess (data): any {
+        /* Setup the message body. */
+        const messageBody: UpdateUserChainAccessBody = {
+            RequestName: 'uduca',
+            token: this.memberSocketService.token,
+            userId: data.userId,
+            toAdd: data.toAdd,
+            toDelete: data.toDelete
+        };
+
+        console.log("SENDING uduca: ", messageBody);
+
+        /* Return the new member node saga requests. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserChainAccess (data): any {
+        /* Setup the message body. */
+        const messageBody: RequestUserChainAccessBody = {
+            RequestName: 'guca',
+            token: this.memberSocketService.token,
+            userId: data.userId
+        };
+
+        console.log("SENDING guca: ", messageBody);
+
+        /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 

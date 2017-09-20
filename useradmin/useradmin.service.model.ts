@@ -67,6 +67,18 @@ export interface UpdateUserWalletPermissions extends MemberNodeMessageBody {
     toDelete: { [walletId: number]: number }
 }
 
+export interface RequestUserChainAccessBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+}
+
+export interface UpdateUserChainAccessBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+    toAdd: { [walletId: number]: number },
+    toDelete: { [walletId: number]: number }
+}
+
 /*
  Permissions Areas
  */
