@@ -10,6 +10,7 @@ import {
     EditUserMessageBody,
     DeleteUserMessageBody,
     RequestUserWalletPermissions,
+    NewUserWalletPermissions,
     UpdateUserWalletPermissions,
 
     /* Permissions. */
@@ -188,6 +189,20 @@ export class AdminUsersService {
             RequestName: 'guwp',
             token: this.memberSocketService.token,
             userId: data.userId
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public newUserWalletPermissions (data):any {
+
+        /* Setup the message body. */
+        const messageBody: NewUserWalletPermissions = {
+            RequestName: 'nuwa',
+            token: this.memberSocketService.token,
+            userId: data.userId,
+            walletAccess: data.walletAccess
         };
 
         /* Return the new member node saga request. */

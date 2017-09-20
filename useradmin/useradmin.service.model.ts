@@ -53,6 +53,12 @@ export interface RequestUserWalletPermissions extends MemberNodeMessageBody {
     userId: number;
 }
 
+export interface NewUserWalletPermissions extends MemberNodeMessageBody {
+    token: string;
+    userId: number;
+    walletAccess: { [walletId: number]: number }
+}
+
 export interface UpdateUserWalletPermissions extends MemberNodeMessageBody {
     token: string;
     userId: number;
