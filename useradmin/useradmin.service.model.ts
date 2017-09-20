@@ -55,14 +55,28 @@ export interface RequestUserWalletPermissions extends MemberNodeMessageBody {
 
 export interface NewUserWalletPermissions extends MemberNodeMessageBody {
     token: string;
-    userId: number;
+    userId: string;
     walletAccess: { [walletId: number]: number }
 }
 
 export interface UpdateUserWalletPermissions extends MemberNodeMessageBody {
     token: string;
-    userId: number;
-    walletAccess: { [walletId: number]: number }
+    userId: string;
+    toAdd: { [walletId: number]: number },
+    toUpdate: { [walletId: number]: number },
+    toDelete: { [walletId: number]: number }
+}
+
+export interface RequestUserChainAccessBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+}
+
+export interface UpdateUserChainAccessBody extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+    toAdd: { [walletId: number]: number },
+    toDelete: { [walletId: number]: number }
 }
 
 /*
