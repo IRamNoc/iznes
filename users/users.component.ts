@@ -179,7 +179,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         this.subscriptions['manageWalletList'] = this.manageWalletsListOb.subscribe((manageWalletList) => {
             /* Set raw list. */
-            console.log("got list: ", manageWalletList);
             this.manageWalletList = manageWalletList;
 
             /* Override the changes. */
@@ -441,18 +440,19 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         const thisTab = this.tabsControl[tabid];
         /* Sort the data structure out. */
         let
-            dataToSend = thisTab.formControl.value;
-        dataToSend.userType = dataToSend.userType.length ? dataToSend.userType[0].id : 0;
-        dataToSend.accountType = dataToSend.accountType.length ? dataToSend.accountType[0].id : 0;
+        newUser = thisTab.formControl.value;
+
+        newUser.userType = (newUser.userType.length ? newUser.userType[0].id : 0);
+        newUser.accountType = (newUser.accountType.length ? newUser.accountType[0].id : 0);
 
         /* Let's trigger the creation of the user. */
-        this.userAdminService.createNewUser(dataToSend).then((response) => {
+        this.userAdminService.createNewUser(newUser).then((response) => {
             /* Now we've edited the user, we need to send any changes to the groups, wallet access and chain access. */
 
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
                 userId: response[1].Data[0].userID,
-                toAdd: this.arrayToGroups(dataToSend.adminGroups),
+                toAdd: this.arrayToGroups(newUser.adminGroups),
                 toDelete: [],
                 chainId: '0'
             }).then((response) => {
@@ -464,13 +464,24 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Save tx group access. */
             this.userAdminService.updateUserGroups({
                 userId: response[1].Data[0].userID,
-                toAdd: this.arrayToGroups(dataToSend.txGroups),
+                toAdd: this.arrayToGroups(newUser.txGroups),
                 toDelete: [],
                 chainId: '2000'
             }).then((response) => {
                 console.log('updated user tx groups.', response);
             }).catch((error) => {
                 console.log('error updating user tx groups.', error);
+            });
+
+            /* Save wallet access. */
+            this.userAdminService.newUserWalletPermissions({
+                userId: thisTab.userId.toString(),
+                walletAccess: this.getWalletAccessFromTab(newUser),
+            }).then((response) => {
+                console.log('updated user wallet permissions.', response);
+            }).catch((error) => {
+                console.log('error updating user wallet permissions.', error);
+                this.showError('Failed to update this user\'s wallet permissions.');
             })
 
             /* TODO - update user meta;

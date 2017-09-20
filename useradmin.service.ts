@@ -280,6 +280,12 @@ export class UserAdminService {
     }
 
     /**
+     * ===============
+     * Users requests.
+     * ===============
+     */
+
+    /**
      * Create New User
      * ----------------
      * Creates a new User.
@@ -326,6 +332,64 @@ export class UserAdminService {
             taskPipe: this.adminUsersService.deleteUser(data)
         });
     }
+
+    /**
+     * Request Permissions
+     * ----------------
+     * Request user wallet permissions.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    requestUserWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestUserWalletPermissions(data),
+            successActions: [ SET_USERS_WALLET_PERMISSIONS ]
+        });
+    }
+
+    /**
+     * New User Wallet Permissions
+     * ----------------
+     * New user wallet permissions.
+     *
+     * @param {entity} - the permissions data.
+     *
+     * @return {any} - returns
+     */
+    newUserWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.newUserWalletPermissions(data)
+        });
+    }
+
+    /**
+     * Update User Wallet Permissions
+     * ----------------
+     * Update user wallet permissions.
+     *
+     * @param {entity} - the permissions data.
+     *
+     * @return {any} - returns
+     */
+    updateUserWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
+        });
+    }
+
+    /**
+     * ===============
+     * Group requests.
+     * ===============
+     */
 
     /**
      * Create New Group
@@ -432,42 +496,6 @@ export class UserAdminService {
      *
      * @return {any} - returns
      */
-    requestUserWalletPermissions(data): Promise<any> {
-        /* Return the request. */
-        return this.adminUsersService.buildRequest({
-            ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.requestUserWalletPermissions(data),
-            successActions: [ SET_USERS_WALLET_PERMISSIONS ]
-        });
-    }
-
-    /**
-     * Update Permissions
-     * ----------------
-     * Requests an entity's permissions or all, used on click for editing a group.
-     *
-     * @param {entity} - the entity data.
-     *
-     * @return {any} - returns
-     */
-    updateUserWalletPermissions(data): Promise<any> {
-        /* Return the request. */
-        console.log('building update wallet access: ', data);
-        return this.adminUsersService.buildRequest({
-            ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
-        });
-    }
-
-    /**
-     * Request Permissions
-     * ----------------
-     * Requests an entity's permissions or all, used on click for editing a group.
-     *
-     * @param {entity} - the entity data.
-     *
-     * @return {any} - returns
-     */
     requestPermissions(entity): Promise<any> {
         /* Return. */
         let
@@ -526,6 +554,12 @@ export class UserAdminService {
     }
 
     /**
+     * ===========================
+     * Getters for hardcoded data.
+     * ===========================
+     */
+
+    /**
      * Get Account Types
      * -----------------
      * Returns the account types array.
@@ -572,6 +606,12 @@ export class UserAdminService {
         /* Return the array. */
         return this.groupTypes;
     }
+
+    /**
+     * ==========================================
+     * Helper functions, and resolving functions.
+     * ==========================================
+     */
 
     /**
      * Resolve Account Type
@@ -762,6 +802,48 @@ export class UserAdminService {
             'toUpdate': toUpdate,
             'toDelete': toDelete
         };
+    }
+
+    /**
+     * Get Wallet Access Differences.
+     * ------------------------------
+     * Returns a neat object of differences, toAdd, toUpdate and toDelete.
+     *
+     * @param {oldAccess} object - an object of permissions.
+     * @param {newAccess} object - an object of permissions.
+     *
+     * @return {differences} object - an object of differences.
+     */
+    public getWalletAccessDiff (oldAccess, newAccess) {
+        /* Variables. */
+        let
+        i, j, k,
+        differences = {
+            'toAdd': {},
+            'toUpdate': {},
+            'toDelete': {}
+        };
+
+        /* First, let's see what's new. */
+        for (i in newAccess) {
+            /* If it's not in the old one, the add it. */
+            if ( ! oldAccess[i] ) differences.toAdd[i] = newAccess[i];
+        }
+
+        /* Next, let's figure out what has been changed. */
+        for (j in newAccess) {
+            /* If it is in the old one and it is not the same value, it's different. */
+            if ( oldAccess[j] && oldAccess[j] != newAccess[j] ) differences.toUpdate[j] = newAccess[j];
+        }
+
+        /* Lastly, let's check if any were deleted. */
+        for (k in oldAccess) {
+            /* If it's not in the new access, it's been deleted. */
+            if ( ! newAccess[k] ) differences.toDelete[k] = oldAccess[k];
+        }
+
+        /* Now, just return the differences. */
+        return differences;
     }
 
 }
