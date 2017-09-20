@@ -7,7 +7,7 @@ import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {SetlPipesModule} from '@setl/utils';
+import {SetlPipesModule, APP_CONFIG} from '@setl/utils';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -22,7 +22,8 @@ import {
     ChannelService,
     AccountsService,
     PermissionGroupService,
-    MemberService
+    MemberService,
+    ChainService
 } from '@setl/core-req-services';
 
 import {
@@ -43,6 +44,9 @@ import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
+
+/* OFI Modules */
+import {OfiProductModule} from '@ofi/product';
 
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
@@ -104,6 +108,7 @@ import {environment} from '../environments/environment';
         UserAdminModule,
         SetlMessagesModule,
         SetlAccountModule,
+        OfiProductModule,
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,
@@ -126,6 +131,11 @@ import {environment} from '../environments/environment';
             }
         },
 
+        {
+            provide: APP_CONFIG,
+            useValue: environment
+        },
+
         WalletNodeSocketService,
         MyUserService,
         MyWalletsService,
@@ -138,6 +148,7 @@ import {environment} from '../environments/environment';
         AccountsService,
         PermissionGroupService,
         MemberService,
+        ChainService,
         MultilingualService
     ],
     bootstrap: [AppComponent]

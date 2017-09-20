@@ -237,3 +237,8 @@ span.fr-counter {
     padding-right: 8px;
     font-weight: bold;
 }
+
+.pagination button {
+    /* Fix clarity's pagination button being a tiny click area. */
+    width: 100%;
+}

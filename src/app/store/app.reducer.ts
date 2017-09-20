@@ -11,6 +11,7 @@ import {
     AssetState, assetReducer,
     AccountState, AccountReducer,
     MemberState, MemberReducer,
+    ChainState, ChainReducer
 } from '@setl/core-store';
 
 export interface AppState {
@@ -21,6 +22,7 @@ export interface AppState {
     asset: AssetState;
     account: AccountState;
     member: MemberState;
+    chain: ChainState;
 }
 
 const appReducer: Reducer<any> = combineReducers<any>({
@@ -30,7 +32,8 @@ const appReducer: Reducer<any> = combineReducers<any>({
     userAdmin: adminUserReducer,
     asset: assetReducer,
     account: AccountReducer,
-    member: MemberReducer
+    member: MemberReducer,
+    chain: ChainReducer
 });
 
 export const rootReducer: Reducer<any> = (state, action) => {
