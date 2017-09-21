@@ -1,13 +1,14 @@
 export interface HoldingByAddress {
-    wallet: string;
+    [walletId: number]: object;
 }
 
 export interface HoldingByAsset {
-    wallet: string;
+    [walletId: number]: object;
 }
 
 export interface MyWalletHoldingState {
-    holdingByAddress: object;
-    holdingByAsset: object;
+    holdingByAddress: HoldingByAddress;
+    holdingByAsset: HoldingByAsset;
+    requested: boolean;
 }
 

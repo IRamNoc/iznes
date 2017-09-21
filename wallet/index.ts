@@ -2,7 +2,9 @@ import {
     MyWalletAddressState,
     MyWalletAddressReducer,
     SET_WALLET_ADDRESSES,
-    getWalletAddressList
+    getWalletAddressList,
+    clearRequestedWalletAddresses,
+    setRequestedWalletAddresses
 } from './my-wallet-address';
 
 import {
@@ -18,7 +20,9 @@ import {
     SET_WALLET_HOLDING,
     getWalletHoldingByAsset,
     getWalletHoldingByAddress,
-    SET_ISSUE_HOLDING
+    SET_ISSUE_HOLDING,
+    setRequestedWalletHolding,
+    clearRequestedWalletHolding
 } from './my-wallet-holding';
 
 import {
@@ -53,7 +57,9 @@ import {combineReducers, Reducer} from 'redux';
 
 export {
     SET_WALLET_ADDRESSES,
-    getWalletAddressList
+    getWalletAddressList,
+    clearRequestedWalletAddresses,
+    setRequestedWalletAddresses
 };
 
 export {
@@ -65,7 +71,9 @@ export {
     SET_WALLET_HOLDING,
     getWalletHoldingByAddress,
     getWalletHoldingByAsset,
-    SET_ISSUE_HOLDING
+    SET_ISSUE_HOLDING,
+    setRequestedWalletHolding,
+    clearRequestedWalletHolding
 };
 
 export {
