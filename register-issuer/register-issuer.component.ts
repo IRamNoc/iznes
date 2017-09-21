@@ -1,24 +1,26 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
 import {FormBuilder, FormGroup, AbstractControl, Validators} from '@angular/forms';
-import {
-    getWalletAddressList,
-} from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 import {
-    WalletnodeTxService
+    WalletnodeTxService,
+    WalletNodeRequestService,
+    InitialisationService
 } from '@setl/core-req-services';
 import {SagaHelper, walletHelper} from '@setl/utils';
 import {
+    getWalletAddressList,
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
     getNewIssuerRequest,
     finishRegisterIssuerNotification,
-    getConnectedWallet
+    getConnectedWallet,
+    setRequestedWalletAddresses
 } from '@setl/core-store';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-register-issuer',
@@ -26,6 +28,9 @@ import {Unsubscribe} from 'redux';
     styleUrls: ['./register-issuer.component.css']
 })
 export class RegisterIssuerComponent implements OnInit, OnDestroy {
+    // Observable subscription array.
+    subscriptionsArry: Array<Subscription> = [];
+
     walletAddressSelectItems: Array<any>;
 
     registerIssuerForm: FormGroup;
@@ -33,11 +38,15 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     issuerAddress: AbstractControl;
     private connectedWalleId: number;
 
+    // List of redux observable
+    @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
+
     // Redux Unsubscription
     reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletnodeTxService: WalletnodeTxService,
+                private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
                 private fb: FormBuilder) {
 
@@ -54,10 +63,14 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
         this.issuerIdentifier = this.registerIssuerForm.controls['issueIdentifier'];
         this.issuerAddress = this.registerIssuerForm.controls['issuerAddress'];
+
+        // List of observable subscriptions.
+        this.subscriptionsArry.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
     }
 
 
     ngOnInit() {
+
     }
 
     updateState() {
@@ -78,6 +91,17 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
             // Set need notify to false;
 
             this.ngRedux.dispatch(finishRegisterIssuerNotification());
+        }
+    }
+
+    requestWalletAddressList(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
+
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalleId);
         }
     }
 
@@ -114,6 +138,10 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.reduxUnsubscribe();
+
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
     showResponseModal(currentRegisterIssuerRequest) {
