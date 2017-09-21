@@ -10,3 +10,4 @@ export {AccountsService} from './account/account.service';
 export {PermissionGroupService} from './permission-group/permission-group.service';
 export {MemberService} from './member/service';
 export {ChainService} from './chain/service';
+export {WalletnodeChannelService} from './walletnode-channel/service';
