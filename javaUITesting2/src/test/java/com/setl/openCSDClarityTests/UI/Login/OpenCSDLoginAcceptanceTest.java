@@ -57,7 +57,9 @@ public class OpenCSDLoginAcceptanceTest {
     public void shouldNotLoginWithIncorrectPassword() throws IOException, InterruptedException {
         navigateToLoginPage();
         enterLoginCredentialsUserName("Emmanuel");
+        enterLoginCredentialsPassword("WrongPassword");
         clickLoginButton();
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]")).isDisplayed();
     }
     @Test
     public void shouldShowPopupForUsernameRequired() throws IOException, InterruptedException {

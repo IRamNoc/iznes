@@ -7,6 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -330,4 +331,12 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
             return false;
         }
     }
+
+  public static void navigateToAddUser() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-user-administration");
+    navigateToPage("user-administration/users");
+    Thread.sleep(500);
+    driver.findElement(By.id("user-tab-1")).click();
+  }
 }
