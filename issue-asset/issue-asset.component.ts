@@ -22,9 +22,9 @@ import {
     setRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {fromJS} from 'immutable';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-issue-asset',
