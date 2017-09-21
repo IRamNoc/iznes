@@ -621,6 +621,27 @@ export class UserAdminService {
     }
 
     /**
+     * Get Account Type by Id
+     * -----------------
+     * Returns the account type by Id.
+     *
+     * @param {id} number - the ID of a type.
+     * @return {accountTypes} - array.
+     */
+    public getAccountTypeById(id): any {
+        /* Return the match. */
+        let i;
+        for ( i in this.accountTypes ) {
+            if ( this.accountTypes[i].id == id ) {
+                return [ this.accountTypes[i] ];
+            }
+        }
+
+        /* ...else empty. */
+        return [];
+    }
+
+    /**
      * Get Wallet Types
      * ----------------
      * Returns the wallet types array.
@@ -630,6 +651,27 @@ export class UserAdminService {
     public getWalletTypes(): any {
         /* Return the array. */
         return this.walletTypes;
+    }
+
+    /**
+     * Get Wallet Type By Id
+     * ----------------
+     * Returns the wallet type by an Id.
+     *
+     * @param {id} number - the ID of a type.
+     * @return {walletType} - array.
+     */
+    public getWalletTypeById(id): any {
+        /* Return the match. */
+        let i;
+        for ( i in this.walletTypes ) {
+            if ( this.walletTypes[i].id == id ) {
+                return [ this.walletTypes[i] ];
+            }
+        }
+
+        /* ...else empty. */
+        return [];
     }
 
     /**

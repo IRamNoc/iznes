@@ -21,7 +21,6 @@ import {AdminUsersComponent} from './users/users.component';
 
 /* Wallets components. */
 import {AdminWalletsComponent} from './wallets/wallets.component';
-import {AdminWalletsTableComponent} from './wallets/subcomponents/wallets-table.component';
 
 /* Permissions components. */
 import {AdminPermissionsComponent} from './permissions/permissions.component';
@@ -36,7 +35,6 @@ import {PermissionGridModule} from '@setl/permission-grid';
 
         /* Wallets components. */
         AdminWalletsComponent,
-        AdminWalletsTableComponent,
 
         /* Permissions components. */
         AdminPermissionsComponent,
@@ -50,7 +48,6 @@ import {PermissionGridModule} from '@setl/permission-grid';
 
         /* Wallets components. */
         AdminWalletsComponent,
-        AdminWalletsTableComponent,
 
         /* Permissions components. */
         AdminPermissionsComponent,
