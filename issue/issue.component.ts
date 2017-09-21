@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
-import {fromJS} from "immutable";
-import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
+import {fromJS} from 'immutable';
+import {Subscription} from 'rxjs/Subscription';
+import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
 
 import {
     getWalletHoldingByAsset,
@@ -12,7 +13,8 @@ import {
     getRequestedIssuerState,
     setRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
-    SET_ISSUE_HOLDING
+    SET_ISSUE_HOLDING,
+    setRequestedWalletHolding
 } from '@setl/core-store';
 
 @Component({
@@ -21,6 +23,11 @@ import {
     styleUrls: ['./issue.component.css']
 })
 export class SetlIssueComponent implements OnInit, AfterViewInit {
+    // Observable subscription array.
+    subscriptionsArry: Array<Subscription> = [];
+
+    // List of redux observable.
+    @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
@@ -45,50 +52,50 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
 
         /*
 
-        function requestIssuedAssetBalance(issuer, instrument, callBack, userData, walletID) {
-            var deferred = $.Deferred();
+         function requestIssuedAssetBalance(issuer, instrument, callBack, userData, walletID) {
+         var deferred = $.Deferred();
 
-            if (document.SetlWalletNodeSocket) { // Websocket
+         if (document.SetlWalletNodeSocket) { // Websocket
 
-                var messageID = document.SetlWalletNodeSocketCallback.getUniqueID();
+         var messageID = document.SetlWalletNodeSocketCallback.getUniqueID();
 
-                document.SetlWalletNodeSocketCallback.addHandler(messageID,
-                    function (ID, message, UserData) {
-                        deferred.resolve(message.data);
-                        if (message.status == "OK") {
-                            var issuedAssetBalance = message.data;
-                            callBack(userData, issuedAssetBalance);
-                        } else {
-                            showWarning(
-                                getTranslation('txt_getissuerfail', 'Get Issuer Fail'),
-                                message.data.status
-                            );
-                        }
-                    }, {});
+         document.SetlWalletNodeSocketCallback.addHandler(messageID,
+         function (ID, message, UserData) {
+         deferred.resolve(message.data);
+         if (message.status == "OK") {
+         var issuedAssetBalance = message.data;
+         callBack(userData, issuedAssetBalance);
+         } else {
+         showWarning(
+         getTranslation('txt_getissuerfail', 'Get Issuer Fail'),
+         message.data.status
+         );
+         }
+         }, {});
 
-                var Request =
-                    {
-                        messageType: 'request',
-                        messageHeader: '',
-                        requestID: messageID,
-                        messageBody: {
-                            topic: 'holders',
-                            walletid: walletID || parseInt(document.dataCache.inUseWallet),
-                            // address : '',
-                            namespace: issuer,
-                            classid: instrument
-                        }
-                    };
+         var Request =
+         {
+         messageType: 'request',
+         messageHeader: '',
+         requestID: messageID,
+         messageBody: {
+         topic: 'holders',
+         walletid: walletID || parseInt(document.dataCache.inUseWallet),
+         // address : '',
+         namespace: issuer,
+         classid: instrument
+         }
+         };
 
-                document.SetlWalletNodeSocket.sendRequest(Request);
+         document.SetlWalletNodeSocket.sendRequest(Request);
 
-            }
-            else {
-                showError('Socket Error', 1001);
-            }
+         }
+         else {
+         showError('Socket Error', 1001);
+         }
 
-            return deferred.promise();
-        }
+         return deferred.promise();
+         }
          */
 
         this.singleAsset = [
@@ -146,6 +153,9 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
 
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
+
+        // List of observable subscriptions.
+        this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
     }
 
     /**
@@ -180,6 +190,19 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
             const holders = this.issuesList[newWalletId][this.currentAsset].holders;
             this.tabsControl[index].assetObject = this.formatHolders(holders);
         }
+    }
+
+    requestWalletHolding(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletHolding());
+            console.log(InitialisationService.requestWalletHolding);
+
+            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+        }
+
     }
 
 
