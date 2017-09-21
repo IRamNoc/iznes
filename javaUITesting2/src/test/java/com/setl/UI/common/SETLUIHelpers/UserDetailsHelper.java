@@ -338,5 +338,11 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
     navigateToPage("user-administration/users");
     Thread.sleep(500);
     driver.findElement(By.id("user-tab-1")).click();
+    try {
+      driver.findElement(By.id("manage-users")).isDisplayed();
+    }catch (Error e){
+      fail();
+      System.out.println("Manage User page not displayed");
+    }
   }
 }

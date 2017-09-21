@@ -65,7 +65,29 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    public void shouldCreateUser() throws IOException, InterruptedException {
+        navigateToAddUser();
+        enterManageUserUsername("TestUser5");
+        enterManageUserEmail("TestEmail@gmail.com");
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        enterManageUserPassword("Testpass123");
+        enterManageUserPasswordRepeat("Testpass123");
+        clickManageUserSubmit();
+    }
+    @Test
     public void shouldCreateRandomUser() throws IOException, InterruptedException {
+        navigateToAddUser();
+        enterManageUserUsername("TestUser5");
+        enterManageUserEmail("TestEmail@gmail.com");
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        enterManageUserPassword("Testpass123");
+        enterManageUserPasswordRepeat("Testpass123");
+        clickManageUserSubmit();
+    }
+    @Test
+    public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException {
         navigateToAddUser();
         enterManageUserUsername("TestUser5");
         enterManageUserEmail("TestEmail@gmail.com");
@@ -134,5 +156,49 @@ public class OpenCSDCreateUserAcceptanceTest {
       selectManageUserUserDropdown();
       enterManageUserPassword("Testpass123");
       clickManageUserSubmit();
+    }
+    @Test
+    public void shouldEditUserWhenEditButtonIsClicked() throws IOException, InterruptedException {
+      navigateToAddUser();
+      driver.findElement(By.id("user-tab-0")).click();
+      driver.findElement(By.id("edit-1")).click();
+      driver.findElement(By.id("user-tab-2")).isDisplayed();
+      driver.findElement(By.xpath("//*[@id=\"edit-user2-form\"]/div/div[5]/div/button[2]")).click();
+    }
+    @Test
+    public void shouldEditEmail() throws IOException, InterruptedException {
+      navigateToAddUser();
+      driver.findElement(By.id("user-tab-0")).click();
+      driver.findElement(By.id("edit-1")).click();
+      driver.findElement(By.id("user-tab-2")).isDisplayed();
+      driver.findElement(By.id("edit-user2-email")).clear();
+      driver.findElement(By.id("edit-user2-email")).sendKeys("test@test.com");
+      driver.findElement(By.xpath("//*[@id=\"edit-user2-form\"]/div/div[5]/div/button[1]")).click();
+    }
+    @Test
+    public void shouldResetEmail() throws IOException, InterruptedException {
+      navigateToAddUser();
+      driver.findElement(By.id("user-tab-0")).click();
+      driver.findElement(By.id("edit-1")).click();
+      driver.findElement(By.id("user-tab-2")).isDisplayed();
+      driver.findElement(By.id("edit-user2-email")).clear();
+      driver.findElement(By.id("edit-user2-email")).sendKeys("anthony.culligan@setl.io");
+      driver.findElement(By.xpath("//*[@id=\"edit-user2-form\"]/div/div[5]/div/button[1]")).click();
+    }
+
+    @Test
+    public void shouldDeleteUser() throws IOException, InterruptedException {
+      navigateToAddUser();
+      driver.findElement(By.id("user-tab-0")).click();
+      navigateToPage5();
+      Thread.sleep(5000);
+      driver.findElement(By.id("delete-102")).click();
+    }
+
+    public static void navigateToPage5(){
+      driver.findElement(By.className("pagination-next")).click();
+      driver.findElement(By.className("pagination-next")).click();
+      driver.findElement(By.className("pagination-next")).click();
+      driver.findElement(By.className("pagination-next")).click();
     }
 }
