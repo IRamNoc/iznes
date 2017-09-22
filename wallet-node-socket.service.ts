@@ -9,6 +9,10 @@ export class WalletNodeSocketService {
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
 
+    // Expose on update callback.
+    // Default to nothing now.
+    public walletnodeUpdateCallback: any = () => true;
+
     constructor(private toasterService: ToasterService) {
     }
 
@@ -35,10 +39,7 @@ export class WalletNodeSocketService {
             }, {}
         );
 
-        this.callBackRegister.addHandler('Update', (data, response) => {
-            console.log(data);
-        }, {});
-
+        this.callBackRegister.addHandler('Update', this.walletnodeUpdateCallback, {});
 
         try {
 
@@ -106,8 +107,11 @@ export class WalletNodeSocketService {
 
         try {
             if ((this.websocket !== undefined)) {
+                // Disable snapshot for now.
                 // Get the initial snapshot, and handle it.
-                this.getInitialSnapshotFromThroughSocket();
+                // this.getInitialSnapshotFromThroughSocket();
+
+                // Subscribe to topics
                 this.walletNodeMessagingSubscribe(ID, message, UserData);
 
             }
@@ -130,7 +134,9 @@ export class WalletNodeSocketService {
                 messageHeader: '',
                 messageBody: {
                     requestName: '',
-                    topic: ['block', 'balanceview', 'proposal', 'transaction', 'serverstatus', 'stateview', 'blockchanges']
+                    // Subscribe less topics.
+                    // topic: ['block', 'balanceview', 'proposal', 'transaction', 'serverstatus', 'stateview', 'blockchanges']
+                    topic: ['blockchanges', 'balanceview']
                 },
                 requestID: messageID
             };
