@@ -24,7 +24,9 @@ import {
     setRequestedAccountList,
     SET_USER_DETAILS,
     setRequestedMyChainAccess,
-    SET_MY_CHAIN_ACCESS
+    SET_MY_CHAIN_ACCESS,
+    clearRequestedWalletHolding,
+    clearRequestedWalletAddresses
 } from '@setl/core-store';
 
 
@@ -46,12 +48,6 @@ export class InitialisationService {
     static walletnodeInitialisation(ngRedux: NgRedux<any>,
                                     walletNodeRequestService: WalletNodeRequestService,
                                     walletId: number): boolean {
-        // Request wallet address.
-        // walletAddressRequest
-        this.requestWalletAddresses(ngRedux, walletNodeRequestService, walletId);
-
-        // Request Wallet Balances
-        this.requestWalletHolding(ngRedux, walletNodeRequestService, walletId);
 
         // Set requested data states to false
         this.clearWalletNodeRequestedStates(ngRedux);
@@ -69,10 +65,6 @@ export class InitialisationService {
         });
 
         // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_ADDRESSES],
             [],
@@ -91,10 +83,6 @@ export class InitialisationService {
         });
 
         // Send a saga action.
-        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-        // saga pipe function descriptor.
-        // Saga pipe function arguments.
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_HOLDING],
             [],
@@ -296,6 +284,13 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested wallet instruments
         ngRedux.dispatch(clearRequestedWalletInstrument());
+
+
+        // clear (set to false) the state of requested wallet address
+        ngRedux.dispatch(clearRequestedWalletAddresses());
+
+        // clear (set to false) the state of requested wallet holding
+        ngRedux.dispatch(clearRequestedWalletHolding());
     }
 
 
@@ -317,13 +312,7 @@ export class InitialisationService {
             [SET_MY_CHAIN_ACCESS],
             [],
             asyncTaskPipe,
-            {},
-            function (data) {
-                console.log('successfully get access', data);
-            },
-            function (data) {
-                console.log('fail to get access', data);
-            }
+            {}
         ));
     }
 
