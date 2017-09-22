@@ -1024,10 +1024,12 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (key in groupsObject) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsObject[key].groupID})[0];
-            newArr.push({
-                id: resolution.groupId,
-                text: resolution.groupName,
-            })
+            if ( resolution ) {
+                newArr.push({
+                    id: resolution.groupId,
+                    text: resolution.groupName,
+                })
+            }
         }
 
         /* Return. */
@@ -1041,7 +1043,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (i in groupsArray) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsArray[i].id})[0];
-            newObject[groupsArray[i].id] = resolution;
+            if ( resolution ) {
+                newObject[groupsArray[i].id] = resolution;
+            }
         }
 
         /* Return. */
