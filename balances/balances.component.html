@@ -10,14 +10,14 @@
             <!-- User list tab. -->
             <ng-container *ngIf="id === 0">
                 <ng-container
-                        *ngTemplateOutlet="staticBalanceList"
+                    *ngTemplateOutlet="staticBalanceList"
                 ></ng-container>
             </ng-container>
 
             <!-- User edit tabs. -->
             <ng-container *ngIf="id >= 1">
                 <ng-container
-                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
+                    *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -36,7 +36,7 @@
             <clr-dg-column>Free</clr-dg-column>
 
 
-            <clr-dg-row *clrDgItems="let asset of assets">
+            <clr-dg-row *clrDgItems="let asset of assets" [class.flash]="asset.isNew">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
                         <button (click)="handleView(asset.index)" class="btn"><i class="fa fa-search"></i> View</button>
@@ -45,9 +45,15 @@
                 </clr-dg-cell>
                 <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
                 <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                <clr-dg-cell>{{asset.total | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{asset.encumbered | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{asset.free | moneyValue}}</clr-dg-cell>
+                <clr-dg-cell [class.flash]="asset.totalChange">
+                    {{asset.total | moneyValue}}
+                </clr-dg-cell>
+                <clr-dg-cell [class.flash]="asset.encumberChange">
+                    {{asset.encumbered | moneyValue}}
+                </clr-dg-cell>
+                <clr-dg-cell [class.flash]="asset.freeChange">
+                    {{asset.free | moneyValue}}
+                </clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
