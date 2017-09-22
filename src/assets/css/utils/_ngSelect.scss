@@ -4,6 +4,7 @@
     margin-right: 0;
     height: 35px;
     border: 1px solid #b9b9b9 !important;
+    position: relative;
 }
 
 .ui-select-search {
@@ -41,6 +42,10 @@
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-top: 5px solid #9a9a9a;
+}
+
+.ui-select-match .ui-select-toggle {
+    position: relative !important;
 }
 
 .ui-select-match .btn a {
