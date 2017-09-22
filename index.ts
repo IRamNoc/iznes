@@ -138,7 +138,15 @@ export {
     SET_USERS_TX_PERMISSIONS,
     getUsersPermissions,
     getUsersAdminPermissions,
-    getUsersTxPermissions
+    getUsersTxPermissions,
+
+    /* Users wallet permissions */
+    SET_USERS_WALLET_PERMISSIONS,
+    getUsersWalletPermissions,
+
+    /* Users chain access */
+    SET_USERS_CHAIN_ACCESS,
+    getUsersChainAccess,
 } from './useradmin';
 
 export {
@@ -166,3 +174,20 @@ export {
     // Combine reducer
     MemberReducer
 } from './member';
+
+export {
+    // Actions.
+    clearRequestedMyChainAccess,
+    setRequestedMyChainAccess,
+    SET_MY_CHAIN_ACCESS,
+
+    // Selectors
+    getDefaultMyChainAccess,
+
+    // Combined state.
+    ChainState,
+
+    // Combine reducer.
+    ChainReducer
+
+} from './chain';

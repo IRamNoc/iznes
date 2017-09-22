@@ -83,6 +83,28 @@ export {
     getUsersTxPermissions,
 } from './users-permissions';
 
+/* Users wallet Permissions. */
+import {
+    UsersWalletPermissionsState,
+    UsersWalletPermissionsReducer,
+} from './users-wallet-permissions';
+
+export {
+    SET_USERS_WALLET_PERMISSIONS,
+    getUsersWalletPermissions,
+} from './users-wallet-permissions';
+
+/* Users chain access. */
+import {
+    UsersChainAccessState,
+    UsersChainAccessReducer,
+} from './users-chain-access';
+
+export {
+    SET_USERS_CHAIN_ACCESS,
+    getUsersChainAccess,
+} from './users-chain-access';
+
 export {
     SET_WALLET_NODE_LIST,
     setRequestedWalletNodeList,
@@ -111,6 +133,8 @@ export interface AdminUsersState {
     chains: ChainsState;
     chainMembership: ChainMembershipState;
     usersPermissions: UsersPermissionsState;
+    usersWalletPermissions: UsersWalletPermissionsState;
+    usersChainAccess: UsersChainAccessState;
 }
 
 /* Import Redux reducers to combine. */
@@ -126,4 +150,6 @@ export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminU
     chains: ChainReducer,
     chainMembership: ChainMembershipReducer,
     usersPermissions: UsersPermissionsReducer,
+    usersWalletPermissions: UsersWalletPermissionsReducer,
+    usersChainAccess: UsersChainAccessReducer,
 });
