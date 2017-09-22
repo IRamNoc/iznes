@@ -11,6 +11,7 @@ import {
     setRequestedWalletHolding
 } from '@setl/core-store';
 import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
+import {Unsubscribe} from 'redux';
 
 
 @Component({
