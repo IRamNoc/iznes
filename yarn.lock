@@ -168,7 +168,7 @@
 
 "@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#a5f670066671200f735daabb67140af6a03adc82"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#82755091d49cdaaa0a0f5f2e232e705168450c91"
 
 "@setl/core-account@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git":
   version "1.0.0"
@@ -176,7 +176,7 @@
 
 "@setl/core-balances@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#0ca42890fb7a6642660e63cc984341bfef3b82b9"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git#4ac056820156d51fae3de0c9ce228ff8568806c8"
 
 "@setl/core-layout@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git":
   version "1.0.0"
@@ -245,7 +245,7 @@
 
 "@setl/websocket-service@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git":
   version "1.0.4"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#ddd92d52798e18feca0657abb40c5b7b1fe46128"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#cd1217a0f001df1a9f2a47d5e45bd20393efcf73"
   dependencies:
     "@setl/socketcluster-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git"
     "@setl/vanilla-websocket-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git"
