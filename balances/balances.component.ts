@@ -1,13 +1,16 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
-import {fromJS} from "immutable";
+import {fromJS} from 'immutable';
+import {Subscription} from 'rxjs/Subscription';
 
 import {
     getWalletHoldingByAsset,
-    getConnectedWallet
+    getConnectedWallet,
+    setRequestedWalletHolding
 } from '@setl/core-store';
+import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
 
 
 @Component({
@@ -16,6 +19,12 @@ import {
     styleUrls: ['./balances.component.css']
 })
 export class SetlBalancesComponent implements OnInit, AfterViewInit {
+
+    // Observable subscription array.
+    subscriptionsArry: Array<Subscription> = [];
+
+    // List of redux observable.
+    @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
@@ -28,7 +37,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
     public tabsControl: any;
 
-    constructor(private ngRedux: NgRedux<any>, private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private walletNodeRequestService: WalletNodeRequestService) {
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -62,6 +73,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
+
+        // List of observable subscriptions.
+        this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
     }
 
     /**
@@ -103,6 +117,19 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.myDataGrid.resize();
+    }
+
+    requestWalletHolding(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletHolding());
+            console.log(InitialisationService.requestWalletHolding);
+
+            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+        }
+
     }
 
     formatHolding() {
