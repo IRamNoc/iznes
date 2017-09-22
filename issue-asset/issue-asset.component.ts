@@ -182,6 +182,10 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.reduxUnsubscribe();
+
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
     showResponseModal(issuerAssetResponse) {
