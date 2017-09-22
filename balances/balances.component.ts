@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
@@ -18,7 +18,7 @@ import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-se
     templateUrl: './balances.component.html',
     styleUrls: ['./balances.component.css']
 })
-export class SetlBalancesComponent implements OnInit, AfterViewInit {
+export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Observable subscription array.
     subscriptionsArry: Array<Subscription> = [];
@@ -28,7 +28,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
 
-    public assets
+    public assets = [];
     public singleAsset;
     public singleAssetHistory;
 
@@ -37,11 +37,17 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
     public tabsControl: any;
 
+    // Redux unsubscription
+    reduxUnsubscribe: Unsubscribe;
+
+    // Flag to mark if first load.
+    firstLoad = true;
+
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private walletNodeRequestService: WalletNodeRequestService) {
 
-        ngRedux.subscribe(() => this.updateState());
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         // this.singleAssetHistory = [
@@ -93,8 +99,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
         this.currentWalletId = newWalletId;
         this.holdingByAsset = getWalletHoldingByAsset(newState);
 
-        this.assets = this.formatHolding();
-        this.assets = this.convertToArray(this.assets);
+        const formatedHolding = this.formatHolding();
+        const formatedHoldingArr = this.convertToArray(formatedHolding);
+        this.assets = this.markUpdatedAssetBalanceData(formatedHoldingArr);
     }
 
     /**
@@ -125,9 +132,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletHolding());
-            console.log(InitialisationService.requestWalletHolding);
 
             InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+
         }
 
     }
@@ -288,6 +295,58 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit {
 
         /* Yes, we have to call this again to get it to work, trust me... */
         this.changeDetectorRef.detectChanges();
+    }
+
+    public markUpdatedAssetBalanceData(newAssetData) {
+        const markUpdatedNewAssetData = newAssetData.slice();
+        let i = 0;
+        for (i; i < markUpdatedNewAssetData.length; i++) {
+            const thisAsset = _.get(markUpdatedNewAssetData, [i], {});
+            const thisAssetName = _.get(thisAsset, ['asset'], '');
+            const currentAsset = this.assets.filter(asset => _.get(asset, 'asset', '') === thisAssetName);
+
+            markUpdatedNewAssetData[i]['isNew'] = false;
+            markUpdatedNewAssetData[i]['encumberChange'] = false;
+            markUpdatedNewAssetData[i]['freeChange'] = false;
+            markUpdatedNewAssetData[i]['totalChange'] = false;
+
+            // If first load, not bother to mark them to true;
+            if (this.firstLoad) {
+                continue;
+            }
+
+            // If new asset mark as new.
+            if (currentAsset.length === 0) {
+                markUpdatedNewAssetData[i]['isNew'] = true;
+            } else {
+                if (thisAsset.free !== currentAsset[0].free) {
+                    markUpdatedNewAssetData[i]['freeChange'] = true;
+                }
+
+                if (thisAsset.encumbered !== currentAsset[0].encumbered) {
+                    markUpdatedNewAssetData[i]['encumberChange'] = true;
+                }
+
+                if (thisAsset.total !== currentAsset[0].total) {
+                    markUpdatedNewAssetData[i]['totalChange'] = true;
+                }
+            }
+
+        }
+
+        if (markUpdatedNewAssetData.length > 0) {
+            this.firstLoad = false;
+        }
+
+        return markUpdatedNewAssetData;
+    }
+
+    ngOnDestroy() {
+        this.reduxUnsubscribe();
+
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
 }
