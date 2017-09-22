@@ -23,7 +23,8 @@ import {
     AccountsService,
     PermissionGroupService,
     MemberService,
-    ChainService
+    ChainService,
+    WalletnodeChannelService
 } from '@setl/core-req-services';
 
 import {
@@ -149,7 +150,8 @@ import {environment} from '../environments/environment';
         PermissionGroupService,
         MemberService,
         ChainService,
-        MultilingualService
+        MultilingualService,
+        WalletnodeChannelService
     ],
     bootstrap: [AppComponent]
 })
