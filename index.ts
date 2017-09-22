@@ -26,6 +26,8 @@ export {
     WalletState,
     walletReducer,
     SET_WALLET_ADDRESSES,
+    clearRequestedWalletAddresses,
+    setRequestedWalletAddresses,
     getWalletAddressList,
     SET_OWN_WALLETS,
     SET_WALLET_HOLDING,
@@ -45,6 +47,8 @@ export {
     getWalletToRelationshipList,
     getRequestWalletToRelationshipState,
     SET_ISSUE_HOLDING,
+    setRequestedWalletHolding,
+    clearRequestedWalletHolding
 } from './wallet';
 
 export {
