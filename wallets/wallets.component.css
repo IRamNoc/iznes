@@ -1,0 +1,29 @@
+.wallet-status .toggle-switch,
+.wallet-status > span {
+    display: inline-block;
+    width: auto;
+    vertical-align: top;
+}
+
+.wallet-status .toggle-switch input[type='checkbox'] {
+    width: 0;
+    height: 0;
+}
+
+.wallet-status > span {
+    margin-top: 5px;
+    margin-left: 10px;
+    width: 15px;
+}
+
+.wallet-status > span i {
+    font-size: 18px;
+}
+
+.wallet-status > span i.fa-unlock {
+    color: #62a420;
+}
+
+.wallet-status > span i.fa-lock {
+    color: #ed5969;
+}
