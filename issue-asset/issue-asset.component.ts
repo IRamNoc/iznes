@@ -10,23 +10,21 @@ import {
 } from '@setl/core-req-services';
 import {
     getConnectedWallet,
-    getRequestedInstrumentState,
     setRequestedWalletInstrument,
     getMyInstrumentsList,
     getWalletAddressList,
-    getRequestWalletToRelationshipState,
     getWalletToRelationshipList,
     setRequestedWalletToRelationship,
     getWalletDirectoryList,
     ISSUE_ASSET_SUCCESS,
     ISSUE_ASSET_FAIL,
-    getNewIssueAssetRequest,
-    finishIssueAssetNotification
+    finishIssueAssetNotification,
+    setRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {fromJS} from 'immutable';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-issue-asset',
@@ -34,6 +32,9 @@ import _ from 'lodash';
     styleUrls: ['./issue-asset.component.css']
 })
 export class IssueAssetComponent implements OnInit, OnDestroy {
+    // Observable subscription array.
+    subscriptionsArry: Array<Subscription> = [];
+
     issueAssetForm: FormGroup;
     connectedWalletId: number;
     walletIssuerDetail: {
@@ -47,9 +48,11 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
     toRelationshipSelectItems: Array<any>;
 
+    // List of redux observable
     @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
     @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
     @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
+    @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -71,9 +74,11 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             amount: new FormControl('', Validators.required),
         });
 
+        // List of observable subscriptions.
         this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState));
         this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState));
         this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => this.showResponseModal(newIssueAssetRequest));
+        this.subscriptionsArry.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
     }
 
     ngOnInit() {
@@ -97,6 +102,22 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         const walletDirectoryList = getWalletDirectoryList(newState);
 
         this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
+    }
+
+    /**
+     *  Request wallet address list.
+     *
+     * @param requestedState
+     */
+    requestWalletAddressList(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
+
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
     }
 
     requestWalletInstruments(requestedInstrumentState) {
