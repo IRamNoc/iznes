@@ -236,3 +236,16 @@ span.fr-counter {
     padding-right: 8px;
     font-weight: bold;
 }
+
+.flash {
+    animation: highlight 4s;
+}
+
+@keyframes highlight {
+    0% {
+        background: #EBFFEB
+    }
+    100% {
+        background: none;
+    }
+}
