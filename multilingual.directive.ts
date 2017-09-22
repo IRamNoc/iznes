@@ -20,11 +20,32 @@ export class MultiLingualDirective {
     }
 
     public ngAfterViewInit () {
+        /* TODO
+         * 1. We need to filter the tags by tagname, inputs will need their
+         * placeholders changed, most things innerHTML and other things will vary.
+         *
+         * 2. We need to figure out where the translations will be stored, at the
+         * moment, they're in a object export as a constant in `translations.ts`.
+         */
         let
-        tag = this.el.nativeElement.getAttribute('mltag'),
-        translation = this.multilingualService.getTranslation(tag);
-        if ( translation !== tag ) {
-            this.el.nativeElement.innerHTML = translation;
+        tagname = this.el.nativeElement.tagName.toLowerCase(),
+        mltag = this.el.nativeElement.getAttribute('mltag'),
+        translation = this.multilingualService.getTranslation(mltag);
+
+        /* First, check that the tag was translated... */
+        if ( translation !== mltag ) {
+            /* ...next, switch to figure out what tag we're translating. */
+            switch ( tagname ) {
+                /* Inputs need their placeholder changed. */
+                case 'input':
+                    this.el.nativeElement.setAttribute('placeholder', translation);
+                    break;
+
+                /* Non specific tags are probably innerHTML. */
+                default:
+                    this.el.nativeElement.innerHTML = translation;
+                    break;
+            }
         }
     }
 }
