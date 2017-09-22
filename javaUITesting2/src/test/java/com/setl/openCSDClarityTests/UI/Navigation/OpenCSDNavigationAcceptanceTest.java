@@ -7,6 +7,7 @@ import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -38,7 +39,6 @@ public class OpenCSDNavigationAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
-
     @Test
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -65,25 +65,182 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("orders");
     }
-
     @Test
     public void shouldNavigateToUsers() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-user-administation");
+        navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/users");
     }
-
     @Test
     public void shouldNavigateToUserWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-user-administation");
+        navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/wallets");
     }
-
     @Test
     public void shouldNavigateToPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-user-administation");
+        navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/permissions");
+    }
+    @Test
+    public void shouldNavigateToWizard() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPage("user-administration/wizard");
+    }
+    @Test
+    public void shouldNavigateToRegisterIssuer() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-asset-servicing");
+        navigateToPage("asset-servicing/register-issuer");
+    }
+    @Test
+    public void shouldNavigateToRegisterAsset() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-asset-servicing");
+        navigateToPage("asset-servicing/register-asset");
+    }
+    @Test
+    public void shouldNavigateToIssueAsset() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-asset-servicing");
+        navigateToPage("asset-servicing/issue-asset");
+    }
+    @Test
+    public void shouldNavigateToBalancesReports() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-reports");
+        navigateToPage("reports/balances");
+    }
+    @Test
+    public void shouldNavigateToIssueReports() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-reports");
+        navigateToPage("reports/issue");
+    }
+    @Test
+    public void shouldNavigateToTransactionReports() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-reports");
+        navigateToPage("reports/transactions");
+    }
+    @Test
+    public void shouldNavigateToMember() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-chain-administration");
+        navigateToPage("chain-admin/manage-member");
+    }
+    @Test
+    public void shouldNavigateToAccount() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-chain-administration");
+        navigateToPage("chain-admin/manage-account");
+    }
+    @Test
+    public void shouldNavigateToChainMember() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-chain-administration");
+        navigateToPage("chain-admin/chain-membership");
+    }
+    @Test
+    public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-asset-managment");
+        navigateToPage("asset-managment/fund-holdings");
+    }
+    @Test
+    public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("account/my-account");
+    }
+    @Test
+    public void shouldNavigateToRelationships() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("account/relationships");
+    }
+    @Test
+    public void shouldNavigateToDocuments() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("account/documents");
+    }
+    @Test
+    public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-module/managment-company");
+    }
+    @Test
+    public void shouldNavigateToSICAV() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-module/sicav");
+    }
+    @Test
+    public void shouldNavigateToFund() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-module/fund");
+    }
+    @Test
+    public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-module/net-asset-value");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToCreateResolution() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/create-resolution");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToIssueResolution() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/issue-resolution");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToDistribution() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/distribution");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToMergerAbsorption() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/merger-absorption");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/coupon-payment");
+    }
+    @Ignore
+    @Test
+    public void shouldNavigateToSplit() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-corporate-actions");
+        navigateToPage("corporate-actions/split");
+    }
+    @Test
+    public void shouldNavigateToMessagesFromTopButtons() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        try {
+          driver.findElement(By.xpath("//a[@href='#/messages']")).click();
+        }catch (Error e){
+          System.out.println("logout button not present");
+          fail();
+        }
     }
 }

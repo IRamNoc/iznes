@@ -169,7 +169,7 @@ ul.breadcrumb li a:hover {
 .fr-wrapper {
     margin-top: -1px;
     box-shadow: none !important;
-    height: 600px;
+    height: 400px;
     border-bottom: 1px solid #ccc !important;
 
     p {
@@ -189,6 +189,7 @@ span.fr-counter {
     border-left: 1px solid #ccc !important;
     margin: 0 1px 1px 0px !important;
     padding: 5px 10px !important;
+    font-family: inherit;
 }
 
 .login-inner-wrapper {
@@ -248,4 +249,9 @@ span.fr-counter {
     100% {
         background: none;
     }
+}
+
+.pagination button {
+    /* Fix clarity's pagination button being a tiny click area. */
+    width: 100%;
 }

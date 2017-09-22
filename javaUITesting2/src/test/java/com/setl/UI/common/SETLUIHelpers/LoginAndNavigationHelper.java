@@ -21,7 +21,8 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
-    public static void navigateToPage(String pageHref) {
+    public static void navigateToPage(String pageHref) throws InterruptedException {
+      Thread.sleep(750);
       try {
         driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']")).click();
       }catch (Error e){
@@ -179,6 +180,13 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
+      Thread.sleep(750);
+      try {
+        driver.findElement(By.xpath("//a[@href='#/login']")).isDisplayed();
+      }catch (Error e){
+        System.out.println("logout button not present");
+        fail();
+      }
         //assertTrue(verifyHomePageIsDisplayed());
     }
 
@@ -201,12 +209,12 @@ public class LoginAndNavigationHelper {
     }
 
   public static void navigateToDropdown(String dropdownID) throws InterruptedException {
+    Thread.sleep(750);
     try {
       driver.findElement(By.id(dropdownID)).click();
     }catch (Error e){
       System.out.println(dropdownID + "not present");
       fail();
     }
-    Thread.sleep(750);
   }
 }
