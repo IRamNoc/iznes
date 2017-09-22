@@ -57,6 +57,9 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 "active": false
             }
         ];
+
+        /* Get Countries list. */
+        this.countriesList = this.userAdminService.countries;
     }
 
     ngAfterViewInit(): void {
@@ -200,16 +203,66 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         /* Now let's patch the core values. */
         thisTab.formControl.controls['walletName'].patchValue(wallet.walletName);
         thisTab.formControl.controls['walletAccount'].patchValue(walletAccount);
+        thisTab.formControl.controls['walletLocked'].patchValue(!wallet.walletLocked);
         thisTab.formControl.controls['walletType'].patchValue(walletType);
 
         /* Then figure out what type we are... then patch the values needed for the forms shown.
         Wallet type legal. */
+        let resolvedCountry
         if ( wallet.walletType == 1 ) {
-
+            thisTab.formControl.controls['walletLei'].patchValue(wallet.Glei || '');
+            thisTab.formControl.controls['walletUid'].patchValue(wallet.uid || '');
+            thisTab.formControl.controls['walletWebUrl'].patchValue(wallet.websiteUrl || '');
+            thisTab.formControl.controls['walletIncDate'].patchValue(wallet.incorporationData || '');
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.country } ]);
+            thisTab.formControl.controls['walletAddrCountry'].patchValue(resolvedCountry);
+            thisTab.formControl.controls['walletAddrPrefix'].patchValue(wallet.addressPrefix || '');
+            thisTab.formControl.controls['walletAddr1'].patchValue(wallet.address1);
+            thisTab.formControl.controls['walletAddr2'].patchValue(wallet.address2);
+            thisTab.formControl.controls['walletAddr3'].patchValue(wallet.address3);
+            thisTab.formControl.controls['walletAddr4'].patchValue(wallet.address4);
+            thisTab.formControl.controls['walletAddrPostcode'].patchValue(wallet.postalCode);
         }
         /* Wallet type individual */
         else if ( wallet.walletType == 2 ) {
+            thisTab.formControl.controls['aliases'].patchValue(wallet.aliases || '');
+            thisTab.formControl.controls['formerName'].patchValue(wallet.formerName || '');
+            thisTab.formControl.controls['idCardNum'].patchValue(wallet.idCardNum || '');
 
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.rdaCountry } ]);
+            thisTab.formControl.controls['rdaAddrCountry'].patchValue(resolvedCountry);
+            thisTab.formControl.controls['rdaAddrPrefix'].patchValue(wallet.rdaAdressPrefix || '');
+            thisTab.formControl.controls['rdaAddr1'].patchValue(wallet.rdaAddress1 || '');
+            thisTab.formControl.controls['rdaAddr2'].patchValue(wallet.rdaAddress2 || '');
+            thisTab.formControl.controls['rdaAddr3'].patchValue(wallet.rdaAddress3 || '');
+            thisTab.formControl.controls['rdaAddr4'].patchValue(wallet.rdaAddress4 || '');
+            thisTab.formControl.controls['rdaAddrPostcode'].patchValue(wallet.rdaPostalCode || '');
+
+            // thisTab.formControl.controls['caSame'].patchValue();
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.caAddressCountry } ]);
+            thisTab.formControl.controls['caAddrCountry'].patchValue(resolvedCountry);
+            thisTab.formControl.controls['caAddrPrefix'].patchValue(wallet.caAddressPrefix || '');
+            thisTab.formControl.controls['caAddr1'].patchValue(wallet.caAddress1 || '');
+            thisTab.formControl.controls['caAddr2'].patchValue(wallet.caAddress2 || '');
+            thisTab.formControl.controls['caAddr3'].patchValue(wallet.caAddress3 || '');
+            thisTab.formControl.controls['caAddr4'].patchValue(wallet.caAddress4 || '');
+            thisTab.formControl.controls['caAddrPostcode'].patchValue(wallet.caPostalCode || '');
+
+            thisTab.formControl.controls['bankWalletId'].patchValue(wallet.bankWalletId || '');
+            thisTab.formControl.controls['bankName'].patchValue(wallet.bankName || '');
+            thisTab.formControl.controls['bankIBAN'].patchValue(wallet.bankIBAN || '');
+            thisTab.formControl.controls['bankBICcode'].patchValue(wallet.bankBicCode || '');
+            thisTab.formControl.controls['bankAccountName'].patchValue(wallet.bankAccountName || '');
+            thisTab.formControl.controls['bankAccountNum'].patchValue(wallet.bankAccountNum || '');
+
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.bdAddressCountry } ]);
+            thisTab.formControl.controls['bdAddrCountry'].patchValue(resolvedCountry);
+            thisTab.formControl.controls['bdAddrPrefix'].patchValue(wallet.bdAddressPrefix || '');
+            thisTab.formControl.controls['bdAddr1'].patchValue(wallet.bdAddress1 || '');
+            thisTab.formControl.controls['bdAddr2'].patchValue(wallet.bdAddress2 || '');
+            thisTab.formControl.controls['bdAddr3'].patchValue(wallet.bdAddress3 || '');
+            thisTab.formControl.controls['bdAddr4'].patchValue(wallet.bdAddress4 || '');
+            thisTab.formControl.controls['bdAddrPostcode'].patchValue(wallet.bdPostalCode || '');
         }
 
         /* Activate the new tab. */
@@ -302,6 +355,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 /* Core wallet fields. */
                 "walletName": new FormControl(''),
                 "walletAccount": new FormControl([]),
+                "walletLocked": new FormControl(false),
                 "walletType": new FormControl([]),
 
                 /* Legal type Fields. */
@@ -342,12 +396,12 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
                 "bankWalletId": new FormControl(''),
                 "bankName": new FormControl(''),
-                "bankBICcode": new FormControl(''),
                 "bankIBAN": new FormControl(''),
+                "bankBICcode": new FormControl(''),
                 "bankAccountName": new FormControl(''),
                 "bankAccountNum": new FormControl(''),
 
-                "bdCountry": new FormControl([]),
+                "bdAddrCountry": new FormControl([]),
                 "bdAddrPrefix": new FormControl(''),
                 "bdAddr1": new FormControl(''),
                 "bdAddr2": new FormControl(''),

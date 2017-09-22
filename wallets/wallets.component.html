@@ -172,6 +172,22 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
+                                <span mltag="txt_usertype">Wallet Status</span>
+                            </label>
+                            <div class="wallet-status">
+                                <span *ngIf="formControl.controls['walletLocked']._value"><i class="fa fa-unlock"></i></span>
+                                <span *ngIf="!formControl.controls['walletLocked']._value"><i class="fa fa-lock"></i></span>
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['walletLocked']" id="edit-wallet-status-toggle" type="checkbox">
+                                    <label for="edit-wallet-status-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
                                 <span mltag="txt_usertype">Wallet Type</span>
                             </label>
                             <ng-select
@@ -270,7 +286,11 @@
                                         <span mltag="txt_country">Country</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-address-country" type="text" [formControl]="formControl.controls['walletAddrCountry']" placeholder="Address Country" class="form-control wallet-addr-country" mltag="txt_country">
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['walletAddrCountry']">
+                                        </ng-select>
                                     </div>
                                 </div>
 
@@ -377,7 +397,11 @@
                                         <span mltag="txt_country">Country</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-rda-address-country" type="text" [formControl]="formControl.controls['rdaAddrCountry']" placeholder="Address Country" class="form-control wallet-addr-country" mltag="txt_country">
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['rdaAddrCountry']">
+                                        </ng-select>
                                     </div>
                                 </div>
 
@@ -451,7 +475,11 @@
                                         <span mltag="txt_country">Country</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-ca-address-country" type="text" [formControl]="formControl.controls['caAddrCountry']" placeholder="Address Country" class="form-control wallet-addr-country" mltag="txt_country">
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['caAddrCountry']">
+                                        </ng-select>
                                     </div>
                                 </div>
 
@@ -512,6 +540,124 @@
                 <a clrTabLink><i class="fa fa-chain"></i> Settlement Detail</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Bank Wallet</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Bank Name</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-name" type="text" [formControl]="formControl.controls['bankName']" placeholder="Bank name" class="form-control wallet-bank-name" mltag="txt_bank_name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">IBAN</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-iban" type="text" [formControl]="formControl.controls['bankIBAN']" placeholder="IBAN" class="form-control wallet-bank-iban" mltag="txt_bank_iban">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Bank BIC Code</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-bic-code" type="text" [formControl]="formControl.controls['bankBICcode']" placeholder="BIC code" class="form-control wallet-bank-bic-code" mltag="txt_bank_bic_code">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Bank Account Name</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-account-name" type="text" [formControl]="formControl.controls['bankAccountName']" placeholder="Account name" class="form-control wallet-bank-account-name" mltag="txt_bank_account_name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Bank Account Number</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-account-num" type="text" [formControl]="formControl.controls['bankAccountNum']" placeholder="Account number" class="form-control wallet-bank-account-num" mltag="txt_bank_account_num">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_country">Country</span>
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bdAddrCountry']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_address_prefix">Address Prefix</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address-prefix" type="text" [formControl]="formControl.controls['bdAddrPrefix']" placeholder="Address Prefix" class="form-control bd-addr-prefix" mltag="txt_prefix">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Postal Address</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address1" type="text" [formControl]="formControl.controls['bdAddr1']" placeholder="Line 1" class="form-control bd-addr1" mltag="txt_line1">
+                                    </div>
+                                    <div>
+                                        <input id="new-wallet-bd-address2" type="text" [formControl]="formControl.controls['bdAddr2']" placeholder="Line 2" class="form-control bd-addr2" mltag="txt_line2">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">City or Town</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address3" type="text" [formControl]="formControl.controls['bdAddr3']" placeholder="City or Town" class="form-control bd-addr3" mltag="txt_city_town">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">State or Area</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address4" type="text" [formControl]="formControl.controls['bdAddr4']" placeholder="State or Area" class="form-control bd-addr4" mltag="txt_state_area">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        <span mltag="txt_username">Post code</span>
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-postcode" type="text" [formControl]="formControl.controls['bdAddrPostcode']" placeholder="Post code" class="form-control bd-addr-postcode" mltag="txt_postcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </clr-tab-content>
             </clr-tab>
