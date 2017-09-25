@@ -45,6 +45,7 @@ import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
+import {SetlComponentsModule} from '@setl/utils';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -114,7 +115,8 @@ import {environment} from '../environments/environment';
         SetlBalancesModule,
         PermissionGridModule,
         SetlPipesModule,
-        CoreManageMemberModule
+        CoreManageMemberModule,
+        SetlComponentsModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -151,7 +153,7 @@ import {environment} from '../environments/environment';
         MemberService,
         ChainService,
         MultilingualService,
-        WalletnodeChannelService
+        WalletnodeChannelService,
     ],
     bootstrap: [AppComponent]
 })
