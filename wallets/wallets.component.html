@@ -141,7 +141,7 @@
     <!-- User Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditWallet(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -547,7 +547,12 @@
                                         <span mltag="txt_username">Bank Wallet</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet">
+                                        <ng-select
+                                            [items]="filteredWalletList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bankWalletId']"
+                                        ></ng-select>
+                                        <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet"> -->
                                     </div>
                                 </div>
 

@@ -25,6 +25,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
     /* Wallet List. */
     @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
+    public filteredWalletList: any;
 
     /* Types lists. */
     private accountTypes: any;
@@ -84,7 +85,13 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 this.walletList.push( list[i] );
             }
 
-            console.log( this.walletList );
+            /* Also filter a new list for ui elements. */
+            this.filteredWalletList = this.walletList.map((wallet) => {
+                return {
+                    id: wallet.walletId,
+                    text: wallet.walletName
+                };
+            });
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -119,6 +126,63 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         newWallet.walletAccount = formData.walletAccount[0].id;
         newWallet.walletType = formData.walletType[0].id;
 
+        /* Add other fields depending on walletType. */
+        if ( newWallet.walletType == "1" ) {
+            /* Legal basic fields. */
+            newWallet.walletUid = formData.walletUid;
+            newWallet.walletLei = formData.walletLei;
+            newWallet.walletWebUrl = formData.walletWebUrl;
+            newWallet.walletIncDate = formData.walletIncDate;
+
+            /* Legal corresondence. */
+            newWallet.walletAddrCountry = formData.walletAddrCountry[0].text;
+            newWallet.walletAddrPrefix = formData.walletAddrPrefix;
+            newWallet.walletAddr1 = formData.walletAddr1;
+            newWallet.walletAddr2 = formData.walletAddr2;
+            newWallet.walletAddr3 = formData.walletAddr3;
+            newWallet.walletAddr4 = formData.walletAddr4;
+            newWallet.walletAddrPostcode = formData.walletAddrPostcode;
+
+        } else if ( newWallet.walletType == "2" ) {
+            /* Individual basic fields. */
+            newWallet.aliases = formData.aliases;
+            newWallet.formerName = formData.formerName;
+            newWallet.idCardNum = formData.idCardNum;
+
+            /* Individual residential address. */
+            newWallet.rdaAddrCountry = formData.rdaAddrCountry[0].text;
+            newWallet.rdaAddrPrefix = formData.rdaAddrPrefix;
+            newWallet.rdaAddr1 = formData.rdaAddr1;
+            newWallet.rdaAddr2 = formData.rdaAddr2;
+            newWallet.rdaAddr3 = formData.rdaAddr3;
+            newWallet.rdaAddr4 = formData.rdaAddr4;
+            newWallet.rdaAddrPostcode = formData.rdaAddrPostcode;
+
+            /* Individual corresondence address. */
+            newWallet.caAddrCountry = formData.caAddrCountry[0].text;
+            newWallet.caAddrPrefix = formData.caAddrPrefix;
+            newWallet.caAddr1 = formData.caAddr1;
+            newWallet.caAddr2 = formData.caAddr2;
+            newWallet.caAddr3 = formData.caAddr3;
+            newWallet.caAddr4 = formData.caAddr4;
+            newWallet.caAddrPostcode = formData.caAddrPostcode;
+
+            /* Individual settlement detail. */
+            newWallet.bankWalletId = formData.bankWalletId[0].id;
+            newWallet.bankName = formData.bankName;
+            newWallet.bankIBAN = formData.bankIBAN;
+            newWallet.bankBICcode = formData.bankBICcode;
+            newWallet.bankAccountName = formData.bankAccountName;
+            newWallet.bankAccountNum = formData.bankAccountNum;
+            newWallet.bdAddrCountry = formData.bdAddrCountry[0].text;
+            newWallet.bdAddrPrefix = formData.bdAddrPrefix;
+            newWallet.bdAddr1 = formData.bdAddr1;
+            newWallet.bdAddr2 = formData.bdAddr2;
+            newWallet.bdAddr3 = formData.bdAddr3;
+            newWallet.bdAddr4 = formData.bdAddr4;
+            newWallet.bdAddrPostcode = formData.bdAddrPostcode;
+        }
+
         console.log('new wallet info: ', newWallet);
 
         this.userAdminService.createNewWallet(newWallet).then((response) => {
@@ -146,13 +210,98 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleEditWallet(tabid: number): void {
+        /* Variables. */
         const thisTab = this.tabsControl[tabid];
+        let
+            formData = thisTab.formControl.value,
+            editWalletData:any = {};
 
-        /* Sort the data structure out. */
-        let formData = thisTab.formControl.value;
+        /* Proccess the data. */
+        editWalletData.walletId = thisTab.walletId;
+        editWalletData.walletName = formData.walletName;
+        editWalletData.walletAccount = formData.walletAccount[0].id;
+        editWalletData.walletType = formData.walletType[0].id;
+        editWalletData.walletLocked = formData.walletLocked ? "0" : "1"; // inverted for the ui, so switch back.
+
+        /* Add other fields depending on walletType. */
+        if ( editWalletData.walletType == "1" ) {
+            /* Legal basic fields. */
+            editWalletData.walletUid = formData.walletUid;
+            editWalletData.walletLei = formData.walletLei;
+            editWalletData.walletWebUrl = formData.walletWebUrl;
+            editWalletData.walletIncDate = formData.walletIncDate;
+
+            /* Legal corresondence. */
+            editWalletData.walletAddrCountry = formData.walletAddrCountry[0].text;
+            editWalletData.walletAddrPrefix = formData.walletAddrPrefix;
+            editWalletData.walletAddr1 = formData.walletAddr1;
+            editWalletData.walletAddr2 = formData.walletAddr2;
+            editWalletData.walletAddr3 = formData.walletAddr3;
+            editWalletData.walletAddr4 = formData.walletAddr4;
+            editWalletData.walletAddrPostcode = formData.walletAddrPostcode;
+
+        } else if ( editWalletData.walletType == "2" ) {
+            /* Individual basic fields. */
+            editWalletData.aliases = formData.aliases;
+            editWalletData.formerName = formData.formerName;
+            editWalletData.idCardNum = formData.idCardNum;
+
+            /* Individual residential address. */
+            editWalletData.rdaAddrCountry = formData.rdaAddrCountry[0].text;
+            editWalletData.rdaAddrPrefix = formData.rdaAddrPrefix;
+            editWalletData.rdaAddr1 = formData.rdaAddr1;
+            editWalletData.rdaAddr2 = formData.rdaAddr2;
+            editWalletData.rdaAddr3 = formData.rdaAddr3;
+            editWalletData.rdaAddr4 = formData.rdaAddr4;
+            editWalletData.rdaAddrPostcode = formData.rdaAddrPostcode;
+
+            /* Individual corresondence address. */
+            editWalletData.caAddrCountry = formData.caAddrCountry[0].text;
+            editWalletData.caAddrPrefix = formData.caAddrPrefix;
+            editWalletData.caAddr1 = formData.caAddr1;
+            editWalletData.caAddr2 = formData.caAddr2;
+            editWalletData.caAddr3 = formData.caAddr3;
+            editWalletData.caAddr4 = formData.caAddr4;
+            editWalletData.caAddrPostcode = formData.caAddrPostcode;
+
+            /* Individual settlement detail. */
+            editWalletData.bankWalletId = formData.bankWalletId[0].id;
+            editWalletData.bankName = formData.bankName;
+            editWalletData.bankIBAN = formData.bankIBAN;
+            editWalletData.bankBICcode = formData.bankBICcode;
+            editWalletData.bankAccountName = formData.bankAccountName;
+            editWalletData.bankAccountNum = formData.bankAccountNum;
+            /* settlement address */
+            editWalletData.bdAddrCountry = formData.bdAddrCountry[0].text;
+            editWalletData.bdAddrPrefix = formData.bdAddrPrefix;
+            editWalletData.bdAddr1 = formData.bdAddr1;
+            editWalletData.bdAddr2 = formData.bdAddr2;
+            editWalletData.bdAddr3 = formData.bdAddr3;
+            editWalletData.bdAddr4 = formData.bdAddr4;
+            editWalletData.bdAddrPostcode = formData.bdAddrPostcode;
+        }
+
+        console.log('edit wallet info: ', editWalletData);
+
+        this.userAdminService.updateWallet(editWalletData).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
+        })
 
         /* Return */
         return;
+    }
+
+    public getWalletById (id) {
+        let i;
+        for ( i in this.walletList ) {
+            if ( this.walletList[i].walletId == id ) {
+                return this.walletList[i];
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -167,8 +316,23 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
     public handleDelete(index): void {
         /* Get the user's data. */
         let dataToSend = {};
+        dataToSend['walletId'] = this.walletList[index].walletId;
 
+        /* Send the request. */
+        /* TODO - Add a better confirm in here. */
+        if (confirm("Are you sure you want to delete " + this.walletList[index].walletName + "?")) {
+            this.userAdminService.deleteWallet(dataToSend).then((response) => {
+                /* TODO - close any edit tabs created for this user. */
 
+                /* Handle succes message. */
+                console.log('Deleted wallet successfully.', response)
+                this.showSuccess('Successfully deleted wallet.');
+            }).catch((error) => {
+                /* Handle error message. */
+                console.log('Failed to deleted wallet.', error);
+                this.showError('Failed to delete wallet.');
+            });
+        }
         /* Return. */
         return;
     }
@@ -197,6 +361,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
         /* Fix up some data. */
         const wallet = this.walletList[index];
+        console.log('editing wallet: ', wallet);
 
         /* Then push the new tab object into the array. */
         this.tabsControl.push({
@@ -243,7 +408,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
             resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.rdaCountry } ]);
             thisTab.formControl.controls['rdaAddrCountry'].patchValue(resolvedCountry);
-            thisTab.formControl.controls['rdaAddrPrefix'].patchValue(wallet.rdaAdressPrefix || '');
+            thisTab.formControl.controls['rdaAddrPrefix'].patchValue(wallet.rdaAddressPrefix || '');
             thisTab.formControl.controls['rdaAddr1'].patchValue(wallet.rdaAddress1 || '');
             thisTab.formControl.controls['rdaAddr2'].patchValue(wallet.rdaAddress2 || '');
             thisTab.formControl.controls['rdaAddr3'].patchValue(wallet.rdaAddress3 || '');
@@ -260,7 +425,15 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['caAddr4'].patchValue(wallet.caAddress4 || '');
             thisTab.formControl.controls['caAddrPostcode'].patchValue(wallet.caPostalCode || '');
 
-            thisTab.formControl.controls['bankWalletId'].patchValue(wallet.bankWalletId || '');
+            /* Get the wallet selected by ID. */
+            let selectWallet = this.getWalletById( wallet.bankWalletId );
+            if ( selectWallet ) {
+                console.log('set wallet: ', selectWallet);
+                thisTab.formControl.controls['bankWalletId'].patchValue([{
+                    id: selectWallet.walletId,
+                    text: selectWallet.walletName
+                }]);
+            }
             thisTab.formControl.controls['bankName'].patchValue(wallet.bankName || '');
             thisTab.formControl.controls['bankIBAN'].patchValue(wallet.bankIBAN || '');
             thisTab.formControl.controls['bankBICcode'].patchValue(wallet.bankBicCode || '');

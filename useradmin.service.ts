@@ -625,6 +625,39 @@ export class UserAdminService {
          });
      }
 
+     /**
+      * Update Wallet
+      * -----------------
+      * Updates a wallet.
+      *
+      * @param {data} object - the updated wallet information.
+      *
+      * @return {any} [description]
+      */
+      updateWallet(data): Promise<any> {
+          /* Return. */
+          return this.adminUsersService.buildRequest({
+              ngRedux: this.ngRedux,
+              taskPipe: this.adminUsersService.updateWallet(data)
+          });
+      }
+
+    /**
+     * Delete Wallet
+     * ----------------
+     * Deletes a Wallet.
+     *
+     * @param {data} - the group's new data.
+     *
+     * @return {void}
+     */
+    public deleteWallet(data): Promise<any> {
+      return this.adminUsersService.buildRequest({
+          ngRedux: this.ngRedux,
+          taskPipe: this.adminUsersService.deleteWallet(data)
+      });
+    }
+
     /**
      * ===========================
      * Getters for hardcoded data.
