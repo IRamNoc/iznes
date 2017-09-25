@@ -6,7 +6,8 @@ import {
     SET_ADMIN_USERLIST,
     SET_USER_DETAILS,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
-    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_MANAGED_WALLETS
 } from '@setl/core-store';
 
 @Injectable()
@@ -97,6 +98,20 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+                        payload: [ null, data, null ]
+                    }
+                );
+                break;
+
+            case 'nw': // new wallet
+            case 'udw': // update wallet
+            case 'dw': // delete wallet
+                console.log(' | UPDATE MANAGE WALLET LIST: ', data);
+
+                /* ...and dispatch the update action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_MANAGED_WALLETS,
                         payload: [ null, data, null ]
                     }
                 );
