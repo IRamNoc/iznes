@@ -116,9 +116,21 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
         /* Proccess the data. */
         newWallet.walletName = formData.walletName;
+        newWallet.walletAccount = formData.walletAccount[0].id;
+        newWallet.walletType = formData.walletType[0].id;
 
-        /* Clear the form. */
-        this.clearNewWallet(1, false);
+        console.log('new wallet info: ', newWallet);
+
+        this.userAdminService.createNewWallet(newWallet).then((response) => {
+            /* Handle response. */
+            this.showSuccess('Successfully created the new wallet.');
+            console.log('made wallet: ', response);
+            this.clearNewWallet(1, false);
+        }).catch((error) => {
+            /* Show error if we failed to create the wallet. */
+            this.showError('Failed to create the new wallet.');
+            console.log('didn\'t make wallet: ', error);
+        });
 
         /* Return. */
         return;
