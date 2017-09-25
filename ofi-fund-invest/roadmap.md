@@ -1,0 +1,5 @@
+- [ ] Setup ofi-fund-invest module
+    - [ ] Create the basic skeleton.
+    - [ ] Import the ofi-fund-invest module. 
+    - [ ] Import ofi-fund-invest components to route, and set up the route.   
+    - [ ] Setup ofi-fund-invest nav item. 
