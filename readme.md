@@ -1,7 +1,7 @@
 ## OFI main module
 
 ### Consist of:
-- ofi-req-service
+- ofi-req-services
 - ofi-store
-- fund-invest  
+- ofi-fund-invest  
 
