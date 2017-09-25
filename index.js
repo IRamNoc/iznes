@@ -9,6 +9,7 @@ export {
 export {SetlPipesModule} from './pipes';
 
 export {SetlComponentsModule} from './components';
+export {ConfirmationService} from './components/jaspero-confirmation/confirmations.service';
 
 export {walletHelper} from './helper';
 
