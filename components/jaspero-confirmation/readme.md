@@ -1,12 +1,12 @@
-##Where is come from:
+## Where is come from:
 This is an angular 2 component that originally from 
 [@jaspero/ng2-confirmation](https://github.com/Jaspero/ng2-confirmations).
 
-##What we got in the customisation
+## What we got in the customisation
 * Allow html in title and message.
 
-##How to use:
-####Import the module to your
+## How to use:
+#### Import the module to your
 ```typescript
 
 @NgModule({
@@ -16,7 +16,7 @@ This is an angular 2 component that originally from
 })
 ```
 
-####Inject Confirmation service
+#### Inject Confirmation service
 ```typescript
 import {ConfirmationService} from '@setl/utils';
 
@@ -33,7 +33,7 @@ export class ExampleConmponet{
               '<span>Do something?</span>',
                '<span>You should really just do it</span>'
            ).subscribe((ans) => {
-               console.log(ans);
+               console.log(ans)
            })
     }
 }
