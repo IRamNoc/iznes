@@ -40,7 +40,7 @@
 
             <div *ngIf="composeSelected" class="message-compose">
                 <div class="message-options">
-                    <h2>Inbox - Compose Message</h2>
+                    <h2>Compose New Message</h2>
                 </div>
                 <form>
                     <section class="">
@@ -71,18 +71,18 @@
                     </section>
                 </form>
 
-                <div [froalaEditor]>Hello, Froala!</div>
+                <!-- composer body -->
 
                 <div class="message-compose-buttons">
-
-                    <button class="btn btn-primary">
-                        <clr-icon shape="plane"></clr-icon>
-                        Success
-                    </button>
                     <button class="btn btn-danger-outline">
                         <clr-icon shape="times"></clr-icon>
-                        Warning
+                        Cancel
                     </button>
+                    <button class="btn btn-primary" (click)="sendMessage()">
+                        <clr-icon shape="plane"></clr-icon>
+                        Send
+                    </button>
+
                 </div>
 
             </div>
@@ -92,7 +92,7 @@
                     <!-- message highlights (previews -->
                     <div class="col-sm-5 message-highlights">
                         <div class="message-options">
-                            <h2>InboxX All Messages ({{messages.length || 0}})</h2>
+                            <h2>Inbox All Messages ({{messages.length || 0}})</h2>
                             <button class="btn btn-outline btn-sm">
                                 <clr-icon shape="refresh"></clr-icon>
                                 Refresh
