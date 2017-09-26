@@ -20,8 +20,10 @@ export class WalletNodeSocketService {
      * Connect to walletnode
      */
     connectToNode(protocol: string = 'ws', hostName: string = '127.0.0.1', port: number = 13535, nodePath = '', userId, apiKey) {
-        const resolveConnect;
-        const rejectConnect;
+        let resolveConnect = () => {
+        };
+        let rejectConnect = () => {
+        };
 
         // Clear current connection.
         this.clearConnection();
@@ -136,7 +138,7 @@ export class WalletNodeSocketService {
                     requestName: '',
                     // Subscribe less topics.
                     // topic: ['block', 'balanceview', 'proposal', 'transaction', 'serverstatus', 'stateview', 'blockchanges']
-                    topic: ['blockchanges', 'balanceview']
+                    topic: ['block', 'stateview', 'blockchanges']
                 },
                 requestID: messageID
             };
