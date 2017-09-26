@@ -57,11 +57,11 @@ function formatToWalletList(rawWalletList: Array<any>): {
                 address4: item.get('address4'),
                 addressPrefix: item.get('addressPrefix'),
                 aliases: item.get('aliases'),
-                bankBicCode: item.get('bankBICCode'),
+                bankBicCode: item.get('bankBICcode'),
                 bankName: item.get('bankName'),
                 bankWalletId: item.get('bankWalletID'),
-                bankAccountName: item.get('bankAccountName'),
-                bankAccountNum: item.get('bankAccountNum'),
+                bankAccountName: item.get('bankaccountname'),
+                bankAccountNum: item.get('bankaccountnum'),
                 bdAddress1: item.get('bdAddress1'),
                 bdAddress2: item.get('bdAddress2'),
                 bdAddress3: item.get('bdAddress3'),
@@ -79,10 +79,10 @@ function formatToWalletList(rawWalletList: Array<any>): {
                 commuPub: item.get('commuPub'),
                 country: item.get('country'),
                 formerName: item.get('formerName'),
-                idCardNum: item.get('idCardNum'),
-                incorporationData: item.get('incorporationData'),
+                idCardNum: item.get('idcardnum'),
+                incorporationData: item.get('incorporationDate'),
                 parent: item.get('parent'),
-                platformRegData: item.get('platformRegData'),
+                platformRegData: item.get('platformRegDate'),
                 postalCode: item.get('postalCode'),
                 rdaAddress1: item.get('rdaAddress1'),
                 rdaAddress2: item.get('rdaAddress2'),
@@ -92,7 +92,7 @@ function formatToWalletList(rawWalletList: Array<any>): {
                 rdaCountry: item.get('rdaCountry'),
                 rdaPostalCode: item.get('rdaPostalCode'),
                 uid: item.get('uid'),
-                websiteUrl: item.get('websiteUrl'),
+                websiteUrl: item.get('websiteURL'),
             };
             return result;
         },
@@ -100,4 +100,3 @@ function formatToWalletList(rawWalletList: Array<any>): {
 
     return walletsObject.toJS();
 }
-
