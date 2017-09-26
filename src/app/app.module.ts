@@ -45,9 +45,11 @@ import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
+import {SetlComponentsModule} from '@setl/utils';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
+import {OfiMainModule} from '@ofi/ofi-main';
 
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
@@ -80,6 +82,17 @@ import {AppState} from './store/app.reducer';
  * Environment
  */
 import {environment} from '../environments/environment';
+
+/**
+ * Membersocket service factory
+ */
+export function memberSocketServiceFactory() {
+    return new MemberSocketService(
+        environment.MEMBER_NODE_CONNECTION.host,
+        environment.MEMBER_NODE_CONNECTION.port,
+        environment.MEMBER_NODE_CONNECTION.path
+    );
+}
 
 @NgModule({
     declarations: [
@@ -114,7 +127,9 @@ import {environment} from '../environments/environment';
         SetlBalancesModule,
         PermissionGridModule,
         SetlPipesModule,
-        CoreManageMemberModule
+        CoreManageMemberModule,
+        SetlComponentsModule,
+        OfiMainModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -122,14 +137,7 @@ import {environment} from '../environments/environment';
         {
             provide: MemberSocketService,
 
-            useFactory() {
-
-                return new MemberSocketService(
-                    environment.MEMBER_NODE_CONNECTION.host,
-                    environment.MEMBER_NODE_CONNECTION.port,
-                    environment.MEMBER_NODE_CONNECTION.path
-                );
-            }
+            useFactory: memberSocketServiceFactory
         },
 
         {
@@ -151,7 +159,7 @@ import {environment} from '../environments/environment';
         MemberService,
         ChainService,
         MultilingualService,
-        WalletnodeChannelService
+        WalletnodeChannelService,
     ],
     bootstrap: [AppComponent]
 })

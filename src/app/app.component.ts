@@ -12,19 +12,28 @@ export class AppComponent {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any;
-    JasperoAlertoptions: any = {
+    jasperoAlertoptions: any = {
         overlay: true,
         overlayClickToClose: true,
         showCloseButton: true,
         duration: 500000
+    };
+    jasperoConfirmaSetting: any = {
+        overlay: true,
+        overlayClickToClose: true,
+        showCloseButton: true,
+        confirmText: 'Yes',
+        declineText: 'No'
     };
 
     constructor(private memberSocketService: MemberSocketService,
                 private walletnodeChannelService: WalletnodeChannelService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private  toasterService: ToasterService) {
+
         memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('warning', 'Member node connection disconnected');
+
         };
 
         // memberSocketService.errorCallback = () => {
@@ -44,6 +53,7 @@ export class AppComponent {
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
             this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
+
 
     }
 }
