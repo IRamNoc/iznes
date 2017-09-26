@@ -30,6 +30,11 @@ import {
     RequestTxPermissionBody,
     RequestUserPermissionsBody,
 
+    /* Wallet requests. */
+    CreateNewWalletBody,
+    UpdateWalletBody,
+    DeleteWalletBody,
+
     /* Wallet node list */
     RequestWalletNodeListBody,
 
@@ -492,6 +497,208 @@ export class AdminUsersService {
         };
 
         /* Return the new member node saga requests. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public createNewWallet(newWallet): any {
+        /* Setup the message body. */
+        let messageBody: CreateNewWalletBody;
+
+        if ( newWallet.walletType == "1" ) {
+            /* Legal wallet body. */
+            messageBody = {
+                RequestName: 'nw',
+                token: this.memberSocketService.token,
+                /* Core wallet stuff. */
+                walletName: _.get(newWallet, 'walletName',    ''),
+                account:    _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType',    ''),
+
+                /* Legal basic. */
+                uid: _.get(newWallet, 'walletUid',    ''),
+                lei: _.get(newWallet, 'walletLei',    ''),
+                websiteUrl: _.get(newWallet, 'walletWebUrl',    ''),
+                incorporationdate: _.get(newWallet, 'walletIncDate',    ''),
+
+                /* Legal corresondence. */
+                country: _.get(newWallet, 'walletAddrCountry', '' ),
+                addressPrefix: _.get(newWallet, 'walletAddrPrefix', '' ),
+                address1: _.get(newWallet, 'walletAddr1', '' ),
+                address2: _.get(newWallet, 'walletAddr2', '' ),
+                address3: _.get(newWallet, 'walletAddr3', '' ),
+                address4: _.get(newWallet, 'walletAddr4', '' ),
+                postalCode: _.get(newWallet, 'walletAddrPostcode', '' ),
+            };
+        } else if ( newWallet.walletType == "2" ) {
+            /* Inidivdual wallet body. */
+            messageBody = {
+                RequestName: 'nw',
+                token: this.memberSocketService.token,
+                walletName: _.get(newWallet, 'walletName',    ''),
+                account:    _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType',    ''),
+
+                /* Individual basic fields. */
+                aliases: _.get(newWallet, 'aliases', ''),
+                formerName: _.get(newWallet, 'formerName', ''),
+                idcardnum: _.get(newWallet, 'idCardNum', ''),
+
+                /* Individual residential address. */
+                rdaCountry: _.get(newWallet, 'rdaAddrCountry', ''),
+                rdaAddressPrefix: _.get(newWallet, 'rdaAddrPrefix', ''),
+                rdaAddress1: _.get(newWallet, 'rdaAddr1', ''),
+                rdaAddress2: _.get(newWallet, 'rdaAddr2', ''),
+                rdaAddress3: _.get(newWallet, 'rdaAddr3', ''),
+                rdaAddress4: _.get(newWallet, 'rdaAddr4', ''),
+                rdaPostalCode: _.get(newWallet, 'rdaAddrPostcode', ''),
+
+                /* Individual corresondence address. */
+                caCountry: _.get(newWallet, 'caAddrCountry', ''),
+                caAddressPrefi: _.get(newWallet, 'caAddrPrefix', ''),
+                caAddress1: _.get(newWallet, 'caAddr1', ''),
+                caAddress2: _.get(newWallet, 'caAddr2', ''),
+                caAddress3: _.get(newWallet, 'caAddr3', ''),
+                caAddress4: _.get(newWallet, 'caAddr4', ''),
+                caPostalCode: _.get(newWallet, 'caAddrPostcode', ''),
+
+                /* Individual settlement detail. */
+                bankWalletID: _.get(newWallet, 'bankWalletId', ''),
+                bankName: _.get(newWallet, 'bankName', ''),
+                bankIBAN: _.get(newWallet, 'bankIBAN', ''),
+                bankBICcode: _.get(newWallet, 'bankBICcode', ''),
+                bankaccountname: _.get(newWallet, 'bankAccountName', ''),
+                bankaccountnum: _.get(newWallet, 'bankAccountNum', ''),
+                /* settlement address */
+                bdCountry: _.get(newWallet, 'bdAddrCountry', ''),
+                bdAddressPrefix: _.get(newWallet, 'bdAddrPrefix', ''),
+                bdAddress1: _.get(newWallet, 'bdAddr1', ''),
+                bdAddress2: _.get(newWallet, 'bdAddr2', ''),
+                bdAddress3: _.get(newWallet, 'bdAddr3', ''),
+                bdAddress4: _.get(newWallet, 'bdAddr4', ''),
+                bdPostalCode: _.get(newWallet, 'bdAddrPostcode', ''),
+            };
+        } else {
+            /* Other wallet body. */
+            messageBody = {
+                RequestName: 'nw',
+                token: this.memberSocketService.token,
+                walletName: _.get(newWallet, 'walletName',    ''),
+                account:    _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType',    ''),
+            };
+        }
+        /* Return the new member node saga requests. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateWallet(editWallet): any {
+        /* Setup the message body. */
+        let messageBody: UpdateWalletBody;
+
+        if ( editWallet.walletType == "1" ) {
+            /* Legal wallet body. */
+            messageBody = {
+                RequestName: 'udw',
+                token: this.memberSocketService.token,
+                /* Core wallet stuff. */
+                walletId: _.get(editWallet, 'walletId',    ''),
+                walletName: _.get(editWallet, 'walletName',    ''),
+                account:    _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType',    ''),
+                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+
+                /* Legal basic. */
+                uid: _.get(editWallet, 'walletUid',    ''),
+                lei: _.get(editWallet, 'walletLei',    ''),
+                websiteUrl: _.get(editWallet, 'walletWebUrl',    ''),
+                incorporationdate: _.get(editWallet, 'walletIncDate',    ''),
+
+                /* Legal corresondence. */
+                country: _.get(editWallet, 'walletAddrCountry', '' ),
+                addressPrefix: _.get(editWallet, 'walletAddrPrefix', '' ),
+                address1: _.get(editWallet, 'walletAddr1', '' ),
+                address2: _.get(editWallet, 'walletAddr2', '' ),
+                address3: _.get(editWallet, 'walletAddr3', '' ),
+                address4: _.get(editWallet, 'walletAddr4', '' ),
+                postalCode: _.get(editWallet, 'walletAddrPostcode', '' ),
+            };
+        } else if ( editWallet.walletType == "2" ) {
+            /* Inidivdual wallet body. */
+            messageBody = {
+                RequestName: 'udw',
+                token: this.memberSocketService.token,
+                walletId: _.get(editWallet, 'walletId',    ''),
+                walletName: _.get(editWallet, 'walletName',    ''),
+                account:    _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType',    ''),
+                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+
+                /* Individual basic fields. */
+                aliases: _.get(editWallet, 'aliases', ''),
+                formerName: _.get(editWallet, 'formerName', ''),
+                idcardnum: _.get(editWallet, 'idCardNum', ''),
+
+                /* Individual residential address. */
+                rdaCountry: _.get(editWallet, 'rdaAddrCountry', ''),
+                rdaAddressPrefix: _.get(editWallet, 'rdaAddrPrefix', ''),
+                rdaAddress1: _.get(editWallet, 'rdaAddr1', ''),
+                rdaAddress2: _.get(editWallet, 'rdaAddr2', ''),
+                rdaAddress3: _.get(editWallet, 'rdaAddr3', ''),
+                rdaAddress4: _.get(editWallet, 'rdaAddr4', ''),
+                rdaPostalCode: _.get(editWallet, 'rdaAddrPostcode', ''),
+
+                /* Individual corresondence address. */
+                caCountry: _.get(editWallet, 'caAddrCountry', ''),
+                caAddressPrefix: _.get(editWallet, 'caAddrPrefix', ''),
+                caAddress1: _.get(editWallet, 'caAddr1', ''),
+                caAddress2: _.get(editWallet, 'caAddr2', ''),
+                caAddress3: _.get(editWallet, 'caAddr3', ''),
+                caAddress4: _.get(editWallet, 'caAddr4', ''),
+                caPostalCode: _.get(editWallet, 'caAddrPostcode', ''),
+
+                /* Individual settlement detail. */
+                bankWalletID: _.get(editWallet, 'bankWalletId', ''),
+                bankName: _.get(editWallet, 'bankName', ''),
+                bankIBAN: _.get(editWallet, 'bankIBAN', ''),
+                bankBICcode: _.get(editWallet, 'bankBICcode', ''),
+                bankaccountname: _.get(editWallet, 'bankAccountName', ''),
+                bankaccountnum: _.get(editWallet, 'bankAccountNum', ''),
+                /* settlement address */
+                bdCountry: _.get(editWallet, 'bdAddrCountry', ''),
+                bdAddressPrefix: _.get(editWallet, 'bdAddrPrefix', ''),
+                bdAddress1: _.get(editWallet, 'bdAddr1', ''),
+                bdAddress2: _.get(editWallet, 'bdAddr2', ''),
+                bdAddress3: _.get(editWallet, 'bdAddr3', ''),
+                bdAddress4: _.get(editWallet, 'bdAddr4', ''),
+                bdPostalCode: _.get(editWallet, 'bdAddrPostcode', ''),
+            };
+        } else {
+            /* Other wallet body. */
+            messageBody = {
+                RequestName: 'udw',
+                token: this.memberSocketService.token,
+                walletId: _.get(editWallet, 'walletId',    ''),
+                walletName: _.get(editWallet, 'walletName',    ''),
+                account:    _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType',    ''),
+                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+            };
+        }
+        /* Return the new member node saga requests. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public deleteWallet(data): any {
+        /* Setup the message body. */
+        const messageBody: DeleteWalletBody = {
+            RequestName: 'dw',
+            token: this.memberSocketService.token,
+            walletId: data.walletId
+        };
+
+        console.log('SENDING DW: ', messageBody);
+
+        /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
