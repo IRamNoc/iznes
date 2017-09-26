@@ -554,7 +554,7 @@ export class AdminUsersService {
 
                 /* Individual corresondence address. */
                 caCountry: _.get(newWallet, 'caAddrCountry', ''),
-                caAddressPrefi: _.get(newWallet, 'caAddrPrefix', ''),
+                caAddressPrefix: _.get(newWallet, 'caAddrPrefix', ''),
                 caAddress1: _.get(newWallet, 'caAddr1', ''),
                 caAddress2: _.get(newWallet, 'caAddr2', ''),
                 caAddress3: _.get(newWallet, 'caAddr3', ''),
@@ -587,6 +587,9 @@ export class AdminUsersService {
                 walletType: _.get(newWallet, 'walletType',    ''),
             };
         }
+
+        console.log('SENDING NW: ', messageBody);
+
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -684,6 +687,9 @@ export class AdminUsersService {
                 walletLocked: _.get(editWallet, 'walletLocked',    ''),
             };
         }
+
+        console.log('SENDING UDW: ', messageBody);
+
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }

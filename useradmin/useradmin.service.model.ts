@@ -207,7 +207,7 @@ export interface CreateNewWalletBody extends MemberNodeMessageBody {
 
     /* Individual corresondence address. */
     caCountry?: string;
-    caAddressPrefi?: string;
+    caAddressPrefix?: string;
     caAddress1?: string;
     caAddress2?: string;
     caAddress3?: string;
