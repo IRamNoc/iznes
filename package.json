@@ -9,7 +9,8 @@
         "test": "ng test",
         "test-single": "ng test --single-run",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build-prod": "cd src; sass  styles.scss:styles.css; cd ../; ng build --prod"
     },
     "private": true,
     "dependencies": {
@@ -24,6 +25,7 @@
         "@angular/platform-browser-dynamic": "^4.2.3",
         "@angular/router": "^4.2.3",
         "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.30",
+        "@ofi/ofi-main": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git",
         "@ofi/product": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi_product.git",
         "@setl/asset-servicing": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git",
         "@setl/core-account": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git",
