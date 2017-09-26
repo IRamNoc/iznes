@@ -6,7 +6,7 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./component.css']
 })
 
-export class InvestorFundListComponent implements OnInit {
+export class OfiInvestorFundListComponent implements OnInit {
     constructor() {
     }
 
