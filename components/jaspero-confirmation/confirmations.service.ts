@@ -1,14 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {ConfirmSettings} from './interfaces/confirm-settings';
-import {ConfirmSettings} from './interfaces/confirm-settings';
+import {ConfirmEmit} from './interfaces/comfirm-emit'
 import {ResolveEmit} from './interfaces/resolve-emit';
 
 @Injectable()
 export class ConfirmationService {
-    confirmation$ = new Subject<ConfirmSettings>();
+    confirmation$ = new Subject<ConfirmEmit>();
+    defaultConfirmationSettings: ConfirmSettings = {
+        declineText: ''
+    };
 
-    create(title: string, message: string, override: ConfirmSettings = {}) {
+    create(title: string, message: string, override: ConfirmSettings = this.defaultConfirmationSettings) {
         const resolve$ = new Subject<ResolveEmit>();
 
         this.confirmation$.next({
