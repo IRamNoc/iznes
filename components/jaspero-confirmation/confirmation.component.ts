@@ -239,11 +239,14 @@ export class ConfirmationComponent {
     }
 
     close(type: string) {
+        const resolveEmit: ResolveEmit = {
+            closedWithoutResolving: type
+        };
         this.animationState = 'leave';
         this._ngZone.runOutsideAngular(() => {
             setTimeout(() => {
                 this._ngZone.run(() => {
-                    this.resolve({closedWithOutResolving: type});
+                    this.resolve(resolveEmit);
                 });
             }, 450);
         });
