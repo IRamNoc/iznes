@@ -9,7 +9,8 @@
         "test": "ng test",
         "test-single": "ng test --single-run",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build-prod": "ng build --prod"
     },
     "private": true,
     "dependencies": {
