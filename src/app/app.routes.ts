@@ -38,6 +38,11 @@ import {
 } from '@setl/core-manage-member';
 
 /**
+ * Ofi main module.
+ */
+import {OfiInvestorFundListComponent} from '@ofi/ofi-main';
+
+/**
  * Login Guard service
  */
 import {LoginGuardService} from '@setl/core-login';
@@ -77,21 +82,21 @@ export const ROUTES: Routes = [
             {
                 path: 'account',
                 children: [
-                        {
-                            path: 'my-account',
-                            component: SetlMyAccountComponent,
-                            canActivate: [LoginGuardService],
-                        }
+                    {
+                        path: 'my-account',
+                        component: SetlMyAccountComponent,
+                        canActivate: [LoginGuardService],
+                    }
                 ]
             },
             {
                 path: 'product-module',
                 children: [
-                        {
-                            path: 'fund',
-                            component: OfiFundComponent,
-                            canActivate: [LoginGuardService],
-                        }
+                    {
+                        path: 'fund',
+                        component: OfiFundComponent,
+                        canActivate: [LoginGuardService],
+                    }
                 ]
             },
             {
@@ -187,6 +192,15 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService]
                     }
                 ],
+                canActivate: [LoginGuardService]
+            },
+
+            /**
+             * OFI
+             */
+            {
+                path: 'list-of-funds',
+                component: OfiInvestorFundListComponent,
                 canActivate: [LoginGuardService]
             }
         ],
