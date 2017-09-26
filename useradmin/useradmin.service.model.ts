@@ -168,3 +168,134 @@ export interface UpdateMemberChainAccessBody extends MemberNodeMessageBody{
     toAdd: object;
     toDelete: Array<number>;
 }
+
+export interface CreateNewWalletBody extends MemberNodeMessageBody {
+    /* Core wallet fields. */
+    token: string;
+    walletName: string;
+    walletType: string;
+    account: string;
+
+    /* Legal basic fields. */
+    uid?: string;
+    lei?: string;
+    websiteUrl?: string;
+    incorporationdate?: string;
+
+    /* Legal corresondence. */
+    country?: string;
+    addressPrefix?: string;
+    address1?: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
+    postalCode?: string;
+
+    /* Individual basic fields. */
+    aliases?: string;
+    formerName?: string;
+    idcardnum?: string;
+
+    /* Individual residential address. */
+    rdaCountry?: string;
+    rdaAddressPrefix?: string;
+    rdaAddress1?: string;
+    rdaAddress2?: string;
+    rdaAddress3?: string;
+    rdaAddress4?: string;
+    rdaPostalCode?: string;
+
+    /* Individual corresondence address. */
+    caCountry?: string;
+    caAddressPrefi?: string;
+    caAddress1?: string;
+    caAddress2?: string;
+    caAddress3?: string;
+    caAddress4?: string;
+    caPostalCode?: string;
+
+    /* Individual settlement detail. */
+    bankWalletID?: string;
+    bankName?: string;
+    bankIBAN?: string;
+    bankBICcode?: string;
+    bankaccountname?: string;
+    bankaccountnum?: string;
+    /* settlement address */
+    bdCountry?: string;
+    bdAddressPrefix?: string;
+    bdAddress1?: string;
+    bdAddress2?: string;
+    bdAddress3?: string;
+    bdAddress4?: string;
+    bdPostalCode?: string;
+}
+
+export interface UpdateWalletBody extends MemberNodeMessageBody {
+    /* Core wallet fields. */
+    token: string;
+    walletId: string;
+    walletName: string;
+    walletType: string;
+    account: string;
+    walletLocked: string;
+
+    /* Legal basic fields. */
+    uid?: string;
+    lei?: string;
+    websiteUrl?: string;
+    incorporationdate?: string;
+
+    /* Legal corresondence. */
+    country?: string;
+    addressPrefix?: string;
+    address1?: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
+    postalCode?: string;
+
+    /* Individual basic fields. */
+    aliases?: string;
+    formerName?: string;
+    idcardnum?: string;
+
+    /* Individual residential address. */
+    rdaCountry?: string;
+    rdaAddressPrefix?: string;
+    rdaAddress1?: string;
+    rdaAddress2?: string;
+    rdaAddress3?: string;
+    rdaAddress4?: string;
+    rdaPostalCode?: string;
+
+    /* Individual corresondence address. */
+    caCountry?: string;
+    caAddressPrefix?: string;
+    caAddress1?: string;
+    caAddress2?: string;
+    caAddress3?: string;
+    caAddress4?: string;
+    caPostalCode?: string;
+
+    /* Individual settlement detail. */
+    bankWalletID?: string;
+    bankName?: string;
+    bankIBAN?: string;
+    bankBICcode?: string;
+    bankaccountname?: string;
+    bankaccountnum?: string;
+    /* settlement address */
+    bdCountry?: string;
+    bdAddressPrefix?: string;
+    bdAddress1?: string;
+    bdAddress2?: string;
+    bdAddress3?: string;
+    bdAddress4?: string;
+    bdPostalCode?: string;
+}
+
+export interface DeleteWalletBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: string;
+}
