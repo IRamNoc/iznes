@@ -22,16 +22,19 @@ export class MemberSocketService {
 
         this.socket.disconnectCallback = () => {
             this.disconnectCallback();
+            return true;
         };
 
         this.socket.errorCallback = () => {
             this.errorCallback();
+            return true;
         };
 
         this.socket.connectCallback = () => {
             if (this.socket.connectTries > 1) {
                 this.reconnectCallback();
             }
+            return true;
         };
 
 

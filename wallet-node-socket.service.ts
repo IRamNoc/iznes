@@ -20,8 +20,10 @@ export class WalletNodeSocketService {
      * Connect to walletnode
      */
     connectToNode(protocol: string = 'ws', hostName: string = '127.0.0.1', port: number = 13535, nodePath = '', userId, apiKey) {
-        const resolveConnect;
-        const rejectConnect;
+        let resolveConnect = () => {
+        };
+        let rejectConnect = () => {
+        };
 
         // Clear current connection.
         this.clearConnection();
