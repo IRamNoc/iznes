@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 
-import {InvestorFundListComponent} from './investor-fund-list/component';
+import {OfiInvestorFundListComponent} from './investor-fund-list/component';
 
 
 @NgModule({
     imports: [],
-    exports: [InvestorFundListComponent],
-    declarations: [InvestorFundListComponent],
+    exports: [OfiInvestorFundListComponent],
+    declarations: [OfiInvestorFundListComponent],
     providers: [],
 })
 export class OfiFundInvestModule {
