@@ -213,7 +213,7 @@ export class UserAdminService {
         }
 
         /* Let's request the admin perm area list, this is the saga pipe function. */
-        if (!getAdminPermAreaList(state).length) {
+        if (!Object.keys(getAdminPermAreaList(state)).length) {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getAdminPermAreaList(),
@@ -222,7 +222,7 @@ export class UserAdminService {
         }
 
         /* Let's request the tx perm area list, this is the saga pipe function. */
-        if (!getTxPermAreaList(state).length) {
+        if (!Object.keys(getTxPermAreaList(state)).length) {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getTxPermAreaList(),
@@ -361,7 +361,7 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserWalletPermissions(data),
-            successActions: [ SET_USERS_WALLET_PERMISSIONS ]
+            successActions: [SET_USERS_WALLET_PERMISSIONS]
         });
     }
 
@@ -430,7 +430,7 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserChainAccess(data),
-            successActions: [ SET_USERS_CHAIN_ACCESS ]
+            successActions: [SET_USERS_CHAIN_ACCESS]
         });
     }
 
@@ -631,9 +631,9 @@ export class UserAdminService {
     public getAccountTypeById(id): any {
         /* Return the match. */
         let i;
-        for ( i in this.accountTypes ) {
-            if ( this.accountTypes[i].id == id ) {
-                return [ this.accountTypes[i] ];
+        for (i in this.accountTypes) {
+            if (this.accountTypes[i].id == id) {
+                return [this.accountTypes[i]];
             }
         }
 
@@ -664,9 +664,9 @@ export class UserAdminService {
     public getWalletTypeById(id): any {
         /* Return the match. */
         let i;
-        for ( i in this.walletTypes ) {
-            if ( this.walletTypes[i].id == id ) {
-                return [ this.walletTypes[i] ];
+        for (i in this.walletTypes) {
+            if (this.walletTypes[i].id == id) {
+                return [this.walletTypes[i]];
             }
         }
 
@@ -905,32 +905,32 @@ export class UserAdminService {
      *
      * @return {differences} object - an object of differences.
      */
-    public getWalletAccessDiff (oldAccess, newAccess):any {
+    public getWalletAccessDiff(oldAccess, newAccess): any {
         /* Variables. */
         let
-        i, j, k,
-        differences = {
-            'toAdd': {},
-            'toUpdate': {},
-            'toDelete': {}
-        };
+            i, j, k,
+            differences = {
+                'toAdd': {},
+                'toUpdate': {},
+                'toDelete': {}
+            };
 
         /* First, let's see what's new. */
         for (i in newAccess) {
             /* If it's not in the old one, the add it. */
-            if ( ! oldAccess[i] ) differences.toAdd[i] = newAccess[i];
+            if (!oldAccess[i]) differences.toAdd[i] = newAccess[i];
         }
 
         /* Next, let's figure out what has been changed. */
         for (j in newAccess) {
             /* If it is in the old one and it is not the same value, it's different. */
-            if ( oldAccess[j] && oldAccess[j] != newAccess[j] ) differences.toUpdate[j] = newAccess[j];
+            if (oldAccess[j] && oldAccess[j] != newAccess[j]) differences.toUpdate[j] = newAccess[j];
         }
 
         /* Lastly, let's check if any were deleted. */
         for (k in oldAccess) {
             /* If it's not in the new access, it's been deleted. */
-            if ( ! newAccess[k] ) differences.toDelete[k] = oldAccess[k];
+            if (!newAccess[k]) differences.toDelete[k] = oldAccess[k];
         }
 
         /* Now, just return the differences. */
@@ -945,15 +945,15 @@ export class UserAdminService {
      * @param {incompleteArray} array - Array of incomplete objects.
      * @return {completeArray} array - Array of complete objects.
      */
-    public resolveCountries (incompleteArray):Array<{
+    public resolveCountries(incompleteArray): Array<{
         id: string;
         text: string;
     }> {
         /* Variables. */
         let
-        i, j, toResolve, country,
-        identifier = '',
-        completeArray = [];
+            i, j, toResolve, country,
+            identifier = '',
+            completeArray = [];
 
         /* Ok, let's loop over each of the objects to resolve. */
         for (i in incompleteArray) {
@@ -970,9 +970,9 @@ export class UserAdminService {
                 country = this.countries[j];
 
                 /* Check if we've found it. */
-                if ( country[identifier] === toResolve[identifier] ) {
+                if (country[identifier] === toResolve[identifier]) {
                     /* If we have, then let's push this country into the array... */
-                    completeArray.push( country );
+                    completeArray.push(country);
 
                     /* ...and break. */
                     break;
