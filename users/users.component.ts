@@ -990,11 +990,16 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
                 resolution = this.getChainById(chain.chainID);
+                console.log( resolution );
                 return {
                     id: resolution.chainId,
                     text: resolution.chainName,
                 };
-            });
+            })
+            /* Filter to remove chains that we can't see. */
+            .filter(chain => !!chain.id);
+
+            /* Set the past access and the form control value. */
             thisTab['oldChainAccess'] = userChainAccess;
             thisTab.formControl.controls['chainAccess'].patchValue(userChainAccess);
         }).catch((error) => {
@@ -1024,10 +1029,12 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (key in groupsObject) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsObject[key].groupID})[0];
-            newArr.push({
-                id: resolution.groupId,
-                text: resolution.groupName,
-            })
+            if ( resolution ) {
+                newArr.push({
+                    id: resolution.groupId,
+                    text: resolution.groupName,
+                })
+            }
         }
 
         /* Return. */
@@ -1041,7 +1048,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (i in groupsArray) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsArray[i].id})[0];
-            newObject[groupsArray[i].id] = resolution;
+            if ( resolution ) {
+                newObject[groupsArray[i].id] = resolution;
+            }
         }
 
         /* Return. */

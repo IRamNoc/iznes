@@ -603,6 +603,29 @@ export class UserAdminService {
     }
 
     /**
+     * =================
+     * Wallet functions.
+     * =================
+     */
+
+    /**
+     * Create New Wallet
+     * -----------------
+     * Creates a new wallet.
+     *
+     * @param {data} object - the new wallet information.
+     *
+     * @return {any} [description]
+     */
+     createNewWallet(data): Promise<any> {
+         /* Return. */
+         return this.adminUsersService.buildRequest({
+             ngRedux: this.ngRedux,
+             taskPipe: this.adminUsersService.createNewWallet(data)
+         });
+     }
+
+    /**
      * ===========================
      * Getters for hardcoded data.
      * ===========================

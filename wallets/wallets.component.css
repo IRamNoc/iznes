@@ -2,7 +2,8 @@
 .wallet-status > span {
     display: inline-block;
     width: auto;
-    vertical-align: top;
+    vertical-align: middle;
+    margin-top: 10px;
 }
 
 .wallet-status .toggle-switch input[type='checkbox'] {
@@ -12,8 +13,13 @@
 
 .wallet-status > span {
     margin-top: 5px;
-    margin-left: 10px;
-    width: 15px;
+    margin-left: 0;
+    border: 1px solid #C0C0C0;
+    border-radius: 4px;
+    width: 38px;
+    height: 38px;
+    text-align: center;
+    line-height: 39px;
 }
 
 .wallet-status > span i {
@@ -25,5 +31,5 @@
 }
 
 .wallet-status > span i.fa-lock {
-    color: #ed5969;
+    color: #747474;
 }
