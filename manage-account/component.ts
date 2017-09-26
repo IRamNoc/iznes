@@ -19,6 +19,22 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
 import _ from 'lodash';
 
+export function getManageMember(state) {
+
+    const myMemberId = state.user.myDetail.memberId;
+    const isAdmin = state.user.myDetail.admin;
+    let managedMemberListImu;
+
+    if (isAdmin) {
+        return state.member.manageMemberList.memberList;
+    } else {
+        managedMemberListImu = fromJS(state.member.manageMemberList.memberList);
+        return managedMemberListImu.filter((thisMember) => {
+            return thisMember.get('memberId') === myMemberId;
+        }).toJS();
+    }
+}
+
 @Component({
     selector: 'app-manage-account',
     templateUrl: './component.html'
@@ -35,7 +51,7 @@ export class ManageAccountComponent implements OnInit {
     @select(['account', 'accountList', 'accountList']) accountListOb;
     @select(['account', 'requestedAccountList']) requestedAccountListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
-    @select((state) => getManageMember(state)) managedMemberOb;
+    @select(getManageMember) managedMemberOb;
     @select(['user', 'myDetail', 'admin']) isSymAdminOb;
     @select(['wallet', 'managedWallets', 'walletList']) walletListOb;
 
@@ -392,20 +408,4 @@ export class ManageAccountComponent implements OnInit {
                     `);
     }
 
-}
-
-function getManageMember(state) {
-
-    const myMemberId = state.user.myDetail.memberId;
-    const isAdmin = state.user.myDetail.admin;
-    let managedMemberListImu;
-
-    if (isAdmin) {
-        return state.member.manageMemberList.memberList;
-    } else {
-        managedMemberListImu = fromJS(state.member.manageMemberList.memberList);
-        return managedMemberListImu.filter((thisMember) => {
-            return thisMember.get('memberId') === myMemberId;
-        }).toJS();
-    }
 }
