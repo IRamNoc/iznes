@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
+import {WalletnodeChannelService} from '@setl/core-req-services';
 import {ToasterService} from 'angular2-toaster';
 
 @Component({
@@ -17,7 +19,31 @@ export class AppComponent {
         duration: 500000
     };
 
-    constructor() {
+    constructor(private memberSocketService: MemberSocketService,
+                private walletnodeChannelService: WalletnodeChannelService,
+                private walletNodeSocketService: WalletNodeSocketService,
+                private  toasterService: ToasterService) {
+        memberSocketService.disconnectCallback = () => {
+            this.toasterService.pop('warning', 'Member node connection disconnected');
+        };
+
+        // memberSocketService.errorCallback = () => {
+        //     this.toasterService.pop('warning', 'Member node connection error');
+        // };
+
+        memberSocketService.reconnectCallback = () => {
+            this.toasterService.pop('warning', 'Member node connection reconnected');
+        };
+
+        /**
+         * Handle walletnode update message.
+         * @param id
+         * @param message
+         * @param userData
+         */
+        this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
+            this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
+        };
 
     }
 }

@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.Accounts;
+package com.setl.openCSDClarityTests.UI.MemberManagement;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -6,7 +6,10 @@ import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -14,16 +17,12 @@ import org.openqa.selenium.By;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.acceptCookies;
-import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
-import static org.junit.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class OpenCSDAccountsAcceptanceTest {
+public class OpenCSDCreateMemberAcceptanceTest {
 
-    private static final Logger logger = LogManager.getLogger(OpenCSDAccountsAcceptanceTest.class);
+    private static final Logger logger = LogManager.getLogger(OpenCSDCreateMemberAcceptanceTest.class);
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();

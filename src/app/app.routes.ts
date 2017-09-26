@@ -16,6 +16,9 @@ import {AdminWalletsComponent} from '@setl/core-useradmin';
 import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 
+/* Product */
+import {OfiFundComponent} from '@ofi/product';
+
 /**
  * Asset serving module
  */
@@ -72,9 +75,24 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'my-account',
-                component: SetlMyAccountComponent,
-                canActivate: [LoginGuardService]
+                path: 'account',
+                children: [
+                        {
+                            path: 'my-account',
+                            component: SetlMyAccountComponent,
+                            canActivate: [LoginGuardService],
+                        }
+                ]
+            },
+            {
+                path: 'product-module',
+                children: [
+                        {
+                            path: 'fund',
+                            component: OfiFundComponent,
+                            canActivate: [LoginGuardService],
+                        }
+                ]
             },
             {
                 path: 'ui-elements',

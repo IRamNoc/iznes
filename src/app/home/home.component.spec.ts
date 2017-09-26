@@ -14,7 +14,6 @@ import {FormElementsComponent} from '../ui-elements/form-elements.component';
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
 import {AdminPermissionsComponent} from '@setl/core-useradmin';
-import {AdminWalletsTableComponent} from '@setl/core-useradmin/wallets/subcomponents/wallets-table.component';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule, APP_BASE_HREF} from '@angular/common';
