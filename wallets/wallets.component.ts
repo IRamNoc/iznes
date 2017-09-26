@@ -1,7 +1,7 @@
 /* Core imports. */
 import {Component, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {JsonPipe} from '@angular/common';
-import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
+import {FormsModule, FormGroup, FormControl, NgModel, Validators} from '@angular/forms';
 
 import {OnDestroy} from '@angular/core';
 
@@ -121,6 +121,11 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             formData = thisTab.formControl.value,
             newWallet:any = {};
 
+        if ( ! thisTab.formControl.valid ) {
+            this.showError('Please complete this form before submitting it.');
+            return;
+        }
+
         /* Proccess the data. */
         newWallet.walletName = formData.walletName;
         newWallet.walletAccount = formData.walletAccount[0].id;
@@ -158,14 +163,14 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             newWallet.rdaAddr4 = formData.rdaAddr4;
             newWallet.rdaAddrPostcode = formData.rdaAddrPostcode;
 
-            /* Individual corresondence address. */
-            newWallet.caAddrCountry = formData.caAddrCountry[0].text;
-            newWallet.caAddrPrefix = formData.caAddrPrefix;
-            newWallet.caAddr1 = formData.caAddr1;
-            newWallet.caAddr2 = formData.caAddr2;
-            newWallet.caAddr3 = formData.caAddr3;
-            newWallet.caAddr4 = formData.caAddr4;
-            newWallet.caAddrPostcode = formData.caAddrPostcode;
+            /* Individual corresondence address, if caSame is set, then we'll use the rda. */
+            newWallet.caAddrCountry = formData.caSame ? newWallet.rdaAddrCountry : formData.caAddrCountry[0].text;
+            newWallet.caAddrPrefix = formData.caSame ? newWallet.rdaAddrPrefix : formData.caAddrPrefix;
+            newWallet.caAddr1 = formData.caSame ? newWallet.rdaAddr1 : formData.caAddr1;
+            newWallet.caAddr2 = formData.caSame ? newWallet.rdaAddr2 : formData.caAddr2;
+            newWallet.caAddr3 = formData.caSame ? newWallet.rdaAddr3 : formData.caAddr3;
+            newWallet.caAddr4 = formData.caSame ? newWallet.rdaAddr4 : formData.caAddr4;
+            newWallet.caAddrPostcode = formData.caSame ? newWallet.rdaAddrPostcode : formData.caAddrPostcode;
 
             /* Individual settlement detail. */
             newWallet.bankWalletId = formData.bankWalletId[0].id;
@@ -402,10 +407,12 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }
         /* Wallet type individual */
         else if ( wallet.walletType == 2 ) {
+            /* Indidviual meta. */
             thisTab.formControl.controls['aliases'].patchValue(wallet.aliases || '');
             thisTab.formControl.controls['formerName'].patchValue(wallet.formerName || '');
             thisTab.formControl.controls['idCardNum'].patchValue(wallet.idCardNum || '');
 
+            /* Rd address. */
             resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.rdaCountry } ]);
             thisTab.formControl.controls['rdaAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['rdaAddrPrefix'].patchValue(wallet.rdaAddressPrefix || '');
@@ -415,8 +422,8 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['rdaAddr4'].patchValue(wallet.rdaAddress4 || '');
             thisTab.formControl.controls['rdaAddrPostcode'].patchValue(wallet.rdaPostalCode || '');
 
-            // thisTab.formControl.controls['caSame'].patchValue();
-            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.caAddressCountry } ]);
+            /* C address. */
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.caCountry } ]);
             thisTab.formControl.controls['caAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['caAddrPrefix'].patchValue(wallet.caAddressPrefix || '');
             thisTab.formControl.controls['caAddr1'].patchValue(wallet.caAddress1 || '');
@@ -428,7 +435,6 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             /* Get the wallet selected by ID. */
             let selectWallet = this.getWalletById( wallet.bankWalletId );
             if ( selectWallet ) {
-                console.log('set wallet: ', selectWallet);
                 thisTab.formControl.controls['bankWalletId'].patchValue([{
                     id: selectWallet.walletId,
                     text: selectWallet.walletName
@@ -440,7 +446,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['bankAccountName'].patchValue(wallet.bankAccountName || '');
             thisTab.formControl.controls['bankAccountNum'].patchValue(wallet.bankAccountNum || '');
 
-            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.bdAddressCountry } ]);
+            resolvedCountry = this.userAdminService.resolveCountries([ { text: wallet.bdCountry } ]);
             thisTab.formControl.controls['bdAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['bdAddrPrefix'].patchValue(wallet.bdAddressPrefix || '');
             thisTab.formControl.controls['bdAddr1'].patchValue(wallet.bdAddress1 || '');
@@ -538,10 +544,19 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         return new FormGroup(
             {
                 /* Core wallet fields. */
-                "walletName": new FormControl(''),
-                "walletAccount": new FormControl([]),
-                "walletLocked": new FormControl(false),
-                "walletType": new FormControl([]),
+                "walletName": new FormControl('',[
+                    Validators.required,
+                    Validators.maxLength(200)
+                ]),
+                "walletAccount": new FormControl([], [
+                    Validators.required
+                ]),
+                "walletLocked": new FormControl(false, [
+                    Validators.required
+                ]),
+                "walletType": new FormControl([], [
+                    Validators.required
+                ]),
 
                 /* Legal type Fields. */
                 "walletLei": new FormControl(''),
