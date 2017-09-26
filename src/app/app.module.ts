@@ -49,6 +49,7 @@ import {SetlComponentsModule} from '@setl/utils';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
+import {OfiMainModule} from '@ofi/ofi-main';
 
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
@@ -81,6 +82,17 @@ import {AppState} from './store/app.reducer';
  * Environment
  */
 import {environment} from '../environments/environment';
+
+/**
+ * Membersocket service factory
+ */
+export function memberSocketServiceFactory() {
+    return new MemberSocketService(
+        environment.MEMBER_NODE_CONNECTION.host,
+        environment.MEMBER_NODE_CONNECTION.port,
+        environment.MEMBER_NODE_CONNECTION.path
+    );
+}
 
 @NgModule({
     declarations: [
@@ -116,7 +128,8 @@ import {environment} from '../environments/environment';
         PermissionGridModule,
         SetlPipesModule,
         CoreManageMemberModule,
-        SetlComponentsModule
+        SetlComponentsModule,
+        OfiMainModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -124,14 +137,7 @@ import {environment} from '../environments/environment';
         {
             provide: MemberSocketService,
 
-            useFactory() {
-
-                return new MemberSocketService(
-                    environment.MEMBER_NODE_CONNECTION.host,
-                    environment.MEMBER_NODE_CONNECTION.port,
-                    environment.MEMBER_NODE_CONNECTION.path
-                );
-            }
+            useFactory: memberSocketServiceFactory
         },
 
         {

@@ -19,17 +19,18 @@ export class AppComponent {
         duration: 500000
     };
     jasperoConfirmaSetting: any = {
-        overlay: true,// Default: true
-        overlayClickToClose: true,// Default: true
-        showCloseButton: true, // Default: true
-        confirmText: 'Yes', // Default: 'Yes'
-        declineText: 'No' // Default: 'No'
+        overlay: true,
+        overlayClickToClose: true,
+        showCloseButton: true,
+        confirmText: 'Yes',
+        declineText: 'No'
     };
 
     constructor(private memberSocketService: MemberSocketService,
                 private walletnodeChannelService: WalletnodeChannelService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private  toasterService: ToasterService) {
+
         memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('warning', 'Member node connection disconnected');
 
