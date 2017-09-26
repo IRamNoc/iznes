@@ -2,7 +2,7 @@ export const environment = {
     production: true,
     MEMBER_NODE_CONNECTION: {
         host: 'localhost',
-        port: 9788,
+        port: 443,
         path: 'db'
     },
 };
