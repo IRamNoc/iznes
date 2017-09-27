@@ -55,6 +55,8 @@ export class SetlMessagesComponent {
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
+        //this.items = ['test', 'test2', 'test3'];
+
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
             {
@@ -186,7 +188,7 @@ export class SetlMessagesComponent {
         this.walletDirectoryList = getWalletDirectoryList(newState);
         this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
 
-        this.items = [this.walletWithCommuPub];
+        this.items = this.walletWithCommuPub;
 
         console.log('messages ------');
         console.log(this.messages);
@@ -235,8 +237,16 @@ export class SetlMessagesComponent {
 
         const message = this.currentMessage;
 
+        const categoryIndex = this.currentCategory;
+        const categoryType = this.categories[categoryIndex].type;
+
         if (!message.isDecrypted) {
-            this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+
+            if (categoryType == "sent") {
+                this.decrypt(message.mailId, message.senderId, message.recipientPub, message.content);
+            } else {
+                this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+            }
         }
     }
 
@@ -259,6 +269,13 @@ export class SetlMessagesComponent {
 
             const type = this.categories[index].type;
 
+            // set the current message that appears on the right hand side
+            this.currentCategory = index;
+            this.currentMessage = {
+                id: 0,
+                mailid: 0,
+            };
+
             if (type === 'inbox') {
                 this.requestMessages();
             } else if (type === 'action') {
@@ -278,8 +295,6 @@ export class SetlMessagesComponent {
                 );
             }
         }
-        // set the current message that appears on the right hand side
-        this.currentCategory = index;
     }
 
     walletListToSelectItem(walletsList: Array<any>): Array<any> {
@@ -293,7 +308,7 @@ export class SetlMessagesComponent {
             }
         );
 
-        return walletsSelectItem.toJS();
+        return walletsSelectItem.toArray();
     }
 
     resetMessages() {
@@ -304,6 +319,11 @@ export class SetlMessagesComponent {
         this.currentMessage = {
             id: 0
         };
+    }
+
+
+    public sendMessage() {
+
     }
 
 
