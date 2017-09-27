@@ -7,7 +7,6 @@ import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
-import {FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
 import {SelectModule} from '@setl/utils';
 import {SetlPipesModule} from '@setl/utils';
 
@@ -22,14 +21,10 @@ import {
         ClarityModule,
         GravatarModule,
         SelectModule,
-        [
-            FroalaEditorModule.forRoot(),
-            FroalaViewModule.forRoot()
-        ],
-        SetlPipesModule
+        SetlPipesModule,
     ],
     declarations: [
-        SetlMessagesComponent,
+        SetlMessagesComponent
     ],
     exports: [
         SetlMessagesComponent,
