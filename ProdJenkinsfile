@@ -11,7 +11,8 @@ node
 
     stage('Build & Unit Test'){
 
-      sh '''yarn install &&
+      sh '''rm yarn.lock &&
+              yarn install &&
               yarn test-single &&
               cd src &&
               sass styles.scss:styles.css &&
