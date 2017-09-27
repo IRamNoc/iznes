@@ -1,6 +1,10 @@
 # What is file drop?
-File drop is an in-house component that basically enhances the native file type
-input.
+File drop is an in-house component that basically enhances the native file type input.
+
+Features:
+* Click to add files.
+* Drop files onto dropzone.
+* Clear selected files from list.
 
 # Usage:
 ## 1. Importing the FileDropModule
@@ -34,7 +38,8 @@ An example component being used.
 #### The `onDrop` event
 
 The on drop event is the standard way to recieve data from the file drop component, it emits an event object with a files property, an array of file objects.
-An example of a files array.
+
+Here's an example of an event object with the files array in it;
 
 ```typescript
 {
@@ -55,7 +60,7 @@ Note that whether this is true or false, the emitted array will always be an arr
 
 #### The `formControl` property.
 
-The `formControl` can be set to a custom FormControl of your choice, instead of emitting an event, the array of files will be patched onto the value of your FormControl.
+The `formControl` can be set to a custom FormControl of your choice, instead of emitting an event, the files array will be patched into the value of your FormControl.
 
 Your HTML:
 ```html
