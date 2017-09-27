@@ -1,6 +1,9 @@
 /* Core imports. */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+/* Form Group. */
+import { FormControl } from '@angular/forms';
+
 /* DropHandler Component */
 import { DropHandler } from './drophandler/drophandler.component';
 
@@ -13,6 +16,9 @@ import { DropHandler } from './drophandler/drophandler.component';
 export class FileDropComponent {
     /* OnDrop event - emit every file that's dropped or removed. */
     @Output() onDrop:EventEmitter<{}> = new EventEmitter();
+
+    /* Form control, if not passed in, we'll make a headless one. */
+    @Input() formControl:FormControl = new FormControl([]);
 
     /* Multiple allows more than one file to be added. */
     @Input() multiple:boolean = false;

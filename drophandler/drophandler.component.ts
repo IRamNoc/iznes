@@ -10,6 +10,8 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 
+import {FormControl} from '@angular/forms';
+
 /* Decorator. */
 @Component({
     selector: 'drop-handler',
@@ -22,7 +24,11 @@ export class DropHandler {
     /* Events */
     @Output() onDropFiles:EventEmitter<{}> = new EventEmitter();
 
+    /* Allow multiple. */
     @Input() multiple:boolean = false;
+
+    /* Form control. */
+    @Input() formControl:FormControl;
 
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput:ElementRef;
@@ -87,6 +93,9 @@ export class DropHandler {
         this.onDropFiles.emit({
             'files': this.encodedFiles
         });
+
+        /* Also patch the from control value. */
+        this.formControl.patchValue( this.encodedFiles );
     }
 
     public handleDrop (event):boolean {
