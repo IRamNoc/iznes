@@ -22,9 +22,6 @@
                 "../node_modules/clarity-icons/clarity-icons.min.css",
                 "../node_modules/clarity-ui/clarity-ui.min.css",
                 "../node_modules/angular2-toaster/toaster.css",
-                "../node_modules/froala-editor/css/froala_editor.pkgd.min.css",
-                "../node_modules/froala-editor/css/froala_style.min.css",
-                "../node_modules/font-awesome/css/font-awesome.css",
                 "styles.css"
             ],
             "scripts": [
@@ -32,9 +29,7 @@
                 "../node_modules/@webcomponents/custom-elements/custom-elements.min.js",
                 "../node_modules/clarity-icons/clarity-icons.min.js",
                 "assets/js/gibberish-aes-1.0.0.min",
-                "assets/js/jsxcompressor/jsxcompressor.min.js",
-                "../node_modules/jquery/dist/jquery.min.js",
-                "../node_modules/froala-editor/js/froala_editor.pkgd.min.js"
+                "assets/js/jsxcompressor/jsxcompressor.min.js"
             ],
             "environmentSource": "environments/environment.ts",
             "environments": {
