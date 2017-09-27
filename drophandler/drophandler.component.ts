@@ -190,7 +190,6 @@ export class DropHandler {
                     if ( ! file ) {
                         continue;
                     }
-                    this.encodedFiles[i].index = i;
                     this.encodedFiles[i].name = files[i].name;
                     this.encodedFiles[i].lastModified = files[i].lastModified;
                 }
