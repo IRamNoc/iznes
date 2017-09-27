@@ -9,7 +9,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {SidebarModule} from 'ng-sidebar';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 import {ClarityModule} from 'clarity-angular';
 import {ReactiveFormsModule} from '@angular/forms';
 

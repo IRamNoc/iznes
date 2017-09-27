@@ -11,13 +11,13 @@ node
 
     stage('Build & Unit Test'){
 
-      sh '''yarn upgrade &&
+      sh '''yarn install &&
               yarn test-single &&
               cd src &&
               sass styles.scss:styles.css &&
               cd ../ '''
-               junit allowEmptyResults: true, keepLongStdio: true,
-                        testResults: '/TESTS-Headless**'
+      junit allowEmptyResults: true, keepLongStdio: true,
+                   testResults: '/TESTS-Headless**'
     }
 
 
