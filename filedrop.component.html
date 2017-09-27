@@ -1,6 +1,8 @@
 <div class="drop-file-wrapper">
+    <!-- We literally just pass properties straight in, or handle events. -->
     <drop-handler
         (onDropFiles)="handleDropFiles($event)"
         [multiple]="multiple"
+        [formControl]="formControl"
     ></drop-handler>
 </div>

@@ -33,7 +33,9 @@
             *ngFor="let file of encodedFiles; let i = index"
             class="tablet added-file"
             (click)="stopPropigation($event);clearFiles(i)">
-            <span><i class="fa fa-times"></i> {{ file.name }}</span>
+            <span>
+                <i class="fa fa-times"></i> {{ file.name }}
+            </span>
         </span>
     </div>
 </div>
