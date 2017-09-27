@@ -6,7 +6,7 @@ import {SetlMyAccountComponent} from './myaccount/myaccount.component';
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 import {SetlPipesModule} from '@setl/utils';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 
 @NgModule({
     imports: [
