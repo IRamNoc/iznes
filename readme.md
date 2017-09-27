@@ -23,7 +23,6 @@ import {
 
 An example component being used.
 
-Example html:
 ```html
 <setl-file-drop
     (onDrop)="functionInYourComponent($event)"
