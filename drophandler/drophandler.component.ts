@@ -6,7 +6,8 @@ import {
     Output,
     ViewChild,
     ElementRef,
-    Renderer
+    Renderer,
+    ChangeDetectorRef
 } from '@angular/core';
 
 /* Decorator. */
@@ -21,6 +22,8 @@ export class DropHandler {
     /* Events */
     @Output() onDropFiles:EventEmitter<{}> = new EventEmitter();
 
+    @Input() multiple:boolean = false;
+
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput:ElementRef;
     @ViewChild('dropFileForm') public formElem:ElementRef;
@@ -29,48 +32,68 @@ export class DropHandler {
     public uploadedFiles:any;
     public encodedFiles:any = [];
     public proccessInterval:any;
-    public uploadPrompt:string = "Drag and Drop a file here, or Click to Upload";
-    public numberFilesText:string = "No files selected.";
+    public uploadPrompt:string;
+    public numberFilesText:string;
     public AfterViewInit:string;
+
+    private removingFile = false;
 
     /* Constructor */
     public constructor (
-        private renderer:Renderer
+        private renderer:Renderer,
+        private changeDetectorRef:ChangeDetectorRef
     ) {
         /* Stub */
     }
 
     /* On View Init. */
     public ngAfterViewInit ():void {
-        this.numberFilesText = ((!this.encodedFiles || this.encodedFiles.length === 0) ? "No" : this.encodedFiles.length) + " files selected.";
+        /* Fix the text on the ui. */
+        this.uploadPrompt = this.multiple ? "Drag and Drop files here, or Click to Upload" : "Drag and Drop a file here, or Click to Upload";
+        this.changeDetectorRef.detectChanges();
+
+        /* Also fix the files text. */
+        this.updateFilesText();
     }
 
     /* Handles a new file being added or removed. */
     public handleFileChange (event):void {
         /* Check. */
         if ( event.target && event.target.files ) {
-            let thisClass = this;
             /* Proccess images. */
-            this.base64Files(event.target.files, function (files) {
-                /* Emit the event up a level. */
-                thisClass.onDropFiles.emit({
-                    'files': files
-                });
+            this.base64Files(event.target.files, (files) => {
+                /* Set the new files. */
+                this.encodedFiles = files;
 
-                thisClass.encodedFiles = files;
+                /* Emit the files. */
+                this.emitFilesEvent();
 
-                /* Update text. */
-                console.log( "Added a file.", thisClass.uploadedFiles );
-                thisClass.numberFilesText = ((!thisClass.encodedFiles || thisClass.encodedFiles.length === 0) ? "No" : thisClass.encodedFiles.length) + " files selected.";
+                /* Update text */
+                this.updateFilesText();
             });
-
         }
+    }
+
+    public updateFilesText () {
+        /* Update. */
+        this.numberFilesText = ((!this.encodedFiles || this.encodedFiles.length === 0) ? "No" : this.encodedFiles.length) + " "+ (this.multiple && this.encodedFiles.length > 1 ? "files" : "file") +" selected.";
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
+    }
+
+    private emitFilesEvent () {
+        /* Emit the event up a level. */
+        this.onDropFiles.emit({
+            'files': this.encodedFiles
+        });
     }
 
     public handleDrop (event):boolean {
         /* Check if files were dropped and add them to the input. */
         if ( event.dataTransfer && event.dataTransfer.files ) {
             this.uploadedFiles = event.dataTransfer.files;
+            this.changeDetectorRef.detectChanges();
         }
 
         /* Stop bubbling. */
@@ -82,11 +105,16 @@ export class DropHandler {
         /* Prevent default */
         event.preventDefault();
 
+        if ( this.removingFile ) return;
+
         /* Handle click event of native file input. */
         let clickevent = new MouseEvent('click', {bubbles: true});
         this.renderer.invokeElementMethod(
             this.fileInput.nativeElement, 'dispatchEvent', [clickevent]
         );
+
+        this.changeDetectorRef.detectChanges();
+
         return false;
     }
 
@@ -114,6 +142,14 @@ export class DropHandler {
         myReader:FileReader,
         grandTotal:number = 0;
 
+        /* Return if no files. */
+        if ( ! files.length ) return;
+
+        /* If mutliple, only do the first. */
+        if ( ! this.multiple ) {
+            files = [files[0]];
+        }
+
         /* Reset encoded files. */
         this.encodedFiles = [];
 
@@ -137,19 +173,19 @@ export class DropHandler {
         }
 
         /* Wait for all files to be done. */
-        let thisClass = this;
-        this.proccessInterval = setInterval(function(){
-            if ( grandTotal === thisClass.encodedFiles.length ) {
-                clearInterval(thisClass.proccessInterval);
+        this.proccessInterval = setInterval(() => {
+            if ( grandTotal === this.encodedFiles.length ) {
+                clearInterval(this.proccessInterval);
 
                 for ( i = 0; i < files.length; i++ ) {
                     if ( ! file ) {
                         continue;
                     }
-                    thisClass.encodedFiles[i].name = files[i].name;
-                    thisClass.encodedFiles[i].lastModified = files[i].lastModified;
+                    this.encodedFiles[i].index = i;
+                    this.encodedFiles[i].name = files[i].name;
+                    this.encodedFiles[i].lastModified = files[i].lastModified;
                 }
-                callback( thisClass.encodedFiles );
+                callback( this.encodedFiles );
             }
         }, 10);
     }
@@ -162,8 +198,28 @@ export class DropHandler {
         this.encodedFiles.push({'data': btoa(binaryString)});
     }
 
-    public clearFiles():void {
-        this.formElem.nativeElement.reset();
-        this.uploadedFiles = {};
+    public clearFiles(index):void {
+        /* If we're not mutliple, then reset the form. */
+        if ( ! this.multiple ) {
+            this.formElem.nativeElement.reset();
+        }
+
+        this.removingFile = true;
+
+        /* Slice the files. */
+        this.encodedFiles = [
+            ...this.encodedFiles.slice(0, index),
+            ...this.encodedFiles.slice(index + 1, this.encodedFiles.length)
+        ];
+
+        /* Update the UI. */
+        this.updateFilesText();
+
+        this.removingFile = false;
+
+        /* Emit the files. */
+        this.emitFilesEvent();
+
+        this.changeDetectorRef.detectChanges();
     }
 }

@@ -1,9 +1,8 @@
 .drop-file-zone {
     margin: 5px;
-    padding: 10px;
+    padding: 5px;
     text-align: center;
     border: 2px dashed #888888;
-    cursor: pointer;
     color: #888888;
     -webkit-transition: color 0.5s ease-in, border-color 0.5s ease-in;
     -moz-transition: color 0.5s ease-in, border-color 0.5s ease-in;
@@ -12,11 +11,39 @@
     transition: color 0.5s ease-in, border-color 0.5s ease-in;
 }
 
-.drop-file-input {
-    display: none;
+.drop-file-zone .tablet {
+    padding: 4px;
+    text-align: center;
+    border: 1px solid #C0C0C0;
+    border-radius: 4px;
 }
 
 .drop-file-zone.active {
     border: 2px dashed #ff8261;
     color: #ff8261;
+}
+
+.drop-file-input {
+    display: none;
+}
+
+.drop-file-area {
+    padding: 25px 5px 30px;
+    background-color: #f3f3f3;
+    cursor: pointer;
+}
+
+.drop-file-area > p {
+    margin: 0;
+}
+
+.drop-file-meta {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    text-align: left;
+}
+
+.drop-file-meta .added-file {
+    margin: 2px;
+    cursor: pointer;
 }

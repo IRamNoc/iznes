@@ -1,23 +1,39 @@
+<!-- Raw input and form. -->
 <form #dropFileForm>
-    <input class="drop-file-input" #fileInput type="file" [files]="uploadedFiles" (change)="handleFileChange($event)" />
+    <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" [files]="uploadedFiles" (change)="handleFileChange($event)" />
 </form>
+
+<!-- Custom UI. -->
 <div
-class="drop-file-zone"
-[ngClass]="{active: this.isHovering}"
-(drag)="stopPropigation($event)"
-(dragstart)="stopPropigation($event)"
-(dragend)="stopPropigation($event);onDragLeave($event)"
-(dragover)="stopPropigation($event);onDragEnter($event)"
-(dragenter)="stopPropigation($event)"
-(dragleave)="stopPropigation($event);onDragLeave($event)"
-(drop)="stopPropigation($event);onDragLeave($event)"
-(click)="handleClick($event)"
-(drop)="handleDrop($event)"
->
-    <p>
-        {{uploadPrompt}}
-    </p>
-    <p>
-        {{numberFilesText}}
-    </p>
+    class="drop-file-zone">
+    <div
+        class="drop-file-area"
+        [ngClass]="{active: this.isHovering}"
+        (drag)="stopPropigation($event)"
+        (dragstart)="stopPropigation($event)"
+        (dragend)="stopPropigation($event);onDragLeave($event)"
+        (dragover)="stopPropigation($event);onDragEnter($event)"
+        (dragenter)="stopPropigation($event)"
+        (dragleave)="stopPropigation($event);onDragLeave($event)"
+        (drop)="stopPropigation($event);onDragLeave($event)"
+        (click)="handleClick($event)"
+        (drop)="handleDrop($event)">
+        <p>
+            <span>{{uploadPrompt}}</span>
+        </p>
+        <p>
+            <span>{{numberFilesText}}</span>
+        </p>
+    </div>
+
+    <div
+        class="drop-file-meta"
+        *ngIf="encodedFiles.length">
+        <span
+            *ngFor="let file of encodedFiles; let i = index"
+            class="tablet added-file"
+            (click)="stopPropigation($event);clearFiles(i)">
+            <span><i class="fa fa-times"></i> {{ file.name }}</span>
+        </span>
+    </div>
 </div>
