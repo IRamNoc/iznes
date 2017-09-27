@@ -21,6 +21,7 @@ import org.junit.runners.JUnit4;
 import io.setl.wsclient.shared.Message.Type;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -48,8 +49,7 @@ public class loginTest {
     }
 
     @Test
-    public void loginSuccessWithValidCredentials() throws InterruptedException
-    {
+    public void loginSuccessWithValidCredentials() throws InterruptedException, ExecutionException {
         CountDownLatch l  = new CountDownLatch(1);
 
         socket.registerHandler(Type.Login.name(),message->{
@@ -62,12 +62,12 @@ public class loginTest {
             return "";});
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
         l.await();
+        connexion.get().disconnect();
 
     }
 
     @Test
-    public void loginFailureWithInvalidCredentials() throws InterruptedException
-    {
+    public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
         CountDownLatch l  = new CountDownLatch(1);
@@ -81,6 +81,7 @@ public class loginTest {
             return "";});
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
         l.await();
+        connexion.get().disconnect();
 
     }
 
@@ -108,8 +109,7 @@ public class loginTest {
 
     @Test
     @Ignore
-    public void ennumerationTest() throws InterruptedException
-    {
+    public void enumerationTest() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
         CountDownLatch l  = new CountDownLatch(1);
@@ -126,6 +126,7 @@ public class loginTest {
             return "";});
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
         l.await();
+        connexion.get().disconnect();
 
     }
 }

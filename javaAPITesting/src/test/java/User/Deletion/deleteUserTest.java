@@ -11,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,87 +29,108 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 @RunWith(JUnit4.class)
 public class deleteUserTest {
 
+    private class Holder<T>{
+      T value = null;
+    }
+
+
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
+
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
+
     }
 
     @Test
-    public void deleteUserTest() throws InterruptedException, ExecutionException {
+    public void deleteUserWithTokenTest() throws InterruptedException, ExecutionException {
 
-        final AtomicInteger atomicInt = new AtomicInteger(0);
+      final  AtomicInteger atomicInt = new AtomicInteger(0);
 
-        String userDetails[] = generateUserDetails();
-        String userName = userDetails[0];
-        String password = userDetails[1];
-        String email = userDetails[2];
+      Holder<Integer> userIdHolder = new Holder<>();
 
-        CountDownLatch latch = new CountDownLatch(1);
+      String userDetails[] = generateUserDetails();
+      String newUserName = userDetails[0];
+      String password = userDetails[1];
+      String email = userDetails[2];
 
-        socket.registerHandler(Message.Type.Login.name(), message -> {
-            factory.addUserToAccount(userName,
-                    email,
-                    "8",
-                    "35",
-                    password);
-            factory.listUsers();
-            factory.deleteUserFromAccount(userName);
-            factory.listUsers();
-            return "";
-        });
+      CountDownLatch latch = new CountDownLatch(1);
 
-        socket.registerHandler(Message.Type.um_lu.name(), message -> {
+      socket.registerHandler(Message.Type.Login.name(), message -> {
 
-            int call = atomicInt.getAndIncrement();
-            if (call == 0) {
-                JSONArray data = (JSONArray) message.get("Data");
-                JSONObject resp = (JSONObject) data.get(data.size() - 1);
-                Object lastUser = resp.get("userName");
-                assertNotNull(lastUser);
-                assertTrue(lastUser.toString().equals(userName));
-                return "";
-            }
+      socket.sendMessage(factory.listUsers());
 
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp = (JSONObject) data.get(data.size() - 1);
-            Object lastUser = resp.get("userName");
-            assertNotNull(lastUser);
-            assertTrue(!lastUser.toString().equals(userName));
+      return "";
+      });
+
+      socket.registerHandler(Message.Type.um_lu.name(), message -> {
+
+        int call = atomicInt.getAndIncrement();
+        JSONArray data = (JSONArray) message.get("Data");
+        JSONObject resp = (JSONObject) data.get(data.size()-1);
+        Object lastUserName = resp.get("userName");
+        Object oldUserName = lastUserName;
+
+        switch (call){
+          case 0: //first time
+            assertNotNull(lastUserName);
+            assertTrue(!lastUserName.toString().equals(newUserName));
+            socket.sendMessage(factory.addUserToAccount(newUserName, email,"8","35", password));
+            break;
+          case 1: //second time
+
+            assertNotNull(lastUserName);
+            assertTrue(lastUserName.toString().equals(newUserName));
+            System.out.println("UserIdHolder at delete = " + userIdHolder.value);
+            socket.sendMessage(factory.deleteUserFromAccount(userIdHolder.value.toString()));
+
+            break;
+          case 2: //third time
+
+            assertNotNull(lastUserName);
+            assertTrue(lastUserName.equals(oldUserName));
             latch.countDown();
-            return "";
-        });
+            break;
+        }
+        return "";
+      });
 
-        socket.registerHandler(Message.Type.nu.name(), message -> {
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp = (JSONObject) data.get(0);
-            Object username = resp.get("userName");
-            assertNotNull(username);
-            assertTrue(username.toString().equalsIgnoreCase(userName));
-            return "";
-        });
+      socket.registerHandler(Message.Type.nu.name(), message -> {
+        JSONArray data = (JSONArray) message.get("Data");
+        JSONObject resp = (JSONObject) data.get(0);
+        Object newUser = resp.get("userName");
+        Object userID = resp.get("userID");
+        userIdHolder.value = ((Number)userID).intValue();
+        assertNotNull(newUser);
+        assertTrue(newUser.toString().equalsIgnoreCase(newUserName));
+        socket.sendMessage(factory.listUsers());
 
-        socket.registerHandler(Message.Type.du.name(), message -> {
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp = (JSONObject) data.get(0);
-            Object result = resp.get("Status");
-            assertTrue(result.toString().equals("OK"));
-            return "";
-        });
+        return "";
+      });
 
+      socket.registerHandler(Message.Type.du.name(), message -> {
+        JSONArray data = (JSONArray) message.get("Data");
+        JSONObject resp = (JSONObject) data.get(0);
+        Object status = resp.get("Status");
+        assertTrue(status.toString().equals("OK") );
+        socket.sendMessage(factory.listUsers());
 
-        Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+        return "";
+      });
 
-        latch.await();
-        connexion.get().connected();
+      Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
 
+      latch.await();
+      connexion.get().disconnect();
     }
 
     public static String[] generateUserDetails() {
