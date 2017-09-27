@@ -22,7 +22,7 @@ import {UserAdminService} from '../useradmin.service';
 
 /* Class. */
 export class AdminUsersComponent implements AfterViewInit, OnDestroy {
-
+    /* Users data grid */
     @ViewChild('usersDataGrid') usersDataGrid;
 
     /* User data. */
@@ -284,8 +284,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Ok, first, lets save the account Id that is selcted. */
         let selectedAccount = thisTab['selectedAccount'] = data;
 
-        console.log(selectedAccount, this.manageWalletList);
-
         /* And now filter the new list to the new account. */
         let key, filteredWallets = [];
         for (key in this.manageWalletList) {
@@ -298,8 +296,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 });
             }
         }
-
-        console.log("Setting tab " + tabid + " to have wallets lists: ", filteredWallets)
 
         /* Now assign that to both the dropdowns. */
         thisTab['filteredWalletsByAccount'] = [...filteredWallets];
@@ -470,9 +466,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 toDelete: [],
                 chainId: '0'
             }).then((response) => {
-                console.log('updated user admin groups.', response);
+                /* Stub. */
             }).catch((error) => {
-                console.log('error updating user admin groups.', error);
+                /* Handle Error. */
+                this.showError('Failed to update this user\'s administrative groups.');
             })
 
             /* Save tx group access. */
@@ -482,9 +479,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 toDelete: [],
                 chainId: '2000'
             }).then((response) => {
-                console.log('updated user tx groups.', response);
+                /* Stub. */
             }).catch((error) => {
-                console.log('error updating user tx groups.', error);
+                /* Handle Error. */
+                this.showError('Failed to update this user\'s transactional groups.');
             });
 
             /* Save wallet access. */
@@ -492,9 +490,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 userId: userId,
                 walletAccess: this.getWalletAccessFromTab(newUser),
             }).then((response) => {
-                console.log('updated user wallet permissions.', response);
+                /* Stub. */
             }).catch((error) => {
-                console.log('error updating user wallet permissions.', error);
+                /* Handle Error. */
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
@@ -504,24 +502,17 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 toAdd: this.getChainAccessFromTab(newUser),
                 toDelete: [],
             }).then((response) => {
-                console.log('updated user chain access.', response);
+                /* Stub. */
             }).catch((error) => {
-                console.log('failed to update user chain access.', error);
+                /* Handle Error. */
                 this.showError('Failed to update this user\'s chain access.');
             });
 
-            /* TODO - update user meta;
-             [x] Admin groups.
-             [x] Tx groups.
-             [x] Wallet access.
-             [ ] Chain access.
-             */
-
-            /* TODO - handle success message. */
-            console.log('Successfully created user.', response);
+            /* Handle success. */
+            this.showSuccess('Successfully updated this user.');
         }).catch((error) => {
             /* TODO - handle error message. */
-            console.log('Failed to create user.', error);
+            this.showError('Failed to update this user.');
         });
 
         /* Clear the form. */
