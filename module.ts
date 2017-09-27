@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
 import {CommonModule} from '@angular/common';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 
 // Local components
 import {ManageChainMembershipComponent} from './manage-chain-membership/component';

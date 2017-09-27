@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
 import {select, NgRedux} from '@angular-redux/store';
@@ -37,7 +37,8 @@ export function getManageMember(state) {
 
 @Component({
     selector: 'app-manage-account',
-    templateUrl: './component.html'
+    templateUrl: './component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ManageAccountComponent implements OnInit {
