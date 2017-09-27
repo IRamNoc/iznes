@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
@@ -18,7 +18,8 @@ import {SagaHelper} from '@setl/utils';
 @Component({
     selector: 'app-manage-member',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ManageMemberComponent implements OnInit {

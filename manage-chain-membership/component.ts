@@ -1,5 +1,5 @@
 // Vendor
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {fromJS, Set} from 'immutable';
@@ -22,7 +22,8 @@ import {SagaHelper} from '@setl/utils';
 @Component({
     selector: 'app-manage-chain-membership',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ManageChainMembershipComponent implements OnInit, OnDestroy {
@@ -60,7 +61,8 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private memberService: MemberService,
-                private adminUsersService: AdminUsersService) {
+                private adminUsersService: AdminUsersService,
+                private changeDetectorRef: ChangeDetectorRef) {
         /* Default tabs. */
         this.tabsControl = [
             {
@@ -185,6 +187,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             });
             return resultList;
         }, []);
+        this.changeDetectorRef.markForCheck();
     }
 
     requestChainList(requestedState) {
@@ -308,6 +311,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 nodeValue
             );
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     handleUpdateChainMembership() {
