@@ -6,6 +6,7 @@
 export const environment = {
     production: false,
     MEMBER_NODE_CONNECTION: {
+        //host: 'devnet.setl.io',
         host: window.location.hostname,
         // host: 'devnet.setl.io',
         // host: '10.0.1.106', // Ming's Socket Server
