@@ -10,14 +10,12 @@ import { DropHandler } from './drophandler/drophandler.component';
     styleUrls: ['filedrop.component.css']
 })
 
-export class DropFile {
+export class FileDropComponent {
     /* OnDrop event - emit every file that's dropped or removed. */
     @Output() onDrop:EventEmitter<{}> = new EventEmitter();
 
     /* Multiple allows more than one file to be added. */
-    @Input() multiple:boolean = true;
-
-    @Input() catergory:string = "";
+    @Input() multiple:boolean = false;
 
     /* Constructor */
     public constructor () {
