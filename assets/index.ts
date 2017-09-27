@@ -72,9 +72,7 @@ export interface AssetState {
     myInstruments: MyInstrumentsState;
 }
 
-export const assetReducer: Reducer<AssetState> = combineReducers({
+export const assetReducer: Reducer<AssetState> = combineReducers<AssetState>({
     myIssuers: MyIssuersReducer,
     myInstruments: MyInstrumentsReducer
 });
-
-

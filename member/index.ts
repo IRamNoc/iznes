@@ -29,6 +29,6 @@ export interface MemberState {
     manageMemberList: ManageMemberListState;
 }
 
-export const MemberReducer: Reducer<MemberState> = combineReducers({
+export const MemberReducer: Reducer<MemberState> = combineReducers<MemberState>({
     manageMemberList: ManageMemberListReducer,
 });
