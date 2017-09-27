@@ -9,12 +9,12 @@
         <clr-tab-content *clrIfActive>
 
             <setl-file-drop
-                (onDrop)="filesDropped($event)"
+                (onDrop)="onDropFiles($event)"
                 [formControl]="filesFormGroup.controls['singleFile']"
             ></setl-file-drop>
 
             <setl-file-drop
-                (onDrop)="filesDropped($event)"
+                (onDrop)="onDropFiles($event)"
                 [multiple]="true"
                 [formControl]="filesFormGroup.controls['multipleFiles']"
             ></setl-file-drop>
