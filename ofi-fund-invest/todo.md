@@ -6,3 +6,6 @@
     
 - [ x ] Setup basic ofi-req-services
 - [ x ] Setup basic ofi-store
+
+- [  ] investor-fund-list view
+    - [ ] Setup up tabs  
