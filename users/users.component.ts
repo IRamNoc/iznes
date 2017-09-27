@@ -121,12 +121,18 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                "title": "<i class='fa fa-search'></i> Search",
+                "title": {
+                    "icon": "fa-search",
+                    "text": "Search"
+                },
                 "userId": -1,
                 "active": true
             },
             {
-                "title": "<i class='fa fa-user'></i> Add User",
+                "title": {
+                    "icon": "fa-user",
+                    "text": "Add User"
+                },
                 "userId": -1,
                 "formControl": new FormGroup(
                     {
@@ -852,7 +858,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* And also prefill the form... let's sort some of the data out. */
         this.tabsControl.push({
-            "title": "<i class='fa fa-user'></i> " + this.usersList[editUserIndex].userName,
+            "title": {
+                "icon": "fa-user",
+                "text": this.usersList[editUserIndex].userName
+            },
             "userId": user.userID,
             "formControl": new FormGroup(
                 {

@@ -6,7 +6,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="wallet-tab-{{id}}" [innerHTML]="tabdata.title"></button>
+            <button clrTabLink id="wallet-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- Wallet list tab. -->
                 <ng-container *ngIf="id === 0">
@@ -54,8 +54,9 @@
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
-                            <span *ngIf="wallet.walletLocked == false" class="label label-success">Enabled</span>
-                            <span *ngIf="wallet.walletLocked == true" class="label label-warning">Disabled</span>
+                            {{ wallet.walletLocked }}
+                            <span *ngIf="wallet.walletLocked === false" class="label label-success">Unlocked</span>
+                            <span *ngIf="wallet.walletLocked === true" class="label label-warning">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -232,8 +233,13 @@
                                 <span mltag="txt_usertype">Wallet Status</span>
                             </label>
                             <div class="wallet-status">
-                                <span *ngIf="formControl.controls['walletLocked']._value"><i class="fa fa-unlock"></i></span>
-                                <span *ngIf="!formControl.controls['walletLocked']._value"><i class="fa fa-lock"></i></span>
+                                <span *ngIf="formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="!formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
                                 <div class="toggle-switch">
                                     <input [formControl]="formControl.controls['walletLocked']" id="edit-wallet-status-toggle" type="checkbox">
                                     <label for="edit-wallet-status-toggle"></label>

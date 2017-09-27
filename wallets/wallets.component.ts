@@ -50,12 +50,18 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                "title": "<i class='fa fa-search'></i> Search",
+                "title": {
+                    "icon": "fa-search",
+                    "text": "Search"
+                },
                 "walletId": -1,
                 "active": true
             },
             {
-                "title": "<i class='fa fa-user'></i> Add Wallet",
+                "title": {
+                    "icon": "fa-user",
+                    "text": "Add Wallet"
+                },
                 "walletId": -1,
                 "formControl": this.newWalletFormGroup(),
                 "active": false
@@ -87,6 +93,8 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 /* then push. */
                 this.walletList.push( list[i] );
             }
+
+            console.log('wallet list: ', this.walletList);
 
             /* Also filter a new list for ui elements. */
             this.filteredWalletList = this.walletList.map((wallet) => {
@@ -302,6 +310,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle error. */
             this.showError('Failed to update this wallet.');
+            console.warn(error);
         })
 
         /* Return */
@@ -402,7 +411,10 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
         /* Now push the new tab object into the array. */
         this.tabsControl.push({
-            "title": "<i class='fa fa-user'></i> " + this.walletList[index].walletName,
+            "title": {
+                "icon": "fa-user",
+                "text": this.walletList[index].walletName
+            },
             "walletId": wallet.walletId,
             "formControl": this.newWalletFormGroup(),
             "active": false // this.editFormControls
@@ -418,7 +430,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         /* Now let's patch the core values. */
         thisTab.formControl.controls['walletName'].patchValue(wallet.walletName);
         thisTab.formControl.controls['walletAccount'].patchValue(walletAccount);
-        thisTab.formControl.controls['walletLocked'].patchValue(!wallet.walletLocked);
+        thisTab.formControl.controls['walletLocked'].patchValue(wallet.walletLocked == 1 ? false : true); // invert for the ui.
         thisTab.formControl.controls['walletType'].patchValue(walletType);
 
         /* Then figure out what type we are... then patch the values needed for the forms shown.
