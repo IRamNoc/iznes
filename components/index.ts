@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {VariousAddressSelectComponent} from './various-address-select/various-address-select.component';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from './ng2-select/select.module';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ConfirmationComponent} from './jaspero-confirmation/confirmation.component';
@@ -16,12 +16,13 @@ import {ConfirmationService} from './jaspero-confirmation/confirmations.service'
     ],
     exports: [
         VariousAddressSelectComponent,
-        ConfirmationsComponent
+        ConfirmationsComponent,
+        SelectModule
     ],
     imports: [
         CommonModule,
         SelectModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     providers: [ConfirmationService]
 })

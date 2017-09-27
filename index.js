@@ -11,6 +11,8 @@ export {SetlPipesModule} from './pipes';
 export {SetlComponentsModule} from './components';
 export {ConfirmationService} from './components/jaspero-confirmation/confirmations.service';
 
+export {SelectModule} from './components/ng2-select/select.module';
+
 export {walletHelper} from './helper';
 
 export {APP_CONFIG} from './appConfig/appConfig';
