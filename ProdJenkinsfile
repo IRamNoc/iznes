@@ -16,7 +16,6 @@ node
               yarn test-single &&
               cd src &&
               sass styles.scss:styles.css &&
-              yarn build-prod &&
               cd ../ &&
               yarn build-prod '''
       junit allowEmptyResults: true, keepLongStdio: true,
