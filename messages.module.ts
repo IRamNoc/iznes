@@ -7,7 +7,7 @@ import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 import {SetlPipesModule} from '@setl/utils';
 
 import {
