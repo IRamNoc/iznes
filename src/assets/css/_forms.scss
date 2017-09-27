@@ -3,6 +3,13 @@
         input[type] {
             width: 95%;
         }
+
+        input[type='checkbox'] {
+            // This fixes checkboxes in forms.
+            width: auto;
+            height: auto !important;
+            display: inline-block;
+        }
     }
 }
 
