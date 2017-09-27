@@ -124,12 +124,18 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                "title": "<i class='fa fa-search'></i> Search",
+                "title": {
+                    "icon": "fa-search",
+                    "text": "Search"
+                },
                 "userId": -1,
                 "active": true
             },
             {
-                "title": "<i class='fa fa-plus'></i> Add New Group",
+                "title": {
+                    "icon": "fa-plus",
+                    "text": "Add New Group"
+                },
                 "userId": -1,
                 "formControl": new FormGroup(
                     {
@@ -275,7 +281,10 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
          /* And also prefill the form... let's sort some of the data out. */
          this.tabsControl.push({
-             "title": "<i class='fa fa-pencil'></i> "+ this.allGroupList[ index ].groupName,
+             "title": {
+                 "icon": "fa-pencil",
+                 "text": this.allGroupList[ index ].groupName,
+             },
              "groupId": group.groupId,
              "formControl": new FormGroup(
                  {

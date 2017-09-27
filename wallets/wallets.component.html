@@ -6,7 +6,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="wallet-tab-{{id}}" [innerHTML]="tabdata.title"></button>
+            <button clrTabLink id="wallet-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- Wallet list tab. -->
                 <ng-container *ngIf="id === 0">
@@ -54,8 +54,9 @@
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
-                            <span *ngIf="wallet.walletLocked == false" class="label label-success">Enabled</span>
-                            <span *ngIf="wallet.walletLocked == true" class="label label-warning">Disabled</span>
+                            {{ wallet.walletLocked }}
+                            <span *ngIf="wallet.walletLocked === false" class="label label-success">Unlocked</span>
+                            <span *ngIf="wallet.walletLocked === true" class="label label-warning">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -80,6 +81,17 @@
                             </label>
                             <div>
                                 <input id="new-wallet-name" type="text" formControlName="walletName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                                <div *ngIf="!formControl.controls['walletName'].valid && formControl.controls['walletName'].touched" class="alert-items">
+                                    <div class="alert alert-danger">
+                                        <div class="alert-items">
+                                            <div class="alert-item">
+                                                <span class="alert-text">
+                                                    A wallet name is required.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,6 +108,17 @@
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
+                            <div *ngIf="!formControl.controls['walletAccount'].valid && formControl.controls['walletAccount'].touched" class="alert-items">
+                                <div class="alert alert-danger">
+                                    <div class="alert-items">
+                                        <div class="alert-item">
+                                            <span class="alert-text">
+                                                An account must be selected.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -111,6 +134,17 @@
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletType']">
                             </ng-select>
+                        </div>
+                        <div *ngIf="!formControl.controls['walletType'].valid && formControl.controls['walletType'].touched" class="alert-items">
+                            <div class="alert alert-danger">
+                                <div class="alert-items">
+                                    <div class="alert-item">
+                                        <span class="alert-text">
+                                            A wallet type must be selected.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group col-sm-12" *ngIf="formControl.controls['walletType']._value.length">
@@ -141,7 +175,7 @@
     <!-- User Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditWallet(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -149,7 +183,20 @@
                                 <span mltag="txt_username">Wallet Name</span>
                             </label>
                             <div>
+
                                 <input id="new-wallet-name" type="text" formControlName="walletName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                                <div *ngIf="!formControl.controls['walletName'].valid && formControl.controls['walletName'].touched" class="alert-items">
+                                    <div class="alert alert-danger">
+                                        <div class="alert-items">
+                                            <div class="alert-item">
+                                                <span class="alert-text">
+                                                    A wallet name is required.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -166,6 +213,17 @@
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
+                            <div *ngIf="!formControl.controls['walletAccount'].valid && formControl.controls['walletAccount'].touched" class="alert-items">
+                                <div class="alert alert-danger">
+                                    <div class="alert-items">
+                                        <div class="alert-item">
+                                            <span class="alert-text">
+                                                An account must be selected.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -175,8 +233,13 @@
                                 <span mltag="txt_usertype">Wallet Status</span>
                             </label>
                             <div class="wallet-status">
-                                <span *ngIf="formControl.controls['walletLocked']._value"><i class="fa fa-unlock"></i></span>
-                                <span *ngIf="!formControl.controls['walletLocked']._value"><i class="fa fa-lock"></i></span>
+                                <span *ngIf="formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="!formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
                                 <div class="toggle-switch">
                                     <input [formControl]="formControl.controls['walletLocked']" id="edit-wallet-status-toggle" type="checkbox">
                                     <label for="edit-wallet-status-toggle"></label>
@@ -197,6 +260,17 @@
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletType']">
                             </ng-select>
+                            <div *ngIf="!formControl.controls['walletType'].valid && formControl.controls['walletType'].touched" class="alert-items">
+                                <div class="alert alert-danger">
+                                    <div class="alert-items">
+                                        <div class="alert-item">
+                                            <span class="alert-text">
+                                                A wallet type must be selected.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group col-sm-12" *ngIf="formControl.controls['walletType']._value.length">
@@ -464,12 +538,13 @@
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
-                                <div class="form-group col-sm-12">
+                                <div *ngIf="tabsControl[tabid].walletId == -1" class="form-group col-sm-12">
                                     <label>
-                                        <input type="checkbox" [formControl]="formControl.controls['caSame']" />Same as Residential address.
+                                        Same as Residential address <input type="checkbox" [formControl]="formControl.controls['caSame']" />
                                     </label>
                                 </div>
-
+                            </div>
+                            <div class="row" [ngClass]="{'disabled-row': formControl.controls['caSame']._value}">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
                                         <span mltag="txt_country">Country</span>
@@ -547,7 +622,12 @@
                                         <span mltag="txt_username">Bank Wallet</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet">
+                                        <ng-select
+                                            [items]="filteredWalletList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bankWalletId']"
+                                        ></ng-select>
+                                        <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet"> -->
                                     </div>
                                 </div>
 

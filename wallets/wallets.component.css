@@ -33,3 +33,12 @@
 .wallet-status > span i.fa-lock {
     color: #747474;
 }
+
+.disabled-row {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    opacity: .4;
+}
