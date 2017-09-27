@@ -14,6 +14,6 @@ export interface OfiFundInvestState {
     ofiInvestorFundList: OfiInvestorFundListState;
 }
 
-export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers({
+export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers<OfiFundInvestState>({
     ofiInvestorFundList: OfiInvestorFundListReducer,
 });
