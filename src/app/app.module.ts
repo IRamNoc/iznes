@@ -62,7 +62,7 @@ import {AppComponent} from './app.component';
  * Vendor Modules and Services.
  */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
 
 /**
