@@ -10,6 +10,10 @@
  import {RouterModule} from '@angular/router';
  import {ClarityModule} from 'clarity-angular';
 
+ import {
+     FileDropModule
+ } from '@setl/core-filedrop';
+
 /* Components. */
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {HomeComponent} from './home/home.component';
@@ -18,7 +22,8 @@ import {HomeComponent} from './home/home.component';
     imports: [
         CommonModule,
         RouterModule,
-        ClarityModule
+        ClarityModule,
+        FileDropModule
     ],
     declarations: [
         FormElementsComponent,

@@ -5,6 +5,22 @@
 
 <clr-tabs>
     <clr-tab>
+        <button clrTabLink><i class="fa fa-document"></i> Setl File Drop</button>
+        <clr-tab-content *clrIfActive>
+
+            <setl-file-drop
+                (onDrop)="filesDropped($event)"
+            ></setl-file-drop>
+
+            <setl-file-drop
+                (onDrop)="filesDropped($event)"
+                [multiple]="true"
+            ></setl-file-drop>
+
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
         <button clrTabLink><i class="fa fa-table"></i> Datagrid</button>
         <clr-tab-content *clrIfActive>
             <clr-datagrid>

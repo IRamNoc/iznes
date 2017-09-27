@@ -8,6 +8,8 @@ import {Component, AfterViewInit} from "@angular/core";
 
 import {fromJS} from 'immutable';
 
+import {FileDropComponent} from '@setl/core-filedrop';
+
 interface User {
     id: number;
     name: string;
@@ -48,6 +50,10 @@ export class HomeComponent {
     public tabs: Array<any>;
 
     basic: boolean = false;
+
+    public filesDropped (files) {
+        console.log('Dropped files: ', files);
+    }
 
     public constructor() {
 
