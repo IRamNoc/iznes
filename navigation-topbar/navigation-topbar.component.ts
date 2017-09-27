@@ -1,4 +1,7 @@
-import {Component, OnInit, Output, EventEmitter, Inject} from '@angular/core';
+import {
+    Component, OnInit, Output, EventEmitter, Inject, ChangeDetectionStrategy,
+    ChangeDetectorRef
+} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {
     getMyWalletList,
@@ -21,7 +24,8 @@ import {WalletNodeSocketService} from '@setl/websocket-service';
 @Component({
     selector: 'app-navigation-topbar',
     templateUrl: './navigation-topbar.component.html',
-    styleUrls: ['./navigation-topbar.component.css']
+    styleUrls: ['./navigation-topbar.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavigationTopbarComponent implements OnInit {
 
@@ -43,6 +47,7 @@ export class NavigationTopbarComponent implements OnInit {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private fb: FormBuilder,
                 private walletNodeSocketService: WalletNodeSocketService,
+                private changeDetectorRef: ChangeDetectorRef,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
