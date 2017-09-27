@@ -11,7 +11,7 @@ import {ClarityModule} from 'clarity-angular';
 import {AdminUsersService} from '@setl/core-req-services';
 
 /* 3rd party modules. */
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils';
 
 /* Import core components. */
 import {AdminWizardComponent} from './wizard/wizard.component';
