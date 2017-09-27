@@ -31,6 +31,7 @@
         "@setl/asset-servicing": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git",
         "@setl/core-account": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git",
         "@setl/core-balances": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git",
+        "@setl/core-filedrop": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/filedrop.git",
         "@setl/core-layout": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git",
         "@setl/core-login": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git",
         "@setl/core-manage-member": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git",
