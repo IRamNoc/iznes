@@ -17,6 +17,12 @@ export {
 
 
 /**
+ * Corporate Actions
+ */
+export {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
+export {CouponPaymentComponent} from './ofi-corp-actions/coupon-payment/coupon-payment.component';
+
+/**
  * Ofi main module
  */
 export {OfiMainModule} from './module';
