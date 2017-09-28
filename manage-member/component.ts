@@ -14,7 +14,6 @@ import {
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
-import {take} from "rxjs/operator/take";
 
 @Component({
     selector: 'app-manage-member',
