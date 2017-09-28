@@ -3,17 +3,17 @@ import {Action} from 'redux';
 import _ from 'lodash';
 
 /* Local types. */
-import {OfiCorpActionsState} from '../';
+import {OfiCouponState} from './';
 import * as ofiCouponActions from './actions';
 
 /* Initial state. */
-const initialState: OfiCorpActionsState = {
+const initialState: OfiCouponState = {
     ofiCouponList: []
 };
 
 /* Reducer. */
 export const OfiCouponListReducer = function (
-    state: OfiCorpActionsState = initialState,
+    state: OfiCouponState = initialState,
     action: Action
 ) {
     switch (action.type) {
@@ -37,7 +37,7 @@ export const OfiCouponListReducer = function (
  *
  * @return {newState} object - the new state.
  */
-function ofiSetCouponList ( state: OfiCorpActionsState, action: Action ) {
+function ofiSetCouponList ( state: OfiCouponState, action: Action ) {
     /* Variables. */
     let
     newState,

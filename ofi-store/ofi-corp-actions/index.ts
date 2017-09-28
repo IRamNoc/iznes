@@ -1,18 +1,20 @@
 import {combineReducers, Reducer} from 'redux';
 
+import {OfiCouponState} from './coupons';
+
 /* Coupon List */
 import {
     OfiCouponListReducer
-} from './coupon-list'
+} from './coupons'
 export {
     OFI_SET_COUPON_LIST,
     getOfiCouponList
-} from './coupon-list';
+} from './coupons';
 
 export interface OfiCorpActionsState {
-    ofiCouponList: Array<any>;
+    ofiCoupon: OfiCouponState
 }
 
 export const OfiCorpActionsReducer: Reducer<OfiCorpActionsState> = combineReducers<OfiCorpActionsState>({
-    ofiCouponList: OfiCouponListReducer,
+    ofiCoupon: OfiCouponListReducer,
 });

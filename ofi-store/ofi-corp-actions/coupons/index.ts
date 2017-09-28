@@ -1,3 +1,6 @@
+/* Model. */
+export {OfiCouponState} from './model';
+
 /* Reducer. */
 export {OfiCouponListReducer} from './reducer';
 
