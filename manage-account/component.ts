@@ -96,7 +96,9 @@ export class ManageAccountComponent implements OnInit {
 
         const accountListImu = fromJS(accountList);
         this.accountList = accountListImu.reduce(function (result, thisAccount) {
-            result.push(thisAccount.toJS());
+            const index = result.length;
+            const newThisAccount = thisAccount.set('index', index)
+            result.push(newThisAccount.toJS());
             return result;
         }, []);
     }

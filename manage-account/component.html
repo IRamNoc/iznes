@@ -36,19 +36,19 @@
     <ng-template #accountListTab>
         <div class="panel-body">
 
-            <clr-datagrid #usersDataGrid>
+            <clr-datagrid>
                 <clr-dg-column>Actions</clr-dg-column>
                 <clr-dg-column>Account Name</clr-dg-column>
                 <clr-dg-column>Description</clr-dg-column>
 
 
-                <clr-dg-row *clrDgItems="let account of accountList; let i = index">
+                <clr-dg-row *clrDgItems="let account of accountList;">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(i)" class="btn">
+                            <button (click)="handleEdit(account.index)" class="btn">
                                 <i class="fa fa-pencil-square-o"></i> Edit
                             </button>
-                            <button (click)="handleDelete(i)" class="btn">
+                            <button (click)="handleDelete(account.index)" class="btn">
                                 <i class="fa fa-trash-o"></i> Delete
                             </button>
                         </div>

@@ -14,6 +14,7 @@ import {
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
+import {take} from "rxjs/operator/take";
 
 @Component({
     selector: 'app-manage-member',
@@ -66,10 +67,13 @@ export class ManageMemberComponent implements OnInit {
     updateMemberList(memberList: object): void {
         const memberListImu = fromJS(memberList);
         this.manageMembersList = memberListImu.reduce(function (result, thisMember) {
-            result.push(thisMember.toJS());
+            const index = result.length;
+            const newThisMember = thisMember.set('index', index);
+            result.push(newThisMember.toJS());
             return result;
         }, []);
-        console.log(this.manageMembersList);
+
+        this.changeDetectorRef.markForCheck();
     }
 
     requestManagedMemberList(requestedState: boolean): void {
@@ -250,19 +254,14 @@ export class ManageMemberComponent implements OnInit {
 
     setTabActive(index: number): void {
 
-        /* Lets loop over all current tabs and switch them to not active. */
-        this.tabsControl.map((i) => {
-            i.active = false;
+        const tabControlImu = fromJS(this.tabsControl);
+
+        const newTabControlImu = tabControlImu.map((item, thisIndex) => {
+            return item.set('active', thisIndex === index);
         });
 
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
+        this.tabsControl = newTabControlImu.toJS();
 
-        /* Set the list active. */
-        this.tabsControl[index].active = true;
-
-        /* Yes, we have to call this again to get it to work, trust me... */
-        this.changeDetectorRef.detectChanges();
     }
 
     showErrorResponse(response) {
