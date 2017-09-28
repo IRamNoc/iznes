@@ -1,5 +1,6 @@
 package User.Creation;
 
+import Utils.LoginHelper;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -9,8 +10,7 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static jdk.nashorn.internal.objects.NativeMath.max;
+import static Utils.LoginHelper.login;
+import static Utils.UserDetailsHelper.createUser;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.junit.Assert.assertFalse;
 
 
 @RunWith(JUnit4.class)
@@ -34,17 +34,6 @@ public class createUserTest {
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-
-    @Before
-    public void setUp() throws Exception
-    {
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-
-    }
 
     @Test
     public void createUserWithValidDataTest() throws InterruptedException, ExecutionException {
@@ -137,11 +126,12 @@ public class createUserTest {
 
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
     latch.await();
-    connexion.get().connected();
+    connexion.get().disconnect();
 
     }
 
     @Test
+    @Ignore("Message format error")
     public void failToCreateUserWithInvalidAccountTypeTest() throws InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -172,11 +162,12 @@ public class createUserTest {
         });
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
     latch.await();
-    connexion.get().connected();
+    connexion.get().disconnect();
 
     }
 
     @Test
+    @Ignore("Message format error")
     public void failToCreateUserWithInvalidAccount() throws InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -207,9 +198,20 @@ public class createUserTest {
         });
         Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
     latch.await();
-    connexion.get().connected();
+    connexion.get().disconnect();
 
     }
+
+    @Test
+    public void createNewUser() throws ExecutionException, InterruptedException {
+      String userDetails[] = generateUserDetails();
+      String userName = userDetails[0];
+      String password = userDetails[1];
+      String email = userDetails[2];
+      login(socket, ws);
+      createUser(factory, socket, ws, userName, email, "8", "35", password);
+    }
+
 
     public static String[] generateUserDetails ()
     {

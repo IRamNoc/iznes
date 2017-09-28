@@ -43,22 +43,29 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
+        //navigateToDropdown("home");
+        verifyHomePageIsDisplayed();
+        navigateToAddressesTab();
+        verifyHomePageIsDisplayed();
     }
     @Test
     public void shouldNavigateToHome() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
         navigateToPage("home");
+        clickLoginButton();
     }
     @Test
     public void shouldNavigateToWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("wallets");
+        clickLoginButton();
     }
     @Test
     public void shouldNavigateToKYCAdmin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("kyc-admin");
+
     }
     @Test
     public void shouldNavigateToManageOrders() throws IOException, InterruptedException {

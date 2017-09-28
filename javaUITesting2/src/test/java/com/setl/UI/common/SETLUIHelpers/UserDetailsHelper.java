@@ -345,4 +345,67 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
       System.out.println("Manage User page not displayed");
     }
   }
+  public static void enterManageUserUsername(String username){
+    driver.findElement(By.id("new-user-username")).sendKeys(username);
+  }
+  public static void enterManageUserEmail(String email){
+    driver.findElement(By.id("new-user-email")).sendKeys(email);
+  }
+  public static void selectManageUserAccountDropdown(){
+    driver.findElement(By.id("new-user-account-select")).click();
+    driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/ul/li[1]")).click();
+  }
+  public static void selectManageUserUserDropdown(){
+    driver.findElement(By.id("new-user-usertype-select")).click();
+    driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/ul/li[1]")).click();
+  }
+  public static void enterManageUserPassword(String password){
+    driver.findElement(By.id("new-user-password")).sendKeys(password);
+  }
+  public static void enterManageUserPasswordRepeat(String password){
+    driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
+  }
+  public static void clickManageUserSubmit(){
+    driver.findElement(By.id("new-user-submit")).click();
+  }
+  public static void navigateToPage5(){
+    driver.findElement(By.className("pagination-next")).click();
+    driver.findElement(By.className("pagination-next")).click();
+    driver.findElement(By.className("pagination-next")).click();
+    driver.findElement(By.className("pagination-next")).click();
+  }
+
+  public static void navigateToUserSearch(){
+    driver.findElement(By.id("user-tab-0")).click();
+  }
+
+  public static void navigateToEditUsers(){
+    driver.findElement(By.id("edit-1")).click();
+    driver.findElement(By.id("user-tab-2")).isDisplayed();
+  }
+
+  public static void editUserEmail(String email){
+    driver.findElement(By.id("edit-user2-email")).clear();
+    driver.findElement(By.id("edit-user2-email")).sendKeys(email);
+  }
+
+  public static void closeUserDetails(){
+    driver.findElement(By.xpath("//*[@id=\"edit-user2-form\"]/div/div[5]/div/button[2]")).click();
+  }
+  public static void saveUserDetails(){
+    driver.findElement(By.xpath("//*[@id=\"edit-user2-form\"]/div/div[5]/div/button[1]")).click();
+  }
+  public static void clickDeleteUser(String delNo){
+    driver.findElement(By.id("delete-"+ delNo)).click();
+  }
+  public static void enterAllUserDetails(){
+    enterManageUserUsername("TestUser5");
+    enterManageUserEmail("TestEmail@gmail.com");
+    selectManageUserAccountDropdown();
+    selectManageUserUserDropdown();
+    enterManageUserPassword("Testpass123");
+    enterManageUserPasswordRepeat("Testpass123");
+  }
+
+
 }
