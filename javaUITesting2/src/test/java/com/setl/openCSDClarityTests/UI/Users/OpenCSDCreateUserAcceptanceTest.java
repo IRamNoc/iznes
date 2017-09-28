@@ -165,13 +165,13 @@ public class OpenCSDCreateUserAcceptanceTest {
         navigateToAddUser();
         enterAllUserDetails();
     }
-    @Test
-    public void shouldDeleteUser() throws IOException, InterruptedException {
-        navigateToAddUser();
-        navigateToUserSearch();
-        navigateToPage5();
-        clickDeleteUser("102");
-    }
+//    @Test
+//    public void shouldDeleteUser() throws IOException, InterruptedException {
+//        navigateToAddUser();
+//        navigateToUserSearch();
+//        navigateToPage5();
+//        clickDeleteUser("102");
+//    }
 
     @Test
     public void shouldNotDeleteUser() throws IOException, InterruptedException{
