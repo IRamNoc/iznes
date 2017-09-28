@@ -7,5 +7,15 @@
 - [ x ] Setup basic ofi-req-services
 - [ x ] Setup basic ofi-store
 
-- [  ] investor-fund-list view
-    - [ ] Setup up tabs  
+- [ x ] investor-fund-list view
+    - [ x ] Setup up tabs  
+    
+- [ x ] Fetch fund access from membernode
+   - [ x ] Fund access request call.
+   - [x] Setup up fund list access in store.
+   - [ ] Create static function to actually to make the call to fetch access.
+   - [ ] Paint fund list in fund list table.
+    
+- [ ] Setup subscribe view 
+- [ ] Setup redeem view
+- [ ] Allow Fund detail viewing function.
