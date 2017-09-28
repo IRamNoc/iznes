@@ -4,12 +4,16 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
+import {SelectModule} from '@setl/utils';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 
 /* Components. */
 import {CouponPaymentComponent} from './coupon-payment/coupon-payment.component';
+
+/* Services. */
+import {OfiCorpActionService} from '../ofi-req-services/ofi-corp-actions/service';
 
 /* Decorator. */
 @NgModule({
@@ -24,9 +28,12 @@ import {CouponPaymentComponent} from './coupon-payment/coupon-payment.component'
         ReactiveFormsModule,
         BrowserModule,
         FormsModule,
-        ClarityModule
+        ClarityModule,
+        SelectModule
     ],
-    providers: []
+    providers: [
+        OfiCorpActionService
+    ]
 })
 
 /* Class. */

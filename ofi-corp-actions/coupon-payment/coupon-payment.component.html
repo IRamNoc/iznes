@@ -1,1 +1,243 @@
-<h2>Coupon payment works!</h2>
+<div class="header-breadcrumbs">
+    <h1 id="ofi-coupon-payments"><i class="fa fa-musuem"></i> Coupon Payment</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="coupon-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container *ngIf="id === 0">
+                    <!-- Coupon Payment list tab. -->
+                    <ng-container
+                        *ngTemplateOutlet="staticCouponsList"
+                    ></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id === 1">
+                    <!-- Create Coupon Payment tab. -->
+                    <ng-container
+                        *ngTemplateOutlet="staticCreateCouponPayment; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id >= 2">
+                    <!-- View Coupon Payment tabs. -->
+                    <ng-container
+                        *ngTemplateOutlet="dynamicCouponPaymentView; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Coupon Payments Data Table. -->
+    <ng-template #staticCouponsList>
+        <div class="panel-body">
+            <clr-datagrid #walletDataGrid>
+                <clr-dg-column>Action</clr-dg-column>
+                <clr-dg-column>Coupon ID</clr-dg-column>
+                <clr-dg-column>Fund</clr-dg-column>
+                <clr-dg-column>Fund ISIN</clr-dg-column>
+                <clr-dg-column>Ratio</clr-dg-column>
+                <clr-dg-column>Gross Amount</clr-dg-column>
+                <clr-dg-column>Date Valuation</clr-dg-column>
+                <clr-dg-column>Date Settlement	Status</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let coupon of couponsList">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button id="view-{{coupon.couponId}}" (click)="handleView(coupon.couponId)" class="btn">
+                                <i class="fa fa-pencil-square-o"></i> Edit
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>Hello</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} coupon payments
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <!-- Create Coupon Payment Form. -->
+    <ng-template #staticCreateCouponPayment let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="create-coupon-payment-form" (ngSubmit)="handleNewCouponPayment(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_username">Wallet Name</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-payment-name" type="text" formControlName="couponName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                                <!-- <div *ngIf="!formControl.controls['walletName'].valid && formControl.controls['walletName'].touched" class="alert-items">
+                                    <div class="alert alert-danger">
+                                        <div class="alert-items">
+                                            <div class="alert-item">
+                                                <span class="alert-text">
+                                                    A wallet name is required.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button id="new-wallet-submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- View Coupon Tab. -->
+    <ng-template #dynamicCouponPaymentView let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditWallet(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_username">Wallet Name</span>
+                            </label>
+                            <div>
+
+                                <input id="new-wallet-name" type="text" formControlName="walletName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                                <div *ngIf="!formControl.controls['walletName'].valid && formControl.controls['walletName'].touched" class="alert-items">
+                                    <div class="alert alert-danger">
+                                        <div class="alert-items">
+                                            <div class="alert-item">
+                                                <span class="alert-text">
+                                                    A wallet name is required.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_account">Account</span>
+                            </label>
+                            <ng-select
+                                id="new-wallet-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletAccount']">
+                            </ng-select>
+                            <div *ngIf="!formControl.controls['walletAccount'].valid && formControl.controls['walletAccount'].touched" class="alert-items">
+                                <div class="alert alert-danger">
+                                    <div class="alert-items">
+                                        <div class="alert-item">
+                                            <span class="alert-text">
+                                                An account must be selected.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_usertype">Wallet Status</span>
+                            </label>
+                            <div class="wallet-status">
+                                <span *ngIf="formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="!formControl.controls['walletLocked']._value">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['walletLocked']" id="edit-wallet-status-toggle" type="checkbox">
+                                    <label for="edit-wallet-status-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_usertype">Wallet Type</span>
+                            </label>
+                            <ng-select
+                                id="new-wallet-usertype-select"
+                                [items]="walletTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletType']">
+                            </ng-select>
+                            <div *ngIf="!formControl.controls['walletType'].valid && formControl.controls['walletType'].touched" class="alert-items">
+                                <div class="alert alert-danger">
+                                    <div class="alert-items">
+                                        <div class="alert-item">
+                                            <span class="alert-text">
+                                                A wallet type must be selected.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="formControl.controls['walletType']._value.length">
+                            <div [ngSwitch]="formControl.controls['walletType']._value[0].id">
+                                <ng-container *ngSwitchCase="'1'">
+                                    <ng-container *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="'2'">
+                                    <ng-container *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button id="new-wallet-submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                            </button>
+
+                            <a (click)="closeTab(tabid)" class="btn btn-secondary">
+                                Close
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+</div>
