@@ -380,6 +380,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 });
             }
         });
+        
         /* Return. */
         return;
     }

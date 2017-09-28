@@ -7,7 +7,9 @@ import {OnDestroy} from '@angular/core';
 
 import {select, NgRedux} from '@angular-redux/store';
 
+/* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService} from '@setl/utils';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -64,7 +66,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     constructor(private userAdminService: UserAdminService,
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,) {
+                private alertsService: AlertsService,
+                private _confirmationService: ConfirmationService,) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
 
@@ -134,20 +137,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     "text": "Add User"
                 },
                 "userId": -1,
-                "formControl": new FormGroup(
-                    {
-                        "username": new FormControl(''),
-                        "email": new FormControl(''),
-                        "accountType": new FormControl([]),
-                        "userType": new FormControl([]),
-                        "password": new FormControl(''),
-                        "adminGroups": new FormControl([]),
-                        "txGroups": new FormControl([]),
-                        "walletsFull": new FormControl([]),
-                        "walletsRead": new FormControl([]),
-                        "chainAccess": new FormControl([]),
-                    }
-                ),
+                "formControl": this.getNewUserFormGroup(),
                 "selectedChain": 0,
                 "filteredTxList": [], // filtered groups of this chainid.
                 "selectedTxList": [], // groups to show as selected.
@@ -809,21 +799,32 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         let dataToSend = {};
         dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
 
-        /* Send the request. */
-        /* TODO - Add a better confirm in here. */
-        if (confirm("Are you sure you want to delete " + this.usersList[deleteUserIndex].userName + "?")) {
-            this.userAdminService.deleteUser(dataToSend).then((response) => {
-                /* TODO - close any edit tabs created for this user. */
+        /* Send the request. */        /* Let's now ask the user if they're sure... */
+        this._confirmationService.create(
+            '<span>Deleting a User</span>',
+            '<span>Are you sure you want to delete \''+ this.usersList[deleteUserIndex].userName +'\'?</span>'
+        ).subscribe((ans) => {
+            /* ...if they are... */
+            if (ans.resolved) {
+                /* ...now send the request. */
+                this.userAdminService.deleteUser(dataToSend).then((response) => {
+                    /* Close any tabs open for this wallet. */
+                    for ( let i in this.tabsControl ) {
+                        if ( this.tabsControl[i].userID == dataToSend['userId'] ) {
+                            this.closeTab(i); break;
+                        }
+                    }
 
-                /* Handle succes message. */
-                console.log('Deleted user successfully.', response)
-                this.showSuccess('Successfully deleted user.');
-            }).catch((error) => {
-                /* Handle error message. */
-                console.log('Failed to deleted user.', error);
-                this.showError('Failed to delete user.');
-            });
-        }
+                    /* Handle succes message. */
+                    console.log('Deleted user successfully.', response)
+                    this.showSuccess('Successfully deleted user.');
+                }).catch((error) => {
+                    /* Handle error message. */
+                    console.log('Failed to deleted user.', error);
+                    this.showError('Failed to delete user.');
+                });
+            }
+        });
 
         /* Return. */
         return;
@@ -851,31 +852,19 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }
         }
 
-        /* Push the edit tab into the array. */
+        /* Let's fix some data. */
         let user = this.usersList[editUserIndex];
         let accountType = this.userAdminService.resolveAccountType({text: user.accountName});
         let userType = this.userAdminService.resolveUserType({id: user.userType});
 
-        /* And also prefill the form... let's sort some of the data out. */
+        /* And push the tab into it's place. */
         this.tabsControl.push({
             "title": {
                 "icon": "fa-user",
                 "text": this.usersList[editUserIndex].userName
             },
             "userId": user.userID,
-            "formControl": new FormGroup(
-                {
-                    "username": new FormControl(user.userName),
-                    "email": new FormControl(user.emailAddress),
-                    "accountType": new FormControl(accountType),
-                    "userType": new FormControl(userType),
-                    "adminGroups": new FormControl([]),
-                    "txGroups": new FormControl([]),
-                    "walletsFull": new FormControl([]),
-                    "walletsRead": new FormControl([]),
-                    "chainAccess": new FormControl([]),
-                }
-            ),
+            "formControl": this.getNewUserFormGroup(),
             "oldAdminGroups": {},
             "oldTxGroups": {},
             "selectedChain": 0,
@@ -887,8 +876,15 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             "active": false // this.editFormControls
         });
 
+        /* Refence the new tab. */
         const thisTab = this.tabsControl[this.tabsControl.length - 1];
         const newTabId = this.tabsControl.length - 1;
+
+        /* Now let's prefill the user's meta data. */
+        thisTab.formControl.controls['username'].patchValue(user.userName);
+        thisTab.formControl.controls['email'].patchValue(user.emailAddress);
+        thisTab.formControl.controls['accountType'].patchValue(accountType);
+        thisTab.formControl.controls['userType'].patchValue(userType);
 
         /* Get Admin permissions. */
         this.userAdminService.requestUserPermissions({
@@ -975,7 +971,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         }).catch((error) => {
             /* Handle the error message */
-            console.log("Editing user, tx permissions error: ", error);
+            console.log("Editing user, wallet permission error: ", error);
             this.showError('Failed to fetch this user\'s wallet permissions.');
         });
 
@@ -1125,7 +1121,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = new FormGroup(
+        this.tabsControl[tabid].formControl = this.getNewUserFormGroup();
+
+        /* Override the changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Get New user Formgroup
+     * ----------------------
+     * Returns a new user form group.
+     * @return {FormGroup}
+     */
+    getNewUserFormGroup ():FormGroup {
+        return new FormGroup(
             {
                 "username": new FormControl(''),
                 "email": new FormControl(''),
@@ -1139,12 +1151,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 "chainAccess": new FormControl([]),
             }
         );
-
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Return. */
-        return;
     }
 
     /**

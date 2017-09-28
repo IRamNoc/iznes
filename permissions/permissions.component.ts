@@ -10,6 +10,10 @@ import {UserAdminService} from '../useradmin.service';
 /* Use the permissions grid. */
 import {PermissionGridComponent} from '@setl/permission-grid';
 
+/* Alerts and confirms. */
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService} from '@setl/utils';
+
 class TypeFilter implements StringFilter<any> {
     accepts(group:any, search: string): boolean {
         return group.category[0].text.toLowerCase().indexOf(search) >= 0;
@@ -76,7 +80,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
-        private changeDetectorRef:ChangeDetectorRef
+        private changeDetectorRef:ChangeDetectorRef,
+        private alertsService: AlertsService,
+        private _confirmationService: ConfirmationService,
     ) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
