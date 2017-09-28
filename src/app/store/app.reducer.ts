@@ -15,8 +15,8 @@ import {
 } from '@setl/core-store';
 
 import {
-    OfiFundInvestState,
-    OfiFundInvestReducer
+    OfiState,
+    OfiReducer
 } from '@ofi/ofi-main';
 
 export interface AppState {
@@ -29,7 +29,7 @@ export interface AppState {
     member: MemberState;
     chain: ChainState;
 
-    ofiFundInvestor: OfiFundInvestState;
+    ofi: OfiState;
 }
 
 const appReducer: Reducer<any> = combineReducers<any>({
@@ -42,7 +42,7 @@ const appReducer: Reducer<any> = combineReducers<any>({
     member: MemberReducer,
     chain: ChainReducer,
 
-    ofiFundInvestor: OfiFundInvestReducer
+    ofi: OfiReducer
 });
 
 export const rootReducer: Reducer<any> = (state, action) => {
