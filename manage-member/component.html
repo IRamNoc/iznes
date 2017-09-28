@@ -39,13 +39,13 @@
             <clr-datagrid #membersDataGrid>
                 <clr-dg-column *ngIf="isSymAdmin">Actions</clr-dg-column>
                 <clr-dg-column>Member Name</clr-dg-column>
-                <clr-dg-row *clrDgItems="let member of manageMembersList; let i = index">
+                <clr-dg-row *clrDgItems="let member of manageMembersList;">
                     <clr-dg-cell *ngIf="isSymAdmin">
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(i)" class="btn">
+                            <button (click)="handleEdit(member.index)" class="btn">
                                 <i class="fa fa-pencil-square-o"></i> Edit
-                        </button>
-                            <button (click)="handleDelete(i)" class="btn">
+                            </button>
+                            <button (click)="handleDelete(member.index)" class="btn">
                                 <i class="fa fa-trash-o"></i> Delete
                             </button>
                         </div>
