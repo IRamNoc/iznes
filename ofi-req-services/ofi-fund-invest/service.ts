@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {RequetFundAccessMy} from './model';
+import {SagaHelper, Common} from '@setl/utils';
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {NgRedux} from '@angular-redux/store';
 
 import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
 
@@ -22,7 +25,7 @@ export class OfiFundInvestService {
         ngRedux.dispatch(setRequestedFundAccessMy());
 
         // Request the list.
-        const asyncTaskPipe = ofiFundInvestService.requestWalletNodeList();
+        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy();
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_ACCESS_MY],
