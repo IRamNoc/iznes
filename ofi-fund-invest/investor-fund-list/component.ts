@@ -1,6 +1,6 @@
 // Vendor
 import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 
 // Internal
 import {MemberService} from '@setl/core-req-services';
@@ -40,6 +40,8 @@ export class OfiInvestorFundListComponent implements OnInit {
             geographic: 'EUROPE'
         }
     ];
+
+    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundList
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
