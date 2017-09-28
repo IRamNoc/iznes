@@ -194,6 +194,32 @@ export const ROUTES: Routes = [
                 ],
                 canActivate: [LoginGuardService]
             },
+            {
+                path: 'corporate-actions',
+                children: [
+                    /**
+                     * Core corporate actions.
+                     */
+                    // {
+                    //     path: 'create-resolution',
+                    //     component: ManageMemberComponent,
+                    //     canActivate: [LoginGuardService]
+                    // },
+                    // {
+                    //     path: 'issue-resolution',
+                    //     component: ManageAccountComponent,
+                    //     canActivate: [LoginGuardService]
+                    // },
+                    // {
+                    //     path: 'distribution',
+                    //     component: ManageChainMembershipComponent,
+                    //     canActivate: [LoginGuardService]
+                    // },
+                    /**
+                     * OFI corporate actions.
+                     */
+                ]
+            },
 
             /**
              * OFI
