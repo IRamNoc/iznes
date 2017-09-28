@@ -7,9 +7,9 @@
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
 
-            <clr-tab-content clrIfActive="tabdata.active">
+            <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
-                    <ng-container ngTemplateOutlet="listOfFundsTab"></ng-container>
+                    <ng-container *ngTemplateOutlet="listOfFundsTab"></ng-container>
                 </ng-container>
             </clr-tab-content>
 
@@ -19,33 +19,45 @@
     <!--list of fund tab-->
     <ng-template #listOfFundsTab>
         <div class="panel-body">
-            <clr-datagrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Account Name</clr-dg-column>
-                <clr-dg-column>Description</clr-dg-column>
+            <!--<clr-datagrid>-->
+            <!--<clr-dg-column>Actions</clr-dg-column>-->
+            <!--<clr-dg-column>Asset manager</clr-dg-column>-->
+            <!--<clr-dg-column>ISIN</clr-dg-column>-->
+            <!--<clr-dg-column>Fund name</clr-dg-column>-->
+            <!--<clr-dg-column>NAV</clr-dg-column>-->
+            <!--<clr-dg-column>Currency</clr-dg-column>-->
+            <!--<clr-dg-column>Asset class</clr-dg-column>-->
+            <!--<clr-dg-column>Sub class of asset</clr-dg-column>-->
+            <!--<clr-dg-column>Geographical area</clr-dg-column>-->
 
 
-                <clr-dg-row *clrDgItems="let account of accountList; let i = index">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(i)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> Edit
-                            </button>
-                            <button (click)="handleDelete(i)" class="btn">
-                                <i class="fa fa-trash-o"></i> Delete
-                            </button>
-                        </div>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>{{account.description}}</clr-dg-cell>
-                </clr-dg-row>
+            <!--<clr-dg-row *clrDgItems="let fund of fundList; let i = index">-->
+            <!--<clr-dg-cell>-->
+            <!--<div class="btn-group btn-sm">-->
+            <!--<button class="btn">-->
+            <!--<i class="fa fa-pencil-square-o"></i> Edit-->
+            <!--</button>-->
+            <!--<button class="btn">-->
+            <!--<i class="fa fa-trash-o"></i> Delete-->
+            <!--</button>-->
+            <!--</div>-->
+            <!--</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.assetManager}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.isin}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.fundName}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.nav}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.currency}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.mainClass}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.subClass}}</clr-dg-cell>-->
+            <!--<clr-dg-cell>{{fund.geographic}}</clr-dg-cell>-->
+            <!--</clr-dg-row>-->
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{pagination.totalItems}} accounts
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <!--<clr-dg-footer>-->
+            <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+            <!--of {{pagination.totalItems}} accounts-->
+            <!--<clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>-->
+            <!--</clr-dg-footer>-->
+            <!--</clr-datagrid>-->
         </div>
     </ng-template>
 </div>

@@ -11,8 +11,8 @@ export {OfiRequestServicesModule} from './ofi-req-services/module';
  * Store
  */
 export {
-    OfiFundInvestState,
-    OfiFundInvestReducer
+    OfiReducer,
+    OfiState
 } from './ofi-store';
 
 
