@@ -20,6 +20,7 @@ export {
  * Corporate Actions
  */
 export {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
+export {OfiCorpActionService} from './ofi-req-services/ofi-corp-actions/service';
 export {CouponPaymentComponent} from './ofi-corp-actions/coupon-payment/coupon-payment.component';
 
 /**
