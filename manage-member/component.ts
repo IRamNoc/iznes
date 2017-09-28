@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
@@ -14,7 +14,6 @@ import {
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
-import {take} from "rxjs/operator/take";
 
 @Component({
     selector: 'app-manage-member',
@@ -23,11 +22,15 @@ import {take} from "rxjs/operator/take";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ManageMemberComponent implements OnInit {
+export class ManageMemberComponent implements OnInit, OnDestroy {
     tabsControl: Array<any>;
     manageMembersList: Array<any>;
     isSymAdmin: boolean;
 
+    // List of observable subscription
+    subscriptionsArry: Array<Subscription> = [];
+
+    // List of redux observable.
     @select(['member', 'manageMemberList', 'memberList']) manageMemberListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
     @select(['user', 'myDetail', 'admin']) isSymAdminOb;
@@ -56,12 +59,20 @@ export class ManageMemberComponent implements OnInit {
             }
         ];
 
-        this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList));
-        this.requestedManagedMemberListOb.subscribe((requestedState) => this.requestManagedMemberList(requestedState));
-        this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin);
+        this.subscriptionsArry.push(this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList)));
+        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
+            this.requestManagedMemberList(requestedState)));
+        this.subscriptionsArry.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
     }
 
     ngOnInit() {
+    }
+
+    ngOnDestroy() {
+
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
     updateMemberList(memberList: object): void {
