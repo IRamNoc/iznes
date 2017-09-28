@@ -56,6 +56,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/users");
+        headingIsPresent("manage-users");
         Thread.sleep(500);
         driver.findElement(By.id("user-tab-1")).click();
     }
@@ -64,14 +65,17 @@ public class OpenCSDTabNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/wallets");
+        headingIsPresent("manage-wallets");
         Thread.sleep(500);
-        driver.findElement(By.id("wallet-new-form-tab")).click();
+        driver.findElement(By.id("wallet-tab-1")).click();
     }
+
     @Test
     public void shouldNavigateToUserAdminTabAddPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/permissions");
+        //headingIsPresent("");
         Thread.sleep(500);
         driver.findElement(By.id("testlink1")).click();
     }
@@ -80,6 +84,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-member");
+        //headingIsPresent("");
         Thread.sleep(500);
         driver.findElement(By.id("link1")).click();
     }
@@ -88,6 +93,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-account");
+        //headingIsPresent("");
         Thread.sleep(500);
         driver.findElement(By.id("link1")).click();
     }

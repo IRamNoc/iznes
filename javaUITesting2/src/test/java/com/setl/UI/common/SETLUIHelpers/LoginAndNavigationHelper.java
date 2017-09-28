@@ -217,4 +217,8 @@ public class LoginAndNavigationHelper {
       fail();
     }
   }
+
+  public static void headingIsPresent(String headingID){
+    driver.findElement(By.id(headingID)).isDisplayed();
+  }
 }

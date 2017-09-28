@@ -27,7 +27,7 @@ public class SetUp {
     public static final String adminuserPassword = "alex01";
     public static final String username = "billtestuser";
     public static final String password = "billtest1";
-    public static final String baseUrl = "localhost:4200";
+    public static final String baseUrl = "https://uk-lon-li-006.opencsd.io";
     public static final String phoenixBaseUrl = "https://phoenix.setl.io";
     public static final StringBuffer verificationErrors = new StringBuffer();
     public static final long timeoutInSeconds = 20;
