@@ -2,12 +2,22 @@ import {combineReducers, Reducer} from 'redux';
 
 import {
     OfiInvestorFundListState,
-    OfiInvestorFundListReducer
+    OfiInvestorFundListReducer,
+
+    // Actions
+    SET_FUND_ACCESS_MY,
+    setRequestedFundAccessMy,
+    clearRequestedFundAccessMy
 } from './ofi-investor-fund-list';
 
 export {
     OfiInvestorFundListState,
-    OfiInvestorFundListReducer
+    OfiInvestorFundListReducer,
+
+    // Actions
+    SET_FUND_ACCESS_MY,
+    setRequestedFundAccessMy,
+    clearRequestedFundAccessMy
 };
 
 export interface OfiFundInvestState {

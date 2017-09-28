@@ -6,7 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // Local components
 import {OfiInvestorFundListComponent} from './investor-fund-list/component';
-import {SelectModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule} from '@setl/utils';
 
 
 @NgModule({
@@ -15,7 +15,8 @@ import {SelectModule} from '@setl/utils';
         ReactiveFormsModule,
         ClarityModule,
         CommonModule,
-        SelectModule
+        SelectModule,
+        SetlPipesModule
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [OfiInvestorFundListComponent],
