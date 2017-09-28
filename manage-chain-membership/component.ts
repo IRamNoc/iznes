@@ -28,7 +28,7 @@ import {SagaHelper} from '@setl/utils';
 
 export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     tabsControl: Array<object>;
-    testArr = [{id: 1, text: 'phoenix'}];
+
     chainMemberShipTypeItems: Array<any> = [
         {id: 1, text: 'Custodian'},
         {id: 2, text: 'Registrar'},

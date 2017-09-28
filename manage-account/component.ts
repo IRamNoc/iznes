@@ -49,6 +49,10 @@ export class ManageAccountComponent implements OnInit {
     managedWalletList: Array<any>;
     isSymAdmin: boolean;
 
+    // List of observable subscription
+    subscriptionsArry: Array<Subscription> = [];
+
+    // List of Redux observable.
     @select(['account', 'accountList', 'accountList']) accountListOb;
     @select(['account', 'requestedAccountList']) requestedAccountListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
@@ -82,13 +86,19 @@ export class ManageAccountComponent implements OnInit {
             }
         ];
 
-        this.accountListOb.subscribe((accountList) => this.updateAccountList(accountList));
-        this.requestedAccountListOb.subscribe((requestedState) => this.requestAccountList(requestedState));
-        this.requestedManagedMemberListOb.subscribe((requestedState) => this.requestManagedMemberList(requestedState));
-        this.managedMemberOb.subscribe((memberList) => this.updateManageMemberList(memberList));
-        this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin);
-        this.walletListOb.subscribe(walletList => this.updateManagedWalletList(walletList));
+        this.subscriptionsArry.push(this.accountListOb.subscribe((accountList) => this.updateAccountList(accountList)));
+        this.subscriptionsArry.push(this.requestedAccountListOb.subscribe((requestedState) => this.requestAccountList(requestedState)));
+        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe((requestedState) => this.requestManagedMemberList(requestedState)));
+        this.subscriptionsArry.push(this.managedMemberOb.subscribe((memberList) => this.updateManageMemberList(memberList)));
+        this.subscriptionsArry.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
+        this.subscriptionsArry.push(this.walletListOb.subscribe(walletList => this.updateManagedWalletList(walletList)));
 
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArry) {
+            subscription.unsubscribe();
+        }
     }
 
     updateAccountList(accountList) {
