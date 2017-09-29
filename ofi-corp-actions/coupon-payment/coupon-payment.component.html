@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="ofi-coupon-payments"><i class="fa fa-musuem"></i> Coupon Payment</h1>
+    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> Coupon Payment</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -43,23 +43,59 @@
                 <clr-dg-column>Ratio</clr-dg-column>
                 <clr-dg-column>Gross Amount</clr-dg-column>
                 <clr-dg-column>Date Valuation</clr-dg-column>
-                <clr-dg-column>Date Settlement	Status</clr-dg-column>
+                <clr-dg-column>Date Settlement</clr-dg-column>
+                <clr-dg-column>Status</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let coupon of couponsList">
+                <clr-dg-row *clrDgItems="let coupon of couponList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="view-{{coupon.couponId}}" (click)="handleView(coupon.couponId)" class="btn">
+                            <button id="view-{{coupon.couponID}}" (click)="handleViewCoupon(coupon.couponID)" class="btn">
                                 <i class="fa fa-pencil-square-o"></i> Edit
                             </button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
-                    <clr-dg-cell>Hello</clr-dg-cell>
+                    <clr-dg-cell>{{padNumberLeft(coupon.couponID, 11)}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.fund}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.fundIsin}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.amount | moneyValueOfi}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.amountGross | moneyValueOfi}}</clr-dg-cell>
+                    <clr-dg-cell>{{formatCouponDate(coupon.dateValuation)}}</clr-dg-cell>
+                    <clr-dg-cell>{{formatCouponDate(coupon.dateSettlement)}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="coupon.status == '1'" class="label label-warning" type="button">
+                            <span mltag="txt_waitingapproval">Waiting approval</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '2'" class="label label-warning" type="button">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '3'" class="label label-warning" type="button">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '4'" class="label label-navy" type="button">
+                            <span mltag="txt_waitingvaluation">Waiting valuation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '5'" class="label label-success" type="button">
+                            <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '-1'" class="label label-primary" type="button">
+                            <span mltag="txt_settled">Settled</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '0'" class="label label-default" type="button">
+                            <span mltag="txt_canceled">Canceled</span>
+                        </span>
+                    </clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -74,26 +110,142 @@
     <!-- Create Coupon Payment Form. -->
     <ng-template #staticCreateCouponPayment let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="create-coupon-payment-form" (ngSubmit)="handleNewCouponPayment(tabid)" [formGroup]="formControl">
+            <form id="create-coupon-payment-form" (ngSubmit)="handleNewCoupon(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span mltag="txt_username">Wallet Name</span>
+                                <span mltag="txt_natureofaction">Nature of Action</span>
                             </label>
                             <div>
-                                <input id="create-coupon-payment-name" type="text" formControlName="couponName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
-                                <!-- <div *ngIf="!formControl.controls['walletName'].valid && formControl.controls['walletName'].touched" class="alert-items">
-                                    <div class="alert alert-danger">
-                                        <div class="alert-items">
-                                            <div class="alert-item">
-                                                <span class="alert-text">
-                                                    A wallet name is required.
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
+                                <input id="create-coupon-nature" type="text" formControlName="couponNature" placeholder="" class="form-control nature" mltag="txt_natureofaction">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_drafter">Drafter</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-drafter" type="text" formControlName="couponDrafter" placeholder="" class="form-control drafter" mltag="txt_drafter">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed" />
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="" class="control-label" mltag="txt_fundsharename">
+                                Fund Share Name
+                            </label>
+                            <ng-select
+                                [items]="filteredUserAssetList"
+                                [allowClear]="true"
+                                [formControl]="formControl.controls['couponFundShareName']"
+                                (selected)="selectedFundShare($event)"
+                                (removed)="selectedFundShare([])">
+                            </ng-select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_isin">ISIN</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-isin" type="text" formControlName="couponIsin" placeholder="" class="form-control coupon-isin" mltag="txt_isin">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed" />
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_amountbyshare">Amount By Share</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-amount-by-share" type="text" formControlName="couponAmountByShare" placeholder="" class="form-control amount-by-share" mltag="txt_amountbyshare">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_fundshareunits">Fund Share Units</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-fund-share-units" type="text" formControlName="couponFundShareUnits" placeholder="" class="form-control fund-share-units" mltag="txt_fundshareunits">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_grossamount">Gross Amount</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-gross-amount" type="text" formControlName="couponGrossAmount" placeholder="" class="form-control gross-amount" mltag="txt_coupongrossamount">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed" />
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span mltag="txt_valuationdate">Valuation Date</span>
+                            </label>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_date">Date</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-valuation-date" type="date" formControlName="couponValuationDate" placeholder="" class="form-control valuation-date" mltag="txt_valuationdate">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_time">Time</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-valuation-time" type="time" formControlName="couponValuationTime" placeholder="" class="form-control valuation-time" mltag="txt_valuationtime">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed" />
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span mltag="txt_settlementdate">Settlement Date</span>
+                            </label>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_date">Date</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-settlement-date" type="date" formControlName="couponSettlementDate" placeholder="" class="form-control settlement-date" mltag="txt_settlementdate">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span mltag="txt_time">Time</span>
+                            </label>
+                            <div>
+                                <input id="create-coupon-settlement-time" type="time" formControlName="couponSettlementTime" placeholder="" class="form-control settlement-time" mltag="txt_settlementtime">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed" />
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                <span mltag="txt_comments">Comments</span>
+                            </label>
+                            <div>
+                                <input id="create-comments" type="text" formControlName="couponComments" placeholder="Comments" class="form-control comments" mltag="txt_comments">
                             </div>
                         </div>
                     </div>

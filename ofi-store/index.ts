@@ -10,8 +10,13 @@ import {
     OfiCorpActionsReducer
 } from './ofi-corp-actions';
 export {
+    /* Coupons */
     getOfiCouponList,
-    OFI_SET_COUPON_LIST
+    OFI_SET_COUPON_LIST,
+
+    /* User issued assets */
+    getOfiUserIssuedAssets,
+    OFI_SET_USER_ISSUED_ASSETS,
 } from './ofi-corp-actions';
 
 export {
