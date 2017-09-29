@@ -37,7 +37,7 @@ export class OfiFundInvestService {
 
     requestFundAccessMy(): any {
         const messageBody: RequetFundAccessMy = {
-            RequestName: 'gfamy',
+            RequestName: 'getfundaccessmy',
             token: this.memberSocketService.token
         };
 
