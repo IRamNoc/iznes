@@ -1,4 +1,5 @@
 import {Component, OnInit, Pipe} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
@@ -24,7 +25,41 @@ import {fromJS} from "immutable";
 })
 export class SetlMessagesComponent {
 
+    messageComposeForm: FormGroup;
+
+    public toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote'],
+
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'direction': 'rtl'}],                         // text direction
+
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        [{'font': []}],
+        [{'align': []}],
+
+        ['clean']                                         // remove formatting button
+    ];
+
+
+    public editorOptions = {
+        modules: {
+            toolbar: this.toolbarOptions    // Snow includes toolbar by default
+        },
+        placeholder: '',
+        bold: false,
+    };
+
+    public editor;
+
     @select(['message', 'myMessages', 'messageList']) getMessageList;
+
+    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+
+    @select(['wallet', 'myWallets', 'walletList']) getMyWalletList;
 
     public messages = [];
     public categories;
@@ -34,7 +69,10 @@ export class SetlMessagesComponent {
     public currentWalletId;
     public walletDirectoryList;
     public walletWithCommuPub;
-    public currentMessageIndex;
+
+    public connectedWallet;
+
+    public myWalletList;
 
     public items: Array<string> = [];
 
@@ -46,16 +84,25 @@ export class SetlMessagesComponent {
                 private myMessageService: MyMessagesService) {
 
         this.getMessageList.subscribe(
-            (messageListData) => {
-                this.messages = messageListData;
-                console.log(this.messages);
+            (data) => {
+                this.messages = data;
+            }
+        );
+
+        this.getConnectedWallet.subscribe(
+            (data) => {
+                this.connectedWallet = data;
+            }
+        );
+
+        this.getMyWalletList.subscribe(
+            (data) => {
+                this.myWalletList = data;
             }
         );
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
-
-        //this.items = ['test', 'test2', 'test3'];
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
@@ -97,6 +144,12 @@ export class SetlMessagesComponent {
         ];
 
         this.resetMessages();
+
+        this.messageComposeForm = new FormGroup({
+            subject: new FormControl('', Validators.required),
+            recipients: new FormControl('', Validators.required),
+            body: new FormControl('', Validators.required)
+        });
     }
 
 
@@ -302,7 +355,10 @@ export class SetlMessagesComponent {
         const walletsSelectItem = walletListImu.map(
             (thisWallet) => {
                 return {
-                    id: thisWallet.get('commuPub'),
+                    id: {
+                        'commPub': thisWallet.get('commuPub'),
+                        'walletId': thisWallet.get('walletID')
+                    },
                     text: thisWallet.get('walletName')
                 };
             }
@@ -323,9 +379,74 @@ export class SetlMessagesComponent {
 
 
     public sendMessage() {
+        console.log(this.messageComposeForm);
+        console.log(this.messageComposeForm);
+
+        let formData = this.messageComposeForm.value;
+
+        let body = {
+            general: btoa(formData.body),
+            action: ''
+        };
+
+        body = JSON.stringify(body);
+
+        let subject = btoa(formData.subject);
+
+        let recipients = {};
+
+        let currentWallet = this.myWalletList[this.connectedWallet];
+
+        let senderId = this.connectedWallet;
+        let senderPub = currentWallet.commuPub;
+
+        for (const i in formData.recipients) {
+            let obj = formData.recipients[i]['id'];
+            let recipentPub = obj.commPub;
+            let receipetId = obj.walletId;
+
+            recipients[receipetId] = recipentPub;
+        }
+
+        const asyncTaskPipe = this.myMessageService.sendMessage(
+            subject,
+            body,
+            senderId,
+            senderPub,
+            recipients
+        );
+
+        // Get response from set active wallet
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            function (data) {
+                console.log('success: ');
+                console.log(data); // success
+            },
+            function (data) {
+                console.log('error: ');
+                console.log(data); // error
+            })
+        );
 
     }
 
+    public onEditorBlured(quill) {
+        console.log('editor blur!', quill);
+    }
+
+    public onEditorFocused(quill) {
+        console.log('editor focus!', quill);
+    }
+
+    public onEditorCreated(quill) {
+        this.editor = quill;
+        console.log('quill is ready! this is current quill instance object', quill);
+    }
+
+    public onContentChanged({quill, html, text}) {
+        console.log('quill content is changed!', quill, html, text);
+    }
 
     private get disabledV(): string {
         return this._disabledV;
