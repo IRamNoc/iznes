@@ -1,4 +1,4 @@
-ode {
+node {
 
 }
 def notifySlack(String buildStatus = 'STARTED') {
