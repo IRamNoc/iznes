@@ -97,5 +97,4 @@ public class OpenCSDTabNavigationAcceptanceTest {
         Thread.sleep(500);
         driver.findElement(By.id("link1")).click();
     }
-
 }
