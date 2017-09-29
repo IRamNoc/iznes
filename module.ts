@@ -7,7 +7,8 @@ import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
 @NgModule({
     imports: [
         OfiFundInvestModule,
-        OfiCorpActionsModule
+        OfiCorpActionsModule,
+        OfiRequestServicesModule
     ],
     exports: [
         OfiFundInvestModule,
@@ -17,7 +18,6 @@ import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
 
     ],
     providers: [
-        OfiRequestServicesModule
     ]
 })
 export class OfiMainModule {

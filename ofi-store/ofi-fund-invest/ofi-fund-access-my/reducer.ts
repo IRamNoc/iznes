@@ -1,4 +1,4 @@
-import {OfiInvestorFundListState} from './model';
+import {OfiFundAccessMyState} from './model';
 import {Action} from 'redux';
 
 import {
@@ -7,7 +7,7 @@ import {
     CLEAR_REQUESTED_FUND_ACCESS_MY,
 } from './actions';
 
-const initialState: OfiInvestorFundListState = {
+const initialState: OfiFundAccessMyState = {
     fundList: [],
     requested: false
 };
@@ -19,7 +19,7 @@ const initialState: OfiInvestorFundListState = {
  * @return {any}
  * @constructor
  */
-export const OfiInvestorFundListReducer = function (state: OfiInvestorFundListState = initialState, action: Action) {
+export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action) {
     switch (action.type) {
         case SET_FUND_ACCESS_MY:
             return handleSetFundAccessMy(state, action);
@@ -39,9 +39,9 @@ export const OfiInvestorFundListReducer = function (state: OfiInvestorFundListSt
  * Handle action
  * @param state
  * @param action
- * @return {OfiInvestorFundListState}
+ * @return {OfiFundAccessMyState}
  */
-function handleSetFundAccessMy(state: OfiInvestorFundListState, action: Action): OfiInvestorFundListState {
+function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
     return state;
 }
 
@@ -49,9 +49,9 @@ function handleSetFundAccessMy(state: OfiInvestorFundListState, action: Action):
  * Handle action
  * @param state
  * @param action
- * @return {OfiInvestorFundListState}
+ * @return {OfiFundAccessMyState}
  */
-function handleSetRequestedFundAccessMy(state: OfiInvestorFundListState, action: Action): OfiInvestorFundListState {
+function handleSetRequestedFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
     return state;
 }
 
@@ -59,9 +59,9 @@ function handleSetRequestedFundAccessMy(state: OfiInvestorFundListState, action:
  * Handle action
  * @param state
  * @param action
- * @return {OfiInvestorFundListState}
+ * @return {OfiFundAccessMyState}
  */
-function handleClearRequestedFundAccessMy(state: OfiInvestorFundListState, action: Action): OfiInvestorFundListState {
+function handleClearRequestedFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
     return state;
 }
 
