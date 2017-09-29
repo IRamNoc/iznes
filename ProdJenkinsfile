@@ -38,13 +38,13 @@ node {
 
           stage('Build & Unit Test'){
 
-            sh '''rm yarn.lock &&
-              yarn install &&
-              yarn test-single &&
-              cd src &&
-              sass styles.scss:styles.css &&
-              cd ../ &&
-              yarn build-prod '''
+            sh '''rm -f yarn.lock &&
+                  yarn install &&
+                  yarn test-single &&
+                  cd src &&
+                  sass styles.scss:styles.css &&
+                  cd ../ &&
+                  yarn build-prod '''
             junit allowEmptyResults: true, keepLongStdio: true,
               testResults: '/TESTS-Headless**'
           }
