@@ -9,6 +9,13 @@ import {
     OfiCorpActionsState,
     OfiCorpActionsReducer
 } from './ofi-corp-actions';
+
+import {
+    OfiProductState,
+    OfiProductReducer,
+    SET_MANAGEMENT_COMPANY_LIST,
+} from './ofi-product';
+
 export {
     getOfiCouponList,
     OFI_SET_COUPON_LIST
@@ -20,12 +27,20 @@ export {
     setRequestedFundAccessMy
 } from './ofi-fund-invest';
 
+export {
+    OfiProductState,
+    OfiProductReducer,
+    SET_MANAGEMENT_COMPANY_LIST
+}
+
 export interface OfiState {
     ofiFundInvest: OfiFundInvestState;
     ofiCorpActions: OfiCorpActionsState;
+    ofiProduct: OfiProductState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiFundInvest: OfiFundInvestReducer,
     ofiCorpActions: OfiCorpActionsReducer,
+    ofiProduct: OfiProductReducer,
 });
