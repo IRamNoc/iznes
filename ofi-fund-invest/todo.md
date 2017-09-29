@@ -1,11 +1,21 @@
-- [ x ] Setup ofi-fund-invest module
-    - [ x ] Create the basic skeleton.
-    - [ x ] Import the ofi-fund-invest module. 
-    - [ x ] Import ofi-fund-invest components to route, and set up the route.   
-    - [ x ] Setup ofi-fund-invest nav item. 
+- [x] Setup ofi-fund-invest module
+    - [x] Create the basic skeleton.
+    - [x] Import the ofi-fund-invest module. 
+    - [x] Import ofi-fund-invest components to route, and set up the route.   
+    - [x] Setup ofi-fund-invest nav item. 
     
-- [ x ] Setup basic ofi-req-services
-- [ x ] Setup basic ofi-store
+- [x] Setup basic ofi-req-services
+- [x] Setup basic ofi-store
 
-- [  ] investor-fund-list view
-    - [ ] Setup up tabs  
+- [x] investor-fund-list view
+    - [x] Setup up tabs  
+    
+- [x] Fetch fund access from membernode
+   - [x] Fund access request call.
+   - [x] Setup up fund list access in store.
+   - [x] Create static function to actually to make the call to fetch access.
+   - [ ] Paint fund list in fund list table.
+    
+- [ ] Setup subscribe view 
+- [ ] Setup redeem view
+- [ ] Allow Fund detail viewing function.

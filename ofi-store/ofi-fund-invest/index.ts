@@ -1,19 +1,29 @@
 import {combineReducers, Reducer} from 'redux';
 
 import {
-    OfiInvestorFundListState,
-    OfiInvestorFundListReducer
-} from './ofi-investor-fund-list';
+    OfiFundAccessMyState,
+    OfiFundAccessMyReducer,
+
+    // Actions
+    SET_FUND_ACCESS_MY,
+    setRequestedFundAccessMy,
+    clearRequestedFundAccessMy
+} from './ofi-fund-access-my';
 
 export {
-    OfiInvestorFundListState,
-    OfiInvestorFundListReducer
+    OfiFundAccessMyState,
+    OfiFundAccessMyReducer,
+
+    // Actions
+    SET_FUND_ACCESS_MY,
+    setRequestedFundAccessMy,
+    clearRequestedFundAccessMy
 };
 
 export interface OfiFundInvestState {
-    ofiInvestorFundList: OfiInvestorFundListState;
+    ofiInvestorFundList: OfiFundAccessMyState;
 }
 
 export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers<OfiFundInvestState>({
-    ofiInvestorFundList: OfiInvestorFundListReducer,
+    ofiInvestorFundList: OfiFundAccessMyReducer,
 });
