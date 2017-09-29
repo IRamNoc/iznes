@@ -86,7 +86,18 @@ export class InitialisationService {
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_HOLDING],
             [],
-            asyncTaskPipes, {}));
+            asyncTaskPipes,
+            {},
+            function (data) {
+                const test = data;
+                console.log(test);
+            },
+
+            function (data) {
+                const test = data;
+                console.log(test);
+            }
+        ));
 
         return false;
     }
