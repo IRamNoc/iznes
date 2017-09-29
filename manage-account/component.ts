@@ -2,6 +2,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
+import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
 
 // Internal
