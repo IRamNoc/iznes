@@ -42,7 +42,7 @@
                 <div class="message-options">
                     <h2>Compose New Message</h2>
                 </div>
-                <form>
+                <form [formGroup]="messageComposeForm" (ngSubmit)="sendMessage()">
                     <section class="">
                         <div class=" row">
                             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
@@ -53,6 +53,7 @@
                                     <ng-select [multiple]="true"
                                                [items]="items"
                                                [disabled]="disabled"
+                                               [formControl]="messageComposeForm.controls['recipients']"
                                                (data)="refreshValue($event)"
                                                (selected)="selected($event)"
                                                (removed)="removed($event)"
@@ -65,25 +66,34 @@
                                 <label for="gForm_1">Subject</label>
                             </div>
                             <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
-                                <input class="form-control" type="text" id="gForm_1" placeholder="Enter value here" size="45">
+                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" id="gForm_1" placeholder="Enter value here" size="45">
                             </div>
                         </div>
                     </section>
+
+
+                    <!-- composer body -->
+                    <quill-editor
+                            [formControl]="messageComposeForm.controls['body']"
+                            [options]="editorOptions"
+                            (blur)="onEditorBlured($event)"
+                            (focus)="onEditorFocused($event)"
+                            (ready)="onEditorCreated($event)"
+                            (change)="onContentChanged($event)"></quill-editor>
+
+
+                    <div class="message-compose-buttons">
+                        <button class="btn btn-danger-outline">
+                            <clr-icon shape="times"></clr-icon>
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary">
+                            <clr-icon shape="plane"></clr-icon>
+                            Send
+                        </button>
+
+                    </div>
                 </form>
-
-                <!-- composer body -->
-
-                <div class="message-compose-buttons">
-                    <button class="btn btn-danger-outline">
-                        <clr-icon shape="times"></clr-icon>
-                        Cancel
-                    </button>
-                    <button class="btn btn-primary" (click)="sendMessage()">
-                        <clr-icon shape="plane"></clr-icon>
-                        Send
-                    </button>
-
-                </div>
 
             </div>
             <div *ngIf="!composeSelected" class="message-grid">

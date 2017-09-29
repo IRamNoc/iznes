@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SetlMessagesComponent} from './messages/messages.component';
 import {ClarityModule} from 'clarity-angular';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
@@ -9,6 +10,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {GravatarModule} from 'ng2-gravatar-directive';
 import {SelectModule} from 'ng2-select';
 import {SetlPipesModule} from '@setl/utils';
+
+import {QuillEditorModule} from 'ngx-quill-editor';
 
 import {
     MyMessagesService,
@@ -22,6 +25,9 @@ import {
         GravatarModule,
         SelectModule,
         SetlPipesModule,
+        QuillEditorModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [
         SetlMessagesComponent
