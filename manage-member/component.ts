@@ -14,6 +14,7 @@ import {
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'app-manage-member',
@@ -28,7 +29,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     isSymAdmin: boolean;
 
     // List of observable subscription
-    subscriptionsArry: Array<Subscription> = [];
+    subscriptionsArray: Array<Subscription> = [];
 
     // List of redux observable.
     @select(['member', 'manageMemberList', 'memberList']) manageMemberListOb;
@@ -59,10 +60,10 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             }
         ];
 
-        this.subscriptionsArry.push(this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList)));
-        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
+        this.subscriptionsArray.push(this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList)));
+        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
             this.requestManagedMemberList(requestedState)));
-        this.subscriptionsArry.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
+        this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
     }
 
     ngOnInit() {
@@ -70,7 +71,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
 
-        for (const subscription of this.subscriptionsArry) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }

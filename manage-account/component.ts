@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
 import {select, NgRedux} from '@angular-redux/store';
@@ -18,6 +18,7 @@ import {
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
 import _ from 'lodash';
+import {Subscription} from "rxjs/Subscription";
 
 export function getManageMember(state) {
 
@@ -41,7 +42,7 @@ export function getManageMember(state) {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ManageAccountComponent implements OnInit {
+export class ManageAccountComponent implements OnInit, OnDestroy {
     tabsControl: Array<any>;
     accountList: Array<any>;
     managedMemberList: Array<any>;
@@ -50,7 +51,7 @@ export class ManageAccountComponent implements OnInit {
     isSymAdmin: boolean;
 
     // List of observable subscription
-    subscriptionsArry: Array<Subscription> = [];
+    subscriptionsArray: Array<Subscription> = [];
 
     // List of Redux observable.
     @select(['account', 'accountList', 'accountList']) accountListOb;
@@ -86,17 +87,18 @@ export class ManageAccountComponent implements OnInit {
             }
         ];
 
-        this.subscriptionsArry.push(this.accountListOb.subscribe((accountList) => this.updateAccountList(accountList)));
-        this.subscriptionsArry.push(this.requestedAccountListOb.subscribe((requestedState) => this.requestAccountList(requestedState)));
-        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe((requestedState) => this.requestManagedMemberList(requestedState)));
-        this.subscriptionsArry.push(this.managedMemberOb.subscribe((memberList) => this.updateManageMemberList(memberList)));
-        this.subscriptionsArry.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
-        this.subscriptionsArry.push(this.walletListOb.subscribe(walletList => this.updateManagedWalletList(walletList)));
+        this.subscriptionsArray.push(this.accountListOb.subscribe((accountList) => this.updateAccountList(accountList)));
+        this.subscriptionsArray.push(this.requestedAccountListOb.subscribe((requestedState) => this.requestAccountList(requestedState)));
+        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
+            this.requestManagedMemberList(requestedState)));
+        this.subscriptionsArray.push(this.managedMemberOb.subscribe((memberList) => this.updateManageMemberList(memberList)));
+        this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
+        this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.updateManagedWalletList(walletList)));
 
     }
 
     ngOnDestroy() {
-        for (const subscription of this.subscriptionsArry) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
