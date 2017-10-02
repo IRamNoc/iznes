@@ -384,12 +384,12 @@ export class SetlMessagesComponent {
 
         let formData = this.messageComposeForm.value;
 
-        let body = {
+        let bodyObj = {
             general: btoa(formData.body),
             action: ''
         };
 
-        body = JSON.stringify(body);
+        const body = JSON.stringify(bodyObj);
 
         let subject = btoa(formData.subject);
 
