@@ -15,6 +15,8 @@ export interface FundShareAccessDetail {
     // 1: has access
     // 0: no access
     userStatus: number;
+    managementCompany: string;
+    price: number;
 }
 
 export interface FundShareAccessList {

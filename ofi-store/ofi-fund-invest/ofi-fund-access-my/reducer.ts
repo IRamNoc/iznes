@@ -47,6 +47,7 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
 function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
     const accessData = _.get(action, 'payload[1].Data', []);
     const accessDataImu = fromJS(accessData);
+    console.log(accessData);
     const accessDataList = accessDataImu.reduce((result, item) => {
         const fundId = item.get('fundID', 0);
         if (!result.fundAccessList.hasOwnProperty(fundId)) {
@@ -67,6 +68,13 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             metaData = {};
         }
 
+        const price = item.get('price', 0);
+
+        // Price should never be 0. if 0, jut ignore this fundshare.
+        if (price === 0) {
+            return result;
+        }
+
         result.fundShareAccessList[shareId] = {
             shareId,
             issuer: item.get('issuer', ''),
@@ -76,7 +84,9 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             shareStatus: item.get('fundStatus', 0),
             metaData: metaData,
             userStatus: item.get('userStatus', 0),
-            fundId
+            fundId,
+            managementCompany: item.get('companyName', ''),
+            price: item.get('price', 0)
         };
 
         return result;

@@ -5,12 +5,27 @@
 <div class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
+            <button clrTabLink id="link{{id}}">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            </button>
 
             <clr-tab-content *clrIfActive="tabdata.active">
-                <ng-container *ngIf="id === 0">
+                <ng-container *ngIf="tabdata.actionType === ''">
                     <ng-container *ngTemplateOutlet="listOfFundsTab"></ng-container>
                 </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'subscribe'">
+                    subscribe
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'redeem'">
+                    redeem
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'viewFundDetail'">
+                    view fund detail
+                </ng-container>
+
             </clr-tab-content>
 
         </clr-tab>
@@ -34,7 +49,7 @@
                 <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button class="btn text-primary">
+                            <button class="btn text-primary" (click)="handleSubscribe(i)">
                                 <i class="fa fa-sign-in"></i> Subscribe
                             </button>
                             <button class="btn text-success">
