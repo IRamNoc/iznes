@@ -86,6 +86,7 @@ public class OpenCSDAccountsAcceptanceTest {
       loginAndVerifySuccess(adminuser, adminuserPassword);
       navigateToDropdown("menu-account-module");
       navigateToPage("account/my-account");
+      Thread.sleep(200);
       driver.findElement(By.id("udMobilePhone")).sendKeys("Testing");
     }
     @Test
