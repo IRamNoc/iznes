@@ -10,7 +10,7 @@ import {OfiMemberNodeChannelService} from './ofi-member-node-channel/service';
     providers: [
         OfiFundInvestService,
         OfiCorpActionService,
-        OfiMemberNodeChannelService
+        OfiMemberNodeChannelService,
         OfiManagementCompanyService
     ]
 })
