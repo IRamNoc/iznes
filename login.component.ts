@@ -59,7 +59,8 @@ export class SetlLoginComponent implements OnDestroy {
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
                 private alertsService: AlertsService,
-                private chainService: ChainService) {
+                private chainService: ChainService,
+                private initialisationService: InitialisationService) {
         // Subscribe to app store
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -71,6 +72,7 @@ export class SetlLoginComponent implements OnDestroy {
             username: new FormControl('', Validators.required),
             password: new FormControl('', Validators.required)
         });
+
 
     }
 
@@ -134,7 +136,8 @@ export class SetlLoginComponent implements OnDestroy {
                 this.accountsService,
                 this.myUserService,
                 this.permissionGroupService,
-                this.chainService
+                this.chainService,
+                this.initialisationService
             );
         }
 
