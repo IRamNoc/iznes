@@ -23,12 +23,14 @@ import {getOfiCouponList} from '../../ofi-store';
 export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
     /* Select the coupon list. */
-    @select(['ofi', 'ofiCorpActions', 'ofiCouponList', 'couponList'])
+    @select(['ofi', 'ofiCorpActions', 'ofiCouponList'])
     couponListOb:any;
-    private couponsList: Array<any> = [];
+    public couponsList: Array<any> = [];
+
+    /* Tabs Control array */
+    public tabsControl: Array<any> = [];
 
     /* Private Properties. */
-    private tabsControl: Array<any> = [];
     private subscriptions: Array<any> = [];
 
     constructor (
@@ -73,13 +75,13 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Check if we need to request the coupon list. */
         let couponList = getOfiCouponList(state);
-        console.log('Coupon list: ', couponList);
-
-        this.ofiCorpActionService.getCouponList().then((response) => {
-            console.log('got coupon list: ', response);
-        }).catch((error) => {
-            console.log('failed to get coupon list: ', error);
-        })
+        if ( ! couponList.length ) {
+            this.ofiCorpActionService.getCouponList().then((response) => {
+                console.log('got coupon list: ', response);
+            }).catch((error) => {
+                console.log('failed to get coupon list: ', error);
+            });
+        }
     }
 
     /**
