@@ -24,7 +24,8 @@ import {
     PermissionGroupService,
     MemberService,
     ChainService,
-    WalletnodeChannelService
+    WalletnodeChannelService,
+    InitialisationService
 } from '@setl/core-req-services';
 
 import {
@@ -160,6 +161,7 @@ export function memberSocketServiceFactory() {
         ChainService,
         MultilingualService,
         WalletnodeChannelService,
+        InitialisationService
     ],
     bootstrap: [AppComponent]
 })
