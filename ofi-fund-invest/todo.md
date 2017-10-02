@@ -14,7 +14,7 @@
    - [x] Fund access request call.
    - [x] Setup up fund list access in store.
    - [x] Create static function to actually to make the call to fetch access.
-   - [ ] Paint fund list in fund list table.
+   - [x] Paint fund list in fund list table.
     
 - [ ] Setup subscribe view 
 - [ ] Setup redeem view
