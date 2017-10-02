@@ -60,4 +60,74 @@ public class OpenCSDAccountsAcceptanceTest {
       enterLoginCredentialsUserName("Emmanuel");
       driver.findElement(By.id("login-submit")).click();
     }
+    @Test
+    public void shouldEditDisplayname() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udDisplayName")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditFirstname() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udFirstName")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditLastname() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udLastName")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditMobilePhone() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udMobilePhone")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditAddress() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udAddress1")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditAddressPrefix() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udAddressPrefix")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditCity() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udAddress3")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditState() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udAddress4")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditPostalCode() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udPostalCode")).sendKeys("Testing");
+    }
+    @Test
+    public void shouldEditCountry() throws IOException, InterruptedException {
+      loginAndVerifySuccess(adminuser, adminuserPassword);
+      navigateToDropdown("menu-account-module");
+      navigateToPage("account/my-account");
+      driver.findElement(By.id("udAddress3")).sendKeys("Testing");
+    }
 }
