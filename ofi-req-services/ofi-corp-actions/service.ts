@@ -16,7 +16,8 @@ import {
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
-    RequestCouponsList
+    OfiRequestCouponsList,
+    OfiSetNewCouponBody
 } from './model';
 
 @Injectable()
@@ -39,7 +40,7 @@ export class OfiCorpActionService {
      */
     public getCouponList(): Promise<any> {
         /* Setup the message body. */
-        const messageBody: RequestCouponsList = {
+        const messageBody: OfiRequestCouponsList = {
             RequestName: 'getcoupon',
             token: this.memberSocketService.token,
             couponId: 0,
@@ -63,7 +64,7 @@ export class OfiCorpActionService {
      */
     public getCouponById(data): Promise<any> {
         /* Setup the message body. */
-        const messageBody: RequestCouponsList = {
+        const messageBody: OfiRequestCouponsList = {
             RequestName: 'getcoupon',
             token: this.memberSocketService.token,
             couponId: data.couponId,
@@ -88,6 +89,38 @@ export class OfiCorpActionService {
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'getuserissuedasset',
             token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [OFI_SET_USER_ISSUED_ASSETS]
+        });
+    }
+
+    /**
+     * Set New Coupon
+     * ----------------------
+     * Sends a request to create a new coupon.
+     *
+     * @return {Promise<any>} promise, resolved when response returns.
+     */
+    public setNewCoupon(data): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiSetNewCouponBody = {
+            RequestName: 'newcoupon',
+            token: this.memberSocketService.token,
+            userCreated: data.userCreated,
+            dateValuation: data.dateValuation,
+            fund: data.fund,
+            fundIsin: data.fundIsin,
+            amount: data.amount,
+            amountGross: data.amountGross,
+            dateSettlement: data.dateSettlement,
+            comment: data.comment,
+            status: data.status,
+            accountId: data.accountId,
+            dateLastUpdated: data.dateLastUpdated,
         };
 
         /* Return the new member node saga request. */

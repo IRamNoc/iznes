@@ -1,7 +1,11 @@
 /* Core/Angular imports. */
 import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
+import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+
+/* Services. */
+import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
 
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -12,6 +16,13 @@ import {MoneyValueOfiPipe} from '@setl/utils/pipes';
 
 /* Ofi Corp Actions request service. */
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+
+/* Core store stuff. */
+import {
+    getConnectedWallet,
+    setRequestedWalletHolding,
+    getWalletHoldingByAsset
+} from '@setl/core-store';
 
 /* Ofi Store stuff. */
 import {
@@ -39,6 +50,11 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
     public userAssetList: Array<any> = [];
     public filteredUserAssetList: Array<{id: string, text:string}> = [];
 
+    /* Wallet holdings by address. */
+    @select(['wallet', 'myWalletHolding', 'holdingByAddress'])
+    walletHoldingsByAddressOb:any;
+    public walletHoldingsByAddress: Array<any> = [];
+
     /* Select the user's details. */
     @select(['user', 'myDetail'])
     myDetailOb:any;
@@ -49,34 +65,18 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
+    private reduxUnsubscribe:Unsubscribe;
 
     constructor (
         private ofiCorpActionService: OfiCorpActionService,
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
+        private walletNodeRequestService: WalletNodeRequestService,
         private _confirmationService: ConfirmationService,
     ) {
         /* Default tabs. */
-        this.tabsControl = [
-            {
-                "title": {
-                    "icon": "fa-search",
-                    "text": "Search"
-                },
-                "couponId": -1,
-                "active": true
-            },
-            {
-                "title": {
-                    "icon": "fa-user",
-                    "text": "Create New Coupon"
-                },
-                "couponId": -1,
-                "formControl": this.newCouponFormGroup(),
-                "active": false
-            }
-        ];
+        this.tabsControl = this.defaultTabControl();
 
         /* Subscribe for the coupon payments list. */
         this.subscriptions['coupon-payments'] = this.couponListOb.subscribe((list) => {
@@ -98,6 +98,13 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             })
         });
 
+        /* Subscribe for wallet holdings by address. */
+        this.subscriptions['wallet-holdings-by-address'] = this.walletHoldingsByAddressOb.subscribe((holdingByAddress) => {
+            console.log('holdingByAddress: ', holdingByAddress);
+            /* Assign list to a property. */
+            this.walletHoldingsByAddress = holdingByAddress;
+        });
+
         /* Subscribe for this user's details. */
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
@@ -106,6 +113,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* Update the create coupon form to hold my details. */
             this.clearNewCouponForm();
         });
+
     }
 
     ngAfterViewInit () {
@@ -147,7 +155,65 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleNewCoupon ():void {
+        /* Varibales. */
+        let
+        thisTab = this.tabsControl[1],
+        formData = thisTab.formControl.value,
+        setFundShare:any = false,
+        newCoupon = {};
 
+        /* Let's check if the form is valid first... */
+        if ( ! thisTab.formControl.valid && formData.couponFundShareName.length >= 1 ) {
+            /* ...tell the user if it isn't valid. */
+            this.showError('ayye yo, sort dis form out.');
+
+            /* Then return. */
+            return;
+        }
+
+        /* Get other data. */
+        setFundShare = this.getFundById( formData.couponFundShareName[0].id )
+
+        console.log(' |--- New Coupon');
+        console.log(' | tab data: ', thisTab);
+        console.log(' | form data: ', formData);
+        console.log(' | selected fund: ', setFundShare);
+
+        /* Ok, let's now start building the new coupon request. */
+        newCoupon['userCreated'] = this.myDetails.username;
+        newCoupon['status'] = 1;
+
+        /* Fund stuff. */
+        newCoupon['fundIsin'] = setFundShare.isin;
+        newCoupon['fund'] = setFundShare.asset;
+        newCoupon['amount'] = Number(formData.couponAmountByShare);
+        newCoupon['amountGross'] = Number(thisTab.couponGrossAmount);
+
+        /* Comment. */
+        newCoupon['accountId'] = this.myDetails.accountId;
+        newCoupon['comment'] = formData.couponComments;
+
+        /* Dates. */
+        newCoupon['dateLastUpdated'] = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date());
+        newCoupon['dateSettlement'] = this.formatDate(
+            "YYYY-MM-DD hh:mm:ss",
+            new Date(formData.couponSettlementDate +" "+ formData.couponSettlementTime)
+        );
+        newCoupon['dateValuation'] = this.formatDate(
+            "YYYY-MM-DD hh:mm:ss",
+            new Date(formData.couponValuationDate +" "+ formData.couponValuationTime)
+        );
+
+        console.log(' | built request: ', newCoupon);
+        /* Now send the request. */
+        this.ofiCorpActionService.setNewCoupon(newCoupon).then((response) => {
+            console.log('response: ', response);
+        }).catch((error) => {
+            console.log('error: ', error);
+        })
+
+        /* Return. */
+        return;
     }
 
     /**
@@ -176,8 +242,15 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         }
 
         console.log(' | coupon: ', coupon);
+        /* TODO - view coupon.
+         * [ ] - create the new tab.
+         * [ ] - prefill the data.
+         * [ ] - implement the ability to update values.
+         */
 
+        /* Push a new tab object into tabsControl. */
 
+        /* Patch all the values needed into the formControl. */
 
         /* Return. */
         return;
@@ -193,15 +266,10 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      */
     public selectedFundShare (selected): void {
         /* Variables. */
-        let userAsset, newCouponControls = this.tabsControl[1].formControl;
+        let
+            userAsset = this.getFundById( selected.id ),
+            newCouponControls = this.tabsControl[1].formControl;
 
-        /* Fund the userAsset selected by it's fund name. */
-        for (userAsset of this.userAssetList) {
-            if (userAsset.asset == selected.id) break;
-            userAsset = false;
-        }
-
-        console.log('Selected a user asset: ', userAsset);
         /* Check if we found it. */
         if (! userAsset) {
             /* Set other fields to empty. */
@@ -211,11 +279,82 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             newCouponControls.controls['couponIsin'].patchValue(userAsset.isin);
         }
 
+        /* Now find the fund in the wallets list, then set it's value in the form. */
+        var issuedUnit:number = 0;
+        /* Try access the value and invert it. */
+        this.getFundShareHoldings( userAsset ).then((holdings) => {
+            /* Get the issued amount, and invert it's polarity. */
+            issuedUnit = -holdings[0];
+
+            /* Set the value. */
+            newCouponControls.controls['couponFundShareUnits'].patchValue( issuedUnit );
+
+            /* Calc the gross amount. */
+            this.calculateGrossAmount();
+        }).catch((e) => {
+            /* Set the value. */
+            newCouponControls.controls['couponFundShareUnits'].patchValue( 0 );
+
+            /* Calc the gross amount. */
+            this.calculateGrossAmount();
+        });
+
         /* Detect changes */
         this.changeDetectorRef.detectChanges();
 
         /* Return */
         return;
+    }
+
+    /**
+     * Get Fund By Id
+     * --------------
+     * Get's a fund by Id.
+     *
+     * @param {number} id - the fund ID.
+     *
+     * @return {object} - the fund wanted.
+     */
+    public getFundById(id):any {
+        /* Varibales. */
+        let userAsset;
+
+        /* Loop over each fund... */
+        for (userAsset of this.userAssetList) {
+            /* ...if this is the one, breaking will leave userAsset as it... */
+            if (userAsset.asset == id) break;
+
+            /* ... if not, set to false incase there are no more. */
+            userAsset = false;
+        }
+
+        /* Return whatever we found. */
+        return userAsset;
+    }
+
+    /**
+     * Calculate Gross Amount
+     * ----------------------
+     * Calculates the gross amount for a new coupon payment.
+     *
+     * @return {void}
+     */
+    public calculateGrossAmount ():void {
+        /* Ok, so let's get the variables. */
+        let
+            newCouponControls = this.tabsControl[1].formControl,
+            amount = Number(newCouponControls.controls['couponAmountByShare']._value),
+            price = Number(newCouponControls.controls['couponFundShareUnits']._value);
+
+        /* Now let's check that the user has entered something usable. */
+        if ( amount && amount >= 0 && ! isNaN( amount ) ) {
+            /* Patch the value. */
+            newCouponControls.controls['couponGrossAmount'].patchValue( amount * price );
+            this.tabsControl[1]['couponGrossAmount'] = amount * price;
+        } else {
+            newCouponControls.controls['couponGrossAmount'].patchValue( 0 );
+            this.tabsControl[1]['couponGrossAmount'] = 0;
+        }
     }
 
     /**
@@ -257,6 +396,89 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Format Date
+     * -----------
+     * Formats a date to a string.
+     * YYYY - 4 character year
+     * YY - 2 character year
+     * MM - 2 character month
+     * DD - 2 character date
+     * hh - 2 character hour (24 hour)
+     * hH - 2 character hour (12 hour)
+     * mm - 2 character minute
+     * ss - 2 character seconds
+     * @param  {string} formatString [description]
+     * @param  {Date}   dateObj      [description]
+     * @return {[type]}              [description]
+     */
+    private formatDate (formatString:string, dateObj:Date) {
+        /* Return if we're missing a param. */
+        if ( ! formatString || ! dateObj ) return false;
+
+        /* Return the formatted string. */
+        return formatString
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad( dateObj.getMonth().toString() ))
+        .replace('DD', this.numPad( dateObj.getDate().toString() ))
+        .replace('hh', this.numPad( dateObj.getHours() ))
+        .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
+        .replace('mm', this.numPad( dateObj.getMinutes() ))
+        .replace('ss', this.numPad( dateObj.getSeconds() ))
+    }
+    private numPad (num) {
+        return num < 10 ? "0"+num : num;
+    }
+
+    /**
+     * Get Fund Share Holdings
+     * -----------------------
+     * Get's a fund share holding or if not requested, it requests it.
+     *
+     * @param {object} userIssuedAsset - the user issued asset, contains the relivant info for the share.
+     *
+     * @return {void}
+     */
+    getFundShareHoldings (userIssuedAsset):Promise<any> {
+        return new Promise((resolve, reject) => {
+            /* If we don't have a walletID... */
+            if ( ! userIssuedAsset.walletID ) {
+                /* ...then giveup. */
+                reject();
+                return;
+            }
+
+            /* Ok, let's check if we have it. */
+            if (! this.walletHoldingsByAddress[ userIssuedAsset.walletID ]) {
+                /* If we don't, let's get it. */
+                InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, userIssuedAsset.walletID);
+            }
+
+            /* Now let's wait for it, and resolve with it. */
+            let timesToTry = 10;
+            const waitInterval = setInterval(() => {
+                if (this.walletHoldingsByAddress[ userIssuedAsset.walletID ] &&
+                    this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ] &&
+                    this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ][ userIssuedAsset.asset ]) {
+                        /* Clear the interval. */
+                        clearInterval( waitInterval );
+                        /* Resolve. */
+                        resolve( this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ][ userIssuedAsset.asset ] );
+                    } else if ( ! timesToTry ) {
+                        /* If we've tried too many times, we probably don't have access... so clear the interval. */
+                        clearInterval( waitInterval );
+
+                        /* then reject. */
+                        reject();
+                    } else {
+                        /* Decrement if we're still looping. */
+                        timesToTry--;
+                    }
+            }, 100);
+        });
+    }
+
+    /**
      * Pad Number Left
      * -------------
      * Pads a number left
@@ -292,22 +514,52 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      */
     private newCouponFormGroup ():FormGroup {
         return new FormGroup({
-            'couponNature': new FormControl({value: 'Coupon Payment', disabled: true}),
-            'couponDrafter': new FormControl({value: this.myDetails.username, disabled: true}),
+            'couponNature': new FormControl(
+                {value: 'Coupon Payment', disabled: true}
+            ),
+            'couponDrafter': new FormControl(
+                {value: this.myDetails.username, disabled: true}
+            ),
 
-            'couponFundShareName': new FormControl([]),
-            'couponIsin': new FormControl({value: '', disabled: true}),
+            'couponFundShareName': new FormControl(
+                [],
+                Validators.required
+            ),
+            'couponIsin': new FormControl(
+                {value: '', disabled: true}
+            ),
 
-            'couponAmountByShare': new FormControl(''),
-            'couponFundShareUnits': new FormControl({value: '', disabled: true}),
-            'couponGrossAmount': new FormControl({value: '', disabled: true}),
+            'couponAmountByShare': new FormControl(
+                '',
+                Validators.required
+            ),
+            'couponFundShareUnits': new FormControl(
+                {value: '', disabled: true}
+            ),
+            'couponGrossAmount': new FormControl(
+                {value: '', disabled: true}
+            ),
 
-            'couponValuationDate': new FormControl(''),
-            'couponValuationTime': new FormControl(''),
-            'couponSettlementDate': new FormControl(''),
-            'couponSettlementTime': new FormControl(''),
+            'couponValuationDate': new FormControl(
+                '',
+                Validators.required
+            ),
+            'couponValuationTime': new FormControl(
+                '',
+                [Validators.required]
+            ),
+            'couponSettlementDate': new FormControl(
+                '',
+                Validators.required
+            ),
+            'couponSettlementTime': new FormControl(
+                '',
+                Validators.required
+            ),
 
-            'couponComments': new FormControl(''),
+            'couponComments': new FormControl(
+                ''
+            ),
         });
     }
 
@@ -316,6 +568,35 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * Tab Functions
      * =============
      */
+
+    /**
+     * Default Tab Controls.
+     * ---------------------
+     * Returns a default tab control object.
+     *
+     * @return {array} - tabsControl object.
+     */
+    private defaultTabControl():Array<any> {
+        return [
+            {
+                "title": {
+                    "icon": "fa-search",
+                    "text": "Search"
+                },
+                "couponId": -1,
+                "active": true
+            },
+            {
+                "title": {
+                    "icon": "fa-user",
+                    "text": "Create New Coupon"
+                },
+                "couponId": -1,
+                "formControl": this.newCouponFormGroup(),
+                "active": false
+            }
+        ];
+    }
 
     /**
      * Close Tab
