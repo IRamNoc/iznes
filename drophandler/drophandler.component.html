@@ -1,6 +1,6 @@
 <!-- Raw input and form. -->
 <form #dropFileForm>
-    <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" [files]="uploadedFiles" (change)="handleFileChange($event)" />
+    <input class="drop-file-input" [files]="uploadedFiles" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
 </form>
 
 <!-- Custom UI. -->

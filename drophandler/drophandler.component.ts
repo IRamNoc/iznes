@@ -35,19 +35,18 @@ export class DropHandler {
     @ViewChild('dropFileForm') public formElem:ElementRef;
 
     public isHovering:boolean = false;
-    public uploadedFiles:any;
+    public uploadedFiles:any = {};
     public encodedFiles:any = [];
     public proccessInterval:any;
-    public uploadPrompt:string;
-    public numberFilesText:string;
-    public AfterViewInit:string;
+    public uploadPrompt:any;
+    public numberFilesText:any;
 
-    private removingFile = false;
+    public removingFile:boolean = false;
 
     /* Constructor */
     public constructor (
-        private renderer:Renderer,
-        private changeDetectorRef:ChangeDetectorRef
+        public renderer:Renderer,
+        public changeDetectorRef:ChangeDetectorRef
     ) {
         /* Stub */
     }
@@ -317,7 +316,7 @@ export class DropHandler {
      *
      * @return {void}
      */
-    private emitFilesEvent () {
+    public emitFilesEvent () {
         /* Emit the event up a level. */
         this.onDropFiles.emit({
             'files': this.encodedFiles
@@ -335,7 +334,7 @@ export class DropHandler {
      * @param  {readerEvt} object - the reader event object.
      * @return {void}
      */
-    private handleFileConverted (readerEvt):void {
+    public handleFileConverted (readerEvt):void {
         /* Encode the raw data in base64. */
         var base64data = btoa(readerEvt.target.result);
 
@@ -350,7 +349,7 @@ export class DropHandler {
      *
      * @return {void}
      */
-    private updateFilesText ():void {
+    public updateFilesText ():void {
         /* Update. */
         this.numberFilesText = ((!this.encodedFiles || this.encodedFiles.length === 0) ? "No" : this.encodedFiles.length) + " "+ (this.multiple && this.encodedFiles.length > 1 ? "files" : "file") +" selected.";
 
