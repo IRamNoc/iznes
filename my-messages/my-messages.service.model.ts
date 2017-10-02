@@ -26,3 +26,18 @@ export interface DecryptMessagesBody extends MemberNodeMessageBody {
 export interface RequestOwnMessagesMessage extends MemberNodeRequest {
     MessageBody: RequestOwnMessagesBody;
 }
+
+export interface SendMessageBody extends MemberNodeMessageBody {
+    token: string;
+    mailSubject: string;
+    mailBody: string;
+    senderId: number;
+    senderPub: string;
+    recipients: string;
+    parentId: number;
+    arrangementId: number;
+    arrangementStatus: number;
+    attachment: number;
+    hasAction: number;
+    isDraft: number;
+}
