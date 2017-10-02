@@ -36,13 +36,39 @@ import {MemberSocketService} from '@setl/websocket-service';
 @Injectable()
 export class InitialisationService {
 
+    channelUpdateCallbacks: Array<(data: string) => void>;
+
     constructor() {
+        this.channelUpdateCallbacks = [];
     }
 
-    static subscribe(memberSocketService, channelService) {
-        memberSocketService.subscribeToChannel(function (data) {
+    /**
+     * Subscribe to member socket service and handle all the callbacks.
+     *
+     * @param memberSocketService
+     * @param channelService
+     * @param initialisationService
+     */
+    static subscribe(memberSocketService: MemberSocketService, channelService: ChannelService,
+                     initialisationService: InitialisationService) {
+        memberSocketService.subscribeToChannel((data) => {
             channelService.resolveChannelMessage(data);
+
+            this.handleChannelUpdateCallbacks(data, initialisationService);
         });
+    }
+
+    /**
+     * Handle all channel update callbacks.
+     * The channel update callbacks can be dynamically create after initialisation service is instantiated.
+     *
+     * @param data
+     * @param initialisationService
+     */
+    static handleChannelUpdateCallbacks(data: any, initialisationService: InitialisationService) {
+        for (const callback of initialisationService.channelUpdateCallbacks) {
+            callback(data);
+        }
     }
 
     static walletnodeInitialisation(ngRedux: NgRedux<any>,
@@ -110,7 +136,8 @@ export class InitialisationService {
                                     accountsService: AccountsService,
                                     myUserService: MyUserService,
                                     permissionGroupService: PermissionGroupService,
-                                    chainService: ChainService): boolean {
+                                    chainService: ChainService,
+                                    initialisationService: InitialisationService): boolean {
         // Request my own wallets
         this.requestMyOwnWallets(ngRedux, myWalletsService);
 
@@ -133,7 +160,7 @@ export class InitialisationService {
         this.requestMyChainAccess(ngRedux, chainService);
 
         // Subscribe to my connection channel, target for my userId.
-        this.subscribe(memberSocketService, channelService);
+        this.subscribe(memberSocketService, channelService, initialisationService);
 
         return true;
     }
