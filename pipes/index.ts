@@ -37,16 +37,33 @@ export class MoneyValuePipe implements PipeTransform {
     }
 }
 
+@Pipe({
+    name: 'moneyValueOfi'
+})
+export class MoneyValueOfiPipe implements PipeTransform {
+    transform(value: string, args: string[]): string {
+        const pieces = ( parseFloat(value) / 5 ).toFixed(2).split('')
+        let ii = pieces.length - 3
+        while ((ii -= 3) > 0) {
+            pieces.splice(ii, 0, ',');
+        }
+        return pieces.join('');
+
+    }
+}
+
 @NgModule({
     declarations: [
         TruncatePipe,
         AssetPipe,
-        MoneyValuePipe
+        MoneyValuePipe,
+        MoneyValueOfiPipe
     ],
     exports: [
         TruncatePipe,
         AssetPipe,
-        MoneyValuePipe
+        MoneyValuePipe,
+        MoneyValueOfiPipe
     ]
 })
 
