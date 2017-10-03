@@ -41,6 +41,10 @@ form, .form {
             }
         }
 
+        .input-group {
+            width: 95%;
+        }
+
         .input-group.date-pick-wrapper {
 
             label, span {
@@ -79,6 +83,10 @@ form, .form {
                 font-size: 12px;
                 margin: 5px 0;
 
+            }
+
+            button {
+                margin: 0;
             }
         }
 
