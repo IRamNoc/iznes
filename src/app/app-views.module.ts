@@ -18,12 +18,17 @@
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {HomeComponent} from './home/home.component';
 
+import {
+    MultilingualModule,
+} from '@setl/multilingual';
+
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         ClarityModule,
-        FileDropModule
+        FileDropModule,
+        MultilingualModule
     ],
     declarations: [
         FormElementsComponent,

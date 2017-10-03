@@ -28,11 +28,6 @@ import {
     InitialisationService
 } from '@setl/core-req-services';
 
-import {
-    MultilingualService,
-    MultilingualDirective
-} from '@setl/multilingual';
-
 /* Routes. */
 import {ROUTES} from './app.routes';
 
@@ -161,7 +156,6 @@ export function memberSocketServiceFactory() {
         PermissionGroupService,
         MemberService,
         ChainService,
-        MultilingualService,
         WalletnodeChannelService,
         InitialisationService
     ],
