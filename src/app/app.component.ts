@@ -26,14 +26,13 @@ export class AppComponent {
         declineText: 'No'
     };
 
+
     constructor(private memberSocketService: MemberSocketService,
                 private walletnodeChannelService: WalletnodeChannelService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private  toasterService: ToasterService) {
-
         memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('warning', 'Member node connection disconnected');
-
         };
 
         // memberSocketService.errorCallback = () => {
@@ -53,7 +52,6 @@ export class AppComponent {
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
             this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
-
 
     }
 }

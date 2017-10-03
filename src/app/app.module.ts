@@ -24,7 +24,8 @@ import {
     PermissionGroupService,
     MemberService,
     ChainService,
-    WalletnodeChannelService
+    WalletnodeChannelService,
+    InitialisationService
 } from '@setl/core-req-services';
 
 import {
@@ -129,9 +130,9 @@ export function memberSocketServiceFactory() {
         PermissionGridModule,
         SetlPipesModule,
         CoreManageMemberModule,
-        SetlComponentsModule,
-        CorpActionsModule,
-        OfiMainModule,
+    	SetlComponentsModule,
+    	CorpActionsModule,
+        OfiMainModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -162,6 +163,7 @@ export function memberSocketServiceFactory() {
         ChainService,
         MultilingualService,
         WalletnodeChannelService,
+        InitialisationService
     ],
     bootstrap: [AppComponent]
 })
