@@ -65,68 +65,109 @@ public class OpenCSDAccountsAcceptanceTest {
     navigateToPage("account/my-account");
     driver.findElement(By.id("udDisplayName")).sendKeys("Testing");
   }
+
+  public static void myAccountSendKeys(String field, String text){
+    driver.findElement(By.id("ud" + field)).sendKeys(text);
+  }
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udFirstName")).sendKeys("Testing");
+    myAccountSendKeys("FirstName", "Testing");
   }
   @Test
   public void shouldEditLastname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udLastName")).sendKeys("Testing");
+    myAccountSendKeys("LastName", "Testing");
   }
   @Test
   public void shouldEditMobilePhone() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    Thread.sleep(200);
-    driver.findElement(By.id("udMobilePhone")).sendKeys("Testing");
+    myAccountSendKeys("MobilePhone", "Testing");
   }
   @Test
   public void shouldEditAddress() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udAddress1")).sendKeys("Testing");
+    myAccountSendKeys("Address1", "Testing");
   }
   @Test
   public void shouldEditAddressPrefix() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udAddressPrefix")).sendKeys("Testing");
+    myAccountSendKeys("AddressPrefix", "Testing");
   }
   @Test
   public void shouldEditCity() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udAddress3")).sendKeys("Testing");
+    myAccountSendKeys("Address3", "Testing");
   }
   @Test
   public void shouldEditState() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udAddress4")).sendKeys("Testing");
+    myAccountSendKeys("Address4", "Testing");
   }
   @Test
   public void shouldEditPostalCode() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udPostalCode")).sendKeys("Testing");
+    myAccountSendKeys("PostalCode", "Testing");
   }
   @Test
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udAddress3")).sendKeys("Testing");
+    myAccountSendKeys("Address3", "Testing");
+  }
+  @Test
+  public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-account-module");
+    navigateToPage("account/my-account");
+    myAccountSendKeys("MemorableQuestion", "Testing");
+  }
+  @Test
+  public void shouldEditMemorableAnswer() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-account-module");
+    navigateToPage("account/my-account");
+    myAccountSendKeys("MemorableAnswer", "Testing");
+  }
+  @Ignore
+  @Test
+  public void shouldEditProfileText() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-account-module");
+    navigateToPage("account/my-account");
+    myAccountSendKeys("Address3", "Testing");
+  }
+  @Test
+  public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
+    loginAndVerifySuccess(adminuser, adminuserPassword);
+    navigateToDropdown("menu-account-module");
+    navigateToPage("account/my-account");
+    myAccountSendKeys("FirstName", "Testing");
+    myAccountSendKeys("LastName", "Testing");
+    myAccountSendKeys("MobilePhone", "Testing");
+    myAccountSendKeys("Address1", "Testing");
+    myAccountSendKeys("AddressPrefix", "Testing");
+    myAccountSendKeys("Address3", "Testing");
+    myAccountSendKeys("Address4", "Testing");
+    myAccountSendKeys("PostalCode", "Testing");
+    myAccountSendKeys("MemorableQuestion", "Testing");
+    myAccountSendKeys("MemorableAnswer", "Testing");
   }
 }
