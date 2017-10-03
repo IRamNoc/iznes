@@ -255,3 +255,12 @@ span.fr-counter {
     /* Fix clarity's pagination button being a tiny click area. */
     width: 100%;
 }
+
+.hr-line-dashed {
+    border-top: 1px dashed #e7eaec;
+    color: #fff;
+    background-color: #fff;
+    height: 1px;
+    margin: 20px 0;
+}
+
