@@ -10,7 +10,7 @@ export {
     ManagementCompanyState,
     ManagementCompanyReducer,
     SET_MANAGEMENT_COMPANY_LIST
-}
+};
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;

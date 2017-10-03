@@ -31,7 +31,7 @@ export {
     OfiProductState,
     OfiProductReducer,
     SET_MANAGEMENT_COMPANY_LIST
-}
+};
 
 export interface OfiState {
     ofiFundInvest: OfiFundInvestState;

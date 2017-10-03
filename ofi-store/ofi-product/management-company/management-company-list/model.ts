@@ -24,11 +24,9 @@ export interface ManagementCompanyDetail {
     logoURL: string;
 }
 
-export interface ManagementCompanyList {
-    [managementCompanyId: number]: ManagementCompanyDetail
-}
-
 export interface ManagementCompanyListState {
-    managementCompanyList: ManagementCompanyList;
+    managementCompanyList: {
+        [key: string]: ManagementCompanyDetail
+    };
     requested: boolean;
 }
