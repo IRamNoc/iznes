@@ -44,6 +44,7 @@ public class OpenCSDLoginAcceptanceTest {
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         navigateToLoginPage();
+        Thread.sleep(1);
     }
     @Test
     public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
