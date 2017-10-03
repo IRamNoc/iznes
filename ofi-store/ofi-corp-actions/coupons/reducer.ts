@@ -45,7 +45,7 @@ function ofiSetCouponList ( state: OfiCouponState, action: Action ) {
 
     /* Set the new state. */
     newState = {
-        ofiCouponList: [ ...state.ofiCouponList, ...newCouponList ]
+        ofiCouponList: newCouponList
     };
 
     /* Return. */

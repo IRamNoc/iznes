@@ -302,6 +302,50 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Handle Update Coupon
+     * --------------------
+     * Updates a coupon status.
+     *
+     * @param {number} tabid - the tab that the call came from.
+     * @param {string} action - the action that was clicked.
+     *
+     * @return {void}
+     */
+    public handleUpdateCoupon (tabid: number, action : string) {
+        /* Validation. */
+        if ( ! tabid || ! action ) {
+            this.showError('Something went wrong, please try again.');
+            return;
+        }
+
+        /* Pointers. */
+        const
+            thisTab = this.tabsControl[ tabid ];
+
+        /* Let's start building the request. */
+        let
+            thisCoupon = this.getCouponById( thisTab.couponId ),
+            updateCoupon = {
+                'couponId': thisTab.couponId,
+                'accountId': this.myDetails.accountId,
+                'amount': thisCoupon.amount,
+                'amountGross': thisCoupon.amountGross,
+                'status': (action == 'approve' ? -1 : 0), // -1 is settled, 0 is canceled.
+            };
+
+        /* Ok, let's send the request now. */
+        this.ofiCorpActionService.updateCoupon( updateCoupon ).then((response) => {
+            console.log('response: ', response);
+        }).catch((error) => {
+            console.log('error: ', error);
+        })
+
+
+        /* Return. */
+        return;
+    }
+
+    /**
      * Selected Fund Share
      * -------------------
      * Handles updating the new coupon form to reflect a newly selected fund share.
@@ -375,6 +419,35 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Return whatever we found. */
         return userAsset;
+    }
+
+    /**
+     * Get Coupon By Id
+     * ----------------
+     * Gets a coupong by it's id.
+     *
+     * @param {number} id - the id of the coupon being requested.
+     * @return {object|false} - the coupon object if it's found, else false.
+     */
+    private getCouponById (id: number):boolean|any {
+        /* Variabes. */
+        let coupon;
+
+        /* Now, let's loop the coupon list... */
+        for (coupon of this.couponList) {
+            /* ...check if we've found the coupon... */
+            if (coupon.couponID == id) {
+                /* Breaking here leaves coupon set
+                   to the correct coupon object. */
+                break;
+            }
+
+            /* Reset the coupon, incase this is the end. */
+            coupon = false;
+        }
+
+        /* Return. */
+        return coupon;
     }
 
     /**

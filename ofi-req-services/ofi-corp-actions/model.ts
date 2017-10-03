@@ -21,3 +21,11 @@ export interface OfiSetNewCouponBody extends OfiMemberNodeBody {
     accountId: string;
     dateLastUpdated: string;
 }
+
+export interface OfiUpdateCouponBody extends OfiMemberNodeBody {
+    couponId: string;
+    accountId: string;
+    amount: string;
+    amountGross: string;
+    status: string;
+}

@@ -410,14 +410,14 @@
                                 Close
                             </a>
 
-                            <ng-container>
+                            <ng-container *ngIf="tabsControl[tabid].couponStatus == 1">
                                 <!-- Buttons for status 1 coupons -->
-                                <button id="view-coupon-cancel" type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
-                                </button>
-                                <button id="view-coupon-approve" type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
-                                </button>
+                                <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'cancel')" class="btn btn-danger">
+                                    <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
+                                </a>
+                                <a id="view-coupon-approve" (click)="handleUpdateCoupon(tabid, 'approve')" class="btn btn-primary">
+                                    <i class="fa fa-check"></i> <span mltag="txt_approve">Approve</span>
+                                </a>
                             </ng-container>
                         </div>
                     </div>
