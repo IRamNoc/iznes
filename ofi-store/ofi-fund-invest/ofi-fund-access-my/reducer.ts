@@ -1,5 +1,7 @@
 import {OfiFundAccessMyState} from './model';
 import {Action} from 'redux';
+import _ from 'lodash';
+import {fromJS} from 'immutable';
 
 import {
     SET_FUND_ACCESS_MY,
@@ -8,7 +10,8 @@ import {
 } from './actions';
 
 const initialState: OfiFundAccessMyState = {
-    fundList: [],
+    fundAccessList: {},
+    fundShareAccessList: {},
     requested: false
 };
 
@@ -19,7 +22,7 @@ const initialState: OfiFundAccessMyState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action) {
+export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action): OfiFundAccessMyState {
     switch (action.type) {
         case SET_FUND_ACCESS_MY:
             return handleSetFundAccessMy(state, action);
@@ -33,7 +36,7 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
         default:
             return state;
     }
-}
+};
 
 /**
  * Handle action
@@ -42,7 +45,64 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
  * @return {OfiFundAccessMyState}
  */
 function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
-    return state;
+    const accessData = _.get(action, 'payload[1].Data', []);
+    const accessDataImu = fromJS(accessData);
+    console.log(accessData);
+    const accessDataList = accessDataImu.reduce((result, item) => {
+        const fundId = item.get('fundID', 0);
+        if (!result.fundAccessList.hasOwnProperty(fundId)) {
+            result.fundAccessList[fundId] = {
+                fundId,
+                fundName: item.get('fundName', ''),
+                fundProspectus: item.get('fundProspectus', ''),
+                fundReport: item.get('fundReport', ''),
+                fundSicavId: item.get('fundSICAVID', 0)
+            };
+        }
+
+        const shareId = item.get('shareID', 0);
+        let metaData = {};
+        try {
+            metaData = JSON.parse(atob(item.get('metadata', '')));
+        } catch (e) {
+            metaData = {};
+        }
+
+        const price = item.get('price', 0);
+
+        // Price should never be 0. if 0, jut ignore this fundshare.
+        if (price === 0) {
+            return result;
+        }
+
+        result.fundShareAccessList[shareId] = {
+            shareId,
+            issuer: item.get('issuer', ''),
+            shareName: item.get('shareName', ''),
+            entryFee: item.get('entryFee', 0),
+            exitFee: item.get('exitFee', 0),
+            shareStatus: item.get('fundStatus', 0),
+            metaData: metaData,
+            userStatus: item.get('userStatus', 0),
+            fundId,
+            managementCompany: item.get('companyName', ''),
+            price: item.get('price', 0)
+        };
+
+        return result;
+
+    }, {
+        fundAccessList: {},
+        fundShareAccessList: {}
+    });
+
+    const fundAccessList = accessDataList.fundAccessList;
+    const fundShareAccessList = accessDataList.fundShareAccessList;
+
+    return Object.assign({}, state, {
+        fundAccessList,
+        fundShareAccessList
+    });
 }
 
 /**
@@ -52,7 +112,11 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
  * @return {OfiFundAccessMyState}
  */
 function handleSetRequestedFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
-    return state;
+    const requested = true;
+
+    return Object.assign({}, state, {
+        requested
+    });
 }
 
 /**
@@ -62,7 +126,11 @@ function handleSetRequestedFundAccessMy(state: OfiFundAccessMyState, action: Act
  * @return {OfiFundAccessMyState}
  */
 function handleClearRequestedFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
-    return state;
+    const requested = false;
+
+    return Object.assign({}, state, {
+        requested
+    });
 }
 
 
