@@ -27,12 +27,12 @@ export class MultilingualService {
         if (
             Translations &&
             Translations['core'] &&
-            Translations['core']['eng'] &&
-            Translations['core']['eng'][mlcode]
+            Translations['core']['fra'] &&
+            Translations['core']['fra'][mlcode]
         ) {
             /* and return it if we have it. */
-            console.log('translation found: ', Translations['core']['eng'][mlcode]);
-            return Translations['core']['eng'][mlcode];
+            console.log('translation found: ', Translations['core']['fra'][mlcode]);
+            return Translations['core']['fra'][mlcode];
         }
 
         /* ...otherwise return origin string. */

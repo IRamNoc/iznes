@@ -10,13 +10,14 @@ import { MultilingualService } from './multilingual.service';
 })
 
 /* Export directive class. */
-export class MultiLingualDirective {
+export class MultilingualDirective {
     /* Constructor. */
     constructor(
         private el: ElementRef,
         private multilingualService:MultilingualService
     ) {
         /* Stub. */
+
     }
 
     public ngAfterViewInit () {
@@ -31,6 +32,8 @@ export class MultiLingualDirective {
         tagname = this.el.nativeElement.tagName.toLowerCase(),
         mltag = this.el.nativeElement.getAttribute('mltag'),
         translation = this.multilingualService.getTranslation(mltag);
+
+        console.log('looking up translation: ', mltag);
 
         /* First, check that the tag was translated... */
         if ( translation !== mltag ) {
