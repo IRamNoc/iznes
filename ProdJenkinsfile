@@ -1,70 +1,32 @@
-node {
+node
+  {
+    stage('Check Out Application Code'){
 
-}
-def notifySlack(String buildStatus = 'STARTED') {
-  // Build status of null means success.
-  buildStatus = buildStatus ?: 'SUCCESS'
+      checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+                doGenerateSubmoduleConfigurations: false, extensions: [],
+                submoduleCfg: [], userRemoteConfigs:
+                  [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
+                    url: 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+    }
 
-  def color
+    stage('Build & Unit Test'){
 
-  if (buildStatus == 'STARTED') {
-    color = '#0000CD'
-  } else if (buildStatus == 'SUCCESS') {
-    color = '#008000'
-  } else if (buildStatus == 'UNSTABLE') {
-    color = '#FFFF00'
-  } else {
-    color = '#FF0000'
-  }
-  def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-  slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
-}
-
-node {
-  timestamps {
-    try {
-      notifySlack()
+      sh '''rm yarn.lock &&
+              yarn install &&
+              yarn test-single &&
+              cd src &&
+              sass styles.scss:styles.css &&
+              cd ../ &&
+              yarn build-prod '''
+      junit allowEmptyResults: true, keepLongStdio: true,
+                   testResults: '/TESTS-Headless**'
+    }
 
 
-      stage('Check Out Application Code') {
-        node {
-          checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
-                    doGenerateSubmoduleConfigurations: false, extensions: [],
-                    submoduleCfg                     : [], userRemoteConfigs:
-                      [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
-                        url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-        }
+    stage('Sonar Scan'){
+      withSonarQubeEnv {
+
+        sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
       }
-
-      stage('Build & Unit Test') {
-        node {
-          sh '''rm -f yarn.lock &&
-                  yarn install &&
-                  yarn test-single &&
-                  cd src &&
-                  sass styles.scss:styles.css &&
-                  cd ../ &&
-                  yarn build-prod '''
-          junit allowEmptyResults: true, keepLongStdio: true,
-            testResults: '/TESTS-Headless**'
-        }
-      }
-
-      stage('Copy code to deployment folder'){
-        node {
-          sh '''mv -f /var/lib/jenkins/Deploy/ /var/lib/jenkins/Deploy_old/ &&
-                mkdir /var/lib/jenkins/Deploy &&
-                pwd &&
-                cp -rf  dist/ /var/lib/jenkins/Deploy/OpenCSD_dist &&
-                pwd '''
-        }
-      }
-
-    } catch (e) {
-      currentBuild.result = 'FAILURE'
-      throw e
-    } finally {
-      notifySlack(currentBuild.result)
     }
   }
-}

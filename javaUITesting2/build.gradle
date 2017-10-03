@@ -1,4 +1,4 @@
-group 'javaUITesting2'
+group 'javaUITesting'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
@@ -19,26 +19,21 @@ ext.seleniumVersion = '3.5.3'
 
 repositories {
     maven { url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/" }
-       mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.7'
     testCompile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.7'
     testCompile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
     testCompile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
-    compile 'org.apache.logging.log4j:log4j:2.9.1'
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version:'3.5.3'
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.5.3'
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-api', version:'3.5.3'
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:'3.5.3'
-
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version:seleniumVersion
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:seleniumVersion
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-api', version:seleniumVersion
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:seleniumVersion
 
 
 }
-group 'javaUITesting'
+group 'javaUITesting2'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -51,5 +46,4 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'junit', name: 'junit', version: '4.12'
 }
