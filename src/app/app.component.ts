@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {WalletnodeChannelService} from '@setl/core-req-services';
+import {WalletnodeChannelService, InitialisationService} from '@setl/core-req-services';
+import {OfiMemberNodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
 
 @Component({
@@ -26,13 +27,16 @@ export class AppComponent {
         declineText: 'No'
     };
 
-
     constructor(private memberSocketService: MemberSocketService,
                 private walletnodeChannelService: WalletnodeChannelService,
                 private walletNodeSocketService: WalletNodeSocketService,
-                private  toasterService: ToasterService) {
+                private  toasterService: ToasterService,
+                private initialisationService: InitialisationService,
+                private ofiMemberNodeChannelService: OfiMemberNodeChannelService) {
+
         memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('warning', 'Member node connection disconnected');
+
         };
 
         // memberSocketService.errorCallback = () => {
@@ -53,5 +57,8 @@ export class AppComponent {
             this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
 
+        this.initialisationService.channelUpdateCallbacks.push((data) => {
+            this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
+        });
     }
 }
