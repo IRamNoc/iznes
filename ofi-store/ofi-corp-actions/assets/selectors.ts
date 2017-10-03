@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 import {OfiState} from '../../index';
-import {OfiCouponState} from '.';
+import {OfiUserAssetsState} from '.';
 import {OfiCorpActionsState} from '../index';
 
 const getOfi = (state): OfiState => {
@@ -14,16 +14,16 @@ const getOfiCorpActions = createSelector(
     }
 );
 
-export const getOfiCoupon = createSelector(
+export const getOfiUserAsset = createSelector(
     getOfiCorpActions,
-    (state: OfiCorpActionsState): OfiCouponState => {
-        return state.ofiCoupon
+    (state: OfiCorpActionsState): OfiUserAssetsState => {
+        return state.ofiUserAssets
     }
 );
 
-export const getOfiCouponList = createSelector(
-    getOfiCoupon,
-    (state: OfiCouponState): Array<any> => {
-        return state.ofiCouponList
+export const getOfiUserIssuedAssets = createSelector(
+    getOfiUserAsset,
+    (state: OfiUserAssetsState): Array<any> => {
+        return state.ofiUserAssetList
     }
 );
