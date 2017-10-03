@@ -1,6 +1,6 @@
 <!-- Raw input and form. -->
 <form #dropFileForm>
-    <input class="drop-file-input" [files]="uploadedFiles" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
+    <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
 </form>
 
 <!-- Custom UI. -->
@@ -30,10 +30,8 @@
         class="drop-file-meta"
         *ngIf="encodedFiles.length">
         <span
-            *ngFor="let file of encodedFiles; let i = index"
-            class="tablet added-file"
-            (click)="stopPropigation($event);clearFiles(i)">
-            <span>
+            *ngFor="let file of encodedFiles; let i = index">
+            <span class="tablet added-file" (click)="stopPropigation($event);clearFiles(i)" *ngIf="file.name">
                 <i class="fa fa-times"></i> {{ file.name }}
             </span>
         </span>
