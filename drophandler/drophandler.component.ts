@@ -34,14 +34,17 @@ export class DropHandler {
     @ViewChild('fileInput') public fileInput:ElementRef;
     @ViewChild('dropFileForm') public formElem:ElementRef;
 
+    /* Public variables. */
     public isHovering:boolean = false;
-    public uploadedFiles:any = {};
     public encodedFiles:any = [];
-    public proccessInterval:any;
-    public uploadPrompt:any;
     public numberFilesText:any;
+    public uploadPrompt:any;
 
-    public removingFile:boolean = false;
+    /* Private variables. */
+    private uploadedFiles:any = [];
+    private silentEncodedFiles:any = [];
+    private proccessInterval:any;
+    private removingFile:boolean = false;
 
     /* Constructor */
     public constructor (
@@ -78,11 +81,15 @@ export class DropHandler {
         /* Check if files were dropped... */
         if ( event.dataTransfer && event.dataTransfer.files ) {
             /* Set the uploaded files. */
-            this.uploadedFiles = event.dataTransfer.files;
+            // this.uploadedFiles = event.dataTransfer.files;
+            this.addFiles(event.dataTransfer.files);
 
-            /* Detect change. */
-            this.changeDetectorRef.detectChanges();
+            /* Proccess the files. */
+            this.handleConversion();
         }
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
 
         /* Stop bubbling. */
         event.preventDefault();
@@ -100,9 +107,6 @@ export class DropHandler {
      * @return {boolean}
      */
     public handleClick(event):boolean {
-        /* Prevent default. */
-        event.preventDefault();
-
         /* Cancel if we're just removing a file. */
         if ( this.removingFile ) return;
 
@@ -114,6 +118,9 @@ export class DropHandler {
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
+
+        /* Prevent default. */
+        event.preventDefault();
 
         /* Return false. */
         return false;
@@ -130,21 +137,53 @@ export class DropHandler {
     public handleFileChange (event):boolean {
         /* Check. */
         if ( event.target && event.target.files ) {
-            /* Proccess images. */
-            this.base64Files(event.target.files, (processedFiles) => {
-                /* Set the new files. */
-                this.encodedFiles = processedFiles;
+            /* Set the array. */
+            // this.uploadedFiles = event.target.files;
+            this.addFiles(event.target.files);
 
-                /* Emit the files. */
-                this.emitFilesEvent();
-
-                /* Update text */
-                this.updateFilesText();
-            });
+            /* Proccess the files. */
+            this.handleConversion()
         }
 
         /* Return. */
         return false;
+    }
+
+    /**
+     * Add Files
+     * ---------
+     * Adds files to the uploadedFiles.
+     *
+     * @param  {array} files - an array of the files.
+     * @return {void}
+     */
+    private addFiles (files):void {
+        /* Loop over each... */
+        for (let file of files) {
+            /* ...and push. */
+            this.uploadedFiles.push(file);
+        }
+    }
+
+    /**
+     * Handle Conversion
+     * -----------------
+     * Pulls in the uploaded files and converts them into the encoded files.
+     *
+     * @return {void}
+     */
+    private handleConversion ():void {
+        /* Proccess files. */
+        this.base64Files(this.uploadedFiles, (processedFiles) => {
+            /* Set the new files. */
+            this.encodedFiles = processedFiles;
+
+            /* Emit the files. */
+            this.emitFilesEvent();
+
+            /* Update text */
+            this.updateFilesText();
+        });
     }
 
     /**
@@ -214,10 +253,16 @@ export class DropHandler {
         /* Set removing file flag. */
         this.removingFile = true;
 
-        /* Slice the files. */
+        /* Slice the encoded files. */
         this.encodedFiles = [
             ...this.encodedFiles.slice(0, index),
             ...this.encodedFiles.slice(index + 1, this.encodedFiles.length)
+        ];
+
+        /* Slice the uploaded files. */
+        this.uploadedFiles = [
+            ...this.uploadedFiles.slice(0, index),
+            ...this.uploadedFiles.slice(index + 1, this.uploadedFiles.length)
         ];
 
         /* Update the UI. */
@@ -242,7 +287,7 @@ export class DropHandler {
      * @param  {callback} Function - a callback function, passed the encoded files array.
      * @return {void}
      */
-    public base64Files (files, callback):void {
+    private base64Files (files, callback):void {
         /* Variables. */
         let
         i,
@@ -258,8 +303,8 @@ export class DropHandler {
             files = [files[0]];
         }
 
-        /* Reset encoded files. */
-        this.encodedFiles = [];
+        /* Reset silent encoded files. */
+        this.silentEncodedFiles = [];
 
         /* Loop over files. */
         for ( i = 0; i < files.length; i++ ) {
@@ -287,7 +332,7 @@ export class DropHandler {
         /* Now wait for all files to be done. */
         this.proccessInterval = setInterval(() => {
             /* Check if the files have been processed. */
-            if ( grandTotal === this.encodedFiles.length ) {
+            if ( grandTotal === this.silentEncodedFiles.length ) {
                 /* If they're all done, clear this interval. */
                 clearInterval(this.proccessInterval);
 
@@ -299,12 +344,12 @@ export class DropHandler {
                     }
 
                     /* ...if we have a file, add the meta data back... */
-                    this.encodedFiles[i].name = files[i].name;
-                    this.encodedFiles[i].lastModified = files[i].lastModified;
+                    this.silentEncodedFiles[i].name = files[i].name;
+                    this.silentEncodedFiles[i].lastModified = files[i].lastModified;
                 }
 
                 /* Call the callback, when done. */
-                callback( this.encodedFiles );
+                callback( this.silentEncodedFiles );
             }
         }, 250); // 250 to save the lag spike during upload.
     }
@@ -316,7 +361,7 @@ export class DropHandler {
      *
      * @return {void}
      */
-    public emitFilesEvent () {
+    private emitFilesEvent () {
         /* Emit the event up a level. */
         this.onDropFiles.emit({
             'files': this.encodedFiles
@@ -334,12 +379,12 @@ export class DropHandler {
      * @param  {readerEvt} object - the reader event object.
      * @return {void}
      */
-    public handleFileConverted (readerEvt):void {
+    private handleFileConverted (readerEvt):void {
         /* Encode the raw data in base64. */
         var base64data = btoa(readerEvt.target.result);
 
         /* Push the file object into the encodedFiles array. */
-        this.encodedFiles.push({'data': base64data});
+        this.silentEncodedFiles.push({'data': base64data});
     }
 
     /**
@@ -349,7 +394,7 @@ export class DropHandler {
      *
      * @return {void}
      */
-    public updateFilesText ():void {
+    private updateFilesText ():void {
         /* Update. */
         this.numberFilesText = ((!this.encodedFiles || this.encodedFiles.length === 0) ? "No" : this.encodedFiles.length) + " "+ (this.multiple && this.encodedFiles.length > 1 ? "files" : "file") +" selected.";
 
