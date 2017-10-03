@@ -17,7 +17,7 @@ import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 
 /* Product */
-import {OfiFundComponent, OfiManagementCompanyComponent} from '@ofi/product';
+import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
 
 /* Corporate Actions Components */
 import {
@@ -107,6 +107,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'fund',
                         component: OfiFundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'sicav',
+                        component: OfiSicavComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
