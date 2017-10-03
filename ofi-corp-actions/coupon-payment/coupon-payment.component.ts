@@ -248,9 +248,54 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
          * [ ] - implement the ability to update values.
          */
 
-        /* Push a new tab object into tabsControl. */
+        /* Workout some data before setting it. */
+        console.log(' | resolving date: ', coupon.dateValuation);
+        console.log(' | resolving date: ', coupon.dateSettlement);
+        let
+            fixedValudation = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation) ),
+            fixedSettlement = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement) ),
+            couponValuationDate = '',
+            couponValuationTime = '',
+            couponSettlementDate = '',
+            couponSettlementTime = '';
 
-        /* Patch all the values needed into the formControl. */
+        /* If the dates are valid, set them. */
+        if ( fixedValudation ) {
+            couponValuationDate = fixedValudation.split(' ')[0]
+            couponValuationTime = fixedValudation.split(' ')[1]
+        }
+        if ( fixedSettlement ) {
+            couponSettlementDate = fixedSettlement.split(' ')[0]
+            couponSettlementTime = fixedSettlement.split(' ')[1]
+        }
+
+        /* Push a new tab object into tabsControl. */
+        this.tabsControl.push({
+            "title": {
+                "icon": "fa-search",
+                "text": coupon.fund
+            },
+            "couponId": coupon.couponID,
+            "formControl": new FormGroup({
+                'couponNature': new FormControl({value: 'Coupon Payment', disabled: true}),
+                'couponDrafter': new FormControl({value: this.myDetails.username, disabled: true}),
+                'couponFundShareName': new FormControl({value: [ {id: 0, text: coupon.fund} ], disabled: true}),
+                'couponIsin': new FormControl({value: coupon.fundIsin, disabled: true}),
+                'couponAmountByShare': new FormControl({value: coupon.amount, disabled: true}),
+                'couponFundShareUnits': new FormControl({value: (coupon.amountGross / coupon.amount), disabled: true}),
+                'couponGrossAmount': new FormControl({value: coupon.amountGross, disabled: true}),
+                'couponValuationDate': new FormControl({value: couponValuationDate, disabled: true}),
+                'couponValuationTime': new FormControl({value: couponValuationTime, disabled: true}),
+                'couponSettlementDate': new FormControl({value: couponSettlementDate, disabled: true}),
+                'couponSettlementTime': new FormControl({value: couponSettlementTime, disabled: true}),
+                'couponComments': new FormControl({value: coupon.comment, disabled: true})
+            }),
+            "couponStatus": coupon.status,
+            "active": false
+        });
+
+        /* Now make this tab active. */
+        this.setTabActive(this.tabsControl.length - 1);
 
         /* Return. */
         return;
