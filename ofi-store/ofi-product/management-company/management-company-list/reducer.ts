@@ -1,7 +1,8 @@
 import {Action} from 'redux';
 import * as ManagementCompanyActions from './actions';
-import {ManagementCompanyListState} from './model';
+import {ManagementCompanyDetail, ManagementCompanyListState} from './model';
 import _ from 'lodash';
+import {List, fromJS, Map} from 'immutable';
 
 
 const initialState: ManagementCompanyListState = {
@@ -16,56 +17,14 @@ export const ManagementCompanyListReducer = function (state: ManagementCompanyLi
     switch (action.type) {
         case ManagementCompanyActions.SET_MANAGEMENT_COMPANY_LIST:
 
-            const mcData = _.get(action, 'payload[1].Data[0]', {});
+            const mcData = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const companyID = _.get(mcData, 'companyID', '');
-            const companyName = _.get(mcData, 'companyName', '');
-            const country = _.get(mcData, 'country', '');
-            const addressPrefix = _.get(mcData, 'addressPrefix', '');
-            const postalAddressLine1 = _.get(mcData, 'postalAddressLine1', '');
-            const postalAddressLine2 = _.get(mcData, 'postalAddressLine2', '');
-            const city = _.get(mcData, 'city', '');
-            const stateArea = _.get(mcData, 'stateArea', '');
-            const postalCode = _.get(mcData, 'postalCode', '');
-            const taxResidence = _.get(mcData, 'taxResidence', '');
-            const registrationNum = _.get(mcData, 'registrationNum', '');
-            const supervisoryAuthority = _.get(mcData, 'supervisoryAuthority', '');
-            const numSiretOrSiren = _.get(mcData, 'numSiretOrSiren', '');
-            const creationDate = _.get(mcData, 'creationDate', '');
-            const shareCapital = _.get(mcData, 'shareCapital', '');
-            const commercialContact = _.get(mcData, 'commercialContact', '');
-            const operationalContact = _.get(mcData, 'operationalContact', '');
-            const directorContact = _.get(mcData, 'directorContact', '');
-            const lei = _.get(mcData, 'lei', '');
-            const bic = _.get(mcData, 'bic', '');
-            const giinCode = _.get(mcData, 'giinCode', '');
-            const logoName = _.get(mcData, 'logoName', '');
-            const logoURL = _.get(mcData, 'logoURL', '');
+            console.log('companyList[] reducer', mcData[0]);
 
-            newState = Object.assign({}, state, {
-                companyID,
-                companyName,
-                country,
-                addressPrefix,
-                postalAddressLine1,
-                postalAddressLine2,
-                city,
-                stateArea,
-                postalCode,
-                taxResidence,
-                registrationNum,
-                supervisoryAuthority,
-                numSiretOrSiren,
-                creationDate,
-                shareCapital,
-                commercialContact,
-                operationalContact,
-                directorContact,
-                lei,
-                bic,
-                giinCode,
-                logoName,
-                logoURL
+            const managementCompanyList = formatManagementCompanyDataResponse(mcData);
+
+            const newState = Object.assign({}, state, {
+                managementCompanyList
             });
 
             return newState;
@@ -74,3 +33,42 @@ export const ManagementCompanyListReducer = function (state: ManagementCompanyLi
             return state;
     }
 };
+
+
+function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<ManagementCompanyDetail> {
+
+    const rawCompanyDataList = fromJS(rawCompanyData);
+
+    const companyDetailList = Map(rawCompanyDataList.reduce(
+        function (result, item) {
+            result[item.get('companyID')] = {
+                companyID: item.get('companyID'),
+                companyName: item.get('companyName'),
+                country: item.get('country'),
+                addressPrefix: item.get('addressPrefix'),
+                postalAddressLine1: item.get('postalAddressLine1'),
+                postalAddressLine2: item.get('postalAddressLine2'),
+                city: item.get('city'),
+                stateArea: item.get('stateArea'),
+                postalCode: item.get('postalCode'),
+                taxResidence: item.get('taxResidence'),
+                registrationNum: item.get('registrationNum'),
+                supervisoryAuthority: item.get('supervisoryAuthority'),
+                numSiretOrSiren: item.get('numSiretOrSiren'),
+                creationDate: item.get('creationDate'),
+                shareCapital: item.get('shareCapital'),
+                commercialContact: item.get('commercialContact'),
+                operationalContact: item.get('operationalContact'),
+                directorContact: item.get('directorContact'),
+                lei: item.get('lei'),
+                bic: item.get('bic'),
+                giinCode: item.get('giinCode'),
+                logoName: item.get('logoName'),
+                logoURL: item.get('logoURL'),
+            };
+            return result;
+        },
+        {}));
+
+    return companyDetailList.toJS();
+}
