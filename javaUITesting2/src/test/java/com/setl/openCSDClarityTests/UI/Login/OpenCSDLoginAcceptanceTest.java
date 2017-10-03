@@ -18,6 +18,7 @@ import org.openqa.selenium.WebElement;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -43,6 +44,7 @@ public class OpenCSDLoginAcceptanceTest {
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         navigateToLoginPage();
+        Thread.sleep(1);
     }
     @Test
     public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
