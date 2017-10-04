@@ -182,7 +182,8 @@ export class AdminUsersService {
         const messageBody: DeleteUserMessageBody = {
             RequestName: 'du',
             token: this.memberSocketService.token,
-            userId: data.userId
+            userId: data.userId,
+            account: data.account || 0,
         };
 
         /* Return the new member node saga request. */

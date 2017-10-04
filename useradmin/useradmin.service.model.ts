@@ -32,6 +32,7 @@ export interface EditUserMessageBody extends MemberNodeMessageBody {
 export interface DeleteUserMessageBody extends MemberNodeMessageBody {
     token: string;
     userId: string;
+    account?: number;
 }
 
 export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
