@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy, EventEmitter} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 import {StringFilter} from "clarity-angular";
@@ -25,7 +25,8 @@ class TypeFilter implements StringFilter<any> {
     selector: 'setl-admin-permissions',
     templateUrl: 'permissions.component.html',
     styleUrls: [ 'permissions.component.css' ],
-    providers: [ UserAdminService, ToasterService ]
+    providers: [ UserAdminService, ToasterService ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */

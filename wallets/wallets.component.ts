@@ -1,5 +1,5 @@
 /* Core / Angular imports. */
-import {Component, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {JsonPipe} from '@angular/common';
 import {FormsModule, FormGroup, FormControl, NgModel, Validators} from '@angular/forms';
 import {OnDestroy} from '@angular/core';
@@ -19,7 +19,8 @@ import {UserAdminService} from '../useradmin.service';
     selector: 'setl-admin-wallets',
     templateUrl: 'wallets.component.html',
     styleUrls: ['wallets.component.css'],
-    providers: [UserAdminService]
+    providers: [UserAdminService],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
@@ -380,7 +381,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 });
             }
         });
-        
+
         /* Return. */
         return;
     }

@@ -1,8 +1,7 @@
 /* Core imports. */
-import {Component, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {JsonPipe} from '@angular/common';
 import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
-
 import {OnDestroy} from '@angular/core';
 
 import {select, NgRedux} from '@angular-redux/store';
@@ -19,7 +18,8 @@ import {UserAdminService} from '../useradmin.service';
     selector: 'setl-admin-users',
     templateUrl: 'users.component.html',
     styleUrls: ['users.component.css'],
-    providers: [UserAdminService]
+    providers: [UserAdminService],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
@@ -798,6 +798,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Get the user's data. */
         let dataToSend = {};
         dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
+        dataToSend['account'] = this.usersList[deleteUserIndex].accountID;
 
         /* Send the request. */        /* Let's now ask the user if they're sure... */
         this._confirmationService.create(
@@ -815,13 +816,12 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                         }
                     }
 
-                    /* Handle succes message. */
-                    console.log('Deleted user successfully.', response)
+                    /* Handle success message. */
                     this.showSuccess('Successfully deleted user.');
                 }).catch((error) => {
                     /* Handle error message. */
-                    console.log('Failed to deleted user.', error);
                     this.showError('Failed to delete user.');
+                    console.warn(error);
                 });
             }
         });
