@@ -118,14 +118,14 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label for="udMemorableAnswer">Profile text</label>
+                            <label for="udProfileText">Profile text</label>
                             <div>
-                                <textarea placeholder="Profile text" [formControl]="profileText" rows="5" style="width:97.5%"></textarea>
+                                <textarea id="udProfileText" placeholder="Profile text" [formControl]="profileText" rows="5" style="width:97.5%"></textarea>
                                 <div *ngIf="profileText.hasError('required') && profileText.touched" class="alert alert-danger">Profile text is required</div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid">Send</button>
+                    <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid">Send</button>
                 </form>
             </section>
         </clr-tab-content>
