@@ -419,6 +419,13 @@
                                     <i class="fa fa-check"></i> <span mltag="txt_approve">Approve</span>
                                 </a>
                             </ng-container>
+
+                            <ng-container *ngIf="tabsControl[tabid].couponStatus == 2">
+                                <!-- Buttons for status 1 coupons -->
+                                <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'cancel')" class="btn btn-warn">
+                                    <i class="fa fa-check"></i> <span mltag="txt_cancel"></span>
+                                </a>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
