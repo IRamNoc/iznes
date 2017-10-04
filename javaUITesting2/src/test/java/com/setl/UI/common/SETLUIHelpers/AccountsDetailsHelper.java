@@ -335,4 +335,15 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             return false;
         }
     }
+  public static void clickMyAccountSubmit(){
+//    try {
+//      driver.findElement(By.id("udSubmit")).click();
+//    }catch (Error e){
+//      System.out.println("udSubmit was not found");
+//      fail();
+//    }
+  }
+  public static void myAccountSendKeys(String field, String text){
+    driver.findElement(By.id("ud" + field)).sendKeys(text);
+  }
 }
