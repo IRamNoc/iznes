@@ -39,7 +39,7 @@ class MyComponent {
 }
 ```
 
-## 2. Using the `mltag` directive.
+## 3. Using the `mltag` directive.
 
 **Note: you'll have to import the `MultilingualModule` into the module that your component is declared in.**
 
