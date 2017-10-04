@@ -62,37 +62,37 @@
                     <clr-dg-cell>{{formatCouponDate(coupon.dateValuation)}}</clr-dg-cell>
                     <clr-dg-cell>{{formatCouponDate(coupon.dateSettlement)}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="coupon.status == '1'" class="label label-warning" type="button">
+                        <span *ngIf="coupon.status == '1'" class="label label-warning">
                             <span mltag="txt_waitingapproval">Waiting approval</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '2'" class="label label-warning" type="button">
+                        <span *ngIf="coupon.status == '2'" class="label label-warning">
                             <span mltag="txt_waitingoperation">Waiting operation</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '3'" class="label label-warning" type="button">
+                        <span *ngIf="coupon.status == '3'" class="label label-warning">
                             <span mltag="txt_waitingoperation">Waiting operation</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '4'" class="label label-navy" type="button">
+                        <span *ngIf="coupon.status == '4'" class="label label-warning">
                             <span mltag="txt_waitingvaluation">Waiting valuation</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '5'" class="label label-success" type="button">
+                        <span *ngIf="coupon.status == '5'" class="label label-info">
                             <span mltag="txt_waitingsettlement">Waiting settlement</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '-1'" class="label label-primary" type="button">
+                        <span *ngIf="coupon.status == '-1'" class="label label-success">
                             <span mltag="txt_settled">Settled</span>
                         </span>
 
 
-                        <span *ngIf="coupon.status == '0'" class="label label-default" type="button">
+                        <span *ngIf="coupon.status == '0'" class="label label-danger">
                             <span mltag="txt_canceled">Canceled</span>
                         </span>
                     </clr-dg-cell>
