@@ -43,7 +43,6 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
-        //navigateToDropdown("home");
         verifyHomePageIsDisplayed();
         navigateToAddressesTab();
         verifyHomePageIsDisplayed();
