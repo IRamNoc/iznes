@@ -174,11 +174,6 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         /* Get other data. */
         setFundShare = this.getFundById( formData.couponFundShareName[0].id )
 
-        console.log(' |--- New Coupon');
-        console.log(' | tab data: ', thisTab);
-        console.log(' | form data: ', formData);
-        console.log(' | selected fund: ', setFundShare);
-
         /* Ok, let's now start building the new coupon request. */
         newCoupon['userCreated'] = this.myDetails.username;
         newCoupon['status'] = 1;
@@ -204,12 +199,20 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             new Date(formData.couponValuationDate +" "+ formData.couponValuationTime)
         );
 
-        console.log(' | built request: ', newCoupon);
         /* Now send the request. */
         this.ofiCorpActionService.setNewCoupon(newCoupon).then((response) => {
-            console.log('response: ', response);
+            /* Ok, let's clear the form... */
+            thisTab.formControl = this.newCouponFormGroup();
+
+            /* ...and move the user back to the table... */
+            this.setTabActive(0);
+
+            /* ...and then let the user know it went well. */
+            this.showSuccess('Successfully created the new coupon payment.');
         }).catch((error) => {
-            console.log('error: ', error);
+            /* Tell the user it went wrong. */
+            this.showError('Failed to create a new coupon payment.');
+            console.warn(error);
         })
 
         /* Return. */
@@ -241,16 +244,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        console.log(' | coupon: ', coupon);
-        /* TODO - view coupon.
-         * [ ] - create the new tab.
-         * [ ] - prefill the data.
-         * [ ] - implement the ability to update values.
-         */
-
         /* Workout some data before setting it. */
-        console.log(' | resolving date: ', coupon.dateValuation);
-        console.log(' | resolving date: ', coupon.dateSettlement);
         let
             fixedValudation = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation) ),
             fixedSettlement = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement) ),
@@ -325,21 +319,42 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         /* Let's start building the request. */
         let
             thisCoupon = this.getCouponById( thisTab.couponId ),
+            successMessage = "",
+            errorMessage = "",
             updateCoupon = {
                 'couponId': thisTab.couponId,
                 'accountId': this.myDetails.accountId,
                 'amount': thisCoupon.amount,
                 'amountGross': thisCoupon.amountGross,
-                'status': (action == 'approve' ? -1 : 0), // -1 is settled, 0 is canceled.
+                'status': 0, // -1 is settled, 0 is canceled.
             };
+
+        /* Let's update the status to the correct value. */
+        switch (action) {
+            case 'approve':
+                updateCoupon.status = 2;
+                successMessage = "Successfully approved this coupon payment.";
+                errorMessage = "Failed to approve this coupon payment. Try again later.";
+                break;
+
+            case 'cancel':
+                updateCoupon.status = 0;
+                successMessage = "Successfully cancelled this coupon payment.";
+                errorMessage = "Failed to cancel this coupon payment. Try again later.";
+                break;
+        }
 
         /* Ok, let's send the request now. */
         this.ofiCorpActionService.updateCoupon( updateCoupon ).then((response) => {
-            console.log('response: ', response);
-        }).catch((error) => {
-            console.log('error: ', error);
-        })
+            /* Ok, so things went well, let's change the status on this tab to hide buttons... */
+            thisTab.couponStatus = updateCoupon.status;
 
+            /* ...and let the user know. */
+            this.showSuccess(successMessage);
+        }).catch((error) => {
+            /* Tell the user that it wans't successfully complete. */
+            this.showError(errorMessage);
+        });
 
         /* Return. */
         return;
