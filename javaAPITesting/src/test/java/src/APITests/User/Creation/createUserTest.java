@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static SETLAPIHelpers.LoginHelper.login;
+import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static SETLAPIHelpers.UserHelper.createUser;
 
 
@@ -44,6 +44,7 @@ public class createUserTest {
 
 
   @Test
+  @Ignore
   public void createUserWithValidDataTest() throws InterruptedException, ExecutionException {
 
     final AtomicInteger atomicInt = new AtomicInteger(0);
@@ -54,7 +55,8 @@ public class createUserTest {
     String email = userDetails[2];
     CountDownLatch latch = new CountDownLatch(1);
 
-    login(socket, address, LoginHelper::loginResponse);
+    Connection connection = login(socket, address, LoginHelper::loginResponse);
+
     socket.sendMessage(factory.listUsers());
 
     socket.registerHandler(Message.Type.um_lu.name(), message -> {
@@ -66,7 +68,13 @@ public class createUserTest {
         Object lastUser = resp.get("userName");
         assertNotNull(lastUser);
         assertTrue(!lastUser.toString().equals(userName));
-        socket.sendMessage(factory.addUserToAccount(userName, email, "8", "35", password));
+        try {
+          createUser(factory, socket, userName, email, "8", "35", password);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        } catch (ExecutionException e) {
+          e.printStackTrace();
+        }
         return "";
       }
 
@@ -99,7 +107,7 @@ public class createUserTest {
 
     CountDownLatch latch = new CountDownLatch(1);
 
-    socket.registerHandler(Message.Type.Login.name(), message -> {
+      socket.registerHandler(Message.Type.Login.name(), message -> {
       socket.sendMessage(factory.addUserToAccount(userName,"pop","8","35", password));
       return "";
     });
@@ -114,6 +122,7 @@ public class createUserTest {
       return "";
     });
   }
+
 
   @Test
   @Ignore("Message format error")
@@ -194,24 +203,21 @@ public class createUserTest {
   @Test
   public void createNewUser() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, address, LoginHelper::loginResponse);
-    for (int i = 0; i < 3; i++) {
-
 
     String userDetails[] = generateUserDetails();
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
-    createUser(connection, factory, socket, userName, email, "8", "35", password);
-  }
+    createUser(factory, socket, userName, email, "8", "35", password);
+
+    connection.disconnect();
   }
 
-  public static String[] generateUserDetails ()
-    {
-        String str = randomAlphabetic(5);
-        String userName = "Test_User_" + str;
-        String password = randomAlphabetic(12);
-        String email = userName + "@test.com";
+  @Test
+  public void createMultipleUsers() throws ExecutionException, InterruptedException {
+    Connection connection = login(socket, address, LoginHelper::loginResponse);
+    createUser(factory, socket, "8", "35", 10);
+    connection.disconnect();
+  }
 
-        return new String[] {userName, password, email};
-    }
 }

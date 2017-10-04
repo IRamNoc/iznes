@@ -62,5 +62,9 @@ public class LoginHelper {
 
   }
 
+  public static void createUserSuccess(JSONObject message){
+
+  }
+
 }
 

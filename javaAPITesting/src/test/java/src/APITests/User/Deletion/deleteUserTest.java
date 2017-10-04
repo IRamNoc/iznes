@@ -9,10 +9,8 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -21,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -33,6 +32,8 @@ public class deleteUserTest {
       T value = null;
     }
 
+    @Rule
+    public Timeout globalTimeout = Timeout.millis(3000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
@@ -131,14 +132,5 @@ public class deleteUserTest {
 
       latch.await();
       connexion.get().disconnect();
-    }
-
-    public static String[] generateUserDetails() {
-        String str = randomAlphabetic(5);
-        String userName = "Test_User_" + str;
-        String password = randomAlphabetic(12);
-        String email = userName + "@test.com";
-
-        return new String[]{userName, password, email};
     }
 }
