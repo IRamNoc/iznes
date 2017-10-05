@@ -346,4 +346,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
   public static void myAccountSendKeys(String field, String text){
     driver.findElement(By.id("ud" + field)).sendKeys(text);
   }
+  public static void myAccountClearField(String field){
+    driver.findElement(By.id("ud" + field)).clear();
+  }
 }

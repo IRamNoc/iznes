@@ -217,7 +217,9 @@ public class LoginAndNavigationHelper {
       fail();
     }
   }
-
+  public static void clickLink(String element){
+    driver.findElement(By.id(element)).click();
+  }
   public static void headingIsPresent(String headingID){
     driver.findElement(By.id(headingID)).isDisplayed();
   }
