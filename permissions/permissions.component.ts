@@ -1,5 +1,5 @@
 /* Core imports. */
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy, EventEmitter} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterViewInit, OnDestroy, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule, FormGroup, FormControl, NgModel } from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 import {StringFilter} from "clarity-angular";
@@ -9,6 +9,10 @@ import {UserAdminService} from '../useradmin.service';
 
 /* Use the permissions grid. */
 import {PermissionGridComponent} from '@setl/permission-grid';
+
+/* Alerts and confirms. */
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService} from '@setl/utils';
 
 class TypeFilter implements StringFilter<any> {
     accepts(group:any, search: string): boolean {
@@ -21,7 +25,8 @@ class TypeFilter implements StringFilter<any> {
     selector: 'setl-admin-permissions',
     templateUrl: 'permissions.component.html',
     styleUrls: [ 'permissions.component.css' ],
-    providers: [ UserAdminService, ToasterService ]
+    providers: [ UserAdminService, ToasterService ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
@@ -76,7 +81,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     /* Constructor. */
     constructor (
         private userAdminService:UserAdminService,
-        private changeDetectorRef:ChangeDetectorRef
+        private changeDetectorRef:ChangeDetectorRef,
+        private alertsService: AlertsService,
+        private _confirmationService: ConfirmationService,
     ) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
