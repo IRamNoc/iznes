@@ -127,6 +127,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getCouponList().then(() => {
                 /* Redux subscription handles setting the property. */
+                this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get the coupon payment list.');
@@ -140,6 +141,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
+                this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get your issued assets.');
