@@ -41,7 +41,6 @@ public class loginTest {
 
     }
 
-
     @After
     public void tearDown() throws Exception
     {
@@ -78,9 +77,9 @@ public class loginTest {
             assertTrue(token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start(address);
+        Future<Connection> connection = ws.start(address);
         l.await();
-        connexion.get().disconnect();
+      connection.get().disconnect();
 
     }
 

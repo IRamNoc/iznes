@@ -25,11 +25,11 @@ public class LoginHelper {
     });
 
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-    Future<Connection> blob = ws.start(address);
+    Future<Connection> connection = ws.start(address);
 
     try {
       latch.await();
-      return blob.get();
+      return connection.get();
     } catch (InterruptedException | ExecutionException e) {
       throw new RuntimeException(e);
     }
