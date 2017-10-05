@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.UserHelper.createDuplicateUser;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static SETLAPIHelpers.UserHelper.createUser;
@@ -33,9 +34,9 @@ import static SETLAPIHelpers.UserHelper.createUser;
 
 @RunWith(JUnit4.class)
 public class createUserTest {
-
+/*
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);*/
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -54,8 +55,6 @@ public class createUserTest {
     String password = userDetails[1];
     String email = userDetails[2];
     CountDownLatch latch = new CountDownLatch(1);
-
-    Connection connection = login(socket, address, LoginHelper::loginResponse);
 
     socket.sendMessage(factory.listUsers());
 
@@ -197,7 +196,6 @@ public class createUserTest {
     Future<Connection> connexion = ws.start(address);
     latch.await();
     connexion.get().disconnect();
-
   }
 
   @Test
@@ -216,7 +214,14 @@ public class createUserTest {
   @Test
   public void createMultipleUsers() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, address, LoginHelper::loginResponse);
-    createUser(factory, socket, "8", "35", 10);
+    createUser(factory, socket, "8", "35", 104);
+    connection.disconnect();
+  }
+
+  @Test
+  public void failToCreateDuplicateUsers() throws ExecutionException, InterruptedException {
+    Connection connection = login(socket, address, LoginHelper::loginResponse);
+    createDuplicateUser(factory, socket, "8", "35");
     connection.disconnect();
   }
 
