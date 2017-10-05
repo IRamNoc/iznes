@@ -129,7 +129,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].fundShareId === this.fundList[index].id || this.tabsControl[i]['actionType'] === 'subscribe') {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
                 this.setTabActive(i);
 
                 return;
@@ -166,7 +166,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].fundShareId === this.fundList[index].id || this.tabsControl[i]['actionType'] === 'redeem') {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'redeem')) {
                 this.setTabActive(i);
 
                 return;
@@ -180,13 +180,13 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.tabsControl.push({
             title: {
-                icon: 'fa-sign-in',
+                icon: 'fa-sign-out',
                 text: fundShareName,
-                colorClass: 'text-primary'
+                colorClass: 'text-success'
             },
             fundShareId: fundShareId,
             fundShareData: fundShareData,
-            actionType: 'subscribe',
+            actionType: 'redeem',
             active: false
         })
         ;
