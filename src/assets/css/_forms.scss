@@ -156,6 +156,10 @@ form, .form {
         input[type=text].error, form .form-group input[type=password].error {
             border: 1px solid #ebafa6;
         }
+
+        input[readonly] {
+            background-color: #f9f9f9;
+        }
     }
 
     select {
@@ -468,5 +472,6 @@ input:checked + .slider:before {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 
 
