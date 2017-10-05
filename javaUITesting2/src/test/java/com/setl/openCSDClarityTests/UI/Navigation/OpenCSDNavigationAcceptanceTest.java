@@ -43,7 +43,6 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
-        //navigateToDropdown("home");
         verifyHomePageIsDisplayed();
         navigateToAddressesTab();
         verifyHomePageIsDisplayed();
@@ -178,7 +177,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/managment-company");
+        navigateToPage("product-module/management-company");
     }
     @Test
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {

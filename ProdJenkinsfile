@@ -41,9 +41,6 @@ node {
           sh '''rm -f yarn.lock &&
                   yarn install &&
                   yarn test-single &&
-                  cd src &&
-                  sass styles.scss:styles.css &&
-                  cd ../ &&
                   yarn build-prod '''
           junit allowEmptyResults: true, keepLongStdio: true,
             testResults: '/TESTS-Headless**'
@@ -52,11 +49,8 @@ node {
 
       stage('Copy code to deployment folder'){
         node {
-          sh '''mv -f /var/lib/jenkins/Deploy/ /var/lib/jenkins/Deploy_old/ &&
-                mkdir /var/lib/jenkins/Deploy &&
-                pwd &&
-                cp -rf  dist/ /var/lib/jenkins/Deploy/OpenCSD_dist &&
-                pwd '''
+          sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
+                rsync -a ./dist /var/lib/jenkins/Deploy/'''
         }
       }
 

@@ -7,7 +7,6 @@ sourceCompatibility = 1.8
 
 repositories {
     maven {url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/"}
-    mavenCentral()
     }
 
 dependencies {
@@ -15,3 +14,4 @@ dependencies {
     compile group: 'io.setl', name: 'websocket-client',     version: '1.0.1-SNAPSHOT'
     compile 'org.apache.commons:commons-lang3:3.6'
 }
+

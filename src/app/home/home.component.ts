@@ -10,7 +10,9 @@ import {fromJS} from 'immutable';
 
 import {FileDropComponent} from '@setl/core-filedrop';
 
-import {FormGroup, FormControl} from '@angular/forms'
+import {FormGroup, FormControl} from '@angular/forms';
+
+import {MultilingualService} from '@setl/multilingual';
 
 interface User {
     id: number;
@@ -68,7 +70,9 @@ export class HomeComponent {
         console.log('file drop event emitted: ', event);
     }
 
-    public constructor() {
+    public constructor(
+        private multilingualService:MultilingualService,
+    ) {
 
         /* Init the files form group. */
         this.filesFormGroup = new FormGroup({
@@ -96,6 +100,8 @@ export class HomeComponent {
                 color: 'blue'
             }
         ];
+
+        console.log( this.multilingualService.getTranslation('txt_home') );
     }
 
     toggler () {

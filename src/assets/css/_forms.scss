@@ -325,6 +325,7 @@ form various-address-select.error .form-group input[type=text] {
 .switch input {
     display: none;
 }
+.switch>input[type='checkbox'] {display:none!important;}
 
 /* The slider */
 .slider {
