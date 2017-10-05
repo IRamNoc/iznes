@@ -1,25 +1,24 @@
 import {MemberNodeMessageBody} from '@setl/utils/common';
 
-export interface ManagementCompanyRequestMessageBody extends MemberNodeMessageBody {
+export interface SicavRequestMessageBody extends MemberNodeMessageBody {
     token: any;
-    accountId: any;
 }
 
-export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {
+export interface SaveSicavRequestBody extends MemberNodeMessageBody {
     token: any;
-    entityId: any;
-    companyName: any;
+    companyID: any;
+    sicavName: any;
     country: any;
-    addressPrefix: any;
+    addrPrefix: any;
     postalAddressLine1: any;
     postalAddressLine2: any;
     city: any;
     stateArea: any;
-    postalCode: any;
+    postalcode: any;
     taxResidence: any;
     registrationNum: any;
     supervisoryAuthority: any;
-    numSiretOrSiren: any;
+    numSIRETorSIREN: any;
     creationDate: any;
     shareCapital: any;
     commercialContact: any;
@@ -32,11 +31,10 @@ export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody 
     logoURL: any;
 }
 
-export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBody {
+export interface UpdateSicavRequestBody extends MemberNodeMessageBody {
     token: any;
-    entityId: any;
-    companyID: any;
-    companyName: any;
+    sicavID: any;
+    sicavName: any;
     country: any;
     addressPrefix: any;
     postalAddressLine1: any;
@@ -47,7 +45,7 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     taxResidence: any;
     registrationNum: any;
     supervisoryAuthority: any;
-    numSiretOrSiren: any;
+    numSIRETorSIREN: any;
     creationDate: any;
     shareCapital: any;
     commercialContact: any;

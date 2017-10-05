@@ -6,6 +6,9 @@ import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from '@setl/utils';
 
+/* Pipes. */
+import {SetlPipesModule} from '@setl/utils';
+
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 
@@ -29,7 +32,8 @@ import {OfiCorpActionService} from '../ofi-req-services/ofi-corp-actions/service
         BrowserModule,
         FormsModule,
         ClarityModule,
-        SelectModule
+        SelectModule,
+        SetlPipesModule
     ],
     providers: [
         OfiCorpActionService

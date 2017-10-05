@@ -1,17 +1,17 @@
-export interface ManagementCompanyDetail {
+export interface SicavDetail {
     companyID: string;
-    companyName: string;
+    sicavName: string;
     country: string;
-    addressPrefix: string;
+    addrPrefix: string;
     postalAddressLine1: string;
     postalAddressLine2: string;
     city: string;
     stateArea: string;
-    postalCode: string;
+    postalcode: string;
     taxResidence: string;
     registrationNum: string;
     supervisoryAuthority: string;
-    numSiretOrSiren: string;
+    numSIRETorSIREN: string;
     creationDate: string;
     shareCapital: string;
     commercialContact: string;
@@ -24,9 +24,9 @@ export interface ManagementCompanyDetail {
     logoURL: string;
 }
 
-export interface ManagementCompanyListState {
-    managementCompanyList: {
-        [key: string]: ManagementCompanyDetail
+export interface SicavListState {
+    sicavList: {
+        [key: string]: SicavDetail
     };
     requested: boolean;
 }
