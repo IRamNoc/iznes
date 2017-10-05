@@ -43,6 +43,8 @@ function ofiSetCouponList ( state: OfiCouponState, action: Action ) {
     newState,
     newCouponList = _.get(action, 'payload[1].Data', []);
 
+    console.log( newCouponList );
+
     /* Set the new state. */
     newState = {
         ofiCouponList: newCouponList

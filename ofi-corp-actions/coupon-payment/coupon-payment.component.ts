@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
@@ -34,6 +34,7 @@ import {
 @Component({
     styleUrls: ['./coupon-payment.component.css'],
     templateUrl: './coupon-payment.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
@@ -163,9 +164,9 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         newCoupon = {};
 
         /* Let's check if the form is valid first... */
-        if ( ! thisTab.formControl.valid && formData.couponFundShareName.length >= 1 ) {
+        if ( ! thisTab.formControl.valid || ! formData.couponFundShareName.length ) {
             /* ...tell the user if it isn't valid. */
-            this.showError('ayye yo, sort dis form out.');
+            this.showError('Please ensure this form is complete.');
 
             /* Then return. */
             return;
@@ -187,6 +188,19 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         /* Comment. */
         newCoupon['accountId'] = this.myDetails.accountId;
         newCoupon['comment'] = formData.couponComments;
+
+        /* Date validation. */
+        if ( new Date(formData.couponSettlementDate +" "+ formData.couponSettlementTime) <= new Date() ) {
+            /* ...let the user know. */
+            this.showError('Please ensure all dates are set to a point in the future.');
+            return;
+        }
+
+        if ( new Date(formData.couponValuationDate +" "+ formData.couponValuationTime) <= new Date() ) {
+            /* ...let the user know. */
+            this.showError('Please ensure all dates are set to a point in the future.');
+            return;
+        }
 
         /* Dates. */
         newCoupon['dateLastUpdated'] = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date());
@@ -346,7 +360,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Ok, let's send the request now. */
         this.ofiCorpActionService.updateCoupon( updateCoupon ).then((response) => {
-            /* Ok, so things went well, let's change the status on this tab to hide buttons... */
+            /* Ok, so things went well, let's change the status on this tab to hide or show buttons... */
             thisTab.couponStatus = updateCoupon.status;
 
             /* ...and let the user know. */
