@@ -12,6 +12,7 @@ export {SetlComponentsModule} from './components';
 export {ConfirmationService} from './components/jaspero-confirmation/confirmations.service';
 
 export {SelectModule} from './components/ng2-select/select.module';
+export {DpDatePickerModule} from './components/ng2-date-picker/date-picker.module';
 
 export {walletHelper} from './helper';
 
