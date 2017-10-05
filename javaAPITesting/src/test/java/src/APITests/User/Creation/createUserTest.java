@@ -34,18 +34,18 @@ import static SETLAPIHelpers.UserHelper.createUser;
 
 @RunWith(JUnit4.class)
 public class createUserTest {
-/*
+
   @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);*/
+  public Timeout globalTimeout = Timeout.millis(3000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
   SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-  String address = "ws://localhost:9788/db/";
-
+  String localAddress = "ws://localhost:9788/db/";
+  //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
+  //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
   @Test
-  @Ignore
   public void createUserWithValidDataTest() throws InterruptedException, ExecutionException {
 
     final AtomicInteger atomicInt = new AtomicInteger(0);
@@ -56,7 +56,8 @@ public class createUserTest {
     String email = userDetails[2];
     CountDownLatch latch = new CountDownLatch(1);
 
-    socket.sendMessage(factory.listUsers());
+
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
     socket.registerHandler(Message.Type.um_lu.name(), message -> {
 
@@ -86,6 +87,8 @@ public class createUserTest {
       return "";
     });
 
+    socket.sendMessage(factory.listUsers());
+
     socket.registerHandler(Message.Type.nu.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
       JSONObject resp = (JSONObject) data.get(0);
@@ -95,7 +98,11 @@ public class createUserTest {
       socket.sendMessage(factory.listUsers());
       return "";
     });
+    connection.disconnect();
   }
+
+
+
 
   @Test
   public void failToCreateUserWithInvalidEmailTest() throws InterruptedException, ExecutionException {
@@ -152,7 +159,7 @@ public class createUserTest {
       latch.countDown();
       return "";
     });
-    Future<Connection> connexion = ws.start(address);
+    Future<Connection> connexion = ws.start(localAddress);
     latch.await();
     connexion.get().disconnect();
 
@@ -166,7 +173,7 @@ public class createUserTest {
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
-    login(socket, address, LoginHelper::loginResponse);
+    login(socket, localAddress, LoginHelper::loginResponse);
 
     LoginHelper.command(socket, factory.addUserToAccount(userName, email, "bob", "35", password), message -> {
       JSONArray data = (JSONArray) message.get("Data");
@@ -193,14 +200,14 @@ public class createUserTest {
       latch.countDown();
       return "";
     });
-    Future<Connection> connexion = ws.start(address);
+    Future<Connection> connexion = ws.start(localAddress);
     latch.await();
     connexion.get().disconnect();
   }
 
   @Test
   public void createNewUser() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, address, LoginHelper::loginResponse);
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
     String userDetails[] = generateUserDetails();
     String userName = userDetails[0];
@@ -213,14 +220,14 @@ public class createUserTest {
 
   @Test
   public void createMultipleUsers() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, address, LoginHelper::loginResponse);
-    createUser(factory, socket, "8", "35", 104);
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+    createUser(factory, socket, "8", "35", 5);
     connection.disconnect();
   }
 
   @Test
   public void failToCreateDuplicateUsers() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, address, LoginHelper::loginResponse);
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     createDuplicateUser(factory, socket, "8", "35");
     connection.disconnect();
   }
