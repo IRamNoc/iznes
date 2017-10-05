@@ -63,7 +63,8 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    driver.findElement(By.id("udDisplayName")).sendKeys("Testing");
+    myAccountClearField("DisplayName");
+    myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
   }
   @Test
@@ -71,6 +72,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
   }
@@ -79,6 +81,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("LastName");
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
   }
@@ -87,6 +90,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("MobilePhone");
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
   }
@@ -95,6 +99,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("Address1");
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
   }
@@ -103,6 +108,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("AddressPrefix");
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
   }
@@ -111,6 +117,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("Address3");
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
@@ -119,6 +126,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("Address4");
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
   }
@@ -127,6 +135,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("PostalCode");
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
   }
@@ -135,6 +144,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("Address3");
     Thread.sleep(2);
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
@@ -144,6 +154,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("MemorableQuestion");
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
   }
@@ -152,6 +163,7 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
+    myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "Testing");
     clickMyAccountSubmit();
   }
@@ -161,7 +173,8 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    //myAccountSendKeys("PorfileText", "Testing");
+    //myAccountClearField("ProfileText");
+    //myAccountSendKeys("ProfileText", "Testing");
     clickMyAccountSubmit();
   }
   @Test
@@ -169,16 +182,26 @@ public class OpenCSDAccountsAcceptanceTest {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("account/my-account");
-    myAccountSendKeys("FirstName", "Testing");
-    myAccountSendKeys("LastName", "Testing");
-    myAccountSendKeys("MobilePhone", "Testing");
-    myAccountSendKeys("Address1", "Testing");
-    myAccountSendKeys("AddressPrefix", "Testing");
-    myAccountSendKeys("Address3", "Testing");
-    myAccountSendKeys("Address4", "Testing");
-    myAccountSendKeys("PostalCode", "Testing");
-    myAccountSendKeys("MemorableQuestion", "Testing");
-    myAccountSendKeys("MemorableAnswer", "Testing");
+    myAccountClearField("FirstName");
+    myAccountSendKeys("FirstName", "null");
+    myAccountClearField("LastName");
+    myAccountSendKeys("LastName", "null");
+    myAccountClearField("MobilePhone");
+    myAccountSendKeys("MobilePhone", "null");
+    myAccountClearField("Address1");
+    myAccountSendKeys("Address1", "null");
+    myAccountClearField("AddressPrefix");
+    myAccountSendKeys("AddressPrefix", "null");
+    myAccountClearField("Address3");
+    myAccountSendKeys("Address3", "null");
+    myAccountClearField("Address4");
+    myAccountSendKeys("Address4", "null");
+    myAccountClearField("PostalCode");
+    myAccountSendKeys("PostalCode", "null");
+    myAccountClearField("MemorableQuestion");
+    myAccountSendKeys("MemorableQuestion", "null");
+    myAccountClearField("MemorableAnswer");
+    myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }
 }

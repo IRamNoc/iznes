@@ -43,13 +43,13 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToHomeTabRandomStuff() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         Thread.sleep(500);
-        driver.findElement(By.id("clr-tab-link-1")).click();
+        clickLink("clr-tab-link-1");
     }
     @Test
     public void shouldNavigateToHomeTabForm() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         Thread.sleep(500);
-        driver.findElement(By.id("clr-tab-link-2")).click();
+        clickLink("clr-tab-link-2");
     }
     @Test
     public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
@@ -58,7 +58,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         navigateToPage("user-administration/users");
         headingIsPresent("manage-users");
         Thread.sleep(500);
-        driver.findElement(By.id("user-tab-1")).click();
+        clickLink("user-tab-1");
     }
     @Test
     public void shouldNavigateToUserAdminTabAddWallets() throws IOException, InterruptedException {
@@ -81,7 +81,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/permissions");
         Thread.sleep(500);
-        driver.findElement(By.id("testlink1")).click();
+        clickLink("testlink1");
     }
     @Test
     public void shouldNavigateToChainAdminTabMember() throws IOException, InterruptedException {
@@ -89,7 +89,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-member");
         Thread.sleep(500);
-        driver.findElement(By.id("link1")).click();
+        clickLink("link1");
     }
     @Test
     public void shouldNavigateToChainAdminTabAccount() throws IOException, InterruptedException {
@@ -97,6 +97,6 @@ public class OpenCSDTabNavigationAcceptanceTest {
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-account");
         Thread.sleep(500);
-        driver.findElement(By.id("link1")).click();
+        clickLink("link1");
     }
 }
