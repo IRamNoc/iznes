@@ -44,7 +44,12 @@ export class OfiMemberNodeChannelService {
                 );
 
                 /* Break. */
-                break;
+		break;
+
+            // case 'newmanagementcompany':
+            //     console.log('-----OFI | INSERT MANAGEMENT COMPANY LIST: ', data);
+            //     this.ngRedux.dispatch(SET_REQUESTED); // CLEAR = false | SET = true
+            //     break;
         }
     }
 
