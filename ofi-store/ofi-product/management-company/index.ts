@@ -6,7 +6,6 @@ import {
     SET_MANAGEMENT_COMPANY_LIST,
 } from './management-company-list';
 
-
 export {
     ManagementCompanyListState,
     ManagementCompanyListReducer,

@@ -3,31 +3,34 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody} from './management-company.service.model';
+
+import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody} from './management-company.service.model';
+import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
 interface ManagementCompanyData {
-    companyName: string;
-    country: string;
-    addressPrefix: string;
-    postalAddressLine1: string;
-    postalAddressLine2: string;
-    city: string;
-    stateArea: string;
-    postalCode: string;
-    taxResidence: string;
-    registrationNum: string;
-    supervisoryAuthority: string;
-    numSiretOrSiren: string;
-    creationDate: string;
-    shareCapital: string;
-    commercialContact: string;
-    operationalContact: string;
-    directorContact: string;
-    lei: string;
-    bic: string;
-    giinCode: string;
-    logoName: string;
-    logoURL: string;
+    companyID: any;
+    companyName: any;
+    country: any;
+    addressPrefix: any;
+    postalAddressLine1: any;
+    postalAddressLine2: any;
+    city: any;
+    stateArea: any;
+    postalCode: any;
+    taxResidence: any;
+    registrationNum: any;
+    supervisoryAuthority: any;
+    numSiretOrSiren: any;
+    creationDate: any;
+    shareCapital: any;
+    commercialContact: any;
+    operationalContact: any;
+    directorContact: any;
+    lei: any;
+    bic: any;
+    giinCode: any;
+    logoName: any;
+    logoURL: any;
 }
 
 @Injectable()
@@ -44,6 +47,30 @@ export class OfiManagementCompanyService {
         this.accountId  = accountId;
     }
 
+    static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if(!boolValue){
+            ngRedux.dispatch(clearRequestedManagementCompany());
+        } else {
+            ngRedux.dispatch(setRequestedManagementCompany());
+        }
+    }
+
+    static defaultRequestManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedManagementCompany());
+
+        // Request the list.
+        const asyncTaskPipe = ofiManagementCompanyService.requestManagementCompanyList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MANAGEMENT_COMPANY_LIST],  // SET est en fait un GETLIST
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     requestManagementCompanyList(): any {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'getManagementCompanyList',
@@ -54,11 +81,48 @@ export class OfiManagementCompanyService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveManagementCompany(mcData: ManagementCompanyData): any {
+    saveManagementCompany(mcData: ManagementCompanyData, ngRedux: NgRedux<any>): any {
+
         const messageBody: SaveManagementCompanyRequestBody = {
             RequestName: 'newmanagementcompany',
             token: this.memberSocketService.token,
             entityId: this.accountId,   // entityId = accountID (name just changed)
+            companyName: mcData.companyName,
+            country: mcData.country,
+            addressPrefix: mcData.addressPrefix,
+            postalAddressLine1: mcData.postalAddressLine1,
+            postalAddressLine2: mcData.postalAddressLine2,
+            city: mcData.city,
+            stateArea: mcData.stateArea,
+            postalCode: mcData.postalCode,
+            taxResidence: mcData.taxResidence,
+            registrationNum: mcData.registrationNum,
+            supervisoryAuthority: mcData.supervisoryAuthority,
+            numSiretOrSiren: mcData.numSiretOrSiren,
+            creationDate: mcData.creationDate,
+            shareCapital: mcData.shareCapital,
+            commercialContact: mcData.commercialContact,
+            operationalContact: mcData.operationalContact,
+            directorContact: mcData.directorContact,
+            lei: mcData.lei,
+            bic: mcData.bic,
+            giinCode: mcData.giinCode,
+            logoName: mcData.logoName,
+            logoURL: mcData.logoURL,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    updateManagementCompany(mcData: ManagementCompanyData, ngRedux: NgRedux<any>): any {
+
+        console.log('updateManagementCompany', mcData);
+
+        const messageBody: UpdateManagementCompanyRequestBody = {       // where is the companyID ?
+            RequestName: 'updatemanagementcompany',
+            token: this.memberSocketService.token,
+            entityId: this.accountId,   // entityId = accountID (name just changed)
+            companyID: mcData.companyID,
             companyName: mcData.companyName,
             country: mcData.country,
             addressPrefix: mcData.addressPrefix,

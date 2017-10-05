@@ -54,8 +54,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         ];
 
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe((requested) => this.requestMyFundAccess(requested)));
-        this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe((fundShareAccessList) =>
-            this.updateFundList(fundShareAccessList)));
+        this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe((fundShareAccessList) => this.updateFundList(fundShareAccessList)));
 
     }
 

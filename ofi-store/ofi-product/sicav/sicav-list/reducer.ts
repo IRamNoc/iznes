@@ -1,31 +1,31 @@
 import {Action} from 'redux';
-import * as ManagementCompanyActions from './actions';
-import {ManagementCompanyDetail, ManagementCompanyListState} from './model';
+import * as SicavActions from './actions';
+import {SicavDetail, SicavListState} from './model';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 
-const initialState: ManagementCompanyListState = {
-    managementCompanyList: {},
+const initialState: SicavListState = {
+    sicavList: {},
     requested: false
 };
 
-export const ManagementCompanyListReducer = function (state: ManagementCompanyListState = initialState, action: Action) {
+export const SicavListReducer = function (state: SicavListState = initialState, action: Action) {
 
     switch (action.type) {
-        case ManagementCompanyActions.SET_MANAGEMENT_COMPANY_LIST:
+        case SicavActions.SET_SICAV_LIST:
 
             const mcData = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-            const managementCompanyList = formatManagementCompanyDataResponse(mcData);
+            const sicavList = formatSicavDataResponse(mcData);
             const newState = Object.assign({}, state, {
-                managementCompanyList
+                sicavList
             });
             return newState;
 
-        case ManagementCompanyActions.SET_REQUESTED_MANAGEMENT_COMPANY:
+        case SicavActions.SET_REQUESTED_SICAV:
             return handleSetRequested(state, action);
 
-        case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
+        case SicavActions.CLEAR_REQUESTED_SICAV:
             return handleClearRequested(state, action);
 
         default:
@@ -34,26 +34,27 @@ export const ManagementCompanyListReducer = function (state: ManagementCompanyLi
 };
 
 
-function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<ManagementCompanyDetail> {
+function formatSicavDataResponse(rawSicavData: Array<any>): Array<SicavDetail> {
 
-    const rawCompanyDataList = fromJS(rawCompanyData);
+    const rawSicavDataList = fromJS(rawSicavData);
 
-    const companyDetailList = Map(rawCompanyDataList.reduce(
+    const sicavDetailList = Map(rawSicavDataList.reduce(
         function (result, item) {
-            result[item.get('companyID')] = {
+            result[item.get('sicavID')] = {
+                sicavID: item.get('sicavID'),
                 companyID: item.get('companyID'),
-                companyName: item.get('companyName'),
+                sicavName: item.get('sicavName'),
                 country: item.get('country'),
-                addressPrefix: item.get('addrPrefix'),  // addressPrefix to addrPrefix
+                addrPrefix: item.get('addrPrefix'),  // addressPrefix to addrPrefix
                 postalAddressLine1: item.get('postalAddressLine1'),
                 postalAddressLine2: item.get('postalAddressLine2'),
                 city: item.get('city'),
                 stateArea: item.get('stateArea'),
-                postalCode: item.get('postalcode'), // postalCode to postalcode
+                postalcode: item.get('postalcode'), // postalCode to postalcode
                 taxResidence: item.get('taxResidence'),
                 registrationNum: item.get('registrationNum'),
                 supervisoryAuthority: item.get('supervisoryAuthority'),
-                numSiretOrSiren: item.get('numSIRETorSIREN'),   // numSiretOrSiren to numSIRETorSIREN
+                numSIRETorSIREN: item.get('numSIRETorSIREN'),
                 creationDate: item.get('creationDate'),
                 shareCapital: item.get('shareCapital'),
                 commercialContact: item.get('commercialContact'),
@@ -69,16 +70,16 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
         },
         {}));
 
-    return companyDetailList.toJS();
+    return sicavDetailList.toJS();
 }
 
 /**
  * Handle action
  * @param state
  * @param action
- * @return {ManagementCompanyListReducer}
+ * @return {SicavListReducer}
  */
-function handleSetRequested(state: ManagementCompanyListState, action: Action): ManagementCompanyListState {
+function handleSetRequested(state: SicavListState, action: Action): SicavListState {
     const requested = true;
 
     return Object.assign({}, state, {
@@ -90,9 +91,9 @@ function handleSetRequested(state: ManagementCompanyListState, action: Action): 
  * Handle action
  * @param state
  * @param action
- * @return {ManagementCompanyListReducer}
+ * @return {SicavListReducer}
  */
-function handleClearRequested(state: ManagementCompanyListState, action: Action): ManagementCompanyListState {
+function handleClearRequested(state: SicavListState, action: Action): SicavListState {
     const requested = false;
 
     return Object.assign({}, state, {

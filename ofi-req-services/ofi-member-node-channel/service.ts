@@ -21,7 +21,10 @@ export class OfiMemberNodeChannelService {
             case 'udw':
                 console.log('-----OFI | UPDATE MANAGE WALLET LIST: ', data);
                 break;
-
+            // case 'newmanagementcompany':
+            //     console.log('-----OFI | INSERT MANAGEMENT COMPANY LIST: ', data);
+            //     this.ngRedux.dispatch(SET_REQUESTED); // CLEAR = false | SET = true
+            //     break;
         }
     }
 
