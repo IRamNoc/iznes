@@ -49,7 +49,8 @@ export class InitialisationService {
      * @param channelService
      * @param initialisationService
      */
-    static subscribe(memberSocketService: MemberSocketService, channelService: ChannelService,
+    static subscribe(memberSocketService: MemberSocketService,
+                     channelService: ChannelService,
                      initialisationService: InitialisationService) {
         memberSocketService.subscribeToChannel((data) => {
             channelService.resolveChannelMessage(data);
