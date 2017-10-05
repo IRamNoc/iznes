@@ -3,11 +3,17 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 
 import {
+    /* Useradmin */
     SET_ADMIN_USERLIST,
-    SET_USER_DETAILS,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_MANAGED_WALLETS
+    SET_MANAGED_WALLETS,
+
+    /* My details */
+    SET_USER_DETAILS,
+
+    /* Manage members. */
+    SET_MANAGE_MEMBER_LIST,
 } from '@setl/core-store';
 
 @Injectable()
@@ -42,7 +48,9 @@ export class ChannelService {
         data = JSON.parse( data );
 
         // The Hench Switch Statement of Channels.
-        console.log(" | Resolving request name: ", data.Request);
+        console.log(" |--- Resolving Core channel broadcast.");
+        console.log(" | name: ", data.Request);
+        console.log(" | data: ", data);
         switch (data.Request) {
             case 'nu': // new user
             case 'udu': // update user
@@ -112,6 +120,21 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_MANAGED_WALLETS,
+                        payload: [ null, data, null ]
+                    }
+                );
+                break;
+
+
+            case 'nm': // new member
+            case 'udm': // update member
+            case 'dm': // delete member
+                console.log(' | Update Manage Member list: ', data);
+
+                /* ...and dispatch the update action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_MANAGE_MEMBER_LIST,
                         payload: [ null, data, null ]
                     }
                 );

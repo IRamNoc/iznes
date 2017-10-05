@@ -32,6 +32,7 @@ export interface EditUserMessageBody extends MemberNodeMessageBody {
 export interface DeleteUserMessageBody extends MemberNodeMessageBody {
     token: string;
     userId: string;
+    account?: number;
 }
 
 export interface RequestUserPermissionsBody extends MemberNodeMessageBody {
@@ -207,7 +208,7 @@ export interface CreateNewWalletBody extends MemberNodeMessageBody {
 
     /* Individual corresondence address. */
     caCountry?: string;
-    caAddressPrefi?: string;
+    caAddressPrefix?: string;
     caAddress1?: string;
     caAddress2?: string;
     caAddress3?: string;
