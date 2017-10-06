@@ -15,7 +15,7 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    <app-subscribe-fund [fundData]="tabdata.fundShareData"></app-subscribe-fund>
+                    <app-subscribe-fund [shareId]="tabdata.fundShareId" (close)="closeTab(id)"></app-subscribe-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
