@@ -1,0 +1,169 @@
+<form (ngSubmit)="handleSubmit()">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Registrar</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" value="OFI" [readonly]="true">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Fund share</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" value="OFI" [readonly]="true">
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">ISIN code</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" value="FR001" [readonly]="true">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Currency</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" value="EUR" [readonly]="true">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <app-switch-button [value]="subscribeBy" (updateValue)="subscribeBy = $event" [config]="{buttonsText: ['Quantity', 'Amount']}"></app-switch-button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Quantity</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [readonly]="subscribeBy === 1">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Net asset value</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [readonly]="true">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Gross amount</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [readonly]="subscribeBy === 0">
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Cut-off date</span>
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"/>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Valuation date</span>
+                </label>
+
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"/>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Settlement date</span>
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"/>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Entry fee</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Comment</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated">
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group button-group">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                    </button>
+                    <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+

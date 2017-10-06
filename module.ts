@@ -14,11 +14,8 @@ import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
         OfiFundInvestModule,
         OfiCorpActionsModule
     ],
-    declarations: [
-
-    ],
-    providers: [
-    ]
+    declarations: [],
+    providers: []
 })
 export class OfiMainModule {
 }
