@@ -1,4 +1,4 @@
-package APITests.User.Creation;
+package src.APITests.User.Creation;
 
 
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static SETLAPIHelpers.LoginHelper.login;
+import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
+import static SETLAPIHelpers.MemberHelper.createMember;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.UserHelper.createDuplicateUser;
 import static junit.framework.TestCase.assertNotNull;
@@ -213,7 +215,7 @@ public class createUserTest {
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
-    createUser(factory, socket, userName, email, "8", "35", password);
+    createUser(factory, socket, userName, email, "8","35", password);
 
     connection.disconnect();
   }
