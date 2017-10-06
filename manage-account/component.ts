@@ -19,7 +19,6 @@ import {
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
 import _ from 'lodash';
-import {Subscription} from "rxjs/Subscription";
 
 export function getManageMember(state) {
 
