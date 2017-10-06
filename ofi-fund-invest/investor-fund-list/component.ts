@@ -193,4 +193,27 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         // Activate the new tab.
         this.setTabActive(this.tabsControl.length - 1);
     }
+
+    /**
+     * Handle close tab click.
+     *
+     * @param {index} number - the tab index to close.
+     *
+     * @return {void}
+     */
+    closeTab(index: number): void {
+        if (!index && index !== 0) {
+            return;
+        }
+
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        // Reset Tabs.
+        this.setTabActive(0);
+
+        return;
+    }
 }
