@@ -1,3 +1,15 @@
+import * as moment from 'moment';
+
 /**
- * Created by ming on 06/10/2017.
+ * moment js add wrapper.
+ *
+ * @param date
+ * @param offset
+ * @param merit
+ * @return {number}
  */
+export function addDay(date: Date, offset: number): number {
+
+    const dataM = moment(date.getTime());
+    return dataM.add(offset, 'days').valueOf();
+}
