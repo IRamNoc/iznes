@@ -256,6 +256,14 @@ span.fr-counter {
     width: 100%;
 }
 
+.hr-line-dashed {
+    border-top: 1px dashed #e7eaec;
+    color: #fff;
+    background-color: #fff;
+    height: 1px;
+    margin: 20px 0;
+}
+
 hr.dashed {
     border: none;
     border-top: 1px dashed #e8e8e8;
