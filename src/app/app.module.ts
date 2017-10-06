@@ -125,8 +125,8 @@ export function memberSocketServiceFactory() {
         PermissionGridModule,
         SetlPipesModule,
         CoreManageMemberModule,
-    	SetlComponentsModule,
-    	CorpActionsModule,
+        SetlComponentsModule,
+        CorpActionsModule,
         OfiMainModule
     ],
     providers: [
