@@ -2,6 +2,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
+import {Subscription} from 'rxjs/Subscription';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
 
@@ -10,11 +11,11 @@ import {MemberService} from '@setl/core-req-services';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {
     setRequestedManageMemberList,
+    clearRequestedManageMemberList,
     SET_REQUESTED_MANAGE_MEMBER_LIST,
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
-import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'app-manage-member',
@@ -116,21 +117,27 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleAddMember(tabId: number): void {
-
+        /* If the form is valid... */
         if (this.tabsControl[tabId].formControl.valid) {
             console.log(this.tabsControl[tabId].formControl.value);
 
-            // Create a saga pipe.
+            /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
                 this.tabsControl[tabId].formControl.value
             );
 
+            /* ...and run the async callback, then dispatch. */
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
+                    /* Handle success message. */
                     this.showSuccessResponse('Member is created');
+
+                    /* Set the request flag to false. */
+                    clearRequestedManageMemberList();
                 },
                 (data) => {
+                    /* Handle error message. */
                     this.showErrorResponse(data);
                 }
             ));
