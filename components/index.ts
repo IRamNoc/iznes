@@ -7,6 +7,7 @@ import {ConfirmationComponent} from './jaspero-confirmation/confirmation.compone
 import {ConfirmationsComponent} from './jaspero-confirmation/confirmations.component';
 import {ConfirmationService} from './jaspero-confirmation/confirmations.service';
 import {SwitchButtonComponent} from './switch-button/component';
+import {SetlPipesModule} from '../pipes';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {SwitchButtonComponent} from './switch-button/component';
         CommonModule,
         SelectModule,
         ReactiveFormsModule,
+        SetlPipesModule
     ],
     providers: [ConfirmationService]
 })
