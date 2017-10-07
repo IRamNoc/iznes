@@ -16,6 +16,8 @@ export {SelectModule} from './components/ng2-select/select.module';
 export {DpDatePickerModule} from './components/ng2-date-picker/date-picker.module';
 
 export {SetlDirectivesModule} from './directives';
+export {NumberConverterService} from './services/number-converter/service';
+export {SetlServicesModule} from './services';
 
 export {walletHelper, immutableHelper, mDateHelper} from './helper';
 
