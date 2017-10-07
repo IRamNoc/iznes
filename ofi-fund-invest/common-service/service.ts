@@ -43,11 +43,11 @@ export class CommonService {
         const rSettlementTime = rCutoffTime;
 
         // fee percentage
-        const entryFee = immutableHelper.get(shareData, ['entryFee'], 0) || 0;
-        const sAcquiredFee = immutableHelper.get(shareData, ['metaData', 'acquired_subscription_fee'], 0);
+        const entryFee = Number(immutableHelper.get(shareData, ['entryFee'], 0)) || 0;
+        const sAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_subscription_fee'], 0));
 
-        const exitFee = immutableHelper.get(shareData, ['exitFee'], 0) || 0;
-        const rAcquiredFee = immutableHelper.get(shareData, ['metaData', 'acquired_redemption_fee'], 0);
+        const exitFee = Number(immutableHelper.get(shareData, ['exitFee'], 0)) || 0;
+        const rAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_redemption_fee'], 0));
 
         // platform fee
         const platformFee = 1;
@@ -74,6 +74,9 @@ export class CommonService {
         // min unit
         const sMinUnit = Number(immutableHelper.get(shareData, ['metaData', 'min_init_subscription'], 0));
 
+        // nav
+        const nav = Number(immutableHelper.get(shareData, ['price'], 0));
+
         return {
             sCutoffDate,
             sCutoffTime,
@@ -97,7 +100,8 @@ export class CommonService {
             rAllowType,
             decimalisation,
             sMinValue,
-            sMinUnit
+            sMinUnit,
+            nav
         };
     }
 

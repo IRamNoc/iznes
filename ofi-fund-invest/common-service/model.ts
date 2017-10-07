@@ -22,4 +22,5 @@ export interface FundCharacteristic {
     decimalisation: number;
     sMinValue: number;
     sMinUnit: number;
+    nav: number;
 }
