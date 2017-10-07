@@ -26,14 +26,50 @@ export class AssetPipe implements PipeTransform {
     name: 'moneyValue'
 })
 export class MoneyValuePipe implements PipeTransform {
-    transform(value: string, args: string[]): string {
-        const pieces = parseFloat(value).toFixed(2).split('')
-        let ii = pieces.length - 3
-        while ((ii -= 3) > 0) {
-            pieces.splice(ii, 0, ',');
-        }
-        return pieces.join('');
+    private DECIMAL_SEPARATOR: string;
+    private THOUSANDS_SEPARATOR: string;
+    private PADDING: string;
 
+    constructor() {
+        // TODO comes from configuration settings
+        this.DECIMAL_SEPARATOR = '.';
+        this.THOUSANDS_SEPARATOR = ',';
+        this.PADDING = '00000';
+    }
+
+    //   transform(value: string, args: string[]): string {
+    //     const pieces = ( parseFloat(value)).toFixed(2).split('')
+    //     let ii = pieces.length - 3
+    //     while ((ii -= 3) > 0) {
+    //         pieces.splice(ii, 0, ',');
+    //     }
+    //     return pieces.join('');
+    //
+    // }
+
+    transform(value: number | string, fractionSize: number = 2): string {
+        let [integer, fraction = ''] = (value || '').toString()
+            .split(this.DECIMAL_SEPARATOR);
+
+        fraction = fractionSize > 0
+            ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
+            : '';
+
+        integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, this.THOUSANDS_SEPARATOR);
+
+        return integer + fraction;
+    }
+
+    parse(value: string, fractionSize: number = 2): string {
+        let [integer, fraction = ''] = (value || '').split(this.DECIMAL_SEPARATOR);
+
+        integer = integer.replace(new RegExp(this.THOUSANDS_SEPARATOR, 'g'), '');
+
+        fraction = parseInt(fraction, 10) > 0 && fractionSize > 0
+            ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
+            : '';
+
+        return integer + fraction;
     }
 }
 

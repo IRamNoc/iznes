@@ -6,6 +6,7 @@ export {
     SagaHelper,
 };
 
+export {MoneyValuePipe} from './pipes';
 export {SetlPipesModule} from './pipes';
 
 export {SetlComponentsModule} from './components';
@@ -13,6 +14,8 @@ export {ConfirmationService} from './components/jaspero-confirmation/confirmatio
 
 export {SelectModule} from './components/ng2-select/select.module';
 export {DpDatePickerModule} from './components/ng2-date-picker/date-picker.module';
+
+export {SetlDirectivesModule} from './directives';
 
 export {walletHelper, immutableHelper, mDateHelper} from './helper';
 
