@@ -66,7 +66,12 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
         return this._subscribeBy;
     }
 
+    get fee() {
+        return (this._moneyValuePipe.parse(this.grossAmount.value) * this.metaData.feePercent / 100) + 1;
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
+                private _commonService: CommonService,
                 private _moneyValuePipe: MoneyValuePipe) {
         this._subscribeBy = 0;
     }
@@ -103,7 +108,7 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
 
         const thisShareData = immutableHelper.get(filteredShareData, String(this.shareId), {});
 
-        const shareCharacteristic = CommonService.getFundCharacteristic(thisShareData);
+        const shareCharacteristic = this._commonService.getFundCharacteristic(thisShareData);
         console.log(shareCharacteristic);
 
         const entryFee = immutableHelper.get(shareCharacteristic, 'entryFee', 0);
@@ -150,12 +155,12 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             'quantity': (value) => {
-                value = this._moneyValuePipe.parse(value);
-                beTriggered.setValue(this._moneyValuePipe.transform(value * this.metaData.nav));
+                const newValue = this._moneyValuePipe.parse(value);
+                beTriggered.setValue(this._moneyValuePipe.transform(newValue * this.metaData.nav));
             },
             'grossAmount': (value) => {
-                value = this._moneyValuePipe.parse(value);
-                beTriggered.setValue(this._moneyValuePipe.transform(value / this.metaData.nav));
+                const newValue = this._moneyValuePipe.parse(value);
+                beTriggered.setValue(this._moneyValuePipe.transform(newValue / this.metaData.nav));
             }
         }[type];
 

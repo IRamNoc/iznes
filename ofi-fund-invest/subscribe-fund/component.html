@@ -147,7 +147,7 @@
                     <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
                 </label>
                 <div>
-                    <input type="text" class="form-control mlp_translated">
+                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue">
                 </div>
             </div>
 

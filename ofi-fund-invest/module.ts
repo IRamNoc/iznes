@@ -9,7 +9,8 @@ import {DpDatePickerModule} from '@setl/utils';
 import {OfiInvestorFundListComponent} from './investor-fund-list/component';
 import {RedeemFundComponent} from './redeem-fund/component';
 import {SubscribeFundComponent} from './subscribe-fund/component';
-import {SelectModule, SetlPipesModule, SetlComponentsModule, MoneyValuePipe, SetlDirectivesModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {CommonService} from './common-service/service';
 
 
 @NgModule({
@@ -21,8 +22,7 @@ import {SelectModule, SetlPipesModule, SetlComponentsModule, MoneyValuePipe, Set
         SelectModule,
         SetlPipesModule,
         DpDatePickerModule,
-        SetlComponentsModule,
-        SetlDirectivesModule
+        SetlComponentsModule
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [
@@ -30,7 +30,7 @@ import {SelectModule, SetlPipesModule, SetlComponentsModule, MoneyValuePipe, Set
         RedeemFundComponent,
         SubscribeFundComponent
     ],
-    providers: [MoneyValuePipe],
+    providers: [CommonService],
 })
 export class OfiFundInvestModule {
 }

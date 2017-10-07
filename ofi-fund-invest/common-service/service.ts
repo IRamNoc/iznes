@@ -1,10 +1,14 @@
 import {Injectable} from '@angular/core';
 import {FundCharacteristic} from './model';
 import {immutableHelper, mDateHelper} from '@setl/utils';
+import {NumberConverterService} from '@setl/utils';
 
 @Injectable()
 export class CommonService {
-    static getFundCharacteristic(shareData): FundCharacteristic {
+    constructor(private _numberConverterService: NumberConverterService) {
+    }
+
+    getFundCharacteristic(shareData): FundCharacteristic {
 
         // Cutoff
         const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscription_cut-off'], 0);
@@ -75,7 +79,7 @@ export class CommonService {
         const sMinUnit = Number(immutableHelper.get(shareData, ['metaData', 'min_init_subscription'], 0));
 
         // nav
-        const nav = Number(immutableHelper.get(shareData, ['price'], 0));
+        const nav = this._numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));
 
         return {
             sCutoffDate,
