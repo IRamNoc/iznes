@@ -7,9 +7,8 @@ import {DpDatePickerModule} from '@setl/utils';
 
 // Local components
 import {OfiInvestorFundListComponent} from './investor-fund-list/component';
-import {RedeemFundComponent} from './redeem-fund/component';
-import {SubscribeFundComponent} from './subscribe-fund/component';
-import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {InvestFundComponent} from './invest-fund/component';
+import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {CommonService} from './common-service/service';
 
 
@@ -22,13 +21,13 @@ import {CommonService} from './common-service/service';
         SelectModule,
         SetlPipesModule,
         DpDatePickerModule,
-        SetlComponentsModule
+        SetlComponentsModule,
+        SetlDirectivesModule
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [
         OfiInvestorFundListComponent,
-        RedeemFundComponent,
-        SubscribeFundComponent
+        InvestFundComponent
     ],
     providers: [CommonService],
 })

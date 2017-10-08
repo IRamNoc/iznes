@@ -16,14 +16,15 @@ import {MoneyValuePipe} from '@setl/utils';
 
 
 @Component({
-    selector: 'app-subscribe-fund',
+    selector: 'app-invest-fund',
     templateUrl: 'component.html',
     styleUrls: ['./component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SubscribeFundComponent implements OnInit, OnDestroy {
-    @Input() shareId;
+export class InvestFundComponent implements OnInit, OnDestroy {
+    @Input() shareId: number;
+    @Input() type: string;
 
     @Output() close: EventEmitter<any> = new EventEmitter();
 
@@ -36,6 +37,9 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
     // 0: quantity, 1: amount
     _subscribeBy: number;
 
+    // form config
+    formConfig: any;
+
     // Date picker configuration
     configDate = {
         firstDayOfWeek: 'mo',
@@ -43,7 +47,6 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
-
     };
 
     // subscription form meta data.
@@ -74,6 +77,7 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
                 private _commonService: CommonService,
                 private _moneyValuePipe: MoneyValuePipe) {
         this._subscribeBy = 0;
+
     }
 
     ngOnDestroy() {
@@ -94,6 +98,30 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
             comment: new FormControl('')
         });
 
+        this.formConfig = {
+            subscribe: {
+                nonAcquiredFeeKey: 'entryFee',
+                acquiredFeeKey: 'sAcquiredFee',
+                cutoffDateKey: 'sCutoffDate',
+                valuationDateKey: 'sValuationDate',
+                settlementDateKey: 'sSettlementDate',
+                allowTypeKey: 'sAllowType',
+                actionLabel: 'subscribe',
+                feeLabel: 'Entry',
+            },
+            redeem: {
+                nonAcquiredFeeKey: 'exitFee',
+                acquiredFeeKey: 'rAcquiredFee',
+                cutoffDateKey: 'rCutoffDate',
+                valuationDateKey: 'rValuationDate',
+                settlementDateKey: 'rSettlementDate',
+                allowTypeKey: 'rAllowType',
+                actionLabel: 'redeem',
+                feeLabel: 'Exit',
+
+            }
+        }[this.type];
+
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.updateShareMetaData(shareData);
@@ -111,22 +139,22 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
         const shareCharacteristic = this._commonService.getFundCharacteristic(thisShareData);
         console.log(shareCharacteristic);
 
-        const entryFee = immutableHelper.get(shareCharacteristic, 'entryFee', 0);
-        const acquiredFee = immutableHelper.get(shareCharacteristic, 'sAcquiredFee', 0);
-        const feePercent = entryFee + acquiredFee;
+        const nonAcquiredFee = immutableHelper.get(shareCharacteristic, this.formConfig.nonAcquiredFeeKey, 0);
+        const acquiredFee = immutableHelper.get(shareCharacteristic, this.formConfig.acquiredFeeKey, 0);
+        const feePercent = nonAcquiredFee + acquiredFee;
 
         this.metaData = {
             registrar: immutableHelper.get(thisShareData, 'managementCompany', ''),
             shareName: immutableHelper.get(thisShareData, 'shareName', ''),
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
             currency: immutableHelper.get(thisShareData, ['metaData', 'portfolio_currency_select'], ''),
-            cutoff: immutableHelper.get(shareCharacteristic, ['sCutoffDate'], 0),
-            valuation: immutableHelper.get(shareCharacteristic, ['sValuationDate'], 0),
-            settlement: immutableHelper.get(shareCharacteristic, ['sSettlementDate'], 0),
-            sAllowType: immutableHelper.get(shareCharacteristic, ['sAllowType'], 0),
+            cutoff: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateKey], 0),
+            valuation: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateKey], 0),
+            settlement: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateKey], 0),
+            allowType: immutableHelper.get(shareCharacteristic, [this.formConfig.allowTypeKey], 0),
             knownNav: immutableHelper.get(shareCharacteristic, ['knownNav'], false),
             nav: immutableHelper.get(shareCharacteristic, 'nav', 0),
-            entryFee,
+            nonAcquiredFee,
             acquiredFee,
             feePercent,
             platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0)
@@ -173,3 +201,4 @@ export class SubscribeFundComponent implements OnInit, OnDestroy {
         }
     }
 }
+
