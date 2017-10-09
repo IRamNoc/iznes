@@ -48,7 +48,6 @@ Here's an example of an event object with the files array in it;
             "data": "aGVsbG8gdGhlcmUh",
             "name": "example.txt",
             "lastModified": 1507563924000
-            
         }
     ]
 }
