@@ -65,7 +65,7 @@
                 <div>
                     <input type="text" formControlName="quantity" class="form-control mlp_translated"
                            [readonly]="subscribeBy === 1"
-                           (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter/>
+                           (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>
                 </div>
             </div>
 
@@ -147,7 +147,7 @@
                     <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
                 </label>
                 <div>
-                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue">
+                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">
                 </div>
             </div>
 

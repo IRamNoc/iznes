@@ -157,7 +157,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             nonAcquiredFee,
             acquiredFee,
             feePercent,
-            platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0)
+            platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0),
+            decimalisation: immutableHelper.get(shareCharacteristic, 'decimalisation', 2)
         };
     }
 
@@ -183,12 +184,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             'quantity': (value) => {
-                const newValue = this._moneyValuePipe.parse(value);
+                const newValue = this._moneyValuePipe.parse(value, this.metaData.decimalisation);
                 beTriggered.setValue(this._moneyValuePipe.transform(newValue * this.metaData.nav));
             },
             'grossAmount': (value) => {
                 const newValue = this._moneyValuePipe.parse(value);
-                beTriggered.setValue(this._moneyValuePipe.transform(newValue / this.metaData.nav));
+                beTriggered.setValue(this._moneyValuePipe.transform(newValue / this.metaData.nav, this.metaData.decimalisation));
             }
         }[type];
 
