@@ -45,9 +45,10 @@ Here's an example of an event object with the files array in it;
 {
     'files': [
         {
-            "data": "bas64 string of contents",
-            "name": "file.ext",
-            "lastmodified": "unix timestamp"
+            "data": "aGVsbG8gdGhlcmUh",
+            "name": "example.txt",
+            "lastModified": 1507563924000
+            
         }
     ]
 }
