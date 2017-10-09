@@ -101,9 +101,6 @@ export class SetlMessagesComponent {
             }
         );
 
-        ngRedux.subscribe(() => this.updateState());
-        this.updateState();
-
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
             {
@@ -142,6 +139,9 @@ export class SetlMessagesComponent {
                 active: false
             },
         ];
+
+        ngRedux.subscribe(() => this.updateState());
+        this.updateState();
 
         this.resetMessages();
 
