@@ -47,7 +47,13 @@
 
         <div class="row">
             <div class="form-group col-sm-6">
-                <app-switch-button [value]="subscribeBy" (updateValue)="subscribeBy = $event" [config]="{buttonsText: ['Quantity', 'Amount']}"></app-switch-button>
+                <app-switch-button [value]="subscribeBy" (updateValue)="subscribeBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>
+                <div>
+                    <span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{formConfig.actionLabel}} by amount or unit for this fund share</span>.</span>
+                    <span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by quantity for this fund share</span>.</span>
+                    <span *ngIf="metaData.allowType === 'amount'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by amount for this fund share</span>.</span>
+                    <span class="help-block m-b-none text-success" [ngStyle]="{'width': '100%'}"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated" mltag="txt_decimalisation">Decimalisation</span>: <span class="decimalisation">0,00001</span>.</span>
+                </div>
             </div>
         </div>
 
@@ -57,7 +63,9 @@
                     <span class="ml_translated">Quantity</span>
                 </label>
                 <div>
-                    <input type="text" formControlName="quantity" class="form-control mlp_translated" [readonly]="subscribeBy === 1" name="quantity"/>
+                    <input type="text" formControlName="quantity" class="form-control mlp_translated"
+                           [readonly]="subscribeBy === 1"
+                           (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>
                 </div>
             </div>
 
@@ -66,7 +74,7 @@
                     <span class="ml_translated">Net asset value</span>
                 </label>
                 <div>
-                    <input type="text" class="form-control mlp_translated" [readonly]="true">
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">
                 </div>
             </div>
         </div>
@@ -77,12 +85,21 @@
                     <span class="ml_translated">Gross amount</span>
                 </label>
                 <div>
-                    <input type="text" formControlName="grossAmount" class="form-control mlp_translated" [readonly]="subscribeBy === 0">
+                    <input type="text" formControlName="grossAmount" class="form-control mlp_translated"
+                           [readonly]="subscribeBy === 0"
+                           (focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>
                 </div>
             </div>
         </div>
 
         <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div>
+                <span *ngIf="!metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by unknown NAV</span>.</span>
+                <span *ngIf="metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by known NAV</span>.</span>
+            </div>
+        </div>
 
         <div class="row">
             <div class="form-group col-sm-6">
@@ -126,10 +143,11 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Entry fee</span>
+                    <span class="ml_translated">{{formConfig.feeLabel}} fee</span>
+                    <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
                 </label>
                 <div>
-                    <input type="text" class="form-control mlp_translated">
+                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">
                 </div>
             </div>
 
@@ -165,5 +183,4 @@
     </div>
 
 </form>
-
 
