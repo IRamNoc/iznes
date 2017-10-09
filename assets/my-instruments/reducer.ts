@@ -28,7 +28,7 @@ const initialState: MyInstrumentsState = {
 };
 
 export const MyInstrumentsReducer = function (state: MyInstrumentsState = initialState,
-                                              action: Action) {
+                                              action: Action): MyInstrumentsState {
     let registerInstrumentData;
     let needNotify;
     let newInstrumentRequest;

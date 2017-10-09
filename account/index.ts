@@ -22,6 +22,6 @@ export interface AccountState {
     accountList: AccountListState;
 }
 
-export const AccountReducer: Reducer<AccountState> = combineReducers({
+export const AccountReducer: Reducer<AccountState> = combineReducers<AccountState>({
     accountList: AccountListReducer,
 });

@@ -32,6 +32,6 @@ export interface ChainState {
     myChainAccess: MyChainAccessState;
 }
 
-export const ChainReducer: Reducer<ChainState> = combineReducers({
+export const ChainReducer: Reducer<ChainState> = combineReducers<ChainState>({
     myChainAccess: MyChainAccessReducer
 });

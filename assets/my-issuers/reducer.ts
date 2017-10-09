@@ -21,7 +21,7 @@ const initialState: MyIssuersState = {
 };
 
 export const MyIssuersReducer = function (state: MyIssuersState = initialState,
-                                          action: AsyncTaskResponseAction) {
+                                          action: AsyncTaskResponseAction): MyIssuersState {
     let registerIssuerData;
     let issuerIdentifier;
     let issuerAddress;
@@ -135,5 +135,3 @@ function formatToWalletIssuerList(rawWalletIssuerData: Array<any>): {
 
     return walletIssuerObject.toJS();
 }
-
-
