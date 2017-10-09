@@ -222,7 +222,7 @@ public class createUserTest {
 
     createUser(factory, socket, userName, email, "8","35", password);
 
-    List<Object> users = new UserHelper().createUser(factory, socket, userName, email, "8","35", password);
+    List<Object> users = new UserHelper().createUserAndCaptureUserId(factory, socket, userName, email, "8","35", password);
     String userId  = users.get(0).toString();
     System.out.println("New User Id : " + userId);
     connection.disconnect();
