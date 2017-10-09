@@ -4,8 +4,8 @@ export const runAsyncTask = (successTypes,
                              failureTypes,
                              descriptor,
                              args = {},
-                             successCallback = (response) => true,
-                             failureCallback = (response) => true) => (
+                             successCallback: any = (response) => true,
+                             failureCallback: any = (response) => true) => (
     {
         type: RUN_ASYNC_TASK,
         successTypes,
@@ -19,8 +19,8 @@ export const runAsyncTask = (successTypes,
 );
 
 export const runAsyncTaskCallback = (descriptor,
-                                     successCallback = (response) => true,
-                                     failureCallback = (response) => true) => (
+                                     successCallback: any = (response) => true,
+                                     failureCallback: any = (response) => true) => (
     {
         type: RUN_ASYNC_TASK,
         successTypes: [],
