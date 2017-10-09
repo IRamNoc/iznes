@@ -1,4 +1,4 @@
-package APITests.User.Deletion;
+package src.APITests.User.Deletion;
 
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
@@ -13,16 +13,20 @@ import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import SETLAPIHelpers.LoginHelper;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static SETLAPIHelpers.UserHelper.createUser;
+import static SETLAPIHelpers.UserHelper.deleteUser;
 
 
 @RunWith(JUnit4.class)
@@ -33,29 +37,18 @@ public class deleteUserTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-
-    @Before
-    public void setUp() throws Exception
-    {
-
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-
-    }
+    String localAddress = "ws://localhost:9788/db/";
 
     @Test
-    public void deleteUserWithTokenTest() throws InterruptedException, ExecutionException {
+    public void deleteUserTest() throws InterruptedException, ExecutionException {
 
-      final  AtomicInteger atomicInt = new AtomicInteger(0);
+      final AtomicInteger atomicInt = new AtomicInteger(0);
 
       Holder<Integer> userIdHolder = new Holder<>();
 
@@ -66,35 +59,32 @@ public class deleteUserTest {
 
       CountDownLatch latch = new CountDownLatch(1);
 
-      socket.registerHandler(Message.Type.Login.name(), message -> {
-
-      socket.sendMessage(factory.listUsers());
-
-      return "";
-      });
+      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
       socket.registerHandler(Message.Type.um_lu.name(), message -> {
 
         int call = atomicInt.getAndIncrement();
         JSONArray data = (JSONArray) message.get("Data");
-        JSONObject resp = (JSONObject) data.get(data.size()-1);
+        JSONObject resp = (JSONObject) data.get(data.size() - 1);
         Object lastUserName = resp.get("userName");
         Object oldUserName = lastUserName;
 
-        switch (call){
+        switch (call) {
           case 0: //first time
+
             assertNotNull(lastUserName);
             assertTrue(!lastUserName.toString().equals(newUserName));
-            socket.sendMessage(factory.addUserToAccount(newUserName, email,"8","35", password));
+            socket.sendMessage(factory.addUserToAccount(newUserName, email, "8", "35", password));
             break;
+
           case 1: //second time
 
             assertNotNull(lastUserName);
             assertTrue(lastUserName.toString().equals(newUserName));
             System.out.println("UserIdHolder at delete = " + userIdHolder.value);
             socket.sendMessage(factory.deleteUserFromAccount(userIdHolder.value.toString()));
-
             break;
+
           case 2: //third time
 
             assertNotNull(lastUserName);
@@ -105,12 +95,13 @@ public class deleteUserTest {
         return "";
       });
 
+
       socket.registerHandler(Message.Type.nu.name(), message -> {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         Object newUser = resp.get("userName");
         Object userID = resp.get("userID");
-        userIdHolder.value = ((Number)userID).intValue();
+        userIdHolder.value = ((Number) userID).intValue();
         assertNotNull(newUser);
         assertTrue(newUser.toString().equalsIgnoreCase(newUserName));
         socket.sendMessage(factory.listUsers());
@@ -118,19 +109,53 @@ public class deleteUserTest {
         return "";
       });
 
+      socket.sendMessage(factory.listUsers());
+
       socket.registerHandler(Message.Type.du.name(), message -> {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         Object status = resp.get("Status");
-        assertTrue(status.toString().equals("OK") );
+        assertTrue(status.toString().equals("OK"));
         socket.sendMessage(factory.listUsers());
-
+        connection.disconnect();
         return "";
       });
 
-      Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+    }
 
-      latch.await();
-      connexion.get().disconnect();
+  @Test
+  public void simpleDeleteTest() throws ExecutionException, InterruptedException {
+      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+      //String userDetails[] = generateUserDetails();
+      //String userName = userDetails[0];
+      //String password = userDetails[1];
+      //String email = userDetails[2];
+      //createUser(factory, socket, userName, email,"8", "35", password);
+      deleteUser(factory, socket, "876");
+      connection.disconnect();
+
+    }
+
+
+  @Test
+  public void failToDeleteNonExistentUserTest() throws ExecutionException, InterruptedException {
+      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+      CountDownLatch latch = new CountDownLatch(1);
+
+
+    socket.registerHandler(Message.Type.du.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(0);
+      Object status = resp.get("Status");
+      assertTrue(status.toString().equals("FAIL"));
+      latch.countDown();
+      return "";
+    });
+
+    socket.sendMessage(factory.deleteUserFromAccount("9999"));
+
+    latch.await();
+      connection.disconnect();
+
     }
 }
