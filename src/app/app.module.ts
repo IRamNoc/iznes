@@ -24,13 +24,9 @@ import {
     PermissionGroupService,
     MemberService,
     ChainService,
-    WalletnodeChannelService
+    WalletnodeChannelService,
+    InitialisationService
 } from '@setl/core-req-services';
-
-import {
-    MultilingualService,
-    MultilingualDirective
-} from '@setl/multilingual';
 
 /* Routes. */
 import {ROUTES} from './app.routes';
@@ -46,6 +42,7 @@ import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
 import {SetlComponentsModule} from '@setl/utils';
+import {CorpActionsModule} from '@setl/core-corp-actions';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -129,6 +126,7 @@ export function memberSocketServiceFactory() {
         SetlPipesModule,
         CoreManageMemberModule,
         SetlComponentsModule,
+        CorpActionsModule,
         OfiMainModule
     ],
     providers: [
@@ -158,8 +156,8 @@ export function memberSocketServiceFactory() {
         PermissionGroupService,
         MemberService,
         ChainService,
-        MultilingualService,
         WalletnodeChannelService,
+        InitialisationService
     ],
     bootstrap: [AppComponent]
 })

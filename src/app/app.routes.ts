@@ -17,7 +17,19 @@ import {AdminPermissionsComponent} from '@setl/core-useradmin';
 import {AdminWizardComponent} from '@setl/core-useradmin';
 
 /* Product */
-import {OfiFundComponent, OfiManagementCompanyComponent} from '@ofi/product';
+import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
+
+/* Corporate Actions Components */
+import {
+    CreateResolutionComponent,
+    IssueResolutionComponent,
+    DistributionComponent,
+    MergerAbsorptionComponent,
+    SplitComponent
+} from '@setl/core-corp-actions';
+import {
+    CouponPaymentComponent,
+} from '@ofi/ofi-main';
 
 /**
  * Asset serving module
@@ -95,6 +107,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'fund',
                         component: OfiFundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'sicav',
+                        component: OfiSicavComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
@@ -198,6 +215,48 @@ export const ROUTES: Routes = [
                     }
                 ],
                 canActivate: [LoginGuardService]
+            },
+            {
+                path: 'corporate-actions',
+                children: [
+                    /**
+                     * Core corporate actions.
+                     */
+                     {
+                         path: 'create-resolution',
+                         component: CreateResolutionComponent,
+                         canActivate: [LoginGuardService],
+                     },
+                     {
+                         path: 'issue-resolution',
+                         component: IssueResolutionComponent,
+                         canActivate: [LoginGuardService],
+                     },
+                     {
+                         path: 'distribution',
+                         component: DistributionComponent,
+                         canActivate: [LoginGuardService],
+                     },
+                     {
+                         path: 'merger-absorption',
+                         component: MergerAbsorptionComponent,
+                         canActivate: [LoginGuardService],
+                     },
+                     {
+                         path: 'split',
+                         component: SplitComponent,
+                         canActivate: [LoginGuardService],
+                     },
+
+                     /**
+                      * OFI corporate actions.
+                      */
+                     {
+                         path: 'coupon-payment',
+                         component: CouponPaymentComponent,
+                         canActivate: [LoginGuardService],
+                     },
+                ]
             },
 
             /**

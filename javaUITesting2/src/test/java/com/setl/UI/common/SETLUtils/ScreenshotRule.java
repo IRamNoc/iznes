@@ -45,7 +45,7 @@ public class ScreenshotRule extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {
-            dir = "/var/lib/jenkins/workspace/TestPipeline/pipelineTest/OpenCSDClarityUIAcceptanceTests/target/test-attachments//";
+            dir = "/var/lib/jenkins/workspace/OpenCSDClarityUIAcceptanceTests/target/test-attachments//";
         }
         String userDirectory = dir;
 

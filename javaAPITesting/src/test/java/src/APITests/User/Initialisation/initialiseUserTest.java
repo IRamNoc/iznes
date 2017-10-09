@@ -1,4 +1,4 @@
-package User.Initialisation;
+package APITests.User.Initialisation;
 
 import io.setl.wsclient.shared.ResponseHandler;
 import org.junit.Before;

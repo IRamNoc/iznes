@@ -1,20 +1,15 @@
-package User.Login;
+package APITests.User.Login;
 
-import io.setl.wsclient.WebSocketClientEndpoint;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
-import io.setl.wsclient.shared.Message;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -35,13 +30,16 @@ public class loginTest {
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
+    String address = "ws://localhost:9788/db/";
+
+    @Rule
+    public Timeout globalTimeout = Timeout.millis(3000);
 
     @Before
     public void setUp() throws Exception
     {
 
     }
-
 
     @After
     public void tearDown() throws Exception
@@ -60,7 +58,7 @@ public class loginTest {
             assertTrue(!token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+        Future<Connection> connexion = ws.start(address);
         l.await();
         connexion.get().disconnect();
 
@@ -79,15 +77,14 @@ public class loginTest {
             assertTrue(token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+        Future<Connection> connection = ws.start(address);
         l.await();
-        connexion.get().disconnect();
+      connection.get().disconnect();
 
     }
 
     @Test
-    public void loginFailureWithUnknownUser() throws InterruptedException
-    {
+    public void loginFailureWithUnknownUser() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "bob", "alex01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
         CountDownLatch l  = new CountDownLatch(1);
@@ -102,8 +99,9 @@ public class loginTest {
             assertTrue(accountName == "" || accountName.toString().isEmpty());
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+        Future<Connection> connexion = ws.start(address);
         l.await();
+        connexion.get().disconnect();
 
     }
 
@@ -124,7 +122,7 @@ public class loginTest {
             assertNull(accountName);
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start("ws://localhost:9788/db/");
+        Future<Connection> connexion = ws.start(address);
         l.await();
         connexion.get().disconnect();
 
