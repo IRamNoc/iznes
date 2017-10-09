@@ -256,6 +256,17 @@ span.fr-counter {
     width: 100%;
 }
 
+.ql-toolbar.ql-snow {
+    border: 0px !important;
+    border-top: 1px solid #ccc !important;
+    border-bottom: 1px solid #ccc !important;
+}
+
+.quill-editor.ql-container.ql-snow {
+    border: 0px;
+    border-bottom: 1px solid #ccc;
+}
+
 .hr-line-dashed {
     border-top: 1px dashed #e7eaec;
     color: #fff;
