@@ -18,7 +18,52 @@ import static junit.framework.TestCase.assertTrue;
 
 public class UserHelper {
 
-  public static List<Object> createUser(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
+  public static void createUser(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+
+
+    socket.registerHandler(Message.Type.nu.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(0);
+      Object newUser = resp.get("userName");
+      assertNotNull(newUser);
+      assertTrue(newUser.toString().equalsIgnoreCase(userName));
+      latch.countDown();
+      return "";
+
+    });
+
+    socket.sendMessage(factory.addUserToAccount(userName, email, account, userType, password));
+
+    latch.await();
+
+  }
+
+  public static List<Object> listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+    List<Object> userList = new ArrayList<>();
+
+    socket.registerHandler(Message.Type.um_lu.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(data.size() - 1);
+      String lastUser = resp.get("userName").toString();
+      assertNotNull(lastUser);
+      userList.add(lastUser);
+      latch.countDown();
+      return "";
+
+    });
+
+    socket.sendMessage(factory.listUsers());
+
+    latch.await();
+    return userList;
+  }
+
+
+  public static List<Object> createUserAndCaptureUserId(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
     List<Object> users = new ArrayList<>();
@@ -27,10 +72,8 @@ public class UserHelper {
       JSONArray data = (JSONArray) message.get("Data");
       JSONObject resp = (JSONObject) data.get(0);
       Object newUserID = resp.get("userID").toString();
-      Object newUser = resp.get("userName");
+      assertNotNull(newUserID);
       users.add(newUserID);
-      assertNotNull(newUser);
-      assertTrue(newUser.toString().equalsIgnoreCase(userName));
       latch.countDown();
       return "";
 
@@ -114,15 +157,12 @@ public class UserHelper {
 
       CountDownLatch latch = new CountDownLatch(1);
 
-
       socket.registerHandler(Message.Type.du.name(), message -> {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         String deletedUser = resp.get("userID").toString();
-        System.out.println("Deleted User :  " + deletedUser);
-        System.out.println("Requested User : " + userId);
+        System.out.println("############## Deleted user :  " + userId + " ##################");
         assertTrue(deletedUser.equals("userId"));
-
         latch.countDown();
         return "";
       });
