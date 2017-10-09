@@ -14,6 +14,7 @@ import {
 
     /* Manage members. */
     SET_MANAGE_MEMBER_LIST,
+    SET_ACCOUNT_LIST,
 } from '@setl/core-store';
 
 @Injectable()
@@ -140,11 +141,23 @@ export class ChannelService {
                 );
                 break;
 
+            case 'na': // new account (group)
+            case 'uda': // update account (group)
+            case 'da': // delete account (group)
+                console.log(' | Update Account (Group) list: ', data);
+
+                /* ...and dispatch the update action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ACCOUNT_LIST,
+                        payload: [ null, data, null ]
+                    }
+                );
+                break;
+
             default:
                 break;
         }
-
-        // import every update action from core redux
     }
 
 }
