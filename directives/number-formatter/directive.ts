@@ -19,7 +19,7 @@ export class NumberFormatterDirective implements OnInit {
 
     @HostListener('focus', ['$event.target.value'])
     onFocus(value) {
-        this.el.value = this._moneyValuePipe.parse(value, this.fractionSize); // opossite of transform
+        this.el.value = this._moneyValuePipe.parse(value, this.fractionSize).toString(); // opossite of transform
     }
 
     @HostListener('blur', ['$event.target.value'])

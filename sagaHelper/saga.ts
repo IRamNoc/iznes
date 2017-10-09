@@ -129,10 +129,11 @@ export function* asyncTaskSaga() {
  * This middleware should be apply before all saga middlewares (Might be some other middleware as well).
  *
  * @param store
+ * @return new Store
  */
 export const preSagaMiddleWare = store => next => action => {
-    next(toStandardReduxAction(action));
-}
+    return next(toStandardReduxAction(action));
+};
 
 /**
  * Convert the standard Redux action to @angular-redux/store action. So @angular-redux/store and handle action
@@ -141,7 +142,8 @@ export const preSagaMiddleWare = store => next => action => {
  * The middleware should be apply after all saga middlewares (Might be some other middleware as well).
  *
  * @param store
+ * @return new store
  */
 export const postSagaMiddleWare = store => next => action => {
-    next(toNgReduxStoreAction(action));
-}
+    return next(toNgReduxStoreAction(action));
+};

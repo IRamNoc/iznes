@@ -60,7 +60,7 @@ export class MoneyValuePipe implements PipeTransform {
         return integer + fraction;
     }
 
-    parse(value: string, fractionSize: number = 2): string {
+    parse(value: string, fractionSize: number = 2): number {
         let [integer, fraction = ''] = (value || '').split(this.DECIMAL_SEPARATOR);
 
         integer = integer.replace(new RegExp(this.THOUSANDS_SEPARATOR, 'g'), '');
@@ -69,7 +69,7 @@ export class MoneyValuePipe implements PipeTransform {
             ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
             : '';
 
-        return integer + fraction;
+        return Number(integer + fraction);
     }
 }
 
