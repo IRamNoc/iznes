@@ -7,4 +7,5 @@ interface MemberNodeConntion {
 export interface AppConfig {
     production: boolean;
     MEMBER_NODE_CONNECTION: MemberNodeConntion;
+    numberDivider: 1;
 }

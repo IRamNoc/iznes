@@ -48,6 +48,20 @@ export function filter(data: any, filterFun: any): any {
 }
 
 /**
+ * Immutable reduce
+ *
+ * @param data
+ * @param reduceFun
+ * @param initialValue
+ */
+export function reduce(data: any, reduceFun: any, initialValue): any {
+    const dataImu = fromJS(data);
+
+    const reduced = dataImu.reduce(reduceFun, initialValue);
+    return reduced.toJS();
+}
+
+/**
  * Deep from js to immutable.
  *
  * @param js

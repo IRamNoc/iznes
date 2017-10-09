@@ -5,15 +5,16 @@ import {
     Input,
     ChangeDetectorRef,
     Output,
-    EventEmitter
+    EventEmitter, forwardRef
 } from '@angular/core';
-import {ControlValueAccessor} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 const noop = () => {
 };
 
 interface Config {
     buttonsText: Array<string>;
+    disabled: boolean;
 }
 
 @Component({
@@ -21,12 +22,12 @@ interface Config {
     template: `
         <div data-toggle="buttons-checkbox" class="btn-group">
             <button class="btn btn-primary byUnit" (click)="writeValue(0)" type="button" [class.btn-primary]="value === 0"
-                    [class.btn-default]="value === 1">
+                    [class.btn-default]="value === 1" [disabled]="config.disabled">
                 <span class="ml_translated" mltag="txt_quantity">{{config.buttonsText[0]}}</span>
             </button>
 
             <button class="btn btn-default byAmount" type="button" (click)="writeValue(1)" [class.btn-primary]="value === 1"
-                    [class.btn-default]="value === 0">
+                    [class.btn-default]="value === 0" [disabled]="config.disabled">
                 <span class="ml_translated" mltag="txt_amount">{{config.buttonsText[1]}}</span>
             </button>
         </div>
@@ -43,9 +44,18 @@ interface Config {
                 color: white;
             }
 
+            .btn.btn-primary:disabled {
+                border-color: #565656;
+            }
+
         `
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => SwitchButtonComponent),
+        multi: true
+    }]
 })
 
 
