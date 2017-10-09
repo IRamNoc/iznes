@@ -19,14 +19,12 @@ import SETLAPIHelpers.LoginHelper;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static SETLAPIHelpers.MemberHelper.createMember;
-import static SETLAPIHelpers.UserHelper.createUser;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
