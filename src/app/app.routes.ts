@@ -31,6 +31,11 @@ import {
     CouponPaymentComponent,
 } from '@ofi/ofi-main';
 
+/* Ofi Manage Orders Module. */
+import {
+    ManageOrdersComponent
+} from '@ofi/ofi-main';
+
 /**
  * Asset serving module
  */
@@ -204,7 +209,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService]
                     },
                     {
-                        path: 'manage-account',
+                        path: 'manage-groups',
                         component: ManageAccountComponent,
                         canActivate: [LoginGuardService]
                     },
@@ -265,6 +270,11 @@ export const ROUTES: Routes = [
             {
                 path: 'list-of-funds',
                 component: OfiInvestorFundListComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'manage-orders',
+                component: ManageOrdersComponent,
                 canActivate: [LoginGuardService]
             }
         ],
