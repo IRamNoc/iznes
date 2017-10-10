@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import SETLAPIHelpers.LoginHelper;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -22,11 +23,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.UserHelper.*;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static SETLAPIHelpers.UserHelper.createUser;
-import static SETLAPIHelpers.UserHelper.deleteUser;
 
 
 @RunWith(JUnit4.class)
@@ -37,7 +37,7 @@ public class deleteUserTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = Timeout.millis(3000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
@@ -126,12 +126,44 @@ public class deleteUserTest {
   @Test
   public void simpleDeleteTest() throws ExecutionException, InterruptedException {
       Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-      //String userDetails[] = generateUserDetails();
-      //String userName = userDetails[0];
-      //String password = userDetails[1];
-      //String email = userDetails[2];
-      //createUser(factory, socket, userName, email,"8", "35", password);
-      deleteUser(factory, socket, "876");
+
+      //USER DETAILS
+      String userDetails[] = generateUserDetails();
+      String userName = userDetails[0];
+      String password = userDetails[1];
+      String email = userDetails[2];
+
+      System.out.println("&&&&&&&& NEW USER NAME : "  + userName + "  &&&&&&&&&&&&&&&" );
+
+      //LIST USERS BEFORE NEW USER CREATION
+      String lastUserName  = listUsers(factory, socket).getItem();
+
+      System.out.println("&&&&&&&& LAST USER NAME : "  + lastUserName + "  &&&&&&&&&&&&&&&" );
+
+      assertTrue(!lastUserName.equalsIgnoreCase(userName));
+
+      //CREATE NEW USER
+      List<Object> users = createUserAndCaptureUserId(factory, socket, userName, email,"8", "35", password);
+      String userId  = users.get(0).toString();
+
+      //LIST USERS AFTER NEW USER CREATION
+      String newLastUserName = listUsers(factory, socket).getItem();
+
+      System.out.println("&&&&&&&& NEW LAST USER NAME : "  + newLastUserName + "  &&&&&&&&&&&&&&&" );
+
+      assertTrue(newLastUserName.equalsIgnoreCase(userName));
+
+      //DELETE NEW USER CREATED
+      deleteUser(factory, socket, userId);
+
+      //LIST USERS AFTER DELETION
+      String oldLastUserName = listUsers(factory, socket).getItem();
+
+      System.out.println("&&&&&&&& OLD LAST USER NAME : "  + oldLastUserName + "  &&&&&&&&&&&&&&&" );
+
+      assertTrue(!oldLastUserName.equalsIgnoreCase(userName));
+      assertTrue(oldLastUserName.equalsIgnoreCase(lastUserName));
+
       connection.disconnect();
 
     }
