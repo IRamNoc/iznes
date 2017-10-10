@@ -61,7 +61,10 @@ export {
     getMyMessagesList,
     DONE_RUN_DECRYPT,
     getNeedRunDecryptState,
-    setDecryptedContent
+    setDecryptedContent,
+    setRequestedMailInitial,
+    clearRequestedMailInitial,
+    SET_MESSAGE_COUNTS
 } from './messages';
 
 export {

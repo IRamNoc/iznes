@@ -4,63 +4,166 @@ import {MyMessagesState, MessageDetail} from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
+import {setDecryptedContent} from "./actions";
 
 const initialState: MyMessagesState = {
     messageList: [],
-    needRunDecrypt: false
+    needRunDecrypt: false,
+    counts: [],
+    requestMailInitial: true
 };
 
-export const MyMessagesReducer = function (state: MyMessagesState = initialState,
-                                           action) {
+export const MyMessagesReducer = function (state: MyMessagesState = initialState, action) {
 
-    let newState;
-    let needRunDecrypt;
-    let messageList;
 
     switch (action.type) {
         case MyMessageActions.SET_MESSAGE_LIST:
-            const messageData = _.get(action, 'payload[1].Data', []);
-
-            console.log(messageData[0]);
-
-            messageList = formatMessagesDataResponse(messageData);
-
-            needRunDecrypt = true;
-
-            newState = Object.assign({}, state, {
-                messageList,
-                needRunDecrypt
-            });
-
-            // console.log(action);
-            return newState;
+            return setMessageList(MyMessageActions.SET_MESSAGE_LIST, action, state);
 
         case MyMessageActions.DONE_RUN_DECRYPT:
-
-            needRunDecrypt = false;
-            newState = Object.assign({}, state, {
-                needRunDecrypt
-            });
-            return newState;
+            return decryptMessage(MyMessageActions.DONE_RUN_DECRYPT, action, state);
 
         case MyMessageActions.SET_DECRYPTED_CONTENT:
-            const currentMessageList = state.messageList;
-            const thisMailId = action['mailId'];
+            return handleSetDecryptedContent(MyMessageActions.DONE_RUN_DECRYPT, action, state);
 
-            const newContent = action['decrypted'][1]['Data'];
-            messageList = updateDecryptedMessage(currentMessageList, thisMailId, newContent);
+        case MyMessageActions.SET_MESSAGE_COUNTS:
 
-            newState = Object.assign({}, state, {
-                messageList
-            });
+            return handleMessageCounts(MyMessageActions.SET_MESSAGE_COUNTS, action, state);
 
-            return newState;
+        case MyMessageActions.SET_REQUEST_MAIL_INIT:
+            return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, true);
 
+        case MyMessageActions.CLEAR_REQUEST_MAIL_INIT:
+            return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, false);
 
         default:
             return state;
     }
 };
+
+/**
+ * Set Message List
+ *
+ * @param actionType
+ * @param action
+ * @param state
+ * @returns {any}
+ */
+function setMessageList(actionType, action, state) {
+    let newState;
+    let needRunDecrypt;
+    let messageList;
+
+    const messageData = _.get(action, 'payload[1].Data', []);
+
+    messageList = formatMessagesDataResponse(messageData);
+    needRunDecrypt = true;
+
+    newState = Object.assign({}, state, {
+        messageList,
+        needRunDecrypt
+    });
+
+    return newState;
+};
+
+/**
+ * Handle Message Counts
+ *
+ * @param actionType
+ * @param action
+ * @param state
+ * @returns {any}
+ */
+function handleMessageCounts(actionType, action, state) {
+    let newState;
+
+    const messageData = _.get(action, 'payload[1].Data', [])[0];
+
+    const counts = {
+        inbox: messageData.numberOfInboxMails,
+        outbox: messageData.numberOfOutboxMails,
+        inboxUnread: messageData.numberOfUnreadMails,
+        draft: messageData.numberOfDraftMails,
+        deleted: messageData.numberOfDeletedMails,
+        actions: messageData.numberOfUnreadActions,
+        totalActions: messageData.numberOfTotalActions,
+        unreadArrangement: messageData.numberofUnReadArrangementMsgs,
+        totalArrangement: messageData.numberOfTotalArrangementMsgs,
+    };
+
+    newState = Object.assign({}, state, {
+        counts
+    });
+
+    return newState;
+};
+
+/**
+ * Decrypt Message
+ *
+ * @param actionType
+ * @param action
+ * @param state
+ * @returns {any}
+ */
+function decryptMessage(actionType, action, state) {
+    let newState;
+    let needRunDecrypt;
+
+    needRunDecrypt = false;
+    newState = Object.assign({}, state, {
+        needRunDecrypt
+    });
+    return newState;
+}
+
+/**
+ * Toggle Request Mail Init Called
+ *
+ * @param actionType
+ * @param action
+ * @param state
+ * @param toggle {true|false}
+ *
+ * @returns {any}
+ */
+function toggleRequestMailInit(actionType, action, state, toggle) {
+    let newState;
+
+    const requestMailInitial = toggle;
+    newState = Object.assign({}, state, {
+        requestMailInitial
+    });
+    return newState;
+}
+
+
+/**
+ * Handle Decryption of Content
+ *
+ * @param actionType
+ * @param action
+ * @param state
+ * @returns {any}
+ */
+function handleSetDecryptedContent(actionType, action, state) {
+    let newState;
+    let messageList;
+
+    const currentMessageList = state.messageList;
+    const thisMailId = action['mailId'];
+
+    const newContent = action['decrypted'][1]['Data'];
+    messageList = updateDecryptedMessage(currentMessageList, thisMailId, newContent);
+
+    newState = Object.assign({}, state, {
+        messageList
+    });
+
+    return newState;
+}
+
 
 function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageDetail> {
 
@@ -92,7 +195,8 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 isActive: thisMessageDetail.get('isActive'),
                 isRead: thisMessageDetail.get('isRead'),
                 content: content,
-                action: null
+                action: null,
+                isDecrypted: false
             };
 
 
@@ -114,9 +218,10 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                 const decryptedObject = JSON.parse(newContent);
                 const content = atob(decryptedObject.general);
                 const action = decryptedObject.action;
+                const isDecrypted = true;
 
                 return Object.assign({}, thisMessageDetail, {
-                    content, action
+                    content, action, isDecrypted
                 });
             } else {
                 return thisMessageDetail;
