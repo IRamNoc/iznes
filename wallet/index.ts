@@ -4,7 +4,10 @@ import {
     SET_WALLET_ADDRESSES,
     getWalletAddressList,
     clearRequestedWalletAddresses,
-    setRequestedWalletAddresses
+    setRequestedWalletAddresses,
+    SET_WALLET_LABEL,
+    setRequestedWalletLabel,
+    clearRequestedWalletLabel
 } from './my-wallet-address';
 
 import {
@@ -59,7 +62,10 @@ export {
     SET_WALLET_ADDRESSES,
     getWalletAddressList,
     clearRequestedWalletAddresses,
-    setRequestedWalletAddresses
+    setRequestedWalletAddresses,
+    SET_WALLET_LABEL,
+    setRequestedWalletLabel,
+    clearRequestedWalletLabel
 };
 
 export {

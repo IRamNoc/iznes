@@ -1,8 +1,15 @@
 export interface AddressDetail {
     pub: string;
     addr: string;
+    label: string;
+}
+
+export interface AddressDetailList {
+    [address: string]: AddressDetail;
 }
 
 export interface MyWalletAddressState {
-    addressList: Array<AddressDetail>;
+    addressList: AddressDetailList;
+    requestedAddressList: boolean;
+    requestedLabel: boolean;
 }
