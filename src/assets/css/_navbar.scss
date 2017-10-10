@@ -72,6 +72,7 @@ header {
                 font-size: 13px !important;
                 float: left !important;
                 color: #222;
+                width: calc(100% - 60px);
             }
             span {
                 font-size: 11px;
@@ -169,7 +170,8 @@ header {
         width: 230px;
 
         .nav-link {
-            margin: auto;
+            text-align: left;
+            margin-top: 8px;
         }
     }
 
