@@ -136,8 +136,7 @@ public class deleteUserTest {
       System.out.println("&&&&&&&& NEW USER NAME : "  + userName + "  &&&&&&&&&&&&&&&" );
 
       //LIST USERS BEFORE NEW USER CREATION
-      List<Object> listUsers = listUsers(factory, socket);
-      String lastUserName = listUsers.get(0).toString();
+      String lastUserName  = listUsers(factory, socket).getItem();
 
       System.out.println("&&&&&&&& LAST USER NAME : "  + lastUserName + "  &&&&&&&&&&&&&&&" );
 
@@ -148,8 +147,7 @@ public class deleteUserTest {
       String userId  = users.get(0).toString();
 
       //LIST USERS AFTER NEW USER CREATION
-      List<Object> listUsers2 = listUsers(factory, socket);
-      String newLastUserName = listUsers2.get(0).toString();
+      String newLastUserName = listUsers(factory, socket).getItem();
 
       System.out.println("&&&&&&&& NEW LAST USER NAME : "  + newLastUserName + "  &&&&&&&&&&&&&&&" );
 
@@ -159,8 +157,7 @@ public class deleteUserTest {
       deleteUser(factory, socket, userId);
 
       //LIST USERS AFTER DELETION
-      List<Object> listUsers3 = listUsers(factory, socket);
-      String oldLastUserName = listUsers3.get(0).toString();
+      String oldLastUserName = listUsers(factory, socket).getItem();
 
       System.out.println("&&&&&&&& OLD LAST USER NAME : "  + oldLastUserName + "  &&&&&&&&&&&&&&&" );
 
