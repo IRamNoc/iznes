@@ -1,23 +1,30 @@
 import {
     Component, OnInit, Output, EventEmitter, Inject, ChangeDetectionStrategy,
-    ChangeDetectorRef
+    ChangeDetectorRef, AfterViewInit
 } from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {
     getMyWalletList,
     setConnectedWallet,
     getMyDetail,
     getDefaultMyChainAccess,
-    getAuthentication
+    getAuthentication,
+    setRequestedMailInitial,
+    SET_MESSAGE_COUNTS,
+    clearRequestedMailInitial
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 import _ from 'lodash';
 
-import {MyWalletsService, WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import {
+    MyWalletsService,
+    WalletNodeRequestService,
+    InitialisationService,
+    MyMessagesService
+} from '@setl/core-req-services';
 import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
-
 
 // setActiveWallet
 
@@ -27,7 +34,7 @@ import {WalletNodeSocketService} from '@setl/websocket-service';
     styleUrls: ['./navigation-topbar.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavigationTopbarComponent implements OnInit {
+export class NavigationTopbarComponent implements OnInit, AfterViewInit {
 
     walletSelectItems: Array<any>;
     searchForm: FormGroup;
@@ -37,13 +44,19 @@ export class NavigationTopbarComponent implements OnInit {
 
     appConfig: AppConfig;
 
+    public hasMail = {};
+
     public currentUserDetails;
     public username;
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
+    @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
+    @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
+
     constructor(private ngRedux: NgRedux<any>,
                 private myWalletsService: MyWalletsService,
+                private messageService: MyMessagesService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private fb: FormBuilder,
                 private walletNodeSocketService: WalletNodeSocketService,
@@ -59,7 +72,6 @@ export class NavigationTopbarComponent implements OnInit {
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
-
     }
 
 
@@ -101,6 +113,8 @@ export class NavigationTopbarComponent implements OnInit {
                     });
                     console.log(this.walletSelectItems[0]);
                     this.selected(this.walletSelectItems[0]);
+
+                    this.changeDetectorRef.markForCheck();
                 }
             });
 
@@ -109,6 +123,36 @@ export class NavigationTopbarComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    ngAfterViewInit() {
+        console.log('calling ollie code');
+        this.requestMailInitial.subscribe(
+            (requestedState) => {
+                this.requestMailInitialCounts(requestedState);
+            }
+        );
+
+        this.inboxUnread.subscribe(
+            (unreadMessages) => {
+                this.triggerUnreadMessages(unreadMessages);
+            }
+        );
+    }
+
+    public triggerUnreadMessages(unreadMessages) {
+
+        let messageState = false;
+
+        if (unreadMessages > 0) {
+            messageState = true;
+        }
+
+        this.hasMail = {
+            'has-badge': messageState
+        };
+
+        this.changeDetectorRef.markForCheck();
     }
 
     public callToggleSidebar(event) {
@@ -135,6 +179,8 @@ export class NavigationTopbarComponent implements OnInit {
 
         // // Request initial data from wallet node.
         InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, value.id);
+
+        this.ngRedux.dispatch(clearRequestedMailInitial());
     }
 
     public removed(value: any): void {
@@ -143,6 +189,26 @@ export class NavigationTopbarComponent implements OnInit {
 
     logout() {
         this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+    }
+
+    requestMailInitialCounts(requestedState: boolean): void {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedMailInitial());
+
+            // Request the list.
+            const asyncTaskPipe = this.messageService.requestMailInit(this.selectedWalletId.value[0].id);
+
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_MESSAGE_COUNTS],
+                [],
+                asyncTaskPipe,
+                {}
+            ));
+
+        }
     }
 }
 
