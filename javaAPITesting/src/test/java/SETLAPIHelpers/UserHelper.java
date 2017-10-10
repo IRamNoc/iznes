@@ -41,10 +41,10 @@ public class UserHelper {
 
   }
 
-  public static Container<String> listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
+  public static String listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
-  Container<String> container = new Container<>();
+    Container<String> container = new Container<>();
 
     socket.registerHandler(Message.Type.um_lu.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
@@ -60,7 +60,8 @@ public class UserHelper {
     socket.sendMessage(factory.listUsers());
 
     latch.await();
-    return container;
+    String lastUserName = container.getItem();
+    return lastUserName;
   }
 
 
@@ -162,7 +163,6 @@ public class UserHelper {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         String deletedUser = resp.get("userID").toString();
-        System.out.println("############## Deleted user :  " + userId + " ##################");
         assertTrue(deletedUser.equals("userId"));
         latch.countDown();
         return "";

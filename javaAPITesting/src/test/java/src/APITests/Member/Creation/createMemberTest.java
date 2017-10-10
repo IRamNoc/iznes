@@ -54,14 +54,14 @@ public class createMemberTest {
   @Test
   public void createMultipleMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createMember(factory, socket, "8", "35", 5);
+    createMember(factory, socket, 5);
     connection.disconnect();
   }
 
   @Test
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
-final AtomicInteger atomicInt = new AtomicInteger(0);
+  final AtomicInteger atomicInt = new AtomicInteger(0);
 
   String memberDetails[] = generateMemberDetails();
   String accountName = memberDetails[0];
@@ -73,10 +73,9 @@ final AtomicInteger atomicInt = new AtomicInteger(0);
 
 
   Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-  //Message msg = factory.listMembers();
 
   socket.registerHandler(Message.Type.gal.name(), message ->  {
-    //System.out.println(message);
+
   int call = atomicInt.getAndIncrement();
   if (call == 0) {
   JSONArray data = (JSONArray) message.get("Data");
@@ -105,7 +104,7 @@ final AtomicInteger atomicInt = new AtomicInteger(0);
   latch.countDown();
   return "";
   });
-  //socket.sendMessage( msg);
+
   socket.sendMessage(factory.listMembers());
 
   socket.registerHandler(Message.Type.nm.name(), message -> {
