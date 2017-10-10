@@ -1,6 +1,7 @@
-package APITests.User.Creation;
+package src.APITests.User.Creation;
 
 
+import SETLAPIHelpers.UserHelper;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -18,6 +19,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import SETLAPIHelpers.LoginHelper;
 
+import java.lang.reflect.Array;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -25,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static SETLAPIHelpers.LoginHelper.login;
+import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
+import static SETLAPIHelpers.MemberHelper.createMember;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.UserHelper.createDuplicateUser;
 import static junit.framework.TestCase.assertNotNull;
@@ -213,8 +219,12 @@ public class createUserTest {
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
-    createUser(factory, socket, userName, email, "8", "35", password);
 
+    createUser(factory, socket, userName, email, "8","35", password);
+
+    List<Object> users = new UserHelper().createUserAndCaptureUserId(factory, socket, userName, email, "8","35", password);
+    String userId  = users.get(0).toString();
+    System.out.println("New User Id : " + userId);
     connection.disconnect();
   }
 

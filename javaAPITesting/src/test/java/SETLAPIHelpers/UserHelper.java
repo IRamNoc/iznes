@@ -5,7 +5,10 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import src.APITests.io.setl.Container;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,16 +32,65 @@ public class UserHelper {
       assertTrue(newUser.toString().equalsIgnoreCase(userName));
       latch.countDown();
       return "";
+
     });
 
     socket.sendMessage(factory.addUserToAccount(userName, email, account, userType, password));
 
     latch.await();
+
   }
 
-  public static void createUser(MessageFactory factory, SocketClientEndpoint socket, String account, String userType, int noOfUsers) throws ExecutionException, InterruptedException {
+  public static String listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+    Container<String> container = new Container<>();
+
+    socket.registerHandler(Message.Type.um_lu.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(data.size() - 1);
+      String lastUser = resp.get("userName").toString();
+      assertNotNull(lastUser);
+      container.setItem(lastUser);
+      latch.countDown();
+      return "";
+
+    });
+
+    socket.sendMessage(factory.listUsers());
+
+    latch.await();
+    String lastUserName = container.getItem();
+    return lastUserName;
+  }
+
+
+  public static List<Object> createUserAndCaptureUserId(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+    List<Object> users = new ArrayList<>();
+
+    socket.registerHandler(Message.Type.nu.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(0);
+      Object newUserID = resp.get("userID").toString();
+      assertNotNull(newUserID);
+      users.add(newUserID);
+      latch.countDown();
+      return "";
+
+    });
+
+    socket.sendMessage(factory.addUserToAccount(userName, email, account, userType, password));
+
+    latch.await();
+    return users;
+  }
+
+  public static List<Object> createUser(MessageFactory factory, SocketClientEndpoint socket, String account, String userType, int noOfUsers) throws ExecutionException, InterruptedException {
     for (int i = 0; i < noOfUsers; i++) {
     CountDownLatch latch = new CountDownLatch(1);
+    List<Object> user = new ArrayList<>();
 
       String userDetails[] = generateUserDetails();
       String userName = userDetails[0];
@@ -50,6 +102,7 @@ public class UserHelper {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         Object newUser = resp.get("userName");
+        user.add(newUser);
         assertNotNull(newUser);
         assertTrue(newUser.toString().equalsIgnoreCase(userName));
         latch.countDown();
@@ -59,8 +112,10 @@ public class UserHelper {
       socket.sendMessage(factory.addUserToAccount(userName, email, account, userType, password));
 
       latch.await();
+      return user;
       }
-   }
+    return null;
+  }
 
   public static void createDuplicateUser(MessageFactory factory, SocketClientEndpoint socket, String account, String userType) throws ExecutionException, InterruptedException {
     final AtomicInteger atomicInt = new AtomicInteger(0);
@@ -98,4 +153,25 @@ public class UserHelper {
 
     latch.await();
       }
-   }
+
+
+  public static void deleteUser(MessageFactory factory, SocketClientEndpoint socket, String userId) throws ExecutionException, InterruptedException {
+
+      CountDownLatch latch = new CountDownLatch(1);
+
+      socket.registerHandler(Message.Type.du.name(), message -> {
+        JSONArray data = (JSONArray) message.get("Data");
+        JSONObject resp = (JSONObject) data.get(0);
+        String deletedUser = resp.get("userID").toString();
+        assertTrue(deletedUser.equals("userId"));
+        latch.countDown();
+        return "";
+      });
+
+      socket.sendMessage(factory.deleteUserFromAccount(userId));
+
+      latch.await();
+
+    }
+
+}
