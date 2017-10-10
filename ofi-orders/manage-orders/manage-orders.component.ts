@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
@@ -37,7 +37,7 @@ import {
 })
 
 /* Class. */
-export class ManageOrdersComponent implements AfterViewInit, OnDestroy {
+export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Tabs Control array */
     public tabsControl: Array<any> = [];
@@ -45,6 +45,10 @@ export class ManageOrdersComponent implements AfterViewInit, OnDestroy {
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe:Unsubscribe;
+    private ordersList: Array<any> = [];
+
+    /* Observables. */
+    @select(['ofi', 'ofiManageOrders', 'manageOrders', 'orderList']) ordersListOb:any;
 
     constructor (
         private ofiManageOrdersService: OfiManageOrdersService,
@@ -56,23 +60,48 @@ export class ManageOrdersComponent implements AfterViewInit, OnDestroy {
     ) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
-
-        /* Do observable subscriptions here. */
     }
 
-    ngAfterViewInit () {
+    ngOnInit () {
         /* State. */
         let state = this.ngRedux.getState();
 
         /* Ok, let's check that we have the orders list, if not... */
         if ( ! getOfiOrderList(state).length ) {
+            /* ...build a simple request and... */
+            let request = {
+                status: "-3",
+                sortOrder: "ASC",
+                sortBy: "dateEntered",
+                partyType: 2,
+                pageSize: 20,
+                pageNum: 0,
+                asset: "",
+                arrangementType: 0
+            }
+
             /* ...request it. */
-            this.ofiManageOrdersService.getOrdersList().then((response) => {
-                console.log('fetched orders list: ', response);
-            }).catch((error) => {
+            this.ofiManageOrdersService.getOrdersList(request)
+            .then(response => true) // no need to do anything here.
+            .catch((error) => {
                 console.warn('failed to fetch orders list: ', error);
+                this.showError('Failed to fetch the latest orders.');
             });
         }
+    }
+
+    ngAfterViewInit () {
+        /* Do observable subscriptions here. */
+
+        /* Orders list. */
+        this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
+            console.log('orderlist: ', orderList);
+            /* Subscribe and set the orders list. */
+            this.ordersList = orderList;
+
+            /* Detect Changes. */
+            this.changeDetectorRef.detectChanges();
+        });
     }
 
     /**

@@ -2,7 +2,7 @@ import {combineReducers, Reducer} from 'redux';
 
 /* Order List */
 import {
-    OfiOrdersState,
+    Orders,
     OfiOrderListReducer
 } from './orders'
 export {
@@ -10,10 +10,10 @@ export {
     getOfiOrderList
 } from './orders';
 
-export interface OfiManageOrderState {
-    ofiManageOrders: OfiOrdersState
+export interface OfiManageOrdersState {
+    manageOrders: Orders
 }
 
-export const OfiManageOrdersReducer: Reducer<OfiManageOrderState> = combineReducers<OfiManageOrderState>({
-    ofiManageOrders: OfiOrderListReducer,
+export const OfiManageOrdersReducer: Reducer<OfiManageOrdersState> = combineReducers<OfiManageOrdersState>({
+    manageOrders: OfiOrderListReducer,
 });

@@ -1,3 +1,3 @@
-export interface OfiOrdersState {
-    ofiOrderList: Array<any>;
+export interface Orders {
+    orderList: Array<any>;
 }
