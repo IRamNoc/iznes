@@ -41,3 +41,9 @@ export interface SendMessageBody extends MemberNodeMessageBody {
     hasAction: number;
     isDraft: number;
 }
+
+export interface MailInitBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: string;
+    search: string;
+}
