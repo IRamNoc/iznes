@@ -3,8 +3,8 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {StringFilter, Comparator} from "clarity-angular";
-import {Component, AfterViewInit} from "@angular/core";
+import {StringFilter, Comparator} from 'clarity-angular';
+import {Component, AfterViewInit} from '@angular/core';
 
 import {fromJS} from 'immutable';
 
@@ -13,6 +13,10 @@ import {FileDropComponent} from '@setl/core-filedrop';
 import {FormGroup, FormControl} from '@angular/forms';
 
 import {MultilingualService} from '@setl/multilingual';
+
+import {FileService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
 
 interface User {
     id: number;
@@ -53,7 +57,7 @@ export class HomeComponent {
 
     public tabs: Array<any>;
 
-    basic: boolean = false;
+    basic = false;
 
     /*
      * File Drop Example.
@@ -63,22 +67,40 @@ export class HomeComponent {
      * onDropFiles captures the event put out too.
      */
 
-    public filesFormGroup:FormGroup;
+    public filesFormGroup: FormGroup;
 
     public onDropFiles ( event ) {
         /* Event contains the latest changes. */
         console.log('file drop event emitted: ', event);
+
+        const asyncTaskPipe = this.fileService.addFile({
+            files: event.files
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            function (data) {
+                console.log('Add File success: ');
+                console.log(data); // success
+            },
+            function (data) {
+                console.log('Add File error: ');
+                console.log(data); // error
+            })
+        );
     }
 
     public constructor(
-        private multilingualService:MultilingualService,
+        private multilingualService: MultilingualService,
+        private ngRedux: NgRedux<any>,
+        private fileService: FileService
     ) {
 
         /* Init the files form group. */
         this.filesFormGroup = new FormGroup({
             'singleFile': new FormControl([]),
             'multipleFiles': new FormControl([])
-        })
+        });
 
         this.users = [
             {
