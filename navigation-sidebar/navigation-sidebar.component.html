@@ -72,7 +72,7 @@
         </ul>
     </section>
 
-    <a class="nav-link" [routerLink]="['/orders']" [ngClass]="{active: activeRoute('/orders')}">
+    <a class="nav-link" [routerLink]="['/manage-orders']" [ngClass]="{active: activeRoute('/manage-orders')}">
         <i class="fa fa-pencil"></i> Manage Orders
     </a>
 
@@ -195,8 +195,8 @@
                 </a>
             </li>
             <li>
-                <a [routerLink]="['/chain-admin/manage-account']" [ngClass]="{active: activeRoute('/chain-admin/manage-account')}" class="nav-link">
-                    <i class="fa fa-user-o"></i> Account
+                <a [routerLink]="['/chain-admin/manage-groups']" [ngClass]="{active: activeRoute('/chain-admin/manage-groups')}" class="nav-link">
+                    <i class="fa fa-user-o"></i> Groups
                 </a>
             </li>
             <li>
