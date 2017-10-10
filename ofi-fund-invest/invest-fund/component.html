@@ -47,7 +47,7 @@
 
         <div class="row">
             <div class="form-group col-sm-6">
-                <app-switch-button [value]="subscribeBy" (updateValue)="subscribeBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>
+                <app-switch-button [value]="actionBy" (updateValue)="actionBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>
                 <div>
                     <span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{formConfig.actionLabel}} by amount or unit for this fund share</span>.</span>
                     <span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by quantity for this fund share</span>.</span>
@@ -64,7 +64,8 @@
                 </label>
                 <div>
                     <input type="text" formControlName="quantity" class="form-control mlp_translated"
-                           [readonly]="subscribeBy === 1"
+                           [readonly]="actionBy === 1"
+                           [class.error]="!form.controls['quantity'].valid && form.controls['quantity'].touched"
                            (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>
                 </div>
             </div>
@@ -86,7 +87,8 @@
                 </label>
                 <div>
                     <input type="text" formControlName="grossAmount" class="form-control mlp_translated"
-                           [readonly]="subscribeBy === 0"
+                           [readonly]="actionBy === 0"
+                           [class.error]="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched"
                            (focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>
                 </div>
             </div>
@@ -178,6 +180,48 @@
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div *ngIf="!form.controls['quantity'].valid && form.controls['quantity'].touched" class="alert-items">
+
+            <div class="alert alert-danger">
+                <div class="alert-items">
+                    <div class="alert-item">
+                <span class="alert-text">
+                Invalid quantity
+                </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched" class="alert-items">
+
+            <div class="alert alert-danger">
+                <div class="alert-items">
+                    <div class="alert-item">
+                <span class="alert-text">
+                Invalid gross amount
+                </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="!form.controls['comment'].valid && form.controls['comment'].touched" class="alert-items">
+
+            <div class="alert alert-danger">
+                <div class="alert-items">
+                    <div class="alert-item">
+                <span class="alert-text">
+                Comment exceed max length
+                </span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>

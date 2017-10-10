@@ -13,13 +13,16 @@ import {select} from '@angular-redux/store';
 import {immutableHelper} from '@setl/utils';
 import {CommonService} from '../common-service/service';
 import {MoneyValuePipe} from '@setl/utils';
-
+import {InvestFundFormService} from './service';
 
 @Component({
     selector: 'app-invest-fund',
     templateUrl: 'component.html',
     styleUrls: ['./component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        InvestFundFormService
+    ]
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
@@ -35,7 +38,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) shareDataOb;
 
     // 0: quantity, 1: amount
-    _subscribeBy: number;
+    _actionBy: number;
 
     // form config
     formConfig: any;
@@ -61,22 +64,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     // they should never subscribe at the same time, so it is ok to just use one variable.
     inputSubscription: Subscription;
 
-    set subscribeBy(value) {
-        this._subscribeBy = value;
+    set actionBy(value) {
+        this._actionBy = value;
     }
 
-    get subscribeBy() {
-        return this._subscribeBy;
+    get actionBy() {
+        return this._actionBy;
     }
 
     get fee() {
-        return (this._moneyValuePipe.parse(this.grossAmount.value) * this.metaData.feePercent / 100) + 1;
+        return (Number(this._moneyValuePipe.parse(this.grossAmount.value)) * this.metaData.feePercent / 100) + 1;
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _commonService: CommonService,
-                private _moneyValuePipe: MoneyValuePipe) {
-        this._subscribeBy = 0;
+                private _moneyValuePipe: MoneyValuePipe,
+                private _investFundFormService: InvestFundFormService) {
+        this._actionBy = 0;
 
     }
 
@@ -88,14 +92,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.quantity = new FormControl(0, Validators.required);
-        this.grossAmount = new FormControl(0, Validators.required);
+        this.quantity = new FormControl(0, [Validators.required, numberValidator]);
+        this.grossAmount = new FormControl(0, [Validators.required, numberValidator]);
 
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
             grossAmount: this.grossAmount,
-            comment: new FormControl('')
+            comment: new FormControl('', Validators.maxLength(100))
         });
 
         this.formConfig = {
@@ -167,7 +171,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     handleSubmit() {
-        console.log(this.form.value);
+        console.log(this.form);
+
+        if (this.form.valid) {
+            // Add actionBy
+            const formValue = Object.assign({}, this.form.value, {byType: this.actionBy});
+            this._investFundFormService.handleForm(formValue, this.metaData, this.type);
+        }
     }
 
     subscribeForChange(type: string): void {
@@ -203,3 +213,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 }
 
+/**
+ * Number validator:
+ *
+ * - Takes a `Control` as it's input and
+ * - Returns a `StringMap<string, boolean>` where the key is "error code" and
+ *   the value is `true` if it fails
+ */
+function numberValidator(control: FormControl): { [s: string]: boolean } {
+    // todo
+    // check if number is none zero as well
+    const testString = control.value.toString();
+    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString)) {
+        return {invalidNumber: true};
+    }
+}
