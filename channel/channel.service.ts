@@ -23,9 +23,7 @@ export class ChannelService {
 
     changedPassword = false;
 
-    constructor (
-        private ngRedux: NgRedux<any>
-    ) {
+    constructor(private ngRedux: NgRedux<any>) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -45,7 +43,7 @@ export class ChannelService {
      */
     public resolveChannelMessage(data: any): void {
         /* Parse the data. */
-        data = JSON.parse( data );
+        data = JSON.parse(data);
 
         // The Hench Switch Statement of Channels.
         console.log(" |--- Resolving Core channel broadcast.");
@@ -62,7 +60,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_ADMIN_USERLIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
 
@@ -75,7 +73,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_USER_DETAILS,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
                 break;
@@ -83,7 +81,7 @@ export class ChannelService {
             case 'setpassword': // guess...
                 console.log(' | UPDATE USER PASSWORD: ', data);
                 console.log(this.changedPassword);
-                if (this.changedPassword !== true){
+                if (this.changedPassword !== true) {
                     document.location.reload(true);
                 }
                 break;
@@ -98,7 +96,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
 
@@ -106,7 +104,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
                 break;
@@ -120,7 +118,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_MANAGED_WALLETS,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
                 break;
@@ -135,12 +133,18 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_MANAGE_MEMBER_LIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
                 break;
 
             default:
+                break;
+
+            case 'send_email': // send email
+
+                // request new emails
+
                 break;
         }
 

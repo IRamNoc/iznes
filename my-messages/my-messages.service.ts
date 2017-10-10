@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {DecryptMessagesBody, RequestOwnMessagesBody, SendMessageBody} from './my-messages.service.model';
+import {DecryptMessagesBody, RequestOwnMessagesBody, SendMessageBody, MailInitBody} from './my-messages.service.model';
 
 
 @Injectable()
@@ -61,6 +61,18 @@ export class MyMessagesService {
             attachment: attachment,
             hasAction: hasAction,
             isDraft: isDraft
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
+    requestMailInit(walletId, search = '') {
+        const messageBody: MailInitBody = {
+            RequestName: 'mail_initial_connect',
+            token: this.memberSocketService.token,
+            walletId: parseInt(walletId), // specific id
+            search: search,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
