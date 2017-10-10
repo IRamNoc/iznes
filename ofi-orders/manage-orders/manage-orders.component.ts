@@ -67,7 +67,11 @@ export class ManageOrdersComponent implements AfterViewInit, OnDestroy {
         /* Ok, let's check that we have the orders list, if not... */
         if ( ! getOfiOrderList(state).length ) {
             /* ...request it. */
-            this.ofiManageOrdersService.getOrdersList();
+            this.ofiManageOrdersService.getOrdersList().then((response) => {
+                console.log('fetched orders list: ', response);
+            }).catch((error) => {
+                console.warn('failed to fetch orders list: ', error);
+            });
         }
     }
 
