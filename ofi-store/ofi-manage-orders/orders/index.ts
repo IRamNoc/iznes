@@ -1,5 +1,5 @@
 /* Model. */
-export {OfiOrdersState} from './model';
+export {Orders} from './model';
 
 /* Reducer. */
 export {OfiOrderListReducer} from './reducer';

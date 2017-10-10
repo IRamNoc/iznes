@@ -15,6 +15,7 @@ import {
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
+    OfiRequestArrangements
 } from './model';
 
 @Injectable()
@@ -35,11 +36,19 @@ export class OfiManageOrdersService {
      *
      * @return {Promise}
      */
-    public getOrdersList(): Promise<any> {
+    public getOrdersList(data): Promise<any> {
         /* Setup the message body. */
-        const messageBody: OfiMemberNodeBody = {
+        const messageBody: OfiRequestArrangements = {
             RequestName: 'getarrangementlist',
             token: this.memberSocketService.token,
+            status: data.status,
+            sortOrder: data.sortOrder,
+            sortBy: data.sortBy,
+            partyType: data.partyType,
+            pageSize: data.pageSize,
+            pageNum: data.pageNum,
+            asset: data.asset,
+            arrangementType: data.arrangementType,
         };
 
         /* Return the new member node saga request. */

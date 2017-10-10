@@ -1,17 +1,17 @@
 <div class="header-breadcrumbs">
-    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> Manage Orders</h1>
+    <h1 id="coupon-payments"><i class="fa fa-museum"></i> Manage Orders</h1>
 </div>
 
 <div class="wrapper wrapper-content">
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="coupon-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button clrTabLink id="-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon Payment list tab. -->
                     <ng-container
-                        *ngTemplateOutlet="staticCouponsList"
+                        *ngTemplateOutlet="staticOrdersList"
                     ></ng-container>
                 </ng-container>
 
@@ -32,37 +32,85 @@
         </clr-tab>
     </clr-tabs>
 
-    <!-- Coupon Payments Data Table. -->
-    <ng-template #staticCouponsList>
+    <!-- Orders Data Table. -->
+    <ng-template #staticOrdersList>
         <div class="panel-body">
-            <clr-datagrid #walletDataGrid>
+
+            <form id="search-orders-form">
+                <div class="row bordered form-horizontal">
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_fundname">Fund Name</span>
+                        </label>
+                        <div>
+                            <input id="orders-search-fundname" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_status">Status</span>
+                        </label>
+                        <div>
+                            <ng-select
+                                id="orders-search-status"
+                                [allowClear]="true"
+                                placeholder="Status"
+                            ></ng-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_type">Type</span>
+                        </label>
+                        <div>
+                            <ng-select
+                                id="orders-search-type"
+                                [allowClear]="true"
+                                placeholder="Type"
+                            ></ng-select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #ordersDataGrid>
                 <clr-dg-column>Action</clr-dg-column>
-                <clr-dg-column>Coupon ID</clr-dg-column>
-                <clr-dg-column>Fund</clr-dg-column>
-                <clr-dg-column>Fund ISIN</clr-dg-column>
-                <clr-dg-column>Ratio</clr-dg-column>
-                <clr-dg-column>Gross Amount</clr-dg-column>
-                <clr-dg-column>Date Valuation</clr-dg-column>
-                <clr-dg-column>Date Settlement</clr-dg-column>
+                <clr-dg-column>Investor</clr-dg-column>
+                <clr-dg-column>Order type</clr-dg-column>
+                <clr-dg-column>Order REF</clr-dg-column>
+                <clr-dg-column>Fund name</clr-dg-column>
+                <clr-dg-column>Amount</clr-dg-column>
+                <clr-dg-column>Quantity</clr-dg-column>
+                <clr-dg-column>Price</clr-dg-column>
+                <clr-dg-column>Percentage</clr-dg-column>
+                <clr-dg-column>Cut-off date</clr-dg-column>
+                <clr-dg-column>Delivery date</clr-dg-column>
                 <clr-dg-column>Status</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let coupon of couponList">
+                <clr-dg-row *clrDgItems="let order of ordersList">
+
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <!-- <button id="view-{{coupon.couponID}}" (click)="handleViewCoupon(coupon.couponID)" class="btn">
+                            <button id="order-cancel-{{order.arrangementID}}" class="btn">
+                                <i class="fa fa-times"></i> Cancel
+                            </button>
+                            <button id="order-view-{{order.arrangementID}}" class="btn">
                                 <i class="fa fa-search"></i> View
-                            </button> -->
+                            </button>
                         </div>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{padNumberLeft(coupon.couponID, 11)}}</clr-dg-cell>
-                    <clr-dg-cell>{{coupon.fund}}</clr-dg-cell>
-                    <clr-dg-cell>{{coupon.fundIsin}}</clr-dg-cell>
-                    <clr-dg-cell>{{coupon.amount | moneyValueOfi}}</clr-dg-cell>
-                    <clr-dg-cell>{{coupon.amountGross | moneyValueOfi}}</clr-dg-cell>
-                    <clr-dg-cell>{{formatCouponDate(coupon.dateValuation)}}</clr-dg-cell>
-                    <clr-dg-cell>{{formatCouponDate(coupon.dateSettlement)}}</clr-dg-cell>
+                    <!-- Action --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.advisorAccountName }}<!-- Investor --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.type }}<!-- Order type --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.ref }}<!-- Order REF --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.asset }}<!-- Fund name --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.units }}<!-- Amount --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.total }}<!-- Quantity --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.price }}<!-- Price --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.feePercent }}<!-- Percentage --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.cutoffDate }}<!-- Cut-off date --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.deliveryDate }}<!-- Delivery date --></clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="coupon.status == '1'" class="label label-warning">
+                        <!-- <span *ngIf="coupon.status == '1'" class="label label-warning">
                             <span mltag="txt_waitingapproval">Waiting approval</span>
                         </span>
 
@@ -94,8 +142,8 @@
 
                         <span *ngIf="coupon.status == '0'" class="label label-danger">
                             <span mltag="txt_canceled">Canceled</span>
-                        </span>
-                    </clr-dg-cell>
+                        </span> -->
+                    <!-- Status --></clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>

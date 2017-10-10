@@ -109,7 +109,7 @@
 
     <!-- Create Coupon Payment Form. -->
     <ng-template #staticCreateCouponPayment let-formControl="formControl" let-tabid="tabid">
-        <div class="user-tab-panel-body panel-body">
+        <div class="panel-body">
             <form id="create-coupon-payment-form" (ngSubmit)="handleNewCoupon(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
@@ -264,7 +264,7 @@
 
     <!-- View Coupon Tab. -->
     <ng-template #dynamicCouponPaymentView let-formControl="formControl" let-tabid="tabid">
-        <div class="user-tab-panel-body panel-body">
+        <div class="panel-body">
             <form id="create-coupon-payment-form" (ngSubmit)="handleUpdateCoupon(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">

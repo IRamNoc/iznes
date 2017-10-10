@@ -43,7 +43,7 @@ import {
     Ofi Manage Orders
  */
 import {
-    OfiManageOrderState,
+    OfiManageOrdersState,
     OfiManageOrdersReducer
 } from './ofi-manage-orders';
 export {
@@ -62,7 +62,7 @@ export interface OfiState {
     ofiFundInvest: OfiFundInvestState;
     ofiCorpActions: OfiCorpActionsState;
     ofiProduct: OfiProductState;
-    ofiManageOrders: OfiManageOrderState;
+    ofiManageOrders: OfiManageOrdersState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
