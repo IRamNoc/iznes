@@ -1,0 +1,110 @@
+<div class="header-breadcrumbs">
+    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> Manage Orders</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="coupon-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container *ngIf="id === 0">
+                    <!-- Coupon Payment list tab. -->
+                    <ng-container
+                        *ngTemplateOutlet="staticCouponsList"
+                    ></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id === 1">
+                    <!-- Create Coupon Payment tab. -->
+                    <!-- <ng-container
+                        *ngTemplateOutlet="staticCreateCouponPayment; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container> -->
+                </ng-container>
+
+                <ng-container *ngIf="id >= 2">
+                    <!-- View Coupon Payment tabs. -->
+                    <!-- <ng-container
+                        *ngTemplateOutlet="dynamicCouponPaymentView; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container> -->
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Coupon Payments Data Table. -->
+    <ng-template #staticCouponsList>
+        <div class="panel-body">
+            <clr-datagrid #walletDataGrid>
+                <clr-dg-column>Action</clr-dg-column>
+                <clr-dg-column>Coupon ID</clr-dg-column>
+                <clr-dg-column>Fund</clr-dg-column>
+                <clr-dg-column>Fund ISIN</clr-dg-column>
+                <clr-dg-column>Ratio</clr-dg-column>
+                <clr-dg-column>Gross Amount</clr-dg-column>
+                <clr-dg-column>Date Valuation</clr-dg-column>
+                <clr-dg-column>Date Settlement</clr-dg-column>
+                <clr-dg-column>Status</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let coupon of couponList">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <!-- <button id="view-{{coupon.couponID}}" (click)="handleViewCoupon(coupon.couponID)" class="btn">
+                                <i class="fa fa-search"></i> View
+                            </button> -->
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{padNumberLeft(coupon.couponID, 11)}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.fund}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.fundIsin}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.amount | moneyValueOfi}}</clr-dg-cell>
+                    <clr-dg-cell>{{coupon.amountGross | moneyValueOfi}}</clr-dg-cell>
+                    <clr-dg-cell>{{formatCouponDate(coupon.dateValuation)}}</clr-dg-cell>
+                    <clr-dg-cell>{{formatCouponDate(coupon.dateSettlement)}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="coupon.status == '1'" class="label label-warning">
+                            <span mltag="txt_waitingapproval">Waiting approval</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '2'" class="label label-warning">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '3'" class="label label-warning">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '4'" class="label label-warning">
+                            <span mltag="txt_waitingvaluation">Waiting valuation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '5'" class="label label-info">
+                            <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '-1'" class="label label-success">
+                            <span mltag="txt_settled">Settled</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '0'" class="label label-danger">
+                            <span mltag="txt_canceled">Canceled</span>
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} coupon payments
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>

@@ -4,7 +4,10 @@ import {NgRedux} from '@angular-redux/store';
 import _ from 'lodash';
 
 /* Actions. */
-import {OFI_SET_COUPON_LIST} from '../../ofi-store';
+import {
+    OFI_SET_COUPON_LIST,
+
+} from '../../ofi-store';
 
 /* Service class. */
 @Injectable()
@@ -44,12 +47,19 @@ export class OfiMemberNodeChannelService {
                 );
 
                 /* Break. */
-		break;
+        		break;
 
-            // case 'newmanagementcompany':
-            //     console.log('-----OFI | INSERT MANAGEMENT COMPANY LIST: ', data);
-            //     this.ngRedux.dispatch(SET_REQUESTED); // CLEAR = false | SET = true
-            //     break;
+            case 'newmanagementcompany':
+                console.log(' | Update managment company list: ', data);
+
+                /* TODO - Dispatch the event to update the management company list. */
+                // this.ngRedux.dispatch({
+                //     type: SET_REQUESTED,
+                //     payload: [ null, data, null ]
+                // });
+
+                /* Break. */
+                break;
         }
     }
 
