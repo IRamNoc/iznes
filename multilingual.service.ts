@@ -18,11 +18,11 @@ export class MultilingualService {
      * ---------------
      * Looks up a translation in the translations json using an mlcode.
      *
-     * @param {mltag} string - The reference tag.
+     * @param {string} mltag - The reference tag.
      *
-     * @return {translation} string - The translation.
+     * @return {string|boolean} - The translation or false.
      */
-    public getTranslation (mlcode:string):string {
+    public getTranslation (mlcode:string):string|boolean {
         /* Look for translation... */
         if (
             Translations &&
@@ -30,13 +30,12 @@ export class MultilingualService {
             Translations['core']['fra'] &&
             Translations['core']['fra'][mlcode]
         ) {
-            /* and return it if we have it. */
-            console.log('translation found: ', Translations['core']['fra'][mlcode]);
+            /* ...and return it, if we have it. */
             return Translations['core']['fra'][mlcode];
         }
 
         /* ...otherwise return origin string. */
-        return mlcode;
+        return false;
     }
 
 }

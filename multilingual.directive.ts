@@ -36,7 +36,7 @@ export class MultilingualDirective {
         console.log('looking up translation: ', mltag);
 
         /* First, check that the tag was translated... */
-        if ( translation !== mltag ) {
+        if ( translation ) {
             /* ...next, switch to figure out what tag we're translating. */
             switch ( tagname ) {
                 /* Inputs need their placeholder changed. */
