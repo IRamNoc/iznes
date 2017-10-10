@@ -5,6 +5,7 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import src.APITests.io.setl.Container;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +41,17 @@ public class UserHelper {
 
   }
 
-  public static List<Object> listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
+  public static Container<String> listUsers(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
-    List<Object> userList = new ArrayList<>();
+  Container<String> container = new Container<>();
 
     socket.registerHandler(Message.Type.um_lu.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
       JSONObject resp = (JSONObject) data.get(data.size() - 1);
       String lastUser = resp.get("userName").toString();
       assertNotNull(lastUser);
-      userList.add(lastUser);
+      container.setItem(lastUser);
       latch.countDown();
       return "";
 
@@ -59,7 +60,7 @@ public class UserHelper {
     socket.sendMessage(factory.listUsers());
 
     latch.await();
-    return userList;
+    return container;
   }
 
 

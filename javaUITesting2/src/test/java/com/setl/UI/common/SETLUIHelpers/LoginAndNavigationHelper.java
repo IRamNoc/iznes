@@ -182,7 +182,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(750);
       try {
-        driver.findElement(By.xpath("//a[@href='#/login']")).isDisplayed();
+        driver.findElement(By.id("search_input")).isDisplayed();
       }catch (Error e){
         System.out.println("logout button not present");
         fail();
