@@ -18,7 +18,7 @@ import SETLAPIHelpers.LoginHelper;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.LoginHelper.login;
@@ -26,7 +26,7 @@ import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.UserHelper.*;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 
 
 @RunWith(JUnit4.class)
@@ -37,7 +37,7 @@ public class deleteUserTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
@@ -133,13 +133,8 @@ public class deleteUserTest {
       String password = userDetails[1];
       String email = userDetails[2];
 
-      System.out.println("&&&&&&&& NEW USER NAME : "  + userName + "  &&&&&&&&&&&&&&&" );
-
       //LIST USERS BEFORE NEW USER CREATION
-      String lastUserName  = listUsers(factory, socket).getItem();
-
-      System.out.println("&&&&&&&& LAST USER NAME : "  + lastUserName + "  &&&&&&&&&&&&&&&" );
-
+      String lastUserName = listUsers(factory, socket);
       assertTrue(!lastUserName.equalsIgnoreCase(userName));
 
       //CREATE NEW USER
@@ -147,33 +142,25 @@ public class deleteUserTest {
       String userId  = users.get(0).toString();
 
       //LIST USERS AFTER NEW USER CREATION
-      String newLastUserName = listUsers(factory, socket).getItem();
-
-      System.out.println("&&&&&&&& NEW LAST USER NAME : "  + newLastUserName + "  &&&&&&&&&&&&&&&" );
-
+      String newLastUserName = listUsers(factory, socket);
       assertTrue(newLastUserName.equalsIgnoreCase(userName));
 
-      //DELETE NEW USER CREATED
+      //DELETE NEW USER
       deleteUser(factory, socket, userId);
 
       //LIST USERS AFTER DELETION
-      String oldLastUserName = listUsers(factory, socket).getItem();
-
-      System.out.println("&&&&&&&& OLD LAST USER NAME : "  + oldLastUserName + "  &&&&&&&&&&&&&&&" );
+      String oldLastUserName = listUsers(factory, socket);
 
       assertTrue(!oldLastUserName.equalsIgnoreCase(userName));
       assertTrue(oldLastUserName.equalsIgnoreCase(lastUserName));
 
       connection.disconnect();
-
     }
-
 
   @Test
   public void failToDeleteNonExistentUserTest() throws ExecutionException, InterruptedException {
       Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
       CountDownLatch latch = new CountDownLatch(1);
-
 
     socket.registerHandler(Message.Type.du.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
