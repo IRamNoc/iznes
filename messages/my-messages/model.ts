@@ -18,4 +18,18 @@ export interface MessageDetail {
 export interface MyMessagesState {
     messageList: Array<MessageDetail>;
     needRunDecrypt: boolean;
+    counts: Array<MessageCounts>;
+    requestMailInitial: boolean;
+}
+
+export interface MessageCounts {
+    inbox: number;
+    outbox: number;
+    inboxUnread: number;
+    draft: number;
+    deleted: number;
+    actions: number;
+    totalActions: number;
+    unreadArrangement: number;
+    totalArrangement: number;
 }
