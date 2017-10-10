@@ -7,9 +7,9 @@ public class MemberDetailsHelper {
   public static String[] generateMemberDetails ()
   {
     String str = randomAlphabetic(5);
-    String userName = "Test_Member_" + str;
-    String email = userName + "@test.com";
+    String memberName = "Test_Member_" + str;
+    String email = memberName + "@test.com";
 
-    return new String[] {userName, email};
+    return new String[] {memberName, email};
   }
 }

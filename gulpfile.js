@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gulpNSP = require('gulp-nsp');
 var sonar = require('gulp-sonar');
 var argv = require('yargs').argv;
 
@@ -33,6 +34,16 @@ gulp.task('sonar', function () {
       }
     }
   };
+
+
+//If you don't want to stop your gulp flow if some vulnerabilities have been found use the stopOnError option:
+  gulp.task('nsp', function (cb) {
+    gulpNSP({
+      package: __dirname + '/package.json',
+      stopOnError: false
+    }, cb);
+  });
+
 
   // gulp source doesn't matter, all files are referenced in options object above
   return gulp.src('thisFileDoesNotExist.js', {read: false})

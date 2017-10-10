@@ -15,4 +15,5 @@ export const environment = {
         port: 9788,
         path: 'db'
     },
+    numberDivider: 100000
 };

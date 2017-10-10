@@ -27,7 +27,9 @@ form, .form {
         padding-left: 0px;
         margin-bottom: 10px;
 
-        label, span {
+        // remove span here, see how it go
+        // label, span {
+        label {
             // side labels
             &:first-child {
                 text-align: left;
