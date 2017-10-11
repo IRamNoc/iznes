@@ -44,6 +44,6 @@ export interface SendMessageBody extends MemberNodeMessageBody {
 
 export interface MailInitBody extends MemberNodeMessageBody {
     token: string;
-    walletId: string;
+    walletId: number;
     search: string;
 }
