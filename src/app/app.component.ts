@@ -35,7 +35,7 @@ export class AppComponent {
                 private ofiMemberNodeChannelService: OfiMemberNodeChannelService) {
 
         memberSocketService.disconnectCallback = () => {
-            this.toasterService.pop('warning', 'Member node connection disconnected');
+            this.toasterService.pop('error', 'Member node connection disconnected');
 
         };
 
@@ -44,7 +44,7 @@ export class AppComponent {
         // };
 
         memberSocketService.reconnectCallback = () => {
-            this.toasterService.pop('warning', 'Member node connection reconnected');
+            this.toasterService.pop('success', 'Member node connection reconnected');
         };
 
         /**
