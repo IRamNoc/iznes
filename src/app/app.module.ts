@@ -7,7 +7,7 @@ import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {SetlPipesModule, APP_CONFIG} from '@setl/utils';
+import {SetlPipesModule, SetlDirectivesModule, APP_CONFIG, SetlServicesModule} from '@setl/utils';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -128,7 +128,9 @@ export function memberSocketServiceFactory() {
         CoreManageMemberModule,
         SetlComponentsModule,
         CorpActionsModule,
-        OfiMainModule
+        OfiMainModule,
+        SetlDirectivesModule,
+        SetlServicesModule
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
