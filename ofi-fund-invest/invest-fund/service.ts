@@ -23,6 +23,7 @@ export class InvestFundFormService {
         const decimalisation = immutableHelper.get(shareMetaData, 'decimalisation', 2);
         const quantity = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
         const grossAmount = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
+        const investorAddress = immutableHelper.get(formValue, 'address', '');
         const comment = immutableHelper.get(formValue, 'comment', '');
         const shareName = immutableHelper.get(shareMetaData, 'shareName', '');
         const byType = immutableHelper.get(formValue, 'byType', '');
@@ -30,7 +31,6 @@ export class InvestFundFormService {
         const settleTimeStamp = 0;
         const expiryTimeStamp = settleTimeStamp + 10;
         const issuerAddress = '';
-        const investorAddress = '';
 
         // Convert to to blockchain integer number
         const quantityParse = this._numberConverterService.toBlockchain(quantity);
@@ -53,7 +53,6 @@ export class InvestFundFormService {
                 authoriseRef,
                 expiryTimeStamp
             });
-
 
         } else if (actionType === 'redeem') {
             console.log('submitting redeem');

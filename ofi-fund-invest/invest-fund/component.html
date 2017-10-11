@@ -72,15 +72,33 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
+                    <span class="ml_translated">Sub-portfolio</span>
+                </label>
+                <div>
+                    <ng-select
+                        [items]="addressList"
+                        [allowClear]="false"
+                        placeholder="Select sub-portfolio"
+                        formControlName="address"
+                        (selected)="handleSelectedAddress($event)"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
                     <span class="ml_translated">Net asset value</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">
                 </div>
             </div>
-        </div>
 
-        <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
                     <span class="ml_translated">Gross amount</span>
