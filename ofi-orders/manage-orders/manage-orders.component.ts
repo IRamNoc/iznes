@@ -57,10 +57,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id:  2, text: 'Waiting for NAV'},
         {id:  3, text: 'Waiting for Settlement'},
         {id: -1, text: 'Order settled'},
-        {id:  0, text: 'Cancelled'},
+        {id:  "0", text: 'Cancelled'},
     ];
     public orderTypes: Array<SelectedItem> = [
-        {id: 0, text: 'All'},
+        {id: "0", text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
     ];
@@ -71,6 +71,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private ordersList: Array<any> = [];
     private myDetails: any = {};
     private requestedSearch:any;
+    private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' };
 
     /* Observables. */
     @select(['ofi', 'ofiManageOrders', 'manageOrders', 'orderList']) ordersListOb:any;
@@ -186,17 +187,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Check if we have search parameters. */
         console.log('searchForm', searchForm);
-        if (
-            ! searchForm.status[0] ||
-            ! searchForm.type[0]
-        ) {
+        if (! searchForm.status[0] || ! searchForm.type[0]) {
             return;
         }
 
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
-        request['sortOrder'] = "ASC";
-        request['sortBy'] = "dateEntered";
+        request['sortOrder'] = this.sort.direction;
+        request['sortBy'] = this.sort.name;
         request['partyType'] = 2;
         request['pageSize'] = 123456789; // we're just getting all.
         request['pageNum'] = 0; // no need for this.
@@ -212,6 +210,55 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             console.warn('failed to fetch orders list: ', error);
             this.showError('Failed to fetch the latest orders.');
         });
+    }
+
+    /**
+     * Switch Sort
+     * -----------
+     * Switches a sort and registers which we're using.
+     *
+     * @param {any} event - the click event.
+     * @param {string} name - the sort name.
+     */
+    switchSort (event: any, name: string):void {
+        console.log(event, name);
+        /* Find the header's caret. */
+        let elms = event.target.getElementsByTagName('i'), caret;
+        if (elms.length && elms[0].classList) {
+            caret = elms[0];
+        }
+
+        console.log(' |--- Switch Sort');
+        console.log(' | event: ', event);
+        console.log(' | name: ', name);
+
+        /* If we've clicked the one we're sorting by, reverse sort. */
+        if ( name === this.sort.name && caret ) {
+            console.log(" | >> flip flop");
+            /* Reverse. */
+            if ( this.sort.direction === "ASC" ) {
+                this.sort.direction = "DESC";
+                caret.classList.remove('fa-caret-up');
+                caret.classList.add('fa-caret-down');
+            } else {
+                this.sort.direction = "ASC";
+                caret.classList.remove('fa-caret-down');
+                caret.classList.add('fa-caret-up');
+            }
+        }
+
+        /* If not, then set this as the one we're sorting by. */
+        else if ( name !== this.sort.name ) {
+            console.log(" | >> change");
+            this.sort.name = name;
+            this.sort.direction = "ASC";
+        }
+
+        /* Send for a search. */
+        this.getOrdersBySearch();
+
+        /* Return. */
+        return;
     }
 
     /**
