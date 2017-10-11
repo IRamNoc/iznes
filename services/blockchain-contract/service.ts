@@ -149,96 +149,94 @@ export class BlockchainContractService {
 
         const hasParameter = immutableHelper.get(arrangementData, ['datas'], []).length > 0;
 
-        try {
 
-            // Get parties from actions.
-            // parties in [address: partyData] form.
-            const actionDataArr = immutableHelper.get(arrangementData, 'actions', []);
+        // Get parties from actions.
+        // parties in [address: partyData] form.
+        const actionDataArr = immutableHelper.get(arrangementData, 'actions', []);
 
-            let partiesData = {};
+        let partiesData = {};
 
-            for (const actionData of actionDataArr) {
-                const actionType: ArrangementActionType = immutableHelper.get(arrangementData, ['actionType'], -1);
-                const actionDataObj = immutableHelper.get(arrangementData, 'actionData', {});
+        for (const actionData of actionDataArr) {
 
-                switch (actionType) {
-                    case ArrangementActionType.SEND:
+            const actionType: ArrangementActionType = immutableHelper.get(actionData, ['actionType'], -1);
+            const actionDataObj = immutableHelper.get(actionData, 'actionData', {});
 
-                        partiesData = handleSendOrIssueActionData(actionDataObj, partiesData, hasParameter, false);
-                        break;
+            switch (actionType) {
+                case ArrangementActionType.SEND:
 
-                    case ArrangementActionType.ISSUE:
+                    partiesData = handleSendOrIssueActionData(actionDataObj, partiesData, hasParameter, false);
+                    break;
 
-                        partiesData = handleSendOrIssueActionData(actionDataObj, partiesData, hasParameter, true);
+                case ArrangementActionType.ISSUE:
 
-                        break;
+                    partiesData = handleSendOrIssueActionData(actionDataObj, partiesData, hasParameter, true);
 
-                    case ArrangementActionType.ENCUMBER:
-                        break;
+                    break;
 
-                    case ArrangementActionType.COMMIT:
-                        break;
+                case ArrangementActionType.ENCUMBER:
+                    break;
 
-                    default:
-                        break;
+                case ArrangementActionType.COMMIT:
+                    break;
 
-                }
+                default:
+                    throw new Error('Invalid action type when converting arrangement data.');
+
             }
+        }
 
-            // get partiesListData.
-            const partiesListData = constructPartiesListData(partiesData);
+        // get partiesListData.
+        const partiesListData = constructPartiesListData(partiesData);
 
-            // get authorisations from conditions
-            const authorisationsList = getAuthorisationList(arrangementData);
+        // get authorisations from conditions
+        const authorisationsList = getAuthorisationList(arrangementData);
 
-            // get start datetime from condition
-            const startDate = getExecuteTimeStamp(arrangementData);
+        // get start datetime from condition
+        const startDate = getExecuteTimeStamp(arrangementData);
 
-            // get meta data and verifiers from docs
-            const metaData = getMetaData(arrangementData);
+        // get meta data and verifiers from docs
+        const metaData = getMetaData(arrangementData);
 
-            // get parameters data
-            const parametersData = getParametersData(arrangementData);
+        // get parameters data
+        const parametersData = getParametersData(arrangementData);
 
-            // Get add encumberance data
-            const addEncData = immutableHelper.get(arrangementData, 'addEncs', []);
+        // Get add encumberance data
+        const addEncData = immutableHelper.get(arrangementData, 'addEncs', []);
 
-            // first address in wallet or issuing address.
-            const contractCreatorAddr = immutableHelper.get(arrangementData, 'issuingAddress', false);
+        // first address in wallet or issuing address.
+        const contractCreatorAddr = immutableHelper.get(arrangementData, 'issuingAddress', false);
 
-            const expiry = arrangementData.expiry;
+        const expiry = arrangementData.expiry;
 
-            if (!contractCreatorAddr) {
-                return false;
-            }
-
-            const contractData: ContractData = {
-                contractfunction: 'dvp_uk',
-                parties: partiesListData,
-                authorisations: authorisationsList,
-                parameters: parametersData,
-                addencumbrances: addEncData,
-                events: ['commit', 'expiry'],
-                expiry: expiry,
-                startdate: startDate,
-                protocol: 'dvp',
-                // todo
-                // The encumbrance is hardcoded to use 'use_encumbrance' now.
-                // It should be specific to a unique reference, when the encumbrance is created.
-                encumbrance: [true, 'use_encumbrance'],
-                metadata: JSON.stringify(metaData)
-            };
-
-
-            return {
-                creatorAddress: contractCreatorAddr,
-                contractFunction: 'dvp_uk',
-                contractData: contractData
-            };
-
-        } catch (e) {
+        if (!contractCreatorAddr) {
             return false;
         }
+
+        const contractData: ContractData = {
+            contractfunction: 'dvp_uk',
+            parties: partiesListData,
+            authorisations: authorisationsList,
+            parameters: parametersData,
+            addencumbrances: addEncData,
+            events: ['commit', 'expiry'],
+            expiry: expiry,
+            startdate: startDate,
+            protocol: 'dvp',
+            // todo
+            // The encumbrance is hardcoded to use 'use_encumbrance' now.
+            // It should be specific to a unique reference, when the encumbrance is created.
+            encumbrance: [true, 'use_encumbrance'],
+            metadata: JSON.stringify(metaData)
+        };
+
+
+        return {
+            creatorAddress: contractCreatorAddr,
+            contractFunction: 'dvp_uk',
+            contractData: contractData
+        };
+
+
     }
 }
 

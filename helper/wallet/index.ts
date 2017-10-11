@@ -6,18 +6,20 @@ import _ from 'lodash';
  * @param walletAddressList
  * @return {any}
  */
-export function walletAddressListToSelectItem(walletAddressList: Array<any>): Array<any> {
+export function walletAddressListToSelectItem(walletAddressList: any): any {
     const walletAddressListImu = fromJS(walletAddressList);
-    const walletAddressSelectItem = walletAddressListImu.map(
-        (thisWalletAddress) => {
-            return {
-                id: thisWalletAddress.get('addr'),
-                text: thisWalletAddress.get('addr')
-            };
-        }
+    const walletAddressSelectItem = walletAddressListImu.reduce(
+        (result, thisWalletAddress, key) => {
+            result.push({
+                id: key,
+                text: key
+            });
+
+            return result;
+        }, []
     );
 
-    return walletAddressSelectItem.toJS();
+    return walletAddressSelectItem;
 }
 
 /**
