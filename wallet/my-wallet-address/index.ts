@@ -4,7 +4,10 @@ export {MyWalletAddressState} from './model';
 export {
     SET_WALLET_ADDRESSES,
     clearRequestedWalletAddresses,
-    setRequestedWalletAddresses
+    setRequestedWalletAddresses,
+    SET_WALLET_LABEL,
+    setRequestedWalletLabel,
+    clearRequestedWalletLabel
 } from './actions';
 export {getWalletAddressList} from './selectors';
 
