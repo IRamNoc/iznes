@@ -9,6 +9,7 @@ import {
     Renderer,
     ChangeDetectorRef
 } from '@angular/core';
+import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 
 import {FormControl} from '@angular/forms';
 
@@ -21,6 +22,7 @@ import {FormControl} from '@angular/forms';
 
 /* Class. */
 export class DropHandler {
+
     /* Events */
     @Output() onDropFiles:EventEmitter<{}> = new EventEmitter();
 
@@ -45,11 +47,13 @@ export class DropHandler {
     private silentEncodedFiles:any = [];
     private proccessInterval:any;
     private removingFile:boolean = false;
+    private maxFileSize:number = 10485760; // 10 MB
 
     /* Constructor */
     public constructor (
         public renderer:Renderer,
-        public changeDetectorRef:ChangeDetectorRef
+        public changeDetectorRef:ChangeDetectorRef,
+        public alertsService: AlertsService
     ) {
         /* Stub */
     }
@@ -57,7 +61,11 @@ export class DropHandler {
     /* On View Init. */
     public ngAfterViewInit ():void {
         /* Fix the text on the ui. */
-        this.uploadPrompt = this.multiple ? "Drag and Drop files here, or Click to Upload" : "Drag and Drop a file here, or Click to Upload";
+        if (this.multiple) {
+            this.uploadPrompt = 'Drag and Drop files here, or Click to Upload';
+        } else {
+            this.uploadPrompt = 'Drag and Drop a file here, or Click to Upload';
+        }
         this.changeDetectorRef.detectChanges();
 
         /* Also fix the files text. */
@@ -80,11 +88,40 @@ export class DropHandler {
     public handleDrop (event):boolean {
         /* Check if files were dropped... */
         if ( event.dataTransfer && event.dataTransfer.files ) {
-            /* Set the uploaded files. */
-            // this.uploadedFiles = event.dataTransfer.files;
-            this.addFiles(event.dataTransfer.files);
+            let invalidFileNames = [];
+            let validFiles = [];
+            _.each(event.dataTransfer.files, (function (file) {
+                if (!this.isValidFileSize(file)) {
+                    invalidFileNames.push(file.name);
+                } else {
+                    validFiles.push(file);
+                }
+            }).bind(this));
 
-            /* Proccess the files. */
+            if (invalidFileNames.length > 0) {
+                let message = 'File';
+                if (invalidFileNames.length > 1) {
+                    message += 's';
+                }
+                message += ' \'' + invalidFileNames.join('\', \'') + '\' exceed';
+                if (invalidFileNames.length === 1) {
+                    message += 's';
+                }
+                message += ' maximum file size for upload.';
+                this.showAlert(
+                    message,
+                    'error'
+                );
+            }
+
+            if (validFiles.length < 1) {
+                return;
+            }
+
+            /* Set the uploaded files. */
+            this.addFiles(validFiles);
+
+            /* Process the files. */
             this.handleConversion();
         }
 
@@ -137,9 +174,38 @@ export class DropHandler {
     public handleFileChange (event):boolean {
         /* Check. */
         if ( event.target && event.target.files ) {
-            /* Set the array. */
-            // this.uploadedFiles = event.target.files;
-            this.addFiles(event.target.files);
+            let invalidFileNames = [];
+            let validFiles = [];
+            _.each(event.target.files, (function (file, fileIndex) {
+                if (!this.isValidFileSize(file)) {
+                    invalidFileNames.push(file.name);
+                } else {
+                    validFiles.push(file);
+                }
+            }).bind(this));
+
+            if (invalidFileNames.length > 0) {
+                let message = 'File';
+                if (invalidFileNames.length > 1) {
+                    message += 's';
+                }
+                message += ' \'' + invalidFileNames.join('\', \'') + '\' exceed';
+                if (invalidFileNames.length === 1) {
+                    message += 's';
+                }
+                message += ' maximum file size for upload.';
+                this.showAlert(
+                    message,
+                    'error'
+                );
+            }
+
+            if (validFiles.length < 1) {
+                return;
+            }
+
+            /* Set the uploaded files. */
+            this.addFiles(validFiles);
 
             /* Proccess the files. */
             this.handleConversion()
@@ -192,14 +258,14 @@ export class DropHandler {
      */
 
     /**
-     * Stop Propigation
+     * Stop Propagation
      * ----------------
      * Basically stops bubbling on the dom.
      *
      * @param  {event} object - object of event.
      * @return {boolean}
      */
-    public stopPropigation(event):boolean {
+    public stopPropagation(event):boolean {
         /* Stop bubbling. */
         event.preventDefault();
 
@@ -219,7 +285,7 @@ export class DropHandler {
         this.isHovering = true;
 
         /* Update the prompt text. */
-        this.uploadPrompt = "Drop your files to add them!";
+        this.uploadPrompt = 'Drop your files to add them!';
     }
 
     /**
@@ -234,7 +300,7 @@ export class DropHandler {
         this.isHovering = false;
 
         /* Update the prompt text. */
-        this.uploadPrompt = "Drag and Drop a file here, or Click to Upload";
+        this.uploadPrompt = 'Drag and Drop a file here, or Click to Upload';
     }
 
     /**
@@ -357,13 +423,14 @@ export class DropHandler {
     /**
      * Emit Files Event
      * ----------------
-     * Triggers an emmission of the encoded files array.
+     * Triggers an emission of the encoded files array.
      *
      * @return {void}
      */
     private emitFilesEvent () {
         /* Emit the event up a level. */
         this.onDropFiles.emit({
+            'target': this,
             'files': this.encodedFiles
         });
 
@@ -381,7 +448,7 @@ export class DropHandler {
      */
     private handleFileConverted (readerEvt):void {
         /* Encode the raw data in base64. */
-        var base64data = btoa(readerEvt.target.result);
+        const base64data = btoa(readerEvt.target.result);
 
         /* Push the file object into the encodedFiles array. */
         this.silentEncodedFiles.push({'data': base64data});
@@ -396,10 +463,61 @@ export class DropHandler {
      */
     private updateFilesText ():void {
         /* Update. */
-        this.numberFilesText = ((!this.encodedFiles || this.encodedFiles.length === 0) ? "No" : this.encodedFiles.length) + " "+ (this.multiple && this.encodedFiles.length > 1 ? "files" : "file") +" selected.";
+        this.numberFilesText = (
+            (!this.encodedFiles || this.encodedFiles.length === 0) ? 'No' : this.encodedFiles.length) + ' ' +
+            (this.multiple && this.encodedFiles.length > 1 ? 'files' : 'file') + ' selected.';
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Update File Status
+     *
+     * @param fileIndex
+     * @param status
+     *
+     * @return {void}
+     */
+    public updateFileStatus(fileIndex, status) {
+        if (fileIndex > this.encodedFiles.length - 1) {
+            return;
+        }
+        this.encodedFiles[fileIndex].status = status;
+    }
+
+    /**
+     * Is Valid File Size
+     *
+     * @param file
+     *
+     * @returns {boolean}
+     */
+    public isValidFileSize(file) {
+        if (file.size > this.maxFileSize) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Show Alert
+     *
+     * @param {string} message
+     * @param {string} level
+     *
+     * @return {void}
+     */
+    public showAlert(message, level = 'error') {
+        this.alertsService.create(level as AlertType, `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-${level}">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
 }
