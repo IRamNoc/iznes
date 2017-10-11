@@ -1,0 +1,32 @@
+.input-button-group {
+
+    input, button {
+        float: left;
+    }
+
+    input {
+        width: calc(100% - 40px) !important;
+        border-top-right-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+    }
+
+    button {
+        width: 40px;
+        height: 40px;
+        margin-left: -4px;
+        border: 0 none;
+        border-radius: 0 4px 4px 0;
+        background-color: #58a5e3;
+        color: #ffffff;
+        cursor: pointer;
+        -webkit-transition: background-color 0.2s ease-out;
+        -moz-transition: background-color 0.2s ease-out;
+        -o-transition: background-color 0.2s ease-out;
+        transition: background-color 0.2s ease-out;
+
+        &:active {
+            background-color: #4681b1;
+        }
+    }
+
+}
