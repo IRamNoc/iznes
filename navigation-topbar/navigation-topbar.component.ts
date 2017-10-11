@@ -25,6 +25,7 @@ import {
 import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
+import {clearRequestedWalletLabel} from "../../core-store/wallet/my-wallet-address/actions";
 
 // setActiveWallet
 
@@ -180,6 +181,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
         InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, value.id);
 
         this.ngRedux.dispatch(clearRequestedMailInitial());
+
+        this.ngRedux.dispatch(clearRequestedWalletLabel());
     }
 
     public removed(value: any): void {
