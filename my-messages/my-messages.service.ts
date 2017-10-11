@@ -71,7 +71,7 @@ export class MyMessagesService {
         const messageBody: MailInitBody = {
             RequestName: 'mail_initial_connect',
             token: this.memberSocketService.token,
-            walletId: parseInt(walletId), // specific id
+            walletId: walletId, // specific id
             search: search,
         };
 

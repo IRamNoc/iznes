@@ -7,15 +7,41 @@ import {
     SetActiveWalletMessageBody,
     RequestWalletDirectoryMessageBody,
     RequestManagedWalletsMessageBody,
-    RequestWalletToRelationshipMessageBody
+    RequestWalletToRelationshipMessageBody,
+    RequestWalletLabelMessageBody,
+    NewWalletLabelMessageBody,
+    UpdateWalletLabelMessageBody
 } from './my-wallets.service.model';
 import _ from 'lodash';
+import {NgRedux} from '@angular-redux/store';
+import {
+    setRequestedWalletLabel,
+    SET_WALLET_LABEL
+} from '@setl/core-store';
 
 
 @Injectable()
 export class MyWalletsService {
 
     constructor(private memberSocketService: MemberSocketService) {
+    }
+
+    static defaultRequestWalletLabel(ngRedux: NgRedux<any>, myWalletService: MyWalletsService, walletId: number) {
+
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedWalletLabel());
+
+        // Request the list.
+        const asyncTaskPipe = myWalletService.requestWalletLabel({
+            walletId
+        });
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_LABEL],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     requestOwnWallets(): any {
@@ -67,6 +93,62 @@ export class MyWalletsService {
             RequestName: 'glrtl',
             token: this.memberSocketService.token,
             senderLei: walletId
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     *  Request wallet label - subportfolio.
+     * @return {any}
+     */
+    requestWalletLabel(requestData: object): any {
+        const walletId = _.get(requestData, 'walletId', 0);
+
+        const messageBody: RequestWalletLabelMessageBody = {
+            RequestName: 'getwalletlabels',
+            token: this.memberSocketService.token,
+            walletId: walletId
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     *  Add wallet label - subportfolio.
+     * @return {any}
+     */
+    newWalletLabel(requestData: object): any {
+        const walletId = _.get(requestData, 'walletId', 0);
+        const option = _.get(requestData, 'option', '');
+        const label = _.get(requestData, 'label', '');
+
+        const messageBody: NewWalletLabelMessageBody = {
+            RequestName: 'newWalletLabels',
+            token: this.memberSocketService.token,
+            walletId,
+            option,
+            label
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     *  Update wallet label - subportfolio.
+     * @return {any}
+     */
+    updateWalletLabel(requestData: object): any {
+        const walletId = _.get(requestData, 'walletId', 0);
+        const option = _.get(requestData, 'option', '');
+        const label = _.get(requestData, 'label', '');
+
+        const messageBody: UpdateWalletLabelMessageBody = {
+            RequestName: 'updateWalletLabels',
+            token: this.memberSocketService.token,
+            walletId,
+            option,
+            label
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

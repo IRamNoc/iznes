@@ -4,9 +4,11 @@ import {createWalletNodeSagaRequest} from '@setl/utils/common';
 import {
     RegisterIssuerMessageBody,
     RegisterAssetMessageBody,
-    IssueAssetMessageBody
+    IssueAssetMessageBody,
+    NewAddressMessageBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
+import {NgRedux} from "@angular-redux/store";
 
 interface RegisterIssuer {
     walletId: number;
@@ -73,5 +75,15 @@ export class WalletnodeTxService {
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    newAddress(requestData: { walletId: number }): any {
+        const messageBody: NewAddressMessageBody = {
+            topic: 'newaddress',
+            walletid: _.get(requestData, 'walletId', 0),
+            register: '1',
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 }
