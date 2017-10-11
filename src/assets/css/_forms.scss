@@ -96,14 +96,14 @@ form, .form {
             input {
                 margin-top: 6px;
                 width: 200px;
-                height: 41px !important;
+                height: 40px !important;
                 margin-bottom: 0px;
             }
         }
 
         .ui-select-toggle {
             margin-top: 6px !important;
-            height: 41px !important;
+            height: 40px !important;
         }
 
         .ui-select-choices {
@@ -167,6 +167,12 @@ form, .form {
             input[disabled] {
                 background-color: #f9f9f9 !important;
             }
+        }
+    }
+
+    ng-select {
+        input {
+            margin-top: 0 !important;
         }
     }
 
