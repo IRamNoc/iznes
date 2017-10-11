@@ -211,6 +211,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Show error if we failed to create the wallet. */
             this.showError('Failed to create the new wallet.');
+            console.warn(error)
         });
 
         /* Return. */
@@ -311,7 +312,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle error. */
             this.showError('Failed to update this wallet.');
-            console.warn(error);
+            console.warn(error)
         })
 
         /* Return */
@@ -378,6 +379,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 }).catch((error) => {
                     /* Handle error message. */
                     this.showError('Failed to delete wallet.');
+                    console.warn(error)
                 });
             }
         });
