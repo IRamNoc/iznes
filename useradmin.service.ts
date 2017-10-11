@@ -5,7 +5,7 @@ import {Subject} from 'rxjs/Subject'
 
 import {SagaHelper} from '@setl/utils';
 
-import {NgRedux} from '@angular-redux/store';
+import {select, NgRedux} from '@angular-redux/store';
 
 import {
     AdminUsersService
@@ -56,7 +56,7 @@ import {
 export class UserAdminService {
 
     /* Account types. */
-    public accountTypes: any = [
+    public accountList: any = [
         {
             'id': '1',
             'text': 'SETL Private Admin',
@@ -197,6 +197,10 @@ export class UserAdminService {
         return this.usersChainAccessSubject.asObservable();
     }
 
+    private subscriptions = {};
+
+    @select( [ 'account', 'accountList', 'accountList' ] ) accountListOb:any;
+
     /* Constructor. */
     constructor(private adminUsersService: AdminUsersService,
                 private ngRedux: NgRedux<any>,) {
@@ -230,7 +234,25 @@ export class UserAdminService {
             });
         }
 
-        /* TODO - pull in the arrays on this object dynamically. */
+        /* Let's subscribe to the accounts list. */
+        this.subscriptions['account-list'] = this.accountListOb.subscribe((accountList) => {
+            /* Variables. */
+            let newAccountList = [], key;
+
+            /* Ok, let's loop over each account... */
+            for ( key in Object.keys(accountList) ) {
+                /* ...and push a nice select object into the new array. */
+                if ( accountList[key] ) {
+                    newAccountList.push({
+                        id: accountList[key].accountId,
+                        text: accountList[key].accountName,
+                    });
+                }
+            }
+
+            /* Now set the current array. */
+            this.accountList = newAccountList;
+        })
 
         /* Assign a update handler to watch changes in redux, then trigger once
          manually. */
@@ -669,11 +691,11 @@ export class UserAdminService {
      * -----------------
      * Returns the account types array.
      *
-     * @return {accountTypes} - array.
+     * @return {accountList} - array.
      */
     public getAccountTypes(): any {
         /* Return the array. */
-        return this.accountTypes;
+        return this.accountList;
     }
 
     /**
@@ -682,14 +704,14 @@ export class UserAdminService {
      * Returns the account type by Id.
      *
      * @param {id} number - the ID of a type.
-     * @return {accountTypes} - array.
+     * @return {accountList} - array.
      */
     public getAccountTypeById(id): any {
         /* Return the match. */
         let i;
-        for (i in this.accountTypes) {
-            if (this.accountTypes[i].id == id) {
-                return [this.accountTypes[i]];
+        for (i in this.accountList) {
+            if (this.accountList[i].id == id) {
+                return [this.accountList[i]];
             }
         }
 
@@ -784,10 +806,10 @@ export class UserAdminService {
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for (i = 0; i < this.accountTypes.length; i++) {
+        for (i = 0; i < this.accountList.length; i++) {
             /* Loop over each and check if they have the same id. */
-            if (query[identifier] === this.accountTypes[i][identifier]) {
-                return [this.accountTypes[i]];
+            if (query[identifier] === this.accountList[i][identifier]) {
+                return [this.accountList[i]];
             }
         }
 
@@ -991,6 +1013,13 @@ export class UserAdminService {
 
         /* Now, just return the differences. */
         return differences;
+    }
+
+    ngOnDestroy () {
+        /* Unsubscribe Observables. */
+        for (var key in this.subscriptions) {
+            this.subscriptions[key].unsubscribe();
+        }
     }
 
     /**
