@@ -8,7 +8,9 @@ import {
     setDecryptedContent,
     SET_MESSAGE_COUNTS,
     setRequestedMailInitial,
-    clearRequestedMailInitial
+    clearRequestedMailInitial,
+    setRequestedMailList,
+    clearRequestedMailList
 } from './my-messages';
 
 import {combineReducers, Reducer} from 'redux';
@@ -21,7 +23,9 @@ export {
     setDecryptedContent,
     SET_MESSAGE_COUNTS,
     setRequestedMailInitial,
-    clearRequestedMailInitial
+    clearRequestedMailInitial,
+    setRequestedMailList,
+    clearRequestedMailList
 };
 
 export interface MessageState {

@@ -22,6 +22,13 @@ export const CLEAR_REQUEST_MAIL_INIT = `${name}/CLEAR_REQUEST_MAIL_INIT`;
 export const clearRequestedMailInitial = kAction(CLEAR_REQUEST_MAIL_INIT);
 
 
+export const SET_REQUEST_MAIL_LIST = `${name}/SET_REQUEST_MAIL_LIST`;
+export const setRequestedMailList = kAction(SET_REQUEST_MAIL_LIST);
+
+export const CLEAR_REQUEST_MAIL_LIST = `${name}/CLEAR_REQUEST_MAIL_LIST`;
+export const clearRequestedMailList = kAction(CLEAR_REQUEST_MAIL_LIST);
+
+
 export interface SetDecryptedContentAction extends Action {
     mailId: number;
     decrypted: string;

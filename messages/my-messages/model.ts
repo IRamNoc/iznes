@@ -20,6 +20,7 @@ export interface MyMessagesState {
     needRunDecrypt: boolean;
     counts: Array<MessageCounts>;
     requestMailInitial: boolean;
+    requestMailList: boolean;
 }
 
 export interface MessageCounts {
