@@ -37,13 +37,14 @@
         <div class="panel-body">
 
             <form id="search-orders-form">
-                <div class="row bordered form-horizontal">
+                <div class="row bordered form-group">
                     <div class="col-sm-4">
                         <label>
                             <span mltag="txt_fundname">Fund Name</span>
                         </label>
-                        <div>
-                            <input id="orders-search-fundname" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                        <div class="input-button-group">
+                            <input id="orders-search-fundname" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                            <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -53,7 +54,11 @@
                         <div>
                             <ng-select
                                 id="orders-search-status"
+                                [items]="orderStatuses"
                                 [allowClear]="true"
+                                (selected)="getOrdersBySearch()"
+                                (removed)="getOrdersBySearch()"
+                                [formControl]="tabsControl[0].searchForm.controls['status']"
                                 placeholder="Status"
                             ></ng-select>
                         </div>
@@ -65,7 +70,11 @@
                         <div>
                             <ng-select
                                 id="orders-search-type"
+                                [items]="orderTypes"
                                 [allowClear]="true"
+                                (selected)="getOrdersBySearch()"
+                                (removed)="getOrdersBySearch()"
+                                [formControl]="tabsControl[0].searchForm.controls['type']"
                                 placeholder="Type"
                             ></ng-select>
                         </div>
@@ -149,7 +158,7 @@
                 <clr-dg-footer>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     of {{pagination.totalItems}} coupon payments
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>

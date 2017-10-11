@@ -29,6 +29,12 @@ import {
     getOfiOrderList
 } from '../../ofi-store';
 
+/* Types. */
+interface SelectedItem {
+    id: number|string;
+    text: number|string;
+}
+
 /* Decorator. */
 @Component({
     styleUrls: ['./manage-orders.component.css'],
@@ -42,13 +48,34 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Tabs Control array */
     public tabsControl: Array<any> = [];
 
+    /* Ui Lists. */
+    public orderStatuses: Array<SelectedItem> = [
+        {id: -3, text: 'All'},
+        {id:  4, text: 'Precentralised'},
+        {id:  5, text: 'Centralised'},
+        {id:  1, text: 'Initiated'},
+        {id:  2, text: 'Waiting for NAV'},
+        {id:  3, text: 'Waiting for Settlement'},
+        {id: -1, text: 'Order settled'},
+        {id:  0, text: 'Cancelled'},
+    ];
+    public orderTypes: Array<SelectedItem> = [
+        {id: 0, text: 'All'},
+        {id: 3, text: 'Subscription'},
+        {id: 4, text: 'Redemption'},
+    ];
+
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe:Unsubscribe;
     private ordersList: Array<any> = [];
+    private myDetails: any = {};
+    private requestedSearch:any;
 
     /* Observables. */
     @select(['ofi', 'ofiManageOrders', 'manageOrders', 'orderList']) ordersListOb:any;
+    /* Select the user's details. */
+    @select(['user', 'myDetail']) myDetailOb:any;
 
     constructor (
         private ofiManageOrdersService: OfiManageOrdersService,
@@ -68,25 +95,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ok, let's check that we have the orders list, if not... */
         if ( ! getOfiOrderList(state).length ) {
-            /* ...build a simple request and... */
-            let request = {
-                status: "-3",
-                sortOrder: "ASC",
-                sortBy: "dateEntered",
-                partyType: 2,
-                pageSize: 20,
-                pageNum: 0,
-                asset: "",
-                arrangementType: 0
-            }
-
-            /* ...request it. */
-            this.ofiManageOrdersService.getOrdersList(request)
-            .then(response => true) // no need to do anything here.
-            .catch((error) => {
-                console.warn('failed to fetch orders list: ', error);
-                this.showError('Failed to fetch the latest orders.');
-            });
+            /* ...request using the defaults in the form. */
+            this.getOrdersBySearch();
         }
     }
 
@@ -97,10 +107,28 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
             console.log('orderlist: ', orderList);
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList;
+            this.ordersList = orderList.map((order) => {
+                /* Pointer. */
+                let fixed = order;
+
+                /* Fix dates. */
+                fixed.cutoffDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.cutoffDate));
+                fixed.deliveryDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.deliveryDate));
+
+                /* Return. */
+                return fixed;
+            });
+
+            /* Fix parts of each order. */
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        /* Subscribe for this user's details. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
+            /* Assign list to a property. */
+            this.myDetails = myDetails;
         });
     }
 
@@ -117,6 +145,91 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Request Search
+     * --------------
+     * This is a buffer function that stops button mashing!
+     * A request comes in, and after 500ms it's actually processed.
+     * If another comes in, in that time, the timeout is reset.
+     *
+     * @return {void}
+     */
+    private requestSearch ():void {
+        /* Let's check if we've got a request already... */
+        if ( this.requestedSearch ) {
+            /* ...if we do, cancel it. */
+            clearTimeout(this.requestedSearch);
+        }
+
+        /* Now let's set a new timeout. */
+        let timeToWait = 500; // milliseconds
+        this.requestedSearch = setTimeout(() => {
+            this.getOrdersBySearch();
+        }, timeToWait);
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Get Orders By Search
+     * --------------------------
+     * Simply reads the search form, and requests data based on what has been entered,
+     * or by defualts. Also, refreshes the order list.
+     *
+     * @return {void}
+     */
+    private getOrdersBySearch ():void {
+        /* Ok, let's get the search form information... */
+        let
+        searchForm = this.tabsControl[0].searchForm.value,
+        request = {};
+
+        /* Check if we have search parameters. */
+        console.log('searchForm', searchForm);
+        if (
+            ! searchForm.status[0] ||
+            ! searchForm.type[0]
+        ) {
+            return;
+        }
+
+        /* Build the rest of it. */
+        request['status'] = searchForm.status[0].id;
+        request['sortOrder'] = "ASC";
+        request['sortBy'] = "dateEntered";
+        request['partyType'] = 2;
+        request['pageSize'] = 123456789; // we're just getting all.
+        request['pageNum'] = 0; // no need for this.
+        request['asset'] = searchForm.name;
+        request['arrangementType'] = searchForm.type[0].id;
+
+        console.log(request);
+
+        /* ...then request the new list. */
+        this.ofiManageOrdersService.getOrdersList(request)
+        .then(response => true) // no need to do anything here.
+        .catch((error) => {
+            console.warn('failed to fetch orders list: ', error);
+            this.showError('Failed to fetch the latest orders.');
+        });
+    }
+
+    /**
+     * New Search FormGroup
+     * --------------------
+     * Instantiates a new FormGroup for the search form.
+     *
+     * @return {FormGroup} - the new FormGroup.
+     */
+    private newSearchFormGroup ():FormGroup {
+        return new FormGroup({
+            'name': new FormControl(''),
+            'status': new FormControl([ this.orderStatuses[0] ]),
+            'type': new FormControl([ this.orderTypes[0] ]),
+        });
+    }
+
+    /**
      * Format Date
      * -----------
      * Formats a date to a string.
@@ -130,11 +243,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * ss - 2 character seconds
      * @param  {string} formatString [description]
      * @param  {Date}   dateObj      [description]
-     * @return {[type]}              [description]
+     * @return {string}              [description]
      */
-    private formatDate (formatString:string, dateObj:Date) {
+    private formatDate (formatString:string, dateObj:Date):string {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return false;
+        if ( ! formatString || ! dateObj ) return '';
 
         /* Return the formatted string. */
         return formatString
@@ -172,6 +285,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     "text": "Search"
                 },
                 "orderId": -1,
+                "searchForm": this.newSearchFormGroup(),
                 "active": true
             }
         ];
