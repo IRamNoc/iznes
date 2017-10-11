@@ -17,6 +17,8 @@ import {MultilingualService} from '@setl/multilingual';
 import {FileService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
+import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
+import _ from 'lodash';
 
 interface User {
     id: number;
@@ -69,6 +71,13 @@ export class HomeComponent {
 
     public filesFormGroup: FormGroup;
 
+    /**
+     * On Drop Files subscriber
+     *
+     * @param event
+     *
+     * @return {void}
+     */
     public onDropFiles ( event ) {
         /* Event contains the latest changes. */
         console.log('file drop event emitted: ', event);
@@ -79,10 +88,24 @@ export class HomeComponent {
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            function (data) {
+            (function (data) {
                 console.log('Add File success: ');
                 console.log(data); // success
-            },
+                if (data[1] && data[1].Data) {
+                    let errorMessage = '';
+                    _.each(data[1].Data, function (returnData, fileIndex) {
+                        if (returnData.error) {
+                            errorMessage += returnData.error + '<br/>';
+                            event.target.updateFileStatus(fileIndex, 'file-error');
+                        } else {
+                            event.target.updateFileStatus(fileIndex, 'uploaded-file');
+                        }
+                    });
+                    if (errorMessage) {
+                        this.showAlert(errorMessage, 'error');
+                    }
+                }
+            }).bind(this),
             function (data) {
                 console.log('Add File error: ');
                 console.log(data); // error
@@ -90,10 +113,31 @@ export class HomeComponent {
         );
     }
 
+    /**
+     * Show Alert
+     *
+     * @param {string} message
+     * @param {string} level
+     *
+     * @return {void}
+     */
+    public showAlert(message, level = 'error') {
+        this.alertsService.create(level as AlertType, `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-${level}">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
+    }
+
     public constructor(
         private multilingualService: MultilingualService,
         private ngRedux: NgRedux<any>,
-        private fileService: FileService
+        private fileService: FileService,
+        private alertsService: AlertsService
     ) {
 
         /* Init the files form group. */
