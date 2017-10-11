@@ -1,4 +1,4 @@
-import {Component, OnInit, Pipe} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, Pipe} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {SagaHelper, Common} from '@setl/utils';
@@ -54,7 +54,8 @@ export class SetlMessagesComponent {
     private disabled: boolean = false;
 
     constructor(private ngRedux: NgRedux<any>,
-                private myMessageService: MyMessagesService) {
+                private myMessageService: MyMessagesService,
+                private changeDetectorRef: ChangeDetectorRef) {
 
         this.getMessageList.subscribe(
             (data) => {
@@ -248,7 +249,13 @@ export class SetlMessagesComponent {
             const id = this.currentMessage.id;
             this.currentMessage = this.messages[id];
             this.currentMessage.id = id;
+
+            this.changeDetectorRef.markForCheck();
         }
+
+
+        console.log('currentMessage');
+        console.log(this.currentMessage);
     }
 
     /**
