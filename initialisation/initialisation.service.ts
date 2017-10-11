@@ -26,7 +26,8 @@ import {
     setRequestedMyChainAccess,
     SET_MY_CHAIN_ACCESS,
     clearRequestedWalletHolding,
-    clearRequestedWalletAddresses
+    clearRequestedWalletAddresses,
+    clearRequestedWalletLabel
 } from '@setl/core-store';
 
 

@@ -25,3 +25,22 @@ export interface RequestWalletToRelationshipMessageBody extends MemberNodeMessag
     token: string;
     senderLei: number;
 }
+
+export interface RequestWalletLabelMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+}
+
+export interface NewWalletLabelMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+    option: string;
+    label: string;
+}
+
+export interface UpdateWalletLabelMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+    option: string;
+    label: string;
+}
