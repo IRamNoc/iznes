@@ -17,7 +17,8 @@
     </a>
 
     <a class="nav-link" [routerLink]="['/messages']" [ngClass]="{active: activeRoute('messages')}">
-        <i class="fa fa-envelope-o"></i> Messages <span class="label label-success">10</span>
+        <i class="fa fa-envelope-o"></i> Messages
+        <span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
     </a>
 
     <section class="nav-group collapsible">
