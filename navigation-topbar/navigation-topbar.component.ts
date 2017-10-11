@@ -127,7 +127,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log('calling ollie code');
         this.requestMailInitial.subscribe(
             (requestedState) => {
                 this.requestMailInitialCounts(requestedState);
