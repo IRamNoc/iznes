@@ -57,3 +57,8 @@ export interface UpdateSicavRequestBody extends MemberNodeMessageBody {
     logoName: any;
     logoURL: any;
 }
+
+export interface DeleteSicavRequestBody extends MemberNodeMessageBody {
+    token: any;
+    sicavID: any;
+}

@@ -14,6 +14,8 @@ import {
     OfiProductState,
     OfiProductReducer,
     SET_MANAGEMENT_COMPANY_LIST,
+    SET_SICAV_LIST,
+    SET_FUND_LIST,
 } from './ofi-product';
 
 export {
@@ -35,7 +37,9 @@ export {
 export {
     OfiProductState,
     OfiProductReducer,
-    SET_MANAGEMENT_COMPANY_LIST
+    SET_MANAGEMENT_COMPANY_LIST,
+    SET_SICAV_LIST,
+    SET_FUND_LIST,
 };
 
 export interface OfiState {
