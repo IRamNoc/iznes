@@ -27,6 +27,9 @@ import {AdminPermissionsComponent} from './permissions/permissions.component';
 
 import {PermissionGridModule} from '@setl/permission-grid';
 
+/* Manage sub-portfolio */
+import {ManageSubPortfolioComponent} from './sub-portfolio/component';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -41,6 +44,9 @@ import {PermissionGridModule} from '@setl/permission-grid';
 
         /* Wizard component. */
         AdminWizardComponent,
+
+        /* Manage sub portfolio */
+        ManageSubPortfolioComponent
     ],
     exports: [
         /* Users components. */
@@ -54,6 +60,9 @@ import {PermissionGridModule} from '@setl/permission-grid';
 
         /* Wizard component. */
         AdminWizardComponent,
+
+        /* Manage sub-portfolio */
+        ManageSubPortfolioComponent
     ],
     imports: [
         CommonModule,
@@ -62,7 +71,7 @@ import {PermissionGridModule} from '@setl/permission-grid';
         FormsModule,
         ClarityModule,
         SelectModule,
-        PermissionGridModule
+        PermissionGridModule,
     ],
     providers: [AdminUsersService]
 })
