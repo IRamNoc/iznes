@@ -21,18 +21,8 @@ export const MyWalletAddressReducer = function (state: MyWalletAddressState = in
                                                 action: AsyncTaskResponseAction) {
     switch (action.type) {
         case MyWalletAddressActions.SET_WALLET_ADDRESSES:
-            console.log(action);
 
-
-            const addressData = _.get(action, 'payload[1].data', []);
-
-            const addressList = formatAddressResponse(addressData);
-
-            const newState = Object.assign({}, state, {
-                addressList
-            });
-
-            return newState;
+            return handleSetWalletAddresses(state, action);
 
         case SET_REQUESTED_WALLET_ADDRESSES:
             return handleSetRequestedWalletAddresses(state);
@@ -73,6 +63,27 @@ function formatAddressResponse(rawAddressData: Array<any>): AddressDetailList {
     );
 
     return addressDetailList;
+}
+
+/**
+ * handle set wallet addresses action
+ * @param state
+ * @param action
+ */
+function handleSetWalletAddresses(state, action) {
+    const addressData = _.get(action, 'payload[1].data', []);
+
+    const addressListData = formatAddressResponse(addressData);
+    const currentAddressList = state.addressList;
+
+    const addressListDataImu = fromJS(addressListData);
+    const currentAddressListImu = fromJS(currentAddressList);
+
+    const newAddressListImu = addressListDataImu.mergeDeep(currentAddressListImu);
+
+    return Object.assign({}, state, {
+        addressList: newAddressListImu.toJS()
+    });
 
 }
 
@@ -128,13 +139,12 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
 
     const currentAddressLit = state.addressList;
     const currentAddressListImu = fromJS(currentAddressLit);
+    const formattedLabelDataImu = fromJS(formattedLabelData);
 
-    const newAddressImu = currentAddressListImu.map((addressItem, address) => {
-        return addressItem.set('label', formattedLabelData[address]['label']);
-    });
+    const newAddressListImu = currentAddressListImu.mergeDeep(formattedLabelDataImu);
 
     return Object.assign({}, state, {
-        addressList: newAddressImu.toJS()
+        addressList: newAddressListImu.toJS()
     });
 }
 
