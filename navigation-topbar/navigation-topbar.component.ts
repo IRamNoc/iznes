@@ -11,7 +11,8 @@ import {
     getAuthentication,
     setRequestedMailInitial,
     SET_MESSAGE_COUNTS,
-    clearRequestedMailInitial
+    clearRequestedMailInitial,
+    clearRequestedWalletLabel
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 import _ from 'lodash';
@@ -25,7 +26,6 @@ import {
 import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
-import {clearRequestedWalletLabel} from "../../core-store/wallet/my-wallet-address/actions";
 
 // setActiveWallet
 
