@@ -57,7 +57,7 @@
                                                (data)="refreshValue($event)"
                                                (selected)="selected($event)"
                                                (removed)="removed($event)"
-                                               placeholder="No city selected"></ng-select>
+                                               placeholder="Select Recipients"></ng-select>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                                 <label for="gForm_1">Subject</label>
                             </div>
                             <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
-                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" id="gForm_1" placeholder="Enter value here" size="45">
+                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" id="gForm_1" placeholder="" size="45">
                             </div>
                         </div>
                     </section>
@@ -83,7 +83,7 @@
 
 
                     <div class="message-compose-buttons">
-                        <button class="btn btn-danger-outline">
+                        <button class="btn btn-danger-outline" (click)="closeAndResetComposed()">
                             <clr-icon shape="times"></clr-icon>
                             Cancel
                         </button>
@@ -157,7 +157,7 @@
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted == true" [innerHtml]="currentMessage.content"></p>
+                            <p *ngIf="currentMessage.content" [innerHtml]="currentMessage.content"></p>
                         </div>
                     </div>
                 </div>

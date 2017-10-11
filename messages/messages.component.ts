@@ -1,4 +1,4 @@
-import {Component, OnInit, Pipe} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, Pipe} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {SagaHelper, Common} from '@setl/utils';
@@ -11,7 +11,8 @@ import {
     getNeedRunDecryptState,
     setDecryptedContent,
     getConnectedWallet,
-    getWalletDirectoryList
+    getWalletDirectoryList,
+    setRequestedMailList
 } from '@setl/core-store';
 
 
@@ -25,41 +26,13 @@ import {fromJS} from "immutable";
 })
 export class SetlMessagesComponent {
 
-    messageComposeForm: FormGroup;
-
-    public toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['blockquote'],
-
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'direction': 'rtl'}],                         // text direction
-
-        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
-
-        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
-        [{'font': []}],
-        [{'align': []}],
-
-        ['clean']                                         // remove formatting button
-    ];
-
-
-    public editorOptions = {
-        modules: {
-            toolbar: this.toolbarOptions    // Snow includes toolbar by default
-        },
-        placeholder: '',
-        bold: false,
-    };
-
+    public messageComposeForm: FormGroup;
     public editor;
 
     @select(['message', 'myMessages', 'messageList']) getMessageList;
-
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
-
     @select(['wallet', 'myWallets', 'walletList']) getMyWalletList;
+    @select(['message', 'myMessages', 'requestMailList']) requestMailList;
 
     public messages = [];
     public categories;
@@ -81,7 +54,8 @@ export class SetlMessagesComponent {
     private disabled: boolean = false;
 
     constructor(private ngRedux: NgRedux<any>,
-                private myMessageService: MyMessagesService) {
+                private myMessageService: MyMessagesService,
+                private changeDetectorRef: ChangeDetectorRef) {
 
         this.getMessageList.subscribe(
             (data) => {
@@ -98,6 +72,12 @@ export class SetlMessagesComponent {
         this.getMyWalletList.subscribe(
             (data) => {
                 this.myWalletList = data;
+            }
+        );
+
+        this.requestMailList.subscribe(
+            (requestedState) => {
+                this.reRequestMailList(requestedState);
             }
         );
 
@@ -260,7 +240,7 @@ export class SetlMessagesComponent {
         // }
 
         if (this.messages.length > 0) {
-            if (this.currentMessage[Object.keys(this.currentMessage)[0]] == 0) {
+            if (this.currentMessage[Object.keys(this.currentMessage)[0]] === 0) {
                 this.currentMessage = this.messages[0];
                 this.showMessage(0);
                 return;
@@ -269,7 +249,13 @@ export class SetlMessagesComponent {
             const id = this.currentMessage.id;
             this.currentMessage = this.messages[id];
             this.currentMessage.id = id;
+
+            this.changeDetectorRef.markForCheck();
         }
+
+
+        console.log('currentMessage');
+        console.log(this.currentMessage);
     }
 
     /**
@@ -350,6 +336,13 @@ export class SetlMessagesComponent {
         }
     }
 
+    closeAndResetComposed() {
+
+        this.showCategory(this.currentCategory, false);
+        this.messageComposeForm.reset();
+    }
+
+
     walletListToSelectItem(walletsList: Array<any>): Array<any> {
         const walletListImu = fromJS(walletsList);
         const walletsSelectItem = walletListImu.map(
@@ -419,17 +412,31 @@ export class SetlMessagesComponent {
         // Get response from set active wallet
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            function (data) {
+            (data) => {
                 console.log('success: ');
                 console.log(data); // success
+
+                this.closeAndResetComposed();
             },
-            function (data) {
+            (data) => {
                 console.log('error: ');
                 console.log(data); // error
             })
         );
 
     }
+
+    reRequestMailList(requestedState: boolean): void {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            if (!this.composeSelected) {
+                this.showCategory(this.currentCategory, false);
+            }
+        }
+    }
+
 
     public onEditorBlured(quill) {
         console.log('editor blur!', quill);
@@ -475,4 +482,30 @@ export class SetlMessagesComponent {
                 return item.text;
             }).join(',');
     }
+
+    public toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote'],
+
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'direction': 'rtl'}],                         // text direction
+
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        [{'font': []}],
+        [{'align': []}],
+
+        ['clean']                                         // remove formatting button
+    ];
+
+
+    public editorOptions = {
+        modules: {
+            toolbar: this.toolbarOptions    // Snow includes toolbar by default
+        },
+        placeholder: '',
+        bold: false,
+    };
 }
