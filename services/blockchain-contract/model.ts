@@ -58,15 +58,14 @@ export interface ConditionData {
 
 export interface ArrangementData {
     actions: Array<ActionData>;
-    docs: Array<any>;
+    docs?: Array<any>;
     expiry: number;
-    conditions: Array<ConditionData>;
-    datas: Array<any>;
-    numStep: number;
+    conditions?: Array<ConditionData>;
+    datas?: Array<any>;
+    numStep: string;
     stepTitle: string;
-    creatorAddr: string;
-    addEncs: Array<any>;
-    issuingAddress: string;
+    creatorAddress: string;
+    addEncs?: Array<any>;
 }
 
 

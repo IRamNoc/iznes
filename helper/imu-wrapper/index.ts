@@ -58,7 +58,25 @@ export function reduce(data: any, reduceFun: any, initialValue): any {
     const dataImu = fromJS(data);
 
     const reduced = dataImu.reduce(reduceFun, initialValue);
-    return reduced.toJS();
+    if (typeof reduced.toJs !== 'undefined') {
+        return reduced.toJS();
+    }
+    return reduced;
+}
+
+/**
+ * Immutable map
+ *
+ * @param data
+ * @param mapFun
+ * @param initialValue
+ */
+export function map(data: any, mapFun: any): any {
+    const dataImu = fromJS(data);
+
+    const maped = dataImu.map(mapFun);
+
+    return maped.toJS();
 }
 
 /**
