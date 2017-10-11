@@ -170,6 +170,56 @@ form, .form {
         }
     }
 
+    .button-input {
+        input[type] {
+            border: 1px solid #dadada;
+            background: white;
+            padding: 5px;
+            height: 40px;
+            width: 500px;
+            -webkit-border-radius: 3px 0 0 3px;
+            -moz-border-radius: 3px 0 0 3px;
+            border-radius: 3px 0 0 3px;
+            padding-left: 10px;
+            padding-right: 10px;
+            position: relative;
+            display: table;
+            border-collapse: separate;
+            float: left;
+
+            &:not([readonly]) {
+                &:focus {
+                    border-bottom: 0px solid #b9b9b9;
+                    &:not(.ui-select-search) {
+                        border: 1px solid #96c8f1 !important;
+                    }
+                }
+                background: white;
+            }
+        }
+
+        .btn {
+            height: 40px;
+            display: table-cell;
+            position: relative;
+            vertical-align: middle;
+            float: left;
+            -webkit-border-radius: 0 3px 3px 0;
+            -moz-border-radius: 0 3px 3px 0;
+            border-radius: 0 3px 3px 0;
+            margin: 0px;
+
+        }
+
+        input[type=text].error, form .form-group input[type=password].error {
+            border: 1px solid #ebafa6;
+        }
+
+        input[readonly] {
+            background-color: #f9f9f9;
+        }
+    }
+
     select {
         border: 1px solid #b9b9b9;
         padding: 0 20px;
