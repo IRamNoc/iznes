@@ -1,0 +1,211 @@
+<div class="header-breadcrumbs">
+    <h1 id="coupon-payments"><i class="fa fa-museum"></i> Manage Orders</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container *ngIf="id === 0">
+                    <!-- Coupon Payment list tab. -->
+                    <ng-container
+                        *ngTemplateOutlet="staticOrdersList"
+                    ></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id === 1">
+                    <!-- Create Coupon Payment tab. -->
+                    <!-- <ng-container
+                        *ngTemplateOutlet="staticCreateCouponPayment; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container> -->
+                </ng-container>
+
+                <ng-container *ngIf="id >= 2">
+                    <!-- View Coupon Payment tabs. -->
+                    <!-- <ng-container
+                        *ngTemplateOutlet="dynamicCouponPaymentView; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                    ></ng-container> -->
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Orders Data Table. -->
+    <ng-template #staticOrdersList>
+        <div class="panel-body">
+
+            <form id="search-orders-form">
+                <div class="row bordered form-group">
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_fundname">Fund Name</span>
+                        </label>
+                        <div class="input-button-group">
+                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                            <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_status">Status</span>
+                        </label>
+                        <div>
+                            <ng-select
+                                id="orders-search-status"
+                                [items]="orderStatuses"
+                                [allowClear]="true"
+                                (selected)="getOrdersBySearch()"
+                                (removed)="getOrdersBySearch()"
+                                [formControl]="tabsControl[0].searchForm.controls['status']"
+                                placeholder="Status"
+                            ></ng-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>
+                            <span mltag="txt_type">Type</span>
+                        </label>
+                        <div>
+                            <ng-select
+                                id="orders-search-type"
+                                [items]="orderTypes"
+                                [allowClear]="true"
+                                (selected)="getOrdersBySearch()"
+                                (removed)="getOrdersBySearch()"
+                                [formControl]="tabsControl[0].searchForm.controls['type']"
+                                placeholder="Type"
+                            ></ng-select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #ordersDataGrid>
+                <clr-dg-column>
+                        Action
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'investor')" class="sortable">
+                        Investor <i *ngIf="sort.name === 'investor'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'order-type')" class="sortable">
+                        Order type <i *ngIf="sort.name === 'order-type'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'order-ref')" class="sortable">
+                        Order REF <i *ngIf="sort.name === 'order-ref'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'fund-name')" class="sortable">
+                        Fund name <i *ngIf="sort.name === 'fund-name'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'amount')" class="sortable">
+                        Amount <i *ngIf="sort.name === 'amount'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'quantity')" class="sortable">
+                        Quantity <i *ngIf="sort.name === 'quantity'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'price')" class="sortable">
+                        Price <i *ngIf="sort.name === 'price'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'percentage')" class="sortable">
+                        Percentage <i *ngIf="sort.name === 'percentage'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'cut-off-date')" class="sortable">
+                        Cut-off date <i *ngIf="sort.name === 'cut-off-date'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'delivery-date')" class="sortable">
+                        Delivery date <i *ngIf="sort.name === 'delivery-date'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    Status
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let order of ordersList">
+
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button id="order-cancel-{{order.arrangementID}}" class="btn" disabled="disabled">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button id="order-view-{{order.arrangementID}}" class="btn">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    <!-- Action --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.advisorAccountName }}<!-- Investor --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.type }}<!-- Order type --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.ref }}<!-- Order REF --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.asset }}<!-- Fund name --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.units }}<!-- Amount --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.total }}<!-- Quantity --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.price }}<!-- Price --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.feePercent }}<!-- Percentage --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.cutoffDate }}<!-- Cut-off date --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.deliveryDate }}<!-- Delivery date --></clr-dg-cell>
+                    <clr-dg-cell>
+                        <!-- <span *ngIf="coupon.status == '1'" class="label label-warning">
+                            <span mltag="txt_waitingapproval">Waiting approval</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '2'" class="label label-warning">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '3'" class="label label-warning">
+                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '4'" class="label label-warning">
+                            <span mltag="txt_waitingvaluation">Waiting valuation</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '5'" class="label label-info">
+                            <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '-1'" class="label label-success">
+                            <span mltag="txt_settled">Settled</span>
+                        </span>
+
+
+                        <span *ngIf="coupon.status == '0'" class="label label-danger">
+                            <span mltag="txt_canceled">Canceled</span>
+                        </span> -->
+                    <!-- Status --></clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} coupon payments
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>

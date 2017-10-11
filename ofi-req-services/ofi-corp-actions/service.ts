@@ -16,8 +16,11 @@ import {
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
+
+    /* Coupons */
     OfiRequestCouponsList,
-    OfiSetNewCouponBody
+    OfiSetNewCouponBody,
+    OfiUpdateCouponBody
 } from './model';
 
 @Injectable()
@@ -126,7 +129,33 @@ export class OfiCorpActionService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [OFI_SET_USER_ISSUED_ASSETS]
+            'successActions': []
+        });
+    }
+
+    /**
+     * Update Coupon
+     * ----------------------
+     * Sends a request to update a coupon status.
+     *
+     * @return {Promise<any>} promise, resolved when response returns.
+     */
+    public updateCoupon(data): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiUpdateCouponBody = {
+            RequestName: 'updatecoupon',
+            token: this.memberSocketService.token,
+            couponId: data.couponId,
+            accountId: data.accountId,
+            amount: data.amount,
+            amountGross: data.amountGross,
+            status: data.status,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': []
         });
     }
 

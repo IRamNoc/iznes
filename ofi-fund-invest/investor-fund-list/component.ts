@@ -128,7 +128,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].fundShareId === this.fundList[index].id || this.tabsControl[i]['actionType'] === 'subscribe') {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
                 this.setTabActive(i);
 
                 return;
@@ -165,7 +165,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].fundShareId === this.fundList[index].id || this.tabsControl[i]['actionType'] === 'redeem') {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'redeem')) {
                 this.setTabActive(i);
 
                 return;
@@ -179,18 +179,41 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.tabsControl.push({
             title: {
-                icon: 'fa-sign-in',
+                icon: 'fa-sign-out',
                 text: fundShareName,
-                colorClass: 'text-primary'
+                colorClass: 'text-success'
             },
             fundShareId: fundShareId,
             fundShareData: fundShareData,
-            actionType: 'subscribe',
+            actionType: 'redeem',
             active: false
         })
         ;
 
         // Activate the new tab.
         this.setTabActive(this.tabsControl.length - 1);
+    }
+
+    /**
+     * Handle close tab click.
+     *
+     * @param {index} number - the tab index to close.
+     *
+     * @return {void}
+     */
+    closeTab(index: number): void {
+        if (!index && index !== 0) {
+            return;
+        }
+
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        // Reset Tabs.
+        this.setTabActive(0);
+
+        return;
     }
 }

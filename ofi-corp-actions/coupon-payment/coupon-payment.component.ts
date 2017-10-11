@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
@@ -34,6 +34,7 @@ import {
 @Component({
     styleUrls: ['./coupon-payment.component.css'],
     templateUrl: './coupon-payment.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
@@ -126,6 +127,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getCouponList().then(() => {
                 /* Redux subscription handles setting the property. */
+                this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get the coupon payment list.');
@@ -139,6 +141,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
+                this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get your issued assets.');
@@ -163,9 +166,9 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         newCoupon = {};
 
         /* Let's check if the form is valid first... */
-        if ( ! thisTab.formControl.valid && formData.couponFundShareName.length >= 1 ) {
+        if ( ! thisTab.formControl.valid || ! formData.couponFundShareName.length ) {
             /* ...tell the user if it isn't valid. */
-            this.showError('ayye yo, sort dis form out.');
+            this.showError('Please ensure this form is complete.');
 
             /* Then return. */
             return;
@@ -173,11 +176,6 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Get other data. */
         setFundShare = this.getFundById( formData.couponFundShareName[0].id )
-
-        console.log(' |--- New Coupon');
-        console.log(' | tab data: ', thisTab);
-        console.log(' | form data: ', formData);
-        console.log(' | selected fund: ', setFundShare);
 
         /* Ok, let's now start building the new coupon request. */
         newCoupon['userCreated'] = this.myDetails.username;
@@ -193,6 +191,19 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         newCoupon['accountId'] = this.myDetails.accountId;
         newCoupon['comment'] = formData.couponComments;
 
+        /* Date validation. */
+        if ( new Date(formData.couponSettlementDate +" "+ formData.couponSettlementTime) <= new Date() ) {
+            /* ...let the user know. */
+            this.showError('Please ensure all dates are set to a point in the future.');
+            return;
+        }
+
+        if ( new Date(formData.couponValuationDate +" "+ formData.couponValuationTime) <= new Date() ) {
+            /* ...let the user know. */
+            this.showError('Please ensure all dates are set to a point in the future.');
+            return;
+        }
+
         /* Dates. */
         newCoupon['dateLastUpdated'] = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date());
         newCoupon['dateSettlement'] = this.formatDate(
@@ -204,12 +215,20 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             new Date(formData.couponValuationDate +" "+ formData.couponValuationTime)
         );
 
-        console.log(' | built request: ', newCoupon);
         /* Now send the request. */
         this.ofiCorpActionService.setNewCoupon(newCoupon).then((response) => {
-            console.log('response: ', response);
+            /* Ok, let's clear the form... */
+            thisTab.formControl = this.newCouponFormGroup();
+
+            /* ...and move the user back to the table... */
+            this.setTabActive(0);
+
+            /* ...and then let the user know it went well. */
+            this.showSuccess('Successfully created the new coupon payment.');
         }).catch((error) => {
-            console.log('error: ', error);
+            /* Tell the user it went wrong. */
+            this.showError('Failed to create a new coupon payment.');
+            console.warn(error);
         })
 
         /* Return. */
@@ -241,16 +260,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        console.log(' | coupon: ', coupon);
-        /* TODO - view coupon.
-         * [ ] - create the new tab.
-         * [ ] - prefill the data.
-         * [ ] - implement the ability to update values.
-         */
-
         /* Workout some data before setting it. */
-        console.log(' | resolving date: ', coupon.dateValuation);
-        console.log(' | resolving date: ', coupon.dateSettlement);
         let
             fixedValudation = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation) ),
             fixedSettlement = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement) ),
@@ -296,6 +306,71 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Now make this tab active. */
         this.setTabActive(this.tabsControl.length - 1);
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Handle Update Coupon
+     * --------------------
+     * Updates a coupon status.
+     *
+     * @param {number} tabid - the tab that the call came from.
+     * @param {string} action - the action that was clicked.
+     *
+     * @return {void}
+     */
+    public handleUpdateCoupon (tabid: number, action : string) {
+        /* Validation. */
+        if ( ! tabid || ! action ) {
+            this.showError('Something went wrong, please try again.');
+            return;
+        }
+
+        /* Pointers. */
+        const
+            thisTab = this.tabsControl[ tabid ];
+
+        /* Let's start building the request. */
+        let
+            thisCoupon = this.getCouponById( thisTab.couponId ),
+            successMessage = "",
+            errorMessage = "",
+            updateCoupon = {
+                'couponId': thisTab.couponId,
+                'accountId': this.myDetails.accountId,
+                'amount': thisCoupon.amount,
+                'amountGross': thisCoupon.amountGross,
+                'status': 0, // -1 is settled, 0 is canceled.
+            };
+
+        /* Let's update the status to the correct value. */
+        switch (action) {
+            case 'approve':
+                updateCoupon.status = 2;
+                successMessage = "Successfully approved this coupon payment.";
+                errorMessage = "Failed to approve this coupon payment. Try again later.";
+                break;
+
+            case 'cancel':
+                updateCoupon.status = 0;
+                successMessage = "Successfully cancelled this coupon payment.";
+                errorMessage = "Failed to cancel this coupon payment. Try again later.";
+                break;
+        }
+
+        /* Ok, let's send the request now. */
+        this.ofiCorpActionService.updateCoupon( updateCoupon ).then((response) => {
+            /* Ok, so things went well, let's change the status on this tab to hide or show buttons... */
+            thisTab.couponStatus = updateCoupon.status;
+
+            /* ...and let the user know. */
+            this.showSuccess(successMessage);
+        }).catch((error) => {
+            /* Tell the user that it wans't successfully complete. */
+            this.showError(errorMessage);
+        });
 
         /* Return. */
         return;
@@ -375,6 +450,35 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Return whatever we found. */
         return userAsset;
+    }
+
+    /**
+     * Get Coupon By Id
+     * ----------------
+     * Gets a coupong by it's id.
+     *
+     * @param {number} id - the id of the coupon being requested.
+     * @return {object|false} - the coupon object if it's found, else false.
+     */
+    private getCouponById (id: number):boolean|any {
+        /* Variabes. */
+        let coupon;
+
+        /* Now, let's loop the coupon list... */
+        for (coupon of this.couponList) {
+            /* ...check if we've found the coupon... */
+            if (coupon.couponID == id) {
+                /* Breaking here leaves coupon set
+                   to the correct coupon object. */
+                break;
+            }
+
+            /* Reset the coupon, incase this is the end. */
+            coupon = false;
+        }
+
+        /* Return. */
+        return coupon;
     }
 
     /**

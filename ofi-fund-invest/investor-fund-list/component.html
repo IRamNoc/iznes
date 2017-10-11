@@ -15,11 +15,11 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    subscribe
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [type]="'subscribe'" (close)="closeTab(id)"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
-                    redeem
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [type]="'redeem'" (close)="closeTab(id)"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'viewFundDetail'">
@@ -52,7 +52,7 @@
                             <button class="btn text-primary" (click)="handleSubscribe(i)">
                                 <i class="fa fa-sign-in"></i> Subscribe
                             </button>
-                            <button class="btn text-success">
+                            <button class="btn text-success" (click)="handleRedeem(i)">
                                 <i class="fa fa-sign-out"></i> Redeem
                             </button>
                         </div>

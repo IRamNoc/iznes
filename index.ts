@@ -25,6 +25,13 @@ export {OfiCorpActionService} from './ofi-req-services/ofi-corp-actions/service'
 export {CouponPaymentComponent} from './ofi-corp-actions/coupon-payment/coupon-payment.component';
 
 /**
+ * Corporate Actions
+ */
+export {OfiManageOrdersModule} from './ofi-orders/ofi-manage-orders.module';
+export {OfiManageOrdersService} from './ofi-req-services/ofi-manage-orders/service';
+export {ManageOrdersComponent} from './ofi-orders/manage-orders/manage-orders.component';
+
+/**
  * Ofi main module
  */
 export {OfiMainModule} from './module';

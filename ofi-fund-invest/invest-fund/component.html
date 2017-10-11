@@ -1,0 +1,186 @@
+<form (ngSubmit)="handleSubmit()" [formGroup]="form" [class.error]="!form.valid && form.touched">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Registrar</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.registrar" [readonly]="true">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Fund share</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.shareName" [readonly]="true">
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">ISIN code</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.isin" [readonly]="true">
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Currency</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.currency" [readonly]="true">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <app-switch-button [value]="subscribeBy" (updateValue)="subscribeBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>
+                <div>
+                    <span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{formConfig.actionLabel}} by amount or unit for this fund share</span>.</span>
+                    <span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by quantity for this fund share</span>.</span>
+                    <span *ngIf="metaData.allowType === 'amount'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by amount for this fund share</span>.</span>
+                    <span class="help-block m-b-none text-success" [ngStyle]="{'width': '100%'}"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated" mltag="txt_decimalisation">Decimalisation</span>: <span class="decimalisation">0,00001</span>.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Quantity</span>
+                </label>
+                <div>
+                    <input type="text" formControlName="quantity" class="form-control mlp_translated"
+                           [readonly]="subscribeBy === 1"
+                           (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Net asset value</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Gross amount</span>
+                </label>
+                <div>
+                    <input type="text" formControlName="grossAmount" class="form-control mlp_translated"
+                           [readonly]="subscribeBy === 0"
+                           (focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div>
+                <span *ngIf="!metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by unknown NAV</span>.</span>
+                <span *ngIf="metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by known NAV</span>.</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Cut-off date</span>
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" [value]="metaData.cutoff | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Valuation date</span>
+                </label>
+
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" [value]="metaData.valuation | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Settlement date</span>
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                    <input [dpDayPicker]="configDate" [value]="metaData.settlement | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">{{formConfig.feeLabel}} fee</span>
+                    <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
+                </label>
+                <div>
+                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">
+                    <span class="ml_translated">Comment</span>
+                </label>
+                <div>
+                    <input type="text" formControlName="comment" class="form-control mlp_translated">
+                </div>
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="form-group button-group">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                    </button>
+                    <button (click)="handleClose()" class="btn btn-secondary">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
