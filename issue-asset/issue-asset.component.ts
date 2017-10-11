@@ -44,7 +44,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
     walletInstrumentsSelectItems: Array<any>;
 
-    walletAddressSelectItems: Array<any>;
+    walletAddressSelectItems: any;
 
     toRelationshipSelectItems: Array<any>;
 

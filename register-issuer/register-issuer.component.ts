@@ -31,7 +31,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     // Observable subscription array.
     subscriptionsArry: Array<Subscription> = [];
 
-    walletAddressSelectItems: Array<any>;
+    walletAddressSelectItems: any;
 
     registerIssuerForm: FormGroup;
     issuerIdentifier: AbstractControl;
