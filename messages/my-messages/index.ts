@@ -7,6 +7,8 @@ export {
     setDecryptedContent,
     SET_MESSAGE_COUNTS,
     setRequestedMailInitial,
-    clearRequestedMailInitial
+    clearRequestedMailInitial,
+    setRequestedMailList,
+    clearRequestedMailList
 } from './actions';
 export {getMyMessagesList, getNeedRunDecryptState} from './selectors';

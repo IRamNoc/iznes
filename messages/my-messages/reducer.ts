@@ -10,7 +10,8 @@ const initialState: MyMessagesState = {
     messageList: [],
     needRunDecrypt: false,
     counts: [],
-    requestMailInitial: true
+    requestMailInitial: true,
+    requestMailList: true
 };
 
 export const MyMessagesReducer = function (state: MyMessagesState = initialState, action) {
@@ -34,7 +35,13 @@ export const MyMessagesReducer = function (state: MyMessagesState = initialState
             return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, true);
 
         case MyMessageActions.CLEAR_REQUEST_MAIL_INIT:
-            return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, false);
+            return toggleRequestMailInit(MyMessageActions.CLEAR_REQUEST_MAIL_INIT, action, state, false);
+
+        case MyMessageActions.SET_REQUEST_MAIL_LIST:
+            return toggleRequestMailList(MyMessageActions.SET_REQUEST_MAIL_LIST, action, state, true);
+
+        case MyMessageActions.CLEAR_REQUEST_MAIL_LIST:
+            return toggleRequestMailList(MyMessageActions.CLEAR_REQUEST_MAIL_LIST, action, state, false);
 
         default:
             return state;
@@ -138,6 +145,15 @@ function toggleRequestMailInit(actionType, action, state, toggle) {
     return newState;
 }
 
+function toggleRequestMailList(actionType, action, state, toggle) {
+    let newState;
+
+    const requestMailList = toggle;
+    newState = Object.assign({}, state, {
+        requestMailList
+    });
+    return newState;
+}
 
 /**
  * Handle Decryption of Content

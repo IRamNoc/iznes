@@ -64,7 +64,9 @@ export {
     setDecryptedContent,
     setRequestedMailInitial,
     clearRequestedMailInitial,
-    SET_MESSAGE_COUNTS
+    SET_MESSAGE_COUNTS,
+    setRequestedMailList,
+    clearRequestedMailList
 } from './messages';
 
 export {
