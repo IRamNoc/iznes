@@ -44,7 +44,6 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
         const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (messageId, data, userData) => {
                 const status = _.get(data, 'Status', 'Fail');
-                console.log(data)
                 // status is ok -> success.
                 if (status === 'OK') {
                     // success
@@ -96,7 +95,6 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
     return SagaHelper.create(async () => {
         const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (errorCode, data) => {
-                console.log(data);
                 const status = _.get(data, 'status', 'Fail');
                 // No error code and status is ok -> success.
                 if (status === 'OK') {
