@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, Pipe} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, Pipe} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {Subscription} from 'rxjs/Subscription';
@@ -25,7 +25,7 @@ import {fromJS} from "immutable";
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
-export class SetlMessagesComponent {
+export class SetlMessagesComponent implements OnDestroy {
 
     public messageComposeForm: FormGroup;
     public editor;
@@ -35,6 +35,7 @@ export class SetlMessagesComponent {
     @select(['wallet', 'myWallets', 'walletList']) getMyWalletList;
     @select(['message', 'myMessages', 'requestMailList']) requestMailList;
     @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectoryList;
+    @select(['message', 'myMessages', 'counts']) getMailCounts;
 
     public messages = [];
     public categories;
@@ -102,41 +103,67 @@ export class SetlMessagesComponent {
 
         this.resetMessages();
 
-        this.getWalletDirectoryList.subscribe(
-            (requestedState) => {
-                this.walletDirectoryList = requestedState;
-                this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
-                this.items = this.walletWithCommuPub;
-            }
-        );
-
-        this.getConnectedWallet.subscribe(
-            (newWalletId) => {
-                if (newWalletId !== this.currentWalletId) {
-                    this.resetMessages();
-                    this.currentWalletId = newWalletId;
-                    this.requestMessages();
+        this.subscriptionsArray.push(
+            this.getWalletDirectoryList.subscribe(
+                (requestedState) => {
+                    this.walletDirectoryList = requestedState;
+                    this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
+                    this.items = this.walletWithCommuPub;
                 }
-                this.connectedWallet = newWalletId;
-            }
+            )
         );
 
-        this.getMyWalletList.subscribe(
-            (data) => {
-                this.myWalletList = data;
-            }
+        this.subscriptionsArray.push(
+            this.getConnectedWallet.subscribe(
+                (newWalletId) => {
+                    if (newWalletId !== this.currentWalletId) {
+                        this.resetMessages();
+                        this.currentWalletId = newWalletId;
+                        this.requestMessages();
+                    }
+                    this.connectedWallet = newWalletId;
+                }
+            )
         );
 
-        this.requestMailList.subscribe(
-            (requestedState) => {
-                this.reRequestMailList(requestedState);
-            }
+        this.subscriptionsArray.push(
+            this.getMyWalletList.subscribe(
+                (data) => {
+                    this.myWalletList = data;
+                }
+            )
         );
 
-        this.getMessageList.subscribe(
-            (data) => {
-                this.messagesList(data);
-            }
+        this.subscriptionsArray.push(
+            this.requestMailList.subscribe(
+                (requestedState) => {
+                    this.reRequestMailList(requestedState);
+                }
+            )
+        );
+
+        this.subscriptionsArray.push(
+            this.getMessageList.subscribe(
+                (data) => {
+                    this.messagesList(data);
+                }
+            )
+        );
+
+        this.subscriptionsArray.push(
+            this.getMessageList.subscribe(
+                (data) => {
+                    this.messagesList(data);
+                }
+            )
+        );
+
+        this.subscriptionsArray.push(
+            this.getMailCounts.subscribe(
+                (data) => {
+                    console.log('mail counts', data);
+                }
+            )
         );
 
         // ngRedux.subscribe(() => this.updateState());
@@ -149,6 +176,11 @@ export class SetlMessagesComponent {
         });
     }
 
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+    }
 
     /**
      * Requests Messages
@@ -172,7 +204,7 @@ export class SetlMessagesComponent {
             fromWallet,
             toWallet,
             0,
-            5,
+            8,
             0,
             0,
             requestIsDeleted,
