@@ -10,14 +10,33 @@ export class CommonService {
 
     getFundCharacteristic(shareData): FundCharacteristic {
 
+        const currentTimeStamp = mDateHelper.getCurrentUnixTimestamp();
+
         // Cutoff
         const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscription_cut-off'], 0);
         const sCutoffDate = mDateHelper.addDay(new Date(), sCutOffOffset);
         const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscription_cut-off_hour'], 0) + ':00';
+        const sCutoffDateStr = mDateHelper.unixTimestampToDateStr(sCutoffDate, 'YYYY-MM-DD');
+        let sCutoffDateTimeStr = sCutoffDateStr + ' ' + sCutoffTime;
+        let sCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
+        // if current time is pass the cutoff of today. use tomorrow's cutoff.
+        if (sCutoffDateTimeNumber < currentTimeStamp) {
+            sCutoffDateTimeNumber = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), 1);
+            sCutoffDateTimeStr = mDateHelper.unixTimestampToDateStr(sCutoffDateTimeNumber, 'YYYY-MM-DD HH:mm');
+        }
+
 
         const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemption_cut-off'], 0);
         const rCutoffDate = mDateHelper.addDay(new Date(), rCutOffOffset);
         const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemption_cut-off_hour'], 0) + ':00';
+        const rCutoffDateStr = mDateHelper.unixTimestampToDateStr(rCutoffDate, 'YYYY-MM-DD');
+        let rCutoffDateTimeStr = rCutoffDateStr + ' ' + rCutoffTime;
+        let rCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
+        // if current time is pass the cutoff of today. use tomorrow's cutoff.
+        if (rCutoffDateTimeNumber < currentTimeStamp) {
+            rCutoffDateTimeNumber = mDateHelper.addDay(new Date(rCutoffDateTimeNumber), 1);
+            rCutoffDateTimeStr = mDateHelper.unixTimestampToDateStr(rCutoffDateTimeNumber, 'YYYY-MM-DD HH:mm');
+        }
 
         // known nav
         const knownNav = Number(immutableHelper.get(shareData, ['metaData', 'known_nav'], 0)) === 1;
@@ -27,24 +46,39 @@ export class CommonService {
         let rValuationDate = 0;
         if (!knownNav) {
             const defaultValuationOffset = 1;
-            sValuationDate = mDateHelper.addDay(new Date(sCutoffDate), defaultValuationOffset);
-            rValuationDate = mDateHelper.addDay(new Date(rCutoffDate), defaultValuationOffset);
+            sValuationDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), defaultValuationOffset);
+            rValuationDate = mDateHelper.addDay(new Date(rCutoffDateTimeNumber), defaultValuationOffset);
         } else {
             sValuationDate = (new Date()).getTime();
             rValuationDate = (new Date()).getTime();
         }
         const sValuationTime = sCutoffTime;
+        const sValuationDateStr = mDateHelper.unixTimestampToDateStr(sValuationDate, 'YYYY-MM-DD');
+        const sValuationDateTimeStr = sValuationDateStr + ' ' + sValuationTime;
+        const sValuationDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sValuationDateTimeStr, 'YYYY-MM-DD HH:mm');
+
         const rValuationTime = rCutoffTime;
+        const rValuationDateStr = mDateHelper.unixTimestampToDateStr(rValuationDate, 'YYYY-MM-DD');
+        const rValuationDateTimeStr = rValuationDateStr + ' ' + rValuationTime;
+        const rValuationDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rValuationDateTimeStr, 'YYYY-MM-DD HH:mm');
 
 
         // settlement
         const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlement_date'], 0);
-        const sSettlementDate = mDateHelper.addDay(new Date(sCutoffDate), settlementDateOffset);
+        const sSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
 
-        const rSettlementDate = mDateHelper.addDay(new Date(sCutoffDate), settlementDateOffset);
+        const rSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
 
         const sSettlementTime = sCutoffTime;
         const rSettlementTime = rCutoffTime;
+
+        const sSettlementDateStr = mDateHelper.unixTimestampToDateStr(sSettlementDate, 'YYYY-MM-DD');
+        const sSettlementDateTimeStr = sSettlementDateStr + ' ' + sSettlementTime;
+        const sSettlementDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sSettlementDateTimeStr, 'YYYY-MM-DD HH:mm');
+
+        const rSettlementDateStr = mDateHelper.unixTimestampToDateStr(rSettlementDate, 'YYYY-MM-DD');
+        const rSettlementDateTimeStr = rSettlementDateStr + ' ' + rSettlementTime;
+        const rSettlementDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rSettlementDateTimeStr, 'YYYY-MM-DD HH:mm');
 
         // fee percentage
         const entryFee = Number(immutableHelper.get(shareData, ['entryFee'], 0)) || 0;
@@ -82,18 +116,24 @@ export class CommonService {
         const nav = this._numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));
 
         return {
-            sCutoffDate,
             sCutoffTime,
-            rCutoffDate,
+            sCutoffDateTimeStr,
+            sCutoffDateTimeNumber,
             rCutoffTime,
-            sValuationDate,
+            rCutoffDateTimeStr,
+            rCutoffDateTimeNumber,
             sValuationTime,
-            rValuationDate,
+            sValuationDateTimeStr,
+            sValuationDateTimeNumber,
             rValuationTime,
-            sSettlementDate,
+            rValuationDateTimeStr,
+            rValuationDateTimeNumber,
             sSettlementTime,
-            rSettlementDate,
+            sSettlementDateTimeStr,
+            sSettlementDateTimeNumber,
             rSettlementTime,
+            rSettlementDateTimeStr,
+            rSettlementDateTimeNumber,
             knownNav,
             entryFee,
             sAcquiredFee,
