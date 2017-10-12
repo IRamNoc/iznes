@@ -15,18 +15,11 @@
                     ></ng-container>
                 </ng-container>
 
-                <ng-container *ngIf="id === 1">
+                <ng-container *ngIf="id >= 1">
                     <!-- Create Coupon Payment tab. -->
-                    <!-- <ng-container
-                        *ngTemplateOutlet="staticCreateCouponPayment; context: {'formControl': tabdata.formControl, 'tabid': id}"
-                    ></ng-container> -->
-                </ng-container>
-
-                <ng-container *ngIf="id >= 2">
-                    <!-- View Coupon Payment tabs. -->
-                    <!-- <ng-container
-                        *ngTemplateOutlet="dynamicCouponPaymentView; context: {'formControl': tabdata.formControl, 'tabid': id}"
-                    ></ng-container> -->
+                    <ng-container
+                        *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
+                    ></ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -43,7 +36,7 @@
                             <span mltag="txt_fundname">Fund Name</span>
                         </label>
                         <div class="input-button-group">
-                            <input id="orders-search-fundname" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
                             <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
@@ -83,35 +76,79 @@
             </form>
 
             <clr-datagrid #ordersDataGrid>
-                <clr-dg-column>Action</clr-dg-column>
-                <clr-dg-column>Investor</clr-dg-column>
-                <clr-dg-column>Order type</clr-dg-column>
-                <clr-dg-column>Order REF</clr-dg-column>
-                <clr-dg-column>Fund name</clr-dg-column>
-                <clr-dg-column>Amount</clr-dg-column>
-                <clr-dg-column>Quantity</clr-dg-column>
-                <clr-dg-column>Price</clr-dg-column>
-                <clr-dg-column>Percentage</clr-dg-column>
-                <clr-dg-column>Cut-off date</clr-dg-column>
-                <clr-dg-column>Delivery date</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_action">Action</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'investor')" class="sortable">
+                        <span mltag="investor">Investor</span> <i *ngIf="sort.name === 'investor'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'orderType')" class="sortable">
+                        <span mltag="order_type">Order type</span> <i *ngIf="sort.name === 'orderType'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'orderRef')" class="sortable">
+                        <span mltag="order_ref">Order REF</span> <i *ngIf="sort.name === 'orderRef'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'fundName')" class="sortable">
+                        <span mltag="fund_name">Fund name</span> <i *ngIf="sort.name === 'fundName'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'amount')" class="sortable">
+                        <span mltag="amount">Amount</span> <i *ngIf="sort.name === 'amount'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'quantity')" class="sortable">
+                        <span mltag="quantity">Quantity</span> <i *ngIf="sort.name === 'quantity'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'price')" class="sortable">
+                        <span mltag="price">Price</span> <i *ngIf="sort.name === 'price'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'percentage')" class="sortable">
+                        <span mltag="percentage">Percentage</span> <i *ngIf="sort.name === 'percentage'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'cutOffDate')" class="sortable">
+                        <span mltag="cut-off_date">Cut-off date</span> <i *ngIf="sort.name === 'cutOffDate'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span (click)="switchSort($event, 'deliveryDate')" class="sortable">
+                        <span mltag="delivery_date">Delivery date</span> <i *ngIf="sort.name === 'deliveryDate'" class="fa fa-caret-up"></i>
+                    </span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="status">Status</span>
+                </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let order of ordersList">
 
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="order-cancel-{{order.arrangementID}}" class="btn">
-                                <i class="fa fa-times"></i> Cancel
+                            <button id="order-cancel-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn" disabled="disabled">
+                                <i class="fa fa-times"></i>
                             </button>
-                            <button id="order-view-{{order.arrangementID}}" class="btn">
-                                <i class="fa fa-search"></i> View
+                            <button id="order-view-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn">
+                                <i class="fa fa-search"></i>
                             </button>
                         </div>
                     <!-- Action --></clr-dg-cell>
-                    <clr-dg-cell>{{ order.advisorAccountName }}<!-- Investor --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.investorWalletName }}<br />{{ order.advisorAccountName }}<!-- Investor --></clr-dg-cell>
                     <clr-dg-cell>{{ order.type }}<!-- Order type --></clr-dg-cell>
-                    <clr-dg-cell>{{ order.metaData.ref }}<!-- Order REF --></clr-dg-cell>
-                    <clr-dg-cell>{{ order.asset }}<!-- Fund name --></clr-dg-cell>
+                    <clr-dg-cell>{{ padNumberLeft(order.arrangementID, 5) }}<!-- Order REF --></clr-dg-cell>
+                    <clr-dg-cell>{{ order.metaData.assetISIN }}<br />{{ order.asset }}<!-- Fund name --></clr-dg-cell>
                     <clr-dg-cell>{{ order.metaData.units }}<!-- Amount --></clr-dg-cell>
                     <clr-dg-cell>{{ order.total }}<!-- Quantity --></clr-dg-cell>
                     <clr-dg-cell>{{ order.metaData.price }}<!-- Price --></clr-dg-cell>
@@ -161,6 +198,196 @@
                     <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <!-- Orders Data Table. -->
+    <ng-template #dynamicViewOrder let-orderData="orderData" let-tabid="tabid">
+        <div class="panel-body">
+
+            <form id="view-order-form">
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_registrar">Registrar</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.metaData.registrar}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_fund_share">Fund share</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.asset}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_isin_code">ISIN Code</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.metaData.assetISIN}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_currency">Currency</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.metaData.currency}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_quantity">Quantity</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.metaData.units | moneyValueOfi}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_net_asset_value">Net Asset Value</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{orderData.price | moneyValueOfi}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_gross_amount">Gross Amount</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{(orderData.metaData.units * orderData.price) | moneyValueOfi}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <label>
+                            <span mltag="txt_cut-off_date">Cut-Off Date</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_date">Date</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderDate( orderData.cutoffDate ) }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_time_utc">Time (UTC)</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderTime( orderData.cutoffDate ) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <label>
+                            <span mltag="txt_valuation_date">Valuation Date</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_date">Date</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderDate( orderData.valuationDate ) }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_time_utc">Time (UTC)</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderTime( orderData.valuationDate ) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <label>
+                            <span mltag="txt_settlement_date">Settlement Date</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_date">Date</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderDate( orderData.deliveryDate ) }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_time_utc">Time (UTC)</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ getOrderTime( orderData.deliveryDate ) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_entry_fee_percent">Entry Fee (3.75%)</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValueOfi }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="dashed" />
+
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <label>
+                            <span mltag="txt_comment">Comment</span>
+                        </label>
+                        <div>
+                            <span class="readonly-field">{{ orderData.metaData.ref }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group button-group">
+                    <div class="col-sm-12">
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary">
+                            Close
+                        </a>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </ng-template>
 

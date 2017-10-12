@@ -12,6 +12,12 @@ import {
     SET_SICAV_LIST,
 } from './sicav';
 
+import {
+    FundState,
+    FundReducer,
+    SET_FUND_LIST,
+} from './fund';
+
 export {
     ManagementCompanyState,
     ManagementCompanyReducer,
@@ -19,14 +25,19 @@ export {
     SicavState,
     SicavReducer,
     SET_SICAV_LIST,
+    FundState,
+    FundReducer,
+    SET_FUND_LIST,
 };
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
+    ofiFund: FundState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
+    ofiFund: FundReducer,
 });

@@ -4,7 +4,7 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody} from './management-company.service.model';
+import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody, DeleteManagementCompanyRequestBody} from './management-company.service.model';
 import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
 interface ManagementCompanyData {
@@ -31,6 +31,10 @@ interface ManagementCompanyData {
     giinCode: any;
     logoName: any;
     logoURL: any;
+}
+
+interface DeleteManagementCompany {
+    companyID: any;
 }
 
 @Injectable()
@@ -109,6 +113,17 @@ export class OfiManagementCompanyService {
             giinCode: mcData.giinCode,
             logoName: mcData.logoName,
             logoURL: mcData.logoURL,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    deleteManagementCompany(mcData: DeleteManagementCompany, ngRedux: NgRedux<any>): any {
+
+        const messageBody: DeleteManagementCompanyRequestBody = {
+            RequestName: 'deletemanagementcompany',
+            token: this.memberSocketService.token,
+            companyID: mcData.companyID
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

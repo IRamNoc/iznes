@@ -57,10 +57,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id:  2, text: 'Waiting for NAV'},
         {id:  3, text: 'Waiting for Settlement'},
         {id: -1, text: 'Order settled'},
-        {id:  0, text: 'Cancelled'},
+        {id:  "0", text: 'Cancelled'},
     ];
     public orderTypes: Array<SelectedItem> = [
-        {id: 0, text: 'All'},
+        {id: "0", text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
     ];
@@ -71,6 +71,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private ordersList: Array<any> = [];
     private myDetails: any = {};
     private requestedSearch:any;
+    private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' };
 
     /* Observables. */
     @select(['ofi', 'ofiManageOrders', 'manageOrders', 'orderList']) ordersListOb:any;
@@ -140,8 +141,58 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleViewOrder (orderId: number):void {
+        /* Find the order. */
+        let order = this.getOrderById(orderId);
+        if (! order) return;
+
+        console.log('Viewing order: ', order);
+        /* Push a new tab into the tabs control... */
+        this.tabsControl.push(
+            {
+                "title": {
+                    "icon": "fa-pencil",
+                    "text": this.padNumberLeft(order.arrangementID, 5)
+                },
+                "orderId": -1,
+                "active": false,
+                "orderData": order
+            }
+        );
+
+        /* Detect the changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* ...then set it active. */
+        this.setTabActive(this.tabsControl.length - 1);
+
+        /* Detect the changes. */
+        this.changeDetectorRef.detectChanges();
+
         /* Return. */
         return;
+    }
+
+    /**
+     * Get Order By ID
+     * ---------------
+     * Get an order by it's ID.
+     *
+     * @param  {number} orderId - an order id.
+     * @return {any|boolean} - the order, if found or just false.
+     */
+    private getOrderById (orderId: number):any|boolean {
+        /* Ok, let's loop over the orders list... */
+        let order;
+        for (order of this.ordersList) {
+            /* ..if this is the order, break, to return it... */
+            if ( order.arrangementID === orderId ) break;
+
+            /* ...else set order to false, incase this is last loop. */
+            order = false;
+        }
+
+        /* Return. */
+        return order;
     }
 
     /**
@@ -186,17 +237,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Check if we have search parameters. */
         console.log('searchForm', searchForm);
-        if (
-            ! searchForm.status[0] ||
-            ! searchForm.type[0]
-        ) {
+        if (! searchForm.status[0] || ! searchForm.type[0]) {
             return;
         }
 
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
-        request['sortOrder'] = "ASC";
-        request['sortBy'] = "dateEntered";
+        request['sortOrder'] = this.sort.direction;
+        request['sortBy'] = this.sort.name;
         request['partyType'] = 2;
         request['pageSize'] = 123456789; // we're just getting all.
         request['pageNum'] = 0; // no need for this.
@@ -212,6 +260,55 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             console.warn('failed to fetch orders list: ', error);
             this.showError('Failed to fetch the latest orders.');
         });
+    }
+
+    /**
+     * Switch Sort
+     * -----------
+     * Switches a sort and registers which we're using.
+     *
+     * @param {any} event - the click event.
+     * @param {string} name - the sort name.
+     */
+    switchSort (event: any, name: string):void {
+        console.log(event, name);
+        /* Find the header's caret. */
+        let elms = event.target.getElementsByTagName('i'), caret;
+        if (elms.length && elms[0].classList) {
+            caret = elms[0];
+        }
+
+        console.log(' |--- Switch Sort');
+        console.log(' | event: ', event);
+        console.log(' | name: ', name);
+
+        /* If we've clicked the one we're sorting by, reverse sort. */
+        if (name === this.sort.name && caret) {
+            console.log(" | >> flip flop");
+            /* Reverse. */
+            if ( this.sort.direction === "ASC" ) {
+                this.sort.direction = "DESC";
+                caret.classList.remove('fa-caret-up');
+                caret.classList.add('fa-caret-down');
+            } else {
+                this.sort.direction = "ASC";
+                caret.classList.remove('fa-caret-down');
+                caret.classList.add('fa-caret-up');
+            }
+        }
+
+        /* If not, then set this as the one we're sorting by. */
+        else if (name !== this.sort.name) {
+            console.log(" | >> change");
+            this.sort.name = name;
+            this.sort.direction = "ASC";
+        }
+
+        /* Send for a search. */
+        this.getOrdersBySearch();
+
+        /* Return. */
+        return;
     }
 
     /**
@@ -241,6 +338,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * hH - 2 character hour (12 hour)
      * mm - 2 character minute
      * ss - 2 character seconds
+     *
      * @param  {string} formatString [description]
      * @param  {Date}   dateObj      [description]
      * @return {string}              [description]
@@ -262,6 +360,65 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     private numPad (num) {
         return num < 10 ? "0"+num : num;
+    }
+
+    /**
+     * Calc Entry Fee
+     * --------------
+     * Calculates the entry fee from the grossAmount.
+     *
+     * @param  {number} grossAmount - the grossAmount.
+     * @return {number}             - the entry fee.
+     */
+    private calcEntryFee (grossAmount:number): number {
+        return Math.round(grossAmount * .0375);
+    }
+
+    /**
+     * Get Order Date
+     *
+     * @param  {string} dateString - the order's date string.
+     * @return {string}            - the formatted date or empty string.
+     */
+    private getOrderDate (dateString):string {
+        return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
+    }
+
+    /**
+     * Get Order Time
+     *
+     * @param  {string} dateString - the order's date string.
+     * @return {string}            - the formatted time or empty string.
+     */
+    private getOrderTime (dateString):string {
+        return this.formatDate('hh:mm:ss', new Date(dateString));
+    }
+
+    /**
+     * Pad Number Left
+     * -------------
+     * Pads a number left
+     *
+     * @param  {number} num - the couponId.
+     * @return {string}
+     */
+    private padNumberLeft (num: number|string, zeros?: number):string {
+        /* Validation. */
+        if ( ! num && num != 0) return "";
+        zeros = zeros || 2;
+
+        /* Variables. */
+        num = num.toString();
+        let // 11 is the total required string length.
+        requiredZeros = zeros - num.length,
+        returnString = "";
+
+        /* Now add the zeros. */
+        while (requiredZeros--) {
+            returnString += "0";
+        }
+
+        return returnString + num;
     }
 
     /**
@@ -335,7 +492,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             i.active = false;
         });
 
-        /* Override the changes. */
+        /* Detect the changes. */
         this.changeDetectorRef.detectChanges();
 
         /* Set the list active. */
