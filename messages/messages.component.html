@@ -44,9 +44,9 @@
                 </div>
                 <form [formGroup]="messageComposeForm" (ngSubmit)="sendMessage()">
                     <section class="">
-                        <div class=" row">
+                        <div class="row">
                             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
-                                <label for="gForm_3">To</label>
+                                <label><b>To</b></label>
                             </div>
                             <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12">
                                 <div class="select form-control">
@@ -103,15 +103,15 @@
                     <div class="col-sm-5 message-highlights">
                         <div class="message-options">
                             <h2>Inbox All Messages ({{messages.length || 0}})</h2>
-                            <button class="btn btn-outline btn-sm">
+                            <button class="btn btn-outline btn-sm" (click)="refreshMailbox()">
                                 <clr-icon shape="refresh"></clr-icon>
                                 Refresh
                             </button>
-                            <button class="btn btn-success-outline btn-sm">
-                                <clr-icon shape="eye"></clr-icon>
-                                Mark as read
-                            </button>
-                            <button class="btn btn-danger-outline btn-sm">
+                            <!--<button class="btn btn-success-outline btn-sm">-->
+                            <!--<clr-icon shape="eye"></clr-icon>-->
+                            <!--Mark as read-->
+                            <!--</button>-->
+                            <button class="btn btn-danger-outline btn-sm" (click)="deleteMessage()">
                                 <clr-icon shape="trash"></clr-icon>
                                 Delete
                             </button>
@@ -120,7 +120,7 @@
                         <div class="message-highlight {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
                                 <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
-                                {{ message.senderId }}
+                                {{message.senderWalletName}}
                             </h6>
 
                             <h4>
@@ -146,18 +146,18 @@
                             <span>from</span>
                             <b class="message-from">
                                 <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
-                                {{currentMessage.senderId}}
+                                {{currentMessage.senderWalletName}}
                             </b> to
                             <b class="message-to">
-                                <img class="message-img-sender" src="http://localhost:4200/assets/images/ollie.jpg">
-                                Ollie Kett
+                                <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
+                                {{currentMessage.recipientWalletName}}
                             </b>
 
                             <h1 [innerHtml]="currentMessage.subject"></h1>
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content" [innerHtml]="currentMessage.content"></p>
+                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted" [innerHtml]="currentMessage.content"></p>
                         </div>
                     </div>
                 </div>

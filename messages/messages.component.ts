@@ -34,7 +34,6 @@ export class SetlMessagesComponent {
     @select(['wallet', 'myWallets', 'walletList']) getMyWalletList;
     @select(['message', 'myMessages', 'requestMailList']) requestMailList;
     @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectoryList;
-    @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectoryList;
 
     public messages = [];
     public categories;
@@ -58,44 +57,6 @@ export class SetlMessagesComponent {
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef) {
-
-        this.getMessageList.subscribe(
-            (data) => {
-                this.messagesList(data);
-            }
-        );
-
-        this.getConnectedWallet.subscribe(
-            (newWalletId) => {
-                if (newWalletId !== this.currentWalletId) {
-                    console.log('i shouldnt hit here');
-                    this.resetMessages();
-                    this.currentWalletId = newWalletId;
-                    this.requestMessages();
-                }
-                this.connectedWallet = newWalletId;
-            }
-        );
-
-        this.getMyWalletList.subscribe(
-            (data) => {
-                this.myWalletList = data;
-            }
-        );
-
-        this.requestMailList.subscribe(
-            (requestedState) => {
-                this.reRequestMailList(requestedState);
-            }
-        );
-
-        this.getWalletDirectoryList.subscribe(
-            (requestedState) => {
-                this.walletDirectoryList = requestedState;
-                this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
-                this.items = this.walletWithCommuPub;
-            }
-        );
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
@@ -136,10 +97,48 @@ export class SetlMessagesComponent {
             },
         ];
 
+        this.resetMessages();
+
+        this.getWalletDirectoryList.subscribe(
+            (requestedState) => {
+                this.walletDirectoryList = requestedState;
+                this.walletWithCommuPub = this.walletListToSelectItem(this.walletDirectoryList);
+                this.items = this.walletWithCommuPub;
+            }
+        );
+
+        this.getConnectedWallet.subscribe(
+            (newWalletId) => {
+                if (newWalletId !== this.currentWalletId) {
+                    console.log('i shouldnt hit here');
+                    this.resetMessages();
+                    this.currentWalletId = newWalletId;
+                    this.requestMessages();
+                }
+                this.connectedWallet = newWalletId;
+            }
+        );
+
+        this.getMyWalletList.subscribe(
+            (data) => {
+                this.myWalletList = data;
+            }
+        );
+
+        this.requestMailList.subscribe(
+            (requestedState) => {
+                this.reRequestMailList(requestedState);
+            }
+        );
+
+        this.getMessageList.subscribe(
+            (data) => {
+                this.messagesList(data);
+            }
+        );
+
         // ngRedux.subscribe(() => this.updateState());
         // this.updateState();
-
-        this.resetMessages();
 
         this.messageComposeForm = new FormGroup({
             subject: new FormControl('', Validators.required),
@@ -216,53 +215,36 @@ export class SetlMessagesComponent {
     }
 
     /**
-     * Handles incoming Redux state when Updated
+     * Message List
+     *
+     * @param messages
      */
-    updateState() {
-        // const newState = this.ngRedux.getState();
-        // const newMessages = getMyMessagesList(newState);
-        //
-        // console.log('messages ------');
-        // console.log(this.messages);
-
-
-        /*
-        // if (getNeedRunDecryptState(newState) && newMessages !== this.messages) {
-        //     // this.decrypt(this.messages[0].recipientId, this.messages[0].senderPub, this.messages[0].content);
-        //     this.ngRedux.dispatch({type: DONE_RUN_DECRYPT});
-        //     for (const i in this.messages) {
-        //         const message = this.messages[i];
-        //
-        //         this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
-        //
-        //         // sent box
-        //         // this.decrypt(message.mailId, message.senderId, message.recipientPub, message.content);
-        //     }
-        // }
-        */
-
-
-        // if (this.messages.length > 0) {
-        //     if (this.currentMessage[Object.keys(this.currentMessage)[0]] === 0) {
-        //         this.currentMessage = this.messages[0];
-        //         this.showMessage(0);
-        //         return;
-        //     }
-        //
-        //     const id = this.currentMessage.id;
-        //     this.currentMessage = this.messages[id];
-        //     this.currentMessage.id = id;
-        //
-        //     this.changeDetectorRef.markForCheck();
-        // }
-        //
-        //
-        // console.log('currentMessage');
-        // console.log(this.currentMessage);
-    }
-
     messagesList(messages) {
         this.messages = messages;
+
+
+        this.messages = messages.map((message) => {
+            const senderId = message.senderId;
+            const senderWallet = this.walletDirectoryList[senderId].walletName;
+            message.senderWalletName = senderWallet;
+
+            const recipientId = message.recipientId;
+            const recipientWallet = this.walletDirectoryList[recipientId].walletName;
+            message.recipientWalletName = recipientWallet;
+            return message;
+        });
+
+        if (this.messages.length > 0) {
+            this.showMessage(this.currentMessage.id);
+        }
+    }
+
+    refreshMailbox() {
+        console.log('refresh current mailbox');
+    }
+
+    deleteMessage() {
+        console.log('delete message');
     }
 
     /**
@@ -274,6 +256,7 @@ export class SetlMessagesComponent {
 
         // set message to active to apply message-active css class
         this.messages[index].active = true;
+        this.messages[index].isRead = true;
 
         // set the current message that appears on the right hand side
         this.currentMessage = this.messages[index];
@@ -294,6 +277,8 @@ export class SetlMessagesComponent {
                 this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
             }
         }
+
+        this.currentMessage.isRead = true;
     }
 
     /**
