@@ -69,7 +69,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToManageOrders() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToPage("orders");
+        navigateToPage("manage-orders");
     }
     @Test
     public void shouldNavigateToUsers() throws IOException, InterruptedException {
@@ -136,12 +136,6 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-member");
-    }
-    @Test
-    public void shouldNavigateToAccount() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-account");
     }
     @Test
     public void shouldNavigateToChainMember() throws IOException, InterruptedException {
