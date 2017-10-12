@@ -28,9 +28,9 @@
 
     <div
         class="drop-file-meta"
-        *ngIf="encodedFiles.length">
+        *ngIf="uploadedFiles.length">
         <span
-            *ngFor="let file of encodedFiles; let i = index">
+            *ngFor="let file of uploadedFiles; let i = index">
             <span class="tablet added-file {{file.status}}" (click)="stopPropagation($event);clearFiles(i)" *ngIf="file.name">
                 <i class="fa fa-times"></i> {{ file.name }}
             </span>

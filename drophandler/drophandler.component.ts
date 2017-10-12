@@ -9,6 +9,7 @@ import {
     Renderer,
     ChangeDetectorRef
 } from '@angular/core';
+import _ from 'lodash';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 
 import {FormControl} from '@angular/forms';
@@ -24,42 +25,42 @@ import {FormControl} from '@angular/forms';
 export class DropHandler {
 
     /* Events */
-    @Output() onDropFiles:EventEmitter<{}> = new EventEmitter();
+    @Output() onDropFiles: EventEmitter<{}> = new EventEmitter();
 
     /* Allow multiple. */
-    @Input() multiple:boolean = false;
+    @Input() multiple = false;
 
     /* Form control. */
-    @Input() formControl:FormControl;
+    @Input() formControl: FormControl;
 
     /* Inputs and forms. */
-    @ViewChild('fileInput') public fileInput:ElementRef;
-    @ViewChild('dropFileForm') public formElem:ElementRef;
+    @ViewChild('fileInput') public fileInput: ElementRef;
+    @ViewChild('dropFileForm') public formElem: ElementRef;
 
     /* Public variables. */
-    public isHovering:boolean = false;
-    public encodedFiles:any = [];
-    public numberFilesText:any;
-    public uploadPrompt:any;
+    public isHovering = false;
+    public encodedFiles: any = [];
+    public numberFilesText: any;
+    public uploadPrompt: any;
 
     /* Private variables. */
-    private uploadedFiles:any = [];
-    private silentEncodedFiles:any = [];
-    private proccessInterval:any;
-    private removingFile:boolean = false;
-    private maxFileSize:number = 10485760; // 10 MB
+    private uploadedFiles: any = [];
+    private silentEncodedFiles: any = [];
+    private processInterval: any;
+    private removingFile = false;
+    private maxFileSize = 10485760; // 10 MB
 
     /* Constructor */
     public constructor (
-        public renderer:Renderer,
-        public changeDetectorRef:ChangeDetectorRef,
+        public renderer: Renderer,
+        public changeDetectorRef: ChangeDetectorRef,
         public alertsService: AlertsService
     ) {
         /* Stub */
     }
 
     /* On View Init. */
-    public ngAfterViewInit ():void {
+    public ngAfterViewInit (): void {
         /* Fix the text on the ui. */
         if (this.multiple) {
             this.uploadPrompt = 'Drag and Drop files here, or Click to Upload';
@@ -85,11 +86,11 @@ export class DropHandler {
      * @param  {event} object - The drop event, contains all information.
      * @return {boolean}
      */
-    public handleDrop (event):boolean {
+    public handleDrop (event): boolean {
         /* Check if files were dropped... */
         if ( event.dataTransfer && event.dataTransfer.files ) {
-            let invalidFileNames = [];
-            let validFiles = [];
+            const invalidFileNames = [];
+            const validFiles = [];
             _.each(event.dataTransfer.files, (function (file) {
                 if (!this.isValidFileSize(file)) {
                     invalidFileNames.push(file.name);
@@ -143,12 +144,14 @@ export class DropHandler {
      * @param  {event} object - Contains information about the click.
      * @return {boolean}
      */
-    public handleClick(event):boolean {
+    public handleClick(event): boolean {
         /* Cancel if we're just removing a file. */
-        if ( this.removingFile ) return;
+        if ( this.removingFile ) {
+            return;
+        }
 
         /* Handle click event of native file input. */
-        let clickevent = new MouseEvent('click', {bubbles: true});
+        const clickevent = new MouseEvent('click', {bubbles: true});
         this.renderer.invokeElementMethod(
             this.fileInput.nativeElement, 'dispatchEvent', [clickevent]
         );
@@ -171,11 +174,11 @@ export class DropHandler {
      * @param {event} object - the change event on the file input.
      * @return {boolean}
      */
-    public handleFileChange (event):boolean {
+    public handleFileChange (event): boolean {
         /* Check. */
         if ( event.target && event.target.files ) {
-            let invalidFileNames = [];
-            let validFiles = [];
+            const invalidFileNames = [];
+            const validFiles = [];
             _.each(event.target.files, (function (file, fileIndex) {
                 if (!this.isValidFileSize(file)) {
                     invalidFileNames.push(file.name);
@@ -207,8 +210,8 @@ export class DropHandler {
             /* Set the uploaded files. */
             this.addFiles(validFiles);
 
-            /* Proccess the files. */
-            this.handleConversion()
+            /* Process the files. */
+            this.handleConversion();
         }
 
         /* Return. */
@@ -223,9 +226,9 @@ export class DropHandler {
      * @param  {array} files - an array of the files.
      * @return {void}
      */
-    private addFiles (files):void {
+    private addFiles (files): void {
         /* Loop over each... */
-        for (let file of files) {
+        for (const file of files) {
             /* ...and push. */
             this.uploadedFiles.push(file);
         }
@@ -238,8 +241,9 @@ export class DropHandler {
      *
      * @return {void}
      */
-    private handleConversion ():void {
-        /* Proccess files. */
+    private handleConversion (): void {
+        /* Process files. */
+        this.encodedFiles = this.uploadedFiles;
         this.base64Files(this.uploadedFiles, (processedFiles) => {
             /* Set the new files. */
             this.encodedFiles = processedFiles;
@@ -265,7 +269,7 @@ export class DropHandler {
      * @param  {event} object - object of event.
      * @return {boolean}
      */
-    public stopPropagation(event):boolean {
+    public stopPropagation(event): boolean {
         /* Stop bubbling. */
         event.preventDefault();
 
@@ -280,7 +284,7 @@ export class DropHandler {
      *
      * @param {event} object - An object of the event.
      */
-    public onDragEnter (event):void {
+    public onDragEnter (event): void {
         /* Change the hovering state. */
         this.isHovering = true;
 
@@ -295,7 +299,7 @@ export class DropHandler {
      *
      * @param {event} object - An object of the event.
      */
-    public onDragLeave (event):void {
+    public onDragLeave (event): void {
         /* Change the hovering state. */
         this.isHovering = false;
 
@@ -310,7 +314,7 @@ export class DropHandler {
      *
      * @param {index} number - The index of the file in the array to be removed.
      */
-    public clearFiles(index):void {
+    public clearFiles(index): void {
         /* If we're not mutliple, then just reset the form. */
         if ( ! this.multiple ) {
             this.formElem.nativeElement.reset();
@@ -353,16 +357,18 @@ export class DropHandler {
      * @param  {callback} Function - a callback function, passed the encoded files array.
      * @return {void}
      */
-    private base64Files (files, callback):void {
+    private base64Files (files, callback): void {
         /* Variables. */
         let
         i,
-        file:File,
-        myReader:FileReader,
-        grandTotal:number = 0;
+        file: File,
+        myReader: FileReader,
+        grandTotal = 0;
 
         /* Return if no files. */
-        if ( ! files.length ) return;
+        if ( ! files.length ) {
+            return;
+        }
 
         /* If mutliple, only do the first. */
         if ( ! this.multiple ) {
@@ -378,7 +384,7 @@ export class DropHandler {
             file = files[i];
 
             /* Check for file. */
-            if ( ! file ) {
+            if ( ! file  || file.status === 'uploaded-file') {
                 continue;
             }
 
@@ -391,27 +397,34 @@ export class DropHandler {
             /* Set on load handler and bind this. */
             myReader.onload = this.handleFileConverted.bind(this);
 
-            /* Proccess the file. */
+            /* Process the file. */
             myReader.readAsBinaryString(file);
         }
 
         /* Now wait for all files to be done. */
-        this.proccessInterval = setInterval(() => {
+        this.processInterval = setInterval(() => {
             /* Check if the files have been processed. */
             if ( grandTotal === this.silentEncodedFiles.length ) {
                 /* If they're all done, clear this interval. */
-                clearInterval(this.proccessInterval);
+                clearInterval(this.processInterval);
 
                 /* Let's loop over the files.... */
+                let j = 0;
                 for ( i = 0; i < files.length; i++ ) {
                     /* ...continue if no file... */
-                    if ( ! file ) {
+                    console.log('silentEncodedFiles : ', this.silentEncodedFiles);
+                    if ( ! files[i] || files[i].status === 'uploaded-file') {
                         continue;
                     }
 
                     /* ...if we have a file, add the meta data back... */
-                    this.silentEncodedFiles[i].name = files[i].name;
-                    this.silentEncodedFiles[i].lastModified = files[i].lastModified;
+                    if (this.silentEncodedFiles[j]) {
+                        this.silentEncodedFiles[j].name = files[i].name;
+                        this.silentEncodedFiles[j].lastModified = files[i].lastModified;
+                        this.silentEncodedFiles[j].status = files[i].status;
+                        this.silentEncodedFiles[j].id = i;
+                    }
+                    j++;
                 }
 
                 /* Call the callback, when done. */
@@ -434,7 +447,7 @@ export class DropHandler {
             'files': this.encodedFiles
         });
 
-        /* Also patch the from control value. */
+        /* Also patch the form control value. */
         this.formControl.patchValue( this.encodedFiles );
     }
 
@@ -446,7 +459,7 @@ export class DropHandler {
      * @param  {readerEvt} object - the reader event object.
      * @return {void}
      */
-    private handleFileConverted (readerEvt):void {
+    private handleFileConverted (readerEvt): void {
         /* Encode the raw data in base64. */
         const base64data = btoa(readerEvt.target.result);
 
@@ -461,7 +474,7 @@ export class DropHandler {
      *
      * @return {void}
      */
-    private updateFilesText ():void {
+    private updateFilesText (): void {
         /* Update. */
         this.numberFilesText = (
             (!this.encodedFiles || this.encodedFiles.length === 0) ? 'No' : this.encodedFiles.length) + ' ' +
@@ -480,10 +493,12 @@ export class DropHandler {
      * @return {void}
      */
     public updateFileStatus(fileIndex, status) {
-        if (fileIndex > this.encodedFiles.length - 1) {
-            return;
+        if (this.uploadedFiles[fileIndex]) {
+            this.uploadedFiles[fileIndex].status = status;
         }
-        this.encodedFiles[fileIndex].status = status;
+        if (this.encodedFiles[fileIndex]) {
+            this.encodedFiles[fileIndex].status = status;
+        }
     }
 
     /**
