@@ -83,7 +83,9 @@ export class HomeComponent {
         console.log('file drop event emitted: ', event);
 
         const asyncTaskPipe = this.fileService.addFile({
-            files: event.files
+            files: _.filter(event.files, function (file) {
+               return file.status !== 'uploaded-file';
+            })
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -93,12 +95,12 @@ export class HomeComponent {
                 console.log(data); // success
                 if (data[1] && data[1].Data) {
                     let errorMessage = '';
-                    _.each(data[1].Data, function (returnData, fileIndex) {
-                        if (returnData.error) {
-                            errorMessage += returnData.error + '<br/>';
-                            event.target.updateFileStatus(fileIndex, 'file-error');
+                    _.each(data[1].Data, function (file) {
+                        if (file.error) {
+                            errorMessage += file.error + '<br/>';
+                            event.target.updateFileStatus(file.id, 'file-error');
                         } else {
-                            event.target.updateFileStatus(fileIndex, 'uploaded-file');
+                            event.target.updateFileStatus(file[0].id, 'uploaded-file');
                         }
                     });
                     if (errorMessage) {
