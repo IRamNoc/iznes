@@ -18,6 +18,9 @@ import {ManageOrdersComponent} from './manage-orders/manage-orders.component';
 /* Services. */
 import {OfiManageOrdersService} from '../ofi-req-services/ofi-manage-orders/service';
 
+/* Multilingual module. */
+import {MultilingualModule} from '@setl/multilingual';
+
 /* Decorator. */
 @NgModule({
     declarations: [
@@ -33,7 +36,8 @@ import {OfiManageOrdersService} from '../ofi-req-services/ofi-manage-orders/serv
         FormsModule,
         ClarityModule,
         SelectModule,
-        SetlPipesModule
+        SetlPipesModule,
+        MultilingualModule
     ],
     providers: [
         OfiManageOrdersService
