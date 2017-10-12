@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit, Pipe} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
+import {Subscription} from 'rxjs/Subscription';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 
@@ -53,6 +54,8 @@ export class SetlMessagesComponent {
     private value: any = ['Athens'];
     private _disabledV: string = '0';
     private disabled: boolean = false;
+
+    subscriptionsArray: Array<Subscription> = [];
 
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
@@ -217,8 +220,6 @@ export class SetlMessagesComponent {
      */
     messagesList(messages) {
         this.messages = messages;
-
-
         this.messages = messages.map((message) => {
             const senderId = message.senderId;
             const senderWallet = this.walletDirectoryList[senderId].walletName;
@@ -414,6 +415,7 @@ export class SetlMessagesComponent {
 
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
+            this.ngRedux.dispatch(setRequestedMailList());
             // Set the state flag to true. so we do not request it again.
             if (!this.composeSelected) {
                 this.showCategory(this.currentCategory, false);
