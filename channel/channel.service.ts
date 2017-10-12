@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
+import {ToasterService} from 'angular2-toaster';
 
 import {
     /* Useradmin */
@@ -15,6 +16,10 @@ import {
     /* Manage members. */
     SET_MANAGE_MEMBER_LIST,
     SET_ACCOUNT_LIST,
+    clearRequestedMailList,
+    clearRequestedMailInitial,
+    setRequestedMailList,
+    setRequestedMailInitial,
 } from '@setl/core-store';
 
 @Injectable()
@@ -24,7 +29,8 @@ export class ChannelService {
 
     changedPassword = false;
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>,
+                private  toasterService: ToasterService) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -148,7 +154,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_ACCOUNT_LIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
                 break;
@@ -156,10 +162,13 @@ export class ChannelService {
             default:
                 break;
 
-            case 'send_email': // send email
+            case 'email_send': // send email
 
                 // request new emails
+                this.ngRedux.dispatch(clearRequestedMailInitial());
+                this.ngRedux.dispatch(clearRequestedMailList());
 
+                this.toasterService.pop('info', 'You got mail!');
                 break;
         }
     }
