@@ -91,8 +91,6 @@ export class HomeComponent {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (function (data) {
-                console.log('Add File success: ');
-                console.log(data); // success
                 if (data[1] && data[1].Data) {
                     let errorMessage = '';
                     _.each(data[1].Data, function (file) {
@@ -109,8 +107,16 @@ export class HomeComponent {
                 }
             }).bind(this),
             function (data) {
-                console.log('Add File error: ');
-                console.log(data); // error
+                let errorMessage = '';
+                _.each(data[1].Data, function (file) {
+                    if (file.error) {
+                        errorMessage += file.error + '<br/>';
+                        event.target.updateFileStatus(file.id, 'file-error');
+                    }
+                });
+                if (errorMessage) {
+                    this.showAlert(errorMessage, 'error');
+                }
             })
         );
     }
