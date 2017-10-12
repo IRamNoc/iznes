@@ -3,8 +3,8 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {StringFilter, Comparator} from "clarity-angular";
-import {Component, AfterViewInit} from "@angular/core";
+import {StringFilter, Comparator} from 'clarity-angular';
+import {Component, AfterViewInit} from '@angular/core';
 
 import {fromJS} from 'immutable';
 
@@ -13,6 +13,12 @@ import {FileDropComponent} from '@setl/core-filedrop';
 import {FormGroup, FormControl} from '@angular/forms';
 
 import {MultilingualService} from '@setl/multilingual';
+
+import {FileService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
+import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
+import _ from 'lodash';
 
 interface User {
     id: number;
@@ -53,7 +59,7 @@ export class HomeComponent {
 
     public tabs: Array<any>;
 
-    basic: boolean = false;
+    basic = false;
 
     /*
      * File Drop Example.
@@ -63,22 +69,90 @@ export class HomeComponent {
      * onDropFiles captures the event put out too.
      */
 
-    public filesFormGroup:FormGroup;
+    public filesFormGroup: FormGroup;
 
+    /**
+     * On Drop Files subscriber
+     *
+     * @param event
+     *
+     * @return {void}
+     */
     public onDropFiles ( event ) {
         /* Event contains the latest changes. */
         console.log('file drop event emitted: ', event);
+
+        const asyncTaskPipe = this.fileService.addFile({
+            files: _.filter(event.files, function (file) {
+               return file.status !== 'uploaded-file';
+            })
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (function (data) {
+                if (data[1] && data[1].Data) {
+                    let errorMessage = '';
+                    _.each(data[1].Data, function (file) {
+                        if (file.error) {
+                            errorMessage += file.error + '<br/>';
+                            event.target.updateFileStatus(file.id, 'file-error');
+                        } else {
+                            event.target.updateFileStatus(file[0].id, 'uploaded-file');
+                        }
+                    });
+                    if (errorMessage) {
+                        this.showAlert(errorMessage, 'error');
+                    }
+                }
+            }).bind(this),
+            function (data) {
+                let errorMessage = '';
+                _.each(data[1].Data, function (file) {
+                    if (file.error) {
+                        errorMessage += file.error + '<br/>';
+                        event.target.updateFileStatus(file.id, 'file-error');
+                    }
+                });
+                if (errorMessage) {
+                    this.showAlert(errorMessage, 'error');
+                }
+            })
+        );
+    }
+
+    /**
+     * Show Alert
+     *
+     * @param {string} message
+     * @param {string} level
+     *
+     * @return {void}
+     */
+    public showAlert(message, level = 'error') {
+        this.alertsService.create(level as AlertType, `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-${level}">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
     public constructor(
-        private multilingualService:MultilingualService,
+        private multilingualService: MultilingualService,
+        private ngRedux: NgRedux<any>,
+        private fileService: FileService,
+        private alertsService: AlertsService
     ) {
 
         /* Init the files form group. */
         this.filesFormGroup = new FormGroup({
             'singleFile': new FormControl([]),
             'multipleFiles': new FormControl([])
-        })
+        });
 
         this.users = [
             {
