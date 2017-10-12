@@ -32,3 +32,10 @@ export interface NewAddressMessageBody extends WalletNodeMessageBody {
     register: string;
 }
 
+export interface NewContractMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    address: string;
+    'function': string;
+    contractdata: string;
+}
+

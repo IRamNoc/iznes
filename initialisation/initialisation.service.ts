@@ -27,7 +27,9 @@ import {
     SET_MY_CHAIN_ACCESS,
     clearRequestedWalletHolding,
     clearRequestedWalletAddresses,
-    clearRequestedWalletLabel
+    clearRequestedAllInstruments,
+    setRequesteAllInstruments,
+    SET_ALL_INSTRUMENTS_LIST
 } from '@setl/core-store';
 
 
@@ -113,6 +115,31 @@ export class InitialisationService {
         // Send a saga action.
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_WALLET_HOLDING],
+            [],
+            asyncTaskPipes,
+            {},
+            function (data) {
+            },
+
+            function (data) {
+            }
+        ));
+
+        return false;
+    }
+
+    static requestAllInstruments(ngRedux: NgRedux<any>,
+                                 walletNodeRequestService: WalletNodeRequestService) {
+        ngRedux.dispatch(setRequesteAllInstruments());
+
+        // Create a saga pipe.
+        const asyncTaskPipes = walletNodeRequestService.walletInstrumentRequest({
+            walletId: 0
+        });
+
+        // Send a saga action.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ALL_INSTRUMENTS_LIST],
             [],
             asyncTaskPipes,
             {},
@@ -331,6 +358,9 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested wallet holding
         ngRedux.dispatch(clearRequestedWalletHolding());
+
+        // clear (set to false) the state of requested all instruments
+        ngRedux.dispatch(clearRequestedAllInstruments());
     }
 
 
