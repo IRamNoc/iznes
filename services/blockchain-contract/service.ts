@@ -204,7 +204,7 @@ export class BlockchainContractService {
         const addEncData = immutableHelper.get(arrangementData, 'addEncs', []);
 
         // first address in wallet or issuing address.
-        const contractCreatorAddr = immutableHelper.get(arrangementData, 'issuingAddress', false);
+        const contractCreatorAddr = immutableHelper.get(arrangementData, 'creatorAddress', false);
 
         const expiry = arrangementData.expiry;
 
@@ -339,8 +339,9 @@ function constructPartiesListData(partiesData: PartiesData): Array<number | Part
             // construct pay list
             const partyPayData = partiesData[address].pay;
             const partyPayList: Array<PartyListEntryPayListData> = immutableHelper.reduce(partyPayData,
-                (resultPayList: Array<PartyListEntryPayListData>, payData: PayAmountData, asset: string) => {
+                (resultPayList: Array<PartyListEntryPayListData>, payDataImu: any, asset: string) => {
 
+                    const payData: PayAmountData = payDataImu.toJS();
                     const assetParts = asset.split(/[|:]/);
                     const payAmount = payData.amount;
                     const payPublicKey = ''; // optional
@@ -400,11 +401,12 @@ function constructPartiesListData(partiesData: PartiesData): Array<number | Part
  * @return {any}
  */
 function getAuthorisationList(arrangementData: ArrangementData): Array<AuthorisationEntryData> {
-    const conditionDataList: Array<ConditionData> = arrangementData.conditions;
+    const conditionDataList: Array<ConditionData> = immutableHelper.get(arrangementData, 'conditions', []);
     let authorisationId = 0;
 
     // get authorisations from conditions
-    const authorisationsList = immutableHelper.reduce(conditionDataList, (resultAuthorisationsList, condition: ConditionData) => {
+    const authorisationsList = immutableHelper.reduce(conditionDataList, (resultAuthorisationsList, conditionImu: any) => {
+        const condition = conditionImu.toJS();
         const conditionType = condition.conditionType;
 
         if (conditionType === ConditionType.AUTHORISE) {
@@ -423,13 +425,15 @@ function getAuthorisationList(arrangementData: ArrangementData): Array<Authorisa
             resultAuthorisationsList.push(authorisationRow);
             authorisationId++;
 
-            return resultAuthorisationsList;
         }
+        return resultAuthorisationsList;
     }, []);
 
     // get verifier list from docs
-    const docDataList = arrangementData.docs;
-    const verifierList = immutableHelper.reduce(docDataList, (resultVerifierList, doc) => {
+    const docDataList = immutableHelper.get(arrangementData, 'docs', []);
+    const verifierList = immutableHelper.reduce(docDataList, (resultVerifierList, docImu) => {
+        const doc = docImu.toJS();
+
         const docHash = doc.hash;
         const docTitle = doc.fileTitle;
         const docVerifiers = doc.verifyAddresses;
@@ -441,7 +445,8 @@ function getAuthorisationList(arrangementData: ArrangementData): Array<Authorisa
 
         const msgStr = JSON.stringify(msg);
 
-        const docVerifiersList = immutableHelper.reduce(docVerifiers, (resultDocVerifierList, docVerifier) => {
+        const docVerifiersList = immutableHelper.reduce(docVerifiers, (resultDocVerifierList, docVerifierImu) => {
+            const docVerifier = docVerifierImu.toJS();
 
             // store verifier in authorisation list.
             const docVerifierMeta = {
@@ -479,7 +484,8 @@ function getExecuteTimeStamp(arrangementData: ArrangementData): number {
 
     // get execution from conditions
     // if multiple execution time condition. pick the first one.
-    const executionTimeList = immutableHelper.reduce(conditionDataList, (resultAuthorisationsList, condition: ConditionData) => {
+    const executionTimeList = immutableHelper.reduce(conditionDataList, (resultAuthorisationsList, conditionImu: any) => {
+        const condition: ConditionData = conditionImu.toJS();
         const conditionType = condition.conditionType;
 
         if (conditionType === ConditionType.TIME) {
@@ -490,8 +496,8 @@ function getExecuteTimeStamp(arrangementData: ArrangementData): number {
 
             resultAuthorisationsList.push(executionTime);
 
-            return resultAuthorisationsList;
         }
+        return resultAuthorisationsList;
     }, []);
 
     // if multiple execution time condition. pick the first one.
@@ -500,9 +506,10 @@ function getExecuteTimeStamp(arrangementData: ArrangementData): number {
 
 function getMetaData(arrangementData: ArrangementData) {
 
-    const docDataList = arrangementData.docs;
+    const docDataList = immutableHelper.get(arrangementData, 'docs', []);
 
-    const docMetaData = immutableHelper.reduce(docDataList, (resultDocMetaData, doc) => {
+    const docMetaData = immutableHelper.reduce(docDataList, (resultDocMetaData, docImu) => {
+        const doc = docImu.toJS();
 
         const docHash = doc.hash;
         const docTitle = doc.fileTitle;
@@ -523,10 +530,11 @@ function getMetaData(arrangementData: ArrangementData) {
 
 function getParametersData(arrangementData: ArrangementData): Array<ParameterData> {
 
-    const datas = arrangementData.datas;
+    const datas = immutableHelper.get(arrangementData, 'datas', []);
 
-    const paramtersData: Array<ParameterData> = immutableHelper.reduce(datas, (resultParametersData, data) => {
-        const dataName = data.parameters;
+    const paramtersData: Array<ParameterData> = immutableHelper.reduce(datas, (resultParametersData, dataImu) => {
+        const data = dataImu.toJS();
+        const dataName = data.parameter;
         const dataAddress = data.address;
 
         resultParametersData[dataName] = [dataAddress, '', 0, 0, 0, ''];
