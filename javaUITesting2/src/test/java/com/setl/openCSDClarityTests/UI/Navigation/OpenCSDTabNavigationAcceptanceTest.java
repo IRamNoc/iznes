@@ -91,12 +91,4 @@ public class OpenCSDTabNavigationAcceptanceTest {
         Thread.sleep(500);
         clickLink("link1");
     }
-    @Test
-    public void shouldNavigateToChainAdminTabAccount() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-account");
-        Thread.sleep(500);
-        clickLink("link1");
-    }
 }
