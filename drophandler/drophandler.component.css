@@ -48,3 +48,13 @@
     cursor: pointer;
     display: inline-block;
 }
+
+.drop-file-meta .uploaded-file {
+    background-color: green;
+    color: white;
+}
+
+.drop-file-meta .file-error {
+    background-color:darkred;
+    color:white;
+}

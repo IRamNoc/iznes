@@ -9,13 +9,13 @@
     <div
         class="drop-file-area"
         [ngClass]="{active: this.isHovering}"
-        (drag)="stopPropigation($event)"
-        (dragstart)="stopPropigation($event)"
-        (dragend)="stopPropigation($event);onDragLeave($event)"
-        (dragover)="stopPropigation($event);onDragEnter($event)"
-        (dragenter)="stopPropigation($event)"
-        (dragleave)="stopPropigation($event);onDragLeave($event)"
-        (drop)="stopPropigation($event);onDragLeave($event)"
+        (drag)="stopPropagation($event)"
+        (dragstart)="stopPropagation($event)"
+        (dragend)="stopPropagation($event);onDragLeave($event)"
+        (dragover)="stopPropagation($event);onDragEnter($event)"
+        (dragenter)="stopPropagation($event)"
+        (dragleave)="stopPropagation($event);onDragLeave($event)"
+        (drop)="stopPropagation($event);onDragLeave($event)"
         (click)="handleClick($event)"
         (drop)="handleDrop($event)">
         <p>
@@ -28,10 +28,10 @@
 
     <div
         class="drop-file-meta"
-        *ngIf="encodedFiles.length">
+        *ngIf="uploadedFiles.length">
         <span
-            *ngFor="let file of encodedFiles; let i = index">
-            <span class="tablet added-file" (click)="stopPropigation($event);clearFiles(i)" *ngIf="file.name">
+            *ngFor="let file of uploadedFiles; let i = index">
+            <span class="tablet added-file {{file.status}}" (click)="stopPropagation($event);clearFiles(i)" *ngIf="file.name">
                 <i class="fa fa-times"></i> {{ file.name }}
             </span>
         </span>
