@@ -7,6 +7,7 @@ import {
     OfiFundInvestState,
     OfiFundInvestReducer
 } from './ofi-fund-invest';
+
 export {
     SET_FUND_ACCESS_MY,
     clearRequestedFundAccessMy,
@@ -21,6 +22,9 @@ import {
     OfiCorpActionsReducer
 } from './ofi-corp-actions';
 
+/*
+    Ofi Product
+ */
 import {
     OfiProductState,
     OfiProductReducer,
@@ -40,21 +44,13 @@ export {
 } from './ofi-corp-actions';
 
 /*
-    Ofi Product
- */
-import {
-    OfiProductState,
-    OfiProductReducer,
-    SET_MANAGEMENT_COMPANY_LIST,
-} from './ofi-product';
-
-/*
     Ofi Manage Orders
  */
 import {
     OfiManageOrdersState,
     OfiManageOrdersReducer
 } from './ofi-manage-orders';
+
 export {
     /* Orders List. */
     getOfiOrderList,
