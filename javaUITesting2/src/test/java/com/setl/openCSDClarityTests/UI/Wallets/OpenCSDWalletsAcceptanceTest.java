@@ -17,6 +17,8 @@ import java.util.Random;
 
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.WalletDetailsHelper.navigateToAddWallet;
+import static com.setl.UI.common.SETLUIHelpers.WalletDetailsHelper.verifyPopupMessageText;
 import static junit.framework.TestCase.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
@@ -46,192 +48,115 @@ public class OpenCSDWalletsAcceptanceTest {
     }
 
     @Test
-  public void shouldNavigateToWallets() throws IOException, InterruptedException {
+    public void shouldNavigateToWallets() throws IOException, InterruptedException {
 
     }
 
-  public static void verifyPopupMessageText(String alertText, String failText) throws InterruptedException {
-    try {
-      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-      wait.until(visibilityOfElementLocated(By.className("jaspero__dialog")));
-      wait.until(elementToBeClickable(driver.findElement(By.cssSelector("default ng-tns-c16-3"))));
-    }catch (TimeoutException t) {
-      System.out.println(failText + "Timed Out  " + t.getMessage());
-    }catch (NoSuchElementException n) {
-      System.out.println(failText + "Popup not present  " + n.getMessage());
-    }catch (ElementNotVisibleException v) {
-      System.out.println(failText + "Popup not visible  " + v.getMessage());
-    }catch (ElementNotSelectableException s) {
-      System.out.println(failText + "Confirm button not ready  " + s.getMessage());
+    public static void enterWalletName(String walletname) throws IOException, InterruptedException {
+        driver.findElement(By.id("new-wallet-name")).clear();
+        driver.findElement(By.id("new-wallet-name")).sendKeys(walletname);
     }
-    try {
-      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-      wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-      if (!(driver.findElement(By.className("jaspero__dialog-title")).getText().contains(alertText))) {
-        Assert.fail("Actual message was : " + (driver.findElement(By.cssSelector(SweetAlert)).getText() + " " + (driver.findElement(By.cssSelector((SweetAlertHeader))).getText())));
-      }
-    }catch (Exception e)
-    {
-      System.out.println("No Text present " + e.getMessage());
-      fail();
+    public static void clickWalletSubmit() throws IOException, InterruptedException {
+        driver.findElement(By.id("new-wallet-submit")).click();
     }
-    driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-  }
+    public static void selectAccountType() throws IOException, InterruptedException {
+        driver.findElement(By.id("new-wallet-account-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
+    }
+    public static void selectWalletType() throws IOException, InterruptedException {
+        driver.findElement(By.id("new-wallet-usertype-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
+    }
 
     @Test
     public void shouldNotCreateWalletWithoutAccountAndWalletType() throws IOException, InterruptedException {
-        driver.findElement(By.id("wallet-tab-1")).click();
-        try {
-          driver.findElement(By.id("manage-wallets")).isDisplayed();
-        }catch (Error e){
-          System.out.println("wallet-tab-2 not present");
-          fail();
-        }
-        driver.findElement(By.id("new-wallet-name")).sendKeys("Testing_Wallet1");
-        driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        enterWalletName("Testing_Wallet");
+        clickWalletSubmit();
         verifyPopupMessageText("Error", "");
     }
 
     @Test
     public void shouldNotCreateWalletWithoutWalletType() throws IOException, InterruptedException {
-        driver.findElement(By.id("wallet-tab-1")).click();
-        try {
-          driver.findElement(By.id("manage-wallets")).isDisplayed();
-        }catch (Error e){
-          System.out.println("wallet-tab-2 not present");
-          fail();
-        }
-        driver.findElement(By.id("new-wallet-name")).sendKeys("Testing_Wallet");
-        driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        enterWalletName("Testing_Wallet");
+        selectAccountType();
+        clickWalletSubmit();
         verifyPopupMessageText("Error", "");
     }
 
     @Test
     public void shouldCreateWallet() throws IOException, InterruptedException {
-        driver.findElement(By.id("wallet-tab-1")).click();
-        try {
-          driver.findElement(By.id("manage-wallets")).isDisplayed();
-        }catch (Error e){
-          System.out.println("wallet-tab-2 not present");
-          fail();
-        }
-      Random rand = new Random();
-      int guess = rand.nextInt(998) + 1;
-        driver.findElement(By.id("new-wallet-name")).sendKeys("Testing_Wallet" + guess);
-        driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-wallet-usertype-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
-        driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        Random rand = new Random();
+        int guess = rand.nextInt(998) + 1;
+        enterWalletName("Testing_Wallet" + guess);
+        selectAccountType();
+        selectWalletType();
+        clickWalletSubmit();
         verifyPopupMessageText("Success", "");
     }
     @Ignore
     @Test
     public void shouldNotCreateDuplicateWallet() throws IOException, InterruptedException {
-        driver.findElement(By.id("wallet-tab-1")).click();
-        try {
-          driver.findElement(By.id("manage-wallets")).isDisplayed();
-        }catch (Error e){
-          System.out.println("wallet-tab-2 not present");
-          fail();
-        }
-        driver.findElement(By.id("new-wallet-name")).sendKeys("Testing_Wallet12345");
-        driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-wallet-usertype-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
-        driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        enterWalletName("Testing_Wallet_dup");
+        selectAccountType();
+        selectWalletType();
+        clickWalletSubmit();
         verifyPopupMessageText("Success", "");
-        driver.findElement(By.id("new-wallet-name")).sendKeys("Testing_Wallet12345");
-        driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-wallet-usertype-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
-        driver.findElement(By.id("new-wallet-submit")).click();
+        enterWalletName("Testing_Wallet_dup");
+        selectAccountType();
+        selectWalletType();
+        clickWalletSubmit();
         verifyPopupMessageText("Error", "");
     }
 
-  @Ignore
+    @Ignore
     @Test
     public void shouldResetWallet() throws IOException, InterruptedException {
-      driver.findElement(By.id("edit-4")).click();
-      try {
-        driver.findElement(By.id("wallet-tab-2")).isDisplayed();
-      }catch (Error e){
-        System.out.println("wallet-tab-2 not present");
-        fail();
-      }
-      driver.findElement(By.id("new-wallet-name")).clear();
-      driver.findElement(By.id("new-wallet-name")).sendKeys("Payment_Bank1");
-      driver.findElement(By.id("new-wallet-submit")).click();
-      try {
-        driver.findElement(By.className("new-wallet-name")).click();
-      } catch (Error e){
-        System.out.println("hello Jordan");
-        fail();
-      }
+        navigateToAddWallet();
+        enterWalletName("Payment_Bank1");
+        driver.findElement(By.id("new-wallet-submit")).click();
+        try {
+            driver.findElement(By.className("new-wallet-name")).click();
+        } catch (Error e){
+            System.out.println("hello Jordan");
+            fail();
+        }
     }
-  @Ignore
+    @Ignore
     @Test
     public void shouldEditWalletAccount() throws IOException, InterruptedException {
-        driver.findElement(By.id("edit-4")).click();
-      try {
-        driver.findElement(By.id("wallet-tab-2")).isDisplayed();
-      }catch (Error e){
-        System.out.println("wallet-tab-2 not present");
-        fail();
-      }
-        driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
-      driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        selectAccountType();
+        clickWalletSubmit();
     }
-  @Ignore
+    @Ignore
     @Test
     public void shouldResetWalletAccount() throws IOException, InterruptedException {
-        driver.findElement(By.id("edit-4")).click();
-      try {
-        driver.findElement(By.id("wallet-tab-2")).isDisplayed();
-      }catch (Error e){
-        System.out.println("wallet-tab-2 not present");
-        fail();
-      }
-      driver.findElement(By.id("new-wallet-account-select")).click();
-      driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[3]")).click();
-      driver.findElement(By.id("new-wallet-submit")).click();
+        navigateToAddWallet();
+        selectWalletType();
+        clickWalletSubmit();
     }
-  @Ignore
+    @Ignore
     @Test
     public void shouldEditWalletStatus() throws IOException, InterruptedException {
-        driver.findElement(By.id("edit-4")).click();
-      try {
-        driver.findElement(By.id("wallet-tab-2")).isDisplayed();
-      }catch (Error e){
-        System.out.println("wallet-tab-2 not present");
-        fail();
-      }
-      driver.findElement(By.className("toggle-switch")).click();
-      driver.findElement(By.id("new-wallet-submit")).click();
-      Thread.sleep(500);
+        navigateToAddWallet();
+        driver.findElement(By.className("toggle-switch")).click();
+        clickWalletSubmit();
     }
-  @Ignore
-  @Test
-  public void shouldResetWalletStatus() throws IOException, InterruptedException {
-    driver.findElement(By.id("edit-4")).click();
-    try {
-      driver.findElement(By.id("wallet-tab-2")).isDisplayed();
-    }catch (Error e){
-      System.out.println("wallet-tab-2 not present");
-      fail();
+    @Ignore
+    @Test
+    public void shouldResetWalletStatus() throws IOException, InterruptedException {
+        navigateToAddWallet();
+        driver.findElement(By.className("toggle-switch")).click();
+        clickWalletSubmit();
     }
-    driver.findElement(By.className("toggle-switch")).click();
-    driver.findElement(By.id("new-wallet-submit")).click();
-  }
-  @Ignore
+    @Ignore
     @Test
     public void shouldEditWalletType() throws IOException, InterruptedException {
-        driver.findElement(By.id("edit-4")).click();
+      driver.findElement(By.id("edit-4")).click();
 
     }
     @Test
