@@ -20,6 +20,15 @@ import {
     OfiCorpActionsState,
     OfiCorpActionsReducer
 } from './ofi-corp-actions';
+
+import {
+    OfiProductState,
+    OfiProductReducer,
+    SET_MANAGEMENT_COMPANY_LIST,
+    SET_SICAV_LIST,
+    SET_FUND_LIST,
+} from './ofi-product';
+
 export {
     /* Coupons */
     getOfiCouponList,
@@ -55,7 +64,9 @@ export {
 export {
     OfiProductState,
     OfiProductReducer,
-    SET_MANAGEMENT_COMPANY_LIST
+    SET_MANAGEMENT_COMPANY_LIST,
+    SET_SICAV_LIST,
+    SET_FUND_LIST,
 };
 
 export interface OfiState {

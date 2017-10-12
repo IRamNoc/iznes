@@ -4,7 +4,7 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {SicavRequestMessageBody, SaveSicavRequestBody, UpdateSicavRequestBody} from './sicav.service.model';
+import {SicavRequestMessageBody, SaveSicavRequestBody, UpdateSicavRequestBody, DeleteSicavRequestBody} from './sicav.service.model';
 import {setRequestedSicav, clearRequestedSicav, SET_SICAV_LIST} from '../../../ofi-store/ofi-product/sicav/sicav-list/actions';
 
 interface InsertSicavData {
@@ -59,6 +59,10 @@ interface UpdateSicavData {
     logoURL: any;
 }
 
+interface DeleteSicavData {
+    sicavID: any;
+}
+
 @Injectable()
 export class OfiSicavService {
 
@@ -106,6 +110,17 @@ export class OfiSicavService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    deleteSicav(sicavData: DeleteSicavData, ngRedux: NgRedux<any>): any {
+
+        const messageBody: DeleteSicavRequestBody = {
+            RequestName: 'deletesicav',
+            token: this.memberSocketService.token,
+            sicavID: sicavData.sicavID
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     saveSicav(sicavData: InsertSicavData, ngRedux: NgRedux<any>): any {
 
         const messageBody: SaveSicavRequestBody = {
@@ -141,7 +156,7 @@ export class OfiSicavService {
 
     updateSicav(sicavData: UpdateSicavData, ngRedux: NgRedux<any>): any {
 
-        console.log('updateSicav', sicavData);
+        // console.log('updateSicav', sicavData);
 
         const messageBody: UpdateSicavRequestBody = {       // where is the companyID ?
             RequestName: 'updateSicav',

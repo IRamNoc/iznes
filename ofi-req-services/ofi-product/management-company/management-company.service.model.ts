@@ -59,3 +59,8 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     logoName: any;
     logoURL: any;
 }
+
+export interface DeleteManagementCompanyRequestBody extends MemberNodeMessageBody {
+    token: any;
+    companyID: any;
+}
