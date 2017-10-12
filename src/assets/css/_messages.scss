@@ -77,13 +77,13 @@
         margin: 20px auto;
         min-height: 800px;
 
-        .ui-select-container.ui-select-multiple {
-            border: 1px solid #ccc !important;
-            margin: 10px auto;
-            padding: 7px 10px 2px !important;
-            border-radius: 4px;
-            width: 95%;
-        }
+        //.ui-select-container.ui-select-multiple {
+        //    border: 1px solid #ccc !important;
+        //    margin: 10px auto;
+        //    padding: 5px !important;
+        //    border-radius: 4px;
+        //    width: 95%;
+        //}
 
         .message-options {
             padding: 20px;
@@ -230,6 +230,11 @@
         .message-compose-buttons {
             padding: 17px 15px 0;
             float: right;
+        }
+
+        form {
+            padding: 0px !important;
+            padding-top: 10px !important;
         }
     }
 }
