@@ -30,6 +30,9 @@ import {PermissionGridModule} from '@setl/permission-grid';
 /* Manage sub-portfolio */
 import {ManageSubPortfolioComponent} from './sub-portfolio/component';
 
+/* Multilingual coolness. */
+import {MultilingualModule} from '@setl/multilingual';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -72,6 +75,7 @@ import {ManageSubPortfolioComponent} from './sub-portfolio/component';
         ClarityModule,
         SelectModule,
         PermissionGridModule,
+        MultilingualModule
     ],
     providers: [AdminUsersService]
 })
