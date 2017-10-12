@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 
 import {WalletnodeTxService} from '@setl/core-req-services';
 import {
@@ -8,61 +8,100 @@ import {
     immutableHelper,
     ConditionType,
     ArrangementActionType,
-    commonHelper
+    commonHelper,
+    SagaHelper
 } from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
+import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import _ from 'lodash';
 
 @Injectable()
 export class InvestFundFormService {
+    private _appConfig: AppConfig;
+    private divider: number;
 
-    constructor(private _walletNodeTxService: WalletnodeTxService,
+    constructor(private _ngRedux: NgRedux<any>,
+                private _walletNodeTxService: WalletnodeTxService,
                 private _moneyValuePipe: MoneyValuePipe,
-                private _numberConverterService: NumberConverterService) {
+                private _numberConverterService: NumberConverterService,
+                private _alertsService: AlertsService,
+                @Inject(APP_CONFIG) _appConfig: AppConfig) {
+        this.divider = _appConfig.numberDivider;
     }
 
     handleForm(formValue, shareMetaData, actionType): void {
         const decimalisation = immutableHelper.get(shareMetaData, 'decimalisation', 2);
         const quantity = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
-        const grossAmount = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
+        const grossAmount = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'grossAmount', 0), decimalisation);
         const investorAddress = immutableHelper.get(formValue, 'address', '');
         const comment = immutableHelper.get(formValue, 'comment', '');
+        const issuer = immutableHelper.get(shareMetaData, 'issuer', '');
         const shareName = immutableHelper.get(shareMetaData, 'shareName', '');
+        const asset = issuer + '|' + shareName;
         const byType = immutableHelper.get(formValue, 'byType', '');
         let authoriseRef = '';
-        const settleTimeStamp = 0;
-        const expiryTimeStamp = settleTimeStamp + 10;
-        const issuerAddress = '';
+        const settleTimeStamp = immutableHelper.get(shareMetaData, 'settlementDateTimeNumber', 0) / 1000;
+        // const expiryTimeStamp = settleTimeStamp + 3600; // + 1h from settlement.
+        const expiryTimeStamp = settleTimeStamp + 600; // + 1min from settlement.
+        const issuerAddress = immutableHelper.get(formValue, 'shareIssuerAddress', '');
+        const walletId = immutableHelper.get(formValue, 'walletId', 0);
+        const walletName = immutableHelper.get(formValue, 'walletName', 0);
+        const feePercent = immutableHelper.get(shareMetaData, 'feePercent', 0) / 100;
 
         // Convert to to blockchain integer number
         const quantityParse = this._numberConverterService.toBlockchain(quantity);
         const grossAmountParse = this._numberConverterService.toBlockchain(grossAmount);
+        const platFormFeeParse = this._numberConverterService.toBlockchain(grossAmount);
 
-        if (actionType === 'subscribe') {
-            console.log('submitting subscribe');
+        authoriseRef = 'Confirm receipt of payment';
 
-            authoriseRef = 'Confirm receipt of payment';
+        const arrangementData = this.constructArrangementData({
+            quantity: quantityParse,
+            grossAmount: grossAmountParse,
+            asset,
+            issuerAddress,
+            investorAddress,
+            settleTimeStamp,
+            actionType,
+            byType,
+            authoriseRef,
+            expiryTimeStamp,
+            walletName,
+            feePercent,
+            platFormFee: platFormFeeParse
+        });
 
-            this.constructArrangementData({
-                quantity: quantityParse,
-                grossAmount: grossAmountParse,
-                shareName,
-                issuerAddress,
-                investorAddress,
-                settleTimeStamp,
-                actionType,
-                byType,
-                authoriseRef,
-                expiryTimeStamp
-            });
 
-        } else if (actionType === 'redeem') {
-            console.log('submitting redeem');
-        }
+        const contractData: any = BlockchainContractService.arrangementToContractData(arrangementData);
+
+        // create contract in the blockchain
+        // Create a saga pipe.
+        const asyncTaskPipes = this._walletNodeTxService.newContract({
+            walletId: walletId,
+            address: contractData.creatorAddress,
+            'function': contractData.contractFunction,
+            contractData: contractData.contractData
+        });
+
+
+        // Send a saga action.
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipes,
+            (data) => {
+                this.showSuccessResponse(data);
+            },
+            (data) => {
+                this.showErrorResponse(data);
+            }
+        ));
+
     }
 
     private constructArrangementData(formData: {
         quantity: number;
         grossAmount: number;
-        shareName: string;
+        asset: string;
         issuerAddress: string;
         investorAddress: string;
         settleTimeStamp: number;
@@ -70,54 +109,119 @@ export class InvestFundFormService {
         byType: number;
         authoriseRef: string;
         expiryTimeStamp: number;
+        walletName: string;
+        feePercent: number;
+        platFormFee: number;
     }) {
 
         let actionData = [];
         const {
             quantity,
             grossAmount,
-            shareName,
+            asset,
             issuerAddress,
             investorAddress,
             settleTimeStamp,
             actionType,
             byType,
             authoriseRef,
-            expiryTimeStamp
+            expiryTimeStamp,
+            walletName,
+            feePercent,
+            platFormFee
         } = formData;
 
-        const currentWalletName = '';
+        if (actionType === 'subscribe') {
+            // byType: Subscribe by quantity or by amount.
+            // 0: by quantity
+            // 1: by amount
+            if (byType === 0) {
+                // by quantity
 
-        // byType: Subscribe by quantity or by amount.
-        // 0: by quantity
-        // 1: by amount
-        if (byType === 0) {
-            // by quantity
+                actionData = [
+                    {
+                        actionData: {
+                            amount: quantity,
+                            amountType: 'amount',
+                            asset: asset,
+                            dataItem: [],
+                            fromAddress: issuerAddress,
+                            sharePrice: -1, // only used for phoenix
+                            toAddress: investorAddress
+                        },
+                        actionType: ArrangementActionType.ISSUE
+                    }
+                ];
+            } else if (byType === 1) {
+                // by amount
+                actionData = [
+                    {
+                        actionData: {
+                            amount: '(((' + grossAmount + ' - ' + platFormFee + ' ) * (1 - ' + feePercent + ' ) ) / nav) * ' +
+                            this.divider,
+                            amountType: 'amount',
+                            asset: asset,
+                            dataItem: [],
+                            fromAddress: issuerAddress,
+                            sharePrice: -1, // only used for phoenix
+                            toAddress: investorAddress
+                        },
+                        actionType: ArrangementActionType.ISSUE
+                    }
+                ]
+                ;
 
-            actionData = [
-                {
-                    actionData: {
-                        amount: quantity,
-                        amountType: 'amount',
-                        asset: shareName,
-                        dataItem: [],
-                        fromAddress: issuerAddress,
-                        sharePrice: -1, // only used for phoenix
-                        toAddress: investorAddress
-                    },
-                    actionType: ArrangementActionType.ISSUE
-                }
-            ];
-        } else if (byType === 1) {
-            // by amount
+            } else {
+                throw new Error('Invalid action-by type.');
+            }
+        } else if (actionType === 'redeem') {
+            // byType: Redeem by quantity or by amount.
+            // 0: by quantity
+            // 1: by amount
+            if (byType === 0) {
+                // by quantity
+                actionData = [
+                    {
+                        actionData: {
+                            amount: quantity,
+                            amountType: 'amount',
+                            asset: asset,
+                            dataItem: [],
+                            fromAddress: investorAddress,
+                            sharePrice: -1, // only used for phoenix
+                            toAddress: issuerAddress
+                        },
+                        actionType: ArrangementActionType.SEND
+                    }
+                ];
+            } else if (byType === 1) {
 
+                // by amount
+                actionData = [
+                    {
+                        actionData: {
+                            amount: '(' + grossAmount + ' / nav ) * ' + this.divider,
+                            amountType: 'amount',
+                            asset: asset,
+                            dataItem: [],
+                            fromAddress: investorAddress,
+                            sharePrice: -1, // only used for phoenix
+                            toAddress: issuerAddress
+                        },
+                        actionType: ArrangementActionType.SEND
+                    }
+                ]
+                ;
+
+            } else {
+                throw new Error('Invalid action-by type.');
+            }
         } else {
-            throw new Error('Invalid action-by type.');
+            throw new Error('Invalid investment action type.');
         }
-
-        const arrangementData = {
+        return {
             actions: actionData,
-            condition: [
+            conditions: [
                 {
                     conditionData: {
                         executeTimeStamp: settleTimeStamp
@@ -132,315 +236,47 @@ export class InvestFundFormService {
                     conditionType: ConditionType.AUTHORISE
                 }
             ],
+            datas: [
+                {
+                    'parameter': 'nav',
+                    'address': issuerAddress
+                }
+            ],
             expiry: expiryTimeStamp,
             numStep: '1',
-            stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + shareName + ' from ' + currentWalletName,
-            creatorAddress: ''
+            stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
+            creatorAddress: investorAddress
         };
+    }
 
-        const contractData = BlockchainContractService.arrangementToContractData(arrangementData);
+    showErrorResponse(response) {
 
-        console.log('request to walletnode to create contract ', contractData);
+        const message = _.get(response, '[1].Data[0].Message', '');
+
+        this._alertsService.create('error', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
+    }
+
+    showSuccessResponse(message) {
+
+        this._alertsService.create('success', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-success">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
     }
 }
 
-
-// function test() {
-//
-//     var actionsData;
-//
-//     if (subscribeType == 'byUnit') {
-//         // By unit
-//         if (!isDistributor) {
-//             actionsData = [
-//                 {
-//                     actionData: {
-//                         'amount': units,
-//                         'amountType': 'amount',
-//                         'asset': asset,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': investorAddr
-//                     },
-//                     actionType: 'issue'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': "(" + units + ' * nav / ' + document.dataGlobal.OFI_DECIMALISATION + ') * (1 + ' + entryPercent + ' )',
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': issuerAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': 100000,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': platformAddr
-//                     },
-//                     actionType: 'send'
-//                 }
-//             ];
-//
-//         } else {
-//             actionsData = [
-//                 {
-//                     actionData: {
-//                         'amount': units,
-//                         'amountType': 'amount',
-//                         'asset': asset,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': investorAddr
-//                     },
-//                     actionType: 'issue'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': "(" + units + ' * nav / ' + document.dataGlobal.OFI_DECIMALISATION + ') * (1 + ' + entryPercent + ' )',
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': issuerAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': 100000,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': platformAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': "(" + units + ' * nav / ' + document.dataGlobal.OFI_DECIMALISATION + ') * (' + document.dataGlobal.OFI_DISTRIBUTOR_COM_SUB + ' )',
-//                         // 'amount': "(" + units + ' * nav / ' + document.dataGlobal.OFI_DECIMALISATION + ')',
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': distributorAddr
-//                     },
-//                     actionType: 'send'
-//                 }
-//             ];
-//         }
-//     } else if (subscribeType === 'byAmount') {
-//         // By amount
-//         if (!isDistributor) {
-//             actionsData = [
-//                 {
-//                     actionData: {
-//                         'amount': '((' + consideration + ' * (1 - ' + entryPercent + ' ) ) / nav) * ' + document.dataGlobal.OFI_DECIMALISATION,
-//                         'amountType': 'amount',
-//                         'asset': asset,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': investorAddr
-//                     },
-//                     actionType: 'issue'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': consideration,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': issuerAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': 100000,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': platformAddr
-//                     },
-//                     actionType: 'send'
-//                 }
-//             ];
-//
-//         } else {
-//             actionsData = [
-//                 {
-//                     actionData: {
-//                         'amount': '((' + consideration + ' * (1 - ' + entryPercent + ' ) ) / nav) * ' + document.dataGlobal.OFI_DECIMALISATION,
-//                         'amountType': 'amount',
-//                         'asset': asset,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': investorAddr
-//                     },
-//                     actionType: 'issue'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': consideration,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': issuerAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': 100000,
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': investorAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': platformAddr
-//                     },
-//                     actionType: 'send'
-//                 },
-//
-//                 {
-//                     actionData: {
-//                         'amount': consideration + '* (' +
-//                         document.dataGlobal.OFI_DISTRIBUTOR_COM_SUB + ' )',
-//                         'amountType': 'amount',
-//                         'asset': currency,
-//                         'dataItem': '.',
-//                         'fromAddr': issuerAddr,
-//                         'sharePrice': -1,
-//                         'toAddr': distributorAddr
-//                     },
-//                     actionType: 'send'
-//                 }
-//             ];
-//         }
-//     }
-//
-//     var contractData = {
-//         actions: actionsData,
-//         conditions: [
-//             {
-//                 conditionData: {
-//                     executeTimeStamp: settleTimeStamp
-//                 },
-//                 conditionType: 'time'
-//             }
-//         ],
-//         datas: [
-//             {
-//                 'parameter': 'nav',
-//                 'addr': issuerAddr
-//             }
-//         ],
-//         docs: [],
-//         expiry: expiryTimeStamp,
-//         numStep: '1',
-//         steptitle: "Subscription of " + asset + ' from ' + getCurrentInUserWalletDetail().walletName
-//     };
-//
-//     if (!checkAllObjectValuesNotEmpty(requestData)) {
-//
-//         showWarning(
-//             getTranslation("txt_missingfields", 'Missing Fields'),
-//             getTranslation("txt_requiredfieldsmissing", 'Required Field(s) is(are) missing.')
-//         );
-//
-//         return false;
-//     }
-//
-//     var investorWalletDetail = getCurrentInUserWalletDetail();
-//     var investorBankDetail = getOneBanckWalletDetail();
-//
-//     requestData['metaData'] = {
-//         currency: currency,
-//         units: units,
-//         price: price,
-//         consideration: consideration,
-//         ref: reference,
-//         assetISIN: isin,
-//         registrar: registrar,
-//         feePercent: entryPercent,
-//         investorID: investorID,
-//         investorWalletID: document.dataCache.inUseWallet,
-//         investorWalletName: investorWalletDetail.walletName,
-//         investorWalletCommuPub: investorWalletDetail.commuPub,
-//         investorWalletAddr: investorAddr,
-//         investorWalletBankID: investorBankDetail.walletID,
-//         investorWalletBankCommuPub: investorBankDetail.commuPub
-//     };
-//
-//     requestData['metaData'] = JSON.stringify(requestData['metaData']);
-//
-//     requestData['contractData'] = contractData;
-//
-//     var processContractData = arrangementDomDataToContractData(requestData['contractData']);
-//
-//     if (!contractData) {
-//         return;
-//     }
-//
-//     walletCreateContract(processContractData).done(function (message) {
-//         var contractExpiry = message.data.contractdata.expiry;
-//         var contractAddr = message.data.toaddr;
-//
-//         // Store doc if there are any.
-//         storeDocumentOnContractCreate(message);
-//
-//         saveArrangement(requestData).done(function (data) {
-//             var arrangementID = data[0].arrangementID;
-//             requestData['arrangementID'] = arrangementID;
-//
-//             showSuccessMessage("Action Executed", "<strong>Arrangement ID:</strong><br/>" +
-//                 pad(arrangementID, 12));
-//
-//             // send notification to all parties about the new arrangement
-//             sendSubscriptionInitiateMsg(requestData);
-//
-//             // store the contract address associate with the arrangement id.
-//             dbAddArrangementContractMap(contractAddr, arrangementID, contractExpiry);
-//
-//             resetSubscribeTransfer();
-//
-//             // redirect to list of funds
-//             processMenuEvent(undefined, 'menu_list_of_funds');
-//         });
-//     });
-// }
-// )
-// ;
-// }
