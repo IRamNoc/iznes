@@ -141,8 +141,58 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleViewOrder (orderId: number):void {
+        /* Find the order. */
+        let order = this.getOrderById(orderId);
+        if (! order) return;
+
+        console.log('Viewing order: ', order);
+        /* Push a new tab into the tabs control... */
+        this.tabsControl.push(
+            {
+                "title": {
+                    "icon": "fa-pencil",
+                    "text": this.padNumberLeft(order.arrangementID, 5)
+                },
+                "orderId": -1,
+                "active": false,
+                "orderData": order
+            }
+        );
+
+        /* Detect the changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* ...then set it active. */
+        this.setTabActive(this.tabsControl.length - 1);
+
+        /* Detect the changes. */
+        this.changeDetectorRef.detectChanges();
+
         /* Return. */
         return;
+    }
+
+    /**
+     * Get Order By ID
+     * ---------------
+     * Get an order by it's ID.
+     *
+     * @param  {number} orderId - an order id.
+     * @return {any|boolean} - the order, if found or just false.
+     */
+    private getOrderById (orderId: number):any|boolean {
+        /* Ok, let's loop over the orders list... */
+        let order;
+        for (order of this.ordersList) {
+            /* ..if this is the order, break, to return it... */
+            if ( order.arrangementID === orderId ) break;
+
+            /* ...else set order to false, incase this is last loop. */
+            order = false;
+        }
+
+        /* Return. */
+        return order;
     }
 
     /**
@@ -233,7 +283,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(' | name: ', name);
 
         /* If we've clicked the one we're sorting by, reverse sort. */
-        if ( name === this.sort.name && caret ) {
+        if (name === this.sort.name && caret) {
             console.log(" | >> flip flop");
             /* Reverse. */
             if ( this.sort.direction === "ASC" ) {
@@ -248,7 +298,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* If not, then set this as the one we're sorting by. */
-        else if ( name !== this.sort.name ) {
+        else if (name !== this.sort.name) {
             console.log(" | >> change");
             this.sort.name = name;
             this.sort.direction = "ASC";
@@ -288,6 +338,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * hH - 2 character hour (12 hour)
      * mm - 2 character minute
      * ss - 2 character seconds
+     *
      * @param  {string} formatString [description]
      * @param  {Date}   dateObj      [description]
      * @return {string}              [description]
@@ -309,6 +360,65 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     private numPad (num) {
         return num < 10 ? "0"+num : num;
+    }
+
+    /**
+     * Calc Entry Fee
+     * --------------
+     * Calculates the entry fee from the grossAmount.
+     *
+     * @param  {number} grossAmount - the grossAmount.
+     * @return {number}             - the entry fee.
+     */
+    private calcEntryFee (grossAmount:number): number {
+        return Math.round(grossAmount * .0375);
+    }
+
+    /**
+     * Get Order Date
+     *
+     * @param  {string} dateString - the order's date string.
+     * @return {string}            - the formatted date or empty string.
+     */
+    private getOrderDate (dateString):string {
+        return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
+    }
+
+    /**
+     * Get Order Time
+     *
+     * @param  {string} dateString - the order's date string.
+     * @return {string}            - the formatted time or empty string.
+     */
+    private getOrderTime (dateString):string {
+        return this.formatDate('hh:mm:ss', new Date(dateString));
+    }
+
+    /**
+     * Pad Number Left
+     * -------------
+     * Pads a number left
+     *
+     * @param  {number} num - the couponId.
+     * @return {string}
+     */
+    private padNumberLeft (num: number|string, zeros?: number):string {
+        /* Validation. */
+        if ( ! num && num != 0) return "";
+        zeros = zeros || 2;
+
+        /* Variables. */
+        num = num.toString();
+        let // 11 is the total required string length.
+        requiredZeros = zeros - num.length,
+        returnString = "";
+
+        /* Now add the zeros. */
+        while (requiredZeros--) {
+            returnString += "0";
+        }
+
+        return returnString + num;
     }
 
     /**
@@ -382,7 +492,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             i.active = false;
         });
 
-        /* Override the changes. */
+        /* Detect the changes. */
         this.changeDetectorRef.detectChanges();
 
         /* Set the list active. */
