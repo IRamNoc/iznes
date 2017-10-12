@@ -5,6 +5,7 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import src.APITests.io.setl.Container;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +36,32 @@ public class MemberHelper {
     socket.sendMessage(factory.createMember(memberName, email));
 
     latch.await();
+  }
+
+  public static String[] createMemberAndCaptureDetails(MessageFactory factory, SocketClientEndpoint socket, String memberName, String email) throws InterruptedException, ExecutionException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+    Container<String[]> container = new Container<>();
+
+
+        socket.registerHandler(Message.Type.nm.name(), message -> {
+        JSONArray data = (JSONArray) message.get("Data");
+        JSONObject resp = (JSONObject) data.get(0);
+        String password = resp.get("pass").toString();
+        String username = resp.get("userName").toString();
+        //container.setItem(password);
+        //container.setItem(username);
+        latch.countDown();
+        return "";
+      });
+
+    //socket.sendMessage(factory.createMember(memberName, email));
+
+    //latch.await();
+    //String password = container.getItem();
+    //String username = container.getItem();
+
+    return new String[] {};
   }
 
   public static void createMember(MessageFactory factory, SocketClientEndpoint socket, int noOfUsers) throws ExecutionException, InterruptedException {

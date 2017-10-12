@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static SETLAPIHelpers.MemberHelper.createMember;
+import static SETLAPIHelpers.MemberHelper.createMemberAndCaptureDetails;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
@@ -32,7 +33,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createMemberTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(50000);
+  public Timeout globalTimeout = Timeout.millis(3000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -50,6 +51,19 @@ public class createMemberTest {
 
     connection.disconnect();
   }
+
+  @Test
+  public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+
+    String memberDetails[] = generateMemberDetails();
+    String memberName = memberDetails[0];
+    String email = memberDetails[1];
+    createMemberAndCaptureDetails(factory, socket, memberName, email);
+
+    connection.disconnect();
+  }
+
 
   @Test
   public void createMultipleMember() throws ExecutionException, InterruptedException {
