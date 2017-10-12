@@ -110,7 +110,6 @@ export class SetlMessagesComponent {
         this.getConnectedWallet.subscribe(
             (newWalletId) => {
                 if (newWalletId !== this.currentWalletId) {
-                    console.log('i shouldnt hit here');
                     this.resetMessages();
                     this.currentWalletId = newWalletId;
                     this.requestMessages();
@@ -157,9 +156,6 @@ export class SetlMessagesComponent {
      * @returns {boolean}
      */
     requestMessages(isAction = false, isDeleted = false, isSent = false) {
-
-        console.log('------ current wallet id');
-        console.log(this.currentWalletId);
 
         const requestIsAction = isAction === true ? 1 : 0;
         const requestIsDeleted = isDeleted === true ? 1 : 0;
@@ -365,9 +361,6 @@ export class SetlMessagesComponent {
 
 
     public sendMessage() {
-        console.log(this.messageComposeForm);
-        console.log(this.messageComposeForm);
-
         let formData = this.messageComposeForm.value;
 
         let bodyObj = {
@@ -407,13 +400,11 @@ export class SetlMessagesComponent {
             asyncTaskPipe,
             (data) => {
                 console.log('success: ');
-                console.log(data); // success
 
                 this.closeAndResetComposed();
             },
             (data) => {
                 console.log('error: ');
-                console.log(data); // error
             })
         );
 
@@ -432,20 +423,16 @@ export class SetlMessagesComponent {
 
 
     public onEditorBlured(quill) {
-        console.log('editor blur!', quill);
     }
 
     public onEditorFocused(quill) {
-        console.log('editor focus!', quill);
     }
 
     public onEditorCreated(quill) {
         this.editor = quill;
-        console.log('quill is ready! this is current quill instance object', quill);
     }
 
     public onContentChanged({quill, html, text}) {
-        console.log('quill content is changed!', quill, html, text);
     }
 
     private get disabledV(): string {
@@ -458,11 +445,9 @@ export class SetlMessagesComponent {
     }
 
     public selected(value: any): void {
-        console.log('Selected value is: ', value);
     }
 
     public removed(value: any): void {
-        console.log('Removed value is: ', value);
     }
 
     public refreshValue(value: any): void {
