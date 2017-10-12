@@ -129,7 +129,7 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.cutoff | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
                 </div>
             </div>
 
@@ -141,7 +141,7 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.valuation | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.settlement | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
                 </div>
             </div>
 

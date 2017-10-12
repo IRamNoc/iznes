@@ -42,6 +42,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     connectedWalletId: number;
     requestedWalletAddress: boolean;
+    walletList: any;
+
+    allInstruments: any;
 
     // List of redux observable.
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) shareDataOb;
@@ -49,6 +52,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
+    @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
+    @select(['wallet', 'myWallets', 'walletList']) walletListOb;
 
     // 0: quantity, 1: amount
     _actionBy: number;
@@ -130,9 +136,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subscribe: {
                 nonAcquiredFeeKey: 'entryFee',
                 acquiredFeeKey: 'sAcquiredFee',
-                cutoffDateKey: 'sCutoffDate',
+                cutoffTimeKey: 'sCutoffTime',
+                cutoffDateTimeStrKey: 'sCutoffDateTimeStr',
+                cutoffDateTimeNumberKey: 'sCutoffDateTimeNumber',
                 valuationDateKey: 'sValuationDate',
+                valuationTimeKey: 'sValuationTime',
+                valuationDateTimeStrKey: 'sValuationDateTimeStr',
+                valuationDateTimeNumberKey: 'sValuationDateTimeNumber',
                 settlementDateKey: 'sSettlementDate',
+                settlementTimeKey: 'sSettlementTime',
+                settlementDateTimeStrKey: 'sSettlementDateTimeStr',
+                settlementDateTimeNumberKey: 'sSettlementDateTimeNumber',
                 allowTypeKey: 'sAllowType',
                 actionLabel: 'subscribe',
                 feeLabel: 'Entry',
@@ -140,9 +154,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             redeem: {
                 nonAcquiredFeeKey: 'exitFee',
                 acquiredFeeKey: 'rAcquiredFee',
-                cutoffDateKey: 'rCutoffDate',
+                cutoffTimeKey: 'rCutoffTime',
+                cutoffDateTimeStrKey: 'rCutoffDateTimeStr',
+                cutoffDateTimeNumberKey: 'rCutoffDateTimeNumber',
                 valuationDateKey: 'rValuationDate',
+                valuationTimeKey: 'rValuationTime',
+                valuationDateTimeStrKey: 'rValuationDateTimeStr',
+                valuationDateTimeNumberKey: 'rValuationDateTimeNumber',
                 settlementDateKey: 'rSettlementDate',
+                settlementTimeKey: 'rSettlementTime',
+                settlementDateTimeStrKey: 'rSettlementDateTimeStr',
+                settlementDateTimeNumberKey: 'rSettlementDateTimeNumber',
                 allowTypeKey: 'rAllowType',
                 actionLabel: 'redeem',
                 feeLabel: 'Exit',
@@ -162,7 +184,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
-
+        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => {
+            this.requestAllInstruments(requested);
+        }));
+        this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
+        this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
     }
 
     updateShareMetaData(shareData) {
@@ -179,14 +205,25 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const acquiredFee = immutableHelper.get(shareCharacteristic, this.formConfig.acquiredFeeKey, 0);
         const feePercent = nonAcquiredFee + acquiredFee;
 
+        const issuer = immutableHelper.get(thisShareData, 'issuer', '');
+        const shareName = immutableHelper.get(thisShareData, 'shareName', '');
+
         this.metaData = {
             registrar: immutableHelper.get(thisShareData, 'managementCompany', ''),
-            shareName: immutableHelper.get(thisShareData, 'shareName', ''),
+            issuer,
+            shareName,
+            fullAssetName: issuer + '|' + shareName,
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
             currency: immutableHelper.get(thisShareData, ['metaData', 'portfolio_currency_select'], ''),
-            cutoff: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateKey], 0),
-            valuation: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateKey], 0),
-            settlement: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateKey], 0),
+            cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
+            cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
+            cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
+            valuationTime: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationTimeKey], 0),
+            valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
+            valuationDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
+            settlementTime: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementTimeKey], 0),
+            settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
+            settlementDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
             allowType: immutableHelper.get(shareCharacteristic, [this.formConfig.allowTypeKey], 0),
             knownNav: immutableHelper.get(shareCharacteristic, ['knownNav'], false),
             nav: immutableHelper.get(shareCharacteristic, 'nav', 0),
@@ -270,6 +307,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
+    requestAllInstruments(requested) {
+        if (!requested) {
+            // request all instruments
+
+            InitialisationService.requestAllInstruments(this._ngRedux, this._walletNodeRequestService);
+        }
+    }
+
+    updateAllInstruments(allInstrumentData) {
+        this.allInstruments = allInstrumentData;
+    }
+
     handleSelectedAddress(value) {
         this.addressSelected = value;
     }
@@ -284,8 +333,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         if (this.form.valid) {
             console.log(this.form.value);
 
+            const fullAssetName = this.metaData.fullAssetName;
+            const shareIssuerAddress = immutableHelper.get(this.allInstruments, [fullAssetName, 'issuerAddress'], '');
+
             // Add actionBy
-            const formValue = Object.assign({}, this.form.value, {byType: this.actionBy});
+            const formValue = Object.assign({}, this.form.value, {
+                byType: this.actionBy,
+                shareIssuerAddress,
+                address: this.form.value.address[0]['id'],
+                walletId: this.connectedWalletId,
+                walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], '')
+            });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }
     }
@@ -305,11 +363,27 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const callBack = {
             'quantity': (value) => {
                 const newValue = this._moneyValuePipe.parse(value, this.metaData.decimalisation);
-                beTriggered.setValue(this._moneyValuePipe.transform(newValue * this.metaData.nav));
+                /**
+                 * grossAmount = ((unit * nav) * (1 + feePercent)) + 1
+                 */
+                const grossAmoutBeforeFee = newValue * this.metaData.nav;
+                const grossAmountAfterFee = (grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + 1;
+                beTriggered.setValue(this._moneyValuePipe.transform(grossAmountAfterFee));
             },
             'grossAmount': (value) => {
                 const newValue = this._moneyValuePipe.parse(value);
-                beTriggered.setValue(this._moneyValuePipe.transform(newValue / this.metaData.nav, this.metaData.decimalisation));
+                /**
+                 * because:
+                 * investment = unit * nav
+                 * investment * (feePercent + 1) + platformFee = grossAmount
+                 *
+                 * so:
+                 * unit = ((grossAmount - platformFee) * (1 - feePercent)) / nav
+                 */
+
+                const investment = ((newValue - this.metaData.platformFee) * (1 - (this.metaData.feePercent / 100)));
+                const resultUnit = (investment) / this.metaData.nav;
+                beTriggered.setValue(this._moneyValuePipe.transform(resultUnit, this.metaData.decimalisation));
             }
         }[type];
 
