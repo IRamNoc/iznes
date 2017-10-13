@@ -190,13 +190,14 @@
 
             .message-highlight-footer {
                 border-top: 1px solid #ccc;
-                padding: 0 20px;
-                background: #ccc;
+                padding: 5px;
+                background: #f7f7f7;
                 color: white;
                 font-weight: 300;
                 position: absolute;
                 bottom: 0;
                 width: calc(100% - 12px);
+                height: 43px;
             }
         }
 
@@ -323,5 +324,13 @@
 
     .message-hr {
         display: none;
+    }
+}
+
+pagination-controls {
+    float: right;
+
+    ul {
+        font-size: 12px;
     }
 }
