@@ -287,3 +287,17 @@ hr.dashed {
     border-radius: 2px;
     cursor: pointer;
 }
+
+.ngx-pagination {
+    li {
+        border-radius: 4px !important;
+    }
+
+    .current {
+        background: #57a5e3 !important;
+    }
+
+    a:hover {
+        border-radius: 4px !important;
+    }
+}
