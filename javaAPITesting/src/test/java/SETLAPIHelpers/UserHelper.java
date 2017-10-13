@@ -74,11 +74,12 @@ public class UserHelper {
   }
 
 
-  public static List<Object> createUserAndCaptureUserId(MessageFactory factory, SocketClientEndpoint socket, String account, String userType) throws InterruptedException, ExecutionException {
+  public static List<Object>  createUserAndCaptureDetails(MessageFactory factory, SocketClientEndpoint socket, String account, String userType) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
 
     String userDetails[] = generateUserDetails();
+
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
