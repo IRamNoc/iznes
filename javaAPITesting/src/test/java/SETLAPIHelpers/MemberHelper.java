@@ -17,10 +17,13 @@ import static junit.framework.TestCase.assertTrue;
 
 public class MemberHelper {
 
-  public static void createMember(MessageFactory factory, SocketClientEndpoint socket, String memberName, String email) throws InterruptedException, ExecutionException {
+  public static void createMember(MessageFactory factory, SocketClientEndpoint socket) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
 
+    String memberDetails[] = generateMemberDetails();
+    String memberName = memberDetails[0];
+    String email = memberDetails[1];
 
     socket.registerHandler(Message.Type.nm.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
