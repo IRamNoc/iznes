@@ -5,10 +5,10 @@ import {
     RegisterIssuerMessageBody,
     RegisterAssetMessageBody,
     IssueAssetMessageBody,
-    NewAddressMessageBody
+    NewAddressMessageBody,
+    NewContractMessageBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
-import {NgRedux} from "@angular-redux/store";
 
 interface RegisterIssuer {
     walletId: number;
@@ -86,4 +86,17 @@ export class WalletnodeTxService {
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
+
+    newContract(requestData: { walletId: number, address: string, 'function': string, contractData: any }): any {
+        const messageBody: NewContractMessageBody = {
+            topic: 'conew',
+            walletid: _.get(requestData, 'walletId', 0),
+            address: _.get(requestData, 'address', ''),
+            'function': _.get(requestData, 'function', ''),
+            contractdata: _.get(requestData, 'contractData', '')
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
 }

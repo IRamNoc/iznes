@@ -66,7 +66,7 @@ export class WalletNodeRequestService {
 
         const messageBody: WalletInstrumentRequestMessageBody = {
             topic: 'instruments',
-            walletid: _.get(requestData, 'walletId', 0),
+            walletid: _.get(requestData, 'walletId', 0)
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
