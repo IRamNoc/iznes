@@ -65,6 +65,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 4, text: 'Redemption'},
     ];
 
+    /* Public Properties */
+    public connectedWalletName: string = '';
+
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe:Unsubscribe;
@@ -72,7 +75,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private myDetails: any = {};
     private myWallets: any = [];
     private connectedWalletId: any = 0;
-    private connectedWalletName: string = '';
     private requestedSearch:any;
     private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' }; // default search.
 
@@ -135,7 +137,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's wallets. */
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            console.log('walletsList:', walletsList);
             /* Assign list to a property. */
             this.myWallets = walletsList;
 
@@ -145,7 +146,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's connected info. */
         this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            console.log('connectedWalletId:', connectedWalletId);
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
@@ -166,7 +166,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let order = this.getOrderById(orderId);
         if (! order) return;
 
-        console.log('Viewing order: ', order);
         /* Push a new tab into the tabs control... */
         this.tabsControl.push(
             {
@@ -194,6 +193,52 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Handle Cancel Order
+     * -----------------
+     * Handles canceling an order.
+     *
+     * @return {void}
+     */
+    public handleCancelOrder (orderId: number):void {
+        /* Let's first find the order... */
+        let
+        request= {},
+        order = this.getOrderById(orderId);
+
+        /* ...or return if we couldn't find it. */
+        if (!order) return;
+
+        /* Now let's build the request that we'll send... */
+        request['arrangementId'] = order.arrangementID;
+        request['walletId'] = this.connectedWalletId;
+        request['status'] = 0;
+        request['price'] = order.price;
+
+        /* Let's ask the user if they're sure... */
+        this._confirmationService.create(
+            '<span>Cancelling an Order</span>',
+            '<span>Are you sure you want to cancel this order?</span>'
+        ).subscribe((ans) => {
+            /* ...if they are... */
+            if (ans.resolved) {
+                /* Send the request. */
+                this.ofiOrdersService.updateOrder(request).then((response) => {
+                    /* Handle success. */
+                    this.showSuccess('Successfully cancelled this order.');
+                    console.log(response);
+                }).catch((error) => {
+                    /* Handle error. */
+                    this.showError('Failed to cancel this order.');
+                    console.warn(error);
+                });
+            }
+        });
+
+        /* Return. */
+        return;
+    }
+
+    /**
      * Update Wallet Connection
      * ------------------------
      * Updates the view depending on what wallet we're using.
@@ -203,11 +248,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private updateWalletConnection ():void {
         /* Loop over my wallets, and find the one we're connected to. */
         let wallet;
-        console.log(this.connectedWalletId +" && "+ Object.keys(this.myWallets).length);
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
-            console.log('looping wallets...');
             for (wallet in this.myWallets) {
-                console.log("wallet: ", wallet);
                 if (wallet == this.connectedWalletId) {
                     this.connectedWalletName = this.myWallets[wallet].walletName;
                     break;
@@ -289,7 +331,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request = {};
 
         /* Check if we have search parameters. */
-        console.log('searchForm', searchForm);
         if (! searchForm.status[0] || ! searchForm.type[0]) {
             return;
         }
@@ -303,8 +344,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['pageNum'] = 0; // no need for this.
         request['asset'] = searchForm.name;
         request['arrangementType'] = searchForm.type[0].id;
-
-        console.log(request);
 
         /* ...then request the new list. */
         this.ofiOrdersService.getManageOrdersList(request)
@@ -324,7 +363,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} name - the sort name.
      */
     switchSort (event: any, name: string):void {
-        console.log(event, name);
         /* Find the header's caret. */
         let elms = event.target.getElementsByTagName('i'), caret;
         if (elms.length && elms[0].classList) {

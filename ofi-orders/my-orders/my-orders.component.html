@@ -95,11 +95,11 @@
                             <!-- Action -->
                             <div class="btn-group btn-sm">
                                 <!-- If order status is 1, allow cancel. -->
-                                <button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn">
+                                <button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">
                                     <i class="fa fa-times"></i>
                                 </button>
                                 <!-- else, disable cancel. -->
-                                <button *ngIf="order.status != 1" id="order-cancel-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn" disabled="disabled">
+                                <button *ngIf="order.status != 1" id="order-cancel-{{order.arrangementID}}" class="btn" disabled="disabled">
                                     <i class="fa fa-times"></i>
                                 </button>
 
@@ -387,6 +387,8 @@
                         </div>
                     </div>
                 </div>
+
+                <hr class="dashed" />
 
                 <div class="form-group button-group">
                     <div class="col-sm-12">
