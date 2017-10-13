@@ -4,7 +4,7 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {FundRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody} from './fund.service.model';
+import {FundRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody, UpdateFundShareRequestBody} from './fund.service.model';
 import {setRequestedFund, clearRequestedFund, SET_FUND_LIST, SET_FUND_SHARE_LIST} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
 
 interface FundData {
@@ -15,7 +15,7 @@ interface FundData {
     fundReport?: any;
     fundLei?: any;
     sicavId?: any;
-
+    shareID?: any;
     metadata?: any;
     issuer?: any;
     shareName?: any;
@@ -132,40 +132,20 @@ export class OfiFundService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    // updateFund(fData: FundData, ngRedux: NgRedux<any>): any {
-    //
-    //     console.log('updateFund', fData);
-    //
-    //     const messageBody: UpdateFundRequestBody = {       // where is the companyID ?
-    //         RequestName: 'updatemanagementcompany',
-    //         token: this.memberSocketService.token,
-    //         entityId: this.accountId,   // entityId = accountID (name just changed)
-    //         companyID: fData.companyID,
-    //         companyName: fData.companyName,
-    //         country: fData.country,
-    //         addressPrefix: fData.addressPrefix,
-    //         postalAddressLine1: fData.postalAddressLine1,
-    //         postalAddressLine2: fData.postalAddressLine2,
-    //         city: fData.city,
-    //         stateArea: fData.stateArea,
-    //         postalCode: fData.postalCode,
-    //         taxResidence: fData.taxResidence,
-    //         registrationNum: fData.registrationNum,
-    //         supervisoryAuthority: fData.supervisoryAuthority,
-    //         numSiretOrSiren: fData.numSiretOrSiren,
-    //         creationDate: fData.creationDate,
-    //         shareCapital: fData.shareCapital,
-    //         commercialContact: fData.commercialContact,
-    //         operationalContact: fData.operationalContact,
-    //         directorContact: fData.directorContact,
-    //         lei: fData.lei,
-    //         bic: fData.bic,
-    //         giinCode: fData.giinCode,
-    //         logoName: fData.logoName,
-    //         logoURL: fData.logoURL,
-    //     };
-    //
-    //     return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    // }
+    updateFundShares(fData: FundData, ngRedux: NgRedux<any>): any {
 
+        const messageBody: UpdateFundShareRequestBody = {
+            RequestName: 'updatefundshare',
+            token: this.memberSocketService.token,
+            accountId: this.accountId,   // entityId = accountID (name just changed)
+            shareID: fData.shareID,
+            fundID: fData.fundID,
+            metadata: fData.metadata,
+            issuer: fData.issuer,
+            shareName: fData.shareName,
+            status: fData.status,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }
