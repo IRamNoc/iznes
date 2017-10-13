@@ -37,6 +37,17 @@ import {
     getNewIssueAssetRequest
 } from './my-instruments';
 
+import {
+    // State and reducer
+    AllInstrumentsState,
+    AllInstrumentsReducer,
+
+    // Actions and action creator
+    SET_ALL_INSTRUMENTS_LIST,
+    setRequesteAllInstruments,
+    clearRequestedAllInstruments
+} from './all-instruments';
+
 export {
     REGISTER_ISSUER_SUCCESS,
     REGISTER_ISSUER_FAIL,
@@ -67,12 +78,20 @@ export {
     finishIssueAssetNotification
 };
 
+export {
+    SET_ALL_INSTRUMENTS_LIST,
+    setRequesteAllInstruments,
+    clearRequestedAllInstruments
+};
+
 export interface AssetState {
     myIssuers: MyIssuersState;
     myInstruments: MyInstrumentsState;
+    allInstruments: AllInstrumentsState;
 }
 
 export const assetReducer: Reducer<AssetState> = combineReducers<AssetState>({
     myIssuers: MyIssuersReducer,
-    myInstruments: MyInstrumentsReducer
+    myInstruments: MyInstrumentsReducer,
+    allInstruments: AllInstrumentsReducer
 });
