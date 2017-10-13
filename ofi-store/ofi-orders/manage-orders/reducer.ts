@@ -3,22 +3,22 @@ import {Action} from 'redux';
 import _ from 'lodash';
 
 /* Local types. */
-import {Orders} from './';
+import {ManageOrders} from './';
 import * as ofiCouponActions from './actions';
 
 /* Initial state. */
-const initialState: Orders = {
+const initialState: ManageOrders = {
     orderList: []
 };
 
 /* Reducer. */
-export const OfiOrderListReducer = function (
-    state: Orders = initialState,
+export const OfiManageOrderListReducer = function (
+    state: ManageOrders = initialState,
     action: Action
 ) {
     switch (action.type) {
         /* Set Coupon List. */
-        case ofiCouponActions.OFI_SET_ORDER_LIST:
+        case ofiCouponActions.OFI_SET_MANAGE_ORDER_LIST:
             return ofiSetOrderList(state, action);
 
         /* Default. */
@@ -32,15 +32,15 @@ export const OfiOrderListReducer = function (
  * ---------------
  * Deals with replacing the local orders list with a new one.
  *
- * @param {state} Orders - the current state.
+ * @param {state} ManageOrders - the current state.
  * @param {action} Action - the action requested.
  *
  * @return {newState} object - the new state.
  */
-function ofiSetOrderList ( state: Orders, action: Action ) {
+function ofiSetOrderList ( state: ManageOrders, action: Action ) {
     /* Variables. */
     let
-    newState:Orders,
+    newState:ManageOrders,
     newOrderList = _.get(action, 'payload[1].Data', []);
 
     /* Let's unpack the metaData... */

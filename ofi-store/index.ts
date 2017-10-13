@@ -44,18 +44,18 @@ export {
 } from './ofi-corp-actions';
 
 /*
-    Ofi Manage Orders
+    Ofi Orders
  */
 import {
-    OfiManageOrdersState,
-    OfiManageOrdersReducer
-} from './ofi-manage-orders';
-
+    OfiOrdersState,
+    OfiOrdersReducer
+} from './ofi-orders';
 export {
-    /* Orders List. */
-    getOfiOrderList,
-    OFI_SET_ORDER_LIST,
-} from './ofi-manage-orders';
+    getOfiMyOrderList,
+    getOfiManageOrderList,
+    OFI_SET_MANAGE_ORDER_LIST,
+    OFI_SET_MY_ORDER_LIST,
+} from './ofi-orders';
 
 export {
     OfiProductState,
@@ -69,12 +69,12 @@ export interface OfiState {
     ofiFundInvest: OfiFundInvestState;
     ofiCorpActions: OfiCorpActionsState;
     ofiProduct: OfiProductState;
-    ofiManageOrders: OfiManageOrdersState;
+    ofiOrders: OfiOrdersState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiFundInvest: OfiFundInvestReducer,
     ofiCorpActions: OfiCorpActionsReducer,
     ofiProduct: OfiProductReducer,
-    ofiManageOrders: OfiManageOrdersReducer,
+    ofiOrders: OfiOrdersReducer,
 });
