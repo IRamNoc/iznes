@@ -48,7 +48,25 @@ public class updateUserTest {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     List<Object> user = createUserAndCaptureUserId(factory, socket, "8", "35");
-    updateUser(factory, socket, user.get(0).toString(), "test@test.com", "8", "35", 0);
+    updateUser(factory, socket, user.get(0).toString(), "test@test.com", "8", "35", "test@test.com", "emailAddress", 0);
+
+    connection.disconnect();
+  }
+  @Test
+  public void updateUserAccountID() throws InterruptedException, ExecutionException {
+
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+    List<Object> user = createUserAndCaptureUserId(factory, socket, "8", "35");
+    updateUser(factory, socket, user.get(0).toString(), user.get(1).toString(), "7", "35", "7", "accountID", 0);
+
+    connection.disconnect();
+  }
+  @Test
+  public void updateUserUserType() throws InterruptedException, ExecutionException {
+
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+    List<Object> user = createUserAndCaptureUserId(factory, socket, "8", "35");
+    updateUser(factory, socket, user.get(0).toString(), user.get(1).toString(), user.get(2).toString(), "35", "35", "userType", 0);
 
     connection.disconnect();
   }

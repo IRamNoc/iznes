@@ -67,6 +67,9 @@ public class OpenCSDWalletsAcceptanceTest {
         driver.findElement(By.id("new-wallet-usertype-select")).click();
         driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
     }
+    public static void toggleLockWallet() throws IOException, InterruptedException {
+        driver.findElement(By.className("toggle-switch")).click();
+    }
 
     @Test
     public void shouldNotCreateWalletWithoutAccountAndWalletType() throws IOException, InterruptedException {
@@ -143,14 +146,14 @@ public class OpenCSDWalletsAcceptanceTest {
     @Test
     public void shouldEditWalletStatus() throws IOException, InterruptedException {
         navigateToAddWallet();
-        driver.findElement(By.className("toggle-switch")).click();
+        toggleLockWallet();
         clickWalletSubmit();
     }
     @Ignore
     @Test
     public void shouldResetWalletStatus() throws IOException, InterruptedException {
         navigateToAddWallet();
-        driver.findElement(By.className("toggle-switch")).click();
+        toggleLockWallet();
         clickWalletSubmit();
     }
     @Ignore
