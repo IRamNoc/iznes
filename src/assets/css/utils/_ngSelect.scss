@@ -145,3 +145,10 @@
 
     }
 }
+
+ng-select.fluid-width {
+    .ui-select-toggle, .ui-select-search {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

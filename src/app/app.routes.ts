@@ -34,7 +34,8 @@ import {
 
 /* Ofi Manage Orders Module. */
 import {
-    ManageOrdersComponent
+    ManageOrdersComponent,
+    MyOrdersComponent,
 } from '@ofi/ofi-main';
 
 /**
@@ -282,6 +283,17 @@ export const ROUTES: Routes = [
                 path: 'manage-orders',
                 component: ManageOrdersComponent,
                 canActivate: [LoginGuardService]
+            },
+            {
+                path: 'order-book',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'my-orders',
+                        canActivate: [LoginGuardService],
+                        component: MyOrdersComponent,
+                    }
+                ]
             }
         ],
         canActivate: [LoginGuardService]
