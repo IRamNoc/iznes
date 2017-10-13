@@ -201,6 +201,8 @@ public class UserHelper {
                                   String email,
                                   String account,
                                   String userType,
+                                  String expectedResult,
+                                  String enteredField,
                                   int userStatus) throws InterruptedException {
 
     CountDownLatch latch = new CountDownLatch(1);
@@ -211,11 +213,9 @@ public class UserHelper {
       JSONObject resp = (JSONObject) data.get(0);
       String status = resp.get("Status").toString();
       assertTrue(status.equals("OK"));
-      assertTrue(resp.get("userID").toString().equals(userId));
-      assertTrue(resp.get("accountID").toString().equals(account));
-      assertTrue(resp.get("emailAddress").toString().equals(email));
-      assertTrue(resp.get("accountLocked").toString().equals(valueOf(userStatus)));
-      assertTrue(resp.get("userType").toString().equals(userType));
+      System.out.println(enteredField);
+      System.out.println(expectedResult);
+      assertTrue(resp.get(enteredField).toString().equals(expectedResult));
 
       latch.countDown();
       return "";
