@@ -227,9 +227,14 @@ export class DropHandler {
      * @return {void}
      */
     private addFiles (files): void {
+
         /* Loop over each... */
         for (const file of files) {
             /* ...and push. */
+            if (!this.multiple && this.uploadedFiles.length > 0) {
+                console.log('Uploaded files:' + this.uploadedFiles.length);
+                continue;
+            }
             this.uploadedFiles.push(file);
         }
     }
@@ -370,7 +375,7 @@ export class DropHandler {
             return;
         }
 
-        /* If mutliple, only do the first. */
+        /* If multiple, only do the first. */
         if ( ! this.multiple ) {
             files = [files[0]];
         }
@@ -477,8 +482,8 @@ export class DropHandler {
     private updateFilesText (): void {
         /* Update. */
         this.numberFilesText = (
-            (!this.encodedFiles || this.encodedFiles.length === 0) ? 'No' : this.encodedFiles.length) + ' ' +
-            (this.multiple && this.encodedFiles.length > 1 ? 'files' : 'file') + ' selected.';
+            (!this.uploadedFiles || this.uploadedFiles.length === 0) ? 'No' : this.uploadedFiles.length) + ' ' +
+            (this.multiple && this.uploadedFiles.length > 1 ? 'files' : 'file') + ' selected.';
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
