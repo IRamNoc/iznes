@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {SetlMessagesComponent} from './messages/messages.component';
 import {ClarityModule} from 'clarity-angular';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 
 import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
@@ -27,7 +28,8 @@ import {
         SetlPipesModule,
         QuillEditorModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxPaginationModule
     ],
     declarations: [
         SetlMessagesComponent

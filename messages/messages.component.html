@@ -101,7 +101,7 @@
                     <!-- message highlights (previews -->
                     <div class="col-sm-5 message-highlights">
                         <div class="message-options">
-                            <h2>Inbox All Messages ({{messages.length || 0}})</h2>
+                            <h2>{{currentBoxName}} ({{currentBoxCount || 0}})</h2>
                             <button class="btn btn-outline btn-sm" (click)="refreshMailbox()">
                                 <clr-icon shape="refresh"></clr-icon>
                                 Refresh
@@ -116,7 +116,8 @@
                             </button>
                         </div>
 
-                        <div class="message-highlight {{!message.isRead && 'message-unread'}}" *ngFor="let message of messages; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
+                        <div class="message-highlight {{!message.isRead && 'message-unread'}}"
+                             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
                                 <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
                                 {{message.senderWalletName}}
@@ -134,7 +135,8 @@
                             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
                         </div>
 
-                        <div class="message-highlight-footer">Display {{messages.length}} messages
+                        <div class="message-highlight-footer">
+                            <pagination-controls (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
                         </div>
 
                     </div>

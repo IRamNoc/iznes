@@ -47,8 +47,11 @@ export class SetlMessagesComponent implements OnDestroy {
     public walletWithCommuPub;
 
     public connectedWallet;
-
     public myWalletList;
+    public mailCounts;
+    public currentBoxCount;
+    public currentPage;
+    public currentBoxName;
 
     public items: Array<string> = [];
 
@@ -162,6 +165,7 @@ export class SetlMessagesComponent implements OnDestroy {
             this.getMailCounts.subscribe(
                 (data) => {
                     console.log('mail counts', data);
+                    this.mailCounts = data;
                 }
             )
         );
@@ -190,7 +194,7 @@ export class SetlMessagesComponent implements OnDestroy {
      * @param {boolean} isSent
      * @returns {boolean}
      */
-    requestMessages(isAction = false, isDeleted = false, isSent = false) {
+    requestMessages(page = 0, isAction = false, isDeleted = false, isSent = false) {
 
         const requestIsAction = isAction === true ? 1 : 0;
         const requestIsDeleted = isDeleted === true ? 1 : 0;
@@ -203,7 +207,7 @@ export class SetlMessagesComponent implements OnDestroy {
             0,
             fromWallet,
             toWallet,
-            0,
+            page,
             8,
             0,
             0,
@@ -254,24 +258,66 @@ export class SetlMessagesComponent implements OnDestroy {
         this.messages = messages;
         this.messages = messages.map((message) => {
             const senderId = message.senderId;
-            const senderWallet = this.walletDirectoryList[senderId].walletName;
-            message.senderWalletName = senderWallet;
-
+            if (senderId) {
+                if (typeof this.walletDirectoryList[senderId] != "undefined") {
+                    const senderWallet = this.walletDirectoryList[senderId].walletName;
+                    message.senderWalletName = senderWallet;
+                }
+            }
             const recipientId = message.recipientId;
-            const recipientWallet = this.walletDirectoryList[recipientId].walletName;
-            message.recipientWalletName = recipientWallet;
+            if (recipientId) {
+                if (typeof this.walletDirectoryList[recipientId] != "undefined") {
+                    const recipientWallet = this.walletDirectoryList[recipientId].walletName;
+                    message.recipientWalletName = recipientWallet;
+                }
+            }
             return message;
         });
 
         if (this.messages.length > 0) {
             this.showMessage(this.currentMessage.id);
         }
+
+        if (this.mailCounts) {
+
+            // currentCategory
+
+            const categoryType = this.categories[this.currentCategory].type;
+
+            this.currentBoxName = this.categories[this.currentCategory].name;
+            this.currentBoxCount = this.mailCounts[categoryType]; // currentCategory
+
+            // using 8 per page
+            // get total pages
+        }
+
+        // sort page counts
+        console.log(this.mailCounts);
     }
 
+    /**
+     * On Page Change Request Next Page
+     *
+     * @param {number} number
+     */
+    onPageChange(number: number) {
+        const page = number - 1;
+        const categoryType = this.categories[this.currentCategory].type;
+        this.requestMailboxByCategory(categoryType, page);
+    }
+
+    /**
+     * Refresh Mailbox
+     */
     refreshMailbox() {
-        console.log('refresh current mailbox');
+        this.currentPage = 0;
+        const categoryType = this.categories[this.currentCategory].type;
+        this.requestMailboxByCategory(categoryType, 0);
     }
 
+    /**
+     * Delete Message
+     */
     deleteMessage() {
         console.log('delete message');
     }
@@ -316,7 +362,7 @@ export class SetlMessagesComponent implements OnDestroy {
      * @param index
      * @param {boolean} composeSelected
      */
-    showCategory(index, composeSelected = false) {
+    showCategory(index, composeSelected = false, page = 0) {
 
         this.resetMessages();
 
@@ -332,29 +378,38 @@ export class SetlMessagesComponent implements OnDestroy {
             // set the current message that appears on the right hand side
             this.currentCategory = index;
 
-            if (type === 'inbox') {
-                this.requestMessages();
-            } else if (type === 'action') {
-                this.requestMessages(
-                    true
-                );
-            } else if (type === 'sent') {
-                this.requestMessages(
-                    false,
-                    false,
-                    true
-                );
-            } else if (type === 'deleted') {
-                this.requestMessages(
-                    false,
-                    true
-                );
-            }
+            this.requestMailboxByCategory(type, 0);
 
             this.currentMessage = {
                 id: 0,
                 mailid: 0,
             };
+        }
+    }
+
+    requestMailboxByCategory(type, page) {
+        if (type === 'inbox') {
+            this.requestMessages(
+                page
+            );
+        } else if (type === 'action') {
+            this.requestMessages(
+                page,
+                true
+            );
+        } else if (type === 'sent') {
+            this.requestMessages(
+                page,
+                false,
+                false,
+                true
+            );
+        } else if (type === 'deleted') {
+            this.requestMessages(
+                page,
+                false,
+                true
+            );
         }
     }
 
@@ -383,8 +438,12 @@ export class SetlMessagesComponent implements OnDestroy {
     }
 
     resetMessages() {
+        this.messages = [];
+
         // Default current category
         this.currentCategory = 0;
+
+        this.currentPage = 0;
 
         // Default current message
         this.currentMessage = {
@@ -404,11 +463,8 @@ export class SetlMessagesComponent implements OnDestroy {
         const body = JSON.stringify(bodyObj);
 
         let subject = btoa(formData.subject);
-
         let recipients = {};
-
         let currentWallet = this.myWalletList[this.connectedWallet];
-
         let senderId = this.connectedWallet;
         let senderPub = currentWallet.commuPub;
 
