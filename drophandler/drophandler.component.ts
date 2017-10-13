@@ -42,9 +42,9 @@ export class DropHandler {
     public encodedFiles: any = [];
     public numberFilesText: any;
     public uploadPrompt: any;
+    public uploadedFiles: any = [];
 
     /* Private variables. */
-    private uploadedFiles: any = [];
     private silentEncodedFiles: any = [];
     private processInterval: any;
     private removingFile = false;
@@ -361,7 +361,7 @@ export class DropHandler {
         /* Variables. */
         let
         i,
-        file: File,
+        file,
         myReader: FileReader,
         grandTotal = 0;
 
