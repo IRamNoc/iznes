@@ -10,8 +10,8 @@ public class Container<T> {
     return item;
   }
 
-  public void setItem(String item) {
-    this.item = (T) item;
+  public void setItem(T item) {
+    this.item = item;
   }
 
 

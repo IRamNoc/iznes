@@ -7,6 +7,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import src.APITests.io.setl.Container;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,31 +46,31 @@ public class MemberHelper {
     latch.await();
   }
 
-  public static String[] createMemberAndCaptureDetails(MessageFactory factory, SocketClientEndpoint socket, String memberName, String email) throws InterruptedException, ExecutionException {
+  public static Member createMemberAndCaptureDetails(MessageFactory factory, SocketClientEndpoint socket, String memberName, String email) throws InterruptedException, ExecutionException {
+      Container<Member> container = new Container<>();
+      CountDownLatch latch = new CountDownLatch(1);
 
-    CountDownLatch latch = new CountDownLatch(1);
-    Container<String[]> container = new Container<>();
-
-
-        socket.registerHandler(Message.Type.nm.name(), message -> {
+      socket.registerHandler(Message.Type.nm.name(), message -> {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
-        String password = resp.get("pass").toString();
-        String username = resp.get("userName").toString();
-        //container.setItem(password);
-        //container.setItem(username);
+        try {
+          Member member = JsonToJava.convert(resp.toJSONString(), Member.class);
+          container.setItem(member);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
         latch.countDown();
         return "";
+
       });
 
-    //socket.sendMessage(factory.createMember(memberName, email));
+      socket.sendMessage(factory.createMember(memberName, email));
 
-    //latch.await();
-    //String password = container.getItem();
-    //String username = container.getItem();
+      latch.await();
 
-    return new String[] {};
-  }
+      return container.getItem();
+    }
 
   public static void createMember(MessageFactory factory, SocketClientEndpoint socket, int noOfUsers) throws ExecutionException, InterruptedException {
     for (int i = 0; i < noOfUsers; i++) {
@@ -91,7 +96,6 @@ public class MemberHelper {
     }
   }
 
-
   public static void addAccountToMember(MessageFactory factory, SocketClientEndpoint socket, String account) throws ExecutionException, InterruptedException {
     CountDownLatch latch = new CountDownLatch(1);
 
@@ -109,4 +113,26 @@ public class MemberHelper {
 
     latch.await();
   }
+
+
+  public static void deleteMember(MessageFactory factory, SocketClientEndpoint socket, String memberId) throws ExecutionException, InterruptedException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+
+    socket.registerHandler(Message.Type.dm.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(0);
+      String deletedMember= resp.get("memberID").toString();
+      assertTrue(deletedMember.equals(memberId));
+      latch.countDown();
+      return "";
+    });
+
+    socket.sendMessage(factory.deleteMember(memberId));
+
+    latch.await();
+
+
+  }
+
 }

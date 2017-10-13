@@ -47,7 +47,7 @@ public class updateUserTest {
   public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    List<Object> user = createUserAndCaptureUserId(factory, socket, "8", "35");
+    List<Object> user = createUserAndCaptureDetails(factory, socket, "8", "35");
     updateUser(factory, socket, user.get(0).toString(), "test@test.com", "8", "35", "test@test.com", "emailAddress", 0);
 
     connection.disconnect();

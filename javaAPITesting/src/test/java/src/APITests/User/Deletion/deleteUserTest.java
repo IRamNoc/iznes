@@ -138,7 +138,7 @@ public class deleteUserTest {
       assertTrue(!lastUserName.equalsIgnoreCase(userName));
 
       //CREATE NEW USER
-      String userId = createUserAndCaptureUserId(factory, socket, "8", "35").get(0).toString();
+      String userId = createUserAndCaptureDetails(factory, socket, "8", "35").get(0).toString();
 
       //LIST USERS AFTER NEW USER CREATION
       String newLastUserName = listUsers(factory, socket);
@@ -173,7 +173,7 @@ public class deleteUserTest {
     socket.sendMessage(factory.deleteUserFromAccount("9999"));
 
     latch.await();
-      connection.disconnect();
+    connection.disconnect();
 
     }
 }

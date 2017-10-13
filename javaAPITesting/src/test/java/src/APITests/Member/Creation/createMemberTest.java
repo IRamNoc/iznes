@@ -1,5 +1,6 @@
 package src.APITests.Member.Creation;
 
+import SETLAPIHelpers.Member;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -33,7 +34,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createMemberTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(300000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -50,15 +51,20 @@ public class createMemberTest {
   @Test
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
     String memberDetails[] = generateMemberDetails();
     String memberName = memberDetails[0];
+    System.out.println("Member Name = " +  memberName);
     String email = memberDetails[1];
-    createMemberAndCaptureDetails(factory, socket, memberName, email);
+    System.out.println("Member Email = " +  email);
+
+    Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
+
+    System.out.println("JSON MemberName = " + member.getUserID());
+    System.out.println("Member Name = " + memberName);
+    assertTrue(member.getMemberName().equals(memberName));
 
     connection.disconnect();
   }
-
 
   @Test
   public void createMultipleMember() throws ExecutionException, InterruptedException {
