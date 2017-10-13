@@ -1,7 +1,7 @@
 ## OFI subscribe/redeem function
 
 #### Prerequisites
-- [ ] ofi-req-services
+- [] ofi-req-services
 - [ ] ofi-store
 - [ ] ofi-fund-invest
 

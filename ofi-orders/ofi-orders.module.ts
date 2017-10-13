@@ -14,17 +14,23 @@ import {ClarityModule} from 'clarity-angular';
 
 /* Components. */
 import {ManageOrdersComponent} from './manage-orders/manage-orders.component';
+import {MyOrdersComponent} from './my-orders/my-orders.component';
 
 /* Services. */
-import {OfiManageOrdersService} from '../ofi-req-services/ofi-manage-orders/service';
+import {OfiOrdersService} from '../ofi-req-services/ofi-orders/service';
+
+/* Multilingual module. */
+import {MultilingualModule} from '@setl/multilingual';
 
 /* Decorator. */
 @NgModule({
     declarations: [
         ManageOrdersComponent,
+        MyOrdersComponent,
     ],
     exports: [
         ManageOrdersComponent,
+        MyOrdersComponent,
     ],
     imports: [
         CommonModule,
@@ -33,14 +39,15 @@ import {OfiManageOrdersService} from '../ofi-req-services/ofi-manage-orders/serv
         FormsModule,
         ClarityModule,
         SelectModule,
-        SetlPipesModule
+        SetlPipesModule,
+        MultilingualModule
     ],
     providers: [
-        OfiManageOrdersService
+        OfiOrdersService
     ]
 })
 
 /* Class. */
-export class OfiManageOrdersModule {
+export class OfiOrdersModule {
 
 }

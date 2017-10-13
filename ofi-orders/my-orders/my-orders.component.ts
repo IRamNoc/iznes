@@ -26,7 +26,7 @@ import {
 
 /* Ofi Store stuff. */
 import {
-    getOfiManageOrderList
+    getOfiMyOrderList
 } from '../../ofi-store';
 
 /* Types. */
@@ -37,13 +37,13 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
-    styleUrls: ['./manage-orders.component.css'],
-    templateUrl: './manage-orders.component.html',
+    styleUrls: ['./my-orders.component.css'],
+    templateUrl: './my-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /* Class. */
-export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Tabs Control array */
     public tabsControl: Array<any> = [];
@@ -77,7 +77,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' }; // default search.
 
     /* Observables. */
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb:any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb:any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
     @select(['user', 'myDetail']) myDetailOb:any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
@@ -99,7 +99,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let state = this.ngRedux.getState();
 
         /* Ok, let's check that we have the orders list, if not... */
-        if ( ! getOfiManageOrderList(state).length ) {
+        if ( ! getOfiMyOrderList(state).length ) {
             /* ...request using the defaults in the form. */
             this.getOrdersBySearch();
         }
@@ -298,7 +298,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['status'] = searchForm.status[0].id;
         request['sortOrder'] = this.sort.direction;
         request['sortBy'] = this.sort.name;
-        request['partyType'] = 2;
+        request['partyType'] = 1;
         request['pageSize'] = 123456789; // we're just getting all.
         request['pageNum'] = 0; // no need for this.
         request['asset'] = searchForm.name;
@@ -307,7 +307,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log(request);
 
         /* ...then request the new list. */
-        this.ofiOrdersService.getManageOrdersList(request)
+        this.ofiOrdersService.getMyOrdersList(request)
         .then(response => true) // no need to do anything here.
         .catch((error) => {
             console.warn('failed to fetch orders list: ', error);
