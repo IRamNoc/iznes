@@ -8,8 +8,8 @@ export class NumberConverterService {
     private _appConfig: AppConfig;
     private divider: number;
 
-    constructor(@Inject(APP_CONFIG) appConfig: AppConfig) {
-        this.divider = appConfig.numberDivider;
+    constructor(@Inject(APP_CONFIG) _appConfig: AppConfig) {
+        this.divider = _appConfig.numberDivider;
     }
 
     toBlockchain(value: number): number {
