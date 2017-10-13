@@ -43,12 +43,7 @@ public class createMemberTest {
   @Test
   public void createNewMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-    String memberDetails[] = generateMemberDetails();
-    String memberName = memberDetails[0];
-    String email = memberDetails[1];
-    createMember(factory, socket, memberName, email);
-
+    createMember(factory, socket);
     connection.disconnect();
   }
 
@@ -100,7 +95,7 @@ public class createMemberTest {
   assertNotNull(lastMember);
   assertTrue(!lastMember.toString().equals(accountName));
   try {
-  createMember(factory, socket, accountName, email);
+  createMember(factory, socket);
   } catch (InterruptedException e) {
   e.printStackTrace();
   } catch (ExecutionException e) {
@@ -130,7 +125,6 @@ public class createMemberTest {
   socket.sendMessage(factory.listMembers());
   return "";
   });
-  latch.await();
 
   connection.disconnect();
   }

@@ -138,8 +138,7 @@ public class deleteUserTest {
       assertTrue(!lastUserName.equalsIgnoreCase(userName));
 
       //CREATE NEW USER
-      List<Object> users = createUserAndCaptureUserId(factory, socket, userName, email,"8", "35", password);
-      String userId  = users.get(0).toString();
+      String userId = createUserAndCaptureUserId(factory, socket, "8", "35").get(0).toString();
 
       //LIST USERS AFTER NEW USER CREATION
       String newLastUserName = listUsers(factory, socket);
