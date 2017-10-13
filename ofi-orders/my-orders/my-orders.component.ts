@@ -65,6 +65,9 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 4, text: 'Redemption'},
     ];
 
+    /* Public Properties */
+    public connectedWalletName: string = '';
+
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe:Unsubscribe;
@@ -72,7 +75,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private myDetails: any = {};
     private myWallets: any = [];
     private connectedWalletId: any = 0;
-    private connectedWalletName: string = '';
     private requestedSearch:any;
     private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' }; // default search.
 
@@ -188,6 +190,52 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Detect the changes. */
         this.changeDetectorRef.detectChanges();
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Handle Cancel Order
+     * -----------------
+     * Handles canceling an order.
+     *
+     * @return {void}
+     */
+    public handleCancelOrder (orderId: number):void {
+        /* Let's first find the order... */
+        let
+        request= {},
+        order = this.getOrderById(orderId);
+
+        /* ...or return if we couldn't find it. */
+        if (!order) return;
+
+        /* Now let's build the request that we'll send... */
+        request['arrangementId'] = order.arrangementID;
+        request['walletId'] = this.connectedWalletId;
+        request['status'] = 0;
+        request['price'] = order.price;
+
+        /* Let's ask the user if they're sure... */
+        this._confirmationService.create(
+            '<span>Cancelling an Order</span>',
+            '<span>Are you sure you want to cancel this order?</span>'
+        ).subscribe((ans) => {
+            /* ...if they are... */
+            if (ans.resolved) {
+                /* Send the request. */
+                this.ofiOrdersService.updateOrder(request).then((response) => {
+                    /* Handle success. */
+                    this.showSuccess('Successfully cancelled this order.');
+                    console.log(response);
+                }).catch((error) => {
+                    /* Handle error. */
+                    this.showError('Failed to cancel this order.');
+                    console.warn(error);
+                });
+            }
+        });
 
         /* Return. */
         return;

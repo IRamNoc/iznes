@@ -14,3 +14,11 @@ export interface OfiRequestArrangements extends OfiMemberNodeBody {
     asset: string;
     arrangementType: string;
 }
+
+export interface OfiUpdateArrangement extends OfiMemberNodeBody {
+    arrangementId: string|number;
+    walletId: string|number;
+    status: string|number;
+    price: string|number;
+    deamonToken: number;
+}

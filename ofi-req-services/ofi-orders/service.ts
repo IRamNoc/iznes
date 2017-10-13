@@ -16,7 +16,8 @@ import {
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
-    OfiRequestArrangements
+    OfiRequestArrangements,
+    OfiUpdateArrangement,
 } from './model';
 
 @Injectable()
@@ -85,6 +86,33 @@ export class OfiOrdersService {
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
             'successActions': [ OFI_SET_MY_ORDER_LIST ]
+        });
+    }
+
+    /**
+     * Update Order
+     * ------------------
+     * Updates an order (arrangement).
+     *
+     * @param  {object} data  - the new arrangement information.
+     *
+     * @return {Promise<any>}
+     */
+    public updateOrder (data: any): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiUpdateArrangement = {
+            RequestName: 'updatearrangement',
+            token: this.memberSocketService.token,
+            arrangementId: data.arrangementId,
+            walletId: data.walletId,
+            status: data.status,
+            price: data.price,
+            deamonToken: 1,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody)
         });
     }
 
