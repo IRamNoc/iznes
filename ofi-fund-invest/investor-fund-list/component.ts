@@ -5,7 +5,9 @@ import {fromJS} from 'immutable';
 import _ from 'lodash';
 
 // Internal
-import {MemberService} from '@setl/core-req-services';
+import {
+    MemberService,
+} from '@setl/core-req-services';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {Subscription} from 'rxjs/Subscription';
@@ -27,6 +29,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
+
 
     // List of redux observable.
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
@@ -53,8 +56,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             }
         ];
 
-        this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe((requested) => this.requestMyFundAccess(requested)));
-        this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe((fundShareAccessList) => this.updateFundList(fundShareAccessList)));
+        this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
+            (requested) => this.requestMyFundAccess(requested)));
+        this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
+            (fundShareAccessList) => this.updateFundList(fundShareAccessList)));
 
     }
 
@@ -108,6 +113,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
+
     setTabActive(index: number): void {
 
         const tabControlImu = fromJS(this.tabsControl);
@@ -150,8 +156,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             fundShareData: fundShareData,
             actionType: 'subscribe',
             active: false
-        })
-        ;
+        });
 
         // Activate the new tab.
         this.setTabActive(this.tabsControl.length - 1);

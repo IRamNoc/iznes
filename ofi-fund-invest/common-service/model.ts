@@ -1,16 +1,22 @@
 export interface FundCharacteristic {
-    sCutoffDate: number;
     sCutoffTime: string;
-    rCutoffDate: number;
+    sCutoffDateTimeStr: string;
+    sCutoffDateTimeNumber: number;
     rCutoffTime: string;
-    sValuationDate: number;
+    rCutoffDateTimeStr: string;
+    rCutoffDateTimeNumber: number;
     sValuationTime: string;
-    rValuationDate: number;
+    sValuationDateTimeStr: string;
+    sValuationDateTimeNumber: number;
     rValuationTime: string;
-    sSettlementDate: number;
+    rValuationDateTimeStr: string;
+    rValuationDateTimeNumber: number;
     sSettlementTime: string;
-    rSettlementDate: number;
+    sSettlementDateTimeStr: string;
+    sSettlementDateTimeNumber: number;
     rSettlementTime: string;
+    rSettlementDateTimeStr: string;
+    rSettlementDateTimeNumber: number;
     knownNav: boolean;
     entryFee: number;
     sAcquiredFee: number;

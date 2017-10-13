@@ -16,6 +16,11 @@
    - [x] Create static function to actually to make the call to fetch access.
    - [x] Paint fund list in fund list table.
     
-- [ ] Setup subscribe view 
-- [ ] Setup redeem view
-- [ ] Allow Fund detail viewing function.
+- [x] Setup subscribe view 
+- [x] Setup redeem view
+- [] Allow Fund detail viewing function.
+
+-[] Create subscription and redemption 
+    -[x] save subscription and redemption into blockchain
+    -[] save subscription and redemption into membernode
+    
