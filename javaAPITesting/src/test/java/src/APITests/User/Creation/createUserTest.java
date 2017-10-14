@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import SETLAPIHelpers.LoginHelper;
 
+import javax.xml.stream.FactoryConfigurationError;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
@@ -32,10 +33,9 @@ import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static SETLAPIHelpers.MemberHelper.createMember;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
-import static SETLAPIHelpers.UserHelper.createDuplicateUser;
+import static SETLAPIHelpers.UserHelper.*;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static SETLAPIHelpers.UserHelper.createUser;
 
 
 @RunWith(JUnit4.class)
@@ -54,73 +54,18 @@ public class createUserTest {
   @Test
   public void createUserWithValidDataTest() throws InterruptedException, ExecutionException {
 
-    final AtomicInteger atomicInt = new AtomicInteger(0);
-
-    String userDetails[] = generateUserDetails();
-    String userName = userDetails[0];
-    String password = userDetails[1];
-    String email = userDetails[2];
-    CountDownLatch latch = new CountDownLatch(1);
-
-
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-    socket.registerHandler(Message.Type.um_lu.name(), message -> {
-
-      int call = atomicInt.getAndIncrement();
-      if (call == 0) {
-        JSONArray data = (JSONArray) message.get("Data");
-        JSONObject resp = (JSONObject) data.get(data.size() - 1);
-        Object lastUser = resp.get("userName");
-        assertNotNull(lastUser);
-        assertTrue(!lastUser.toString().equals(userName));
-        try {
-          createUser(factory, socket, userName, email, "8", "35", password);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } catch (ExecutionException e) {
-          e.printStackTrace();
-        }
-        return "";
-      }
-
-      JSONArray data = (JSONArray) message.get("Data");
-      JSONObject resp = (JSONObject) data.get(data.size() - 1);
-      Object lastUser = resp.get("userName");
-      assertNotNull(lastUser);
-      assertTrue(lastUser.toString().equals(userName));
-      latch.countDown();
-      return "";
-    });
-
-    socket.sendMessage(factory.listUsers());
-
-    socket.registerHandler(Message.Type.nu.name(), message -> {
-      JSONArray data = (JSONArray) message.get("Data");
-      JSONObject resp = (JSONObject) data.get(0);
-      Object newUser = resp.get("userName");
-      assertNotNull(newUser);
-      assertTrue(newUser.toString().equalsIgnoreCase(userName));
-      socket.sendMessage(factory.listUsers());
-      return "";
-    });
+    createUser(factory, socket, "8", "35");
     connection.disconnect();
   }
-
-
-
 
   @Test
   public void failToCreateUserWithInvalidEmailTest() throws InterruptedException, ExecutionException {
 
-    String userDetails[] = generateUserDetails();
-    String userName = userDetails[0];
-    String password = userDetails[1];
-
     CountDownLatch latch = new CountDownLatch(1);
 
       socket.registerHandler(Message.Type.Login.name(), message -> {
-      socket.sendMessage(factory.addUserToAccount(userName,"pop","8","35", password));
+      socket.sendMessage(factory.addUserToAccount("Test_User_1","pop","8","35", "password"));
       return "";
     });
 
@@ -214,17 +159,7 @@ public class createUserTest {
   @Test
   public void createNewUser() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-    String userDetails[] = generateUserDetails();
-    String userName = userDetails[0];
-    String password = userDetails[1];
-    String email = userDetails[2];
-
-    createUser(factory, socket, userName, email, "8","35", password);
-
-    List<Object> users = new UserHelper().createUserAndCaptureUserId(factory, socket, userName, email, "8","35", password);
-    String userId  = users.get(0).toString();
-    System.out.println("New User Id : " + userId);
+    createUser(factory, socket,"8","35");
     connection.disconnect();
   }
 

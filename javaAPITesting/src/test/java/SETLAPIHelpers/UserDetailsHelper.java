@@ -6,7 +6,7 @@ public class UserDetailsHelper {
 
   //Comment
 
-  public static String[] generateUserDetails ()
+  public static String[] generateUserDetails()
   {
     String str = randomAlphabetic(5);
     String userName = "Test_User_" + str;

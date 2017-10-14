@@ -1,5 +1,6 @@
 package src.APITests.Member.Creation;
 
+import SETLAPIHelpers.Member;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -25,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static SETLAPIHelpers.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static SETLAPIHelpers.MemberHelper.createMember;
+import static SETLAPIHelpers.MemberHelper.createMemberAndCaptureDetails;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
@@ -32,7 +34,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createMemberTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(50000);
+  public Timeout globalTimeout = Timeout.millis(300000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -42,11 +44,24 @@ public class createMemberTest {
   @Test
   public void createNewMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+    createMember(factory, socket);
+    connection.disconnect();
+  }
 
+  @Test
+  public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     String memberDetails[] = generateMemberDetails();
     String memberName = memberDetails[0];
+    System.out.println("Member Name = " +  memberName);
     String email = memberDetails[1];
-    createMember(factory, socket, memberName, email);
+    System.out.println("Member Email = " +  email);
+
+    Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
+
+    System.out.println("JSON MemberName = " + member.getUserID());
+    System.out.println("Member Name = " + memberName);
+    assertTrue(member.getMemberName().equals(memberName));
 
     connection.disconnect();
   }
@@ -86,7 +101,7 @@ public class createMemberTest {
   assertNotNull(lastMember);
   assertTrue(!lastMember.toString().equals(accountName));
   try {
-  createMember(factory, socket, accountName, email);
+  createMember(factory, socket);
   } catch (InterruptedException e) {
   e.printStackTrace();
   } catch (ExecutionException e) {
@@ -116,7 +131,6 @@ public class createMemberTest {
   socket.sendMessage(factory.listMembers());
   return "";
   });
-  latch.await();
 
   connection.disconnect();
   }

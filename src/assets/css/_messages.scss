@@ -36,10 +36,10 @@
             h4 {
                 margin: 0px 0 0;
                 line-height: 30px;
-                font-size: 15px;
+                font-size: 13px;
             }
             span {
-                font-size: 12px;
+                font-size: 10px;
             }
         }
 
@@ -77,13 +77,13 @@
         margin: 20px auto;
         min-height: 800px;
 
-        .ui-select-container.ui-select-multiple {
-            border: 1px solid #ccc !important;
-            margin: 10px auto;
-            padding: 7px 10px 2px !important;
-            border-radius: 4px;
-            width: 95%;
-        }
+        //.ui-select-container.ui-select-multiple {
+        //    border: 1px solid #ccc !important;
+        //    margin: 10px auto;
+        //    padding: 5px !important;
+        //    border-radius: 4px;
+        //    width: 95%;
+        //}
 
         .message-options {
             padding: 20px;
@@ -108,7 +108,7 @@
             padding-right: 0;
 
             .message-highlight {
-                padding: 15px;
+                padding: 12px;
                 border-bottom: 1px solid #ccc;
                 border-left: 2px solid transparent;
                 border-right: 2px solid transparent;
@@ -190,13 +190,14 @@
 
             .message-highlight-footer {
                 border-top: 1px solid #ccc;
-                padding: 0 20px;
-                background: #ccc;
+                padding: 5px;
+                background: #f7f7f7;
                 color: white;
                 font-weight: 300;
                 position: absolute;
                 bottom: 0;
-                width: 98.2%;
+                width: calc(100% - 12px);
+                height: 43px;
             }
         }
 
@@ -230,6 +231,11 @@
         .message-compose-buttons {
             padding: 17px 15px 0;
             float: right;
+        }
+
+        form {
+            padding: 0px !important;
+            padding-top: 10px !important;
         }
     }
 }
@@ -318,5 +324,13 @@
 
     .message-hr {
         display: none;
+    }
+}
+
+pagination-controls {
+    float: right;
+
+    ul {
+        font-size: 12px;
     }
 }

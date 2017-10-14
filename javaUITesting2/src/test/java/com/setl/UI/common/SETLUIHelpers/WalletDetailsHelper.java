@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
+import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +10,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 
 import static com.setl.UI.common.SETLUIHelpers.ExpiryDateHelper.calculateExpiryDate;
@@ -890,4 +892,42 @@ public class WalletDetailsHelper extends LoginAndNavigationHelper {
         String userDirectory = dir;
         FileUtils.copyFile(scrFile, new File(userDirectory, fname));
     }
+
+  public static void verifyPopupMessageText(String alertText, String failText) throws InterruptedException {
+    try {
+      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+      wait.until(visibilityOfElementLocated(By.className("jaspero__dialog")));
+      wait.until(elementToBeClickable(driver.findElement(By.cssSelector("default ng-tns-c16-3"))));
+    }catch (TimeoutException t) {
+      System.out.println(failText + "Timed Out  " + t.getMessage());
+    }catch (NoSuchElementException n) {
+      System.out.println(failText + "Popup not present  " + n.getMessage());
+    }catch (ElementNotVisibleException v) {
+      System.out.println(failText + "Popup not visible  " + v.getMessage());
+    }catch (ElementNotSelectableException s) {
+      System.out.println(failText + "Confirm button not ready  " + s.getMessage());
+    }
+    try {
+      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+      wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+      if (!(driver.findElement(By.className("jaspero__dialog-title")).getText().contains(alertText))) {
+        Assert.fail("Actual message was : " + (driver.findElement(By.cssSelector(SweetAlert)).getText() + " " + (driver.findElement(By.cssSelector((SweetAlertHeader))).getText())));
+      }
+    }catch (Exception e)
+    {
+      System.out.println("No Text present " + e.getMessage());
+      TestCase.fail();
+    }
+    driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+  }
+
+  public static void navigateToAddWallet() throws IOException, InterruptedException {
+    driver.findElement(By.id("wallet-tab-1")).click();
+    try {
+      driver.findElement(By.id("manage-wallets")).isDisplayed();
+    }catch (Error e){
+      System.out.println("wallet-tab-2 not present");
+      TestCase.fail();
+    }
+  }
 }

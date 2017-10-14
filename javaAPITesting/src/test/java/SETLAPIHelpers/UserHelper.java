@@ -1,5 +1,6 @@
 package SETLAPIHelpers;
 
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import io.setl.wsclient.shared.Message;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
@@ -7,6 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import src.APITests.io.setl.Container;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -14,14 +16,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static java.lang.String.valueOf;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 public class UserHelper {
 
-  public static void createUser(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
+  public static void createUser(MessageFactory factory, SocketClientEndpoint socket, String account, String userType) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
+
+    String userDetails[] = generateUserDetails();
+    String userName = userDetails[0];
+    String password = userDetails[1];
+    String email = userDetails[2];
 
 
     socket.registerHandler(Message.Type.nu.name(), message -> {
@@ -65,17 +74,28 @@ public class UserHelper {
   }
 
 
-  public static List<Object> createUserAndCaptureUserId(MessageFactory factory, SocketClientEndpoint socket, String userName, String email, String account, String userType, String password) throws InterruptedException, ExecutionException {
+  public static List<Object>  createUserAndCaptureDetails(MessageFactory factory, SocketClientEndpoint socket, String account, String userType) throws InterruptedException, ExecutionException {
 
     CountDownLatch latch = new CountDownLatch(1);
-    List<Object> users = new ArrayList<>();
+
+    String userDetails[] = generateUserDetails();
+
+    String userName = userDetails[0];
+    String password = userDetails[1];
+    String email = userDetails[2];
+
+    List<Object> user = new ArrayList<>();
 
     socket.registerHandler(Message.Type.nu.name(), message -> {
       JSONArray data = (JSONArray) message.get("Data");
       JSONObject resp = (JSONObject) data.get(0);
-      Object newUserID = resp.get("userID").toString();
-      assertNotNull(newUserID);
-      users.add(newUserID);
+      user.add(resp.get("userID").toString());
+      user.add(resp.get("userName").toString());
+      user.add(resp.get("accountID").toString());
+      user.add(resp.get("emailAddress").toString());
+      user.add(resp.get("accountLocked"));
+      user.add(resp.get("userType").toString());
+
       latch.countDown();
       return "";
 
@@ -84,7 +104,8 @@ public class UserHelper {
     socket.sendMessage(factory.addUserToAccount(userName, email, account, userType, password));
 
     latch.await();
-    return users;
+
+    return user;
   }
 
   public static List<Object> createUser(MessageFactory factory, SocketClientEndpoint socket, String account, String userType, int noOfUsers) throws ExecutionException, InterruptedException {
@@ -163,7 +184,7 @@ public class UserHelper {
         JSONArray data = (JSONArray) message.get("Data");
         JSONObject resp = (JSONObject) data.get(0);
         String deletedUser = resp.get("userID").toString();
-        assertTrue(deletedUser.equals("userId"));
+        assertTrue(deletedUser.equals(userId));
         latch.countDown();
         return "";
       });
@@ -172,6 +193,41 @@ public class UserHelper {
 
       latch.await();
 
+
     }
+
+  public static void updateUser(MessageFactory factory,
+                                  SocketClientEndpoint socket,
+                                  String userId,
+                                  String email,
+                                  String account,
+                                  String userType,
+                                  String expectedResult,
+                                  String enteredField,
+                                  int userStatus) throws InterruptedException {
+
+    CountDownLatch latch = new CountDownLatch(1);
+
+
+    socket.registerHandler(Message.Type.udu.name(), message -> {
+      JSONArray data = (JSONArray) message.get("Data");
+      JSONObject resp = (JSONObject) data.get(0);
+      String status = resp.get("Status").toString();
+      assertTrue(status.equals("OK"));
+      System.out.println(enteredField);
+      System.out.println(expectedResult);
+      assertTrue(resp.get(enteredField).toString().equals(expectedResult));
+
+      latch.countDown();
+      return "";
+    });
+
+    socket.sendMessage(factory.updateUser(userId, email, account, userType, userStatus));
+
+    latch.await();
+
+
+
+  }
 
 }

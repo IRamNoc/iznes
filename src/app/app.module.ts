@@ -8,6 +8,7 @@ import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 import {SetlPipesModule, SetlDirectivesModule, APP_CONFIG, SetlServicesModule} from '@setl/utils';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 /* Connection Services */
 import {MemberSocketService} from '@setl/websocket-service';
@@ -25,7 +26,8 @@ import {
     MemberService,
     ChainService,
     WalletnodeChannelService,
-    InitialisationService
+    InitialisationService,
+    FileService
 } from '@setl/core-req-services';
 
 /* Routes. */
@@ -109,6 +111,7 @@ export function memberSocketServiceFactory() {
         JasperoAlertsModule,
         NgReduxModule,
         ReactiveFormsModule,
+        NgxPaginationModule,
 
         /* Internal modules. */
         AppCoreModule,
@@ -159,7 +162,8 @@ export function memberSocketServiceFactory() {
         MemberService,
         ChainService,
         WalletnodeChannelService,
-        InitialisationService
+        InitialisationService,
+        FileService
     ],
     bootstrap: [AppComponent]
 })

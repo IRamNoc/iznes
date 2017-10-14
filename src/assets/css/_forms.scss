@@ -43,6 +43,11 @@ form, .form {
             }
         }
 
+        span {
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+
         .input-group {
             width: 95%;
         }
@@ -541,5 +546,19 @@ input:checked + .slider:before {
     border-bottom-left-radius: 0;
 }
 
+span.readonly-field {
+    display: block;
+    padding: 2px 10px;
+    background-color: #efefef;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    line-height: 32px;
+    height: 36px;
+}
 
+/**
+ * IMPORTS
+ */
 
+/* Input button groups. */
+@import 'forms-input-buttons';
