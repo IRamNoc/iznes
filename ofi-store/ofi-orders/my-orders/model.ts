@@ -1,3 +1,3 @@
-export interface Orders {
+export interface MyOrders {
     orderList: Array<any>;
 }

@@ -9,17 +9,19 @@ import { SagaHelper, Common } from '@setl/utils';
 
 /* Import actions. */
 import {
-    OFI_SET_ORDER_LIST
+    OFI_SET_MANAGE_ORDER_LIST,
+    OFI_SET_MY_ORDER_LIST
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
-    OfiRequestArrangements
+    OfiRequestArrangements,
+    OfiUpdateArrangement,
 } from './model';
 
 @Injectable()
-export class OfiManageOrdersService {
+export class OfiOrdersService {
 
     /* Constructor. */
     constructor(
@@ -30,13 +32,13 @@ export class OfiManageOrdersService {
     }
 
     /**
-     * Get Orders List
+     * Get Manage Orders List
      * ---------------
-     * Fetches a list of arrangements, aka orders.
+     * Fetches a list of arrangements, aka orders for a manager.
      *
      * @return {Promise}
      */
-    public getOrdersList(data): Promise<any> {
+    public getManageOrdersList(data): Promise<any> {
         /* Setup the message body. */
         const messageBody: OfiRequestArrangements = {
             RequestName: 'getarrangementlist',
@@ -54,7 +56,63 @@ export class OfiManageOrdersService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [ OFI_SET_ORDER_LIST ]
+            'successActions': [ OFI_SET_MANAGE_ORDER_LIST ]
+        });
+    }
+
+    /**
+     * Get My Orders List
+     * ---------------
+     * Fetches a list of arrangements, aka orders for a user.
+     *
+     * @return {Promise}
+     */
+    public getMyOrdersList(data): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiRequestArrangements = {
+            RequestName: 'getarrangementlist',
+            token: this.memberSocketService.token,
+            status: data.status,
+            sortOrder: data.sortOrder,
+            sortBy: data.sortBy,
+            partyType: data.partyType,
+            pageSize: data.pageSize,
+            pageNum: data.pageNum,
+            asset: data.asset,
+            arrangementType: data.arrangementType,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [ OFI_SET_MY_ORDER_LIST ]
+        });
+    }
+
+    /**
+     * Update Order
+     * ------------------
+     * Updates an order (arrangement).
+     *
+     * @param  {object} data  - the new arrangement information.
+     *
+     * @return {Promise<any>}
+     */
+    public updateOrder (data: any): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiUpdateArrangement = {
+            RequestName: 'updatearrangement',
+            token: this.memberSocketService.token,
+            arrangementId: data.arrangementId,
+            walletId: data.walletId,
+            status: data.status,
+            price: data.price,
+            deamonToken: 1,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody)
         });
     }
 
