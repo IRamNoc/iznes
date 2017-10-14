@@ -1,9 +1,15 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {RequetFundAccessMy} from './model';
+import {
+    RequetFundAccessMy,
+    AddArrangementRequestBody,
+    ArrangementType,
+    AddArrangementContractMapRequestBody
+} from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
+import _ from 'lodash';
 
 import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
 
@@ -43,4 +49,50 @@ export class OfiFundInvestService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    addArrangementRequest(requestData: {
+        creatorId: number;
+        type: ArrangementType;
+        metaData: any;
+        asset: string;
+        parties: any;
+        cutoff: string;
+        delivery: string;
+        valuation: string;
+    }): any {
+
+        const messageBody: AddArrangementRequestBody = {
+            RequestName: 'savearrangement',
+            token: this.memberSocketService.token,
+            creatorId: _.get(requestData, 'creatorId', 0),
+            type: _.get(requestData, 'type', 0),
+            metaData: _.get(requestData, 'metaData', ''),
+            asset: _.get(requestData, 'asset', ''),
+            parties: _.get(requestData, 'parties', {}),
+            cutoff: _.get(requestData, 'cutoff', ''),
+            delivery: _.get(requestData, 'delivery', ''),
+            valuation: _.get(requestData, 'valuation', '')
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    addArrangementContractMapRequest(requestData: {
+        walletId: number;
+        arrangementId: number;
+        contractAddress: string;
+        expiry: number;
+    }): any {
+        const messageBody: AddArrangementContractMapRequestBody = {
+            RequestName: 'aacm',
+            token: this.memberSocketService.token,
+            walletId: _.get(requestData, 'walletId', 0),
+            arrangementId: _.get(requestData, 'arrangementId', ''),
+            contractAddress: _.get(requestData, 'contractAddress', ''),
+            expiry: _.get(requestData, 'expiry', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
 }
