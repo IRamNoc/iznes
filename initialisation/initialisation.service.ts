@@ -29,7 +29,8 @@ import {
     clearRequestedWalletAddresses,
     clearRequestedAllInstruments,
     setRequesteAllInstruments,
-    SET_ALL_INSTRUMENTS_LIST
+    SET_ALL_INSTRUMENTS_LIST,
+    updateLastCreatedContractDetail
 } from '@setl/core-store';
 
 
@@ -361,6 +362,19 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested all instruments
         ngRedux.dispatch(clearRequestedAllInstruments());
+    }
+
+    /**
+     * Using 'blockchanges' update from wallet node.
+     *
+     * Update tx that made to wallet node from frontend, waiting block come in an update
+     * status. for example set inBlockchain flag to true, and set needHandle flag to true.
+     *
+     * @param ngRedux
+     * @param data
+     */
+    static updatedWalletNodeTxStateWithBlockChange(ngRedux: NgRedux<any>, data) {
+        ngRedux.dispatch(updateLastCreatedContractDetail(data));
     }
 
 
