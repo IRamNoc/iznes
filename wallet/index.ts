@@ -56,6 +56,14 @@ import {
     getRequestWalletToRelationshipState
 } from './wallet-relationship';
 
+import {
+    MyWalletContractState,
+    MyWalletContractReducer,
+
+    setLastCreatedContractDetail,
+    updateLastCreatedContractDetail
+} from './my-wallet-contract';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -103,6 +111,11 @@ export {
     getRequestWalletToRelationshipState
 };
 
+export {
+    setLastCreatedContractDetail,
+    updateLastCreatedContractDetail
+};
+
 export interface WalletState {
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
@@ -110,6 +123,7 @@ export interface WalletState {
     walletDirectory: WalletDirectoryState;
     managedWallets: ManagedWalletsState;
     walletRelationship: WalletRelationshipState;
+    myWalletContract: MyWalletContractState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
@@ -118,7 +132,7 @@ export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
         myWalletHolding: MyWalletHoldingReducer,
         walletDirectory: WalletDirectoryReducer,
         managedWallets: ManagedWalletsReducer,
-        walletRelationship: WalletRelationshipReducer
-
+        walletRelationship: WalletRelationshipReducer,
+        myWalletContract: MyWalletContractReducer
     }
 );

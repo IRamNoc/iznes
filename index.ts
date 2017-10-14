@@ -51,7 +51,9 @@ export {
     getRequestWalletToRelationshipState,
     SET_ISSUE_HOLDING,
     setRequestedWalletHolding,
-    clearRequestedWalletHolding
+    clearRequestedWalletHolding,
+    setLastCreatedContractDetail,
+    updateLastCreatedContractDetail
 } from './wallet';
 
 export {
