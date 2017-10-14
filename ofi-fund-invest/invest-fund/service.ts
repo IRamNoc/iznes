@@ -93,6 +93,9 @@ export class InvestFundFormService {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipes,
             (data) => {
+                // show success walletnode request message
+                this.showSuccessResponse();
+
                 // Save last created contact along with meta data for creating arrangement.
                 const userId = immutableHelper.get(formValue, 'userId', 0);
                 const walletCommuPub = immutableHelper.get(formValue, 'walletCommuPub', '');
@@ -313,6 +316,10 @@ export class InvestFundFormService {
             (response) => {
                 // save arrangement and contract map
                 const arrangementId = _.get(response, '[1].Data[0].arrangementID', 0);
+
+                // Update success alert message
+                this.updateArrangeCreateStatus({arrangementId});
+
                 if (arrangementId === 0) {
                     throw new Error('Create new order fail');
                 }
@@ -362,18 +369,41 @@ export class InvestFundFormService {
                     `);
     }
 
-    showSuccessResponse(message) {
+    showSuccessResponse() {
 
         this._alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
-                                <td class="text-center text-success">${message}</td>
+                                <td class="text-left text-success" width="500px">
+                                <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
+                                &nbsp;Waiting order to be put in blockchain ledger</td>
                             </tr>
                         </tbody>
                     </table>
                     `);
     }
+
+    updateArrangeCreateStatus(data) {
+        const arrangementId = data.arrangementId;
+
+        this._alertsService.updateView(`<table class="table grid">
+                        <tbody>
+                            <tr class="fadeIn">
+                                <td class="text-left text-success" width="500px">
+                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
+                                &nbsp;Order in blockchain ledger</td>
+                            </tr>
+                            <tr class="fadeIn">
+                                <td class="text-left text-success" width="500px">
+                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
+                                &nbsp;Order ID: ${arrangementId}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+        `);
+
+    }
+
 }
 
