@@ -25,11 +25,11 @@ export interface MyMessagesState {
 
 export interface MessageCounts {
     inbox: number;
-    outbox: number;
+    sent: number;
     inboxUnread: number;
     draft: number;
     deleted: number;
-    actions: number;
+    action: number;
     totalActions: number;
     unreadArrangement: number;
     totalArrangement: number;

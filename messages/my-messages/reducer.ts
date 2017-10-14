@@ -89,11 +89,11 @@ function handleMessageCounts(actionType, action, state) {
 
     const counts = {
         inbox: messageData.numberOfInboxMails,
-        outbox: messageData.numberOfOutboxMails,
+        sent: messageData.numberOfOutboxMails,
         inboxUnread: messageData.numberOfUnreadMails,
         draft: messageData.numberOfDraftMails,
         deleted: messageData.numberOfDeletedMails,
-        actions: messageData.numberOfUnreadActions,
+        action: messageData.numberOfUnreadActions,
         totalActions: messageData.numberOfTotalActions,
         unreadArrangement: messageData.numberofUnReadArrangementMsgs,
         totalArrangement: messageData.numberOfTotalArrangementMsgs,
