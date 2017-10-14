@@ -43,6 +43,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     requestedWalletAddress: boolean;
     walletList: any;
+    userId: number;
 
     allInstruments: any;
 
@@ -55,6 +56,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
     @select(['wallet', 'myWallets', 'walletList']) walletListOb;
+    @select(['wallet', 'myWalletContract', 'lastCreated']) lastCreatedContractOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
 
     // 0: quantity, 1: amount
     _actionBy: number;
@@ -189,6 +192,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
         this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
+        this.subscriptionsArray.push(this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)));
+        this.subscriptionsArray.push(this.userIdOb.subscribe(userId => this.userId = userId));
     }
 
     updateShareMetaData(shareData) {
@@ -216,13 +221,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
             currency: immutableHelper.get(thisShareData, ['metaData', 'portfolio_currency_select'], ''),
             cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
-            cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
+            cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeStrKey], 0),
             cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
             valuationTime: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationTimeKey], 0),
-            valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
+            valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeStrKey], 0),
             valuationDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
             settlementTime: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementTimeKey], 0),
-            settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
+            settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeStrKey], 0),
             settlementDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
             allowType: immutableHelper.get(shareCharacteristic, [this.formConfig.allowTypeKey], 0),
             knownNav: immutableHelper.get(shareCharacteristic, ['knownNav'], false),
@@ -319,6 +324,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.allInstruments = allInstrumentData;
     }
 
+    handleLastCreatedContract(lastCreated) {
+        const needHandle = lastCreated.needHandle;
+        const inBlockchain = lastCreated.inBlockchain;
+
+        if (needHandle && inBlockchain) {
+
+            this._investFundFormService.createArrangement(lastCreated);
+        }
+    }
+
     handleSelectedAddress(value) {
         this.addressSelected = value;
     }
@@ -341,8 +356,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 byType: this.actionBy,
                 shareIssuerAddress,
                 address: this.form.value.address[0]['id'],
+                userId: this.userId,
                 walletId: this.connectedWalletId,
-                walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], '')
+                walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
+                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], '')
             });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }

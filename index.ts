@@ -6,7 +6,7 @@ export {OfiInvestorFundListComponent} from './ofi-fund-invest/investor-fund-list
  */
 export {OfiFundInvestService} from './ofi-req-services/ofi-fund-invest/service';
 export {OfiMemberNodeChannelService} from './ofi-req-services/ofi-member-node-channel/service';
-export {OfiRequestServicesModule} from './ofi-req-services/module';
+export {OfiRequestServicesModule, ArrangementType} from './ofi-req-services/module';
 
 /**
  * Store

@@ -13,7 +13,10 @@ import {
 } from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {setLastCreatedContractDetail} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
+import {ArrangementType} from '../../ofi-req-services/ofi-fund-invest/model';
 import _ from 'lodash';
 
 @Injectable()
@@ -26,6 +29,7 @@ export class InvestFundFormService {
                 private _moneyValuePipe: MoneyValuePipe,
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
+                private _ofiFundInvestService: OfiFundInvestService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.divider = _appConfig.numberDivider;
     }
@@ -53,6 +57,7 @@ export class InvestFundFormService {
         const quantityParse = this._numberConverterService.toBlockchain(quantity);
         const grossAmountParse = this._numberConverterService.toBlockchain(grossAmount);
         const platFormFeeParse = this._numberConverterService.toBlockchain(grossAmount);
+        const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
 
         authoriseRef = 'Confirm receipt of payment';
 
@@ -84,12 +89,59 @@ export class InvestFundFormService {
             contractData: contractData.contractData
         });
 
-
         // Send a saga action.
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipes,
             (data) => {
-                this.showSuccessResponse(data);
+                // Save last created contact along with meta data for creating arrangement.
+                const userId = immutableHelper.get(formValue, 'userId', 0);
+                const walletCommuPub = immutableHelper.get(formValue, 'walletCommuPub', '');
+                const creatorId = walletId;
+                const type = {
+                    subscribe: ArrangementType.SUBSCRIBE,
+                    redeem: ArrangementType.REDEEM
+                }[actionType];
+
+                const metaData = {
+                    currency: shareMetaData.currency,
+                    units: quantityParse,
+                    price: navParse,
+                    consideration: grossAmountParse,
+                    ref: formValue.comment,
+                    assetISIN: shareMetaData.isin,
+                    registrar: shareMetaData.registrar,
+                    feePercent: shareMetaData.feePercent,
+                    investorId: userId,
+                    investorWalletId: walletId,
+                    investorWalletName: walletName,
+                    investorWalletCommuPub: walletCommuPub,
+                    investorWalletAddr: investorAddress,
+                    investorWalletBankID: 0,
+                    investorWalletBankCommuPub: ''
+                };
+
+                const parties = {
+                    [issuerAddress]: {
+                        canRead: 1,
+                        canWrite: 1,
+                        canDelete: 1,
+                        partyType: 2
+                    }
+                };
+
+                this._ngRedux.dispatch(setLastCreatedContractDetail(data, {
+                    actionType,
+                    arrangementData: {
+                        creatorId,
+                        type,
+                        metaData: JSON.stringify(metaData),
+                        asset: asset,
+                        parties,
+                        cutoff: shareMetaData.cutoffDateTimeStr,
+                        delivery: shareMetaData.settlementDateTimeStr,
+                        valuation: shareMetaData.valuationDateTimeStr
+                    }
+                }));
             },
             (data) => {
                 this.showErrorResponse(data);
@@ -247,6 +299,51 @@ export class InvestFundFormService {
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
             creatorAddress: investorAddress
         };
+    }
+
+    createArrangement(requestData): void {
+        console.log('creating arrangement');
+        const arrangementData = _.get(requestData, 'metaData.arrangementData', {});
+
+        // save arrangement
+        const asyncTaskPipe = this._ofiFundInvestService.addArrangementRequest(arrangementData);
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (response) => {
+                // save arrangement and contract map
+                const arrangementId = _.get(response, '[1].Data[0].arrangementID', 0);
+                if (arrangementId === 0) {
+                    throw new Error('Create new order fail');
+                }
+
+                const walletId = _.get(arrangementData, 'creatorId', 0);
+                const contractAddress = _.get(requestData, 'contractAddress', '');
+                const expiry = _.get(requestData, 'contractExpiry', 0);
+
+                const addMapAsyncPipe = this._ofiFundInvestService.addArrangementContractMapRequest({
+                    walletId,
+                    arrangementId,
+                    contractAddress,
+                    expiry
+                });
+
+                this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    addMapAsyncPipe,
+                    (addMapResponse) => {
+                        console.log('success----------------');
+                    },
+                    (addMapResponse) => {
+                        this.showErrorResponse(addMapResponse);
+                    }
+                ));
+
+            },
+            (response) => {
+                this.showErrorResponse(response);
+            },
+        ));
+
     }
 
     showErrorResponse(response) {
