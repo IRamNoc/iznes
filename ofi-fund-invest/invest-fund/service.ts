@@ -405,5 +405,18 @@ export class InvestFundFormService {
 
     }
 
+    showInvalidForm(message) {
+        this._alertsService.create('error', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
+    }
+
 }
 
