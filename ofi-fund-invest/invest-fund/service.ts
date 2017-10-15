@@ -8,11 +8,10 @@ import {
     immutableHelper,
     ConditionType,
     ArrangementActionType,
-    commonHelper,
     SagaHelper
 } from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
 import {setLastCreatedContractDetail} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
@@ -385,7 +384,7 @@ export class InvestFundFormService {
     }
 
     updateArrangeCreateStatus(data) {
-        const arrangementId = data.arrangementId;
+        const arrangementId = commonHelper.pad(data.arrangementId, 10, '0');
 
         this._alertsService.updateView(`<table class="table grid">
                         <tbody>

@@ -1,0 +1,861 @@
+<div class="row">
+    <div class="tab col-sm-2 p-0">
+        <button *ngFor="let cate of categories" [class.active]="cate===activeTabData.category" class="tablinks" (click)="tabClick(cate)">{{cate | capitalize}}</button>
+    </div>
+
+    <div class="tabcontent col-sm-10">
+
+        <ng-container *ngIf="activeTabData.category === 'administrative'">
+            <ng-container *ngTemplateOutlet="administrativeTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'services'">
+            <ng-container *ngTemplateOutlet="servicesTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'category'">
+            <ng-container *ngTemplateOutlet="categoryTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'legal'">
+            <ng-container *ngTemplateOutlet="legalTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'fees'">
+            <ng-container *ngTemplateOutlet="feesTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'risk'">
+            <ng-container *ngTemplateOutlet="riskTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'profile'">
+            <ng-container *ngTemplateOutlet="profileTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'characteristic'">
+            <ng-container *ngTemplateOutlet="characteristicTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'calendar'">
+            <ng-container *ngTemplateOutlet="calendarTab"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeTabData.category === 'documents'">
+            <ng-container *ngTemplateOutlet="documentTab"></ng-container>
+        </ng-container>
+    </div>
+
+</div>
+
+<div class="row" style="margin-top: 10px;">
+    <div class="form-group button-group">
+        <div class="col-sm-12">
+            <button (click)="handleClose()" class="btn btn-secondary">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #administrativeTab>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">ISIN</td>
+                    <td>FR0000970097</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Portfolio Code</td>
+                    <td>1336</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Share Name</td>
+                    <td>OFI RS Dynamique C D</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Status</td>
+                    <td>Active</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Address</td>
+                    <td>
+                        22 Rue Vernier, Paris, France, 75017
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">LEI</td>
+                    <td>
+                        LEI00001
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Share type</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Income Allocation</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Currency of Share</td>
+                    <td>
+                        EUR
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Portfolio Currency</td>
+                    <td>
+                        EUR
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Approval Date</td>
+                    <td>
+                        01/08/2000
+                    </td>
+                </tr>
+
+                <tr class="data-row">
+                    <td class="font-weight-bold">Creation Date</td>
+                    <td>
+                        01/08/2000
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Dissolution Date</td>
+                    <td>01/08/2000</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Side Pocket</td>
+                    <td>Yes</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">In liquidation</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Valuation Frequency</td>
+                    <td>Dairy</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Business Day Rule</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Applicable Rights</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Estimated NAV</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Estimated NAV Date</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Regulator Disclosure</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Reporting Country</td>
+                    <td>France</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">End of First Financial Year</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Closing Date</td>
+                    <td>No</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #servicesTab>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Delegated asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Delegation of FX and Treasury</td>
+                    <td>OFI RS Dynamique C D</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Promoter</td>
+                    <td>OFI AM</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Statutory Advisor</td>
+                    <td>APLITEC</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">CAC Mandate Renewal Date</td>
+                    <td>
+                        31/03/2013
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Compensator</td>
+                    <td>
+                        NEWEDGE GROUP (UK BRANCH)
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Fin/Invest/Alloc Adviser</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Custodian</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Depositary</td>
+                    <td>
+                        SOCIETE GENERALE PARIS
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Sub Custodian</td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Centralising Order Agent</td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr class="data-row">
+                    <td class="font-weight-bold">Prime Broker</td>
+                    <td>
+                        01/08/2000
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Regulatory Reporting</td>
+                    <td>QUANDAX</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Registry Account Manager</td>
+                    <td>Yes</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Administrative and Accounting Manager</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Administrator NAV</td>
+                    <td>Dairy</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #categoryTab>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Asset class</td>
+                    <td>Equities</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Sub class of asset</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Geographical area</td>
+                    <td>EUR</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">SRI</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Co-promotion</td>
+                    <td>No</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #legalTab>
+    Legal
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Supervisory Authority</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">AMF classification</td>
+                    <td>Actions des pays de la zone euro</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">UcitsIV classification</td>
+                    <td>Fonds d’investissement a vocation générale</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">legal_nature</td>
+                    <td>SICAV</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Form of opcvm</td>
+                    <td>FIA</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">UCITS of UCITS</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Feeder</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Master</td>
+                    <td>Yes
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #feesTab>
+    Fees
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Max Indirect Fees</td>
+                    <td>2</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Max Management Fees</td>
+                    <td>1.59</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Prospectus Calculation Basis</td>
+                    <td>Valeur liquidative * nombre de parts</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Actual Calculation Basis</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Provisioned Actual Management Fee</td>
+                    <td>OFI RS Dynamique C D</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Acquired Subscription Fee</td>
+                    <td>3.75</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Acquired Redemption Fee</td>
+                    <td>0</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Maximum non-acquired Subscription Fee</td>
+                    <td>
+                        5
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Maximum non-accrued Redemption Fee</td>
+                    <td>
+                        5
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Outperformance Fee</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Hurdle</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">High Water Mark</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">VMF First Collection Date</td>
+                    <td>
+                        01-20
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">VMF billing month</td>
+                    <td>
+                        01
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">VMF frequency</td>
+                    <td>
+                        01
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Acquisition on Redemption</td>
+                    <td>
+                        No
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">VMF First Collection Date</td>
+                    <td>
+                        01-20
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #riskTab>
+    Risk
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Guarantee of Capital</td>
+                    <td>Yes</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Method of Engagement</td>
+                    <td>Linear</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Regulatory Level of Leverage</td>
+                    <td>0</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">SRRI</td>
+                    <td>5</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Main risks</td>
+                    <td>Exposition marchés actions et taux</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #profileTab>
+    Profile
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Subscriber profile</td>
+                    <td>Tous souscripteurs</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Dedicated</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Reserved</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Access Conditions</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Investment Horizon</td>
+                    <td>5 ans</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">PEA Eligability</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Tax Ration 90%</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="font-weight-bold">Reverse Solictation</td>
+                    <td>
+                        Yes
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #characteristicTab>
+    Charateristic
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td>Asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Delegated asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Delegation of FX and Treasury</td>
+                    <td>OFI RS Dynamique C D</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Promoter</td>
+                    <td>OFI AM</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Statutory Advisor</td>
+                    <td>APLITEC</td>
+                </tr>
+                <tr class="data-row">
+                    <td>CAC Mandate Renewal Date</td>
+                    <td>
+                        31/03/2013
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Compensator</td>
+                    <td>
+                        NEWEDGE GROUP (UK BRANCH)
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Fin/Invest/Alloc Adviser</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Custodian</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Depositary</td>
+                    <td>
+                        SOCIETE GENERALE PARIS
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Sub Custodian</td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td>Centralising Order Agent</td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr class="data-row">
+                    <td>Prime Broker</td>
+                    <td>
+                        01/08/2000
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Regulatory Reporting</td>
+                    <td>QUANDAX</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Registry Account Manager</td>
+                    <td>Yes</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Administrative and Accounting Manager</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Administrator NAV</td>
+                    <td>Dairy</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #calendarTab>
+    Calender
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 1</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td>Asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Delegated asset management company</td>
+                    <td>OFI asset management</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Address</td>
+                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Delegation of FX and Treasury</td>
+                    <td>OFI RS Dynamique C D</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Promoter</td>
+                    <td>OFI AM</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Statutory Advisor</td>
+                    <td>APLITEC</td>
+                </tr>
+                <tr class="data-row">
+                    <td>CAC Mandate Renewal Date</td>
+                    <td>
+                        31/03/2013
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Compensator</td>
+                    <td>
+                        NEWEDGE GROUP (UK BRANCH)
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Fin/Invest/Alloc Adviser</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Custodian</td>
+                    <td>
+                        Diversifiée
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Depositary</td>
+                    <td>
+                        SOCIETE GENERALE PARIS
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Sub Custodian</td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2">Section 2</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td>Centralising Order Agent</td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr class="data-row">
+                    <td>Prime Broker</td>
+                    <td>
+                        01/08/2000
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td>Regulatory Reporting</td>
+                    <td>QUANDAX</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Registry Account Manager</td>
+                    <td>Yes</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Administrative and Accounting Manager</td>
+                    <td>No</td>
+                </tr>
+                <tr class="data-row">
+                    <td>Administrator NAV</td>
+                    <td>Dairy</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #documentTab>
+    Document
+</ng-template>

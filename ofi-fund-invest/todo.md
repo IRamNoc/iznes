@@ -24,3 +24,4 @@
     - [x] save subscription and redemption into blockchain
     - [x] save subscription and redemption into membernode
 
+- [ ] Create morning-star view for fund characteristic. 

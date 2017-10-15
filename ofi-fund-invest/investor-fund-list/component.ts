@@ -200,6 +200,43 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Handle fund view is click in the list of funds.
+     * @param index
+     */
+    handleView(index: number): void {
+        /* Check if the tab is already open. */
+        let i;
+        for (i = 0; i < this.tabsControl.length; i++) {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'view')) {
+                this.setTabActive(i);
+
+                return;
+            }
+        }
+
+        /* Push the edit tab into the array. */
+        const fundShareId = _.get(this.fundList, [index, 'id'], 0);
+        const fundShareData = _.get(this.fundListObj, [fundShareId], {});
+        const fundShareName = _.get(fundShareData, ['shareName'], '');
+
+        this.tabsControl.push({
+            title: {
+                icon: 'fa-eye',
+                text: fundShareName,
+                colorClass: 'text-primary'
+            },
+            fundShareId: fundShareId,
+            fundShareData: fundShareData,
+            actionType: 'view',
+            active: false
+        })
+        ;
+
+        // Activate the new tab.
+        this.setTabActive(this.tabsControl.length - 1);
+    }
+
+    /**
      * Handle close tab click.
      *
      * @param {index} number - the tab index to close.
