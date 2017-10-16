@@ -30,7 +30,8 @@ import {
     clearRequestedAllInstruments,
     setRequesteAllInstruments,
     SET_ALL_INSTRUMENTS_LIST,
-    updateLastCreatedContractDetail
+    updateLastCreatedContractDetail,
+    clearRequestedWalletLabel
 } from '@setl/core-store';
 
 
@@ -356,6 +357,9 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested wallet address
         ngRedux.dispatch(clearRequestedWalletAddresses());
+
+        // clear (set to false) the state of requested wallet address label
+        ngRedux.dispatch(clearRequestedWalletLabel());
 
         // clear (set to false) the state of requested wallet holding
         ngRedux.dispatch(clearRequestedWalletHolding());
