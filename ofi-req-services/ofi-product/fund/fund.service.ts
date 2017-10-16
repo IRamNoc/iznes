@@ -4,8 +4,19 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {FundRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody} from './fund.service.model';
-import {setRequestedFund, clearRequestedFund, SET_FUND_LIST, SET_FUND_SHARE_LIST} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
+import {
+    FundRequestMessageBody,
+    FundShareRequestMessageBody,
+    SaveFundRequestBody,
+    UpdateFundRequestBody,
+    SaveFundShareRequestBody
+} from './fund.service.model';
+import {
+    setRequestedFund,
+    clearRequestedFund,
+    SET_FUND_LIST,
+    SET_FUND_SHARE_LIST
+} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
 
 interface FundData {
     fundID?: any;
@@ -32,9 +43,6 @@ export class OfiFundService {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
-    myAccountId(accountId) {
-        this.accountId  = accountId;
-    }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
@@ -58,6 +66,10 @@ export class OfiFundService {
             asyncTaskPipe,
             {},
         ));
+    }
+
+    myAccountId(accountId) {
+        this.accountId = accountId;
     }
 
     requestFundList(): any {

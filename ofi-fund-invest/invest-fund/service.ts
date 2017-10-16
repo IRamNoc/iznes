@@ -132,7 +132,7 @@ export class InvestFundFormService {
                 };
 
                 this._ngRedux.dispatch(setLastCreatedContractDetail(data, {
-                    actionType,
+                    actionType: 'ofi-arrangement',
                     arrangementData: {
                         creatorId,
                         type,
@@ -303,55 +303,6 @@ export class InvestFundFormService {
         };
     }
 
-    createArrangement(requestData): void {
-        console.log('creating arrangement');
-        const arrangementData = _.get(requestData, 'metaData.arrangementData', {});
-
-        // save arrangement
-        const asyncTaskPipe = this._ofiFundInvestService.addArrangementRequest(arrangementData);
-
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (response) => {
-                // save arrangement and contract map
-                const arrangementId = _.get(response, '[1].Data[0].arrangementID', 0);
-
-                // Update success alert message
-                this.updateArrangeCreateStatus({arrangementId});
-
-                if (arrangementId === 0) {
-                    throw new Error('Create new order fail');
-                }
-
-                const walletId = _.get(arrangementData, 'creatorId', 0);
-                const contractAddress = _.get(requestData, 'contractAddress', '');
-                const expiry = _.get(requestData, 'contractExpiry', 0);
-
-                const addMapAsyncPipe = this._ofiFundInvestService.addArrangementContractMapRequest({
-                    walletId,
-                    arrangementId,
-                    contractAddress,
-                    expiry
-                });
-
-                this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                    addMapAsyncPipe,
-                    (addMapResponse) => {
-                        console.log('success----------------');
-                    },
-                    (addMapResponse) => {
-                        this.showErrorResponse(addMapResponse);
-                    }
-                ));
-
-            },
-            (response) => {
-                this.showErrorResponse(response);
-            },
-        ));
-
-    }
-
     showErrorResponse(response) {
 
         const message = _.get(response, '[1].Data[0].Message', '');
@@ -370,38 +321,17 @@ export class InvestFundFormService {
 
     showSuccessResponse() {
 
-        this._alertsService.create('success', `
+        this._alertsService.create('waiting', `
                     <table class="table grid">
                         <tbody>
                             <tr>
                                 <td class="text-left text-success" width="500px">
                                 <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
-                                &nbsp;Waiting order to be put in blockchain ledger</td>
+                                &nbsp;Waiting order to be put in blockchain ledger</div></td>
                             </tr>
                         </tbody>
                     </table>
                     `);
-    }
-
-    updateArrangeCreateStatus(data) {
-        const arrangementId = commonHelper.pad(data.arrangementId, 10, '0');
-
-        this._alertsService.updateView(`<table class="table grid">
-                        <tbody>
-                            <tr class="fadeIn">
-                                <td class="text-left text-success" width="500px">
-                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                &nbsp;Order in blockchain ledger</td>
-                            </tr>
-                            <tr class="fadeIn">
-                                <td class="text-left text-success" width="500px">
-                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                &nbsp;Order ID: ${arrangementId}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-        `);
-
     }
 
     showInvalidForm(message) {

@@ -16,7 +16,6 @@ import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-
 @Injectable()
 export class OfiFundInvestService {
     constructor(private memberSocketService: MemberSocketService) {
-        console.log(this.memberSocketService);
     }
 
     /**

@@ -56,7 +56,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
     @select(['wallet', 'myWallets', 'walletList']) walletListOb;
-    @select(['wallet', 'myWalletContract', 'lastCreated']) lastCreatedContractOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
 
     // 0: quantity, 1: amount
@@ -192,7 +191,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
         this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
-        this.subscriptionsArray.push(this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)));
         this.subscriptionsArray.push(this.userIdOb.subscribe(userId => this.userId = userId));
     }
 
@@ -322,16 +320,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     updateAllInstruments(allInstrumentData) {
         this.allInstruments = allInstrumentData;
-    }
-
-    handleLastCreatedContract(lastCreated) {
-        const needHandle = lastCreated.needHandle;
-        const inBlockchain = lastCreated.inBlockchain;
-
-        if (needHandle && inBlockchain) {
-
-            this._investFundFormService.createArrangement(lastCreated);
-        }
     }
 
     handleSelectedAddress(value) {
