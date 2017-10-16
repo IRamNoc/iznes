@@ -50,7 +50,17 @@ node {
       stage('Copy code to deployment folder'){
         node {
           sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
+                rm -rf /var/lib/jenkins/Deploy/dist &&
                 rsync -a ./dist /var/lib/jenkins/Deploy/'''
+        }
+      }
+
+      stage('Deploy Frontend to Test Environment'){
+        node{
+          sh '''
+              ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
+              ssh root@139.162.213.130 mkdir /var/www_setltestnet && 
+              scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
         }
       }
 
