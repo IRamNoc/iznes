@@ -9,5 +9,6 @@ export interface AlertEmit {
 }
 
 export interface UpdateEmit {
+    type?: AlertType;
     message: string;
 }

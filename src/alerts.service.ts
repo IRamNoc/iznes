@@ -13,7 +13,7 @@ export class AlertsService {
         this.alert$.next({type: type, message: message, override: settingsOverrides});
     }
 
-    updateView(message: string) {
-        this.update$.next({message: message});
+    updateView(type, message: string) {
+        this.update$.next({type, message});
     }
 }

@@ -7,7 +7,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     template: `
         <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"></div>
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
-            <div class="jaspero__dialog-icon" [ngSwitch]="type">
+            <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
                 <ng-template ngSwitchCase="success">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490.4 490.4">
                         <path d="M245.2 0C110 0 0 110 0 245.2s110 245.2 245.2 245.2 245.2-110 245.2-245.2S380.4 0 245.2 0zm0 465.9c-121.7 0-220.7-99-220.7-220.7s99-220.7 220.7-220.7 220.7 99 220.7 220.7-99 220.7-220.7 220.7z"/>
@@ -35,6 +35,10 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
                         <circle cx="33.018" cy="19.541" r="3.345"/>
                         <path d="M32.137 28.342c-1.104 0-2 .896-2 2v17c0 1.104.896 2 2 2s2-.896 2-2v-17c0-1.105-.896-2-2-2z"/>
                     </svg>
+                </ng-template>
+
+                <ng-template ngSwitchCase="waiting">
+                    <div class="loader"></div>
                 </ng-template>
             </div>
 
@@ -207,6 +211,10 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             box-shadow: 0 1px 5px rgba(0, 0, 0, .2), 0 2px 2px rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);
         }
 
+        .fixedHeight {
+            height: 90px;
+        }
+
         :host(.success) .jaspero__dialog-icon svg path {
             /*fill: #17A398;*/
             fill: #a5dc86;
@@ -287,5 +295,9 @@ export class AlertComponent implements OnInit {
 
     updateMessage(message) {
         this.incomingData.message = message;
+    }
+
+    updateAlertType(type) {
+        this.type = type;
     }
 }

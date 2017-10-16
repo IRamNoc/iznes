@@ -81,6 +81,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
         this._updateViewListener = this._service.update$.subscribe((updateView) => {
             if (this._current) {
+                this._current.instance.updateAlertType(updateView.type);
                 this._current.instance.updateMessage(updateView.message);
             }
         });
