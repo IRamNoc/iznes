@@ -1,5 +1,6 @@
 package src.APITests.User.Deletion;
 
+import SETLAPIHelpers.User;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -37,12 +38,11 @@ public class deleteUserTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = Timeout.millis(3000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-    SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
     String localAddress = "ws://localhost:9788/db/";
 
     @Test
@@ -124,7 +124,7 @@ public class deleteUserTest {
     }
 
   @Test
-  public void simpleDeleteTest() throws ExecutionException, InterruptedException {
+  public void simpleDeleteUserTest() throws ExecutionException, InterruptedException {
       Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
       //USER DETAILS
@@ -138,19 +138,19 @@ public class deleteUserTest {
       assertTrue(!lastUserName.equalsIgnoreCase(userName));
 
       //CREATE NEW USER
-      String userId = createUserAndCaptureDetails(factory, socket, "8", "35").get(0).toString();
+      User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
       //LIST USERS AFTER NEW USER CREATION
       String newLastUserName = listUsers(factory, socket);
-      assertTrue(newLastUserName.equalsIgnoreCase(userName));
+      assertTrue(newLastUserName.equalsIgnoreCase(user.getUserName()));
 
       //DELETE NEW USER
-      deleteUser(factory, socket, userId);
+      deleteUser(factory, socket, user.getUserID());
 
       //LIST USERS AFTER DELETION
       String oldLastUserName = listUsers(factory, socket);
 
-      assertTrue(!oldLastUserName.equalsIgnoreCase(userName));
+      assertTrue(!oldLastUserName.equalsIgnoreCase(user.getUserName()));
       assertTrue(oldLastUserName.equalsIgnoreCase(lastUserName));
 
       connection.disconnect();
