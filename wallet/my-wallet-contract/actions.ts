@@ -33,3 +33,5 @@ export const setLastCreatedContractDetail: ActionCreator<SetLastCreatedContractD
         metaData
     });
 
+export const CLEAR_CONTRACT_NEED_HANDLE = `${name}/CLEAR_CONTRACT_NEED_HANDLE`;
+export const clearContractNeedHandle = kAction(CLEAR_CONTRACT_NEED_HANDLE);

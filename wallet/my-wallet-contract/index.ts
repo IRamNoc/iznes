@@ -4,4 +4,5 @@ export {MyWalletContractState} from './model';
 export {
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
+    clearContractNeedHandle
 } from './actions';

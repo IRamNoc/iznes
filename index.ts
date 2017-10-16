@@ -53,7 +53,8 @@ export {
     setRequestedWalletHolding,
     clearRequestedWalletHolding,
     setLastCreatedContractDetail,
-    updateLastCreatedContractDetail
+    updateLastCreatedContractDetail,
+    clearContractNeedHandle
 } from './wallet';
 
 export {

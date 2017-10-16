@@ -61,7 +61,8 @@ import {
     MyWalletContractReducer,
 
     setLastCreatedContractDetail,
-    updateLastCreatedContractDetail
+    updateLastCreatedContractDetail,
+    clearContractNeedHandle
 } from './my-wallet-contract';
 
 import {combineReducers, Reducer} from 'redux';
@@ -113,7 +114,8 @@ export {
 
 export {
     setLastCreatedContractDetail,
-    updateLastCreatedContractDetail
+    updateLastCreatedContractDetail,
+    clearContractNeedHandle
 };
 
 export interface WalletState {

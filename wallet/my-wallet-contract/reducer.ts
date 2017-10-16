@@ -1,6 +1,7 @@
 import {Action} from 'redux';
 import {MyWalletContractState} from './model';
 import {
+    CLEAR_CONTRACT_NEED_HANDLE,
     SET_LAST_CREATED_CONTRACT_DETAIL,
     UPDATE_LAST_CREATED_CONTRACT_DETAIL
 } from './actions';
@@ -28,6 +29,9 @@ export const MyWalletContractReducer = function (state: MyWalletContractState = 
 
         case UPDATE_LAST_CREATED_CONTRACT_DETAIL:
             return updateLastCreatedContractDetail(state, action);
+
+        case CLEAR_CONTRACT_NEED_HANDLE:
+            return handleClearContractNeedHandle(state);
 
         default:
             return state;
@@ -80,3 +84,19 @@ function updateLastCreatedContractDetail(state: MyWalletContractState, action: a
     });
 }
 
+/**
+ * handle clear contract need handle.
+ * @param state
+ * @return {{}&MyWalletContractState&{lastCreated: ({}&LastContractDetail&{needHandle: boolean})}}
+ */
+function handleClearContractNeedHandle(state: MyWalletContractState) {
+    const oldLastCreated = state.lastCreated;
+    const needHandle = false;
+    const lastCreated = Object.assign({}, oldLastCreated, {
+        needHandle
+    });
+
+    return Object.assign({}, state, {
+        lastCreated
+    });
+}
