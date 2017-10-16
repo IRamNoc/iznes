@@ -1,6 +1,5 @@
 package SETLAPIHelpers;
 
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 import io.setl.wsclient.shared.Message;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
@@ -9,7 +8,6 @@ import org.json.simple.JSONObject;
 import src.APITests.io.setl.Container;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -17,8 +15,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
-import static java.lang.String.valueOf;
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
