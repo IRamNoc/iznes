@@ -131,12 +131,14 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-reports");
         navigateToPage("reports/transactions");
     }
+    @Ignore
     @Test
     public void shouldNavigateToMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/manage-member");
     }
+    @Ignore
     @Test
     public void shouldNavigateToChainMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
