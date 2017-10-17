@@ -151,8 +151,9 @@ form .form-group div.ui-select-container {
 }
 
 ng-select.fluid-width {
-    .ui-select-toggle, .ui-select-search {
+    .ui-select-toggle, .ui-select-search, .ui-select-choices {
         width: 100% !important;
         max-width: 100% !important;
     }
 }
+
