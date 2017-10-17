@@ -11,7 +11,8 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build-prod": "cd src; sass  styles.scss:styles.css; cd ../; ng build --prod",
-        "tar": "tar -cvzf opencsd-front-end-build.tgz dist"
+        "tar": "tar -cvzf opencsd-front-end-build.tgz dist",
+        "start-no-reload": "ng serve --live-reload false --sourcemap --extractCss"
     },
     "private": true,
     "dependencies": {

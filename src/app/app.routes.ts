@@ -59,7 +59,7 @@ import {
 /**
  * Ofi main module.
  */
-import {OfiInvestorFundListComponent} from '@ofi/ofi-main';
+import {OfiInvestorFundListComponent, OfiManageOfiNavComponent} from '@ofi/ofi-main';
 
 /**
  * Login Guard service
@@ -124,6 +124,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'management-company',
                         component: OfiManagementCompanyComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'net-asset-value',
+                        component: OfiManageOfiNavComponent,
                         canActivate: [LoginGuardService],
                     }
                 ]
