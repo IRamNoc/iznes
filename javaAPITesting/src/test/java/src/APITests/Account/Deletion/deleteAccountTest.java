@@ -44,11 +44,11 @@ public class deleteAccountTest {
   String localAddress = "ws://localhost:9788/db/";
 
   @Test
-  public void deleteMemberTest() throws InterruptedException, ExecutionException {
+  public void deleteAccountTest() throws InterruptedException, ExecutionException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
-    Account account = createAccount(factory, socket, "accToBeDeleted", "accToBeDeleted", 333);
-    //deleteAccount(factory, socket, account.getAccountID());
+    Account account = createAccount(factory, socket, 1);
+    deleteAccount(factory, socket, account.getAccountID());
     connection.disconnect();
   }
 

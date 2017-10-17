@@ -7,9 +7,11 @@ public class Account {
 
   String Status;
 
-  String accountDescription;
+  int accountID;
 
   String accountName;
+
+  String description;
 
   int accountMember;
 
@@ -22,12 +24,12 @@ public class Account {
     this.Status = Status;
   }
 
-  public String getAccountDescription() {
-    return accountDescription;
+  public int getAccountID() {
+    return accountID;
   }
 
-  public void setAccountDescription(String accountDescription) {
-    this.accountDescription = accountDescription;
+  public void setAccountID(int accountID) {
+    this.accountID = accountID;
   }
 
   public String getAccountName() {
@@ -38,21 +40,22 @@ public class Account {
     this.accountName = accountName;
   }
 
-  public int getAccountMember() {
-    return accountMember;
+  public String getDescription() {
+    return description;
   }
 
-  public void setAccountMember(int accountMember) {
-    this.accountMember = accountMember;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   @Override
   public String toString() {
     return "Account{" +
       "Status='" + Status + '\'' +
-      ", accountDescription='" + accountDescription + '\'' +
+      ", accountID=" + accountID +
       ", accountName='" + accountName + '\'' +
-      ", accountMember='" + accountMember + '\'' +
+      ", description='" + description + '\'' +
+      ", accountMember=" + accountMember +
       '}';
   }
 }

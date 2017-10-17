@@ -39,7 +39,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createAccountTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(300000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -52,7 +52,7 @@ public class createAccountTest {
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createAccount(factory, socket, "testAccount", "TESTACCOUNT", 1);
+    createAccount(factory, socket, 1);
     connection.disconnect();
   }
 
@@ -60,7 +60,7 @@ public class createAccountTest {
   public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    AccountError accountError = (AccountError) createAccountError(factory, socket, "testAccount1", "TESTACCOUNT1", 2);
+    AccountError accountError = (AccountError) createAccountError(factory, socket, 2);
     assertTrue("Permission Denied.".equals(accountError.getMessage()));
     connection.disconnect();
   }
@@ -69,8 +69,8 @@ public class createAccountTest {
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createAccount(factory, socket, "testAccount3", "TESTACCOUNT3", 1);
-    AccountError accountError = (AccountError) createAccountError(factory, socket, "testAccount3", "TESTACCOUNT3", 1);
+    Account account = createAccount(factory, socket, 1);
+    AccountError accountError = (AccountError) createAccountError(factory, socket, account.getAccountName(), account.getDescription(), 1);
     assertTrue("Account already exist under this member.".equals(accountError.getMessage()));
     connection.disconnect();
   }
