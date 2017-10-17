@@ -1,5 +1,6 @@
 package src.APITests.User.Deletion;
 
+import SETLAPIHelpers.User;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -37,94 +38,16 @@ public class deleteUserTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = Timeout.millis(3000);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-    SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
     String localAddress = "ws://localhost:9788/db/";
 
-    @Test
-    public void deleteUserTest() throws InterruptedException, ExecutionException {
-
-      final AtomicInteger atomicInt = new AtomicInteger(0);
-
-      Holder<Integer> userIdHolder = new Holder<>();
-
-      String userDetails[] = generateUserDetails();
-      String newUserName = userDetails[0];
-      String password = userDetails[1];
-      String email = userDetails[2];
-
-      CountDownLatch latch = new CountDownLatch(1);
-
-      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-      socket.registerHandler(Message.Type.um_lu.name(), message -> {
-
-        int call = atomicInt.getAndIncrement();
-        JSONArray data = (JSONArray) message.get("Data");
-        JSONObject resp = (JSONObject) data.get(data.size() - 1);
-        Object lastUserName = resp.get("userName");
-        Object oldUserName = lastUserName;
-
-        switch (call) {
-          case 0: //first time
-
-            assertNotNull(lastUserName);
-            assertTrue(!lastUserName.toString().equals(newUserName));
-            socket.sendMessage(factory.addUserToAccount(newUserName, email, "8", "35", password));
-            break;
-
-          case 1: //second time
-
-            assertNotNull(lastUserName);
-            assertTrue(lastUserName.toString().equals(newUserName));
-            System.out.println("UserIdHolder at delete = " + userIdHolder.value);
-            socket.sendMessage(factory.deleteUserFromAccount(userIdHolder.value.toString()));
-            break;
-
-          case 2: //third time
-
-            assertNotNull(lastUserName);
-            assertTrue(lastUserName.equals(oldUserName));
-            latch.countDown();
-            break;
-        }
-        return "";
-      });
-
-
-      socket.registerHandler(Message.Type.nu.name(), message -> {
-        JSONArray data = (JSONArray) message.get("Data");
-        JSONObject resp = (JSONObject) data.get(0);
-        Object newUser = resp.get("userName");
-        Object userID = resp.get("userID");
-        userIdHolder.value = ((Number) userID).intValue();
-        assertNotNull(newUser);
-        assertTrue(newUser.toString().equalsIgnoreCase(newUserName));
-        socket.sendMessage(factory.listUsers());
-
-        return "";
-      });
-
-      socket.sendMessage(factory.listUsers());
-
-      socket.registerHandler(Message.Type.du.name(), message -> {
-        JSONArray data = (JSONArray) message.get("Data");
-        JSONObject resp = (JSONObject) data.get(0);
-        Object status = resp.get("Status");
-        assertTrue(status.toString().equals("OK"));
-        socket.sendMessage(factory.listUsers());
-        connection.disconnect();
-        return "";
-      });
-
-    }
 
   @Test
-  public void simpleDeleteTest() throws ExecutionException, InterruptedException {
+  public void simpleDeleteUserTest() throws ExecutionException, InterruptedException {
       Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
       //USER DETAILS
@@ -138,19 +61,19 @@ public class deleteUserTest {
       assertTrue(!lastUserName.equalsIgnoreCase(userName));
 
       //CREATE NEW USER
-      String userId = createUserAndCaptureDetails(factory, socket, "8", "35").get(0).toString();
+      User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
       //LIST USERS AFTER NEW USER CREATION
       String newLastUserName = listUsers(factory, socket);
-      assertTrue(newLastUserName.equalsIgnoreCase(userName));
+      assertTrue(newLastUserName.equalsIgnoreCase(user.getUserName()));
 
       //DELETE NEW USER
-      deleteUser(factory, socket, userId);
+      deleteUser(factory, socket, user.getUserID());
 
       //LIST USERS AFTER DELETION
       String oldLastUserName = listUsers(factory, socket);
 
-      assertTrue(!oldLastUserName.equalsIgnoreCase(userName));
+      assertTrue(!oldLastUserName.equalsIgnoreCase(user.getUserName()));
       assertTrue(oldLastUserName.equalsIgnoreCase(lastUserName));
 
       connection.disconnect();

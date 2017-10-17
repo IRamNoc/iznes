@@ -14,7 +14,7 @@ import java.io.Reader;
     public static <T> T convert(String json,Class<T> clazz) throws IOException {
 
         Gson gson = new GsonBuilder().create();
-       return gson.fromJson(json, clazz);
+        return gson.fromJson(json, clazz);
 
 
   }
