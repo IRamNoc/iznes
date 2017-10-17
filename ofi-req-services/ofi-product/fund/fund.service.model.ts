@@ -43,3 +43,14 @@ export interface SaveFundShareRequestBody extends MemberNodeMessageBody {
     shareName: any;
     status: any;
 }
+
+export interface UpdateFundShareRequestBody extends MemberNodeMessageBody {
+    token: any;
+    accountId: any;
+    shareID: any;
+    fundID: any;
+    metadata: any;
+    issuer: any;
+    shareName: any;
+    status: any;
+}
