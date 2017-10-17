@@ -23,7 +23,7 @@ import {
     clearRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, immutableHelper} from '@setl/utils';
+import {SagaHelper, immutableHelper, mDateHelper} from '@setl/utils';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 
 @Component({
@@ -67,6 +67,9 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
     // Search form
     searchForm: FormGroup;
+    searchBy: string;
+    selectedFund: FormControl;
+    navDate: string;
 
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -75,7 +78,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
     constructor(private _ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
-                private changeDetectorRef: ChangeDetectorRef,
+                private _changeDetectorRef: ChangeDetectorRef,
                 private _ofiCorpActionService: OfiCorpActionService) {
     }
 
@@ -96,10 +99,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         };
 
         // search formGroup
+        this.searchBy = 'byDate';
+        this.selectedFund = new FormControl([]);
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+        this.navDate = new FormControl('');
+
         this.searchForm = new FormGroup({
-            searchBy: new FormControl([{id: 'byFund', text: 'Fund'}]),
-            fundName: new FormControl(''),
-            date: new FormControl('')
+            searchBy: new FormControl([{id: 'byData', text: 'Date'}]),
+            fundName: this.selectedFund,
+            navDate: this.navDate
         });
 
         this.connectedWalletId = 0;
@@ -132,6 +140,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             },
 
         ];
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -153,12 +162,50 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     updateUserIssuedAssets(assetList): void {
         this.assetListObj = assetList;
 
-        // this.assetList = immutableHelper.reduce(assetList, (result, item) => {
-        //     result.push({
-        //         id: item.get()
-        //     });
-        //    return result;
-        // }, []);
+        this.assetList = immutableHelper.reduce(assetList, (result, item) => {
+            result.push({
+                id: item.get('asset', ''),
+                text: item.get('asset', '')
+            });
+            return result;
+        }, []);
+
+        // Set default or selected address.
+        const hasSelectedFundInList = immutableHelper.filter(this.assetList, (thisItem) => {
+            return thisItem.get('id') === this.selectedFund && this.selectedFund.value.length > 0 && this.selectedFund.value[0].id;
+        });
+
+
+        if (this.assetList.length > 0) {
+            if (!this.selectedFund || hasSelectedFundInList.length === 0) {
+                console.log('selecting', this.assetList[0]);
+                this.selectedFund.setValue([this.assetList[0]], {
+                    onlySelf: true,
+                    emitEvent: true,
+                    emitModelToViewChange: true,
+                    emitViewToModelChange: true
+                });
+            } else {
+                this.selectedFund.setValue([this.selectedFund.value[0]], {
+                    onlySelf: true,
+                    emitEvent: true,
+                    emitModelToViewChange: true,
+                    emitViewToModelChange: true
+                });
+            }
+        }
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    selectSearchBy(searchBy) {
+        this.searchBy = searchBy.id;
+        this._changeDetectorRef.markForCheck();
+        console.log(this.searchForm.value);
+    }
+
+    handleSearchSubmit() {
+        console.log(this.searchForm.value);
     }
 
     /**

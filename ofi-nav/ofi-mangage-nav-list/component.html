@@ -21,7 +21,7 @@
     <!-- Nav Data Table. -->
     <ng-template #navListTab>
         <div class="panel-body">
-            <form [formGroup]="searchForm">
+            <form [formGroup]="searchForm" (ngSubmit)="handleSearchSubmit()">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
@@ -33,6 +33,7 @@
                                     class="fluid-width"
                                     [items]="allowSearchTypes"
                                     formControlName="searchBy"
+                                    (selected)="selectSearchBy($event)"
                                 ></ng-select>
                             </div>
                         </div>
@@ -42,7 +43,12 @@
                                 <span class="ml_translated">Fund name</span>
                             </label>
                             <div>
-                                <input formControlName="fundName" type="text" class="form-control mlp_translated">
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="assetList"
+                                    formControlName="fundName"
+                                    [disabled]="searchBy === 'byDate'"
+                                ></ng-select>
                             </div>
                         </div>
 
@@ -53,7 +59,12 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input formControlName="date" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"/>
+                                <input
+                                    [(ngModel)]="navDate"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    [disabled]="searchBy === 'byFund'"
+                                />
                             </div>
                         </div>
                     </div>
