@@ -1,4 +1,13 @@
-import {Component, OnInit, ViewContainerRef, OnDestroy, Input, ReflectiveInjector, ComponentFactoryResolver, ViewChild} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewContainerRef,
+    OnDestroy,
+    Input,
+    ReflectiveInjector,
+    ComponentFactoryResolver,
+    ViewChild
+} from '@angular/core';
 import {AlertsService} from './alerts.service';
 import {AlertSettings} from './interfaces/alert-settings';
 import {AlertComponent} from './alert.component';
@@ -6,13 +15,13 @@ import {AlertComponent} from './alert.component';
 @Component({
     selector: 'jaspero-alerts',
     entryComponents: [AlertComponent],
-    template: `<div #comp></div>`
+    template: `
+        <div #comp></div>`
 })
 export class AlertsComponent implements OnInit, OnDestroy {
-    constructor(
-        private _service: AlertsService,
-        private _resolver: ComponentFactoryResolver
-    ) { }
+    constructor(private _service: AlertsService,
+                private _resolver: ComponentFactoryResolver) {
+    }
 
     @ViewChild('comp', {read: ViewContainerRef}) compViewContainerRef: ViewContainerRef;
 
@@ -30,6 +39,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     private _current: any;
     private _latestSub: any;
     private _listener: any;
+    private _updateViewListener: any;
 
     ngOnInit() {
 
@@ -68,13 +78,20 @@ export class AlertsComponent implements OnInit, OnDestroy {
                 this._service.alert$.next(res);
             });
         });
+
+        this._updateViewListener = this._service.update$.subscribe((updateView) => {
+            if (this._current) {
+                this._current.instance.updateAlertType(updateView.type);
+                this._current.instance.updateMessage(updateView.message);
+            }
+        });
     }
 
 
     private _destroy() {
         /*
-            We run the check twice in case the component timed out
-            This can happen on short durations
+         We run the check twice in case the component timed out
+         This can happen on short durations
          */
 
         if (this._current) {
@@ -86,5 +103,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._listener.unsubscribe();
+        this._updateViewListener.unsubscribe();
     }
 }

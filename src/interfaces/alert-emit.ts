@@ -7,3 +7,8 @@ export interface AlertEmit {
     type?: AlertType;
     override?: AlertSettings;
 }
+
+export interface UpdateEmit {
+    type?: AlertType;
+    message: string;
+}
