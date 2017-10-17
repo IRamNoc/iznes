@@ -69,6 +69,7 @@ export class WalletnodeChannelService {
          */
         console.log('---handle block update---');
         InitialisationService.clearWalletNodeRequestedStates(this.ngRedux);
+        InitialisationService.updatedWalletNodeTxStateWithBlockChange(this.ngRedux, data);
     }
 
     updateWalletBalance(data) {
