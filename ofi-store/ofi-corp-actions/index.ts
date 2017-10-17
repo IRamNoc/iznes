@@ -4,7 +4,7 @@ import {combineReducers, Reducer} from 'redux';
 import {
     OfiCouponState,
     OfiCouponListReducer
-} from './coupons'
+} from './coupons';
 export {
     OFI_SET_COUPON_LIST,
     getOfiCouponList
@@ -14,15 +14,17 @@ export {
 import {
     OfiUserAssetsState,
     OfiUserAssetsReducer
-} from './assets'
+} from './assets';
 export {
     OFI_SET_USER_ISSUED_ASSETS,
-    getOfiUserIssuedAssets
+    getOfiUserIssuedAssets,
+    ofiClearRequestedIssuedAssets,
+    ofiSetRequestedUserIssuedAssets
 } from './assets';
 
 export interface OfiCorpActionsState {
-    ofiCoupon: OfiCouponState
-    ofiUserAssets: OfiUserAssetsState
+    ofiCoupon: OfiCouponState;
+    ofiUserAssets: OfiUserAssetsState;
 }
 
 export const OfiCorpActionsReducer: Reducer<OfiCorpActionsState> = combineReducers<OfiCorpActionsState>({

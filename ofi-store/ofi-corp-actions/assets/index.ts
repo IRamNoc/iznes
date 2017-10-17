@@ -5,7 +5,11 @@ export {OfiUserAssetsState} from './model';
 export {OfiUserAssetsReducer} from './reducer';
 
 /* Actions. */
-export {OFI_SET_USER_ISSUED_ASSETS} from './actions';
+export {
+    OFI_SET_USER_ISSUED_ASSETS,
+    ofiSetRequestedUserIssuedAssets,
+    ofiClearRequestedIssuedAssets
+} from './actions';
 
 /* Selectors. */
 export {getOfiUserIssuedAssets} from './selectors';

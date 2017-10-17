@@ -2,6 +2,12 @@ export {OfiFundInvestModule} from './ofi-fund-invest/module';
 export {OfiInvestorFundListComponent} from './ofi-fund-invest/investor-fund-list/component';
 
 /**
+ *
+ */
+export {OfiNavModule} from './ofi-nav/module';
+export {OfiManageOfiNavComponent} from './ofi-nav/ofi-mangage-nav-list/component';
+
+/**
  * Services
  */
 export {OfiFundInvestService} from './ofi-req-services/ofi-fund-invest/service';

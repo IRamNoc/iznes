@@ -1,7 +1,7 @@
 import {Reducer, combineReducers} from 'redux';
 
 /*
-    Ofi Invest
+ Ofi Invest
  */
 import {
     OfiFundInvestState,
@@ -15,7 +15,7 @@ export {
 } from './ofi-fund-invest';
 
 /*
-    Ofi Corp Actions
+ Ofi Corp Actions
  */
 import {
     OfiCorpActionsState,
@@ -23,7 +23,7 @@ import {
 } from './ofi-corp-actions';
 
 /*
-    Ofi Product
+ Ofi Product
  */
 import {
     OfiProductState,
@@ -41,10 +41,12 @@ export {
     /* User issued assets */
     getOfiUserIssuedAssets,
     OFI_SET_USER_ISSUED_ASSETS,
+    ofiClearRequestedIssuedAssets,
+    ofiSetRequestedUserIssuedAssets
 } from './ofi-corp-actions';
 
 /*
-    Ofi Orders
+ Ofi Orders
  */
 import {
     OfiOrdersState,

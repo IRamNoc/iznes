@@ -1,16 +1,17 @@
 /* Core/Angular imports. */
-import { Injectable } from '@angular/core';
-import { select, NgRedux } from '@angular-redux/store';
+import {Injectable} from '@angular/core';
+import {select, NgRedux} from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
-import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
-import { SagaHelper, Common } from '@setl/utils';
+import {MemberSocketService} from '@setl/websocket-service';
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {SagaHelper, Common} from '@setl/utils';
 
 /* Import actions. */
 import {
     OFI_SET_COUPON_LIST,
-    OFI_SET_USER_ISSUED_ASSETS
+    OFI_SET_USER_ISSUED_ASSETS,
+    ofiSetRequestedUserIssuedAssets
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
@@ -27,11 +28,31 @@ import {
 export class OfiCorpActionService {
 
     /* Constructor. */
-    constructor(
-        private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>,
-    ) {
+    constructor(private memberSocketService: MemberSocketService,
+                private ngRedux: NgRedux<any>,) {
         /* Stub. */
+    }
+
+    /**
+     * Default static call to get user issued assets, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiFundInvestService
+     * @param ngRedux
+     */
+    static defaultRequestUserIssuedAsset(ofiFundInvestService: OfiCorpActionService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(ofiSetRequestedUserIssuedAssets());
+
+        // Request the list.
+        const asyncTaskPipe = ofiFundInvestService.requestUserIssuedAssets();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_USER_ISSUED_ASSETS],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**
@@ -101,6 +122,15 @@ export class OfiCorpActionService {
         });
     }
 
+    requestUserIssuedAssets(): any {
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'getuserissuedasset',
+            token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     /**
      * Set New Coupon
      * ----------------------
@@ -160,14 +190,14 @@ export class OfiCorpActionService {
     }
 
     /**
-    * Build Request
-    * -------------
-    * Builds a request and sends it, responsing when it completes.
-    *
-    * @param {options} Object - and object of options.
-    *
-    * @return {Promise<any>} [description]
-    */
+     * Build Request
+     * -------------
+     * Builds a request and sends it, responsing when it completes.
+     *
+     * @param {options} Object - and object of options.
+     *
+     * @return {Promise<any>} [description]
+     */
     private buildRequest(options): Promise<any> {
         /* Check for taskPipe,  */
         return new Promise((resolve, reject) => {
