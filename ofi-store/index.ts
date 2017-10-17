@@ -52,6 +52,7 @@ import {
     OfiOrdersState,
     OfiOrdersReducer
 } from './ofi-orders';
+
 export {
     getOfiMyOrderList,
     getOfiManageOrderList,
