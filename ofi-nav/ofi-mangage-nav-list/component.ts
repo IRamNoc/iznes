@@ -69,7 +69,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
     searchBy: string;
     selectedFund: FormControl;
-    navDate: string;
+    navDate: FormControl;
 
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -102,7 +102,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         this.searchBy = 'byDate';
         this.selectedFund = new FormControl([]);
         const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
-        this.navDate = new FormControl('');
+        this.navDate = new FormControl(currentDate);
 
         this.searchForm = new FormGroup({
             searchBy: new FormControl([{id: 'byData', text: 'Date'}]),
@@ -201,6 +201,10 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     selectSearchBy(searchBy) {
         this.searchBy = searchBy.id;
         this._changeDetectorRef.markForCheck();
+        console.log(this.searchForm.value);
+    }
+
+    submitSearch() {
         console.log(this.searchForm.value);
     }
 
