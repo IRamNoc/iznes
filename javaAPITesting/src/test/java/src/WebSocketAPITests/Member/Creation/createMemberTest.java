@@ -58,7 +58,7 @@ public class createMemberTest {
 
     Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
 
-    System.out.println("JSON MemberName = " + member.getUserID());
+    System.out.println("JSON MemberName = " + member.getMemberName());
     System.out.println("Member Name = " + memberName);
     assertTrue(member.getMemberName().equals(memberName));
 

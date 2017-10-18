@@ -19,7 +19,7 @@ import static SETLAPIHelpers.RestAPI.UserHelper.createUserSuccess;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static junit.framework.TestCase.assertTrue;
 
-public class createUserTest {
+public class createUserAcceptanceTest {
 
   @Rule
   public Timeout globalTimeout = Timeout.millis(3000);
