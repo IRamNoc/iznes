@@ -49,6 +49,57 @@ public static User createUserAndCaptureDetails(String localAddress,
   return container.getItem();
   }
 
+  public static void createUserSuccess(String localAddress,
+                                       String account,
+                                       String userName,
+                                       String email,
+                                       String userType,
+                                       String password
+                                       //int userId,
+                                       //String apiKey
+                               )
+                               throws InterruptedException {
+
+
+    RestApi api = new RestApi(localAddress);
+    //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
+    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    //api.start(userId, apiKey);
+
+    MessageFactory msfFactory = api.getMessageFactory();
+    api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
+      Map resp = claim.get("data").asList(Map.class).get(0);
+      assertTrue("OK".equals(resp.get("Status")));
+    });
+
+  }
+
+  public static void createUserFailure(String localAddress,
+                                       String account,
+                                       String userName,
+                                       String email,
+                                       String userType,
+                                       String password
+                                       //int userId,
+                                       //String apiKey
+                               )
+                               throws InterruptedException {
+
+
+    RestApi api = new RestApi(localAddress);
+    //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
+    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    //api.start(userId, apiKey);
+
+    MessageFactory msfFactory = api.getMessageFactory();
+    api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
+      Map resp = claim.get("data").asList(Map.class).get(0);
+      assertTrue("Fail".equals(resp.get("Status")));
+      assertTrue("User Name / Email Address already exists.".equals(resp.get("Message")));
+    });
+
+  }
+
   public static void deleteUserSuccess(String localAddress, String userID) {
 
     RestApi api = new RestApi(localAddress);
