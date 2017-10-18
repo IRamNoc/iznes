@@ -24,7 +24,15 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper, immutableHelper, mDateHelper} from '@setl/utils';
+import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import {NavStatus} from '../../ofi-req-services/ofi-product/nav/model';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+import {
+    ofiSetCurrentManageNavRequest,
+    clearRequestedManageNavList,
+    getOfiManageNavListCurrentRequest
+} from '../../ofi-store/ofi-product/nav';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-nav',
@@ -75,9 +83,12 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'requested']) requestedUserIssuedAssetsOb;
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userIssuedAssetsOb;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'requested']) navRequestedOb;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
+                private _ofiNavService: OfiNavService,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _ofiCorpActionService: OfiCorpActionService) {
     }
@@ -123,23 +134,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             this.updateUserIssuedAssets(assetList);
         }));
 
-        this.navList = [
-            {
-                fundName: 'LEI00001|OFI RS Dynamique C D',
-                fundIsin: 'FR0000970097',
-                date: '2017-10-16',
-                nav: 122000,
-                status: -1
-            },
-            {
-                fundName: 'LEI00001|OFI RS Dynamique C D',
-                fundIsin: 'FR0000970097',
-                date: '2017-10-17',
-                nav: 132000,
-                status: 1
-            },
+        this.subscriptionsArray.push(this.navRequestedOb.subscribe(requested => {
+            this.requestNavList(requested);
+        }));
 
-        ];
+        this.subscriptionsArray.push(this.navListOb.subscribe(navList => {
+            this.updateNavList(navList);
+        }));
+
+        this.navList = [];
         this._changeDetectorRef.markForCheck();
     }
 
@@ -198,18 +201,155 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
+    requestNavList(requested) {
+        if (!requested) {
+            const currentState = this._ngRedux.getState();
+            const currentRequest = getOfiManageNavListCurrentRequest(currentState);
+            OfiNavService.defaultRequestNavList(this._ofiNavService, this._ngRedux, currentRequest);
+        }
+    }
+
+    updateNavList(navList) {
+        const currentState = this._ngRedux.getState();
+        const currentRequest = getOfiManageNavListCurrentRequest(currentState);
+        const {fundName, navDate} = currentRequest;
+
+        const processNavList = this.processNavList(navList);
+
+
+        // Fill gaps
+
+        let listToFill = [];
+        // was search by nav date. so insert today's price row (price of pending), if today's price is absent.
+        if (fundName === '') {
+            const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'YYYY-MM-DD');
+            const navDateParsed = mDateHelper.unixTimestampToDateStr(navDateNum, 'DD/MM/YYYY');
+
+            listToFill = this.fillNavGapsIfByDate(processNavList, navDateParsed);
+
+        } else if (navDate === '') {
+            // was search by fund name. so fill the price of the date, for all the issued assets. if the price is absent.
+            // this.navList = fillNavGaps(navList);
+            listToFill = this.fillNavGapsIfByFundName(processNavList, fundName);
+        }
+
+        this.navList = [...listToFill, ...processNavList];
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    processNavList(navList) {
+        return immutableHelper.map(navList, (item) => {
+            const navDate = item.get('navDate', '');
+            const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'YYYY-MM-DD');
+            const navDateParsed = mDateHelper.unixTimestampToDateStr(navDateNum, 'DD/MM/YYYY');
+            const thisFundName = item.get('fundName', '');
+            const fundIsin = _.get(this.assetListObj, [thisFundName, 'isin'], '');
+
+            return {
+                fundName: thisFundName,
+                fundIsin,
+                date: navDateParsed,
+                nav: item.get('price', 0),
+                status: item.get('status', 0)
+            };
+        });
+    }
+
+    fillNavGapsIfByDate(navList, navDate) {
+        return immutableHelper.reduce(this.assetListObj, (result, item) => {
+            const assetNameToMatch = item.get('asset');
+            const fundIsin = item.get('isin');
+
+            const matchedAsset = immutableHelper.filter(navList, (asset) => {
+                const navPriceAssetName = asset.get('fundName', '');
+                return navPriceAssetName === assetNameToMatch;
+            });
+
+            // if price not found, fill the gap.
+            if (matchedAsset.length === 0) {
+                result.push({
+                    fundName: assetNameToMatch,
+                    fundIsin,
+                    date: navDate,
+                    nav: false,
+                    status: 2
+                });
+            }
+
+            return result;
+        }, []);
+    }
+
+    fillNavGapsIfByFundName(navList, fundName) {
+        const hasToday = immutableHelper.filter(navList, (asset) => {
+            const navDate = asset.get('navDate', '');
+
+            const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'DD/MM/YYYY');
+            // if is today
+            return (moment().diff(moment(navDateNum), 'day') === 0);
+        });
+
+        if (hasToday.length === 0) {
+            const todayStr = moment().format('DD/MM/YYYY');
+            const fundIsin = _.get(this.assetListObj, [fundName, 'isin'], '');
+            return [{
+                fundName,
+                fundIsin,
+                date: todayStr,
+                nav: false,
+                status: 2
+            }];
+        }
+        return [];
+    }
+
     selectSearchBy(searchBy) {
         this.searchBy = searchBy.id;
+        const {fundName, navDate} = this.searchForm.value;
+        const fundNameValue = _.get(fundName, '[0].id', '');
+
+        if (this.searchBy === 'byFund') {
+            this.handleSearchSubmit({fundName: fundNameValue, navDate: ''});
+        } else if (this.searchBy === 'byDate') {
+            const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'DD/MM/YYYY');
+            const navDateParse = mDateHelper.unixTimestampToDateStr(navDateNum, 'YYYY-MM-DD');
+            this.handleSearchSubmit({fundName: '', navDate: navDateParse});
+        } else {
+            throw new Error('Unknown nav search by');
+        }
+
         this._changeDetectorRef.markForCheck();
-        console.log(this.searchForm.value);
     }
 
-    submitSearch() {
-        console.log(this.searchForm.value);
+    fundChange($event) {
+        const fundName = $event['id'];
+        const navDate = '';
+        this.handleSearchSubmit({fundName, navDate});
     }
 
-    handleSearchSubmit() {
-        console.log(this.searchForm.value);
+    dateChange($event) {
+        const fundName = '';
+        const navDateNum = mDateHelper.dateStrToUnixTimestamp($event, 'DD/MM/YYYY');
+        const navDate = mDateHelper.unixTimestampToDateStr(navDateNum, 'YYYY-MM-DD');
+        this.handleSearchSubmit({fundName, navDate});
+    }
+
+    handleSearchSubmit(request: { fundName: string; navDate: string; }) {
+        const {fundName, navDate} = request;
+        const status = NavStatus.ALL_STATUS;
+        const pageNum = 0;
+        const pageSize = 1000;
+
+        this._ngRedux.dispatch(ofiSetCurrentManageNavRequest({
+            fundName,
+            navDate,
+            status,
+            pageNum,
+            pageSize
+        }));
+
+        this._ngRedux.dispatch(clearRequestedManageNavList());
     }
 
     /**
