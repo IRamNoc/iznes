@@ -87,9 +87,10 @@ form .form-group div.ui-select-container {
 }
 
 .ui-disabled {
-    height: 87% !important;
-    top: 6px !important;
-    background: none;
+    // Comment out util clarify, Need to find out why we need that
+    //height: 87% !important;
+    //top: 6px !important;
+    //background: none;
 }
 
 .ui-select-container.ui-select-multiple {
