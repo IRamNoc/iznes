@@ -2,6 +2,7 @@ package src.RESTAPITests.User.Creation;
 
 import java.util.Map;
 
+import SETLAPIHelpers.User;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MessageFactory;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -12,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import static SETLAPIHelpers.RestAPI.UserHelper.createUserAndCaptureDetails;
+import static SETLAPIHelpers.RestAPI.UserHelper.createUserFailure;
+import static SETLAPIHelpers.RestAPI.UserHelper.createUserSuccess;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static junit.framework.TestCase.assertTrue;
 
@@ -167,5 +171,21 @@ public class createUserTest {
       assertTrue("Invalid User Name / Email Address.".equals(response.get("Message")));
 
     });
+  }
+
+  @Test
+  public void failToCreateDuplicateUser() throws InterruptedException {
+
+    String userDetails[] = generateUserDetails();
+    String userName = userDetails[0];
+    String password = userDetails[1];
+    String email = userDetails[2];;
+
+    String userType = "35";
+    String account = "8";
+
+    createUserSuccess(localAddress, account, userName, email, userType, password);
+    createUserFailure(localAddress, account, userName, email, userType, password);
+
   }
 }
