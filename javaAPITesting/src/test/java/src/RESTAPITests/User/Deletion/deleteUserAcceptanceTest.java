@@ -13,11 +13,11 @@ import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.RestAPI.UserHelper.*;
-import static junit.framework.TestCase.assertTrue;
+
 
 
 @RunWith(JUnit4.class)
-public class deleteUserTest {
+public class deleteUserAcceptanceTest {
 
     private class Holder<T>{
       T value = null;
@@ -30,7 +30,7 @@ public class deleteUserTest {
 
 
   @Test
-  public void simpleDeleteUserTest() throws ExecutionException, InterruptedException {
+  public void deleteUserTest() throws ExecutionException, InterruptedException {
 
     //USER DETAILS
       String userDetails[] = generateUserDetails();
@@ -42,9 +42,29 @@ public class deleteUserTest {
       User user = createUserAndCaptureDetails(localAddress, "8", userName, email, "35", password);
 
     //DELETE USER
-      deleteUser(localAddress, user.getUserID());
+      deleteUserSuccess(localAddress, user.getUserID());
 
     }
+
+  @Test
+  public void failToDeleteUserNonExistentUserTest() throws ExecutionException, InterruptedException {
+
+    //USER DETAILS
+    String userDetails[] = generateUserDetails();
+    String userName = userDetails[0];
+    String password = userDetails[1];
+    String email = userDetails[2];
+
+    //CREATE NEW USER
+    User user = createUserAndCaptureDetails(localAddress, "8", userName, email, "35", password);
+
+    //DELETE USER
+    String userToDelete = user.getUserID();
+    deleteUserSuccess(localAddress, userToDelete);
+
+    //TRY TO DELETE SAME USER
+    deleteUserError(localAddress, userToDelete);
+  }
 
 
 }
