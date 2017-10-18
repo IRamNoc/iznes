@@ -25,7 +25,7 @@ export class FundViewComponent implements OnInit, OnDestroy {
 
     categories: Array<string>;
 
-    activeTabData: object;
+    activeTabData: any;
 
     constructor(private _changeDetectorRef: ChangeDetectorRef) {
     }

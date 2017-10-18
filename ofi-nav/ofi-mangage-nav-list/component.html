@@ -48,6 +48,7 @@
                                     [items]="assetList"
                                     formControlName="fundName"
                                     [disabled]="searchBy === 'byDate'"
+                                    (selected)="submitSearch()"
                                 ></ng-select>
                             </div>
                         </div>
@@ -60,10 +61,12 @@
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
                                 <input
-                                    [(ngModel)]="navDate"
+                                    formControlName="navDate"
+                                    [(ngModel)]="navDate.value"
                                     [dpDayPicker]="configDate" placeholder="Choose a date"
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     [disabled]="searchBy === 'byFund'"
+                                    (selectedDate)="submitSearch()"
                                 />
                             </div>
                         </div>
