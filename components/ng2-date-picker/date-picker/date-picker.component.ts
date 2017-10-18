@@ -89,6 +89,7 @@ export class DatePickerComponent implements OnChanges,
 
     @Output() open = new EventEmitter<void>();
     @Output() close = new EventEmitter<void>();
+    @Output() selectedDate = new EventEmitter<Moment[]>();
 
     @ViewChild('container') calendarContainer: ElementRef;
     @ViewChild('dayCalendar') dayCalendarRef: DayCalendarComponent;
@@ -125,9 +126,11 @@ export class DatePickerComponent implements OnChanges,
             .convertFromMomentArray(this.componentConfig.format, selected, ECalendarValue.StringArr))
             .join(', ');
         this.onChangeCallback(this.processOnChangeCallback(selected));
+        this.selectedDate.emit(this._selected);
     }
 
     get selected(): Moment[] {
+
         return this._selected;
     }
 

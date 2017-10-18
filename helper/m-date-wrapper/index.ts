@@ -36,7 +36,21 @@ export function dateStrToUnixTimestamp(dateStr: string, formatStr: string): numb
     return dataM.valueOf();
 }
 
+/**
+ * get current unix timestamp in number.
+ * @return {number}
+ */
 export function getCurrentUnixTimestamp() {
     const dataM = moment();
     return dataM.valueOf();
+}
+
+/**
+ *  get current timestamp in format of 'format'
+ * @param format
+ * @return {string}
+ */
+export function getCurrentUnixTimestampStr(format) {
+    const dataM = moment();
+    return dataM.format(format);
 }
