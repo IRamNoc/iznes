@@ -49,7 +49,7 @@ public static User createUserAndCaptureDetails(String localAddress,
   return container.getItem();
   }
 
-  public static void deleteUser(String localAddress, String userID) {
+  public static void deleteUserSuccess(String localAddress, String userID) {
 
     RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
@@ -59,10 +59,24 @@ public static User createUserAndCaptureDetails(String localAddress,
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteUser(userID), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
-      System.out.println(claim.get("data").asList(Map.class));
       String deletedUser = resp.get("userID").toString();
+      assertTrue("OK".equals(resp.get("Status")));
       assertTrue(deletedUser.equals(userID));
+    });
 
+  }
+
+  public static void deleteUserError(String localAddress, String userID) {
+
+    RestApi api = new RestApi(localAddress);
+    //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
+    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    //api.start(userId, apiKey);
+
+    MessageFactory msfFactory = api.getMessageFactory();
+    api.sendMessage(msfFactory.deleteUser(userID), claim -> {
+      Map resp = claim.get("data").asList(Map.class).get(0);
+      assertTrue("Fail".equals(resp.get("Status")));
     });
 
   }

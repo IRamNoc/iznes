@@ -116,7 +116,6 @@ public class createUserTest {
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email,userType, password), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
-    System.out.println(claim.get("data").asList(Map.class));
     assertTrue("Fail".equals(response.get("Status").toString()));
 
     });
@@ -164,7 +163,6 @@ public class createUserTest {
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
       Map response = claim.get("data").asList(Map.class).get(0);
-      System.out.println(claim.get("data").asList(Map.class));
       assertTrue("Fail".equals(response.get("Status").toString()));
       assertTrue("Invalid User Name / Email Address.".equals(response.get("Message")));
 
