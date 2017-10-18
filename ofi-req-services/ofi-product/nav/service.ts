@@ -1,94 +1,70 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
-    RequetFundAccessMy,
-    AddArrangementRequestBody,
-    ArrangementType,
-    AddArrangementContractMapRequestBody
+    RequetNavListMessageBody,
+    UpdateNavMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
 import _ from 'lodash';
 
-import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
+import {
+    SET_MANAGE_NAV_LIST,
+    setRequestedManageNavList,
+} from '../../../ofi-store/ofi-product/nav';
 
 @Injectable()
-export class OfiFundInvestService {
+export class OfiNavService {
     constructor(private memberSocketService: MemberSocketService) {
     }
 
     /**
-     * Default static call to get my fund access, and dispatch default actions, and other
+     * Default static call to get nav list, and dispatch default actions, and other
      * default task.
      *
-     * @param ofiFundInvestService
+     * @param ofiNavService
      * @param ngRedux
+     * @param requestData
      */
-    static defaultRequestFunAccessMy(ofiFundInvestService: OfiFundInvestService, ngRedux: NgRedux<any>) {
+    static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedFundAccessMy());
+        ngRedux.dispatch(setRequestedManageNavList());
 
         // Request the list.
-        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy();
+        const asyncTaskPipe = ofiNavService.requestNavList(requestData);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_FUND_ACCESS_MY],
+            [SET_MANAGE_NAV_LIST],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    requestFundAccessMy(): any {
-        const messageBody: RequetFundAccessMy = {
-            RequestName: 'getfundaccessmy',
-            token: this.memberSocketService.token
+    requestNavList(requestData: any): any {
+        const messageBody: RequetNavListMessageBody = {
+            RequestName: 'getNavList',
+            token: this.memberSocketService.token,
+            fundName: _.get(requestData, 'fundName', ''),
+            navDate: _.get(requestData, 'navDate', ''),
+            status: _.get(requestData, 'status', 0),
+            pageNum: _.get(requestData, 'pageNum', 0),
+            pageSize: _.get(requestData, 'pageSize', 1000),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    addArrangementRequest(requestData: {
-        creatorId: number;
-        type: ArrangementType;
-        metaData: any;
-        asset: string;
-        parties: any;
-        cutoff: string;
-        delivery: string;
-        valuation: string;
-    }): any {
+    updateNav(requestData: any): any {
 
-        const messageBody: AddArrangementRequestBody = {
-            RequestName: 'savearrangement',
+        const messageBody: UpdateNavMessageBody = {
+            RequestName: 'updateNav',
             token: this.memberSocketService.token,
-            creatorId: _.get(requestData, 'creatorId', 0),
-            type: _.get(requestData, 'type', 0),
-            metaData: _.get(requestData, 'metaData', ''),
-            asset: _.get(requestData, 'asset', ''),
-            parties: _.get(requestData, 'parties', {}),
-            cutoff: _.get(requestData, 'cutoff', ''),
-            delivery: _.get(requestData, 'delivery', ''),
-            valuation: _.get(requestData, 'valuation', '')
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    addArrangementContractMapRequest(requestData: {
-        walletId: number;
-        arrangementId: number;
-        contractAddress: string;
-        expiry: number;
-    }): any {
-        const messageBody: AddArrangementContractMapRequestBody = {
-            RequestName: 'aacm',
-            token: this.memberSocketService.token,
-            walletId: _.get(requestData, 'walletId', 0),
-            arrangementId: _.get(requestData, 'arrangementId', ''),
-            contractAddress: _.get(requestData, 'contractAddress', ''),
-            expiry: _.get(requestData, 'expiry', 0),
+            fundName: _.get(requestData, 'fundName', ''),
+            fundDate: _.get(requestData, 'fundDate', ''),
+            price: _.get(requestData, 'price', 0),
+            priceStatus: _.get(requestData, 'priceStatus', 0)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
