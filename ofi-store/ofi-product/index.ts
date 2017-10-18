@@ -18,6 +18,16 @@ import {
     SET_FUND_LIST,
 } from './fund';
 
+import {
+    OfiManageNavState,
+    OfiManageNavReducer,
+    SET_MANAGE_NAV_LIST,
+    setRequestedManageNavList,
+    clearRequestedManageNavList,
+    ofiSetCurrentManageNavRequest,
+    getOfiManageNavListCurrentRequest
+} from './nav';
+
 export {
     ManagementCompanyState,
     ManagementCompanyReducer,
@@ -28,16 +38,24 @@ export {
     FundState,
     FundReducer,
     SET_FUND_LIST,
+
+    SET_MANAGE_NAV_LIST,
+    setRequestedManageNavList,
+    clearRequestedManageNavList,
+    ofiSetCurrentManageNavRequest,
+    getOfiManageNavListCurrentRequest
 };
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
     ofiFund: FundState;
+    ofiManageNav: OfiManageNavState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
+    ofiManageNav: OfiManageNavReducer
 });
