@@ -109,13 +109,19 @@
 
                     <clr-dg-cell>
                         <span *ngIf="!nav.editing">
-                            <span *ngIf="nav.nav">
-                                {{nav.nav | moneyValue}}
+                            <span [ngSwitch]="nav.status">
+                                <span *ngSwitchCase="-1">
+                                    <span class="text-success">{{nav.nav}}</span>
+                                </span>
+                                <span *ngSwitchCase="1">
+                                    <span class="text-warning">{{nav.nav}}</span>
+                                </span>
+
+                                <span *ngSwitchCase="2">
+                                    <span class="text-warning">Pending</span>
+                                </span>
                             </span>
 
-                            <span *ngIf="!nav.nav" class="text-warning">
-                                Pending
-                            </span>
                         </span>
                         <div *ngIf="nav.editing">
 
@@ -129,7 +135,18 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{nav.status}}
+                            <span [ngSwitch]="nav.status">
+                                <span *ngSwitchCase="-1">
+                                    <span class="label label-success">Final</span>
+                                </span>
+                                <span *ngSwitchCase="1">
+                                    <span class="label label-warning">Estimated</span>
+                                </span>
+
+                                <span *ngSwitchCase="2">
+                                    <span class="label label-warning">Pending</span>
+                                </span>
+                            </span>
                     </clr-dg-cell>
                 </clr-dg-row>
 

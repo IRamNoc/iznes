@@ -183,14 +183,14 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             if (!this.selectedFund || hasSelectedFundInList.length === 0) {
                 console.log('selecting', this.assetList[0]);
                 this.selectedFund.setValue([this.assetList[0]], {
-                    onlySelf: true,
+                    onlySelf: false,
                     emitEvent: true,
                     emitModelToViewChange: true,
                     emitViewToModelChange: true
                 });
             } else {
                 this.selectedFund.setValue([this.selectedFund.value[0]], {
-                    onlySelf: true,
+                    onlySelf: false,
                     emitEvent: true,
                     emitModelToViewChange: true,
                     emitViewToModelChange: true
