@@ -5,27 +5,34 @@ import _ from 'lodash';
 /* Local types. */
 import {OfiUserAssetsState} from './';
 import * as ofiCouponActions from './actions';
+import {OFI_SET_REQUESTED_USER_ISSUED_ASSETS, OFI_CLEAR_REQUESTED_USER_ISSUED_ASSETS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 /* Initial state. */
 const initialState: OfiUserAssetsState = {
-    ofiUserAssetList: []
+    ofiUserAssetList: [],
+    requested: false
 };
 
 /* Reducer. */
-export const OfiUserAssetsReducer = function (
-    state: OfiUserAssetsState = initialState,
-    action: Action
-) {
+export const OfiUserAssetsReducer = function (state: OfiUserAssetsState = initialState,
+                                              action: Action) {
     switch (action.type) {
         /* Set Asset List. */
         case ofiCouponActions.OFI_SET_USER_ISSUED_ASSETS:
             return ofiSetUserAssetList(state, action);
 
+        case OFI_SET_REQUESTED_USER_ISSUED_ASSETS:
+            return toggleRequestedUserIssuedAsset(state, true);
+
+        case OFI_CLEAR_REQUESTED_USER_ISSUED_ASSETS:
+            return toggleRequestedUserIssuedAsset(state, false);
+
         /* Default. */
         default:
             return state;
     }
-}
+};
 
 /**
  * Set Coupon List
@@ -37,17 +44,38 @@ export const OfiUserAssetsReducer = function (
  *
  * @return {newState} object - the new state.
  */
-function ofiSetUserAssetList ( state: OfiUserAssetsState, action: Action ) {
+function ofiSetUserAssetList(state: OfiUserAssetsState, action: Action) {
     /* Variables. */
-    let
-    newState,
-    newAssetList = _.get(action, 'payload[1].Data', []);
+    const newAssetList = _.get(action, 'payload[1].Data', []);
 
     /* Set the new state. */
-    newState = {
-        ofiUserAssetList: [ ...state.ofiUserAssetList, ...newAssetList ]
-    };
+    const ofiUserAssetList = immutableHelper.reduce(newAssetList, (result, item) => {
+        result.push({
+            address: item.get('addr', ''),
+            asset: item.get('asset', ''),
+            companyName: item.get('companyName', ''),
+            isin: item.get('isin', ''),
+            managementCompanyId: item.get('managementCompanyID', ''),
+            status: item.get('status', ''),
+            walletId: item.get('walletID', 0)
+        });
+        return result;
+    }, []);
 
     /* Return. */
-    return newState;
+    return Object.assign({}, state, {
+        ofiUserAssetList
+    });
+}
+
+/**
+ * Toggle requested user issued asset
+ *
+ * @param state
+ * @param requested
+ */
+function toggleRequestedUserIssuedAsset(state: OfiUserAssetsState, requested: boolean) {
+    return Object.assign({}, state, {
+        requested
+    });
 }

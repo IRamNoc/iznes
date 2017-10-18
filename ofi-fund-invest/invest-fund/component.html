@@ -76,6 +76,7 @@
                 </label>
                 <div>
                     <ng-select
+                        [class.error]="!form.controls['address'].valid && form.controls['address'].touched"
                         [items]="addressList"
                         [allowClear]="false"
                         placeholder="Select sub-portfolio"
@@ -235,6 +236,20 @@
                     <div class="alert-item">
                 <span class="alert-text">
                 Comment exceed max length
+                </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="!form.controls['address'].valid && form.controls['address'].touched" class="alert-items">
+
+            <div class="alert alert-danger">
+                <div class="alert-items">
+                    <div class="alert-item">
+                <span class="alert-text">
+                    Select a sub-portfolio
                 </span>
                     </div>
                 </div>

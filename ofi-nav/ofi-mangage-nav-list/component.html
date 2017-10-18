@@ -1,0 +1,136 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-industrial"></i> NAV</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa {{tabDetail.title.icon}}"></i> {{tabDetail.title.text}}</button>
+            <clr-tab-content *clrIfActive="true">
+                <!-- NAV list tab. -->
+                <ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="navListTab"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Nav Data Table. -->
+    <ng-template #navListTab>
+        <div class="panel-body">
+            <form [formGroup]="searchForm" (ngSubmit)="handleSearchSubmit()">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Search by</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="allowSearchTypes"
+                                    formControlName="searchBy"
+                                    (selected)="selectSearchBy($event)"
+                                ></ng-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Fund name</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="assetList"
+                                    formControlName="fundName"
+                                    [disabled]="searchBy === 'byDate'"
+                                ></ng-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input
+                                    [(ngModel)]="navDate"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    [disabled]="searchBy === 'byFund'"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid>
+                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Fund name</clr-dg-column>
+                <clr-dg-column>Fund ISIN</clr-dg-column>
+                <clr-dg-column>Date</clr-dg-column>
+                <clr-dg-column>Nav</clr-dg-column>
+                <clr-dg-column>Status</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let nav of navList;">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button *ngIf="!nav.editing" (click)="handleEdit()" class="btn">
+                                <i class="fa fa-pencil-square-o"></i> Edit
+                            </button>
+
+                            <button *ngIf="nav.editing" (click)="handleCancelEdit()" class="btn">
+                                <i class="fa fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{nav.fundName}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{nav.fundIsin}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{nav.date}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        <span *ngIf="!nav.editing">
+                        {{nav.nav}}
+                        </span>
+                        <div *ngIf="nav.editing">
+
+                            <form (submit)="handleUpdateLabel(input.value, address.address)" style="padding: 0">
+                                <input type="text" [value]="address.label" #input style="width: inherit">
+                                <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
+                                   type="submit"
+                                   (click)="handleUpdateLabel(input.value, address.address)"></i>
+                            </form>
+                        </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{nav.status}}
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} accounts
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>

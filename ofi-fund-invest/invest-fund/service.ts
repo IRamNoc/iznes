@@ -8,12 +8,14 @@ import {
     immutableHelper,
     ConditionType,
     ArrangementActionType,
-    commonHelper,
     SagaHelper
 } from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
+import {setLastCreatedContractDetail} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
+import {ArrangementType} from '../../ofi-req-services/ofi-fund-invest/model';
 import _ from 'lodash';
 
 @Injectable()
@@ -26,6 +28,7 @@ export class InvestFundFormService {
                 private _moneyValuePipe: MoneyValuePipe,
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
+                private _ofiFundInvestService: OfiFundInvestService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.divider = _appConfig.numberDivider;
     }
@@ -53,6 +56,7 @@ export class InvestFundFormService {
         const quantityParse = this._numberConverterService.toBlockchain(quantity);
         const grossAmountParse = this._numberConverterService.toBlockchain(grossAmount);
         const platFormFeeParse = this._numberConverterService.toBlockchain(grossAmount);
+        const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
 
         authoriseRef = 'Confirm receipt of payment';
 
@@ -84,12 +88,62 @@ export class InvestFundFormService {
             contractData: contractData.contractData
         });
 
-
         // Send a saga action.
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipes,
             (data) => {
-                this.showSuccessResponse(data);
+                // show success walletnode request message
+                this.showSuccessResponse();
+
+                // Save last created contact along with meta data for creating arrangement.
+                const userId = immutableHelper.get(formValue, 'userId', 0);
+                const walletCommuPub = immutableHelper.get(formValue, 'walletCommuPub', '');
+                const creatorId = walletId;
+                const type = {
+                    subscribe: ArrangementType.SUBSCRIBE,
+                    redeem: ArrangementType.REDEEM
+                }[actionType];
+
+                const metaData = {
+                    currency: shareMetaData.currency,
+                    units: quantityParse,
+                    price: navParse,
+                    consideration: grossAmountParse,
+                    ref: formValue.comment,
+                    assetISIN: shareMetaData.isin,
+                    registrar: shareMetaData.registrar,
+                    feePercent: shareMetaData.feePercent,
+                    investorId: userId,
+                    investorWalletId: walletId,
+                    investorWalletName: walletName,
+                    investorWalletCommuPub: walletCommuPub,
+                    investorWalletAddr: investorAddress,
+                    investorWalletBankID: 0,
+                    investorWalletBankCommuPub: ''
+                };
+
+                const parties = {
+                    [issuerAddress]: {
+                        canRead: 1,
+                        canWrite: 1,
+                        canDelete: 1,
+                        partyType: 2
+                    }
+                };
+
+                this._ngRedux.dispatch(setLastCreatedContractDetail(data, {
+                    actionType: 'ofi-arrangement',
+                    arrangementData: {
+                        creatorId,
+                        type,
+                        metaData: JSON.stringify(metaData),
+                        asset: asset,
+                        parties,
+                        cutoff: shareMetaData.cutoffDateTimeStr,
+                        delivery: shareMetaData.settlementDateTimeStr,
+                        valuation: shareMetaData.valuationDateTimeStr
+                    }
+                }));
             },
             (data) => {
                 this.showErrorResponse(data);
@@ -265,18 +319,33 @@ export class InvestFundFormService {
                     `);
     }
 
-    showSuccessResponse(message) {
+    showSuccessResponse() {
 
-        this._alertsService.create('success', `
+        this._alertsService.create('waiting', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
-                                <td class="text-center text-success">${message}</td>
+                                <td class="text-left text-success" width="500px">
+                                <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
+                                &nbsp;Waiting order to be put in blockchain ledger</div></td>
                             </tr>
                         </tbody>
                     </table>
                     `);
     }
+
+    showInvalidForm(message) {
+        this._alertsService.create('error', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
+    }
+
 }
 

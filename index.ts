@@ -2,11 +2,18 @@ export {OfiFundInvestModule} from './ofi-fund-invest/module';
 export {OfiInvestorFundListComponent} from './ofi-fund-invest/investor-fund-list/component';
 
 /**
+ *
+ */
+export {OfiNavModule} from './ofi-nav/module';
+export {OfiManageOfiNavComponent} from './ofi-nav/ofi-mangage-nav-list/component';
+
+/**
  * Services
  */
 export {OfiFundInvestService} from './ofi-req-services/ofi-fund-invest/service';
 export {OfiMemberNodeChannelService} from './ofi-req-services/ofi-member-node-channel/service';
-export {OfiRequestServicesModule} from './ofi-req-services/module';
+export {OfiRequestServicesModule, ArrangementType} from './ofi-req-services/module';
+export {OfiPostTxService} from './ofi-post-tx/service';
 
 /**
  * Store

@@ -32,9 +32,6 @@ export class OfiFundService {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
-    myAccountId(accountId) {
-        this.accountId  = accountId;
-    }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
@@ -58,6 +55,10 @@ export class OfiFundService {
             asyncTaskPipe,
             {},
         ));
+    }
+
+    myAccountId(accountId) {
+        this.accountId = accountId;
     }
 
     requestFundList(): any {
