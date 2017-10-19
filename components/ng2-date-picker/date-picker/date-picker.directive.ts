@@ -36,16 +36,25 @@ export class DatePickerDirective implements OnInit {
         return this._config;
     }
 
-    @Input('dpDayPicker') set config(config: IDatePickerDirectiveConfig) {
+    @Input('dpDayPicker')
+    set config(config: IDatePickerDirectiveConfig) {
         this._config = this.service.getConfig(config, this.viewContainerRef.element, this.attachTo);
         this.updateDatepickerConfig();
+    }
+
+    @Input('disabled')
+    set disabled(state) {
+        if (state) {
+            this.el.nativeElement.setAttribute('disabled', 'disabled');
+        }
     }
 
     get attachTo(): ElementRef | string {
         return this._attachTo;
     }
 
-    @Input() set attachTo(attachTo: ElementRef | string) {
+    @Input()
+    set attachTo(attachTo: ElementRef | string) {
         this._attachTo = attachTo;
         this._config = this.service.getConfig(this.config, this.viewContainerRef.element, this.attachTo);
         this.updateDatepickerConfig();
@@ -55,7 +64,8 @@ export class DatePickerDirective implements OnInit {
         return this._theme;
     }
 
-    @Input() set theme(theme: string) {
+    @Input()
+    set theme(theme: string) {
         this._theme = theme;
         if (this.datePicker) {
             this.datePicker.theme = theme;
@@ -66,14 +76,16 @@ export class DatePickerDirective implements OnInit {
         return this._mode;
     }
 
-    @Input() set mode(mode: CalendarMode) {
+    @Input()
+    set mode(mode: CalendarMode) {
         this._mode = mode;
         if (this.datePicker) {
             this.datePicker.mode = mode;
         }
     }
 
-    @Input() set minDate(minDate: Moment | string) {
+    @Input()
+    set minDate(minDate: Moment | string) {
         this._minDate = minDate;
         if (this.datePicker) {
             this.datePicker.minDate = minDate;
@@ -85,7 +97,8 @@ export class DatePickerDirective implements OnInit {
         return this._minDate;
     }
 
-    @Input() set maxDate(maxDate: Moment | string) {
+    @Input()
+    set maxDate(maxDate: Moment | string) {
         this._maxDate = maxDate;
         if (this.datePicker) {
             this.datePicker.maxDate = maxDate;
@@ -97,7 +110,8 @@ export class DatePickerDirective implements OnInit {
         return this._maxDate;
     }
 
-    @Input() set minTime(minTime: Moment | string) {
+    @Input()
+    set minTime(minTime: Moment | string) {
         this._minTime = minTime;
         if (this.datePicker) {
             this.datePicker.minTime = minTime;
@@ -109,7 +123,8 @@ export class DatePickerDirective implements OnInit {
         return this._minTime;
     }
 
-    @Input() set maxTime(maxTime: Moment | string) {
+    @Input()
+    set maxTime(maxTime: Moment | string) {
         this._maxTime = maxTime;
         if (this.datePicker) {
             this.datePicker.maxTime = maxTime;
@@ -127,7 +142,8 @@ export class DatePickerDirective implements OnInit {
     public datePicker: DatePickerComponent;
     public api: IDpDayPickerApi;
 
-    constructor(public viewContainerRef: ViewContainerRef,
+    constructor(private el: ElementRef,
+                public viewContainerRef: ViewContainerRef,
                 public componentFactoryResolver: ComponentFactoryResolver,
                 @Optional() public formControl: NgControl,
                 public service: DatePickerDirectiveService) {
