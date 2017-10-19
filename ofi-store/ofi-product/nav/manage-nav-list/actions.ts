@@ -26,9 +26,11 @@ export const clearRequestedManageNavList = kAction(CLEAR_REQUESTED_MANAGE_NAV_LI
  *
  */
 export const OFI_SET_CURRENT_MANAGE_NAV_REQUEST = `${name}/OFI_SET_CURRENT_MANAGE_NAV_REQUEST`;
+
 interface OfiSetCurrentManageNavRequest extends Action {
     currentRequest: CurrentRequest;
 }
+
 export const ofiSetCurrentManageNavRequest: ActionCreator<OfiSetCurrentManageNavRequest> = (currentRequest) => ({
     type: OFI_SET_CURRENT_MANAGE_NAV_REQUEST,
     currentRequest

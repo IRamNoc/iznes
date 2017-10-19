@@ -6,7 +6,7 @@ import _ from 'lodash';
 /* Actions. */
 import {
     OFI_SET_COUPON_LIST,
-    ofiUpdateNavItem
+    clearRequestedManageNavList
 } from '../../ofi-store';
 
 /* Service class. */
@@ -63,18 +63,14 @@ export class OfiMemberNodeChannelService {
 
             case 'updatenav':
 
-                handleUpdateNav(this.ngRedux, data);
+                handleUpdateNav(this.ngRedux);
                 break;
         }
     }
 
 }
 
-function handleUpdateNav(ngRedux, data) {
-    const fundName = _.get(data, 'Data[0].fundName', '');
-    const navDate = _.get(data, 'Data[0].navDate', '');
-    const price = _.get(data, 'Data[0].price', '');
-    const status = _.get(data, 'Data[0].status', '');
-
-    ngRedux.dispatch(ofiUpdateNavItem(fundName, navDate, price, status));
+function handleUpdateNav(ngRedux) {
+    console.log(clearRequestedManageNavList());
+    ngRedux.dispatch(clearRequestedManageNavList());
 }
