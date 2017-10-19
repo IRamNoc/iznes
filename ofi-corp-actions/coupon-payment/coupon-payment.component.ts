@@ -244,7 +244,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      */
     public handleViewCoupon (couponId: number):void {
         /* Let's firstly find the coupon in the list. */
-        let coupon;
+        let coupon, i = 0, foundActive = false;
         for (coupon of this.couponList) {
             if (coupon.couponID == couponId) {
                 /* Breaking here leaves coupon set
@@ -257,6 +257,28 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         /* Check if we found the coupon. */
         if ( ! coupon ) {
             this.showError('Could not show that coupon.');
+            return;
+        }
+
+        /* Now, let's check if we already have a tab open for this coupon. */
+        this.tabsControl.map((tab) => {
+            if (tab.couponId == coupon.couponID) {
+                /* Set flag... */
+                foundActive = true;
+
+                /* ...set tab active... */
+                this.setTabActive(i);
+
+                /* ...and gotta call this again. */
+                this.changeDetectorRef.detectChanges();
+            }
+
+            /* Inc. */
+            i++;
+        })
+
+        /* If we found an active tab, no need to do anymore... */
+        if (foundActive) {
             return;
         }
 
@@ -289,7 +311,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             "formControl": new FormGroup({
                 'couponNature': new FormControl({value: 'Coupon Payment', disabled: true}),
                 'couponDrafter': new FormControl({value: this.myDetails.username, disabled: true}),
-                'couponFundShareName': new FormControl({value: [ {id: 0, text: coupon.fund} ], disabled: true}),
+                'couponFundShareName': new FormControl({value: [{id: 0, text: coupon.fund}], disabled: true}),
                 'couponIsin': new FormControl({value: coupon.fundIsin, disabled: true}),
                 'couponAmountByShare': new FormControl({value: coupon.amount, disabled: true}),
                 'couponFundShareUnits': new FormControl({value: (coupon.amountGross / coupon.amount), disabled: true}),
@@ -306,6 +328,9 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Now make this tab active. */
         this.setTabActive(this.tabsControl.length - 1);
+
+        /* Gotta call this again... */
+        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
@@ -357,6 +382,12 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
                 updateCoupon.status = 0;
                 successMessage = "Successfully cancelled this coupon payment.";
                 errorMessage = "Failed to cancel this coupon payment. Try again later.";
+                break;
+
+            case 'confirm-payment':
+                updateCoupon.status = 6;
+                successMessage = "Successfully confirmed off platform payment for this coupon payment.";
+                errorMessage = "Failed to confirm off platform payement for this coupon payment. Try again later.";
                 break;
         }
 
