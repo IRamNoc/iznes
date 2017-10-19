@@ -2,15 +2,9 @@ package src.RESTAPITests.Member.Creation;
 
 import SETLAPIHelpers.Member;
 
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import SETLAPIHelpers.WebSocketAPI.MemberHelper;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MessageFactory;
-import io.setl.wsclient.shared.Connection;
-import io.setl.wsclient.shared.Message;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.junit.Before;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
