@@ -33,7 +33,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: 108;
+            z-index: 2108;
         }
 
         .jaspero__overlay {
@@ -46,7 +46,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             opacity: 0;
             transition: all .5s cubic-bezier(.35, 0, .25, 1);
             position: fixed;
-            z-index: 109;
+            z-index: 2109;
         }
 
         .jaspero__dialog {
@@ -59,7 +59,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             flex-flow: column;
             overflow: hidden;
             position: relative;
-            z-index: 110;
+            z-index: 2110;
             outline: none;
             border-radius: 2px;
             opacity: 0;

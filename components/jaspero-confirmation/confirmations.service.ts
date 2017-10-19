@@ -8,7 +8,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
 export class ConfirmationService {
     confirmation$ = new Subject<ConfirmEmit>();
     defaultConfirmationSettings: ConfirmSettings = {
-        declineText: ''
+        declineText: 'No'
     };
 
     create(title: string, message: string, override: ConfirmSettings = this.defaultConfirmationSettings) {

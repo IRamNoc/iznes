@@ -26,7 +26,8 @@ export class ConfirmationsComponent implements OnInit, OnDestroy {
 
     @ViewChild('comp', {read: ViewContainerRef}) compViewContainerRef: ViewContainerRef;
 
-    @Input() set defaultSettings(settings: ConfirmSettings) {
+    @Input()
+    set defaultSettings(settings: ConfirmSettings) {
         this.settings = {...this.settings, ...settings};
     }
 
