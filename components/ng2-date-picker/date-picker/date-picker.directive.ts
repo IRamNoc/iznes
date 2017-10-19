@@ -46,6 +46,8 @@ export class DatePickerDirective implements OnInit {
     set disabled(state) {
         if (state) {
             this.el.nativeElement.setAttribute('disabled', 'disabled');
+        } else {
+            this.el.nativeElement.removeAttribute('disabled');
         }
     }
 
