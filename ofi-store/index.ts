@@ -31,6 +31,7 @@ import {
     SET_MANAGEMENT_COMPANY_LIST,
     SET_SICAV_LIST,
     SET_FUND_LIST,
+
 } from './ofi-product';
 
 export {
@@ -67,6 +68,14 @@ export {
     SET_SICAV_LIST,
     SET_FUND_LIST,
 };
+
+export {
+    SET_MANAGE_NAV_LIST,
+    setRequestedManageNavList,
+    clearRequestedManageNavList,
+    ofiSetCurrentManageNavRequest,
+    getOfiManageNavListCurrentRequest
+} from './ofi-product';
 
 export interface OfiState {
     ofiFundInvest: OfiFundInvestState;

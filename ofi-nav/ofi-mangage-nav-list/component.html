@@ -48,7 +48,7 @@
                                     [items]="assetList"
                                     formControlName="fundName"
                                     [disabled]="searchBy === 'byDate'"
-                                    (selected)="submitSearch()"
+                                    (selected)="fundChange($event)"
                                 ></ng-select>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                                     [dpDayPicker]="configDate" placeholder="Choose a date"
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     [disabled]="searchBy === 'byFund'"
-                                    (selectedDate)="submitSearch()"
+                                    (ngModelChange)="dateChange($event)"
                                 />
                             </div>
                         </div>
@@ -109,7 +109,19 @@
 
                     <clr-dg-cell>
                         <span *ngIf="!nav.editing">
-                        {{nav.nav}}
+                            <span [ngSwitch]="nav.status">
+                                <span *ngSwitchCase="-1">
+                                    <span class="text-success">{{nav.nav}}</span>
+                                </span>
+                                <span *ngSwitchCase="1">
+                                    <span class="text-warning">{{nav.nav}}</span>
+                                </span>
+
+                                <span *ngSwitchCase="2">
+                                    <span class="text-warning">Pending</span>
+                                </span>
+                            </span>
+
                         </span>
                         <div *ngIf="nav.editing">
 
@@ -123,7 +135,18 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{nav.status}}
+                            <span [ngSwitch]="nav.status">
+                                <span *ngSwitchCase="-1">
+                                    <span class="label label-success">Final</span>
+                                </span>
+                                <span *ngSwitchCase="1">
+                                    <span class="label label-warning">Estimated</span>
+                                </span>
+
+                                <span *ngSwitchCase="2">
+                                    <span class="label label-warning">Pending</span>
+                                </span>
+                            </span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
