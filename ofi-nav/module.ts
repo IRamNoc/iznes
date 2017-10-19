@@ -6,7 +6,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // Local components
 import {OfiManageOfiNavComponent} from './ofi-mangage-nav-list/component';
-import {DpDatePickerModule, SelectModule} from '@setl/utils';
+import {DpDatePickerModule, SelectModule, SetlPipesModule} from '@setl/utils';
+
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {DpDatePickerModule, SelectModule} from '@setl/utils';
         ClarityModule,
         CommonModule,
         DpDatePickerModule,
-        SelectModule
+        SelectModule,
+        SetlPipesModule
     ],
     exports: [OfiManageOfiNavComponent],
     declarations: [
