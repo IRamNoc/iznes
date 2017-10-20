@@ -9,7 +9,6 @@ import {Component, AfterViewInit} from '@angular/core';
 import {fromJS} from 'immutable';
 
 import {FileDropComponent} from '@setl/core-filedrop';
-
 import {FormGroup, FormControl} from '@angular/forms';
 
 import {MultilingualService} from '@setl/multilingual';
