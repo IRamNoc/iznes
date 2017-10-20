@@ -153,14 +153,14 @@ export class SetlMyAccountComponent {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.minLength(4)
+                    Validators.minLength(6)
                 ])
             ),
             'passwordConfirm': new FormControl(
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.minLength(4)
+                    Validators.minLength(6)
                 ])
             )
         }, this.passwordValidator);
