@@ -6,6 +6,7 @@ import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
 import {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 import {OfiPostTxService} from './ofi-post-tx/service';
 import {OfiNavModule} from './ofi-nav/module';
+import {OfiReportModule} from './ofi-report-module';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import {OfiNavModule} from './ofi-nav/module';
         OfiCorpActionsModule,
         OfiRequestServicesModule,
         OfiOrdersModule,
-        OfiNavModule
+        OfiNavModule,
+        OfiReportModule
     ],
     exports: [
         OfiFundInvestModule,
