@@ -232,7 +232,6 @@ export class DropHandler {
         for (const file of files) {
             /* ...and push. */
             if (!this.multiple && this.uploadedFiles.length > 0) {
-                console.log('Uploaded files:' + this.uploadedFiles.length);
                 continue;
             }
             this.uploadedFiles.push(file);
@@ -417,7 +416,6 @@ export class DropHandler {
                 let j = 0;
                 for ( i = 0; i < files.length; i++ ) {
                     /* ...continue if no file... */
-                    console.log('silentEncodedFiles : ', this.silentEncodedFiles);
                     if ( ! files[i] || files[i].status === 'uploaded-file') {
                         continue;
                     }
@@ -539,5 +537,4 @@ export class DropHandler {
               </table>
           `);
     }
-
 }
