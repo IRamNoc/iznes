@@ -1,3 +1,2 @@
-
-/.gradle/
 /out/test/classes/
+.gradle/

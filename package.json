@@ -11,7 +11,8 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build-prod": "cd src; sass  styles.scss:styles.css; cd ../; ng build --prod",
-        "tar": "tar -cvzf opencsd-front-end-build.tgz dist"
+        "tar": "tar -cvzf opencsd-front-end-build.tgz dist",
+        "start-no-reload": "ng serve --live-reload false --sourcemap --extractCss"
     },
     "private": true,
     "dependencies": {
@@ -61,6 +62,7 @@
         "ng2-date-picker": "^2.4.0",
         "ng2-gravatar-directive": "^2.0.1",
         "ng2-select": "^1.2.0",
+        "ngx-pagination": "^3.0.1",
         "ngx-quill-editor": "^2.2.1",
         "node-sass": "^4.5.3",
         "redux": "^3.7.2",

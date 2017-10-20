@@ -83,6 +83,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
         Thread.sleep(500);
         clickLink("testlink1");
     }
+    @Ignore
     @Test
     public void shouldNavigateToChainAdminTabMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);

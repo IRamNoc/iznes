@@ -1,6 +1,6 @@
 /* Fix for ng2-select dropdowns. */
 .ui-select-toggle {
-    width: 300px !important;
+    width: 360px !important;
     margin-right: 0;
     height: 35px;
     border: 1px solid #b9b9b9 !important;
@@ -8,7 +8,11 @@
 }
 
 .ui-select-search {
-    width: 300px !important;
+    width: 360px !important;
+}
+
+form .form-group div.ui-select-container {
+    width: inherit;
 }
 
 .ui-select-toggle .ui-select-placeholder,
@@ -147,8 +151,9 @@
 }
 
 ng-select.fluid-width {
-    .ui-select-toggle, .ui-select-search {
+    .ui-select-toggle, .ui-select-search, .ui-select-choices {
         width: 100% !important;
         max-width: 100% !important;
     }
 }
+
