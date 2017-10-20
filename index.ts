@@ -40,6 +40,11 @@ export {ManageOrdersComponent} from './ofi-orders/manage-orders/manage-orders.co
 export {MyOrdersComponent} from './ofi-orders/my-orders/my-orders.component';
 
 /**
+ * Report module
+ */
+export {OfiPnlReportComponent, OfiTaxReportComponent, OfiReportModule} from './ofi-report-module';
+
+/**
  * Ofi main module
  */
 export {OfiMainModule} from './module';

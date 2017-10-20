@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
@@ -23,7 +23,14 @@ import {
     clearRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, immutableHelper, mDateHelper} from '@setl/utils';
+import {
+    SagaHelper,
+    immutableHelper,
+    mDateHelper,
+    MoneyValuePipe,
+    NumberConverterService,
+    ConfirmationService
+} from '@setl/utils';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {NavStatus} from '../../ofi-req-services/ofi-product/nav/model';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
@@ -37,13 +44,15 @@ import * as moment from 'moment';
 @Component({
     selector: 'app-nav',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss'],
+    styleUrls: ['./component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     assetListObj: any;
     assetList: Array<any>;
+
+    editing: boolean;
 
     navList: Array<any>;
     allowSearchTypes: Array<any> = [
@@ -79,6 +88,12 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     selectedFund: FormControl;
     navDate: FormControl;
 
+    // nav edit form
+    navForm: FormGroup;
+    navFormFundName: string;
+    navFormDate: string;
+    navFormPrice: FormControl;
+
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'requested']) requestedUserIssuedAssetsOb;
@@ -86,10 +101,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'requested']) navRequestedOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
 
+    @ViewChild('myDataGrid') myDataGrid;
+
     constructor(private _ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private _ofiNavService: OfiNavService,
                 private _changeDetectorRef: ChangeDetectorRef,
+                private _moneyValuePipe: MoneyValuePipe,
+                private _confirmationService: ConfirmationService,
+                private _numberConverterService: NumberConverterService,
                 private _ofiCorpActionService: OfiCorpActionService) {
     }
 
@@ -109,6 +129,9 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             }
         };
 
+        // if editing price or not, if yes, show modal.
+        this.editing = false;
+
         // search formGroup
         this.searchBy = 'byDate';
         this.selectedFund = new FormControl([]);
@@ -122,6 +145,14 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         });
 
         this.connectedWalletId = 0;
+
+        // nav form
+        this.navFormPrice = new FormControl('');
+        this.navForm = new FormGroup({
+            nav: this.navFormPrice
+        });
+        this.navFormFundName = '';
+        this.navFormDate = '';
 
         // Reduce observable subscription
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
@@ -244,14 +275,17 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'YYYY-MM-DD');
             const navDateParsed = mDateHelper.unixTimestampToDateStr(navDateNum, 'DD/MM/YYYY');
             const thisFundName = item.get('fundName', '');
-            const fundIsin = _.get(this.assetListObj, [thisFundName, 'isin'], '');
+            const fundIsin = this.getFundIsin(thisFundName);
+            const nav = item.get('price', 0);
+            const navParse = this._numberConverterService.toFrontEnd(nav);
 
             return {
                 fundName: thisFundName,
                 fundIsin,
                 date: navDateParsed,
-                nav: item.get('price', 0),
-                status: item.get('status', 0)
+                nav: navParse,
+                status: item.get('status', 0),
+                editing: false
             };
         });
     }
@@ -292,7 +326,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
         if (hasToday.length === 0) {
             const todayStr = moment().format('DD/MM/YYYY');
-            const fundIsin = _.get(this.assetListObj, [fundName, 'isin'], '');
+            const fundIsin = this.getFundIsin(fundName);
             return [{
                 fundName,
                 fundIsin,
@@ -302,6 +336,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             }];
         }
         return [];
+    }
+
+    getFundIsin(fundName) {
+        const matchFund = immutableHelper.filter(this.assetListObj, (asset) => {
+            const assetName = asset.get('asset', '');
+            return fundName === assetName;
+        });
+
+        return matchFund[0]['isin'];
     }
 
     selectSearchBy(searchBy) {
@@ -353,61 +396,90 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Handle Add new profile click.
+     * Handle edit/cancel button is clicked.
      *
+     * @param fundName
+     * @param date
+     * @param editing
      */
-    handleAddProfile(): void {
+    toggleEdit(fundName, date, editing): void {
+        this.navList = immutableHelper.map(this.navList, (navEntry) => {
+            if (navEntry.get('fundName', '') === fundName &&
+                navEntry.get('date', '') === date) {
+                return navEntry.set('editing', editing);
+            }
+            return navEntry;
 
+        });
+
+        this._changeDetectorRef.detectChanges();
+        this.myDataGrid.resize();
+        this._changeDetectorRef.markForCheck();
     }
 
-    handleEditSubPortfolio(address): void {
+    showEdit(fundName, price, date) {
+        this.editing = true;
+        this.navFormFundName = fundName;
+        this.navFormDate = date;
+        if (!price) {
+            price = '0';
+        }
+        this.navFormPrice.setValue(this._moneyValuePipe.transform(price));
+        this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Handle edit button is clicked.
-     * @param index
-     */
-    handleEdit(address): void {
-        // this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
-        //     if (addressEntry.get('address', '') === address) {
-        //         return addressEntry.set('editing', true);
-        //     }
-        //     return addressEntry;
-        //
-        // });
+    closeEdit() {
+        this.editing = false;
+        this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Handle cancel button is clicked.
-     * @param address
-     */
-    handleCancelEdit(address): void {
-        // this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
-        //     if (addressEntry.get('address', '') === address) {
-        //         return addressEntry.set('editing', false);
-        //     }
-        //     return addressEntry;
-        //
-        // });
+    handleUpdateNav(status) {
+        const priceParse = this._moneyValuePipe.parse(this.navFormPrice.value);
+        const dateParseNum = mDateHelper.dateStrToUnixTimestamp(this.navFormDate, 'DD/MM/YYYY');
+        const dateParse = mDateHelper.unixTimestampToDateStr(dateParseNum, 'YYYY-MM-DD');
+        if (status === -1) {
+            // show confirmation.
+            this._confirmationService.create(
+                '<span>Are you sure?</span>',
+                '<span>You cannot change the price again on the selected date if you continue.</span>'
+            ).subscribe((ans) => {
+                const isConfirm = _.get(ans, 'resolved', false);
+                if (isConfirm) {
+                    this.sendUpdateNav(this.navFormFundName, dateParse, priceParse, status);
+                } else {
+                    return false;
+                }
+            });
+        } else {
+            this.sendUpdateNav(this.navFormFundName, dateParse, priceParse, status);
+        }
     }
 
-    handleUpdateLabel(value, address) {
 
-        // const asyncTaskPipe = this._myWalletService.updateWalletLabel({
-        //     walletId: this.connectedWalletId,
-        //     option: address,
-        //     label: value
-        // });
-        // console.log(address);
-        //
-        // this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-        //     (data) => {
-        //         this.showSuccessResponse('Portfolio name updated');
-        //         this.ngRedux.dispatch(clearRequestedWalletLabel());
-        //     }, (data) => {
-        //         this.showErrorResponse(data);
-        //     }));
+    sendUpdateNav(fundName, fundDate, price, status) {
+        const priceParse = this._numberConverterService.toBlockchain(price);
 
+        if (priceParse > 0) {
+            const asyncTaskPipe = this._ofiNavService.updateNav({
+                fundName,
+                fundDate,
+                price: priceParse,
+                priceStatus: status
+            });
+
+            this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    this.showSuccessResponse('Nav is successfully updated.');
+                },
+                (data) => {
+                    this.showErrorResponse(data);
+                }
+            ));
+        } else {
+            this.showInvalidForm('NAV must be greater than 0');
+            return false;
+        }
     }
 
     showErrorResponse(response) {
@@ -440,4 +512,18 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
                     `);
     }
 
+    showInvalidForm(message) {
+        this.alertsService.create('error', `
+                    <table class="table grid">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${message}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `);
+    }
+
 }
+

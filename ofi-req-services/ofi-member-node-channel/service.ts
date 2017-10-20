@@ -6,7 +6,7 @@ import _ from 'lodash';
 /* Actions. */
 import {
     OFI_SET_COUPON_LIST,
-
+    clearRequestedManageNavList
 } from '../../ofi-store';
 
 /* Service class. */
@@ -14,7 +14,7 @@ import {
 export class OfiMemberNodeChannelService {
 
     /* Constructor. */
-    constructor (private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>) {
         /* Stub. */
     }
 
@@ -42,12 +42,12 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: OFI_SET_COUPON_LIST,
-                        payload: [ null, data, null ]
+                        payload: [null, data, null]
                     }
                 );
 
                 /* Break. */
-        		break;
+                break;
 
             case 'newmanagementcompany':
                 console.log(' | Update managment company list: ', data);
@@ -60,7 +60,17 @@ export class OfiMemberNodeChannelService {
 
                 /* Break. */
                 break;
+
+            case 'updatenav':
+
+                handleUpdateNav(this.ngRedux);
+                break;
         }
     }
 
+}
+
+function handleUpdateNav(ngRedux) {
+    console.log(clearRequestedManageNavList());
+    ngRedux.dispatch(clearRequestedManageNavList());
 }

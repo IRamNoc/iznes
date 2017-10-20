@@ -74,7 +74,7 @@
                 </div>
             </form>
 
-            <clr-datagrid>
+            <clr-datagrid #myDataGrid>
                 <clr-dg-column>Actions</clr-dg-column>
                 <clr-dg-column>Fund name</clr-dg-column>
                 <clr-dg-column>Fund ISIN</clr-dg-column>
@@ -84,15 +84,9 @@
 
                 <clr-dg-row *clrDgItems="let nav of navList;">
                     <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button *ngIf="!nav.editing" (click)="handleEdit()" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> Edit
-                            </button>
-
-                            <button *ngIf="nav.editing" (click)="handleCancelEdit()" class="btn">
-                                <i class="fa fa-times"></i> Cancel
-                            </button>
-                        </div>
+                        <button class="btn" (click)="showEdit(nav.fundName, nav.nav, nav.date)" [disabled]="nav.status === -1">
+                            <i class="fa fa-pencil-square-o"></i> Edit
+                        </button>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -108,13 +102,13 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        <span *ngIf="!nav.editing">
+                        <span>
                             <span [ngSwitch]="nav.status">
                                 <span *ngSwitchCase="-1">
-                                    <span class="text-success">{{nav.nav}}</span>
+                                    <span class="text-success">€ {{nav.nav | moneyValue}}</span>
                                 </span>
                                 <span *ngSwitchCase="1">
-                                    <span class="text-warning">{{nav.nav}}</span>
+                                    <span class="text-warning">€ {{nav.nav | moneyValue}}</span>
                                 </span>
 
                                 <span *ngSwitchCase="2">
@@ -123,15 +117,6 @@
                             </span>
 
                         </span>
-                        <div *ngIf="nav.editing">
-
-                            <form (submit)="handleUpdateLabel(input.value, address.address)" style="padding: 0">
-                                <input type="text" [value]="address.label" #input style="width: inherit">
-                                <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
-                                   type="submit"
-                                   (click)="handleUpdateLabel(input.value, address.address)"></i>
-                            </form>
-                        </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -159,4 +144,49 @@
         </div>
     </ng-template>
 
+
 </div>
+
+<clr-modal [(clrModalOpen)]="editing">
+    <div class="modal-title">
+        <i class="fa fa-industry modal-icon" style="color:#1AB399"></i>
+        <h4 class="modal-title-text"><span class="ml_translated" mltag="txt_enternav">Enter NAV</span></h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="navForm">
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label"><span class="ml_translated" mltag="txt_fundname">Fund name</span></label>
+                        <div>{{navFormFundName}}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label"><span class="ml_translated" mltag="txt_date">Date</span></label>
+                        <div>{{navFormDate}}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label"><span class="ml_translated" mltag="txt_price">NAV</span> (€)</label>
+                        <div>
+                            <input formControlName="nav" type="text" class="form-control" value="" appNumberFormatter="2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning price-update" data-action="estimate">
+            <span class="ml_translated" mltag="txt_estimate" (click)="handleUpdateNav(1)">Estimate</span>
+        </button>
+        <button type="button" class="btn btn-primary price-update" data-action="final" (click)="handleUpdateNav(-1)">
+            <span class="ml_translated" mltag="txt_final">Final</span></button>
+        <button type="button" class="btn btn-outline" (click)="editing = false">Cancel</button>
+    </div>
+</clr-modal>
