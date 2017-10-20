@@ -24,7 +24,7 @@ export class NumberFormatterDirective implements OnInit {
 
     @HostListener('blur', ['$event.target.value'])
     onBlur(value) {
-        this.el.value = this._moneyValuePipe.transform(value, this.fractionSize);
+        this.el.value = this._moneyValuePipe.transform(value.toString(), this.fractionSize);
     }
 
 }
