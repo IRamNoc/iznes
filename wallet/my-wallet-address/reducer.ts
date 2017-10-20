@@ -110,8 +110,10 @@ function handleSetRequestedWalletAddresses(state) {
  */
 function handleClearRequestedWalletAddresses(state) {
     const requestedAddressList = false;
+    const addressList = [];
 
     return Object.assign({}, state, {
+        addressList,
         requestedAddressList
     });
 }
