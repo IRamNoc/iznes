@@ -90,7 +90,7 @@ export function memberSocketServiceFactory() {
         environment.MEMBER_NODE_CONNECTION.host,
         environment.MEMBER_NODE_CONNECTION.port,
         environment.MEMBER_NODE_CONNECTION.path
-    );
+    )
 }
 
 @NgModule({
