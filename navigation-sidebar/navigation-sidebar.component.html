@@ -223,6 +223,22 @@
         <i class="fa fa-university"></i> List of funds
     </a>
 
+    <section class="nav-group collapsible">
+        <label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i> Reports</label>
+        <ul class="nav-list">
+            <li>
+                <a [routerLink]="['/reports-section/tax']" [ngClass]="{active: activeRoute('/reports-section/tax')}" class="nav-link">
+                    <i class="fa fa-eur" aria-hidden="true"></i> Tax Report
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/reports-section/pnl']" [ngClass]="{active: activeRoute('/reports-section/pnl')}" class="nav-link">
+                    <i class="fa fa-list-alt"></i> P & L
+                </a>
+            </li>
+        </ul>
+    </section>
+
     <!-- <section class="nav-group">
         <input id="tabexample2" type="checkbox">
         <label for="tabexample2">Default Nav Element</label>
