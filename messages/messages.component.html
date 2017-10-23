@@ -15,7 +15,7 @@
                     <clr-icon shape="edit" size="24"></clr-icon>
                 </div>
                 <div class="tile-text">
-                    <h4>Compose</h4>
+                    <h4 mltag="txt_compose">Compose</h4>
                 </div>
             </div>
 
@@ -39,13 +39,13 @@
 
             <div *ngIf="composeSelected" class="message-compose">
                 <div class="message-options">
-                    <h2>Compose New Message</h2>
+                    <h2 mltag="txt_composemessage">Compose Message</h2>
                 </div>
                 <form [formGroup]="messageComposeForm" (ngSubmit)="sendMessage()">
                     <section class="">
                         <div class="row">
                             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
-                                <label><b>To</b></label>
+                                <label><b mltag="txt_to">To</b></label>
                             </div>
                             <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12">
                                 <div class="select form-control">
@@ -56,13 +56,14 @@
                                                (data)="refreshValue($event)"
                                                (selected)="selected($event)"
                                                (removed)="removed($event)"
+                                               mltag="txt_selectrecipients"
                                                placeholder="Select Recipients"></ng-select>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
-                                <label for="gForm_1">Subject</label>
+                                <label for="gForm_1" mltag="txt_subject">Subject</label>
                             </div>
                             <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
                                 <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" id="gForm_1" placeholder="" size="45">
@@ -84,11 +85,11 @@
                     <div class="message-compose-buttons">
                         <button class="btn btn-danger-outline" (click)="closeAndResetComposed()">
                             <clr-icon shape="times"></clr-icon>
-                            Cancel
+                            <span mltag="txt_cancel">Cancel</span>
                         </button>
                         <button class="btn btn-primary">
                             <clr-icon shape="plane"></clr-icon>
-                            Send
+                            <span mltag="txt_send">Send</span>
                         </button>
 
                     </div>
@@ -104,7 +105,7 @@
                             <h2>{{currentBoxName}} ({{currentBoxCount || 0}})</h2>
                             <button class="btn btn-outline btn-sm" (click)="refreshMailbox()">
                                 <clr-icon shape="refresh"></clr-icon>
-                                Refresh
+                                <span mltag="txt_refresh">Refresh</span>
                             </button>
                             <!--<button class="btn btn-success-outline btn-sm">-->
                             <!--<clr-icon shape="eye"></clr-icon>-->
@@ -112,7 +113,7 @@
                             <!--</button>-->
                             <button class="btn btn-danger-outline btn-sm" (click)="deleteMessage()">
                                 <clr-icon shape="trash"></clr-icon>
-                                Delete
+                               <span mltag="txt_delete">Delete</span>
                             </button>
                         </div>
 
@@ -144,7 +145,7 @@
                     <!-- actual individual message area -->
                     <div class="col-sm-7 message-body" *ngIf="currentMessage">
                         <div class="message-title">
-                            <span>from</span>
+                            <span mltag="txt_from">From</span>
                             <b class="message-from">
                                 <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
                                 {{currentMessage.senderWalletName}}
