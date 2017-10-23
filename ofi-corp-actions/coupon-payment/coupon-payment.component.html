@@ -66,31 +66,29 @@
                             <span mltag="txt_waitingapproval">Waiting approval</span>
                         </span>
 
-
                         <span *ngIf="coupon.status == '2'" class="label label-warning">
                             <span mltag="txt_waitingoperation">Waiting operation</span>
                         </span>
-
 
                         <span *ngIf="coupon.status == '3'" class="label label-warning">
                             <span mltag="txt_waitingoperation">Waiting operation</span>
                         </span>
 
-
                         <span *ngIf="coupon.status == '4'" class="label label-warning">
                             <span mltag="txt_waitingvaluation">Waiting valuation</span>
                         </span>
-
 
                         <span *ngIf="coupon.status == '5'" class="label label-info">
                             <span mltag="txt_waitingsettlement">Waiting settlement</span>
                         </span>
 
+                        <span *ngIf="coupon.status == '6'" class="label label-info">
+                            <span mltag="txt_waitingpayment">Waiting for payment</span>
+                        </span>
 
                         <span *ngIf="coupon.status == '-1'" class="label label-success">
                             <span mltag="txt_settled">Settled</span>
                         </span>
-
 
                         <span *ngIf="coupon.status == '0'" class="label label-danger">
                             <span mltag="txt_canceled">Canceled</span>
@@ -422,8 +420,8 @@
 
                             <ng-container *ngIf="tabsControl[tabid].couponStatus == 2">
                                 <!-- Buttons for status 1 coupons -->
-                                <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'cancel')" class="btn btn-warn">
-                                    <i class="fa fa-check"></i> <span mltag="txt_cancel"></span>
+                                <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'confirm-payment')" class="btn btn-primary">
+                                    <i class="fa fa-check"></i> <span mltag="txt_confirm_payment">Confirm Payment</span>
                                 </a>
                             </ng-container>
                         </div>
