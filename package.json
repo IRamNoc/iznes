@@ -61,7 +61,7 @@
         "ng2-date-picker": "^2.4.0",
         "ng2-gravatar-directive": "^2.0.1",
         "ng2-select": "^1.2.0",
-        "ngx-pagination": "^3.0.1",
+        "ngx-pagination": "3.0.1",
         "ngx-quill-editor": "^2.2.1",
         "node-sass": "^4.5.3",
         "redux": "^3.7.2",
