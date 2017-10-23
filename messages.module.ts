@@ -13,6 +13,7 @@ import {SelectModule} from '@setl/utils';
 import {SetlPipesModule} from '@setl/utils';
 
 import {QuillEditorModule} from 'ngx-quill-editor';
+import {MultilingualModule} from '@setl/multilingual';
 
 import {
     MyMessagesService,
@@ -29,7 +30,8 @@ import {
         QuillEditorModule,
         FormsModule,
         ReactiveFormsModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        MultilingualModule
     ],
     declarations: [
         SetlMessagesComponent
