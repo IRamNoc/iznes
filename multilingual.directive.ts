@@ -31,12 +31,28 @@ export class MultilingualDirective {
         let
         tagname = this.el.nativeElement.tagName.toLowerCase(),
         mltag = this.el.nativeElement.getAttribute('mltag'),
-        translation = this.multilingualService.getTranslation(mltag);
+        translation = this.multilingualService.getTranslation(mltag),
+        element = this.el.nativeElement, hadAttribute = true;
 
-        console.log('looking up translation: ', mltag);
+        // console.log('looking up translation: ', mltag);
 
         /* First, check that the tag was translated... */
         if ( translation ) {
+            /* ...let's check for any attributes that differ the way we'll refect the translation... */
+            switch (true) {
+                /* Has a title attribute. */
+                case element.hasAttribute('title'):
+                    this.el.nativeElement.setAttribute('title', translation);
+                    break;
+
+                /* if no attribute was found, we'll let the code fall into the next switch. */
+                default:
+                    hadAttribute = false;
+            }
+
+            /* ...attribute flag... */
+            if ( hadAttribute ) return;
+
             /* ...next, switch to figure out what tag we're translating. */
             switch ( tagname ) {
                 /* Inputs need their placeholder changed. */
@@ -46,6 +62,7 @@ export class MultilingualDirective {
 
                 /* Non specific tags are probably innerHTML. */
                 default:
+                    /* Default behaviour. */
                     this.el.nativeElement.innerHTML = translation;
                     break;
             }
