@@ -53,9 +53,12 @@ An example of HTML in a component using the directive.
 
 The directive is adaptive, so if placed on a `span`, like above, it'll set the innerHTML of that span.
 
-As of right now, here are custom behaviours for specific tags:
+The directive is adaptive. So if the translation is found, the element will firstly be checked for attributes, if it doesn't have any that are specified then its tagname will be checked - if all else fails - the innerHTML will be replaced.
 
-| Tag Name   | Behaviour                                           |
+As of right now, here are custom behaviours for specific tags;
+
+| Tag Name / Attribute   | Behaviour                                           |
 |------------|-----------------------------------------------------|
+| `[title]`  | The translation replaces the title content.         |
 | `input`    | The translation replaces the placeholder attribute. |
 | not above  | The translation replaces the innerHTML.             |
