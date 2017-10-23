@@ -87,9 +87,10 @@ form .form-group div.ui-select-container {
 }
 
 .ui-disabled {
-    height: 87% !important;
-    top: 6px !important;
-    background: none;
+    // Comment out util clarify, Need to find out why we need that
+    //height: 87% !important;
+    //top: 6px !important;
+    //background: none;
 }
 
 .ui-select-container.ui-select-multiple {
@@ -151,9 +152,9 @@ form .form-group div.ui-select-container {
 }
 
 ng-select.fluid-width {
+    width: 95%;
     .ui-select-toggle, .ui-select-search, .ui-select-choices {
         width: 100% !important;
         max-width: 100% !important;
     }
 }
-

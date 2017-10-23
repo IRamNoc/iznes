@@ -62,6 +62,11 @@ import {
 import {OfiInvestorFundListComponent, OfiManageOfiNavComponent} from '@ofi/ofi-main';
 
 /**
+ * Ofi report module
+ */
+import {OfiPnlReportComponent, OfiTaxReportComponent} from '@ofi/ofi-main';
+
+/**
  * Login Guard service
  */
 import {LoginGuardService} from '@setl/core-login';
@@ -297,6 +302,26 @@ export const ROUTES: Routes = [
                         path: 'my-orders',
                         canActivate: [LoginGuardService],
                         component: MyOrdersComponent,
+                    }
+                ]
+            },
+
+            /**
+             * Ofi report
+             */
+            {
+                path: 'reports-section',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'tax',
+                        canActivate: [LoginGuardService],
+                        component: OfiTaxReportComponent
+                    },
+                    {
+                        path: 'pnl',
+                        canActivate: [LoginGuardService],
+                        component: OfiPnlReportComponent
                     }
                 ]
             }
