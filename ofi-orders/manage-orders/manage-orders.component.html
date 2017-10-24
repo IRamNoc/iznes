@@ -30,48 +30,50 @@
         <div class="panel-body">
 
             <form id="search-orders-form">
-                <div class="row bordered form-group">
-                    <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_fundname">Fund Name</span>
-                        </label>
-                        <div class="input-button-group">
-                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
-                            <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
+                <div class="form-horizontal">
+                    <div class="row bordered">
+                        <div class="form-group col-sm-4">
+                            <label>
+                                <span mltag="txt_fundname">Fund Name</span>
+                            </label>
+                            <div class="input-button-group">
+                                <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                                <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_status">Status</span>
-                        </label>
-                        <div>
-                            <ng-select
-                                id="orders-search-status"
-                                class="fluid-width"
-                                [items]="orderStatuses"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch()"
-                                (removed)="getOrdersBySearch()"
-                                [formControl]="tabsControl[0].searchForm.controls['status']"
-                                placeholder="Status"
-                            ></ng-select>
+                        <div class="form-group col-sm-4">
+                            <label>
+                                <span mltag="txt_home" title="poop">Status</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    id="orders-search-status"
+                                    class="fluid-width"
+                                    [items]="orderStatuses"
+                                    [allowClear]="true"
+                                    (selected)="getOrdersBySearch()"
+                                    (removed)="getOrdersBySearch()"
+                                    [formControl]="tabsControl[0].searchForm.controls['status']"
+                                    placeholder="Status"
+                                ></ng-select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_type">Type</span>
-                        </label>
-                        <div>
-                            <ng-select
-                                id="orders-search-type"
-                                class="fluid-width"
-                                [items]="orderTypes"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch()"
-                                (removed)="getOrdersBySearch()"
-                                [formControl]="tabsControl[0].searchForm.controls['type']"
-                                placeholder="Type"
-                            ></ng-select>
+                        <div class="form-group col-sm-4">
+                            <label>
+                                <span mltag="txt_type">Type</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    id="orders-search-type"
+                                    class="fluid-width"
+                                    [items]="orderTypes"
+                                    [allowClear]="true"
+                                    (selected)="getOrdersBySearch()"
+                                    (removed)="getOrdersBySearch()"
+                                    [formControl]="tabsControl[0].searchForm.controls['type']"
+                                    placeholder="Type"
+                                ></ng-select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -395,6 +397,9 @@
                         <a (click)="closeTab(tabid)" class="btn btn-secondary">
                             Close
                         </a>
+                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning">
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </form>

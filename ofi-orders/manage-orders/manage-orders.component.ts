@@ -80,6 +80,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb:any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb:any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
     @select(['user', 'myDetail']) myDetailOb:any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
@@ -118,8 +119,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 let fixed = order;
 
                 /* Fix dates. */
-                fixed.cutoffDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.cutoffDate));
-                fixed.deliveryDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.deliveryDate));
+                fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+                fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
                 /* Return. */
                 return fixed;
@@ -152,6 +153,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Update wallet name. */
             this.updateWalletConnection();
         });
+
+        /* Subscribe for the order buffer. */
+        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+            /* Check if we have an Id. */
+            setTimeout(() => {
+                if (orderId !== -1 && this.ordersList.length) {
+                    /* If we do, then hande the viewing of it. */
+                    console.log(orderId);
+                    this.handleViewOrder(orderId);
+
+                    this.ofiOrdersService.resetOrderBuffer();
+                }
+            }, 100);
+        });
     }
 
     /**
@@ -163,8 +178,33 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public handleViewOrder (orderId: number):void {
         /* Find the order. */
-        let order = this.getOrderById(orderId);
+        let
+            i = 0,
+            foundActive = false,
+            order = this.getOrderById(orderId);
         if (! order) return;
+
+        /* Check if the tab is already open. */
+        this.tabsControl.map((tab) => {
+            if (tab.orderId == orderId) {
+                /* Set flag... */
+                foundActive = true;
+
+                /* ...set tab active... */
+                this.setTabActive(i);
+
+                /* ...and gotta call this again. */
+                this.changeDetectorRef.detectChanges();
+            }
+
+            /* Inc. */
+            i++;
+        })
+
+        /* If we found an active tab, no need to do anymore... */
+        if (foundActive) {
+            return;
+        }
 
         /* Push a new tab into the tabs control... */
         this.tabsControl.push(
@@ -173,7 +213,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     "icon": "fa-pencil",
                     "text": this.padNumberLeft(order.arrangementID, 5)
                 },
-                "orderId": -1,
+                "orderId": orderId,
                 "active": false,
                 "orderData": order
             }
@@ -256,9 +296,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }
-
-        /* Re-search. */
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -484,7 +521,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * -------------
      * Pads a number left
      *
-     * @param  {number} num - the couponId.
+     * @param  {number} num - the orderId.
      * @return {string}
      */
     private padNumberLeft (num: number|string, zeros?: number):string {

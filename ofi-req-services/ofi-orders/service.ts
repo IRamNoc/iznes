@@ -10,7 +10,10 @@ import { SagaHelper, Common } from '@setl/utils';
 /* Import actions. */
 import {
     OFI_SET_MANAGE_ORDER_LIST,
-    OFI_SET_MY_ORDER_LIST
+    OFI_SET_MY_ORDER_LIST,
+    OFI_SET_HOME_ORDER_LIST,
+    OFI_SET_HOME_ORDER_BUFFER,
+    OFI_RESET_HOME_ORDER_BUFFER
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
@@ -33,7 +36,7 @@ export class OfiOrdersService {
 
     /**
      * Get Manage Orders List
-     * ---------------
+     * ----------------------
      * Fetches a list of arrangements, aka orders for a manager.
      *
      * @return {Promise}
@@ -62,7 +65,7 @@ export class OfiOrdersService {
 
     /**
      * Get My Orders List
-     * ---------------
+     * ------------------
      * Fetches a list of arrangements, aka orders for a user.
      *
      * @return {Promise}
@@ -90,6 +93,35 @@ export class OfiOrdersService {
     }
 
     /**
+     * Get Home Orders List
+     * --------------------
+     * Fetches a list of arrangements, aka orders for a user.
+     *
+     * @return {Promise}
+     */
+    public getHomeOrdersList(data): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiRequestArrangements = {
+            RequestName: 'getarrangementlist',
+            token: this.memberSocketService.token,
+            status: data.status,
+            sortOrder: data.sortOrder,
+            sortBy: data.sortBy,
+            partyType: data.partyType,
+            pageSize: data.pageSize,
+            pageNum: data.pageNum,
+            asset: data.asset,
+            arrangementType: data.arrangementType,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [ OFI_SET_HOME_ORDER_LIST ]
+        });
+    }
+
+    /**
      * Update Order
      * ------------------
      * Updates an order (arrangement).
@@ -113,6 +145,38 @@ export class OfiOrdersService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody)
+        });
+    }
+
+    /**
+     * Set Order Buffer
+     * ------------------
+     * Sets the order buffer to an order's ID.
+     *
+     * @param {number} orderId - the order id.
+     *
+     * @return {void}
+     */
+    public setOrderBuffer (orderId: number):void {
+        /* Dispatch the event. */
+        this.ngRedux.dispatch({
+            'type': OFI_SET_HOME_ORDER_BUFFER,
+            'payload': orderId
+        });
+    }
+
+    /**
+     * Reset Order Buffer
+     * ------------------
+     * Sets the order buffer to -1.
+     *
+     * @return {void}
+     */
+    public resetOrderBuffer ():void {
+        /* Dispatch the event. */
+        this.ngRedux.dispatch({
+            'type': OFI_SET_HOME_ORDER_BUFFER,
+            'payload': -1
         });
     }
 

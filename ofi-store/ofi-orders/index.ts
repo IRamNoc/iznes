@@ -20,12 +20,27 @@ export {
     getOfiMyOrderList,
 } from './my-orders';
 
+/* Home Orders */
+import {
+    HomeOrders,
+    OfiHomeOrderListReducer,
+} from './home-orders'
+export {
+    OFI_SET_HOME_ORDER_LIST,
+    OFI_SET_HOME_ORDER_BUFFER,
+    OFI_RESET_HOME_ORDER_BUFFER,
+    getOfiHomeOrderList,
+    getOfiHomeOrderViewBuffer,
+} from './home-orders';
+
 export interface OfiOrdersState {
     manageOrders: ManageOrders;
     myOrders: MyOrders;
+    homeOrders: HomeOrders;
 }
 
 export const OfiOrdersReducer: Reducer<OfiOrdersState> = combineReducers<OfiOrdersState>({
     manageOrders: OfiManageOrderListReducer,
     myOrders: OfiMyOrderListReducer,
+    homeOrders: OfiHomeOrderListReducer,
 });
