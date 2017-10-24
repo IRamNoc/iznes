@@ -37,25 +37,25 @@
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Username</clr-dg-column>
-                <clr-dg-column>Email</clr-dg-column>
-                <clr-dg-column>Account</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_username">Username</clr-dg-column>
+                <clr-dg-column mltag="txt_email">Email</clr-dg-column>
+                <clr-dg-column mltag="txt_account">Account</clr-dg-column>
+                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let user of usersList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{user.userName}}</clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
-                            <span *ngIf="user.accountLocked == 0" class="label label-success">Enabled</span>
-                            <span *ngIf="user.accountLocked != 0" class="label label-warning">Disabled</span>
+                            <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
+                            <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="disabled">Disabled</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -88,7 +88,7 @@
                                 <span class="ml_translated" mltag="txt_email">Email</span>
                             </label>
                             <div>
-                                <input id="new-user-email" type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input id="new-user-email" type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
                             </div>
                         </div>
                     </div>
@@ -118,6 +118,7 @@
                                 id="new-user-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
+                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['userType']">
                             </ng-select>
@@ -187,7 +188,7 @@
                                 <span class="ml_translated" mltag="txt_email">Email</span>
                             </label>
                             <div>
-                                <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
                             </div>
                         </div>
                     </div>
@@ -261,6 +262,7 @@
                             [items]="filteredAdminGroupsList"
                             [multiple]="true"
                             [allowClear]="true"
+                            mltag="txt_selecttype"
                             placeholder="Select Type"
                             [formControl]="formControl.controls['adminGroups']">
                         </ng-select>
@@ -276,6 +278,7 @@
                         <ng-select
                             [items]="filteredChainList"
                             [allowClear]="true"
+                            mltag="txt_selectachains"
                             placeholder="Select Chain"
                             (selected)="setFormChainId(tabid, $event)">
                         </ng-select>
@@ -285,6 +288,7 @@
                             [items]="tabsControl[tabid].filteredTxList"
                             [multiple]="true"
                             [allowClear]="true"
+                            mltag="txt_selecttype"
                             placeholder="Select Type"
                             [formControl]="formControl.controls['txGroups']">
                         </ng-select>
@@ -302,6 +306,7 @@
                             (selected)="addedWalletSelection(1, tabid, $event)"
                             [multiple]="true"
                             [allowClear]="true"
+                            mltag="txt_choosewallets"
                             placeholder="Choose Wallets"
                             [formControl]="formControl.controls['walletsFull']">
                         </ng-select>
@@ -312,6 +317,7 @@
                             (selected)="addedWalletSelection(0, tabid, $event)"
                             [multiple]="true"
                             [allowClear]="true"
+                            mltag="txt_choosewallets"
                             placeholder="Choose Wallets"
                             [formControl]="formControl.controls['walletsRead']">
                         </ng-select>
@@ -320,15 +326,16 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-chain"></i> Chains</a>
+              <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        Chains
+                      <span mltag="txt_chains">Chains</span>
                         <ng-select
                             [items]="filteredChainList"
                             [multiple]="true"
                             [allowClear]="true"
-                            placeholder="Choose Chains"
+                            mltag="txt_choosechain"
+                            placeholder="Choose Chains..."
                             [formControl]="formControl.controls['chainAccess']">
                         </ng-select>
                     </div>

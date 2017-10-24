@@ -37,17 +37,17 @@
         <div class="panel-body">
 
             <clr-datagrid #walletDataGrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Wallet Name</clr-dg-column>
-                <clr-dg-column>Account</clr-dg-column>
-                <clr-dg-column>Wallet Type</clr-dg-column>
-                <clr-dg-column>Wallet Status</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_walletname">Wallet Name</clr-dg-column>
+                <clr-dg-column mltag="txt_account">Account</clr-dg-column>
+                <clr-dg-column mltag="txt_wallettype">Wallet Type</clr-dg-column>
+                <clr-dg-column mltag="txt_walletstatus">Wallet Status</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let wallet of walletList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn"><i class="fa fa-pencil-square-o"></i> Edit</button>
-                            <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn"><i class="fa fa-trash-o"></i> Delete</button>
+                          <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                          <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletName}}</clr-dg-cell>
@@ -55,8 +55,8 @@
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
                             {{ wallet.walletLocked }}
-                            <span *ngIf="wallet.walletLocked === false" class="label label-success">Unlocked</span>
-                            <span *ngIf="wallet.walletLocked === true" class="label label-warning">Locked</span>
+                            <span *ngIf="wallet.walletLocked === false" class="label label-success" mltag="txt_unlocked">Unlocked</span>
+                            <span *ngIf="wallet.walletLocked === true" class="label label-warning" mltag="txt_locked">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -77,7 +77,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span mltag="txt_username">Wallet Name</span>
+                              <span mltag="txt_walletname">Wallet Name</span>
                             </label>
                             <div>
                                 <input id="new-wallet-name" type="text" formControlName="walletName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
@@ -85,8 +85,8 @@
                                     <div class="alert alert-danger">
                                         <div class="alert-items">
                                             <div class="alert-item">
-                                                <span class="alert-text">
-                                                    A wallet name is required.
+                                                <span class="alert-text" mltag="txt_walletnamerequired">
+                                                  Wallet name required
                                                 </span>
                                             </div>
                                         </div>
@@ -105,6 +105,7 @@
                                 id="new-wallet-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
+                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
@@ -112,8 +113,8 @@
                                 <div class="alert alert-danger">
                                     <div class="alert-items">
                                         <div class="alert-item">
-                                            <span class="alert-text">
-                                                An account must be selected.
+                                            <span class="alert-text" mltag="txt_accountrequired">
+                                                Account required
                                             </span>
                                         </div>
                                     </div>
@@ -131,6 +132,7 @@
                                 id="new-wallet-usertype-select"
                                 [items]="walletTypes"
                                 [allowClear]="true"
+                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletType']">
                             </ng-select>
@@ -139,8 +141,8 @@
                             <div class="alert alert-danger">
                                 <div class="alert-items">
                                     <div class="alert-item">
-                                        <span class="alert-text">
-                                            A wallet type must be selected.
+                                        <span class="alert-text" mltag="txt_wallettyperequired">
+                                          Wallet type required
                                         </span>
                                     </div>
                                 </div>
@@ -180,7 +182,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span mltag="txt_username">Wallet Name</span>
+                                <span mltag="txt_walletname">Wallet Name</span>
                             </label>
                             <div>
 
@@ -189,8 +191,8 @@
                                     <div class="alert alert-danger">
                                         <div class="alert-items">
                                             <div class="alert-item">
-                                                <span class="alert-text">
-                                                    A wallet name is required.
+                                                <span class="alert-text" mltag="txt_walletnamerequired">
+                                                    Wallet name required
                                                 </span>
                                             </div>
                                         </div>
@@ -210,6 +212,7 @@
                                 id="new-wallet-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
+                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
@@ -217,8 +220,8 @@
                                 <div class="alert alert-danger">
                                     <div class="alert-items">
                                         <div class="alert-item">
-                                            <span class="alert-text">
-                                                An account must be selected.
+                                            <span class="alert-text" mltag="txt_accountrequired">
+                                                Account required
                                             </span>
                                         </div>
                                     </div>
@@ -230,7 +233,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span mltag="txt_usertype">Wallet Status</span>
+                                <span mltag="txt_walletstatus">Wallet Status</span>
                             </label>
                             <div class="wallet-status">
                                 <span *ngIf="formControl.controls['walletLocked']._value">
@@ -251,12 +254,13 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span mltag="txt_usertype">Wallet Type</span>
+                                <span mltag="txt_wallettype">Wallet Type</span>
                             </label>
                             <ng-select
                                 id="new-wallet-usertype-select"
                                 [items]="walletTypes"
                                 [allowClear]="true"
+                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [formControl]="formControl.controls['walletType']">
                             </ng-select>
@@ -264,8 +268,8 @@
                                 <div class="alert alert-danger">
                                     <div class="alert-items">
                                         <div class="alert-item">
-                                            <span class="alert-text">
-                                                A wallet type must be selected.
+                                            <span class="alert-text" mltag="txt_wallettyperequired">
+                                                Wallet type required
                                             </span>
                                         </div>
                                     </div>
@@ -292,7 +296,7 @@
                                 <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
                             </button>
 
-                            <a (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
                                 Close
                             </a>
                         </div>
@@ -306,7 +310,7 @@
     <ng-template #walletMetaLegal let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> Basic</a>
+              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -316,7 +320,7 @@
                                         <span mltag="txt_lei">LEI</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-lei" type="text" [formControl]="formControl.controls['walletLei']" placeholder="LEI" class="form-control wallet-lei" mltag="txt_wallet-lei">
+                                        <input id="new-wallet-lei" type="text" [formControl]="formControl.controls['walletLei']" placeholder="LEI" class="form-control wallet-lei" mltag="txt_lei">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
@@ -324,23 +328,23 @@
                                         <span mltag="txt_uniqueidentifier">Unique Identifier</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-uid" type="text" [formControl]="formControl.controls['walletUid']" placeholder="UID" class="form-control wallet-uid" mltag="txt_wallet-uid">
+                                        <input id="new-wallet-uid" type="text" [formControl]="formControl.controls['walletUid']" placeholder="UID" class="form-control wallet-uid" mltag="txt_uid">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Website Url</span>
+                                        <span mltag="txt_websiteurl">Website Url</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-weburl" type="text" [formControl]="formControl.controls['walletWebUrl']" placeholder="Website Url" class="form-control wallet-weburl" mltag="txt_wallet-weburl">
+                                        <input id="new-wallet-weburl" type="text" [formControl]="formControl.controls['walletWebUrl']" placeholder="Website Url" class="form-control wallet-weburl" mltag="txt_websiteurl">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Incorporation Date</span>
+                                        <span mltag="txt_incorporationdate">Incorporation Date</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-incdate" type="date" [formControl]="formControl.controls['walletIncDate']" placeholder="Incoporation Date" class="form-control wallet-incdate" mltag="txt_wallet-incdate">
+                                        <input id="new-wallet-incdate" type="date" [formControl]="formControl.controls['walletIncDate']" placeholder="Incoporation Date" class="form-control wallet-incdate" mltag="txt_incorporationdate">
                                     </div>
                                 </div>
                             </div>
@@ -350,7 +354,7 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> Correspondence Address</a>
+              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -373,13 +377,13 @@
                                         <span mltag="txt_address_prefix">Address Prefix</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-address-prefix" type="text" [formControl]="formControl.controls['walletAddrPrefix']" placeholder="Address Prefix" class="form-control wallet-addr-prefix" mltag="txt_prefix">
+                                        <input id="new-wallet-address-prefix" type="text" [formControl]="formControl.controls['walletAddrPrefix']" placeholder="Address Prefix" class="form-control wallet-addr-prefix" mltag="txt_addressprefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Postal Address</span>
+                                        <span mltag="txt_postaladdress">Postal Address</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-address1" type="text" [formControl]="formControl.controls['walletAddr1']" placeholder="Line 1" class="form-control wallet-addr1" mltag="txt_line1">
@@ -391,25 +395,25 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">City or Town</span>
+                                        <span mltag="txt_cityortown">City or Town</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-address3" type="text" [formControl]="formControl.controls['walletAddr3']" placeholder="City or Town" class="form-control wallet-addr3" mltag="txt_city_town">
+                                        <input id="new-wallet-address3" type="text" [formControl]="formControl.controls['walletAddr3']" placeholder="City or Town" class="form-control wallet-addr3" mltag="txt_cityortown">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">State or Area</span>
+                                        <span mltag="txt_stateorarea">State or Area</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-address4" type="text" [formControl]="formControl.controls['walletAddr4']" placeholder="State or Area" class="form-control wallet-addr4" mltag="txt_state_area">
+                                        <input id="new-wallet-address4" type="text" [formControl]="formControl.controls['walletAddr4']" placeholder="State or Area" class="form-control wallet-addr4" mltag="txt_stateorarea">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Post code</span>
+                                        <span mltag="txt_postcode">Post code</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-postcode" type="text" [formControl]="formControl.controls['walletAddrPostcode']" placeholder="Post code" class="form-control wallet-postcode" mltag="txt_postcode">
@@ -427,33 +431,33 @@
     <ng-template #walletMetaIndividual let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> Basic</a>
+              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_username">Aliases</span>
+                                <span mltag="txt_aliases">Aliases</span>
                             </label>
                             <div>
-                                <input id="new-wallet-aliases" type="text" [formControl]="formControl.controls['aliases']" placeholder="Aliases" class="form-control wallet-aliases" mltag="txt_wallet-aliases">
+                                <input id="new-wallet-aliases" type="text" [formControl]="formControl.controls['aliases']" placeholder="Aliases" class="form-control wallet-aliases" mltag="txt_aliases">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_username">Former Name</span>
+                                <span mltag="txt_formername">Former Name</span>
                             </label>
                             <div>
-                                <input id="new-wallet-formerName" type="text" [formControl]="formControl.controls['formerName']" placeholder="Former Name" class="form-control wallet-formername" mltag="txt_wallet-formername">
+                                <input id="new-wallet-formerName" type="text" [formControl]="formControl.controls['formerName']" placeholder="Former Name" class="form-control wallet-formername" mltag="txt_formername">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_username">ID Card Number</span>
+                                <span mltag="txt_idcardnumber">ID Card Number</span>
                             </label>
                             <div>
-                                <input id="new-wallet-idCardNum" type="text" [formControl]="formControl.controls['idCardNum']" placeholder="ID Card Number" class="form-control wallet-idcardnum" mltag="txt_wallet-idcardnum">
+                                <input id="new-wallet-idCardNum" type="text" [formControl]="formControl.controls['idCardNum']" placeholder="ID Card Number" class="form-control wallet-idcardnum" mltag="txt_idcardnumber">
                             </div>
                         </div>
                     </div>
@@ -461,7 +465,7 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-map-marker"></i> Residential Address</a>
+              <a clrTabLink><i class="fa fa-map-marker"></i> <span mltag="txt_residentialaddr">Residential Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -481,16 +485,16 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_address_prefix">Address Prefix</span>
+                                        <span mltag="txt_addrprefix">Address Prefix</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-rda-address-prefix" type="text" [formControl]="formControl.controls['rdaAddrPrefix']" placeholder="Address Prefix" class="form-control rda-addr-prefix" mltag="txt_prefix">
+                                        <input id="new-wallet-rda-address-prefix" type="text" [formControl]="formControl.controls['rdaAddrPrefix']" placeholder="Address Prefix" class="form-control rda-addr-prefix" mltag="txt_addrprefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Postal Address</span>
+                                        <span mltag="txt_postaladdress">Postal Address</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address1" type="text" [formControl]="formControl.controls['rdaAddr1']" placeholder="Line 1" class="form-control rda-addr1" mltag="txt_line1">
@@ -502,25 +506,25 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">City or Town</span>
+                                        <span mltag="txt_cityortown">City or Town</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-rda-address3" type="text" [formControl]="formControl.controls['rdaAddr3']" placeholder="City or Town" class="form-control rda-addr3" mltag="txt_city_town">
+                                        <input id="new-wallet-rda-address3" type="text" [formControl]="formControl.controls['rdaAddr3']" placeholder="City or Town" class="form-control rda-addr3" mltag="txt_cityortown">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">State or Area</span>
+                                        <span mltag="txt_stateorarea">State or Area</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-rda-address4" type="text" [formControl]="formControl.controls['rdaAddr4']" placeholder="State or Area" class="form-control rda-addr4" mltag="txt_state_area">
+                                        <input id="new-wallet-rda-address4" type="text" [formControl]="formControl.controls['rdaAddr4']" placeholder="State or Area" class="form-control rda-addr4" mltag="txt_stateorarea">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Post code</span>
+                                        <span mltag="txt_postcode">Post code</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-postcode" type="text" [formControl]="formControl.controls['rdaAddrPostcode']" placeholder="Post code" class="form-control rda-addr-postcode" mltag="txt_postcode">
@@ -533,14 +537,14 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-map-marker"></i> Correspondence Address</a>
+              <a clrTabLink><i class="fa fa-map-marker"></i> <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div *ngIf="tabsControl[tabid].walletId == -1" class="form-group col-sm-12">
                                     <label>
-                                        Same as Residential address <input type="checkbox" [formControl]="formControl.controls['caSame']" />
+                                      <span mltag="txt_sameasresidentialaddress">Same as Residential address</span> <input type="checkbox" [formControl]="formControl.controls['caSame']" />
                                     </label>
                                 </div>
                             </div>
@@ -560,16 +564,16 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_address_prefix">Address Prefix</span>
+                                        <span mltag="txt_addressprefix">Address Prefix</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-ca-address-prefix" type="text" [formControl]="formControl.controls['caAddrPrefix']" placeholder="Address Prefix" class="form-control ca-addr-prefix" mltag="txt_prefix">
+                                        <input id="new-wallet-ca-address-prefix" type="text" [formControl]="formControl.controls['caAddrPrefix']" placeholder="Address Prefix" class="form-control ca-addr-prefix" mltag="txt_addressprefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Postal Address</span>
+                                        <span mltag="txt_postaladdress">Postal Address</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address1" type="text" [formControl]="formControl.controls['caAddr1']" placeholder="Line 1" class="form-control ca-addr1" mltag="txt_line1">
@@ -581,25 +585,25 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">City or Town</span>
+                                        <span mltag="txt_cityortown">City or Town</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-ca-address3" type="text" [formControl]="formControl.controls['caAddr3']" placeholder="City or Town" class="form-control ca-addr3" mltag="txt_city_town">
+                                        <input id="new-wallet-ca-address3" type="text" [formControl]="formControl.controls['caAddr3']" placeholder="City or Town" class="form-control ca-addr3" mltag="txt_cityortown">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">State or Area</span>
+                                        <span mltag="txt_stateorarea">State or Area</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-ca-address4" type="text" [formControl]="formControl.controls['caAddr4']" placeholder="State or Area" class="form-control ca-addr4" mltag="txt_state_area">
+                                        <input id="new-wallet-ca-address4" type="text" [formControl]="formControl.controls['caAddr4']" placeholder="State or Area" class="form-control ca-addr4" mltag="txt_stateorarea">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Post code</span>
+                                        <span mltag="txt_postcode">Post code</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-postcode" type="text" [formControl]="formControl.controls['caAddrPostcode']" placeholder="Post code" class="form-control ca-addr-postcode" mltag="txt_postcode">
@@ -612,14 +616,14 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-chain"></i> Settlement Detail</a>
+              <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_settlementdetail">Settlement Detail</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Bank Wallet</span>
+                                        <span mltag="txt_username" mltag="txt_bankwallet">Bank Wallet</span>
                                     </label>
                                     <div>
                                         <ng-select
@@ -633,46 +637,46 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Bank Name</span>
+                                        <span mltag="txt_bankname">Bank Name</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-name" type="text" [formControl]="formControl.controls['bankName']" placeholder="Bank name" class="form-control wallet-bank-name" mltag="txt_bank_name">
+                                        <input id="new-wallet-bank-name" type="text" [formControl]="formControl.controls['bankName']" placeholder="Bank name" class="form-control wallet-bank-name" mltag="txt_bankname">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">IBAN</span>
+                                        <span mltag="txt_iban">IBAN</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-iban" type="text" [formControl]="formControl.controls['bankIBAN']" placeholder="IBAN" class="form-control wallet-bank-iban" mltag="txt_bank_iban">
+                                        <input id="new-wallet-bank-iban" type="text" [formControl]="formControl.controls['bankIBAN']" placeholder="IBAN" class="form-control wallet-bank-iban" mltag="txt_iban">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Bank BIC Code</span>
+                                        <span mltag="txt_username" mltag="txt_bankbiccode">Bank BIC Code</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-bic-code" type="text" [formControl]="formControl.controls['bankBICcode']" placeholder="BIC code" class="form-control wallet-bank-bic-code" mltag="txt_bank_bic_code">
+                                        <input id="new-wallet-bank-bic-code" type="text" [formControl]="formControl.controls['bankBICcode']" placeholder="BIC code" class="form-control wallet-bank-bic-code" mltag="txt_bankbiccode">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Bank Account Name</span>
+                                        <span mltag="txt_bankaccountname">Bank Account Name</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-account-name" type="text" [formControl]="formControl.controls['bankAccountName']" placeholder="Account name" class="form-control wallet-bank-account-name" mltag="txt_bank_account_name">
+                                        <input id="new-wallet-bank-account-name" type="text" [formControl]="formControl.controls['bankAccountName']" placeholder="Bank Account name" class="form-control wallet-bank-account-name" mltag="txt_bankaccountname">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Bank Account Number</span>
+                                        <span mltag="txt_bankaccountnum">Bank Account Number</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bank-account-num" type="text" [formControl]="formControl.controls['bankAccountNum']" placeholder="Account number" class="form-control wallet-bank-account-num" mltag="txt_bank_account_num">
+                                        <input id="new-wallet-bank-account-num" type="text" [formControl]="formControl.controls['bankAccountNum']" placeholder="Bank Account number" class="form-control wallet-bank-account-num" mltag="txt_bankaccountnum">
                                     </div>
                                 </div>
 
@@ -691,16 +695,16 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_address_prefix">Address Prefix</span>
+                                        <span mltag="txt_addressprefix">Address Prefix</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bd-address-prefix" type="text" [formControl]="formControl.controls['bdAddrPrefix']" placeholder="Address Prefix" class="form-control bd-addr-prefix" mltag="txt_prefix">
+                                        <input id="new-wallet-bd-address-prefix" type="text" [formControl]="formControl.controls['bdAddrPrefix']" placeholder="Address Prefix" class="form-control bd-addr-prefix" mltag="txt_addressprefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Postal Address</span>
+                                        <span mltag="txt_postaladdress">Postal Address</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address1" type="text" [formControl]="formControl.controls['bdAddr1']" placeholder="Line 1" class="form-control bd-addr1" mltag="txt_line1">
@@ -712,25 +716,25 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">City or Town</span>
+                                        <span mltag="txt_cityortown">City or Town</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bd-address3" type="text" [formControl]="formControl.controls['bdAddr3']" placeholder="City or Town" class="form-control bd-addr3" mltag="txt_city_town">
+                                        <input id="new-wallet-bd-address3" type="text" [formControl]="formControl.controls['bdAddr3']" placeholder="City or Town" class="form-control bd-addr3" mltag="txt_cityortown">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">State or Area</span>
+                                        <span mltag="txt_stateorarea">State or Area</span>
                                     </label>
                                     <div>
-                                        <input id="new-wallet-bd-address4" type="text" [formControl]="formControl.controls['bdAddr4']" placeholder="State or Area" class="form-control bd-addr4" mltag="txt_state_area">
+                                        <input id="new-wallet-bd-address4" type="text" [formControl]="formControl.controls['bdAddr4']" placeholder="State or Area" class="form-control bd-addr4" mltag="txt_stateorarea">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_username">Post code</span>
+                                        <span mltag="txt_postcode">Post code</span>
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-postcode" type="text" [formControl]="formControl.controls['bdAddrPostcode']" placeholder="Post code" class="form-control bd-addr-postcode" mltag="txt_postcode">
