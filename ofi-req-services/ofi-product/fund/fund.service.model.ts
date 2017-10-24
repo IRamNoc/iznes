@@ -5,6 +5,17 @@ export interface FundRequestMessageBody extends MemberNodeMessageBody {
     accountId: any;
 }
 
+export interface HistoryRequestMessageBody extends MemberNodeMessageBody {
+    token: any;
+    fundId: any;
+    shareId: any;
+    fieldTag: any;
+    dateFrom: any;
+    dateTo: any;
+    pageNum: any;
+    pageSize: any;
+}
+
 export interface FundShareRequestMessageBody extends MemberNodeMessageBody {
     token: any;
     accountId: any;
@@ -53,4 +64,9 @@ export interface UpdateFundShareRequestBody extends MemberNodeMessageBody {
     issuer: any;
     shareName: any;
     status: any;
+}
+
+export interface SaveFundHistoryRequestBody extends MemberNodeMessageBody {
+    token: any;
+    changes: any;
 }
