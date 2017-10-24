@@ -26,6 +26,7 @@ import {DropdownDirective} from '@setl/core-layout';
 
 /* Services. */
 import {MenuDropdownService} from '@setl/core-layout';
+import {MultilingualModule} from '@setl/multilingual';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import {MenuDropdownService} from '@setl/core-layout';
         SidebarModule,
         SelectModule,
         ClarityModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MultilingualModule
     ],
     declarations: [
         /* Directives. */
