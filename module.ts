@@ -10,6 +10,7 @@ import {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 import {OfiPostTxService} from './ofi-post-tx/service';
 import {OfiNavModule} from './ofi-nav/module';
 import {OfiReportModule} from './ofi-report-module';
+import {MultilingualModule} from '@setl/multilingual';
 
 /* Decorator. */
 @NgModule({
@@ -20,7 +21,8 @@ import {OfiReportModule} from './ofi-report-module';
         OfiRequestServicesModule,
         OfiOrdersModule,
         OfiNavModule,
-        OfiReportModule
+        OfiReportModule,
+        MultilingualModule
     ],
     exports: [
         OfiFundInvestModule,
