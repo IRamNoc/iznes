@@ -12,3 +12,4 @@ export {MemberService} from './member/service';
 export {ChainService} from './chain/service';
 export {WalletnodeChannelService} from './walletnode-channel/service';
 export {FileService} from './file/file.service';
+export {PdfService} from './pdf/pdf.service';
