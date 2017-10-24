@@ -6,13 +6,15 @@ import {SetlIssueComponent} from './issue/issue.component';
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
 import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {MultilingualModule} from '@setl/multilingual';
 
 @NgModule({
     imports: [
         CommonModule,
         ClarityModule,
         SetlPipesModule,
-        SetlComponentsModule
+        SetlComponentsModule,
+        MultilingualModule
     ],
     declarations: [
         SetlBalancesComponent,
