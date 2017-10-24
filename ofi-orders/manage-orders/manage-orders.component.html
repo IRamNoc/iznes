@@ -397,6 +397,9 @@
                         <a (click)="closeTab(tabid)" class="btn btn-secondary">
                             Close
                         </a>
+                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning">
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </form>

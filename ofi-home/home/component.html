@@ -1,1 +1,174 @@
-<h2>Ofi Home Works!</h2>
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-homepage"><i class="fa fa-home"></i> <span mltag="txt_home">Home</span> - {{ connectedWalletName }}</h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <!-- Navigation buttons. -->
+    <div class="row">
+        <div class="col-sm-3">
+            <button class="btn btn-primary home-button red">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="fa fa-cubes"></i>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        Balance
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-primary home-button green">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="fa fa-line-chart"></i>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        List of Funds
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-primary home-button yellow">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="fa fa-flag"></i>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        Precentralised
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-primary home-button blue">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="fa fa-university"></i>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        Centralised
+                    </div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Precentralised orders table. -->
+    <div class="panel-body">
+        <div>
+            <i class="fa fa-th-list"></i> Precentralised Orders
+        </div>
+
+        <hr class="dashed" />
+
+        <clr-datagrid #ordersDataGrid>
+            <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_order_type">Order type</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_order_ref">Order REF</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_fund_name">Fund name</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_cut-off_date">Cut-off date</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_delivery_date">Delivery date</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
+
+            <clr-dg-row *clrDgItems="let order of ordersList">
+                <clr-dg-cell>
+                    <!-- Action -->
+                    <div class="btn-group btn-sm">
+                        <!-- View order. -->
+                        <button id="order-view-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Investor -->
+                    {{ order.metaData.investorWalletName }}<br />
+                    {{ order.advisorAccountName }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Order type -->
+                    <span *ngIf="order.type == 3" class="label label-info">
+                        Subscription
+                    </span>
+                    <span *ngIf="order.type == 4" class="label label-success">
+                        Redemption
+                    </span>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Order REF -->
+                    {{ padNumberLeft(order.arrangementID, 5) }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Fund name -->
+                    {{ order.metaData.assetISIN }}<br />
+                    {{ order.asset }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Amount -->
+                    {{ order.metaData.units }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Quantity -->
+                    {{ order.total }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Price -->
+                    {{ order.metaData.price }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Percentage -->
+                    {{ order.metaData.feePercent }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Cut-off date -->
+                    {{ order.cutoffDate }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Delivery date -->
+                    {{ order.deliveryDate }}
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <!-- Status -->
+                    <span *ngIf="order.status == 1" class="label label-warning">
+                        <span class="txt_initiated">Initiated</span>
+                    </span>
+
+                    <span *ngIf="order.status == 2" class="label label-info">
+                        <span class="ml" mltag="txt_waitingnav">Waiting for NAV</span>
+                    </span>
+
+                    <span *ngIf="order.status == 3" class="label label-info">
+                        <span class="txt_waitingnav">Waiting for settlement</span>
+                    </span>
+
+                    <span *ngIf="order.status == 0" class="label label-error">
+                        <span class="ml" mltag="txt_cancelled">Cancelled</span>
+                    </span>
+
+                    <span *ngIf="order.status == -1" class="label label-success">
+                        <span class="ml" mltag="txt_ordersettled">Order settled</span>
+                    </span>
+
+                    <span *ngIf="order.status == -2" class="label label-error">
+                        <span class="ml" mltag="txt_order_expired">Order expired</span>
+                    </span>
+                </clr-dg-cell>
+            </clr-dg-row>
+
+            <clr-dg-footer>
+                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                of {{pagination.totalItems}} coupon payments
+                <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+</div>

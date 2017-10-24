@@ -80,6 +80,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb:any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb:any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
     @select(['user', 'myDetail']) myDetailOb:any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
@@ -152,6 +153,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Update wallet name. */
             this.updateWalletConnection();
         });
+
+        /* Subscribe for the order buffer. */
+        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+            /* Check if we have an Id. */
+            setTimeout(() => {
+                if (orderId !== -1 && this.ordersList.length) {
+                    /* If we do, then hande the viewing of it. */
+                    console.log(orderId);
+                    this.handleViewOrder(orderId);
+
+                    this.ofiOrdersService.resetOrderBuffer();
+                }
+            }, 100);
+        });
     }
 
     /**
@@ -164,7 +179,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     public handleViewOrder (orderId: number):void {
         /* Find the order. */
         let
-            i,
+            i = 0,
             foundActive = false,
             order = this.getOrderById(orderId);
         if (! order) return;
@@ -198,7 +213,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     "icon": "fa-pencil",
                     "text": this.padNumberLeft(order.arrangementID, 5)
                 },
-                "orderId": -1,
+                "orderId": orderId,
                 "active": false,
                 "orderData": order
             }
@@ -281,9 +296,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }
-
-        /* Re-search. */
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
