@@ -27,7 +27,8 @@ import {
     ChainService,
     WalletnodeChannelService,
     InitialisationService,
-    FileService
+    FileService,
+    PdfService
 } from '@setl/core-req-services';
 
 /* Routes. */
@@ -165,7 +166,8 @@ export function memberSocketServiceFactory() {
         ChainService,
         WalletnodeChannelService,
         InitialisationService,
-        FileService
+        FileService,
+        PdfService
     ],
     bootstrap: [AppComponent]
 })

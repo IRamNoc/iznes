@@ -13,7 +13,7 @@ import {FormGroup, FormControl} from '@angular/forms';
 
 import {MultilingualService} from '@setl/multilingual';
 
-import {FileService} from '@setl/core-req-services';
+import {FileService, PdfService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
@@ -58,6 +58,8 @@ export class HomeComponent {
 
     public tabs: Array<any>;
 
+    public pdfID;
+
     basic = false;
 
     /*
@@ -78,9 +80,6 @@ export class HomeComponent {
      * @return {void}
      */
     public onDropFiles ( event ) {
-        /* Event contains the latest changes. */
-        console.log('file drop event emitted: ', event);
-
         const asyncTaskPipe = this.fileService.addFile({
             files: _.filter(event.files, function (file) {
                return file.status !== 'uploaded-file';
@@ -144,6 +143,7 @@ export class HomeComponent {
         private multilingualService: MultilingualService,
         private ngRedux: NgRedux<any>,
         private fileService: FileService,
+        private pdfService: PdfService,
         private alertsService: AlertsService
     ) {
 
@@ -181,8 +181,44 @@ export class HomeComponent {
         this.basic = !this.basic;
     }
 
-    ngAfterViewInit() {
+    createPdf() {
+        const asyncTaskPipe = this.pdfService.createPdfMetadata({
+            type: 0,
+            metadata: {
+                walletName: 'Testing Wallet Name'
+            }
+        });
 
+        this.ngRedux.dispatch(
+            SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (function (data) {
+                    this.pdfID = data[1].Data[0].pdfID;
+                }).bind(this),
+                function (data) { console.log('Error received : ', data); }
+            )
+        );
+    }
+
+    getPdf() {
+        const asyncTaskPipe = this.pdfService.getPdf({
+            pdfID: this.pdfID
+        });
+        this.ngRedux.dispatch(
+            SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (function (data) {
+                    if (data && data[1] && data[1].Data) {
+                        let fileHash = data[1].Data;
+                        this.pdfService.servePdf(fileHash);
+                    }
+                }).bind(this),
+                function (data) { console.log('Error received : ', data); }
+            )
+        );
+    }
+
+    ngAfterViewInit() {
         // this.tabs = [
         //     {
         //         "title": "tab1",

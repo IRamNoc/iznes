@@ -7,6 +7,12 @@
     <clr-tab>
         <button clrTabLink><i class="fa fa-document"></i> Setl File Drop</button>
         <clr-tab-content *clrIfActive>
+            <button (click)="createPdf()">Create PDF</button>
+            <br/><br/>
+
+            <button (click)="getPdf()">Get PDF</button>
+            <br/><br/>
+
             <setl-file-viewer fileHash="aa89eb50bd183d00f424d9ebc9b7744673eb22e944c4dcbf220885b1d5654d35">
             </setl-file-viewer>
 
