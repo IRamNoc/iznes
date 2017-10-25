@@ -1,7 +1,5 @@
 package src.RESTAPITests.Member.Creation;
 
-import SETLAPIHelpers.Member;
-
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MessageFactory;
 
@@ -12,23 +10,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 
 import static SETLAPIHelpers.RestAPI.MemberHelper.*;
-import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(JUnit4.class)
 public class createMemberAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(300000);
+  public Timeout globalTimeout = Timeout.millis(3000);
 
   String localAddress = "http://localhost:9788/api";
   int userId = 4;

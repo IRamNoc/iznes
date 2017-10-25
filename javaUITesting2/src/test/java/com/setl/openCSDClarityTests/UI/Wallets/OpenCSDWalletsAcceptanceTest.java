@@ -162,22 +162,4 @@ public class OpenCSDWalletsAcceptanceTest {
       driver.findElement(By.id("edit-4")).click();
 
     }
-    @Test
-    public void shouldDeleteWallet() throws IOException, InterruptedException {
-    }
-    @Test
-    public void shouldNavigateToNextPageWalletSearch() throws IOException, InterruptedException {
-    }
-    @Test
-    public void shouldAddWallet() throws IOException, InterruptedException {
-    }
-    @Test
-    public void shouldNotAddWalletWithoutWalletName() throws IOException, InterruptedException {
-    }
-    @Test
-    public void shouldNotAddWalletWithoutAccountSelected() throws IOException, InterruptedException {
-    }
-    @Test
-    public void shouldNotAddWalletWithoutWalletTypeSelected() throws IOException, InterruptedException {
-    }
 }
