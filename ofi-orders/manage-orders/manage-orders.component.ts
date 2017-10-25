@@ -160,7 +160,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             setTimeout(() => {
                 if (orderId !== -1 && this.ordersList.length) {
                     /* If we do, then hande the viewing of it. */
-                    console.log(orderId);
                     this.handleViewOrder(orderId);
 
                     this.ofiOrdersService.resetOrderBuffer();
@@ -265,7 +264,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.ofiOrdersService.updateOrder(request).then((response) => {
                     /* Handle success. */
                     this.showSuccess('Successfully cancelled this order.');
-                    console.log(response);
                 }).catch((error) => {
                     /* Handle error. */
                     this.showError('Failed to cancel this order.');

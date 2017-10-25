@@ -138,7 +138,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's wallets. */
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            console.log('walletsList:', walletsList);
             /* Assign list to a property. */
             this.myWallets = walletsList;
 
@@ -148,7 +147,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's connected info. */
         this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            console.log('connectedWalletId:', connectedWalletId);
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
@@ -162,7 +160,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             setTimeout(() => {
                 if (orderId !== -1 && this.ordersList.length) {
                     /* If we do, then hande the viewing of it. */
-                    console.log(orderId);
                     this.handleViewOrder(orderId);
 
                     this.ofiOrdersService.resetOrderBuffer();
@@ -267,7 +264,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.ofiOrdersService.updateOrder(request).then((response) => {
                     /* Handle success. */
                     this.showSuccess('Successfully cancelled this order.');
-                    console.log(response);
                 }).catch((error) => {
                     /* Handle error. */
                     this.showError('Failed to cancel this order.');
@@ -370,7 +366,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request = {};
 
         /* Check if we have search parameters. */
-        console.log('searchForm', searchForm);
         if (! searchForm.status[0] || ! searchForm.type[0]) {
             return;
         }
@@ -385,7 +380,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['asset'] = searchForm.name;
         request['arrangementType'] = searchForm.type[0].id;
 
-        console.log(request);
 
         /* ...then request the new list. */
         this.ofiOrdersService.getMyOrdersList(request)
@@ -405,7 +399,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} name - the sort name.
      */
     switchSort (event: any, name: string):void {
-        console.log(event, name);
         /* Find the header's caret. */
         let elms = event.target.getElementsByTagName('i'), caret;
         if (elms.length && elms[0].classList) {
