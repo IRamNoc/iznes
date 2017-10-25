@@ -172,6 +172,10 @@
                                 <span class="txt_waitingnav">Waiting for settlement</span>
                             </span>
 
+                            <span *ngIf="order.status == 5" class="label label-info">
+                                <span class="txt_waiting_for_payment">Waiting for payment</span>
+                            </span>
+
                             <span *ngIf="order.status == 0" class="label label-error">
                                 <span class="ml" mltag="txt_cancelled">Cancelled</span>
                             </span>
@@ -399,6 +403,9 @@
                         </a>
                         <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning">
                             Cancel
+                        </button>
+                        <button *ngIf="orderData.status == 5" id="order-approve-{{orderData.arrangementID}}" (click)="handleApproveOrder(orderData.arrangementID)" class="btn btn-primary">
+                            Approve
                         </button>
                     </div>
                 </div>
