@@ -38,6 +38,9 @@ import {
     MyOrdersComponent,
 } from '@ofi/ofi-main';
 
+/* Ofi Home Page. */
+import {OfiHomeComponent} from '@ofi/ofi-main';
+
 /**
  * Asset serving module
  */
@@ -95,6 +98,11 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'home',
+                component: OfiHomeComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService]
             },
