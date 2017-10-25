@@ -2,7 +2,6 @@ package SETLAPIHelpers.RestAPI;
 
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.JsonToJava;
-import SETLAPIHelpers.Member;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MessageFactory;
 import src.WebSocketAPITests.io.setl.Container;
@@ -47,7 +46,7 @@ public class AccountHelper {
     });
   }
 
-  public static void createAccountFailure(String localAddress, int userId, String apiKey, String description, String name, String member, String expectedError) throws InterruptedException{
+  public static void createAccountFailure(String localAddress, int userId, String apiKey, String description, String name, int member, String expectedError) throws InterruptedException{
 
     RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);

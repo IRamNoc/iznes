@@ -40,18 +40,6 @@ public class OpenCSDTabNavigationAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    public void shouldNavigateToHomeTabRandomStuff() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        Thread.sleep(500);
-        clickLink("clr-tab-link-1");
-    }
-    @Test
-    public void shouldNavigateToHomeTabForm() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        Thread.sleep(500);
-        clickLink("clr-tab-link-2");
-    }
-    @Test
     public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
