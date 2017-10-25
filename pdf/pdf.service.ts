@@ -21,25 +21,34 @@ interface UpdatePdfFileHash {
 
 @Injectable()
 export class PdfService {
-    private connectedWallet;
-    private baseUrl = 'http://localhost:9788';
+    private token: string =  null;
+    private userId: string = null;
+    private walletId: string = null;
+    private baseUrl: string = 'http://localhost:9788';
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['user', 'myDetail', 'userId']) getUser;
 
     constructor(private memberSocketService: MemberSocketService) {
+        this.token = this.memberSocketService.token;
         this.getConnectedWallet.subscribe(
             (data) => {
-                this.connectedWallet = data;
+                this.walletId = data;
+            }
+        );
+        this.getUser.subscribe(
+            (data) => {
+                this.userId = data;
             }
         );
     }
 
     public createPdfMetadata(requestData: CreatePdfMetadata): any {
-        if (this.connectedWallet) {
+        if (this.walletId) {
             const messageBody: CreatePdfMetadataMessageBody = {
                 RequestName: 'createpdfmetadata',
-                token: this.memberSocketService.token,
-                walletID: this.connectedWallet,
+                token: this.token,
+                walletID: this.walletId,
                 type: _.get(requestData, 'type', null),
                 metadata: _.get(requestData, 'metadata', null)
             };
@@ -48,11 +57,11 @@ export class PdfService {
     }
 
     public getPdf(requestData: GetPdf): any {
-        if (this.connectedWallet) {
+        if (this.walletId) {
             const messageBody: GetPdfMessageBody = {
                 RequestName: 'getpdf',
-                token: this.memberSocketService.token,
-                walletID: this.connectedWallet,
+                token: this.token,
+                walletID: this.walletId,
                 pdfID: _.get(requestData, 'pdfID', null)
             };
             return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -61,14 +70,12 @@ export class PdfService {
 
     public servePdf(fileHash) {
         if (fileHash) {
-            console.log('Serving PDF using File Hash : ' + fileHash);
-
             const path = this.baseUrl +
                 '/file?' +
                 'method=retrieve' +
-                '&userId=' + '17' +
-                '&walletId=' + this.connectedWallet +
-                '&token=' + this.memberSocketService.token +
+                '&userId=' + this.userId +
+                '&walletId=' + this.walletId +
+                '&token=' + this.token +
                 '&fileHash=' + fileHash;
 
             console.log('Serving from path:' + path);
