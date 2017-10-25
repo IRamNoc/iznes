@@ -1,60 +1,69 @@
 <div class="login-container">
-  <div>
-    <div class="logo-wrap">
-      <img id="logo-image" src="assets/images/Setl_Logo_Clean.png"/>
+    <div>
+        <div class="logo-wrap">
+            <img id="logo-image" src="assets/images/Setl_Logo_Clean.png"/>
+        </div>
+
+
+        <div class="login-inner-wrapper">
+            <span class="login-subheading" mltag="txt_opencsd">OpenCSD</span>
+            <p class="login-subpara" mltag="txt_pleaseenteryourusernameandpasswordtologintosetlopencsd">Please enter your
+                username and password to log into SETL OpenCSD</p>
+
+            <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)"
+                  [class.error]="!loginForm.valid && loginForm.touched">
+
+                <div class="form-group">
+                    <input id="username-field" type="text" name="username" placeholder="User name" class="form-control"
+                           formControlName="username"
+                           [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
+                           mltag="txt_username">
+                </div>
+                <div class="form-group">
+                    <input id="password-field" name="password" type="password" class="form-control" placeholder="Password"
+                           formControlName="password"
+                           [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+                           mltag="txt_password">
+                </div>
+
+                <div class="form-group">
+                    <button id="login-submit" type="submit" class="btn btn-primary block full-width m-b" mltag="txt_login">Login
+                    </button>
+                </div>
+
+                <div *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
+                     class="alert-items">
+
+                    <div class="alert alert-danger">
+                        <div class="alert-items">
+                            <div class="alert-item">
+                                <span class="alert-text" mltag="txt_usernameisrequired">Username is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+                     class="alert-items">
+
+                    <div class="alert alert-danger">
+                        <div class="alert-items">
+                            <div class="alert-item">
+                                <span class="alert-text" mltag="txt_passwordisrequired">Password is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+        <p class="m-t">
+            <small>
+                <span class="ml" mltag="txt_setlopencsdisaprivateenvironmentsubjecttoauthorisedaccessonly">SETL OpenCSD is a private environment subject to authorised access only.</span>
+            </small>
+        </p>
     </div>
-
-
-    <div class="login-inner-wrapper">
-      <span class="login-subheading" mltag="txt_opencsd">OpenCSD</span>
-      <p class="login-subpara" mltag="txt_pleaseenteryourusernameandpasswordtologintosetlopencsd">Please enter your username and password to log into SETL OpenCSD</p>
-
-      <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)" [class.error]="!loginForm.valid && loginForm.touched">
-
-        <div class="form-group">
-          <input id="username-field" type="text" name="username" placeholder="User name" class="form-control" formControlName="username"
-                 [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched" mltag="txt_username">
-        </div>
-        <div class="form-group">
-          <input id="password-field" name="password" type="password" class="form-control" placeholder="Password"
-                 formControlName="password" [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" mltag="txt_password">
-        </div>
-
-        <div class="form-group">
-          <button id="login-submit" type="submit" class="btn btn-primary block full-width m-b" mltag="txt_login">Login</button>
-        </div>
-
-        <div *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched" class="alert-items">
-
-          <div class="alert alert-danger">
-            <div class="alert-items">
-              <div class="alert-item">
-                <span class="alert-text" mltag="txt_usernameisrequired">Username is required</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" class="alert-items">
-
-          <div class="alert alert-danger">
-            <div class="alert-items">
-              <div class="alert-item">
-                <span class="alert-text" mltag="txt_passwordisrequired">Password is required</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </form>
-
-      <p class="m-t">
-        <small>
-          <span class="ml" mltag="txt_setlopencsdisaprivateenvironmentsubjecttoauthorisedaccessonly">SETL OpenCSD is a private environment subject to authorised access only.</span>
-        </small>
-      </p>
-    </div>
-  </div>
 </div>
