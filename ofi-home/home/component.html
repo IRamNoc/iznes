@@ -7,7 +7,7 @@
 <div class="wrapper wrapper-content">
     <!-- Navigation buttons. -->
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <button class="btn btn-primary home-button red">
                 <div class="row">
                     <div class="col-sm-4">
@@ -19,7 +19,7 @@
                 </div>
             </button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <button class="btn btn-primary home-button green">
                 <div class="row">
                     <div class="col-sm-4">
@@ -31,7 +31,7 @@
                 </div>
             </button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <button class="btn btn-primary home-button yellow">
                 <div class="row">
                     <div class="col-sm-4">
@@ -43,7 +43,7 @@
                 </div>
             </button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <button class="btn btn-primary home-button blue">
                 <div class="row">
                     <div class="col-sm-4">
@@ -167,7 +167,7 @@
             <clr-dg-footer>
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                 of {{pagination.totalItems}} coupon payments
-                <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
+                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
     </div>

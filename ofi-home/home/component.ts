@@ -25,7 +25,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     public walletHoldingsByAddress: Array<any> = [];
     public myDetails: any = {};
     public connectedWalletName: string = '';
-    private ordersList: Array<any> = [];
+    public ordersList: Array<any> = [];
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
@@ -95,7 +95,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
         /* Now, let's fetch the precentralised orders list. */
         let request;
-        console.log('My details: ', this.myDetails);
         if (this.myDetails.userType <= 26) {
             /* Is am. */
             request = {
@@ -131,7 +130,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     public handleViewOrder (orderId):void {
-        console.log('Gotta send them to orders to view: ', orderId);
         /* Set the buffer. */
         this.ofiOrdersService.setOrderBuffer(orderId);
 
@@ -146,7 +144,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     public handleCancelOrder (orderId):void {
-        console.log('Gotta send them to orders to cancel: ', orderId);
         /* Set the buffer. */
         this.ofiOrdersService.setOrderBuffer(orderId);
 
