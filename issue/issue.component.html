@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa fa-money"></i> Issue Reports</h1>
+    <h1><i class="fa fa fa-money"></i><span mltag="txt_issuereports">Issue Reports</span></h1>
 </div>
 
 <clr-tabs *ngIf="tabsControl.length">
@@ -26,17 +26,17 @@
 <ng-template #staticBalanceList>
     <div class="panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>Actions</clr-dg-column>
-            <clr-dg-column>Identifier</clr-dg-column>
-            <clr-dg-column>Asset</clr-dg-column>
-            <clr-dg-column>Total</clr-dg-column>
+            <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+            <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
+            <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
+            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
 
 
             <clr-dg-row *clrDgItems="let issue of issues">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
-                        <button (click)="handleView(issue.index)" class="btn"><i class="fa fa-search"></i> View
-                        </button>
+                        <button (click)="handleView(issue.index)" class="btn">
+                            <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
                     </div>
                 </clr-dg-cell>
                 <clr-dg-cell></clr-dg-cell>
@@ -57,12 +57,12 @@
 <ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-asset="asset">
     <div class="user-tab-panel-body panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>Wallet</clr-dg-column>
-            <clr-dg-column>Address</clr-dg-column>
-            <clr-dg-column>% Holding</clr-dg-column>
-            <clr-dg-column>Total</clr-dg-column>
-            <clr-dg-column>Encumbered</clr-dg-column>
-            <clr-dg-column>Free</clr-dg-column>
+            <clr-dg-column mltag="txt_wallet">Wallet</clr-dg-column>
+            <clr-dg-column mltag="txt_address">Address</clr-dg-column>
+            <clr-dg-column mltag="txt_percentageofholding">Percentage of Holding</clr-dg-column>
+            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let holder of asset">
                 <clr-dg-cell></clr-dg-cell>
@@ -81,7 +81,6 @@
         </clr-datagrid>
     </div>
 </ng-template>
-
 
 <!--<clr-tabs>-->
 <!--<clr-tab>-->

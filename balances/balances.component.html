@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th-list"></i> Balances</h1>
+    <h1><i class="fa fa-th-list"></i><span mltag="txt_balances">Balances</span></h1>
 </div>
 
 
@@ -10,14 +10,14 @@
             <!-- User list tab. -->
             <ng-container *ngIf="id === 0">
                 <ng-container
-                    *ngTemplateOutlet="staticBalanceList"
+                        *ngTemplateOutlet="staticBalanceList"
                 ></ng-container>
             </ng-container>
 
             <!-- User edit tabs. -->
             <ng-container *ngIf="id >= 1">
                 <ng-container
-                    *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
+                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -28,19 +28,21 @@
     <div class="panel-body">
 
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>Actions</clr-dg-column>
-            <clr-dg-column>Identifier</clr-dg-column>
-            <clr-dg-column>Asset</clr-dg-column>
-            <clr-dg-column>Total</clr-dg-column>
-            <clr-dg-column>Encumbered</clr-dg-column>
-            <clr-dg-column>Free</clr-dg-column>
+            <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+            <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
+            <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
+            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
 
             <clr-dg-row *clrDgItems="let asset of assets" [class.flash]="asset.isNew">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
-                        <button (click)="handleView(asset.index)" class="btn"><i class="fa fa-search"></i> View</button>
-                        <button class="btn"><i class="fa fa-history"></i> History</button>
+                        <button (click)="handleView(asset.index)" class="btn">
+                            <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
+                        <button class="btn"><i class="fa fa-history"></i><span mltag="txt_history">History</span>
+                        </button>
                     </div>
                 </clr-dg-cell>
                 <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
@@ -70,10 +72,10 @@
 <ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-asset="asset">
     <div class="user-tab-panel-body panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>Address</clr-dg-column>
-            <clr-dg-column>Total</clr-dg-column>
-            <clr-dg-column>Encumbered</clr-dg-column>
-            <clr-dg-column>Free</clr-dg-column>
+            <clr-dg-column mltag="txt_address">Address</clr-dg-column>
+            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
 
             <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
