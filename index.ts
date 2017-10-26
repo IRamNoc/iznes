@@ -37,12 +37,18 @@ export {OfiCorpActionService} from './ofi-req-services/ofi-corp-actions/service'
 export {CouponPaymentComponent} from './ofi-corp-actions/coupon-payment/coupon-payment.component';
 
 /**
- * Corporate Actions
+ * Orders
  */
 export {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 export {OfiOrdersService} from './ofi-req-services/ofi-orders/service';
 export {ManageOrdersComponent} from './ofi-orders/manage-orders/manage-orders.component';
 export {MyOrdersComponent} from './ofi-orders/my-orders/my-orders.component';
+
+/**
+ *
+ */
+export {OfiAmDashboardModule} from './ofi-am-dashboard/module';
+export {FundHoldingsComponent} from './ofi-am-dashboard/fund-holdings/component';
 
 /**
  * Report module
