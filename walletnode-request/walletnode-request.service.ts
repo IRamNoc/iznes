@@ -6,7 +6,8 @@ import {
     WalletAddressRequestMessageBody,
     WalletIssuerRequestMessageBody,
     RequestWalletHoldingMessageBody,
-    WalletInstrumentRequestMessageBody
+    WalletInstrumentRequestMessageBody,
+    RequestContractByAddressBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
 
@@ -107,6 +108,36 @@ export class WalletNodeRequestService {
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
+    }
+
+    /**
+     * request Contract By Address
+     *
+     * @param {object} requestData {walletId, issuer, instrument}
+     * @returns {any}
+     */
+    requestContractByAddress(requestData: any): any {
+
+        const messageBody: RequestContractByAddressBody = {
+            topic: 'contract',
+            walletid: _.get(requestData, 'walletId', 0),
+            address: _.get(requestData, 'address', ''),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
+    }
+ d
+    walletCommitToContract(requestData: any) {
+        let messageBody: any = {
+            topic: 'cocom',
+            walletid: _.get(requestData, 'walletid', 0),
+            address: _.get(requestData, 'address', 0),
+            function: _.get(requestData, 'function', 0),
+            contractdata: _.get(requestData, 'contractdata', 0),
+            contractaddress: _.get(requestData, 'contractaddress', 0),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
 }

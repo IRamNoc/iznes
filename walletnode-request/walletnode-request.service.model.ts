@@ -28,3 +28,8 @@ export interface RequestWalletHoldingMessageBody extends WalletNodeMessageBody {
 export interface WalletInstrumentRequestMessageBody extends WalletAddressRequestMessageBody {
     walletid: number;
 }
+
+export interface RequestContractByAddressBody extends WalletAddressRequestMessageBody {
+    walletid: number;
+    address: string;
+}
