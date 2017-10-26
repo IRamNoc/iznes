@@ -4,8 +4,12 @@ import {select, NgRedux} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
+import {_} from 'lodash';
+
 /* Services. */
 import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+
+import {BlockchainContractService} from '@setl/utils';
 
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -16,6 +20,14 @@ import {MoneyValueOfiPipe} from '@setl/utils/pipes';
 
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+
+/* Ofi Corp Actions request service. */
+import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+
+/* Ofi Store stuff. */
+import {
+    getOfiUserIssuedAssets
+} from '../../ofi-store';
 
 /* Core store stuff. */
 import {
@@ -31,8 +43,8 @@ import {
 
 /* Types. */
 interface SelectedItem {
-    id: number|string;
-    text: number|string;
+    id: number | string;
+    text: number | string;
 }
 
 /* Decorator. */
@@ -51,13 +63,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Ui Lists. */
     public orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id:  4, text: 'Precentralised'},
-        {id:  5, text: 'Centralised'},
-        {id:  1, text: 'Initiated'},
-        {id:  2, text: 'Waiting for NAV'},
-        {id:  3, text: 'Waiting for Settlement'},
+        {id: 4, text: 'Precentralised'},
+        {id: 5, text: 'Centralised'},
+        {id: 1, text: 'Initiated'},
+        {id: 2, text: 'Waiting for NAV'},
+        {id: 3, text: 'Waiting for Settlement'},
         {id: -1, text: 'Order settled'},
-        {id:  "0", text: 'Cancelled'},
+        {id: "0", text: 'Cancelled'},
     ];
     public orderTypes: Array<SelectedItem> = [
         {id: "0", text: 'All'},
@@ -70,44 +82,47 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
-    private reduxUnsubscribe:Unsubscribe;
+    private reduxUnsubscribe: Unsubscribe;
     private ordersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
+    private userAssetList: Array<any> = [];
     private connectedWalletId: any = 0;
-    private requestedSearch:any;
-    private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' }; // default search.
+    private requestedSearch: any;
+    private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.
 
     /* Observables. */
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb:any;
-    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
-    @select(['user', 'myDetail']) myDetailOb:any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
+    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+    @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb:any;
 
-    constructor (
-        private ofiOrdersService: OfiOrdersService,
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private walletNodeRequestService: WalletNodeRequestService,
-        private _confirmationService: ConfirmationService,
-    ) {
+    constructor(private ofiOrdersService: OfiOrdersService,
+                private ofiCorpActionService: OfiCorpActionService,
+                private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private _confirmationService: ConfirmationService,
+                private _blockchainContractService: BlockchainContractService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
 
-    ngOnInit () {
+    ngOnInit() {
         /* State. */
         let state = this.ngRedux.getState();
 
         /* Ok, let's check that we have the orders list, if not... */
-        if ( ! getOfiManageOrderList(state).length ) {
+        if (!getOfiManageOrderList(state).length) {
             /* ...request using the defaults in the form. */
             this.getOrdersBySearch();
         }
     }
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
         /* Do observable subscriptions here. */
 
         /* Orders list. */
@@ -118,8 +133,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 let fixed = order;
 
                 /* Fix dates. */
-                fixed.cutoffDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.cutoffDate));
-                fixed.deliveryDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.deliveryDate));
+                fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+                fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
                 /* Return. */
                 return fixed;
@@ -152,6 +167,42 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Update wallet name. */
             this.updateWalletConnection();
         });
+
+        /* Subscribe for the user issued asset list. */
+        this.subscriptions['user-issued-assets'] = this.userAssetListOb.subscribe((list) => {
+            /* Assign list to a property. */
+            this.userAssetList = list;
+        });
+
+        /* Subscribe for the order buffer. */
+        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+            /* Check if we have an Id. */
+            setTimeout(() => {
+                if (orderId !== -1 && this.ordersList.length) {
+                    /* If we do, then hande the viewing of it. */
+                    this.handleViewOrder(orderId);
+
+                    this.ofiOrdersService.resetOrderBuffer();
+                }
+            }, 100);
+        });
+
+
+        /* State. */
+        let state = this.ngRedux.getState();
+
+        /* Check if we need to request the user issued assets. */
+        let userIssuedAssetsList = getOfiUserIssuedAssets(state);
+        if ( ! userIssuedAssetsList.length ) {
+            /* If the list is empty, request it. */
+            this.ofiCorpActionService.getUserIssuedAssets().then(() => {
+                /* Redux subscription handles setting the property. */
+                this.changeDetectorRef.detectChanges();
+            }).catch((error) => {
+                /* Handle error. */
+                console.warn('Failed to get your issued assets: ', error);
+            });
+        }
     }
 
     /**
@@ -161,10 +212,35 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleViewOrder (orderId: number):void {
+    public handleViewOrder(orderId: number): void {
         /* Find the order. */
-        let order = this.getOrderById(orderId);
-        if (! order) return;
+        let
+            i = 0,
+            foundActive = false,
+            order = this.getOrderById(orderId);
+        if (!order) return;
+
+        /* Check if the tab is already open. */
+        this.tabsControl.map((tab) => {
+            if (tab.orderId == orderId) {
+                /* Set flag... */
+                foundActive = true;
+
+                /* ...set tab active... */
+                this.setTabActive(i);
+
+                /* ...and gotta call this again. */
+                this.changeDetectorRef.detectChanges();
+            }
+
+            /* Inc. */
+            i++;
+        })
+
+        /* If we found an active tab, no need to do anymore... */
+        if (foundActive) {
+            return;
+        }
 
         /* Push a new tab into the tabs control... */
         this.tabsControl.push(
@@ -173,7 +249,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     "icon": "fa-pencil",
                     "text": this.padNumberLeft(order.arrangementID, 5)
                 },
-                "orderId": -1,
+                "orderId": orderId,
                 "active": false,
                 "orderData": order
             }
@@ -199,11 +275,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleCancelOrder (orderId: number):void {
+    public handleCancelOrder(orderId: number): void {
         /* Let's first find the order... */
         let
-        request= {},
-        order = this.getOrderById(orderId);
+            request = {},
+            order = this.getOrderById(orderId);
 
         /* ...or return if we couldn't find it. */
         if (!order) return;
@@ -225,7 +301,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.ofiOrdersService.updateOrder(request).then((response) => {
                     /* Handle success. */
                     this.showSuccess('Successfully cancelled this order.');
-                    console.log(response);
                 }).catch((error) => {
                     /* Handle error. */
                     this.showError('Failed to cancel this order.');
@@ -239,13 +314,161 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Update Order State
+     * -----------------
+     * Handles updating an order.
+     *
+     * @return {void}
+     */
+    public updateOrderStatus(orderId: number, status: number): void {
+        /* Let's first find the order... */
+        let
+            request = {},
+            order = this.getOrderById(orderId);
+
+        /* ...or return if we couldn't find it. */
+        if (!order) return;
+
+        /* Now let's build the request that we'll send... */
+        request['arrangementId'] = order.arrangementID;
+        request['walletId'] = this.connectedWalletId;
+        request['status'] = status;
+        request['price'] = order.price;
+
+        /* Send the request. */
+        this.ofiOrdersService.updateOrder(request).then((response) => {
+            /* Handle success. */
+            let i;
+            for (i in this.tabsControl) {
+                if (this.tabsControl[i].orderId == orderId) {
+                    this.tabsControl[i].orderData.status = status;
+                    break;
+                }
+            }
+        }).catch((error) => {
+            /* Handle error. */
+            console.warn(error);
+        });
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Handle Approve Order
+     * -----------------
+     * Handles approving/authorising an order.
+     *
+     * @return {void}
+     */
+    public handleApproveOrder(orderId: number): void {
+        /* Let's first find the order... */
+        let
+            request = {},
+            order = this.getOrderById(orderId);
+
+        /* ...or return if we couldn't find it. */
+        if (!order) return;
+
+        console.log(' |---- Approving contract.')
+        console.log(' | order:', order);
+
+        request['arrangementId'] = order.arrangementID;
+        request['walletId'] = this.connectedWalletId;
+
+        console.log(' | request:', request);
+
+        /* Get contract information for this order. */
+        this.ofiOrdersService.getContractsByOrder(request).then((response) => {
+            /* Handle success. */
+            console.log(' | < response:', response);
+
+            /* Make call to wallet node. */
+            var contractAddress = response[1].Data[0].contractAddr;
+            this.getContractData(contractAddress, order);
+
+            console.log(' | < contractAddr:', contractAddress);
+
+        }).catch((error) => {
+            /* Handle error. */
+            this.showError('Failed to fetch the contract information for this order.');
+            console.warn(' | < error:', error);
+        });
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Get Contract Data
+     * -----------------
+     * Get's contract data and then sends the WN request.
+     *
+     * @param  {string} contractAddress [description]
+     * @return {any}                    [description]
+     */
+    public getContractData(contractAddress: string, order: any): any {
+        /* Let's get the wallet id for this asset. */
+        let i, walletId = 0;
+        for (i in this.userAssetList) {
+            if (this.userAssetList[i].asset == order.asset) {
+                walletId = this.userAssetList[i].walletId;
+                break;
+            }
+        }
+
+        /* If no wallet id, return. */
+        if (!walletId) return;
+
+        /* Reqest the contract by address. */
+        this.ofiOrdersService.buildRequest({
+            'taskPipe': this.walletNodeRequestService.requestContractByAddress({
+                'address': contractAddress,
+                'walletId': walletId
+            })
+        }).then((response) => {
+            /* Handle success. */
+            let contractData = response[1].data;
+
+            /* Get the wallet commit data. */
+            let commitData = this._blockchainContractService.handleWalletCommitContract(
+                contractData,
+                contractAddress,
+                contractData['authorisations'][0][0],
+                0,
+                'authorisationCommit'
+            );
+
+            /* Set some other meta data. */
+            commitData['walletid'] = walletId;
+            commitData['address'] = contractData['authorisations'][0][0];
+
+            /* Send the authorisation request. */
+            this.ofiOrdersService.buildRequest({
+                'taskPipe': this.walletNodeRequestService.walletCommitToContract(commitData),
+            }).then((response) => {
+                /* Update this order to waiting for payement, but not with a button for approval. */
+                this.updateOrderStatus(order.arrangementID, 6);
+
+                /* Detect changes. */
+                this.changeDetectorRef.detectChanges();
+            }).catch((error) => {
+                console.warn('authorisation error: ', error);
+            });
+        }).catch((error) => {
+            /* Handle error. */
+            console.log('request contract by address:', error);
+        })
+    }
+
+    /**
      * Update Wallet Connection
      * ------------------------
      * Updates the view depending on what wallet we're using.
      *
      * @return {void}
      */
-    private updateWalletConnection ():void {
+    private updateWalletConnection(): void {
         /* Loop over my wallets, and find the one we're connected to. */
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
@@ -256,9 +479,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }
-
-        /* Re-search. */
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -275,12 +495,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} orderId - an order id.
      * @return {any|boolean} - the order, if found or just false.
      */
-    private getOrderById (orderId: number):any|boolean {
+    private getOrderById(orderId: number): any | boolean {
         /* Ok, let's loop over the orders list... */
         let order;
         for (order of this.ordersList) {
             /* ..if this is the order, break, to return it... */
-            if ( order.arrangementID === orderId ) break;
+            if (order.arrangementID === orderId) break;
 
             /* ...else set order to false, incase this is last loop. */
             order = false;
@@ -299,9 +519,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private requestSearch ():void {
+    private requestSearch(): void {
         /* Let's check if we've got a request already... */
-        if ( this.requestedSearch ) {
+        if (this.requestedSearch) {
             /* ...if we do, cancel it. */
             clearTimeout(this.requestedSearch);
         }
@@ -324,14 +544,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private getOrdersBySearch ():void {
+    private getOrdersBySearch(): void {
         /* Ok, let's get the search form information... */
         let
-        searchForm = this.tabsControl[0].searchForm.value,
-        request = {};
+            searchForm = this.tabsControl[0].searchForm.value,
+            request = {};
 
         /* Check if we have search parameters. */
-        if (! searchForm.status[0] || ! searchForm.type[0]) {
+        if (!searchForm.status[0] || !searchForm.type[0]) {
             return;
         }
 
@@ -347,11 +567,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* ...then request the new list. */
         this.ofiOrdersService.getManageOrdersList(request)
-        .then(response => true) // no need to do anything here.
-        .catch((error) => {
-            console.warn('failed to fetch orders list: ', error);
-            this.showError('Failed to fetch the latest orders.');
-        });
+            .then(response => true) // no need to do anything here.
+            .catch((error) => {
+                console.warn('failed to fetch orders list: ', error);
+                this.showError('Failed to fetch the latest orders.');
+            });
     }
 
     /**
@@ -362,7 +582,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} event - the click event.
      * @param {string} name - the sort name.
      */
-    switchSort (event: any, name: string):void {
+    switchSort(event: any, name: string): void {
         /* Find the header's caret. */
         let elms = event.target.getElementsByTagName('i'), caret;
         if (elms.length && elms[0].classList) {
@@ -372,7 +592,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* If we've clicked the one we're sorting by, reverse sort. */
         if (name === this.sort.name && caret) {
             /* Reverse. */
-            if ( this.sort.direction === "ASC" ) {
+            if (this.sort.direction === "ASC") {
                 this.sort.direction = "DESC";
                 caret.classList.remove('fa-caret-up');
                 caret.classList.add('fa-caret-down');
@@ -403,11 +623,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {FormGroup} - the new FormGroup.
      */
-    private newSearchFormGroup ():FormGroup {
+    private newSearchFormGroup(): FormGroup {
         return new FormGroup({
             'name': new FormControl(''),
-            'status': new FormControl([ this.orderStatuses[0] ]),
-            'type': new FormControl([ this.orderTypes[0] ]),
+            'status': new FormControl([this.orderStatuses[0]]),
+            'type': new FormControl([this.orderTypes[0]]),
         });
     }
 
@@ -428,23 +648,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {string}              [description]
      */
-    private formatDate (formatString:string, dateObj:Date):string {
+    private formatDate(formatString: string, dateObj: Date): string {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return '';
+        if (!formatString || !dateObj) return '';
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad( dateObj.getMonth().toString() ))
-        .replace('DD', this.numPad( dateObj.getDate().toString() ))
-        .replace('hh', this.numPad( dateObj.getHours() ))
-        .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
-        .replace('mm', this.numPad( dateObj.getMinutes() ))
-        .replace('ss', this.numPad( dateObj.getSeconds() ))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad(dateObj.getMonth().toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
-    private numPad (num) {
-        return num < 10 ? "0"+num : num;
+
+    private numPad(num) {
+        return num < 10 ? "0" + num : num;
     }
 
     /**
@@ -455,7 +676,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} grossAmount - the grossAmount.
      * @return {number}             - the entry fee.
      */
-    private calcEntryFee (grossAmount:number): number {
+    private calcEntryFee(grossAmount: number): number {
         return Math.round(grossAmount * .0375);
     }
 
@@ -465,7 +686,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted date or empty string.
      */
-    private getOrderDate (dateString):string {
+    private getOrderDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
@@ -475,7 +696,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted time or empty string.
      */
-    private getOrderTime (dateString):string {
+    private getOrderTime(dateString): string {
         return this.formatDate('hh:mm:ss', new Date(dateString));
     }
 
@@ -484,19 +705,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * -------------
      * Pads a number left
      *
-     * @param  {number} num - the couponId.
+     * @param  {number} num - the orderId.
      * @return {string}
      */
-    private padNumberLeft (num: number|string, zeros?: number):string {
+    private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if ( ! num && num != 0) return "";
+        if (!num && num != 0) return "";
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
-        requiredZeros = zeros - num.length,
-        returnString = "";
+            requiredZeros = zeros - num.length,
+            returnString = "";
 
         /* Now add the zeros. */
         while (requiredZeros--) {
@@ -519,7 +740,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {array} - tabsControl object.
      */
-    private defaultTabControl():Array<any> {
+    private defaultTabControl(): Array<any> {
         return [
             {
                 "title": {

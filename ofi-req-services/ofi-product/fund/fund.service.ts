@@ -4,7 +4,7 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {FundRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody, UpdateFundShareRequestBody} from './fund.service.model';
+import {FundRequestMessageBody, HistoryRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody, UpdateFundShareRequestBody, SaveFundHistoryRequestBody} from './fund.service.model';
 import {setRequestedFund, clearRequestedFund, SET_FUND_LIST, SET_FUND_SHARE_LIST} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
 
 interface FundData {
@@ -20,6 +20,16 @@ interface FundData {
     issuer?: any;
     shareName?: any;
     status?: any;
+}
+interface HistoryData {
+    fundId?: any;
+    shareId?: any;
+    fieldTag?: any;
+    dateFrom?: any;
+    dateTo?: any;
+    pageNum?: any;
+    pageSize?: any;
+    changes?: any;
 }
 
 @Injectable()
@@ -145,6 +155,33 @@ export class OfiFundService {
             issuer: fData.issuer,
             shareName: fData.shareName,
             status: fData.status,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestFundHistory(hData: HistoryData, ngRedux: NgRedux<any>): any {
+        const messageBody: HistoryRequestMessageBody = {
+            RequestName: 'getFundModification',
+            token: this.memberSocketService.token,
+            fundId: hData.fundId,
+            shareId: hData.shareId,
+            fieldTag: hData.fieldTag,
+            dateFrom: hData.dateFrom,
+            dateTo: hData.dateTo,
+            pageNum: hData.pageNum,
+            pageSize: hData.pageSize,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    saveFundHistory(hData: HistoryData, ngRedux: NgRedux<any>): any {
+
+        const messageBody: SaveFundHistoryRequestBody = {
+            RequestName: 'newFundModification',
+            token: this.memberSocketService.token,
+            changes: hData.changes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

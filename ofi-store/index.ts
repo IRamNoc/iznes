@@ -55,9 +55,21 @@ import {
 } from './ofi-orders';
 
 export {
-    getOfiMyOrderList,
+    /* Manage orders */
     getOfiManageOrderList,
     OFI_SET_MANAGE_ORDER_LIST,
+
+    /* Home orders */
+    getOfiHomeOrderList,
+    OFI_SET_HOME_ORDER_LIST,
+
+    /* Home orders buffer */
+    OFI_SET_HOME_ORDER_BUFFER,
+    OFI_RESET_HOME_ORDER_BUFFER,
+    getOfiHomeOrderViewBuffer,
+
+    /* My orders */
+    getOfiMyOrderList,
     OFI_SET_MY_ORDER_LIST,
 } from './ofi-orders';
 

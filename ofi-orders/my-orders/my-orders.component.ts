@@ -80,6 +80,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb:any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb:any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
     @select(['user', 'myDetail']) myDetailOb:any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
@@ -118,8 +119,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 let fixed = order;
 
                 /* Fix dates. */
-                fixed.cutoffDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.cutoffDate));
-                fixed.deliveryDate = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(fixed.deliveryDate));
+                fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+                fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
                 /* Return. */
                 return fixed;
@@ -137,7 +138,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's wallets. */
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            console.log('walletsList:', walletsList);
             /* Assign list to a property. */
             this.myWallets = walletsList;
 
@@ -147,12 +147,24 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe for this user's connected info. */
         this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            console.log('connectedWalletId:', connectedWalletId);
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
             /* Update wallet name. */
             this.updateWalletConnection();
+        });
+
+        /* Subscribe for the order buffer. */
+        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+            /* Check if we have an Id. */
+            setTimeout(() => {
+                if (orderId !== -1 && this.ordersList.length) {
+                    /* If we do, then hande the viewing of it. */
+                    this.handleViewOrder(orderId);
+
+                    this.ofiOrdersService.resetOrderBuffer();
+                }
+            }, 100);
         });
     }
 
@@ -165,10 +177,34 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public handleViewOrder (orderId: number):void {
         /* Find the order. */
-        let order = this.getOrderById(orderId);
+        let
+            i = 0,
+            foundActive = false,
+            order = this.getOrderById(orderId);
         if (! order) return;
 
-        console.log('Viewing order: ', order);
+        /* Check if the tab is already open. */
+        this.tabsControl.map((tab) => {
+            if (tab.orderId == orderId) {
+                /* Set flag... */
+                foundActive = true;
+
+                /* ...set tab active... */
+                this.setTabActive(i);
+
+                /* ...and gotta call this again. */
+                this.changeDetectorRef.detectChanges();
+            }
+
+            /* Inc. */
+            i++;
+        })
+
+        /* If we found an active tab, no need to do anymore... */
+        if (foundActive) {
+            return;
+        }
+
         /* Push a new tab into the tabs control... */
         this.tabsControl.push(
             {
@@ -176,7 +212,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     "icon": "fa-pencil",
                     "text": this.padNumberLeft(order.arrangementID, 5)
                 },
-                "orderId": -1,
+                "orderId": orderId,
                 "active": false,
                 "orderData": order
             }
@@ -228,7 +264,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.ofiOrdersService.updateOrder(request).then((response) => {
                     /* Handle success. */
                     this.showSuccess('Successfully cancelled this order.');
-                    console.log(response);
                 }).catch((error) => {
                     /* Handle error. */
                     this.showError('Failed to cancel this order.');
@@ -251,20 +286,14 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private updateWalletConnection ():void {
         /* Loop over my wallets, and find the one we're connected to. */
         let wallet;
-        console.log(this.connectedWalletId +" && "+ Object.keys(this.myWallets).length);
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
-            console.log('looping wallets...');
             for (wallet in this.myWallets) {
-                console.log("wallet: ", wallet);
                 if (wallet == this.connectedWalletId) {
                     this.connectedWalletName = this.myWallets[wallet].walletName;
                     break;
                 }
             }
         }
-
-        /* Re-search. */
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -337,7 +366,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request = {};
 
         /* Check if we have search parameters. */
-        console.log('searchForm', searchForm);
         if (! searchForm.status[0] || ! searchForm.type[0]) {
             return;
         }
@@ -352,7 +380,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['asset'] = searchForm.name;
         request['arrangementType'] = searchForm.type[0].id;
 
-        console.log(request);
 
         /* ...then request the new list. */
         this.ofiOrdersService.getMyOrdersList(request)
@@ -372,7 +399,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} name - the sort name.
      */
     switchSort (event: any, name: string):void {
-        console.log(event, name);
         /* Find the header's caret. */
         let elms = event.target.getElementsByTagName('i'), caret;
         if (elms.length && elms[0].classList) {
