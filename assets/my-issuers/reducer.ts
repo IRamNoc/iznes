@@ -1,8 +1,14 @@
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyIssuersActions from './actions';
+import {
+    SET_LAST_CREATED_REGISTER_ISSUER_DETAIL,
+    UPDATE_LAST_CREATED_REGISTER_ISSUER_DETAIL,
+    CLEAR_REGISTER_ISSUER_NEED_HANDLE
+} from './actions';
 import {MyIssuersState, IssuerDetail, NewIssuerRequest} from './model';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
+import {immutableHelper} from '@setl/utils';
 
 const initialState: MyIssuersState = {
     issuerList: [],
@@ -17,6 +23,14 @@ const initialState: MyIssuersState = {
     walletIssuerDetail: {
         walletIssuer: '',
         walletIssuerAddress: ''
+    },
+    lastCreated: {
+        txHash: '',
+        fromAddress: '',
+        namespace: '',
+        inBlockchain: false,
+        needHandle: false,
+        metaData: false
     }
 };
 
@@ -112,6 +126,15 @@ export const MyIssuersReducer = function (state: MyIssuersState = initialState,
 
             return newState;
 
+        case SET_LAST_CREATED_REGISTER_ISSUER_DETAIL:
+            return handleSetLastCreatedRegisterIssuerDetail(state, action);
+
+        case UPDATE_LAST_CREATED_REGISTER_ISSUER_DETAIL:
+            return updateLastCreatedRegisterIssuerDetail(state, action);
+
+        case CLEAR_REGISTER_ISSUER_NEED_HANDLE:
+            return handleClearRegisterIssuerNeedHandle(state);
+
         default:
             return state;
     }
@@ -134,4 +157,73 @@ function formatToWalletIssuerList(rawWalletIssuerData: Array<any>): {
     }, {}));
 
     return walletIssuerObject.toJS();
+}
+
+
+function handleSetLastCreatedRegisterIssuerDetail(state: MyIssuersState, action: any): MyIssuersState {
+    const registerIssuerData = _.get(action, 'data[1].data', {});
+    const txHash = _.get(registerIssuerData, 'hash', '');
+    const fromAddress = _.get(registerIssuerData, 'fromaddr', '');
+    const namespace = _.get(registerIssuerData, 'namespace', '');
+    const inBlockchain = false;
+    const needHandle = true;
+    const metaData = _.get(action, 'metaData', {});
+
+    const lastCreated = {
+        txHash,
+        fromAddress,
+        namespace,
+        inBlockchain,
+        needHandle,
+        metaData
+    };
+
+    return Object.assign({}, state, {
+        lastCreated
+    });
+}
+
+function updateLastCreatedRegisterIssuerDetail(state: MyIssuersState, action: any): MyIssuersState {
+    console.log('---handling action update register issuer');
+    console.log('action', action);
+    // find all updated contract.
+    const registerIssuerTx = _.get(action, 'data', []);
+    console.log('tx', registerIssuerTx);
+
+    // the last created tx hash.
+    const lastCreatedTxHash = state.lastCreated.txHash;
+    console.log('old hash', lastCreatedTxHash);
+
+    // the hash of transaction to check.
+    const registerIssuerTxHash = _.get(registerIssuerTx, '[3]', '');
+    console.log('new hash', registerIssuerTxHash);
+
+    const inBlockchain = lastCreatedTxHash === registerIssuerTxHash;
+    const oldLastCreated = state.lastCreated;
+    const lastCreated = Object.assign({}, oldLastCreated, {
+        inBlockchain
+    });
+    console.log('new last created', lastCreated);
+    console.log('---done handling action update register issuer');
+
+    return Object.assign({}, state, {
+        lastCreated
+    });
+}
+
+/**
+ * handle clear register issuer need handle.
+ * @param {MyIssuersState} state
+ * @return {MyIssuersState}
+ */
+function handleClearRegisterIssuerNeedHandle(state: MyIssuersState): MyIssuersState {
+    const oldLastCreated = state.lastCreated;
+    const needHandle = false;
+    const lastCreated = Object.assign({}, oldLastCreated, {
+        needHandle
+    });
+
+    return Object.assign({}, state, {
+        lastCreated
+    });
 }

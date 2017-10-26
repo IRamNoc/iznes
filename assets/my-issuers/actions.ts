@@ -1,5 +1,6 @@
 import {name} from './__init__';
 import {kAction} from '@setl/utils/common';
+import {Action, ActionCreator} from 'redux';
 
 /**
  * Register new issuer success
@@ -37,3 +38,41 @@ export const clearRequestedWalletIssuer = kAction(CLEAR_REQUESTED_WALLET_ISSUER)
  * Set my issuers list
  */
 export const SET_WALLET_ISSUER_LIST = `${name}/SET_WALLET_ISSUER_LIST`;
+
+/**
+ * Update last created register issuer.
+ * @type {string}
+ */
+export const UPDATE_LAST_CREATED_REGISTER_ISSUER_DETAIL = `${name}/UPDATE_LAST_CREATED_REGISTER_ISSUER_DETAIL`;
+
+interface UpdateLastCreatedRegisterIssuerDetail extends Action {
+    data: any;
+}
+
+export const updateLastCreatedRegisterIssuerDetail: ActionCreator<UpdateLastCreatedRegisterIssuerDetail> =
+    (data) => ({
+        type: UPDATE_LAST_CREATED_REGISTER_ISSUER_DETAIL,
+        data
+    });
+
+/**
+ * Set last created register issuer.
+ *
+ * @type {string}
+ */
+export const SET_LAST_CREATED_REGISTER_ISSUER_DETAIL = `${name}/SET_LAST_CREATED_REGISTER_ISSUER_DETAIL`;
+
+interface SetLastCreatedRegisterIssuerDetail extends Action {
+    data: any;
+    metaData: any;
+}
+
+export const setLastCreatedRegisterIssuerDetail: ActionCreator<SetLastCreatedRegisterIssuerDetail> =
+    (data, metaData) => ({
+        type: SET_LAST_CREATED_REGISTER_ISSUER_DETAIL,
+        data,
+        metaData
+    });
+
+export const CLEAR_REGISTER_ISSUER_NEED_HANDLE = `${name}/CLEAR_REGISTER_ISSUER_NEED_HANDLE`;
+export const clearRegisterIssuerNeedHandle = kAction(CLEAR_REGISTER_ISSUER_NEED_HANDLE);

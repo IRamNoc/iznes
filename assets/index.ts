@@ -11,7 +11,10 @@ import {
     setRequestedWalletIssuer,
     clearRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
-    getWalletIssuerDetail
+    getWalletIssuerDetail,
+    setLastCreatedRegisterIssuerDetail,
+    updateLastCreatedRegisterIssuerDetail,
+    clearRegisterIssuerNeedHandle
 } from './my-issuers';
 
 import {
@@ -57,7 +60,10 @@ export {
     setRequestedWalletIssuer,
     clearRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
-    getWalletIssuerDetail
+    getWalletIssuerDetail,
+    setLastCreatedRegisterIssuerDetail,
+    updateLastCreatedRegisterIssuerDetail,
+    clearRegisterIssuerNeedHandle
 };
 
 export {
