@@ -21,6 +21,7 @@ import {
     OfiMemberNodeBody,
     OfiRequestArrangements,
     OfiUpdateArrangement,
+    OfiGetContractByOrder,
 } from './model';
 
 @Injectable()
@@ -149,6 +150,32 @@ export class OfiOrdersService {
     }
 
     /**
+     * Get Contracts By Order
+     * ------------------
+     * Gets contracts information by order (arrangement) ID.
+     *
+     * @param  {object} data  - the order information.
+     *
+     * @return {Promise<any>}
+     */
+    public getContractsByOrder (data: any): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiGetContractByOrder = {
+            RequestName: 'gconbarr',
+            token: this.memberSocketService.token,
+            arrangementId: data.arrangementId,
+            walletId: data.walletId,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody)
+        });
+    }
+
+    //gconbarr
+
+    /**
      * Set Order Buffer
      * ------------------
      * Sets the order buffer to an order's ID.
@@ -189,7 +216,7 @@ export class OfiOrdersService {
     *
     * @return {Promise<any>} [description]
     */
-    private buildRequest(options): Promise<any> {
+    public buildRequest(options): Promise<any> {
         /* Check for taskPipe,  */
         return new Promise((resolve, reject) => {
             /* Dispatch the request. */

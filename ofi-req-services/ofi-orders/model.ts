@@ -22,3 +22,8 @@ export interface OfiUpdateArrangement extends OfiMemberNodeBody {
     price: string|number;
     deamonToken: number;
 }
+
+export interface OfiGetContractByOrder extends OfiMemberNodeBody {
+    arrangementId: string|number;
+    walletId: string|number;
+}
