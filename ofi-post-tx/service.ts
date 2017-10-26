@@ -19,11 +19,17 @@ export class OfiPostTxService implements OnDestroy {
 
     @select(['wallet', 'myWalletContract', 'lastCreated']) lastCreatedContractOb;
 
+    // need something like this
+    @select(['wallet', 'myWalletIssuer', 'lastCreated']) lastCreatedIssuer;
+
     constructor(private _memberSocketService: MemberSocketService,
                 private _ngRedux: NgRedux<any>,
                 private _ofiFundInvestService: OfiFundInvestService,
                 private _alertsService: AlertsService) {
-        this.subscriptionsArray.push(this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)));
+        this.subscriptionsArray.push(
+            this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
+            this.lastCreatedIssuer.subscribe(lastCreated => this.handleLastCreatedIssuer(lastCreated))
+        );
     }
 
     ngOnDestroy() {
@@ -31,6 +37,20 @@ export class OfiPostTxService implements OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+    }
+
+
+    handleLastCreatedIssuer(lastCreated) {
+
+        console.log('blockchain output: ' + lastCreated);
+        console.log('issuer complete');
+
+        // register asset (ISIN|FundShareName)
+        // in walletnode-tx/registerAsset
+
+
+        // register another asset (ISIN|Coupon)
+        // in walletnode-tx/registerAsset
     }
 
     handleLastCreatedContract(lastCreated) {
