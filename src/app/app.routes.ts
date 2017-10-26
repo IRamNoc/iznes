@@ -10,7 +10,7 @@ import {SetlMyAccountComponent} from '@setl/core-account';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
-import {FundHoldingsComponent} from '@setl/core-am-dashboard';
+import {FundHoldingsComponent} from '@ofi/ofi-main';
 
 /* UserAdmin Module. */
 import {AdminUsersComponent} from '@setl/core-useradmin';

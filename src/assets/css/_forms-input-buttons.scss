@@ -44,11 +44,7 @@ For use with ng-select.
 <button class='btn btn-primary btn-end'></button>
 */
 button.btn-end {
-    display: block;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    margin-left: -2px !important;
-    margin-top: 0px !important;
+    display: inline-block;
+    margin-top: 6px !important;
     height: 40px;
-    z-index: 1;
 }
