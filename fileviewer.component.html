@@ -1,5 +1,5 @@
 <div *ngIf="fileHash !== ''">
-    <button (click)="openFileModal();">View File</button>
+    <button (click)="openFileModal();" mltag="txt_viewfile">View File</button>
     <clr-modal [(clrModalOpen)]="fileModal" [clrModalSize]="'xl'" [clrModalClosable]="false">
         <div class="modal-title">
             <div class="alert alert-success">
@@ -19,12 +19,8 @@
             <iframe class="fileviewer-contents" [src]="fileUrl"></iframe>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="closeFileModal();">
-                Close
-            </button>
+            <button type="button" class="btn btn-primary" (click)="closeFileModal();" mltag="txt_close">Close</button>
         </div>
     </clr-modal>
 </div>
-<div *ngIf="fileHash === ''">
-    No File
-</div>
+<div *ngIf="fileHash === ''" mltag="txt_nofile">No File</div>
