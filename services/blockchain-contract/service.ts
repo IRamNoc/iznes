@@ -238,6 +238,58 @@ export class BlockchainContractService {
 
 
     }
+
+    handleWalletCommitContract(contract, thisContractAddress, thisCommitAddr, thisPartyId, commitType) {
+
+        var payList = [];
+        var receiveList = [];
+        var authoriseList = [];
+
+        if (commitType === 'partyCommit') {
+
+        }
+
+        else if (commitType === 'authorisationCommit') {
+
+            for (var i = 0; i < contract['authorisations'].length; i++) {
+                var thisAuthorisorData = contract['authorisations'][i];
+
+                if (thisAuthorisorData[0] == thisCommitAddr && thisAuthorisorData[1] == thisPartyId) {
+                    var thisAuthorisorPub = thisCommitAddr;
+                    var thisAuthorisorIdentifier = thisAuthorisorData[1];
+                    var thisAuthorisorSignature = thisAuthorisorData[2];
+                    var thisAuthorisorMeta = thisAuthorisorData[3];
+                    var thisAuthorisorCommitData = [thisAuthorisorPub, thisAuthorisorIdentifier, thisAuthorisorSignature, thisAuthorisorMeta];
+
+                    authoriseList.push(thisAuthorisorCommitData);
+                }
+            }
+
+            var contractData = {
+                'contractfunction': "dvp_uk_commit",
+                'issuingaddress': thisCommitAddr,
+                'contractaddress': thisContractAddress,
+                'party': [],
+                'commitment': payList,
+                'receive': receiveList,
+                'authorise': authoriseList
+            };
+        }
+
+        else if (commitType === 'cancelCommit') {
+
+        }
+
+        var data = {
+            'commitaddress': thisCommitAddr,
+            'function': 'dvp_uk_commit',
+            'contractdata': contractData,
+            'contractaddress': thisContractAddress
+        };
+
+        return data;
+    }
+
 }
 
 /**
