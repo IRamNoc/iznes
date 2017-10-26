@@ -45,6 +45,7 @@ import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
 import {SetlComponentsModule} from '@setl/utils';
 import {CorpActionsModule} from '@setl/core-corp-actions';
+import {AmDashboardModule} from '@setl/core-am-dashboard';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -134,14 +135,14 @@ export function memberSocketServiceFactory() {
         CorpActionsModule,
         OfiMainModule,
         SetlDirectivesModule,
-        SetlServicesModule
+        SetlServicesModule,
+        AmDashboardModule,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
 
         {
             provide: MemberSocketService,
-
             useFactory: memberSocketServiceFactory
         },
 
