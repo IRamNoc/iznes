@@ -50,6 +50,7 @@ export class WalletnodeChannelService {
          * and etc.
          */
         console.log('---handle block update---');
+        InitialisationService.updatedWalletNodeTxStateWithBlock(this.ngRedux, data);
     }
 
 

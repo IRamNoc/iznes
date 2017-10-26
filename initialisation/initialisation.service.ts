@@ -31,8 +31,10 @@ import {
     setRequesteAllInstruments,
     SET_ALL_INSTRUMENTS_LIST,
     updateLastCreatedContractDetail,
+    updateLastCreatedRegisterIssuerDetail,
     clearRequestedWalletLabel
 } from '@setl/core-store';
+import _ from 'lodash';
 
 
 import {SagaHelper} from '@setl/utils';
@@ -369,6 +371,28 @@ export class InitialisationService {
     }
 
     /**
+     * Using 'block' update from wallet node.
+     *
+     * Update tx that made to wallet node from frontend, waiting block come in an update
+     * status. for example set inBlockchain flag to true, and set needHandle flag to true.
+     *
+     * @param ngRedux
+     * @param data
+     */
+    static updatedWalletNodeTxStateWithBlock(ngRedux: NgRedux<any>, data) {
+        const txList = _.get(data, 'Data.Transactions', []);
+
+        for (const tx of txList) {
+            const txType = tx[2];
+            // todo
+            // change to a switch statement of some sort, and store tx type in a constant
+            if (txType === 4) {
+                ngRedux.dispatch(updateLastCreatedRegisterIssuerDetail(tx));
+            }
+        }
+    }
+
+    /**
      * Using 'blockchanges' update from wallet node.
      *
      * Update tx that made to wallet node from frontend, waiting block come in an update
@@ -379,6 +403,7 @@ export class InitialisationService {
      */
     static updatedWalletNodeTxStateWithBlockChange(ngRedux: NgRedux<any>, data) {
         ngRedux.dispatch(updateLastCreatedContractDetail(data));
+
     }
 
 
