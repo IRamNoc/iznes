@@ -11,6 +11,15 @@ export interface NewIssuerRequest {
     needNotify: boolean;
 }
 
+export interface LastRegisterIssuerDetail {
+    txHash: string;
+    fromAddress: string;
+    namespace: string;
+    inBlockchain: boolean;
+    needHandle: boolean;
+    metaData: any;
+}
+
 export interface MyIssuersState {
     issuerList: Array<IssuerDetail>;
     requestedWalletIssuer: boolean;
@@ -19,5 +28,6 @@ export interface MyIssuersState {
         walletIssuer: string;
         walletIssuerAddress: string;
     };
+    lastCreated: LastRegisterIssuerDetail;
 }
 

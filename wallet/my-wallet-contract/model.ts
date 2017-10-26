@@ -20,7 +20,6 @@ export interface LastContractDetail {
 
 export interface MyWalletContractState {
     contractList: ContractList;
-
     lastCreated: LastContractDetail;
 }
 

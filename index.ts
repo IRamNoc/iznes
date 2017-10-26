@@ -84,6 +84,9 @@ export {
     SET_WALLET_ISSUER_LIST,
     setRequestedWalletIssuer,
     clearRequestedWalletIssuer,
+    setLastCreatedRegisterIssuerDetail,
+    updateLastCreatedRegisterIssuerDetail,
+    clearRegisterIssuerNeedHandle,
 
     REGISTER_ASSET_SUCCESS,
     REGISTER_ASSET_FAIL,

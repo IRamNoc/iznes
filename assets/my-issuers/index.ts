@@ -6,6 +6,9 @@ export {
     finishRegisterIssuerNotification,
     setRequestedWalletIssuer,
     clearRequestedWalletIssuer,
-    SET_WALLET_ISSUER_LIST
+    SET_WALLET_ISSUER_LIST,
+    updateLastCreatedRegisterIssuerDetail,
+    setLastCreatedRegisterIssuerDetail,
+    clearRegisterIssuerNeedHandle
 } from './actions';
 export {getNewIssuerRequest, getRequestedIssuerState, getWalletIssuerDetail} from './selectors';
