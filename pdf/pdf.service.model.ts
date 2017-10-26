@@ -2,14 +2,14 @@ import {MemberNodeMessageBody} from '@setl/utils/common';
 
 export interface CreatePdfMetadataMessageBody extends MemberNodeMessageBody {
     token: string;
-    walletID: number;
+    walletID: string;
     type: number;
     metadata: object;
 }
 
 export interface GetPdfMessageBody extends MemberNodeMessageBody {
     token: string;
-    walletID: number;
+    walletID: string;
     pdfID: number;
 }
 
