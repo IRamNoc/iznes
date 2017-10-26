@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {DomSanitizer} from "@angular/platform-browser";
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {AddFileMessageBody} from './file.service.model';
