@@ -241,53 +241,50 @@ export class BlockchainContractService {
 
     handleWalletCommitContract(contract, thisContractAddress, thisCommitAddr, thisPartyId, commitType) {
 
-        var payList = [];
-        var receiveList = [];
-        var authoriseList = [];
+        const payList = [];
+        const receiveList = [];
+        const authoriseList = [];
+        let contractData = {};
 
         if (commitType === 'partyCommit') {
 
-        }
+        } else if (commitType === 'authorisationCommit') {
 
-        else if (commitType === 'authorisationCommit') {
+            let i = 0;
+            for (i = 0; i < contract['authorisations'].length; i++) {
+                const thisAuthorisorData = contract['authorisations'][i];
 
-            for (var i = 0; i < contract['authorisations'].length; i++) {
-                var thisAuthorisorData = contract['authorisations'][i];
-
-                if (thisAuthorisorData[0] == thisCommitAddr && thisAuthorisorData[1] == thisPartyId) {
-                    var thisAuthorisorPub = thisCommitAddr;
-                    var thisAuthorisorIdentifier = thisAuthorisorData[1];
-                    var thisAuthorisorSignature = thisAuthorisorData[2];
-                    var thisAuthorisorMeta = thisAuthorisorData[3];
-                    var thisAuthorisorCommitData = [thisAuthorisorPub, thisAuthorisorIdentifier, thisAuthorisorSignature, thisAuthorisorMeta];
+                if (thisAuthorisorData[0] === thisCommitAddr && Number(thisAuthorisorData[1]) === Number(thisPartyId)) {
+                    const thisAuthorisorPub = thisCommitAddr;
+                    const thisAuthorisorIdentifier = thisAuthorisorData[1];
+                    const thisAuthorisorSignature = thisAuthorisorData[2];
+                    const thisAuthorisorMeta = thisAuthorisorData[3];
+                    const thisAuthorisorCommitData = [thisAuthorisorPub, thisAuthorisorIdentifier,
+                        thisAuthorisorSignature, thisAuthorisorMeta];
 
                     authoriseList.push(thisAuthorisorCommitData);
                 }
             }
 
-            var contractData = {
-                'contractfunction': "dvp_uk_commit",
-                'issuingaddress': thisCommitAddr,
-                'contractaddress': thisContractAddress,
-                'party': [],
-                'commitment': payList,
-                'receive': receiveList,
-                'authorise': authoriseList
+            contractData = {
+                contractfunction: 'dvp_uk_commit',
+                issuingaddress: thisCommitAddr,
+                contractaddress: thisContractAddress,
+                party: [],
+                commitment: payList,
+                receive: receiveList,
+                authorise: authoriseList
             };
-        }
-
-        else if (commitType === 'cancelCommit') {
+        } else if (commitType === 'cancelCommit') {
 
         }
 
-        var data = {
+        return {
             'commitaddress': thisCommitAddr,
             'function': 'dvp_uk_commit',
             'contractdata': contractData,
             'contractaddress': thisContractAddress
         };
-
-        return data;
     }
 
 }
@@ -308,7 +305,7 @@ function handleSendOrIssueActionData(actionData: SendActionData | IssueActionDat
     const toAddress = actionData.toAddress;
     const asset = actionData.asset;
     const amount = actionData.amount;
-    const sharePrice = actionData.sharePrice;
+    const actionMetaData = actionData.metaData;
 
     // from address
 
@@ -325,8 +322,8 @@ function handleSendOrIssueActionData(actionData: SendActionData | IssueActionDat
 
         newParties[fromAddress]['pay'][asset] = {
             amount: amount,
-            price: sharePrice,
-            isIssuance: isIssuance
+            isIssuance: isIssuance,
+            metaData: actionMetaData
         };
     } else {
         // If this address has already pay something. so add this to existing pay.
@@ -398,11 +395,8 @@ function constructPartiesListData(partiesData: PartiesData): Array<number | Part
                     const payAmount = payData.amount;
                     const payPublicKey = ''; // optional
                     const paySignature = ''; // optional
-                    const sharePrice = payData.price;
                     const isIssuance = payData.isIssuance;
-                    const payListMeta = {
-                        price: sharePrice
-                    };
+                    const payListMeta = payData.metaData;
 
                     const payListMetaStr = JSON.stringify(payListMeta);
 
