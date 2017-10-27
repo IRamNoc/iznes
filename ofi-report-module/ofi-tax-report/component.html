@@ -1,1 +1,66 @@
-<h2>Ofi tax report</h2>
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-eur"></i> Tax report</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            </button>
+
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container>
+                    <ng-container *ngTemplateOutlet="balanceTab"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- balance Table. -->
+    <ng-template #balanceTab>
+        <div class="panel-body">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Fund name</clr-dg-column>
+                <clr-dg-column>Fund ISIN</clr-dg-column>
+                <clr-dg-column>Date</clr-dg-column>
+                <clr-dg-column>Nav</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let assetBalance of assetBalances">
+                    <clr-dg-cell>
+                        <button class="btn">
+                            <i class="fa fa-pencil-square-o"></i> Edit
+                        </button>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{assetBalance.fundName}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{assetBalance.balance}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{assetBalance.disposalGainLoss}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{assetBalance.unrealisedGainLoss}}
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} accounts
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>
+
