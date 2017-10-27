@@ -448,10 +448,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 'taskPipe': this.walletNodeRequestService.walletCommitToContract(commitData),
             }).then((response) => {
                 /* Update this order to waiting for payement, but not with a button for approval. */
-                this.updateOrderStatus(order.arrangementID, 6);
+                // Daemon does this.
+                // this.updateOrderStatus(order.arrangementID, -1);
 
                 /* Detect changes. */
-                this.changeDetectorRef.detectChanges();
+                // this.changeDetectorRef.detectChanges();
+                this.showSuccess('Successfully approved this order.');
             }).catch((error) => {
                 console.warn('authorisation error: ', error);
             });
