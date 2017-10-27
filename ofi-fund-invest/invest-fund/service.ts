@@ -200,8 +200,10 @@ export class InvestFundFormService {
                             asset: asset,
                             dataItem: [],
                             fromAddress: issuerAddress,
-                            sharePrice: -1, // only used for phoenix
-                            toAddress: investorAddress
+                            toAddress: investorAddress,
+                            metaData: {
+                                clientTxType: 'subscription'
+                            }
                         },
                         actionType: ArrangementActionType.ISSUE
                     }
@@ -217,8 +219,10 @@ export class InvestFundFormService {
                             asset: asset,
                             dataItem: [],
                             fromAddress: issuerAddress,
-                            sharePrice: -1, // only used for phoenix
-                            toAddress: investorAddress
+                            toAddress: investorAddress,
+                            metaData: {
+                                clientTxType: 'subscription'
+                            }
                         },
                         actionType: ArrangementActionType.ISSUE
                     }
@@ -242,8 +246,10 @@ export class InvestFundFormService {
                             asset: asset,
                             dataItem: [],
                             fromAddress: investorAddress,
-                            sharePrice: -1, // only used for phoenix
-                            toAddress: issuerAddress
+                            toAddress: issuerAddress,
+                            metaData: {
+                                clientTxType: 'redemption'
+                            }
                         },
                         actionType: ArrangementActionType.SEND
                     }
@@ -259,8 +265,10 @@ export class InvestFundFormService {
                             asset: asset,
                             dataItem: [],
                             fromAddress: investorAddress,
-                            sharePrice: -1, // only used for phoenix
-                            toAddress: issuerAddress
+                            toAddress: issuerAddress,
+                            metaData: {
+                                clientTxType: 'redemption'
+                            }
                         },
                         actionType: ArrangementActionType.SEND
                     }
