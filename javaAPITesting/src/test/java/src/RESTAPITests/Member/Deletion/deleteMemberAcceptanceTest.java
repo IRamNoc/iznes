@@ -52,4 +52,30 @@ public class deleteMemberAcceptanceTest {
     });
   });
   }
+  @Test
+  public void shouldNotDeleteMemberWithoutPermissions() throws ExecutionException, InterruptedException {
+
+    String memberDetails[] = generateMemberDetails();
+    String memberName = memberDetails[0];
+    String memberEmail = memberDetails[1];
+
+    int userId = 4;
+    String apiKey = "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=";
+
+      RestApi api = new RestApi(localAddress);
+      api.start(userId, apiKey);
+      MessageFactory msfFactory = api.getMessageFactory();
+      api.sendMessage(msfFactory.newMember(memberName, memberEmail), claim -> {
+      Map response = claim.get("data").asList(Map.class).get(0);
+      assertTrue("OK".equals(response.get("Status").toString()));
+      Map resp = claim.get("data").asList(Map.class).get(0);
+      String hello = resp.get("parent").toString();
+
+      api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+      api.sendMessage(msfFactory.deleteMember(hello), claime -> {
+      Map resp2 = claime.get("data").asList(Map.class).get(0);
+      assertTrue("Permission denied.".equals(resp2.get("Message")));
+    });
+  });
+  }
 }
