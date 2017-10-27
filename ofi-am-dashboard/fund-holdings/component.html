@@ -1,0 +1,86 @@
+<div class="header-breadcrumbs">
+    <h1 id="am-fund-holdings"><i class="fa fa-bar-chart"></i> <span mltag="txt_fund_holdings">Funds Holdings</span> - {{ connectedWalletName }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink id="am-fund-holdings-tab">
+                <i class="fa fa-bar-chart"></i> <span mltag="txt_fund_holdings">Fund Holdings</span>
+            </button>
+            <clr-tab-content *clrIfActive="true">
+                <div class="panel-body">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label mltag="txt_fund_share">
+                                    Fund Share
+                                </label>
+                                <ng-select
+                                    [items]="filteredUserAssetList"
+                                    [allowClear]="true"
+                                    [formControl]="fundShareForm.controls['selectFund']">
+                                </ng-select>
+                                <button
+                                    (click)="handleFundSelection()"
+                                    class="btn btn-primary btn-end">
+                                    Go
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div *ngIf="showStats">
+                        <hr class="dashed" />
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-sm-6">
+                                    <label>
+                                        <span mltag="txt_isin_code">ISIN Code</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{fundStats.isin}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <span mltag="txt_asset_management_company">Asset Management Company</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{fundStats.company}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <span mltag="txt_nav">NAV</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <span mltag="txt_number_of_units">Number of Units</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>
+                                        <span mltag="txt_net_asset">Net Asset</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+</div>
