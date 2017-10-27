@@ -48,6 +48,7 @@ export {MyOrdersComponent} from './ofi-orders/my-orders/my-orders.component';
  *
  */
 export {OfiAmDashboardModule} from './ofi-am-dashboard/module';
+export {OfiAmDashboardService} from './ofi-req-services/ofi-am-dashboard/service';
 export {FundHoldingsComponent} from './ofi-am-dashboard/fund-holdings/component';
 
 /**

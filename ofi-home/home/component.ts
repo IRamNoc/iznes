@@ -182,7 +182,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         return formatString
         .replace('YYYY', dateObj.getFullYear().toString())
         .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad( dateObj.getMonth().toString() ))
+        .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
         .replace('DD', this.numPad( dateObj.getDate().toString() ))
         .replace('hh', this.numPad( dateObj.getHours() ))
         .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
