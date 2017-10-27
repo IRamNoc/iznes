@@ -53,7 +53,6 @@ export class FileViewerComponent {
      * @return {void}
      */
     public ngOnInit() {
-        console.log('File Hash:', this.fileHash);
         this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
             this.baseUrl +
             '/file?' +
