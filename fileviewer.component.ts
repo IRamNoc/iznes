@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
@@ -26,11 +26,15 @@ export class FileViewerComponent {
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
-
     /**
      * Constructor
      */
-    public constructor (private alertsService: AlertsService, private http: Http, private memberSocketService: MemberSocketService, private sanitizer: DomSanitizer) {
+    public constructor (
+        private alertsService: AlertsService,
+        private http: Http,
+        private memberSocketService: MemberSocketService,
+        private sanitizer: DomSanitizer
+    ) {
         this.token = this.memberSocketService.token;
         this.getUser.subscribe(
             (data) => {
@@ -40,24 +44,32 @@ export class FileViewerComponent {
         this.getConnectedWallet.subscribe(
             (data) => {
                 this.walletId = data;
-                this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-                    this.baseUrl +
-                    '/file?' +
-                    'method=retrieve' +
-                    '&userId=' + this.userId +
-                    '&walletId=' + this.walletId +
-                    '&token=' + this.token +
-                    '&fileHash=' + this.fileHash
-                );
-                this.validateUrl = this.baseUrl +
-                    '/file?' +
-                    'method=validate' +
-                    '&userId=' + this.userId +
-                    '&walletId=' + this.walletId +
-                    '&token=' + this.token +
-                    '&fileHash=' + this.fileHash;
             }
         );
+    }
+    /**
+     * Init
+     *
+     * @return {void}
+     */
+    public ngOnInit() {
+        console.log('File Hash:', this.fileHash);
+        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            this.baseUrl +
+            '/file?' +
+            'method=retrieve' +
+            '&userId=' + this.userId +
+            '&walletId=' + this.walletId +
+            '&token=' + this.token +
+            '&fileHash=' + this.fileHash
+        );
+        this.validateUrl = this.baseUrl +
+            '/file?' +
+            'method=validate' +
+            '&userId=' + this.userId +
+            '&walletId=' + this.walletId +
+            '&token=' + this.token +
+            '&fileHash=' + this.fileHash;
     }
     /**
      * Open File Modal
@@ -90,7 +102,6 @@ export class FileViewerComponent {
     public closeFileModal() {
         this.fileModal = false;
     }
-
     /**
      * Show Alert
      *
