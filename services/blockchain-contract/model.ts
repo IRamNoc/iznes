@@ -16,7 +16,7 @@ export interface SendActionData {
     toAddress: string;
     asset: string;
     amount: number | string;
-    sharePrice: number;
+    metaData: any;
 }
 
 export interface IssueActionData {
@@ -24,7 +24,7 @@ export interface IssueActionData {
     toAddress: string;
     asset: string;
     amount: string;
-    sharePrice: number;
+    metaData: any;
 }
 
 // export interface EncumberActionData {
@@ -72,9 +72,10 @@ export interface ArrangementData {
 // Blockchain contract
 export interface PayAmountData {
     amount: number | string;
-    price: number;
     isIssuance: boolean;
+    metaData: any;
 }
+
 export interface PayData {
     [asset: string]: PayAmountData;
 }
@@ -144,15 +145,18 @@ export type PartyListEntryData = [
 
 export type AuthorisationAddress = string;
 export type AuthorisationId = string;
+
 export interface VerfierMsg {
     title: string;
     hash: string;
 }
+
 export interface AuthorisationMetaData {
     type: string;
     msg: string;
     address: AuthorisationAddress;
 }
+
 export type AuthorisationMetaDataStr = string;
 
 export type AuthorisationEntryData = [
