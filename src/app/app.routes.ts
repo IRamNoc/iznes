@@ -10,6 +10,8 @@ import {SetlMyAccountComponent} from '@setl/core-account';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
+import {FundHoldingsComponent} from '@ofi/ofi-main';
+
 /* UserAdmin Module. */
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
@@ -117,6 +119,16 @@ export const ROUTES: Routes = [
                     {
                         path: 'my-account',
                         component: SetlMyAccountComponent,
+                        canActivate: [LoginGuardService],
+                    }
+                ]
+            },
+            {
+                path: 'asset-management',
+                children: [
+                    {
+                        path: 'fund-holdings',
+                        component: FundHoldingsComponent,
                         canActivate: [LoginGuardService],
                     }
                 ]
