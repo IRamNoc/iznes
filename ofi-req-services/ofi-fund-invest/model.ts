@@ -15,6 +15,11 @@ export interface AddArrangementRequestBody extends MemberNodeMessageBody {
     type: ArrangementType;
     metaData: string;
     asset: string;
+    investBy: number;
+    quantity: number;
+    amountWithCost: number;
+    feePercent: number;
+    platFormFee: number;
     parties: object;
     cutoff: string;
     delivery: string;
