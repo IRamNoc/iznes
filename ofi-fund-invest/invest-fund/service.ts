@@ -291,12 +291,12 @@ export class InvestFundFormService {
         return {
             actions: actionData,
             conditions: [
-                {
-                    conditionData: {
-                        executeTimeStamp: settleTimeStamp
-                    },
-                    conditionType: ConditionType.TIME
-                },
+                // {
+                //     conditionData: {
+                //         executeTimeStamp: settleTimeStamp
+                //     },
+                //     conditionType: ConditionType.TIME
+                // },
                 {
                     conditionData: {
                         authoriseRef: authoriseRef,

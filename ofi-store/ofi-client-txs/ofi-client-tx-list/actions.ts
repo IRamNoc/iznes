@@ -4,19 +4,19 @@ import {kAction} from '@setl/utils/common';
 /**
  *  Set fund access my
  */
-export const SET_FUND_ACCESS_MY = `${name}/SET_FUND_ACCESS_MY`;
+export const SET_CLIENT_TX_LIST = `${name}/SET_CLIENT_TX_LIST`;
 
 /**
- * Set (Set to true) request fund access my fund access list state
+ * Set (Set to true) request wallet client tx list state.
  * Flag that to indicate we do not need to request it again.
  */
-export const SET_REQUESTED_FUND_ACCESS_MY = `${name}/SET_REQUESTED_FUND_ACCESS_MY`;
-export const setRequestedFundAccessMy = kAction(SET_REQUESTED_FUND_ACCESS_MY);
+export const SET_REQUESTED_CLIENT_TX_LIST = `${name}/SET_REQUESTED_CLIENT_TX_LIST`;
+export const setRequestedClientTxList = kAction(SET_REQUESTED_CLIENT_TX_LIST);
 
 
 /**
- * Clear (set to false) request my fund access state
+ * Clear (set to false) request wallet client tx list state.
  * Flag that to indicate we will ned to request it when we need it.
  */
-export const CLEAR_REQUESTED_FUND_ACCESS_MY = `${name}/CLEAR_REQUESTED_FUND_ACCESS_MY`;
-export const clearRequestedFundAccessMy = kAction(CLEAR_REQUESTED_FUND_ACCESS_MY);
+export const CLEAR_REQUESTED_CLIENT_TX_LIST = `${name}/CLEAR_REQUESTED_CLIENT_TX_LIST`;
+export const clearRequestedClientTxList = kAction(CLEAR_REQUESTED_CLIENT_TX_LIST);

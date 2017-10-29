@@ -1,1 +1,1 @@
-export const name = 'ofi-investor-fund-list';
+export const name = 'ofi-client-tx-list';

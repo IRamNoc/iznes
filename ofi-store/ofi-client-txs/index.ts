@@ -1,29 +1,26 @@
 import {combineReducers, Reducer} from 'redux';
 
 import {
-    OfiFundAccessMyState,
-    OfiFundAccessMyReducer,
+    OfiClientTxsListState,
+    OfiClientTxListReducer,
 
     // Actions
-    SET_FUND_ACCESS_MY,
-    setRequestedFundAccessMy,
-    clearRequestedFundAccessMy
-} from './ofi-fund-access-my';
+    SET_CLIENT_TX_LIST,
+    setRequestedClientTxList,
+    clearRequestedClientTxList
+} from './ofi-client-tx-list';
 
 export {
-    OfiFundAccessMyState,
-    OfiFundAccessMyReducer,
-
     // Actions
-    SET_FUND_ACCESS_MY,
-    setRequestedFundAccessMy,
-    clearRequestedFundAccessMy
+    SET_CLIENT_TX_LIST,
+    setRequestedClientTxList,
+    clearRequestedClientTxList
 };
 
-export interface OfiFundInvestState {
-    ofiInvestorFundList: OfiFundAccessMyState;
+export interface OfiClientTxState {
+    ofiClientTxList: OfiClientTxsListState;
 }
 
-export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers<OfiFundInvestState>({
-    ofiInvestorFundList: OfiFundAccessMyReducer,
+export const OfiClientTxReducer: Reducer<OfiClientTxState> = combineReducers<OfiClientTxState>({
+    ofiClientTxList: OfiClientTxListReducer
 });

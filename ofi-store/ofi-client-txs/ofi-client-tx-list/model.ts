@@ -1,42 +1,47 @@
-export interface FundShareAccessDetail {
-    shareId: number;
-    shareName: string;
-    fundId: number;
-    entryFee: number;
-    exitFee: number;
-    /**
-     * 0: suspended
-     * 1: active
-     * 2: deleted (merged)
-     */
-    shareStatus: number;
-    issuer: string;
-    metaData: object;
-    // 1: has access
-    // 0: no access
-    userStatus: number;
-    managementCompany: string;
-    price: number;
+export const enum ClientTxType {
+    SUBSCRIPTION = 1,
+    REDEMPTION,
+    CASH_PAY,
+    CASH_RECEIVE
 }
 
-export interface FundShareAccessList {
-    [fundShareId: number]: FundShareAccessDetail;
+export const enum ClientTxLegType {
+    PARENET = 1,
+    CHIlD
 }
 
-export interface FundAccessDetail {
-    fundId: number;
-    fundName: string;
-    fundProspectus: string;
-    fundReport: string;
-    fundSicavId: number;
+export interface TxDetail {
+    transactionId: number;
+    transactionParentId: number;
+    transactionHash: string;
+    transactionWalletId: number;
+    transactionAddress: string;
+    blockNumber: number;
+    transactionInstrument: number;
+    transactionInstrumentName: string;
+    transactionType: ClientTxType;
+    transactionType_Contra: ClientTxType;
+    transactionUnits: number;
+    transactionSignedUnits: number;
+    transactionPrice: number;
+    transactionCosts: number;
+    transactionSettlement: number;
+    transactionSignedSettlement: number;
+    transactionSettlementCurrencyId: string;
+    transactionCounterparty: number;
+    transactionValueDate: string;
+    transactionSettlementDate: string;
+    transactionConfirmationDate: string;
+    transactionIsTransfer: boolean;
+    transactionLeg: ClientTxLegType;
+    transactionDateEntered: string;
 }
 
-export interface FundAccessList {
-    [fundId: number]: FundAccessDetail;
+export interface TxList {
+    [transactionId: number]: TxDetail;
 }
 
-export interface OfiFundAccessMyState {
-    fundAccessList: FundAccessList;
-    fundShareAccessList: FundShareAccessList;
+export interface OfiClientTxsListState {
+    txList: TxList;
     requested: boolean;
 }
