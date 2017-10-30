@@ -7,9 +7,10 @@ import {Subscription} from 'rxjs/Subscription';
 // Internal
 import {MemberSocketService} from '@setl/websocket-service';
 import {OfiFundInvestService} from '@ofi/ofi-main';
+import { WalletnodeTxService } from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper, commonHelper} from '@setl/utils';
-import {clearContractNeedHandle} from '@setl/core-store';
+import {clearContractNeedHandle, clearRegisterIssuerNeedHandle} from '@setl/core-store';
 
 
 @Injectable()
@@ -18,13 +19,12 @@ export class OfiPostTxService implements OnDestroy {
     subscriptionsArray: Array<Subscription> = [];
 
     @select(['wallet', 'myWalletContract', 'lastCreated']) lastCreatedContractOb;
-
-    // need something like this
-    @select(['wallet', 'myWalletIssuer', 'lastCreated']) lastCreatedIssuer;
+    @select(['asset', 'myIssuers', 'lastCreated']) lastCreatedIssuer;
 
     constructor(private _memberSocketService: MemberSocketService,
                 private _ngRedux: NgRedux<any>,
                 private _ofiFundInvestService: OfiFundInvestService,
+                private walletnodeTxService: WalletnodeTxService,
                 private _alertsService: AlertsService) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
@@ -42,15 +42,20 @@ export class OfiPostTxService implements OnDestroy {
 
     handleLastCreatedIssuer(lastCreated) {
 
-        console.log('blockchain output: ' + lastCreated);
+        console.log('blockchain output: ', lastCreated);
         console.log('issuer complete');
 
-        // register asset (ISIN|FundShareName)
-        // in walletnode-tx/registerAsset
+        const needHandle = lastCreated.needHandle;
+        const inBlockchain = lastCreated.inBlockchain;
 
+        if (needHandle && inBlockchain) {
+            const actionType = _.get(lastCreated, 'metaData.actionType');
 
-        // register another asset (ISIN|Coupon)
-        // in walletnode-tx/registerAsset
+            if (actionType === 'ofi-create-new-share') {
+                this.saveRegisterAsset(lastCreated);
+            }
+
+        }
     }
 
     handleLastCreatedContract(lastCreated) {
@@ -139,6 +144,36 @@ export class OfiPostTxService implements OnDestroy {
                     </table>
         `);
 
+    }
+
+    saveRegisterAsset(requestData) {
+        const walletID = _.get(requestData, 'metaData.arrangementData.walletID');
+        const address = _.get(requestData, 'metaData.arrangementData.address');
+        const issuerIdentifier = _.get(requestData, 'metaData.arrangementData.issuerIdentifier');
+        const shareName = _.get(requestData, 'metaData.arrangementData.shareName');
+
+        // set need handle to false;
+        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
+
+        const asyncTaskPipe = this.walletnodeTxService.registerAsset(
+            {
+                walletId: walletID,
+                address: address,
+                namespace: issuerIdentifier,
+                instrument: shareName,
+                metaData: {}
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('Blockchain : new wallet register asset success', data); // success
+            },
+            (data) => {
+                console.log('Error: ', data);
+            })
+        );
     }
 
     showErrorResponse(response) {
