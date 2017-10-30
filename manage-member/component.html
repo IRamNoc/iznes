@@ -1,5 +1,6 @@
+
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Manage Member</h1>
+    <h1><i class="fa fa-users"></i> <span mltag="txt_managemember">Manage Member</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -11,21 +12,21 @@
                 <!-- Member list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="staticMemberListTab"
+                            *ngTemplateOutlet="staticMemberListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                        *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
+                            *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member edit tabs. -->
                 <ng-container *ngIf="id >= 2 && isSymAdmin">
                     <ng-container
-                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -37,17 +38,15 @@
         <div class="panel-body">
 
             <clr-datagrid #membersDataGrid>
-                <clr-dg-column *ngIf="isSymAdmin">Actions</clr-dg-column>
-                <clr-dg-column>Member Name</clr-dg-column>
+                <clr-dg-column *ngIf="isSymAdmin" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_membername">Member Name</clr-dg-column>
                 <clr-dg-row *clrDgItems="let member of manageMembersList;">
                     <clr-dg-cell *ngIf="isSymAdmin">
                         <div class="btn-group btn-sm">
                             <button (click)="handleEdit(member.index)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> Edit
-                            </button>
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                             <button (click)="handleDelete(member.index)" class="btn">
-                                <i class="fa fa-trash-o"></i> Delete
-                            </button>
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{member.memberName}}</clr-dg-cell>
@@ -71,10 +70,10 @@
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label class="control-label">
-                                    <span class="ml_translated">Member name</span>
+                                    <span class="ml_translated" mltag="txt_membername">Member name</span>
                                 </label>
                                 <div>
-                                    <input type="text" formControlName="memberName" placeholder="Member Name" class="form-control mlp_translated">
+                                    <input type="text" formControlName="memberName" placeholder="Member Name" class="form-control mlp_translated" mltag="txt_membername"/>
                                 </div>
                             </div>
 
@@ -84,10 +83,10 @@
 
                             <div class="form-group col-sm-6">
                                 <label class="control-label">
-                                    <span class="ml_translated">Admin Email</span>
+                                    <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
                                 </label>
                                 <div>
-                                    <input type="email" formControlName="email" name="email" placeholder="enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                    <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail"/>
                                 </div>
                             </div>
                         </div>
@@ -112,10 +111,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Member Name</span>
+                                <span class="ml_translated" mltag="txt_membername">Member Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="memberName" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <input type="text" formControlName="memberName" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username"/>
                             </div>
                         </div>
                     </div>
@@ -129,9 +128,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                                 </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                    Close
-                                </button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
                             </div>
                         </div>
                     </div>
@@ -141,3 +138,4 @@
     </ng-template>
 
 </div>
+

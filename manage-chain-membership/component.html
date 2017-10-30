@@ -1,5 +1,6 @@
+
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Chain Membership</h1>
+    <h1><i class="fa fa-users"></i> <span mltag="txt_chainmembership">Chain Membership</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -11,7 +12,7 @@
                 <!-- Manage chain access tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="manageChainAccessTab"
+                            *ngTemplateOutlet="manageChainAccessTab"
                     ></ng-container>
                 </ng-container>
 
@@ -27,11 +28,11 @@
                     <div class="form-group col-sm-6">
                         <label class="control-label"><span class="ml" mltag="txt_chains">Chains</span></label>
                         <ng-select
-                            [items]="chainList"
-                            [allowClear]="false"
-                            placeholder="Select Chain"
-                            (selected)="selectChain($event)"
-                            formControlName="chain"
+                                [items]="chainList"
+                                [allowClear]="false"
+                                placeholder="Select Chain"
+                                (selected)="selectChain($event)"
+                                formControlName="chain"
                         >
                         </ng-select>
                     </div>
@@ -39,7 +40,7 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label"><span class="ml" mltag="txt_chains">Chain Accesses</span></label>
+                        <label class="control-label"><span class="ml" mltag="txt_chainaccesses">Chain Accesses</span></label>
                     </div>
 
                     <div class="member-chain-access-wrapper">
@@ -49,31 +50,31 @@
                                 <div class="form-group col-sm-4">
 
                                     <ng-select
-                                        [items]="memberList"
-                                        [allowClear]="false"
-                                        placeholder="Select Member"
-                                        [formControl]="thisFormGroup.controls['member']"
-                                        (selected)="selectMember($event, i)"
+                                            [items]="memberList"
+                                            [allowClear]="false"
+                                            placeholder="Select Member"
+                                            [formControl]="thisFormGroup.controls['member']"
+                                            (selected)="selectMember($event, i)"
                                     >
                                     </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-4">
                                     <ng-select
-                                        [items]="chainMemberShipTypeItems"
-                                        [allowClear]="false"
-                                        placeholder="Select Membership Type"
-                                        [formControl]="thisFormGroup.controls['memberType']"
+                                            [items]="chainMemberShipTypeItems"
+                                            [allowClear]="false"
+                                            placeholder="Select Membership Type"
+                                            [formControl]="thisFormGroup.controls['memberType']"
                                     >
                                     </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-4">
                                     <ng-select
-                                        [items]="currentChainWalletNodeList"
-                                        [allowClear]="false"
-                                        placeholder="Select Wallet Node"
-                                        [formControl]="thisFormGroup.controls['node']"
+                                            [items]="currentChainWalletNodeList"
+                                            [allowClear]="false"
+                                            placeholder="Select Wallet Node"
+                                            [formControl]="thisFormGroup.controls['node']"
                                     >
                                     </ng-select>
 
@@ -127,3 +128,5 @@
         </div>
     </ng-template>
 </div>
+
+

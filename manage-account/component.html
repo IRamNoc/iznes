@@ -1,5 +1,6 @@
+
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Manage Account</h1>
+    <h1><i class="fa fa-users"></i> <span mltag="txt_manageaccount">Manage Account</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -11,21 +12,21 @@
                 <!-- Account list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="accountListTab"
+                            *ngTemplateOutlet="accountListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Account add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                        *ngTemplateOutlet="staticAccountAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="staticAccountAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Account edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -37,20 +38,18 @@
         <div class="panel-body">
 
             <clr-datagrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Account Name</clr-dg-column>
-                <clr-dg-column>Description</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_accountname">Account Name</clr-dg-column>
+                <clr-dg-column mltag="txt_description">Description</clr-dg-column>
 
 
                 <clr-dg-row *clrDgItems="let account of accountList;">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button (click)="handleEdit(account.index)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> Edit
-                            </button>
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                             <button (click)="handleDelete(account.index)" class="btn">
-                                <i class="fa fa-trash-o"></i> Delete
-                            </button>
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
@@ -74,10 +73,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Account Name</span>
+                                <span class="ml_translated" mltag="txt_accountname">Account Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="accountName" placeholder="Account Name" class="form-control username mlp_translated" mltag="txt_username">
+                                <input type="text" formControlName="accountName" placeholder="Account Name" class="form-control username mlp_translated" mltag="txt_accountname"/>
                             </div>
                         </div>
 
@@ -86,10 +85,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Account Description</span>
+                                <span class="ml_translated" mltag="txt_accountdescription">Account Description</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="accountDescription" placeholder="Account Description" class="form-control username mlp_translated" mltag="txt_username">
+                                <input type="text" formControlName="accountDescription" placeholder="Account Description" class="form-control username mlp_translated" mltag="txt_accountdescription"/>
                             </div>
                         </div>
                     </div>
@@ -97,14 +96,14 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Account Member</span>
+                                <span class="ml_translated" mltag="txt_accountmember">Account Member</span>
                             </label>
                             <ng-select
-                                [items]="managedMemberList"
-                                [allowClear]="false"
-                                placeholder="Select Member"
-                                formControlName="member"
-                                [disabled]="!isSymAdmin"
+                                    [items]="managedMemberList"
+                                    [allowClear]="false"
+                                    placeholder="Select Member"
+                                    formControlName="member"
+                                    [disabled]="!isSymAdmin"
                             >
                             </ng-select>
                         </div>
@@ -130,10 +129,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Account Name</span>
+                                <span class="ml_translated" mltag="txt_accountname">Account Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="accountName" placeholder="Account Name" class="form-control mlp_translated">
+                                <input type="text" formControlName="accountName" placeholder="Account Name" class="form-control mlp_translated" mltag="txt_accountname"/>
                             </div>
                         </div>
                     </div>
@@ -144,10 +143,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Account Description</span>
+                                <span class="ml_translated" mltag="txt_accountdescription">Account Description</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="accountDescription" placeholder="Account Description" class="form-control mlp_translated">
+                                <input type="text" formControlName="accountDescription" placeholder="Account Description" class="form-control mlp_translated" mltag="txt_accountdescription"/>
                             </div>
                         </div>
                     </div>
@@ -158,10 +157,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Member</span>
+                                <span class="ml_translated" mltag="txt_member">Member</span>
                             </label>
                             <div>
-                                <input type="text" [readonly]="true" formControlName="memberName" class="form-control mlp_translated">
+                                <input type="text" [readonly]="true" formControlName="memberName" class="form-control mlp_translated"/>
                             </div>
                         </div>
                     </div>
@@ -172,13 +171,13 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated">Wallet</span>
+                                <span class="ml_translated" mltag="txt_wallet">Wallet</span>
                             </label>
                             <ng-select
-                                [items]="managedWalletList"
-                                [allowClear]="false"
-                                placeholder="Select Wallet"
-                                formControlName="wallet"
+                                    [items]="managedWalletList"
+                                    [allowClear]="false"
+                                    placeholder="Select Wallet"
+                                    formControlName="wallet"
                             >
                             </ng-select>
                         </div>
@@ -193,9 +192,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                                 </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                    Close
-                                </button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
                             </div>
                         </div>
                     </div>
@@ -204,3 +201,4 @@
         </div>
     </ng-template>
 </div>
+
