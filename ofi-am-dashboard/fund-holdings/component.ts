@@ -2,11 +2,19 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
+import {SagaHelper} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
 
 /* Selectors */
 import {getOfiUserIssuedAssets} from '@ofi/ofi-main/ofi-store';
+
+/* Core redux imports. */
+import {
+    SET_ISSUE_HOLDING,
+    setRequestedWalletIssuer,
+    setRequestedWalletHolding,
+} from '@setl/core-store';
 
 /* Ofi corp service. */
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
@@ -15,6 +23,12 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+
+import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+
+/* Utils. */
+import {MoneyValueOfiPipe} from '@setl/utils/pipes';
+
 
 @Component({
     selector: 'core-am-dashboard',
@@ -38,6 +52,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     private filteredUserAssetList: Array<{ id: string, text: string }> = [];
 
     /* Redux observables. */
+    @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -48,11 +63,15 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiAmDashboardService: OfiAmDashboardService,
-                private ofiNavService: OfiNavService,) {
+                private ofiNavService: OfiNavService,
+                private walletNodeRequestService: WalletNodeRequestService) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
             'selectFund': new FormControl(0)
         })
+
+        /* Subscribe to wallet holdings. */
+        this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested));
     }
 
     public ngOnInit() {
@@ -139,7 +158,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Fail if we didn't find it. */
         if (!fund) return;
 
-        /* Prefill the fund information we have, and show the data... */
+        /* Pre-fill the fund information we have, and show the data... */
         this.showStats = true;
         this.fundStats.isin = fund.isin;
         this.fundStats.company = fund.companyName;
@@ -148,9 +167,20 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Now, let's request all the other information needed. */
         this.getFundDashboardData(fund).then((data) => {
             console.log(' | dashboardData:', data);
+            /* Now let's set the extras we asked for... */
+            this.fundStats.navPrice = data.nav.price;
+            this.fundStats.navDate = data.nav.navDate;
+            this.fundStats.units = data.units;
+            this.fundStats.netAsset = (data.nav.price / 5) * data.units;
+
+            /* Now let's get the holders in this fund. */
+
+
+            /* Detect changes. */
+            this.changeDetectorRef.detectChanges();
         }).catch((error) => {
             console.log(' | dashboardData Error:', error)
-        })
+        });
 
 
         /* Detect changes. */
@@ -171,7 +201,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public getFundDashboardData(fund: any): Promise<any> {
         /* Return a promise. */
-        return new Promise(() => {
+        return new Promise((resolve, reject) => {
             /* Ok, let's build the request to get the NAV list... */
             let navRequest = {
                 fundname: fund.asset,
@@ -180,21 +210,85 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 pagenum: 0,
                 pagesize: 1
             };
+            console.log(' |--- Get Fund Dash Data');
+
+            /* Return data. */
+            let oReturn: any = {};
 
             /* ...and send it. */
             this.ofiAmDashboardService.buildRequest({
                 'taskPipe': this.ofiNavService.requestNavList(navRequest)
             }).then((response) => {
-                /* Success. */
-                console.log('success getting nav list: ', response);
+                console.log(' | success: ', response);
+                /* Success, let's set the NAV. */
+                oReturn.nav = response[1].Data[0];
+                delete oReturn.nav.Status;
+                oReturn.nav.navDate = oReturn.nav.navDate.split(' ')[0];
+
+                /* Now, let's get the fund's issued assets. */
+                // TODO - get the actual fund issued assets.
+                // document.dataCache.myAllWalletHoldingByAddress
+                oReturn.units = 0;
+
+                console.log(' | fund: ', fund.asset);
+                /* Split asset name... */
+                let assetParts = fund.asset.split('|');
+
+                /* Request holders of this fund. */
+                this.requestWalletIssueHolding(assetParts[0], assetParts[1], fund.walletId).then((response) => {
+                    /* Get the list of holders. */
+                    let holdersList = response[1].data['holders'];
+                    console.log(" | holdersList: ", holdersList);
+
+                    /* Resolve the original promise. */
+                    resolve(oReturn);
+                }).catch((error) => {
+                    console.log(" | error: ", error);
+                });
             }).catch((error) => {
                 /* Handle error. */
-                console.log('error fetching nav list: ', error);
+                console.warn(' | error: ', error);
+                reject(false);
             })
 
             /* Return. */
             return;
         });
+    }
+
+
+    /**
+     * Request Wallet Issue Holding
+     * ----------------------------
+     *
+     * @param issuer
+     * @param instrument
+     */
+    private requestWalletIssueHolding(issuer, instrument, walletId = 0) {
+        /* Ok, let's build a nice request object. */
+        let request: any = {};
+        request['walletId'] = walletId == 0 ? this.connectedWalletId : walletId;
+        request['issuer'] = issuer;
+        request['instrument'] = instrument;
+
+        /* Send the request and return the promise. */
+        return this.ofiAmDashboardService.buildRequest({
+            'taskPipe': this.walletNodeRequestService.requestWalletIssueHolding(request),
+            'successActions': SET_ISSUE_HOLDING,
+        });
+    }
+
+    requestWalletHolding(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletHolding());
+            console.log(InitialisationService.requestWalletHolding);
+
+            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+        }
+
     }
 
     /**
@@ -207,7 +301,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {object} - the fund wanted.
      */
     private getFundById(id): any {
-        /* Varibales. */
+        /* Variables. */
         let userAsset;
 
         /* Loop over each fund... */
@@ -215,7 +309,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             /* ...if this is the one, breaking will leave userAsset as it... */
             if (userAsset.asset == id) break;
 
-            /* ... if not, set to false incase there are no more. */
+            /* ... if not, set to false in case there are no more. */
             userAsset = false;
         }
 

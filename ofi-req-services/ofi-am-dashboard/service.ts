@@ -7,11 +7,6 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {SagaHelper, Common} from '@setl/utils';
 
-/* Import actions. */
-// import {
-//
-// } from '../../ofi-store';
-
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
