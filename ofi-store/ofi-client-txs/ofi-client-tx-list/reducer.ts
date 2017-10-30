@@ -1,7 +1,7 @@
 import {OfiClientTxsListState} from './model';
 import {Action} from 'redux';
 import _ from 'lodash';
-import {fromJS} from 'immutable';
+import {immutableHelper} from '@setl/utils';
 
 import {
     SET_CLIENT_TX_LIST,
@@ -10,7 +10,7 @@ import {
 } from './actions';
 
 const initialState: OfiClientTxsListState = {
-    txList: {},
+    allTxList: {},
     requested: false
 };
 
@@ -44,8 +44,56 @@ export const OfiClientTxListReducer = function (state: OfiClientTxsListState = i
  * @return {OfiClientTxsListState}
  */
 function handleSetClientTxList(state: OfiClientTxsListState, action: Action): OfiClientTxsListState {
-    const accessData = _.get(action, 'payload[1].Data', []);
-    return state;
+    const clientTxData = _.get(action, 'payload[1].Data', []);
+
+    const txList = immutableHelper.reduce(clientTxData, (result, item) => {
+        const transactionId = item.get('TransactionID', 0);
+        result.push({
+            transactionId: transactionId,
+            transactionParentId: item.get('TransactionParentID', 0),
+            transactionHash: item.get('TransactionHash', 0),
+            transactionWalletId: item.get('TransactionWalletID', 0),
+            transactionAddress: item.get('TransactionAddress', 0),
+            transactionBlockNumber: item.get('TransactionBlockNumber', 0),
+            transactionInstrument: item.get('TransactionInstrument', 0),
+            transactionInstrumentName: item.get('TransactionInstrumentName', 0),
+            transactionType: item.get('TransactionType', 0),
+            transactionType_Contra: item.get('TransactionType_Contra', 0),
+            transactionUnits: item.get('TransactionUnit', 0),
+            transactionSignedUnits: item.get('TransactionSignedUnits', 0),
+            transactionPrice: item.get('TransactionPrice', 0),
+            transactionCosts: item.get('TransactionCost', 0),
+            transactionSettlement: item.get('TransactionSettlement', 0),
+            transactionSignedSettlement: item.get('TransactionSignedSettlement', 0),
+            transactionSettlementCurrencyId: item.get('TransactionSettlementCurrencyID', 0),
+            transactionCounterparty: item.get('TransactionCounterParty', 0),
+            transactionValueDate: item.get('TransactionValueDate', 0),
+            transactionSettlementDate: item.get('TransactionSettlementDate', 0),
+            transactionConfirmationDate: item.get('TransactionConfirmationDate', 0),
+            transactionIsTransfer: item.get('TransactionTransfer', 0) === 1,
+            transactionLeg: item.get('TransactionLeg', 0),
+            transactionDate: item.get('TransactionDateEntered', 0),
+        });
+
+        return result;
+    }, []);
+
+    // Group them by asset
+    const allTxList = immutableHelper.reduce(txList, (result, item) => {
+        const txAsset = item.get('transactionInstrumentName', '');
+        const transactionID = item.get('transactionId', 0);
+        if (typeof result[txAsset] === 'undefined') {
+            result[txAsset] = {};
+        }
+
+        result[txAsset][transactionID] = item.toJS();
+
+        return result;
+    }, {});
+
+    return Object.assign({}, state, {
+        allTxList
+    });
 }
 
 /**

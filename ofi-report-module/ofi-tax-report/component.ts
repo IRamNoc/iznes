@@ -1,5 +1,8 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
+import {NgRedux, select} from '@angular-redux/store';
+import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
+import {setRequestedClientTxList} from "../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions";
 
 @Component({
     selector: 'app-ofi-tax-report',
@@ -8,15 +11,34 @@ import {Subscription} from 'rxjs/Subscription';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OfiTaxReportComponent implements OnInit {
+export class OfiTaxReportComponent implements OnInit, OnDestroy {
     tabsControl: Array<any>;
+
+    connectedWalletId: number;
+
+    // client txt data
+    clientTxListObj: any;
+    clientTxList: Array<any>;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
     assetBalances: Array<any>;
 
-    constructor() {
+    // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'txList']) clientTxListOb;
+    @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'requested']) clientTxListRequestedOb;
+
+    constructor(private _ngRedux: NgRedux<any>,
+                private _ofiClientTxService: OfiClientTxService) {
+    }
+
+    ngOnDestroy() {
+
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 
     ngOnInit() {
@@ -49,6 +71,32 @@ export class OfiTaxReportComponent implements OnInit {
                 unrealisedGainLoss: 81000
             }
         ];
+
+        // List of observable subscription.
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+        }));
+        this.subscriptionsArray.push(this.clientTxListRequestedOb.subscribe(requested => this.requestClientTx(requested)));
+        this.subscriptionsArray.push(this.clientTxListOb.subscribe(clientTxList => {
+            this.updateClientTxList(clientTxList);
+        }));
+    }
+
+    requestClientTx(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            // Set the state flag to true. so we do not request it again.
+            this._ngRedux.dispatch(setRequestedClientTxList());
+
+            // Request the list.
+            OfiClientTxService.defaultRequestWalletClientTxs(this._ofiClientTxService, this._ngRedux,
+                this.connectedWalletId, '');
+        }
+    }
+
+    updateClientTxList(clientTxListData) {
+        this.clientTxListObj = clientTxListData;
     }
 }
 

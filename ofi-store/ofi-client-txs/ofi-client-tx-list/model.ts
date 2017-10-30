@@ -16,7 +16,7 @@ export interface TxDetail {
     transactionHash: string;
     transactionWalletId: number;
     transactionAddress: string;
-    blockNumber: number;
+    transactionBlockNumber: number;
     transactionInstrument: number;
     transactionInstrumentName: string;
     transactionType: ClientTxType;
@@ -34,14 +34,18 @@ export interface TxDetail {
     transactionConfirmationDate: string;
     transactionIsTransfer: boolean;
     transactionLeg: ClientTxLegType;
-    transactionDateEntered: string;
+    transactionDate: string;
 }
 
 export interface TxList {
     [transactionId: number]: TxDetail;
 }
 
+export interface AllTxList {
+    [assetName: string]: TxList;
+}
+
 export interface OfiClientTxsListState {
-    txList: TxList;
+    allTxList: AllTxList;
     requested: boolean;
 }

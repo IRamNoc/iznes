@@ -34,7 +34,10 @@ export class OfiClientTxService {
             [SET_CLIENT_TX_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
+            (data) => {
+                console.log(data);
+            }
         ));
     }
 
