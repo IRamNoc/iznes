@@ -25,6 +25,7 @@ import {
     getAuthentication,
     SET_NEW_PASSWORD,
 } from './authentication';
+
 export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD};
 
 
@@ -47,15 +48,29 @@ export {
 };
 
 
+// site settings
+import {
+    SiteSettingsReducer,
+    SiteSettingsState,
+    setLanguage
+} from './site-settings';
+
+export {
+    setLanguage
+};
+
+
 export interface UserState {
     myDetail: MyDetailState;
     authentication: AuthenticationState;
     connected: ConnectedState;
+    siteSettings: SiteSettingsState;
 }
 
 export const userReducer: Reducer<UserState> = combineReducers<UserState>({
     myDetail: MyDetailReducer,
     authentication: AuthenticationReducer,
-    connected: ConnectedReducer
+    connected: ConnectedReducer,
+    siteSettings: SiteSettingsReducer
 });
 

@@ -19,7 +19,11 @@ export {
     setConnectedWallet,
     getConnected,
     getConnectedChain,
-    getConnectedWallet
+    getConnectedWallet,
+
+    // site settings
+    setLanguage
+
 } from './user';
 
 export {
