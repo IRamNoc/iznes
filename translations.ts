@@ -33,6 +33,7 @@ export const Translations = {
             "txt_entry_fee_percent": "Droits d’entrée",
             "txt_comment": "Commentaire",
             "txt_gross_amount": "Gross Amount",
+            "txt_wallet": "FrenchWallet"
         },
         "esp": {
             "txt_home": "Casas"

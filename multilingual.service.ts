@@ -2,15 +2,30 @@
 import {Injectable} from '@angular/core';
 
 /* Package Imports. */
-import { Translations } from './translations';
+import {Translations} from './translations';
+
+import {Subscription} from 'rxjs/Subscription';
+import {NgRedux, select} from '@angular-redux/store';
 
 /* Service Class. */
 @Injectable()
 export class MultilingualService {
 
+    @select(['user', 'siteSettings', 'language']) getLanguage;
+
+    language;
+    subscriptionsArray: Array<Subscription> = [];
+
     /* Constructor. */
-    constructor () {
+    constructor() {
         /* Stub. */
+        this.subscriptionsArray.push(
+            this.getLanguage.subscribe(
+                (language) => {
+                    this.language = language;
+                }
+            )
+        );
     }
 
     /**
@@ -22,16 +37,16 @@ export class MultilingualService {
      *
      * @return {string|boolean} - The translation or false.
      */
-    public getTranslation (mlcode:string):string|boolean {
+    public getTranslation(mlcode: string): string | boolean {
         /* Look for translation... */
         if (
             Translations &&
             Translations['core'] &&
-            Translations['core']['fra'] &&
-            Translations['core']['fra'][mlcode]
+            Translations['core'][this.language] &&
+            Translations['core'][this.language][mlcode]
         ) {
             /* ...and return it, if we have it. */
-            return Translations['core']['fra'][mlcode];
+            return Translations['core'][this.language][mlcode];
         }
 
         /* ...otherwise return origin string. */
