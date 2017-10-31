@@ -1,5 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-bar-chart"></i> <span mltag="txt_fund_holdings">Funds Holdings</span> - {{ connectedWalletName }}</h1>
+    <h1 id="am-fund-holdings"><i class="fa fa-bar-chart"></i>
+        <span mltag="txt_fund_holdings">Funds Holdings</span> - {{ connectedWalletName }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -18,13 +19,13 @@
                                     Fund Share
                                 </label>
                                 <ng-select
-                                    [items]="filteredUserAssetList"
-                                    [allowClear]="true"
-                                    [formControl]="fundShareForm.controls['selectFund']">
+                                        [items]="filteredUserAssetList"
+                                        [allowClear]="true"
+                                        [formControl]="fundShareForm.controls['selectFund']">
                                 </ng-select>
                                 <button
-                                    (click)="handleFundSelection()"
-                                    class="btn btn-primary btn-end">
+                                        (click)="handleFundSelection()"
+                                        class="btn btn-primary btn-end">
                                     Go
                                 </button>
                             </div>
@@ -32,7 +33,8 @@
                     </form>
 
                     <div *ngIf="showStats">
-                        <hr class="dashed" />
+                        <hr class="dashed"/>
+
                         <form>
                             <div class="row form-group">
                                 <div class="col-sm-6">
@@ -56,7 +58,7 @@
                                         <span mltag="txt_nav">NAV</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field"></span>
+                                        <span class="readonly-field">{{fundStats.navPrice}}  <small>Last updated: {{fundStats.navDate}}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -64,7 +66,7 @@
                                         <span mltag="txt_number_of_units">Number of Units</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field"></span>
+                                        <span class="readonly-field">{{fundStats.units}}</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -72,11 +74,30 @@
                                         <span mltag="txt_net_asset">Net Asset</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field"></span>
+                                        <span class="readonly-field">{{fundStats.netAsset}}</span>
                                     </div>
                                 </div>
                             </div>
                         </form>
+
+                        <hr class="dashed"/>
+
+                        <!-- Holder list table. -->
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th><span mltag="txt_holder">Holder</span></th>
+                                <th><span mltag="txt_amount">Amount</span></th>
+                                <th><span mltag="txt_quantity">Quantity</span></th>
+                                <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let holder of fundStats.holderList">
+                                <td colspan="4">{{ holder | json }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </clr-tab-content>
