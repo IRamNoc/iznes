@@ -240,6 +240,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                     let holdersList = response[1].data['holders'];
                     console.log(" | holdersList: ", holdersList);
 
+                    /* TODO - map these holder addresses to wallets and workout the percentage holdings etc. */
+
                     /* Resolve the original promise. */
                     resolve(oReturn);
                 }).catch((error) => {
@@ -286,7 +288,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ngRedux.dispatch(setRequestedWalletHolding());
             console.log(InitialisationService.requestWalletHolding);
 
-            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
 
     }
