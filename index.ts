@@ -19,6 +19,7 @@ export {OfiFundInvestService} from './ofi-req-services/ofi-fund-invest/service';
 export {OfiMemberNodeChannelService} from './ofi-req-services/ofi-member-node-channel/service';
 export {OfiRequestServicesModule, ArrangementType} from './ofi-req-services/module';
 export {OfiPostTxService} from './ofi-post-tx/service';
+export {OfiWalletnodeChannelService} from './ofi-req-services/ofi-walletnode-channel/service';
 
 /**
  * Store
