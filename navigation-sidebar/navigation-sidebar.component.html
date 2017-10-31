@@ -1,240 +1,204 @@
 <section class="sidenav-content">
     <a class="nav-link" [routerLink]="['/home/']" [ngClass]="{active: activeRoute('home')}">
-        <i class="fa fa-home"></i> Home
-    </a>
+        <i class="fa fa-home"></i> <span mltag="txt_home">Home</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-asset-managment" menu-dropdown><i class="fa fa-bar-chart"></i> Asset Manager Panel</label>
+        <label id="menu-asset-managment" menu-dropdown><i class="fa fa-bar-chart"></i> <span mltag="txt_assetmanagerpanel">Asset Manager Panel</span></label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/asset-management/fund-holdings']" [ngClass]="{active: activeRoute('/asset-management/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> Fund Holidings</a>
+                <a [routerLink]="['/asset-management/fund-holdings']" [ngClass]="{active: activeRoute('/asset-management/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> <span mltag="txt_fundholidings">Fund Holidings</span></a>
             </li>
         </ul>
     </section>
 
     <a class="nav-link" [routerLink]="['/wallets']" [ngClass]="{active: activeRoute('wallets')}">
-        <i class="fa fa-briefcase"></i> Wallets
-    </a>
+        <i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>
 
     <a class="nav-link" [routerLink]="['/messages']" [ngClass]="{active: activeRoute('messages')}">
-        <i class="fa fa-envelope-o"></i> Messages
-        <span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
+        <i class="fa fa-envelope-o"></i> <span mltag="txt_messages">Messages</span><span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
     </a>
 
     <section class="nav-group collapsible">
-        <label id="menu-account-module" menu-dropdown><i class="fa fa-user"></i> Account Module</label>
+        <label id="menu-account-module" menu-dropdown><i class="fa fa-user"></i> <span mltag="txt_accountmodule">Account Module</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/account/my-account']" [ngClass]="{active: activeRoute('/account/my-account')}" class="nav-link">
-                    <i class="fa fa-user"></i> My Account
-                </a>
+                    <i class="fa fa-user"></i> <span mltag="txt_myaccount">My Account</span></a>
             </li>
             <li>
                 <a [routerLink]="['/account/relationships']" [ngClass]="{active: activeRoute('/account/relationships')}" class="nav-link">
-                    <i class="fa fa-users"></i> Relationships
-                </a>
+                    <i class="fa fa-users"></i> <span mltag="txt_relationships">Relationships</span></a>
             </li>
             <li>
                 <a [routerLink]="['/account/documents']" [ngClass]="{active: activeRoute('/account/documents')}" class="nav-link">
-                    <i class="fa fa-book"></i> Documents
-                </a>
+                    <i class="fa fa-book"></i> <span mltag="txt_documents">Documents</span></a>
             </li>
         </ul>
     </section>
 
 
     <a class="nav-link" [routerLink]="['/kyc-admin']" [ngClass]="{active: activeRoute('kyc')}">
-        <i class="fa fa-users"></i> KYC Administration
-    </a>
+        <i class="fa fa-users"></i> <span mltag="txt_kycadministration">KYC Administration</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-product-module" menu-dropdown><i class="fa fa-industry"></i> Product Module</label>
+        <label id="menu-product-module" menu-dropdown><i class="fa fa-industry"></i> <span mltag="txt_productmodule">Product Module</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/product-module/management-company']" [ngClass]="{active: activeRoute('/product-module/management-company')}" class="nav-link">
-                    <i class="fa fa-university"></i> Management Company
-                </a>
+                    <i class="fa fa-university"></i> <span mltag="txt_managementcompany">Management Company</span></a>
             </li>
             <li>
                 <a [routerLink]="['/product-module/sicav']" [ngClass]="{active: activeRoute('/product-module/sicav')}" class="nav-link">
-                    <i class="fa fa-users"></i> SICAV
-                </a>
+                    <i class="fa fa-users"></i> <span mltag="txt_sicav">SICAV</span></a>
             </li>
             <li>
                 <a [routerLink]="['/product-module/fund']" [ngClass]="{active: activeRoute('/product-module/fund')}" class="nav-link">
-                    <i class="fa fa-area-chart"></i> Fund
-                </a>
+                    <i class="fa fa-area-chart"></i> <span mltag="txt_fund">Fund</span></a>
             </li>
             <li>
                 <a [routerLink]="['/product-module/net-asset-value']" [ngClass]="{active: activeRoute('/product-module/net-asset-value')}" class="nav-link">
-                    <i class="fa fa-ellipsis-h"></i> Net Asset Value
-                </a>
+                    <i class="fa fa-ellipsis-h"></i> <span mltag="txt_netassetvalue">Net Asset Value</span></a>
             </li>
         </ul>
     </section>
 
     <a class="nav-link" [routerLink]="['/manage-orders']" [ngClass]="{active: activeRoute('/manage-orders')}">
-        <i class="fa fa-pencil"></i> Manage Orders
-    </a>
+        <i class="fa fa-pencil"></i> <span mltag="txt_manageorders">Manage Orders</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-pencil"></i> Order Book</label>
+        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-pencil"></i> <span mltag="txt_orderbook">Order Book</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/order-book/my-orders']" [ngClass]="{active: activeRoute('/order-book/my-orders')}" class="nav-link">
-                    <i class="fa fa-book"></i> My Orders
-                </a>
+                    <i class="fa fa-book"></i> <span mltag="txt_myorders">My Orders</span></a>
             </li>
         </ul>
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-corporate-actions" menu-dropdown><i class="fa fa-university"></i> Corporate Actions</label>
+        <label id="menu-corporate-actions" menu-dropdown><i class="fa fa-university"></i> <span mltag="txt_corporateactions">Corporate Actions</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/corporate-actions/create-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/create-resolution')}" class="nav-link">
-                    <i class="fa fa-plus"></i> Create Resolution
-                </a>
+                    <i class="fa fa-plus"></i> <span mltag="txt_createresolution">Create Resolution</span></a>
             </li>
             <li>
                 <a [routerLink]="['/corporate-actions/issue-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/issue-resolution')}" class="nav-link">
-                    <i class="fa fa-check"></i> Issue Resolution
-                </a>
+                    <i class="fa fa-check"></i> <span mltag="txt_issueresolution">Issue Resolution</span></a>
             </li>
             <li>
                 <a [routerLink]="['/corporate-actions/distribution']" [ngClass]="{active: activeRoute('/corporate-actions/distribution')}" class="nav-link">
-                    <i class="fa fa-ellipsis-h"></i> Distribution
-                </a>
+                    <i class="fa fa-ellipsis-h"></i> <span mltag="txt_distribution">Distribution</span></a>
             </li>
             <li>
                 <a [routerLink]="['/corporate-actions/merger-absorption']" [ngClass]="{active: activeRoute('/corporate-actions/merger-absorption')}" class="nav-link">
-                    <i class="fa fa-compress"></i> Merger/Absorption
-                </a>
+                    <i class="fa fa-compress"></i> <span mltag="txt_mergerabsorption">Merger/Absorption</span></a>
             </li>
             <li>
                 <a [routerLink]="['/corporate-actions/coupon-payment']" [ngClass]="{active: activeRoute('/corporate-actions/coupon-payment')}" class="nav-link">
-                    <i class="fa fa-briefcase"></i> Coupon Payment
-                </a>
+                    <i class="fa fa-briefcase"></i> <span mltag="txt_couponpayment">Coupon Payment</span></a>
             </li>
             <li>
                 <a [routerLink]="['/corporate-actions/split']" [ngClass]="{active: activeRoute('/corporate-actions/split')}" class="nav-link">
-                    <i class="fa fa-arrows-h"></i> Split
-                </a>
+                    <i class="fa fa-arrows-h"></i> <span mltag="txt_split">Split</span></a>
             </li>
         </ul>
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-user-administration" menu-dropdown><i class="fa fa-cubes"></i> User Administration</label>
+        <label id="menu-user-administration" menu-dropdown><i class="fa fa-cubes"></i> <span mltag="txt_useradministration">User Administration</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link">
-                    <i class="fa fa-user"></i> Users
-                </a>
+                    <i class="fa fa-user"></i> <span mltag="txt_users">Users</span></a>
             </li>
             <li>
                 <a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/user-administration/wallets')}" class="nav-link">
-                    <i class="fa fa-briefcase"></i> Wallets
-                </a>
+                    <i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>
             </li>
             <li>
                 <a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/user-administration/permissions')}" class="nav-link">
-                    <i class="fa fa-key"></i> Permissions
-                </a>
+                    <i class="fa fa-key"></i> <span mltag="txt_permissions">Permissions</span></a>
             </li>
             <li>
                 <a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link">
-                    <i class="fa fa-users"></i> Wizard
-                </a>
+                    <i class="fa fa-users"></i> <span mltag="txt_wizard">Wizard</span></a>
             </li>
 
             <li>
                 <a [routerLink]="['/user-administration/subportfolio']" [ngClass]="{active: activeRoute('/user-administration/subportfolio')}" class="nav-link">
-                    <i class="fa fa-id-badge"></i> Sub-portfolio
-                </a>
+                    <i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></a>
             </li>
         </ul>
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-asset-servicing" menu-dropdown><i class="fa fa-archive"></i> Asset Servicing</label>
+        <label id="menu-asset-servicing" menu-dropdown><i class="fa fa-archive"></i> <span mltag="txt_assetservicing">Asset Servicing</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/asset-servicing/register-issuer']" [ngClass]="{active: activeRoute('/asset-servicing/register-issuer')}" class="nav-link">
-                    <i class="fa fa-user-plus"></i> Register Issuer
-                </a>
+                    <i class="fa fa-user-plus"></i> <span mltag="txt_registerissuer">Register Issuer</span></a>
             </li>
             <li>
                 <a [routerLink]="['/asset-servicing/register-asset']" [ngClass]="{active: activeRoute('/asset-servicing/register-asset')}" class="nav-link">
-                    <i class="fa fa-plus-circle"></i> Register Asset
-                </a>
+                    <i class="fa fa-plus-circle"></i> <span mltag="txt_registerasset">Register Asset</span></a>
             </li>
             <li>
                 <a [routerLink]="['/asset-servicing/issue-asset']" [ngClass]="{active: activeRoute('/asset-servicing/issue-asset')}" class="nav-link">
-                    <i class="fa fa-paper-plane"></i> Issue Asset
-                </a>
+                    <i class="fa fa-paper-plane"></i> <span mltag="txt_issueasset">Issue Asset</span></a>
             </li>
         </ul>
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-reports" menu-dropdown><i class="fa fa-flag"></i> Reports</label>
+        <label id="menu-reports" menu-dropdown><i class="fa fa-flag"></i> <span mltag="txt_reports">Reports</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link">
-                    <i class="fa fa-th-list"></i> Balances Reports
-                </a>
+                    <i class="fa fa-th-list"></i> <span mltag="txt_balancesreports">Balances Reports</span></a>
             </li>
             <li>
                 <a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link">
-                    <i class="fa fa-money"></i> Issue Reports
-                </a>
+                    <i class="fa fa-money"></i> <span mltag="txt_issuereports">Issue Reports</span></a>
             </li>
             <li>
                 <a [routerLink]="['/reports/transactions']" [ngClass]="{active: activeRoute('/reports/transactions')}" class="nav-link">
-                    <i class="fa fa-key"></i> Transactions Reports
-                </a>
+                    <i class="fa fa-key"></i> <span mltag="txt_transactionsreports">Transactions Reports</span></a>
             </li>
         </ul>
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-chain"></i> Chain Administration</label>
+        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-chain"></i> <span mltag="txt_chainadministration">Chain Administration</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/chain-admin/manage-member']" [ngClass]="{active: activeRoute('/chain-admin/manage-member')}" class="nav-link">
-                    <i class="fa fa-address-card"></i> Member
-                </a>
+                    <i class="fa fa-address-card"></i> <span mltag="txt_member">Member</span></a>
             </li>
             <li>
                 <a [routerLink]="['/chain-admin/manage-groups']" [ngClass]="{active: activeRoute('/chain-admin/manage-groups')}" class="nav-link">
-                    <i class="fa fa-user-o"></i> Groups
-                </a>
+                    <i class="fa fa-user-o"></i> <span mltag="txt_groups">Groups</span></a>
             </li>
             <li>
                 <a [routerLink]="['/chain-admin/chain-membership']" [ngClass]="{active: activeRoute('/chain-admin/chain-membership')}" class="nav-link">
-                    <i class="fa fa-handshake-o"></i> Chain Membership
-                </a>
+                    <i class="fa fa-handshake-o"></i> <span mltag="txt_chainmembership">Chain Membership</span></a>
             </li>
         </ul>
     </section>
 
     <a class="nav-link" [routerLink]="['/list-of-funds']" [ngClass]="{active: activeRoute('/list-of-funds')}">
-        <i class="fa fa-university"></i> List of funds
-    </a>
+        <i class="fa fa-university"></i> <span mltag="txt_listoffunds">List of funds</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i> Reports</label>
+        <label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i> <span mltag="txt_reports">Reports</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/reports-section/tax']" [ngClass]="{active: activeRoute('/reports-section/tax')}" class="nav-link">
-                    <i class="fa fa-eur" aria-hidden="true"></i> Tax Report
-                </a>
+                    <i class="fa fa-eur" aria-hidden="true"></i> <span mltag="txt_taxreport">Tax Report</span></a>
             </li>
             <li>
                 <a [routerLink]="['/reports-section/pnl']" [ngClass]="{active: activeRoute('/reports-section/pnl')}" class="nav-link">
-                    <i class="fa fa-list-alt"></i> P&L
-                </a>
+                    <i class="fa fa-list-alt"></i> <span mltag="txt_pl">P&L</span></a>
             </li>
         </ul>
     </section>
