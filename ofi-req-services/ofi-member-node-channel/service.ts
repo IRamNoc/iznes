@@ -31,9 +31,9 @@ export class OfiMemberNodeChannelService {
         data = JSON.parse(data);
 
         /* Switch the request. */
-        console.log(" |--- Resolving Ofi channel brodcast.");
-        console.log(" | name: ", data.Request);
-        console.log(" | data: ", data);
+        console.log(' |--- Resolving Ofi channel brodcast.');
+        console.log(' | name: ', data.Request);
+        console.log(' | data: ', data);
         switch (data.Request) {
             /* Coupon requests. */
             case 'newcoupon':
@@ -64,6 +64,11 @@ export class OfiMemberNodeChannelService {
             case 'updatenav':
 
                 handleUpdateNav(this.ngRedux);
+                break;
+
+            case 'newArrangementList':
+                console.log('----------got new arrangement update-----');
+
                 break;
         }
     }

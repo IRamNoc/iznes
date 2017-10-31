@@ -50,12 +50,14 @@ export class InvestFundFormService {
         const issuerAddress = immutableHelper.get(formValue, 'shareIssuerAddress', '');
         const walletId = immutableHelper.get(formValue, 'walletId', 0);
         const walletName = immutableHelper.get(formValue, 'walletName', 0);
-        const feePercent = immutableHelper.get(shareMetaData, 'feePercent', 0) / 100;
+        const feePercentInt = immutableHelper.get(shareMetaData, 'feePercent', 0);
+        const feePercent = feePercentInt / 100;
+        const platFormFee = immutableHelper.get(shareMetaData, 'platformFee', 0);
 
         // Convert to to blockchain integer number
         const quantityParse = this._numberConverterService.toBlockchain(quantity);
         const grossAmountParse = this._numberConverterService.toBlockchain(grossAmount);
-        const platFormFeeParse = this._numberConverterService.toBlockchain(grossAmount);
+        const platFormFeeParse = this._numberConverterService.toBlockchain(platFormFee);
         const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
 
         authoriseRef = 'Confirm receipt of payment';
@@ -138,6 +140,11 @@ export class InvestFundFormService {
                         type,
                         metaData: JSON.stringify(metaData),
                         asset: asset,
+                        investBy: byType,
+                        quantity: byType === 0 ? quantity : 0,
+                        amountWithCost: byType === 1 ? grossAmount : 0,
+                        feePercent: feePercentInt,
+                        platFormFee: platFormFeeParse,
                         parties,
                         cutoff: shareMetaData.cutoffDateTimeStr,
                         delivery: shareMetaData.settlementDateTimeStr,
@@ -213,7 +220,7 @@ export class InvestFundFormService {
                 actionData = [
                     {
                         actionData: {
-                            amount: '(((' + grossAmount + ' - ' + platFormFee + ' ) * (1 - ' + feePercent + ' ) ) / nav) * ' +
+                            amount: '(((' + grossAmount + ' - ' + platFormFee + ' ) / (1 + ' + feePercent + ' ) ) / nav) * ' +
                             this.divider,
                             amountType: 'amount',
                             asset: asset,
@@ -267,7 +274,7 @@ export class InvestFundFormService {
                             fromAddress: investorAddress,
                             toAddress: issuerAddress,
                             metaData: {
-                                clientTxType: 'redemption'
+                                clientTxType: 'redemption',
                             }
                         },
                         actionType: ArrangementActionType.SEND
@@ -284,12 +291,12 @@ export class InvestFundFormService {
         return {
             actions: actionData,
             conditions: [
-                {
-                    conditionData: {
-                        executeTimeStamp: settleTimeStamp
-                    },
-                    conditionType: ConditionType.TIME
-                },
+                // {
+                //     conditionData: {
+                //         executeTimeStamp: settleTimeStamp
+                //     },
+                //     conditionType: ConditionType.TIME
+                // },
                 {
                     conditionData: {
                         authoriseRef: authoriseRef,

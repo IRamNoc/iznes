@@ -81,14 +81,22 @@ export class CommonService {
         const rSettlementDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rSettlementDateTimeStr, 'YYYY-MM-DD HH:mm');
 
         // fee percentage
-        const entryFee = Number(immutableHelper.get(shareData, ['entryFee'], 0)) || 0;
-        const sAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_subscription_fee'], 0));
+        // Force fee to be 0, for november go live
+        // const entryFee = Number(immutableHelper.get(shareData, ['entryFee'], 0)) || 0;
+        // const sAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_subscription_fee'], 0));
+        const entryFee = 0;
+        const sAcquiredFee = 0;
 
-        const exitFee = Number(immutableHelper.get(shareData, ['exitFee'], 0)) || 0;
-        const rAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_redemption_fee'], 0));
+        // Force fee to be 0, for november go live
+        // const exitFee = Number(immutableHelper.get(shareData, ['exitFee'], 0)) || 0;
+        // const rAcquiredFee = Number(immutableHelper.get(shareData, ['metaData', 'acquired_redemption_fee'], 0));
+        const exitFee = 0;
+        const rAcquiredFee = 0;
 
         // platform fee
-        const platformFee = 1;
+        // Force fee to be 0, for november go live
+        // const platformFee = 1;
+        const platformFee = 0;
 
         // allow type
         const typeDef = {

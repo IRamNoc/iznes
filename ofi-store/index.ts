@@ -15,6 +15,24 @@ export {
 } from './ofi-fund-invest';
 
 /*
+ Ofi client tx
+ */
+import {
+    OfiClientTxReducer,
+    OfiClientTxState,
+
+    SET_CLIENT_TX_LIST,
+    setRequestedClientTxList,
+    clearRequestedClientTxList
+} from './ofi-client-txs';
+
+export {
+    SET_CLIENT_TX_LIST,
+    setRequestedClientTxList,
+    clearRequestedClientTxList
+} from './ofi-client-txs';
+
+/*
  Ofi Corp Actions
  */
 import {
@@ -94,6 +112,7 @@ export interface OfiState {
     ofiCorpActions: OfiCorpActionsState;
     ofiProduct: OfiProductState;
     ofiOrders: OfiOrdersState;
+    ofiClientTx: OfiClientTxState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -101,4 +120,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiCorpActions: OfiCorpActionsReducer,
     ofiProduct: OfiProductReducer,
     ofiOrders: OfiOrdersReducer,
+    ofiClientTx: OfiClientTxReducer,
 });

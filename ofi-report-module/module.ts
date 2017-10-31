@@ -1,5 +1,5 @@
 // vendor imports
-import {NgModule} from '@angular/core';
+import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {ClarityModule} from 'clarity-angular';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -9,7 +9,20 @@ import {DpDatePickerModule} from '@setl/utils';
 import {OfiTaxReportComponent} from './ofi-tax-report/component';
 import {OfiPnlReportComponent} from './ofi-pnl-report/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
+import {ActionDirection} from './pnlHelper/class';
 
+@Pipe({name: 'txType'})
+export class TxTypePipe implements PipeTransform {
+    transform(value: number): string {
+        if (value === ActionDirection.REDEMPTION) {
+            return 'Redemption';
+        } else if (value === ActionDirection.SUBSCRIPTION) {
+            return 'Subscription';
+        } else {
+            return 'Unknown';
+        }
+    }
+}
 
 @NgModule({
     imports: [
@@ -24,7 +37,7 @@ import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModul
         SetlDirectivesModule
     ],
     exports: [],
-    declarations: [OfiTaxReportComponent, OfiPnlReportComponent],
+    declarations: [OfiTaxReportComponent, OfiPnlReportComponent, TxTypePipe],
     providers: [],
 })
 export class OfiReportModule {
