@@ -19,11 +19,53 @@
                     [sidebarClass]="'demo-sidebar'"
                     [ariaLabel]="'My sidebar'"
         >
+            <div class="ng-sidebar-header">
+                <div class="ng-sidebar-header-left">
+                    <button class="btn btn-outline" (click)="_toggleSidebar()">Close</button>
+                </div>
+                <div class="ng-sidebar-header-middle">
+                    Settings
+                </div>
+                <div class="ng-sidebar-header-right">
+
+                </div>
+            </div>
+            <div class="ng-sidebar-body">
+
+
+                <div class="ng-sidebar-section-header">
+
+                    Change Language
+                </div>
+                <div class="ng-sidebar-section-body">
+
+
+                    <section class="form-block">
+                        <label>Radio Buttons</label>
+                        <div class="form-group">
+                            <label>Inline radio button group</label>
+                            <div class="radio-inline" (click)="changeLanguage('eng')">
+                                <input type="radio" name="gridRadios1" id="lang_eng" checked>
+                                <label for="lang_eng">English</label>
+                            </div>
+                            <div class="radio-inline" (click)="changeLanguage('fra')">
+                                <input type="radio" name="gridRadios1" id="lang_fra">
+                                <label for="lang_fra">Francais</label>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div>
+            </div>
+
             <button class="header-overflow-trigger" type="button">
                 <span></span>
             </button>
+
+
             <p>Sidebar contents</p>
-            <button (click)="_toggleSidebar()">Toggle sidebar</button>
+
         </ng-sidebar>
 
         <div ng-sidebar-content class="main-container-sidebar-content">

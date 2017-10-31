@@ -1,4 +1,9 @@
 import {Component, OnInit} from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
+
+import {
+    setLanguage
+} from '@setl/core-store';
 
 @Component({
     selector: 'app-basic-layout',
@@ -28,7 +33,16 @@ export class BasicLayoutComponent implements OnInit {
         return false;
     }
 
-    constructor() {
+    /**
+     * Changes Language and Stores in Redux (site-settings)
+     *
+     * @param lang
+     */
+    public changeLanguage(lang) {
+        this.ngRedux.dispatch(setLanguage(lang));
+    }
+
+    constructor(private ngRedux: NgRedux<any>) {
     }
 
     ngOnInit() {
