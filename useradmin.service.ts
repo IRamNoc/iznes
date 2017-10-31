@@ -56,20 +56,7 @@ import {
 export class UserAdminService {
 
     /* Account types. */
-    public accountList: any = [
-        {
-            'id': '1',
-            'text': 'SETL Private Admin',
-        },
-        {
-            'id': '2',
-            'text': 'Developement_Admin_Account',
-        },
-        {
-            'id': '8',
-            'text': 'HKEX_Admin_Account',
-        },
-    ];
+    public accountList: any = [];
 
     /* Wallet Types. */
     public walletTypes: any = [
@@ -199,7 +186,7 @@ export class UserAdminService {
 
     private subscriptions = {};
 
-    @select( [ 'account', 'accountList', 'accountList' ] ) accountListOb:any;
+    @select(['account', 'accountList', 'accountList']) accountListOb: any;
 
     /* Constructor. */
     constructor(private adminUsersService: AdminUsersService,
@@ -240,9 +227,9 @@ export class UserAdminService {
             let newAccountList = [], key;
 
             /* Ok, let's loop over each account... */
-            for ( key in Object.keys(accountList) ) {
+            for (key of Object.keys(accountList)) {
                 /* ...and push a nice select object into the new array. */
-                if ( accountList[key] ) {
+                if (accountList[key]) {
                     newAccountList.push({
                         id: accountList[key].accountId,
                         text: accountList[key].accountName,
@@ -639,30 +626,30 @@ export class UserAdminService {
      *
      * @return {any} [description]
      */
-     createNewWallet(data): Promise<any> {
-         /* Return. */
-         return this.adminUsersService.buildRequest({
-             ngRedux: this.ngRedux,
-             taskPipe: this.adminUsersService.createNewWallet(data)
-         });
-     }
+    createNewWallet(data): Promise<any> {
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.createNewWallet(data)
+        });
+    }
 
-     /**
-      * Update Wallet
-      * -----------------
-      * Updates a wallet.
-      *
-      * @param {data} object - the updated wallet information.
-      *
-      * @return {any} [description]
-      */
-      updateWallet(data): Promise<any> {
-          /* Return. */
-          return this.adminUsersService.buildRequest({
-              ngRedux: this.ngRedux,
-              taskPipe: this.adminUsersService.updateWallet(data)
-          });
-      }
+    /**
+     * Update Wallet
+     * -----------------
+     * Updates a wallet.
+     *
+     * @param {data} object - the updated wallet information.
+     *
+     * @return {any} [description]
+     */
+    updateWallet(data): Promise<any> {
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateWallet(data)
+        });
+    }
 
     /**
      * Delete Wallet
@@ -674,10 +661,10 @@ export class UserAdminService {
      * @return {void}
      */
     public deleteWallet(data): Promise<any> {
-      return this.adminUsersService.buildRequest({
-          ngRedux: this.ngRedux,
-          taskPipe: this.adminUsersService.deleteWallet(data)
-      });
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.deleteWallet(data)
+        });
     }
 
     /**
@@ -1015,7 +1002,7 @@ export class UserAdminService {
         return differences;
     }
 
-    ngOnDestroy () {
+    ngOnDestroy() {
         /* Unsubscribe Observables. */
         for (var key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();

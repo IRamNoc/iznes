@@ -37,7 +37,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public accountTypes: any;
     private allGroupList: any;
     private usersPermissionsList: any;
-    private usersWalletPermissions: any;;
+    private usersWalletPermissions: any;
     private usersChainAccess: any;
 
     /* User types select. */
@@ -504,15 +504,16 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s chain access.');
             });
 
+            /* Clear the form. */
+            this.clearNewUser(1, false);
+
             /* Handle success. */
             this.showSuccess('Successfully updated this user.');
         }).catch((error) => {
-            /* TODO - handle error message. */
+            /* Handle error. */
             this.showError('Failed to update this user.');
+            console.warn('Failed to update this user: ', error);
         });
-
-        /* Clear the form. */
-        this.clearNewUser(1, false);
 
         /* Return. */
         return;
@@ -632,27 +633,31 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         return;
     }
 
-    private diffChainAccess (oldAccessArr, newAccessArr):any {
+    private diffChainAccess(oldAccessArr, newAccessArr): any {
         /* Convert the arrays to objects. */
         let
-        oldAccess = {},
-        newAccess = {};
-        oldAccessArr.map(chain => { oldAccess[chain.id] = chain });
-        newAccessArr.map(chain => { newAccess[chain.chainId] = chain });
+            oldAccess = {},
+            newAccess = {};
+        oldAccessArr.map(chain => {
+            oldAccess[chain.id] = chain
+        });
+        newAccessArr.map(chain => {
+            newAccess[chain.chainId] = chain
+        });
 
         /* Variables. */
         let
-        i, j, res,
-        differences = {
-            toAdd: [],
-            toDelete: []
-        }
+            i, j, res,
+            differences = {
+                toAdd: [],
+                toDelete: []
+            }
 
         /* First, let's see what's new. */
         for (i in newAccess) {
             /* If it's not in the old one, the add it. */
-            if ( ! oldAccess[i] ) {
-                res = this.getChainById( newAccess[i].chainId );
+            if (!oldAccess[i]) {
+                res = this.getChainById(newAccess[i].chainId);
                 differences.toAdd.push(res);
             }
         }
@@ -660,8 +665,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Lastly, let's check if any were deleted. */
         for (j in oldAccess) {
             /* If it's not in the new access, it's been deleted. */
-            if ( ! newAccess[j] ) {
-                res = this.getChainById( oldAccess[j].id );
+            if (!newAccess[j]) {
+                res = this.getChainById(oldAccess[j].id);
                 differences.toDelete.push(res);
             }
         }
@@ -711,13 +716,13 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         return walletAccess;
     }
 
-    private getChainAccessFromTab(formData):any {
+    private getChainAccessFromTab(formData): any {
         /* Object of changes. */
         let i, resolution, chainAccess = [];
 
         /* Get each wallet and push into wallet access. */
         for (i in formData['chainAccess']) {
-            resolution = this.getChainById( formData['chainAccess'][i].id );
+            resolution = this.getChainById(formData['chainAccess'][i].id);
             chainAccess.push(resolution);
         }
 
@@ -800,19 +805,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
         dataToSend['account'] = this.usersList[deleteUserIndex].accountID;
 
-        /* Send the request. */        /* Let's now ask the user if they're sure... */
+        /* Send the request. */
+        /* Let's now ask the user if they're sure... */
         this._confirmationService.create(
             '<span>Deleting a User</span>',
-            '<span>Are you sure you want to delete \''+ this.usersList[deleteUserIndex].userName +'\'?</span>'
+            '<span>Are you sure you want to delete \'' + this.usersList[deleteUserIndex].userName + '\'?</span>'
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
                 /* ...now send the request. */
                 this.userAdminService.deleteUser(dataToSend).then((response) => {
                     /* Close any tabs open for this wallet. */
-                    for ( let i in this.tabsControl ) {
-                        if ( this.tabsControl[i].userID == dataToSend['userId'] ) {
-                            this.closeTab(i); break;
+                    for (let i in this.tabsControl) {
+                        if (this.tabsControl[i].userID == dataToSend['userId']) {
+                            this.closeTab(i);
+                            break;
                         }
                     }
 
@@ -979,21 +986,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.userAdminService.requestUserChainAccess({
             userId: user.userID
         }).then((response) => {
-            console.log('got chain access: ', response );
+            console.log('got chain access: ', response);
             /* So we've requested the data, now we can access it. */
-            let resolution, userChainAccess = this.usersChainAccess[ user.userID ] || [];
+            let resolution, userChainAccess = this.usersChainAccess[user.userID] || [];
 
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
                 resolution = this.getChainById(chain.chainID);
-                console.log( resolution );
+                console.log(resolution);
                 return {
                     id: resolution.chainId,
                     text: resolution.chainName,
                 };
             })
             /* Filter to remove chains that we can't see. */
-            .filter(chain => !!chain.id);
+                .filter(chain => !!chain.id);
 
             /* Set the past access and the form control value. */
             thisTab['oldChainAccess'] = userChainAccess;
@@ -1025,7 +1032,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (key in groupsObject) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsObject[key].groupID})[0];
-            if ( resolution ) {
+            if (resolution) {
                 newArr.push({
                     id: resolution.groupId,
                     text: resolution.groupName,
@@ -1044,7 +1051,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Loop and fetch the rest of the data. */
         for (i in groupsArray) {
             resolution = this.userAdminService.resolveGroup({groupId: groupsArray[i].id})[0];
-            if ( resolution ) {
+            if (resolution) {
                 newObject[groupsArray[i].id] = resolution;
             }
         }
@@ -1136,7 +1143,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * Returns a new user form group.
      * @return {FormGroup}
      */
-    getNewUserFormGroup ():FormGroup {
+    getNewUserFormGroup(): FormGroup {
         return new FormGroup(
             {
                 "username": new FormControl(''),
