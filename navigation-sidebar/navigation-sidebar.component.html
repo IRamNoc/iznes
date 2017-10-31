@@ -1,12 +1,16 @@
 <section class="sidenav-content">
     <a class="nav-link" [routerLink]="['/home/']" [ngClass]="{active: activeRoute('home')}">
-        <i class="fa fa-home"></i> <span mltag="txt_home">Home</span></a>
+        <i class="fa fa-home"></i> <span mltag="txt_home">Home</span>
+    </a>
+
 
     <section class="nav-group collapsible">
-        <label id="menu-asset-managment" menu-dropdown><i class="fa fa-bar-chart"></i> <span mltag="txt_assetmanagerpanel">Asset Manager Panel</span></label>
+        <label id="menu-asset-managment" menu-dropdown><i class="fa fa-bar-chart"></i>
+            <span mltag="txt_assetmanagerpanel">Asset Manager Panel</span></label>
         <ul class="nav-list">
             <li>
-                <a [routerLink]="['/asset-management/fund-holdings']" [ngClass]="{active: activeRoute('/asset-management/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> <span mltag="txt_fundholidings">Fund Holidings</span></a>
+                <a [routerLink]="['/asset-management/fund-holdings']" [ngClass]="{active: activeRoute('/asset-management/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i>
+                    <span mltag="txt_fundholidings">Fund Holidings</span></a>
             </li>
         </ul>
     </section>
@@ -15,11 +19,13 @@
         <i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>
 
     <a class="nav-link" [routerLink]="['/messages']" [ngClass]="{active: activeRoute('messages')}">
-        <i class="fa fa-envelope-o"></i> <span mltag="txt_messages">Messages</span><span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
+        <i class="fa fa-envelope-o"></i>
+        <span mltag="txt_messages">Messages</span><span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
     </a>
 
     <section class="nav-group collapsible">
-        <label id="menu-account-module" menu-dropdown><i class="fa fa-user"></i> <span mltag="txt_accountmodule">Account Module</span></label>
+        <label id="menu-account-module" menu-dropdown><i class="fa fa-user"></i>
+            <span mltag="txt_accountmodule">Account Module</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/account/my-account']" [ngClass]="{active: activeRoute('/account/my-account')}" class="nav-link">
@@ -41,7 +47,8 @@
         <i class="fa fa-users"></i> <span mltag="txt_kycadministration">KYC Administration</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-product-module" menu-dropdown><i class="fa fa-industry"></i> <span mltag="txt_productmodule">Product Module</span></label>
+        <label id="menu-product-module" menu-dropdown><i class="fa fa-industry"></i>
+            <span mltag="txt_productmodule">Product Module</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/product-module/management-company']" [ngClass]="{active: activeRoute('/product-module/management-company')}" class="nav-link">
@@ -66,7 +73,8 @@
         <i class="fa fa-pencil"></i> <span mltag="txt_manageorders">Manage Orders</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-pencil"></i> <span mltag="txt_orderbook">Order Book</span></label>
+        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-pencil"></i>
+            <span mltag="txt_orderbook">Order Book</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/order-book/my-orders']" [ngClass]="{active: activeRoute('/order-book/my-orders')}" class="nav-link">
@@ -76,7 +84,8 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-corporate-actions" menu-dropdown><i class="fa fa-university"></i> <span mltag="txt_corporateactions">Corporate Actions</span></label>
+        <label id="menu-corporate-actions" menu-dropdown><i class="fa fa-university"></i>
+            <span mltag="txt_corporateactions">Corporate Actions</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/corporate-actions/create-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/create-resolution')}" class="nav-link">
@@ -106,7 +115,8 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-user-administration" menu-dropdown><i class="fa fa-cubes"></i> <span mltag="txt_useradministration">User Administration</span></label>
+        <label id="menu-user-administration" menu-dropdown><i class="fa fa-cubes"></i>
+            <span mltag="txt_useradministration">User Administration</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link">
@@ -133,7 +143,8 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-asset-servicing" menu-dropdown><i class="fa fa-archive"></i> <span mltag="txt_assetservicing">Asset Servicing</span></label>
+        <label id="menu-asset-servicing" menu-dropdown><i class="fa fa-archive"></i>
+            <span mltag="txt_assetservicing">Asset Servicing</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/asset-servicing/register-issuer']" [ngClass]="{active: activeRoute('/asset-servicing/register-issuer')}" class="nav-link">
@@ -151,7 +162,8 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-reports" menu-dropdown><i class="fa fa-flag"></i> <span mltag="txt_reports">Reports</span></label>
+        <label id="menu-reports" menu-dropdown><i class="fa fa-flag"></i>
+            <span mltag="txt_reports">Reports</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link">
@@ -169,7 +181,8 @@
     </section>
 
     <section class="nav-group collapsible">
-        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-chain"></i> <span mltag="txt_chainadministration">Chain Administration</span></label>
+        <label id="menu-chain-administration" menu-dropdown><i class="fa fa-chain"></i>
+            <span mltag="txt_chainadministration">Chain Administration</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/chain-admin/manage-member']" [ngClass]="{active: activeRoute('/chain-admin/manage-member')}" class="nav-link">
@@ -190,7 +203,8 @@
         <i class="fa fa-university"></i> <span mltag="txt_listoffunds">List of funds</span></a>
 
     <section class="nav-group collapsible">
-        <label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i> <span mltag="txt_reports">Reports</span></label>
+        <label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i>
+            <span mltag="txt_reports">Reports</span></label>
         <ul class="nav-list">
             <li>
                 <a [routerLink]="['/reports-section/tax']" [ngClass]="{active: activeRoute('/reports-section/tax')}" class="nav-link">
