@@ -9,7 +9,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
 
 /* 3rd party modules. */
-import {SelectModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule} from '@setl/utils';
 
 /* Multilingual coolness. */
 import {MultilingualModule} from '@setl/multilingual';
@@ -32,6 +32,7 @@ import {FundHoldingsComponent} from './fund-holdings/component'
         FormsModule,
         ClarityModule,
         SelectModule,
+        SetlPipesModule,
         MultilingualModule
     ],
     providers: []

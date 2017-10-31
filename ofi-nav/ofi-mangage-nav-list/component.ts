@@ -392,6 +392,8 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             pageSize
         }));
 
+        console.log("fundName: ", fundName, "navDate: ", navDate, "status: ", status, "pageNum: ", pageNum, "pageSize: ", pageSize);
+
         this._ngRedux.dispatch(clearRequestedManageNavList());
     }
 
@@ -526,4 +528,3 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     }
 
 }
-
