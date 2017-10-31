@@ -59,7 +59,7 @@ function handleSetClientTxList(state: OfiClientTxsListState, action: Action): Of
             transactionInstrumentName: item.get('TransactionInstrumentName', 0),
             transactionType: item.get('TransactionType', 0),
             transactionType_Contra: item.get('TransactionType_Contra', 0),
-            transactionUnits: item.get('TransactionUnit', 0),
+            transactionUnits: item.get('TransactionUnits', 0),
             transactionSignedUnits: item.get('TransactionSignedUnits', 0),
             transactionPrice: item.get('TransactionPrice', 0),
             transactionCosts: item.get('TransactionCost', 0),
