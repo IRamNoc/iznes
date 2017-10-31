@@ -198,6 +198,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     transactionInstrumentName: tx.transactionInstrumentName,
                     transactionType: tx.transactionType,
                     transactionId: tx.transactionId,
+                    transactionRefId: tx.transactionRefId,
                     transactionPrice,
                     transactionUnits: tx.transactionUnits,
                     transactionSettlement: tx.transactionSettlement,

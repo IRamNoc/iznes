@@ -186,6 +186,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 transactionInstrumentName: item.get('transactionInstrumentName', ''),
                 transactionType: item.get('transactionType', ''),
                 transactionId: item.get('transactionId', ''),
+                transactionRefId: item.get('transactionRefId', ''),
                 transactionPrice: this._numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
                 transactionUnits: this._numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
                 transactionSettlement: this._numberConverterService.toFrontEnd(item.get('transactionSettlement', '')),

@@ -12,6 +12,7 @@ export const enum ClientTxLegType {
 
 export interface TxDetail {
     transactionId: number;
+    transactionRefId: number;
     transactionParentId: number;
     transactionHash: string;
     transactionWalletId: number;

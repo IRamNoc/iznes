@@ -50,6 +50,7 @@ function handleSetClientTxList(state: OfiClientTxsListState, action: Action): Of
         const transactionId = item.get('TransactionID', 0);
         result.push({
             transactionId: transactionId,
+            transactionRefId: item.get('TransactionRefID', 0),
             transactionParentId: item.get('TransactionParentID', 0),
             transactionHash: item.get('TransactionHash', 0),
             transactionWalletId: item.get('TransactionWalletID', 0),
