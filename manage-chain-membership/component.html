@@ -33,6 +33,7 @@
                                 placeholder="Select Chain"
                                 (selected)="selectChain($event)"
                                 formControlName="chain"
+                                mltag="txt_selectchain"
                         >
                         </ng-select>
                     </div>
@@ -55,6 +56,7 @@
                                             placeholder="Select Member"
                                             [formControl]="thisFormGroup.controls['member']"
                                             (selected)="selectMember($event, i)"
+                                            mltag="txt_selectmember"
                                     >
                                     </ng-select>
                                 </div>
@@ -65,6 +67,7 @@
                                             [allowClear]="false"
                                             placeholder="Select Membership Type"
                                             [formControl]="thisFormGroup.controls['memberType']"
+                                            mltag="txt_selectmembershiptype"
                                     >
                                     </ng-select>
                                 </div>
