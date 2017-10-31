@@ -7,7 +7,7 @@
     </div>
     <form class="search" [formGroup]="searchForm">
         <label for="search_input">
-            <input id="search_input" type="text" placeholder="Search for keywords...">
+            <input id="search_input" type="text" placeholder="Search for keywords..." mltag="txt_searchforkeywords">
         </label>
     </form>
     <div class="header-actions">
@@ -19,7 +19,8 @@
                        (removed)="removed($event)"
                        placeholder="No wallet selected"
                        [formControl]="selectedWalletId"
-                       [multiple]="false">
+                       [multiple]="false"
+                       mltag="txt_nowalletselected">
             </ng-select>
         </div>
 
@@ -32,29 +33,29 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <span>Last 21/08/2017 15:33</span>
+                <span mltag="txt_last">Last</span> 21/08/2017 15:33
             </div>
 
             <div class="dropdown-menu">
-                <a href="/#/account/my-account" clrDropdownItem>My Account</a>
+                <a href="/#/account/my-account" clrDropdownItem mltag="txt_myaccount">My Account</a>
                 <div class="dropdown-divider"></div>
-                <a href="/#/login" clrDropdownItem>Logout</a>
+                <a href="/#/login" clrDropdownItem mltag="txt_logout">Logout</a>
             </div>
         </clr-dropdown>
 
         <a [routerLink]="['/messages']" class="nav-link nav-icon">
             <clr-icon shape="email" class="is-solid" [ngClass]="hasMail"></clr-icon>
-            <label>Messages</label>
+            <label mltag="txt_messages">Messages</label>
         </a>
 
         <a class="nav-link nav-icon" (click)="callToggleSidebar($event)">
             <clr-icon shape="cog"></clr-icon>
-            <label>Settings</label>
+            <label mltag="txt_settings">Settings</label>
         </a>
 
         <a [routerLink]="['/login']" class="nav-link nav-icon" (click)="logout()">
             <clr-icon shape="logout"></clr-icon>
-            <label>Logout</label>
+            <label mltag="txt_logout">Logout</label>
         </a>
 
         <button class="header-overflow-trigger" type="button">
