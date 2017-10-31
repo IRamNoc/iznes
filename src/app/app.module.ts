@@ -93,6 +93,8 @@ export function memberSocketServiceFactory() {
     )
 }
 
+
+
 @NgModule({
     declarations: [
         /* Components. */
@@ -132,14 +134,13 @@ export function memberSocketServiceFactory() {
         CorpActionsModule,
         OfiMainModule,
         SetlDirectivesModule,
-        SetlServicesModule
+        SetlServicesModule,
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
 
         {
             provide: MemberSocketService,
-
             useFactory: memberSocketServiceFactory
         },
 

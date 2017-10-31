@@ -10,6 +10,8 @@ import {SetlMyAccountComponent} from '@setl/core-account';
 import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
+import {FundHoldingsComponent} from '@ofi/ofi-main';
+
 /* UserAdmin Module. */
 import {AdminUsersComponent} from '@setl/core-useradmin';
 import {AdminWalletsComponent} from '@setl/core-useradmin';
@@ -37,6 +39,9 @@ import {
     ManageOrdersComponent,
     MyOrdersComponent,
 } from '@ofi/ofi-main';
+
+/* Ofi Home Page. */
+import {OfiHomeComponent} from '@ofi/ofi-main';
 
 /**
  * Asset serving module
@@ -95,6 +100,11 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'home',
+                component: OfiHomeComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService]
             },
@@ -109,6 +119,16 @@ export const ROUTES: Routes = [
                     {
                         path: 'my-account',
                         component: SetlMyAccountComponent,
+                        canActivate: [LoginGuardService],
+                    }
+                ]
+            },
+            {
+                path: 'asset-management',
+                children: [
+                    {
+                        path: 'fund-holdings',
+                        component: FundHoldingsComponent,
                         canActivate: [LoginGuardService],
                     }
                 ]

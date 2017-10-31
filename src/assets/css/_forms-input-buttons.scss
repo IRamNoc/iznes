@@ -4,7 +4,6 @@
     <button>hi</button>
 </div>
 */
-
 .input-button-group {
 
     input, button {
@@ -36,4 +35,16 @@
         }
     }
 
+}
+
+/*
+For use with ng-select.
+
+<ng-select></ng-select>
+<button class='btn btn-primary btn-end'></button>
+*/
+button.btn-end {
+    display: inline-block;
+    margin-top: 6px !important;
+    height: 40px;
 }

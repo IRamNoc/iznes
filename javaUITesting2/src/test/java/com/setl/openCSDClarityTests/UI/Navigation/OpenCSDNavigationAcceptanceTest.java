@@ -145,6 +145,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-chain-administration");
         navigateToPage("chain-admin/chain-membership");
     }
+    @Ignore
     @Test
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
