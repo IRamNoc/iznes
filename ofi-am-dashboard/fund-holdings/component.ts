@@ -273,11 +273,12 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         let
                             key,
                             id,
-                            i = 0,
+                            i: number,
                             finalHoldersList = [],
                             numberOfUnits = 0;
 
                         /* For each wallet, loop the directory list and find it... */
+                        i = 0;
                         for (key in walletIdList) {
                             for (id in this.walletDirectoryList) {
                                 /* ...check if we've found it... */
@@ -302,9 +303,9 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         oReturn.nav.price = this._numberConverterService.toFrontEnd(oReturn.nav.price);
 
                         /* For each holder, let's figure out  */
-                        let i;
-                        for (i in finalHoldersList) {
-                            finalHoldersList[i]['ratio'] = (100 / oReturn['units']) * finalHoldersList[i]['quantity'];
+                        let finalHolder: any;
+                        for (finalHolder in finalHoldersList) {
+                            finalHoldersList[finalHolder]['ratio'] = (100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity'];
                         }
 
                         /* Assign them to the return. */
@@ -313,10 +314,10 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         /* Workout the graph data. */
                         oReturn['graphData'] = [];
                         oReturn['graphLabels'] = [];
-                        let i;
-                        for (i in oReturn['holders']) {
-                            oReturn['graphData'].push(oReturn['holders'][i]['ratio']);
-                            oReturn['graphLabels'].push(oReturn['holders'][i]['walletName']);
+                        let returnHolder: any;
+                        for (returnHolder in oReturn['holders']) {
+                            oReturn['graphData'].push(oReturn['holders'][returnHolder]['ratio']);
+                            oReturn['graphLabels'].push(oReturn['holders'][returnHolder]['walletName']);
                         }
 
 
