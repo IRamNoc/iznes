@@ -83,21 +83,31 @@
                         <hr class="dashed"/>
 
                         <!-- Holder list table. -->
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th><span mltag="txt_holder">Holder</span></th>
-                                <th><span mltag="txt_amount">Amount</span></th>
-                                <th><span mltag="txt_quantity">Quantity</span></th>
-                                <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let holder of fundStats.holderList">
-                                <td colspan="4">{{ holder | json }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th><span mltag="txt_holder">Holder</span></th>
+                                        <th><span mltag="txt_amount">Amount</span></th>
+                                        <th><span mltag="txt_quantity">Quantity</span></th>
+                                        <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let holder of fundStats.holders">
+                                        <!--<td colspan="4">{{ holder | json }}</td>-->
+                                        <td>{{ holder.walletName }}</td>
+                                        <td>{{ holder.quantity }}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </clr-tab-content>

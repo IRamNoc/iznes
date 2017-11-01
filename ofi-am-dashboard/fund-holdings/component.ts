@@ -47,6 +47,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     private subscriptions: any = {};
     private connectedWalletId: any = 0;
     private myWallets: any = [];
+    private walletDirectoryList: any = [];
     private myDetails: any = {};
     private userAssetList: Array<any> = [];
     private filteredUserAssetList: Array<{ id: string, text: string }> = [];
@@ -57,6 +58,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb: any;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -85,6 +87,15 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
             /* Assign list to a property. */
             this.myWallets = walletsList;
+
+            /* Update wallet name. */
+            this.updateWalletConnection();
+        });
+
+        /* Subscribe for wallet dir list. */
+        this.subscriptions['wallet-dir-list'] = this.walletDirectoryListOb.subscribe((walletsList) => {
+            /* Assign list to a property. */
+            this.walletDirectoryList = walletsList;
 
             /* Update wallet name. */
             this.updateWalletConnection();
@@ -174,7 +185,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundStats.netAsset = (data.nav.price / 5) * data.units;
 
             /* Now let's get the holders in this fund. */
-
+            this.fundStats.holders = data.holders;
 
             /* Detect changes. */
             this.changeDetectorRef.detectChanges();
@@ -237,13 +248,54 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Request holders of this fund. */
                 this.requestWalletIssueHolding(assetParts[0], assetParts[1], fund.walletId).then((response) => {
                     /* Get the list of holders. */
-                    let holdersList = response[1].data['holders'];
+                    let
+                        holdersList = response[1].data['holders'],
+                        key, addresses = [];
+
+                    /* Push all the keys (addresses) into an array */
+                    for (key in holdersList) addresses.push(key);
+
+                    /* Request all the wallet IDs of these addresses. */
+                    this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response) => {
+                        console.log(' | > getWalletIdsByAddreses response: ', response);
+                        let walletIdList = response[1].Data;
+
+                        /* Now let's map the holders to wallets. */
+                        console.log(' | ~ map: ', this.walletDirectoryList, walletIdList);
+                        let
+                            key,
+                            id,
+                            i = 0,
+                            finalHoldersList = [];
+
+                        /* For each wallet, loop the directory list and find it... */
+                        for (key in walletIdList) {
+                            for (id in this.walletDirectoryList) {
+                                /* ...check if we've found it... */
+                                if (this.walletDirectoryList[id].commuPub === walletIdList[key].commuPub) {
+                                    /* ...if we have, push a nice object into the array. */
+                                    finalHoldersList.push({
+                                        'walletName': this.walletDirectoryList[id].walletName,
+                                        'quantity': holdersList[Object.keys(holdersList)[i]],
+                                    });
+                                }
+                            }
+
+                            /* Inc the position, keeps us inline with the original holders list array. */
+                            i++;
+                        }
+
+                        /* Assign them to the return. */
+                        oReturn['holders'] = finalHoldersList;
+
+                        /* Resolve the original promise. */
+                        resolve(oReturn);
+                    }).catch((error) => {
+                        console.log(' | > getWalletIdsByAddreses error: ', error);
+                    })
                     console.log(" | holdersList: ", holdersList);
 
-                    /* TODO - map these holder addresses to wallets and workout the percentage holdings etc. */
 
-                    /* Resolve the original promise. */
-                    resolve(oReturn);
                 }).catch((error) => {
                     console.log(" | error: ", error);
                 });
