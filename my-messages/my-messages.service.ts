@@ -97,12 +97,12 @@ export class MyMessagesService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    markRead(walletId, mailsToMarkRead) {
+    markRead(walletId, mailsToMark) {
         const messageBody: MarkAsRead = {
             RequestName: 'email_mark_read',
             token: this.memberSocketService.token,
             walletId: walletId, // specific id
-            mailsToMark: mailsToMarkRead,
+            mailsToMark: mailsToMark,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

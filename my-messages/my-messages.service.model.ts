@@ -52,7 +52,7 @@ export interface MarkAsDelete extends MemberNodeMessageBody {
     token: string;
     walletId: number;
     mailsToMark: object;
-    isDelete: string;
+    isDelete: number;
 }
 
 export interface MarkAsRead extends MemberNodeMessageBody {
