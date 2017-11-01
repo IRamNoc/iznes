@@ -10,6 +10,7 @@ import {immutableHelper, NumberConverterService, mDateHelper} from '@setl/utils'
 import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
 import _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {FormControl, FormGroup} from '@angular/forms';
 
 interface ClientTxViewListItem {
     transactionId: number;
@@ -36,6 +37,20 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
     connectedWalletId: number;
 
+    // Date picker configuration
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'DD-MM-YYYY',
+        closeOnSelect: true,
+        opens: 'right',
+        locale: 'en',
+    };
+
+    // Date range search form
+    dateRangeForm: FormGroup;
+    fromDateValue: string;
+    toDateValue: string;
+
     // client txt data
     clientTxListObj: any;
     clientTxList: Array<any>;
@@ -57,6 +72,13 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'allTxList']) clientTxListOb;
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'requested']) clientTxListRequestedOb;
+
+    // total amount to be declared in the date range.
+    get totalAmountToDeclared() {
+        return immutableHelper.reduce(this.pnlRegister, (result, item) => {
+            return result + item.realisePnl;
+        }, 0);
+    }
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _ofiClientTxService: OfiClientTxService,
@@ -88,6 +110,14 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             }
         ];
 
+        this.fromDateValue = mDateHelper.unixTimestampToDateStr(mDateHelper.substractYear(new Date(), 1), 'DD/MM/YYYY');
+        this.toDateValue = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+
+        this.dateRangeForm = new FormGroup({
+            fromDate: new FormControl(this.fromDateValue),
+            toDate: new FormControl(this.toDateValue)
+        });
+
         this.relatedRedemptionTxList = [];
 
         // List of observable subscription.
@@ -117,6 +147,8 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
     updateClientTxList(clientTxListData) {
         this.clientTxListObj = clientTxListData;
+        clientTxListData = this.filterTxsWithDate(clientTxListData);
+
         this.pnlRegister = this.processClientTxList(clientTxListData);
 
         const allTxs = immutableHelper.reduce(clientTxListData, (result, item) => {
@@ -155,6 +187,30 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             return result;
         }, []);
         this._changeDetectorRef.markForCheck();
+    }
+
+    filterTxsWithDate(clientTxListData): any {
+        const fromDate = mDateHelper.dateStrToUnixTimestamp(this.fromDateValue, 'DD/MM/YYYY');
+        const toDate = mDateHelper.dateStrToUnixTimestamp(this.toDateValue, 'DD/MM/YYYY');
+
+        return immutableHelper.reduce(clientTxListData, (result, shareTxs, shareName) => {
+
+            result[shareName] = shareTxs.reduce((txResult, tx) => {
+                const thisDateStr = tx.get('transactionDate', '');
+                const thisDate = mDateHelper.dateStrToUnixTimestamp(thisDateStr, 'YYYY-MM-DD');
+
+                if (thisDate >= fromDate && thisDate <= toDate) {
+                    const thisTxId = tx.get('transactionId', 0);
+                    txResult[thisTxId] = tx.toJS();
+                }
+
+                return txResult;
+
+            }, {});
+
+            return result;
+
+        }, {});
     }
 
     /**
@@ -198,6 +254,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     transactionInstrumentName: tx.transactionInstrumentName,
                     transactionType: tx.transactionType,
                     transactionId: tx.transactionId,
+                    transactionRefId: tx.transactionRefId,
                     transactionPrice,
                     transactionUnits: tx.transactionUnits,
                     transactionSettlement: tx.transactionSettlement,
@@ -214,6 +271,15 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
         } else {
             this.showWarning('No related txs are found');
         }
+    }
+
+    dateChange(dateType, $event) {
+        if (dateType === 'from') {
+            this.fromDateValue = $event;
+        } else {
+            this.toDateValue = $event;
+        }
+        this.updateClientTxList(this.clientTxListObj);
     }
 
     showWarning(response) {

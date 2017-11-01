@@ -22,6 +22,55 @@
     <!-- balance Table. -->
     <ng-template #balanceTab>
         <div class="panel-body">
+            <form [formGroup]="dateRangeForm">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input
+                                    formControlName="fromDate"
+                                    [(ngModel)]="dateRangeForm.controls['fromDate'].value"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    (ngModelChange)="dateChange('from', $event)"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input
+                                    formControlName="toDate"
+                                    [(ngModel)]="dateRangeForm.controls['toDate'].value"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    (ngModelChange)="dateChange('to', $event)"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated">Total Amount to be declared</span>
+                            </label>
+                            <div>
+                                € <span class="text-primary">{{totalAmountToDeclared | moneyValue}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <clr-datagrid #myDataGrid>
                 <clr-dg-column>Action</clr-dg-column>
                 <clr-dg-column>Fund name</clr-dg-column>
@@ -114,7 +163,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionId | padding : 10 }}
+                    {{tx.transactionRefId | padding : 10 }}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
