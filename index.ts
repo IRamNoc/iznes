@@ -24,4 +24,4 @@ export {SetlServicesModule} from './services';
 export {walletHelper, immutableHelper, mDateHelper, commonHelper} from './helper';
 
 export {APP_CONFIG} from './appConfig/appConfig';
-export {AppConfig} from './appConfig/appConfig.model';
+export {AppConfig, MenuSpec, MenuItem} from './appConfig/appConfig.model';
