@@ -58,7 +58,7 @@
                                         <span mltag="txt_nav">NAV</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.navPrice}}  <small>Last updated: {{fundStats.navDate}}</small></span>
+                                        <span class="readonly-field">{{fundStats.navPrice | moneyValue}}  <small>Last updated: {{fundStats.navDate}}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -66,7 +66,7 @@
                                         <span mltag="txt_number_of_units">Number of Units</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.units}}</span>
+                                        <span class="readonly-field">{{fundStats.units | moneyValue}}</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -74,7 +74,7 @@
                                         <span mltag="txt_net_asset">Net Asset</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.netAsset}}</span>
+                                        <span class="readonly-field">{{fundStats.netAsset | moneyValue}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -97,15 +97,22 @@
                                     <tbody>
                                     <tr *ngFor="let holder of fundStats.holders">
                                         <!--<td colspan="4">{{ holder | json }}</td>-->
-                                        <td>{{ holder.walletName }}</td>
-                                        <td>{{ holder.quantity }}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-left">{{ holder.walletName }}</td>
+                                        <td class="text-right">{{ holder.amount | moneyValue }}</td>
+                                        <td class="text-right">{{ holder.quantity | moneyValue }}</td>
+                                        <td class="text-right">{{ holder.ratio }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-sm-12 col-md-6">
+                                <canvas *ngIf="fundStats.graphLabels"
+                                        baseChart
+                                        [data]="fundStats.graphData"
+                                        [labels]="fundStats.graphLabels"
+                                        [chartType]="'pie'"
+                                        (chartHover)="chartHovered($event)"
+                                        (chartClick)="chartClicked($event)"></canvas>
                             </div>
                         </div>
                     </div>
