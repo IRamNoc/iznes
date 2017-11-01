@@ -2,7 +2,14 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {DecryptMessagesBody, RequestOwnMessagesBody, SendMessageBody, MailInitBody, MarkAsDelete, MarkAsRead} from './my-messages.service.model';
+import {
+    DecryptMessagesBody,
+    RequestOwnMessagesBody,
+    SendMessageBody,
+    MailInitBody,
+    MarkAsDelete,
+    MarkAsRead
+} from './my-messages.service.model';
 
 
 @Injectable()
@@ -78,7 +85,7 @@ export class MyMessagesService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    deleteMessage(walletId, mailsToMark, isDelete = '') {
+    deleteMessage(walletId, mailsToMark, isDelete = 0) {
         const messageBody: MarkAsDelete = {
             RequestName: 'email_mark_isdelete',
             token: this.memberSocketService.token,
