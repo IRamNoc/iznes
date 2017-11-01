@@ -566,7 +566,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 userId: thisTab.userId.toString(),
                 toAdd: txGroupChanges.toAdd,
                 toDelete: txGroupChanges.toDelete,
-                chainId: '2000'
+                chainId: thisTab['selectedChain']
             }).then((response) => {
                 console.log('updated user tx groups.', response);
             }).catch((error) => {
