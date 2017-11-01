@@ -47,3 +47,16 @@ export interface MailInitBody extends MemberNodeMessageBody {
     walletId: number;
     search: string;
 }
+
+export interface MarkAsDelete extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+    mailsToMark: object;
+    isDelete: string;
+}
+
+export interface MarkAsRead extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+    mailsToMarkRead: object;
+}
