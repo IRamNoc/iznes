@@ -1,4 +1,3 @@
-
 <div class="header-breadcrumbs">
     <h1><i class="fa fa-users"></i> <span mltag="txt_managemember">Manage Member</span></h1>
 </div>
@@ -12,21 +11,21 @@
                 <!-- Member list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                            *ngTemplateOutlet="staticMemberListTab"
+                        *ngTemplateOutlet="staticMemberListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                            *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
+                        *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member edit tabs. -->
                 <ng-container *ngIf="id >= 2 && isSymAdmin">
                     <ng-container
-                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
