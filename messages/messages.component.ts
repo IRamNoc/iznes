@@ -4,6 +4,7 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 import {
     SET_MESSAGE_LIST,
@@ -63,7 +64,8 @@ export class SetlMessagesComponent implements OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private _alertsService: AlertsService) {
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
@@ -536,6 +538,17 @@ export class SetlMessagesComponent implements OnDestroy {
             asyncTaskPipe,
             (data) => {
                 console.log('success: ');
+
+                this._alertsService.create('success', `<table class="table grid">
+                        <tbody>
+                            <tr class="fadeIn">
+                                <td class="text-center" width="500px">
+                                <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
+                                &nbsp;Your message has been sent!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `);
 
                 this.closeAndResetComposed();
             },
