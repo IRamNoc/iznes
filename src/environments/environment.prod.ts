@@ -1,3 +1,5 @@
+import {menuSpec} from './menuSpec';
+
 export const environment = {
     production: true,
     MEMBER_NODE_CONNECTION: {
@@ -5,4 +7,6 @@ export const environment = {
         port: 443,
         path: 'db'
     },
+    numberDivider: 100000,
+    menuSpec
 };
