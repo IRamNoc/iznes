@@ -319,7 +319,27 @@ export class SetlMessagesComponent implements OnDestroy {
      * Delete Message
      */
     deleteMessage() {
-        console.log('delete message');
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myMessageService.deleteMessage(
+            this.connectedWallet,
+            [this.currentMessage.mailId],
+            1
+        );
+
+        // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('success: ');
+                console.log(data);
+            },
+            (data) => {
+                console.log('error: ');
+            })
+        );
+
+        this.refreshMailbox();
     }
 
     /**
@@ -332,6 +352,8 @@ export class SetlMessagesComponent implements OnDestroy {
         // set message to active to apply message-active css class
         this.messages[index].active = true;
         this.messages[index].isRead = true;
+
+        this.markAsRead(this.messages[index]);
 
         // set the current message that appears on the right hand side
         this.currentMessage = this.messages[index];
@@ -354,6 +376,31 @@ export class SetlMessagesComponent implements OnDestroy {
         }
 
         this.currentMessage.isRead = true;
+    }
+
+    /**
+     * Mark message as read.
+     */
+    markAsRead(message){
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myMessageService.markRead(
+            this.connectedWallet,
+            [message.mailId],
+        );
+
+        // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('success: ');
+                console.log(data);
+            },
+            (data) => {
+                console.log('error: ');
+            })
+        );
+
     }
 
     /**
