@@ -126,7 +126,7 @@ export class WalletNodeRequestService {
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
- d
+
     walletCommitToContract(requestData: any) {
         let messageBody: any = {
             topic: 'cocom',
