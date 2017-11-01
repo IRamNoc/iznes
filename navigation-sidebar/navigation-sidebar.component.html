@@ -4,7 +4,6 @@
     </ng-container>
 
 </section>
-
 <ng-template #menuItem let-childMenuJson="childMenuJson">
     <a *ngIf="!childMenuJson.children" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
         <i class="{{childMenuJson.icon_class}}"></i>
