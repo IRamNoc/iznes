@@ -169,6 +169,38 @@ export class OfiPostTxService implements OnDestroy {
             asyncTaskPipe,
             (data) => {
                 console.log('Blockchain : new wallet register asset success', data); // success
+                this.saveCoupon(requestData);
+            },
+            (data) => {
+                console.log('Error: ', data);
+            })
+        );
+    }
+
+    saveCoupon(requestData) {
+        const walletID = _.get(requestData, 'metaData.arrangementData.walletID');
+        const address = _.get(requestData, 'metaData.arrangementData.address');
+        const issuerIdentifier = _.get(requestData, 'metaData.arrangementData.issuerIdentifier');
+        const coupon = 'Coupon';
+
+        // set need handle to false;
+        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
+
+        const asyncTaskPipe = this.walletnodeTxService.registerAsset(
+            {
+                walletId: walletID,
+                address: address,
+                namespace: issuerIdentifier,
+                instrument: coupon,
+                metaData: {}
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('Blockchain : new wallet coupon success', data); // success
+                this.updateSuccessResponse();
             },
             (data) => {
                 console.log('Error: ', data);
@@ -190,6 +222,35 @@ export class OfiPostTxService implements OnDestroy {
                         </tbody>
                     </table>
                     `);
+    }
+
+    showSuccessResponse() {
+        this._alertsService.create('waiting', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-warning" width="500px">
+                            <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;Do not close your browser window</h3>
+                            <p>We are saving your progress. This may take a few moment.</p>
+                        </td>                       
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+    updateSuccessResponse() {
+        this._alertsService.updateView('success', `<table class="table grid">
+                <tbody>
+                    <tr class="fadeIn">
+                        <td class="text-center text-success" width="500px">
+                            <h3>Your form has been saved successfully!</h3>
+                            <p>You can now close this pop-up.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
 }

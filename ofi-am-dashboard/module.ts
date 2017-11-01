@@ -17,6 +17,10 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {FundHoldingsComponent} from './fund-holdings/component'
 
+/* Graphs. */
+// import {NgxChartsModule} from '@swimlane/ngx-charts';
+// import {NgxUIModule} from '@swimlane/ngx-ui';
+
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
@@ -33,7 +37,9 @@ import {FundHoldingsComponent} from './fund-holdings/component'
         ClarityModule,
         SelectModule,
         SetlPipesModule,
-        MultilingualModule
+        MultilingualModule,
+        // NgxUIModule,
+        // NgxChartsModule
     ],
     providers: []
 })
