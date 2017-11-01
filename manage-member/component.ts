@@ -332,7 +332,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                     `);
     }
 
-    showNewMemberUser(message) {
+    showNewMemberUser() {
 
         this.alertsService.create('success', `
         <table class="table grid large">
