@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {WalletnodeChannelService, InitialisationService} from '@setl/core-req-services';
-import {OfiMemberNodeChannelService, OfiPostTxService} from '@ofi/ofi-main';
+import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
 
 @Component({
@@ -33,7 +33,8 @@ export class AppComponent {
                 private  toasterService: ToasterService,
                 private initialisationService: InitialisationService,
                 private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
-                private ofiPostTxService: OfiPostTxService) {
+                private ofiPostTxService: OfiPostTxService,
+                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
 
         memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('error', 'Member node connection disconnected');
@@ -56,6 +57,7 @@ export class AppComponent {
          */
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
             this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
+            this._ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
 
         this.initialisationService.channelUpdateCallbacks.push((data) => {
