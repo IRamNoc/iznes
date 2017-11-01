@@ -17,6 +17,13 @@ import {
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
 
+interface NewMemberUserDetail {
+    memberName: string;
+    emailAddress: string;
+    userName: string;
+    password: string;
+}
+
 @Component({
     selector: 'app-manage-member',
     templateUrl: './component.html',
@@ -31,6 +38,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
+
+    createdNewMemberUser: NewMemberUserDetail;
 
     // List of redux observable.
     @select(['member', 'manageMemberList', 'memberList']) manageMemberListOb;
@@ -65,6 +74,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
             this.requestManagedMemberList(requestedState)));
         this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
+
+
     }
 
     ngOnInit() {
@@ -131,7 +142,15 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     /* Handle success message. */
-                    this.showSuccessResponse('Member is created');
+                    const newMemberUserDetail = _.get(data, '[1][Data][0]');
+                    this.createdNewMemberUser = {
+                        memberName: _.get(newMemberUserDetail, 'memberName', ''),
+                        emailAddress: _.get(newMemberUserDetail, 'emailAddress', ''),
+                        password: _.get(newMemberUserDetail, 'pass', ''),
+                        userName: _.get(newMemberUserDetail, 'userName', ''),
+                    };
+
+                    this.showNewMemberUser();
 
                     /* Set the request flag to false. */
                     clearRequestedManageMemberList();
@@ -310,6 +329,31 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                             </tr>
                         </tbody>
                     </table>
+                    `);
+    }
+
+    showNewMemberUser(message) {
+
+        this.alertsService.create('success', `
+        <table class="table grid large">
+            <tr>
+                <td class="left">Member Name</td>
+                <td class="left">${this.createdNewMemberUser.memberName}</td>
+            </tr>
+            <tr>
+                <td class="left">Email Address</td>
+                <td class="left">${this.createdNewMemberUser.emailAddress}</td>
+            </tr>
+            <tr>
+                <td class="left">Username</td>
+                <td class="left">${this.createdNewMemberUser.userName}</td>
+            </tr>
+            <tr>
+                <td class="left">Password</td>
+                <td class="left">${this.createdNewMemberUser.password}</td>
+            </tr>
+
+        </table>
                     `);
     }
 }
