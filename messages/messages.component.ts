@@ -324,7 +324,7 @@ export class SetlMessagesComponent implements OnDestroy {
         const asyncTaskPipe = this.myMessageService.deleteMessage(
             this.connectedWallet,
             [this.currentMessage.mailId],
-            '1'
+            1
         );
 
         // Send a saga action.
