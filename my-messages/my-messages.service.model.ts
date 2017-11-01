@@ -58,5 +58,5 @@ export interface MarkAsDelete extends MemberNodeMessageBody {
 export interface MarkAsRead extends MemberNodeMessageBody {
     token: string;
     walletId: number;
-    mailsToMarkRead: object;
+    mailsToMark: object;
 }
