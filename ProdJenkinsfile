@@ -25,44 +25,30 @@ node {
     try {
       notifySlack()
 
-
-      stage('Check Out Application Code') {
-        node {
-          checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
-                    doGenerateSubmoduleConfigurations: false, extensions: [],
-                    submoduleCfg                     : [], userRemoteConfigs:
-                      [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
-                        url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-        }
-      }
-
-      stage('Build & Unit Test') {
-        node {
-          sh '''rm -f yarn.lock &&
-                  yarn install &&
-                  yarn test-single &&
-                  yarn build-prod '''
-          junit allowEmptyResults: true, keepLongStdio: true,
-            testResults: '/TESTS-Headless**'
-        }
-      }
-
-      stage('Copy code to deployment folder'){
-        node {
-          sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
-                rm -rf /var/lib/jenkins/Deploy/dist &&
-                rsync -a ./dist /var/lib/jenkins/Deploy/'''
-        }
-      }
-
-      stage('Deploy Frontend to Test Environment'){
-        node{
-          sh '''
+        stage('Deploy Frontend to Test Environment'){
+            node{
+                sh '''
               ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
               ssh root@139.162.213.130 mkdir /var/www_setltestnet && 
               scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
+            }
         }
-      }
+        stage('Deploy Backend to Test Environment') {
+            node {
+                sh '''
+                            ssh root@139.162.213.130 mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
+                            ssh root@139.162.213.130 mkdir /var/phpapps/backend && 
+                            scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
+            }
+        }
+
+        stage ('Update Dependencies'){
+            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
+        }
+
+        stage ('Restart Node Server'){
+            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && killall node\''
+        }
 
     } catch (e) {
       currentBuild.result = 'FAILURE'
