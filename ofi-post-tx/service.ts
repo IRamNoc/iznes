@@ -5,13 +5,14 @@ import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 
 // Internal
-import {MemberSocketService} from '@setl/websocket-service';
-import {OfiFundInvestService} from '@ofi/ofi-main';
+import { MemberSocketService } from '@setl/websocket-service';
+import { OfiFundInvestService } from '@ofi/ofi-main';
+import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
 import { WalletnodeTxService } from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, commonHelper} from '@setl/utils';
-import {clearContractNeedHandle, clearRegisterIssuerNeedHandle} from '@setl/core-store';
-
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { SagaHelper, commonHelper } from '@setl/utils';
+import { clearContractNeedHandle, clearRegisterIssuerNeedHandle } from '@setl/core-store';
+import { setLastCreatedRegisterIssuerDetail } from '@setl/core-store/assets/my-issuers/actions';
 
 @Injectable()
 export class OfiPostTxService implements OnDestroy {
@@ -25,6 +26,7 @@ export class OfiPostTxService implements OnDestroy {
                 private _ngRedux: NgRedux<any>,
                 private _ofiFundInvestService: OfiFundInvestService,
                 private walletnodeTxService: WalletnodeTxService,
+                private _adminUsersService: AdminUsersService,
                 private _alertsService: AlertsService) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
@@ -39,22 +41,30 @@ export class OfiPostTxService implements OnDestroy {
         }
     }
 
-
     handleLastCreatedIssuer(lastCreated) {
 
-        console.log('blockchain output: ', lastCreated);
-        console.log('issuer complete');
+        console.log('blockchain output lastCreated: ', lastCreated);
 
         const needHandle = lastCreated.needHandle;
         const inBlockchain = lastCreated.inBlockchain;
+        console.log('needHandle', needHandle);
+        console.log('inBlockchain', inBlockchain);
 
-        if (needHandle && inBlockchain) {
-            const actionType = _.get(lastCreated, 'metaData.actionType');
+        const actionType = _.get(lastCreated, 'metaData.actionType');
+        console.log('actionType', actionType);
 
-            if (actionType === 'ofi-create-new-share') {
-                this.saveRegisterAsset(lastCreated);
+        if (actionType === 'ofi-create-new-share') {
+            console.log('handleLastCreatedIssuer', lastCreated);
+            const currentStep = _.get(lastCreated, 'metaData.arrangementData.currentStep');
+            if (needHandle && inBlockchain) {
+                if (currentStep === 'saveRegisterAsset') {
+                    this.saveRegisterAsset(lastCreated);
+                }
+            } else if (needHandle && !inBlockchain) {
+                if (currentStep === 'saveNewWallet') {
+                    this.saveNewWallet(lastCreated);
+                }
             }
-
         }
     }
 
@@ -146,21 +156,121 @@ export class OfiPostTxService implements OnDestroy {
 
     }
 
-    saveRegisterAsset(requestData) {
-        const walletID = _.get(requestData, 'metaData.arrangementData.walletID');
-        const address = _.get(requestData, 'metaData.arrangementData.address');
-        const issuerIdentifier = _.get(requestData, 'metaData.arrangementData.issuerIdentifier');
-        const shareName = _.get(requestData, 'metaData.arrangementData.shareName');
+    saveNewWallet(requestData) {
+        // set need handle to false;
+        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
 
+        const shareName = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
+
+        const asyncTaskPipe = this._adminUsersService.createNewWallet(
+            {
+                walletName: shareName,
+                walletAccount: requestData.metaData.arrangementData.accountId,
+                walletType: 3,
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('1) saveNewWallet : success', data); // success
+                const walletID = data[1].Data[0].walletID;
+                requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID = walletID;
+                this.saveNewWalletPermission(requestData);
+            },
+            (data) => {
+                console.log('saveNewWallet Error: ', data);
+            })
+        );
+    }
+
+    saveNewWalletPermission(requestData) {
+        const shareName = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
+
+        const asyncTaskPipe = this._adminUsersService.newUserWalletPermissions(
+            {
+                walletName: shareName,
+                userId: requestData.metaData.arrangementData.userId,
+                walletAccess: { [requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID]: 3 },
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('2) saveNewWalletPermission : success', data); // success
+                setTimeout(() => {
+                    this.saveNewAddress(requestData);
+                }, 2000);
+            },
+            (data) => {
+                console.log('saveNewWalletPermission Error: ', data);
+            })
+        );
+    }
+
+    saveNewAddress(requestData) {
+        const asyncTaskPipe = this.walletnodeTxService.newAddress(
+            {
+                walletId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID,
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('3) saveNewAddress : success', data); // success
+                const address = data[1].data.address;
+                requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address = address;
+                this.saveRegisterIssuer(requestData);
+            },
+            (data) => {
+                console.log('saveNewAddress Error: ', data);
+            })
+        );
+    }
+
+    saveRegisterIssuer(requestData) {
+        const asyncTaskPipe = this.walletnodeTxService.registerIssuer(
+            {
+                walletId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID,
+                issuerIdentifier: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
+                issuerAddress: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
+                metaData: {},
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('4) saveRegisterIssuer : success', data); // success
+                this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                    actionType: 'ofi-create-new-share',
+                    arrangementData: {
+                        currentShare: requestData.metaData.arrangementData.currentShare,
+                        currentStep: 'saveRegisterAsset',
+                        accountId: requestData.metaData.arrangementData.accountId,
+                        userId: requestData.metaData.arrangementData.userId,
+                        sharesList: requestData.metaData.arrangementData.sharesList
+                    }
+                }));
+            },
+            (data) => {
+                console.log('saveRegisterIssuer Error: ', data);
+            })
+        );
+    }
+
+    saveRegisterAsset(requestData) {
         // set need handle to false;
         this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
 
         const asyncTaskPipe = this.walletnodeTxService.registerAsset(
             {
-                walletId: walletID,
-                address: address,
-                namespace: issuerIdentifier,
-                instrument: shareName,
+                walletId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID,
+                address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
+                namespace: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
+                instrument: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName,
                 metaData: {}
             }
         );
@@ -168,29 +278,23 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('Blockchain : new wallet register asset success', data); // success
+                console.log('5) saveRegisterAsset : success', data); // success
                 this.saveCoupon(requestData);
             },
             (data) => {
-                console.log('Error: ', data);
+                console.log('saveRegisterAsset Error: ', data);
             })
         );
     }
 
     saveCoupon(requestData) {
-        const walletID = _.get(requestData, 'metaData.arrangementData.walletID');
-        const address = _.get(requestData, 'metaData.arrangementData.address');
-        const issuerIdentifier = _.get(requestData, 'metaData.arrangementData.issuerIdentifier');
         const coupon = 'Coupon';
-
-        // set need handle to false;
-        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
 
         const asyncTaskPipe = this.walletnodeTxService.registerAsset(
             {
-                walletId: walletID,
-                address: address,
-                namespace: issuerIdentifier,
+                walletId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID,
+                address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
+                namespace: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
                 instrument: coupon,
                 metaData: {}
             }
@@ -199,11 +303,28 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('Blockchain : new wallet coupon success', data); // success
-                this.updateSuccessResponse();
+                console.log('6) saveCoupon : success', data); // success
+
+                const nbShares = requestData.metaData.arrangementData.sharesList.length;
+                if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
+                    requestData.metaData.arrangementData.currentShare++;
+                    requestData.metaData.arrangementData.currentStep = 'saveNewWallet';
+                    this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                        actionType: 'ofi-create-new-share',
+                        arrangementData: {
+                            currentShare: requestData.metaData.arrangementData.currentShare,
+                            currentStep: 'saveNewWallet',
+                            accountId: requestData.metaData.arrangementData.accountId,
+                            userId: requestData.metaData.arrangementData.userId,
+                            sharesList: requestData.metaData.arrangementData.sharesList
+                        }
+                    }));
+                } else {
+                    this.updateSuccessResponse();
+                }
             },
             (data) => {
-                console.log('Error: ', data);
+                console.log('saveCoupon Error: ', data);
             })
         );
     }

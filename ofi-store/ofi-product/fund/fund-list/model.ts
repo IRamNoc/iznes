@@ -30,3 +30,8 @@ export interface FundListState {
     };
     requested: boolean;
 }
+
+export interface FundSharesToProcess {
+    current: number;
+    shares: object;
+}
