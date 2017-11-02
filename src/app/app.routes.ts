@@ -11,6 +11,7 @@ import {SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 
 import {FundHoldingsComponent} from '@ofi/ofi-main';
+import {MyDashboardComponent} from '@ofi/ofi-main';
 
 /* UserAdmin Module. */
 import {AdminUsersComponent} from '@setl/core-useradmin';
@@ -130,7 +131,12 @@ export const ROUTES: Routes = [
                         path: 'fund-holdings',
                         component: FundHoldingsComponent,
                         canActivate: [LoginGuardService],
-                    }
+                    },
+                    {
+                        path: 'my-dashboard',
+                        component: MyDashboardComponent,
+                        canActivate: [LoginGuardService],
+                    },
                 ]
             },
             {

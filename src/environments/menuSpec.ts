@@ -14,7 +14,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_mydashboard',
             icon_class: 'fa fa-bar-chart',
             element_id: 'menu-my-dashboard',
-            router_link: '/my-dashboard'
+            router_link: '/asset-management/my-dashboard'
         },
         {
             label: 'Sub-portfolio',
@@ -463,14 +463,7 @@ export const menuSpec: MenuSpec = {
             ]
         }
     ],
-    'system_admin': [
-        {
-            label: 'Messages',
-            label_txt: 'txt_messages',
-            icon_class: 'fa fa-envelope',
-            element_id: 'menu-messages',
-            router_link: '/messages'
-        },
+    system_admin: [
         {
             label: 'Account Module',
             label_txt: 'txt_accountmodule',
@@ -632,14 +625,7 @@ export const menuSpec: MenuSpec = {
             ]
         }
     ],
-    'chain_admin': [
-        {
-            label: 'Messages',
-            label_txt: 'txt_messages',
-            icon_class: 'fa fa-envelope',
-            element_id: 'menu-messages',
-            router_link: '/messages'
-        },
+    chain_admin: [
         {
             label: 'Account Module',
             label_txt: 'txt_accountmodule',
@@ -794,14 +780,7 @@ export const menuSpec: MenuSpec = {
             ]
         }
     ],
-    'member_user': [
-        {
-            label: 'Messages',
-            label_txt: 'txt_messages',
-            icon_class: 'fa fa-envelope',
-            element_id: 'menu-messages',
-            router_link: '/messages'
-        },
+    member_user: [
         {
             label: 'Account Module',
             label_txt: 'txt_accountmodule',
