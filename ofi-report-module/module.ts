@@ -8,6 +8,7 @@ import {DpDatePickerModule} from '@setl/utils';
 // Local components
 import {OfiTaxReportComponent} from './ofi-tax-report/component';
 import {OfiPnlReportComponent} from './ofi-pnl-report/component';
+import {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {ActionDirection} from './pnlHelper/class';
 
@@ -37,7 +38,7 @@ export class TxTypePipe implements PipeTransform {
         SetlDirectivesModule
     ],
     exports: [],
-    declarations: [OfiTaxReportComponent, OfiPnlReportComponent, TxTypePipe],
+    declarations: [OfiTaxReportComponent, OfiPnlReportComponent, OfiCollectiveArchiveComponent, TxTypePipe],
     providers: [],
 })
 export class OfiReportModule {
