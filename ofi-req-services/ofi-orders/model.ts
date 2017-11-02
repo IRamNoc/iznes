@@ -27,3 +27,7 @@ export interface OfiGetContractByOrder extends OfiMemberNodeBody {
     arrangementId: string | number;
     walletId: string | number;
 }
+
+export interface OfiGetArrangementCollectiveArchive extends MemberNodeMessageBody {
+    token: string;
+}

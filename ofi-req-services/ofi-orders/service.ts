@@ -13,7 +13,9 @@ import {
     OFI_SET_MY_ORDER_LIST,
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
-    OFI_RESET_HOME_ORDER_BUFFER
+    OFI_RESET_HOME_ORDER_BUFFER,
+    setRequestedCollectiveArchive,
+    SET_COLLECTIVE_ARCHIVE
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
@@ -22,6 +24,7 @@ import {
     OfiRequestArrangements,
     OfiUpdateArrangement,
     OfiGetContractByOrder,
+    OfiGetArrangementCollectiveArchive
 } from './model';
 
 @Injectable()
@@ -31,6 +34,28 @@ export class OfiOrdersService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>) {
         /* Stub. */
+    }
+
+    /**
+     * Default static call to get arrangement collective archive, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiOrdersService
+     * @param ngRedux
+     */
+    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCollectiveArchive());
+
+        // Request the list.
+        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_COLLECTIVE_ARCHIVE],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**
@@ -235,4 +260,12 @@ export class OfiOrdersService {
         });
     }
 
+    getCollectiveArchive(): any {
+        const messageBody: OfiGetArrangementCollectiveArchive = {
+            RequestName: 'getarrangementcollectivearchive',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

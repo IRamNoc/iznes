@@ -55,7 +55,12 @@ export {FundHoldingsComponent} from './ofi-am-dashboard/fund-holdings/component'
 /**
  * Report module
  */
-export {OfiPnlReportComponent, OfiTaxReportComponent, OfiReportModule} from './ofi-report-module';
+export {
+    OfiPnlReportComponent,
+    OfiTaxReportComponent,
+    OfiCollectiveArchiveComponent,
+    OfiReportModule
+} from './ofi-report-module';
 
 /**
  * Ofi main module
