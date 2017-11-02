@@ -13,6 +13,7 @@
  import {
      FileDropModule
  } from '@setl/core-filedrop';
+ import {FileViewerModule} from '@setl/core-fileviewer';
 
 /* Components. */
 import {FormElementsComponent} from './ui-elements/form-elements.component';
@@ -28,6 +29,7 @@ import {
         RouterModule,
         ClarityModule,
         FileDropModule,
+        FileViewerModule,
         MultilingualModule
     ],
     declarations: [
