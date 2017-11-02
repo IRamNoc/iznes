@@ -1,4 +1,4 @@
-<div *ngIf="fileHash !== ''">
+<div *ngIf="(pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')">
     <button (click)="openFileModal();" mltag="txt_viewfile">View File</button>
     <clr-modal [(clrModalOpen)]="fileModal" [clrModalSize]="'xl'" [clrModalClosable]="false">
         <div class="modal-title">
@@ -23,4 +23,6 @@
         </div>
     </clr-modal>
 </div>
-<div *ngIf="fileHash === ''" mltag="txt_nofile">No File</div>
+<div *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')" mltag="txt_nofile">
+    No File
+</div>
