@@ -1,11 +1,12 @@
-import {ArrangementType} from '../../../ofi-req-services/ofi-fund-invest/model';
-
 export interface CollectiveArchiveEntry {
-    total: number;
+    subscriptionTotal: number;
+    subscriptionQuantity: number;
+    redemptionTotal: number;
+    redemptionQuantity: number;
     cutoffDate: string;
+    cutoffDateNumber: number;
     asset: string;
     price: number;
-    type: ArrangementType;
 }
 
 export interface OfiCollectiveArchiveState {

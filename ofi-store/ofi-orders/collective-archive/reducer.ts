@@ -2,6 +2,7 @@ import {OfiCollectiveArchiveState} from './model';
 import {Action} from 'redux';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
+import {immutableHelper, mDateHelper} from '@setl/utils';
 
 import {
     SET_COLLECTIVE_ARCHIVE,
@@ -46,9 +47,27 @@ export const OfiCollectiveArchiveReducer = function (state: OfiCollectiveArchive
  */
 function handleSetCollectiveArchive(state: OfiCollectiveArchiveState, action: Action): OfiCollectiveArchiveState {
     const collectiveArchiveData = _.get(action, 'payload[1].Data', []);
-    console.log(collectiveArchiveData);
 
-    return state;
+    const collectiveArchiveList = immutableHelper.reduce(collectiveArchiveData, (result, item) => {
+        const cutoffDate = item.get('cutoffDate', '');
+        const cutoffDateNumber = mDateHelper.dateStrToUnixTimestamp(cutoffDate, 'YYYY-MM-DD HH:mm:ss');
+
+        result.push({
+            subscriptionTotal: item.get('subscriptionTotal', 0),
+            subscriptionQuantity: item.get('subscriptionQuantity', 0),
+            redemptionTotal: item.get('redemptionTotal', 0),
+            redemptionQuantity: item.get('redemptionQuantity', 0),
+            cutoffDate,
+            cutoffDateNumber,
+            asset: item.get('asset', ''),
+            price: item.get('price', 0)
+        });
+        return result;
+    }, []);
+
+    return Object.assign({}, state, {
+        collectiveArchiveList
+    });
 }
 
 /**

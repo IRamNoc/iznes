@@ -22,12 +22,12 @@
     <!-- balance Table. -->
     <ng-template #balanceTab>
         <div class="panel-body">
-            <form [formGroup]="dateRangeForm">
+            <form [formGroup]="dateRangeForm" class="p-0">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">Date</span>
+                                <span class="ml_translated">From date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
@@ -44,7 +44,7 @@
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">Date</span>
+                                <span class="ml_translated">To date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>

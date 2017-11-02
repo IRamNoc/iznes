@@ -5,20 +5,12 @@ import {
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
-import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
 import {immutableHelper, NumberConverterService, mDateHelper} from '@setl/utils';
-import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
 import _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-
-interface ActiveBalanceListItem {
-    fundName: string;
-    activeQuantity: number;
-    realisePnl: number;
-    unRealisePnl: number;
-    lastMovement: number;
-}
+import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+import {setRequestedCollectiveArchive} from '../../ofi-store/ofi-orders/collective-archive/actions';
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
     selector: 'app-ofi-pnl-report',
@@ -30,44 +22,35 @@ interface ActiveBalanceListItem {
 export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
     tabsControl: Array<any>;
 
-    showRelatedTxModal: boolean;
+    archiveList: Array<any>;
+    archiveListFiltered: Array<any>;
 
-    connectedWalletId: number;
+    // Date picker configuration
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'DD-MM-YYYY',
+        closeOnSelect: true,
+        opens: 'right',
+        locale: 'en',
+    };
 
-    // client txt data
-    clientTxListObj: any;
-    clientTxList: Array<any>;
-
-    // Active balance list
-    activeBalanceList: Array<any>;
-
-    // Pnl instances
-    // use to keep track of the pnl for each fund share
-    pnlRegister: any;
-
-    sharePriceList: object;
+    // Date range search form
+    dateRangeForm: FormGroup;
+    fromDateValue: string;
+    toDateValue: string;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    assetBalances: Array<any>;
-
-    // The related txs that we want to check of particular asset.
-    relatedTxList: Array<any>;
-
-
     // List of redux observable.
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'allTxList']) clientTxListOb;
-    @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'requested']) clientTxListRequestedOb;
-    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
-    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) shareDataOb;
+    @select(['ofi', 'ofiOrders', 'collectiveArchive', 'collectiveArchiveList']) collectiveArchiveListOb;
+    @select(['ofi', 'ofiOrders', 'collectiveArchive', 'requested']) collectiveArchiveRequestOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _ofiClientTxService: OfiClientTxService,
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
-                private _ofiFundInvestService: OfiFundInvestService,
+                private _ofiOrdersService: OfiOrdersService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 
@@ -94,133 +77,95 @@ export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
             }
         ];
 
-        this.relatedTxList = [];
-        this.activeBalanceList = [];
-        this.sharePriceList = {};
+        this.fromDateValue = mDateHelper.unixTimestampToDateStr(mDateHelper.substractYear(new Date(), 1), 'DD/MM/YYYY');
+        this.toDateValue = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+
+        this.dateRangeForm = new FormGroup({
+            fromDate: new FormControl(this.fromDateValue),
+            toDate: new FormControl(this.toDateValue)
+        });
 
         // List of observable subscription.
-        this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
-            (requested) => this.requestMyFundAccess(requested)));
-        this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
-            this.updateSharePrice(shareData);
-        }));
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
-        }));
-        this.subscriptionsArray.push(this.clientTxListRequestedOb.subscribe(requested => this.requestClientTx(requested)));
-        this.subscriptionsArray.push(this.clientTxListOb.subscribe(clientTxList => {
-            this.updateActiveBalanceList(clientTxList);
+        this.subscriptionsArray.push(this.collectiveArchiveRequestOb.subscribe(
+            (requested) => this.requestCollectiveArchive(requested)));
+        this.subscriptionsArray.push(this.collectiveArchiveListOb.subscribe((archiveList) => {
+            this.updateCollectiveArchive(archiveList);
         }));
 
-        this.showRelatedTxModal = false;
     }
 
-    requestClientTx(requestedState: boolean) {
+    requestCollectiveArchive(requestedState: boolean) {
 
         // If the state is false, that means we need to request the list.
-        if (!requestedState && this.connectedWalletId !== 0) {
+        if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedClientTxList());
+            this._ngRedux.dispatch(setRequestedCollectiveArchive());
 
             // Request the list.
-            OfiClientTxService.defaultRequestWalletClientTxs(this._ofiClientTxService, this._ngRedux,
-                this.connectedWalletId, '');
+            OfiOrdersService.defaultGetArrangementCollectiveArchive(this._ofiOrdersService, this._ngRedux);
         }
     }
 
-    updateActiveBalanceList(clientTxListData) {
-        this.clientTxListObj = clientTxListData;
-        this.pnlRegister = this.processClientTxList(clientTxListData);
+    updateCollectiveArchive(archiveList) {
+        this.archiveList = archiveList;
+        const archiveListFiltered = this.filterTxsWithDate(archiveList);
 
-        this.activeBalanceList = immutableHelper.reduce(this.pnlRegister, (result, item, key) => {
-            const lastMovement = mDateHelper.dateStrToUnixTimestamp(item.lastMovement, 'YYYY-MM-DD HH:mm:ss');
+        this.archiveListFiltered = immutableHelper.reduce(archiveListFiltered, (result, item) => {
 
-            const thisBalance: ActiveBalanceListItem = {
-                fundName: key,
-                activeQuantity: item.activeBalance,
-                realisePnl: item.realisePnl,
-                unRealisePnl: item.unRealisePnl,
-                lastMovement
-            };
+            const price = item.get('price', 0);
+            const currentTimeNumber = mDateHelper.getCurrentUnixTimestamp();
+            const cutoffDateNumber = item.get('cutoffDateNumber', 0);
+            let status = '';
 
-            result.push(thisBalance);
-            return result;
-        }, []);
-
-        this._changeDetectorRef.detectChanges();
-    }
-
-    /**
-     * Process clientTxList
-     *
-     * @param clientTxList
-     * @return {{}}
-     */
-    processClientTxList(clientTxList) {
-
-        const newPnlRegister = {};
-
-        for (const shareName of Object.keys(clientTxList)) {
-            const price = this.sharePriceList[shareName];
-            // creat the pnl register for the fund share.
-            newPnlRegister[shareName] = new PnlHelper(price, this._numberConverterService);
-
-            // process all the tx for the fund share;
-            const txList = clientTxList[shareName];
-            for (const transactionId of Object.keys(txList)) {
-                newPnlRegister[shareName].execute(txList[transactionId]);
+            if (currentTimeNumber > cutoffDateNumber) {
+                status += 'Definitive';
+            } else {
+                status += 'Estimate';
             }
-        }
 
-        return newPnlRegister;
-    }
-
-    viewRelateTxs(shareName: string) {
-        const txsObj = this.clientTxListObj[shareName];
-
-        this.relatedTxList = immutableHelper.reduce(txsObj, (result, item) => {
-
-            const txDateNumber = mDateHelper.dateStrToUnixTimestamp(item.get('transactionDate', ''), 'YYYY-MM-DD HH:mm:ss');
+            if (price === 0 || !price) {
+                status += ' unknown';
+            } else {
+                status += ' known';
+            }
 
             result.push({
-                transactionInstrumentName: item.get('transactionInstrumentName', ''),
-                transactionType: item.get('transactionType', ''),
-                transactionId: item.get('transactionId', ''),
-                transactionRefId: item.get('transactionRefId', ''),
-                transactionPrice: this._numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
-                transactionUnits: this._numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
-                transactionSettlement: this._numberConverterService.toFrontEnd(item.get('transactionSettlement', '')),
-                transactionDate: txDateNumber,
+                subscriptionTotal: this._numberConverterService.toFrontEnd(item.get('subscriptionTotal', 0)),
+                subscriptionQuantity: this._numberConverterService.toFrontEnd(item.get('subscriptionQuantity', 0)),
+                redemptionTotal: this._numberConverterService.toFrontEnd(item.get('redemptionTotal', 0)),
+                redemptionQuantity: this._numberConverterService.toFrontEnd(item.get('redemptionQuantity', 0)),
+                cutoffDate: item.get('cutoffDate', 0),
+                cutoffDateNumber: item.get('cutoffDateNumber', 0),
+                asset: item.get('asset', ''),
+                status
             });
+            return result;
+        }, []);
+        this._changeDetectorRef.markForCheck();
+    }
+
+    dateChange(dateType, $event) {
+        if (dateType === 'from') {
+            this.fromDateValue = $event;
+        } else {
+            this.toDateValue = $event;
+        }
+        this.updateCollectiveArchive(this.archiveList);
+    }
+
+    filterTxsWithDate(archiveListData): any {
+        const fromDate = mDateHelper.dateStrToUnixTimestamp(this.fromDateValue, 'DD/MM/YYYY');
+        const toDate = mDateHelper.dateStrToUnixTimestamp(this.toDateValue, 'DD/MM/YYYY');
+
+        return immutableHelper.reduce(archiveListData, (result, item) => {
+            const thisDate = item.get('cutoffDateNumber', 0);
+
+            if (thisDate >= fromDate && thisDate <= toDate) {
+                result.push(item.toJS());
+            }
+
             return result;
 
         }, []);
-
-        // show modal;
-        this.showRelatedTxModal = true;
-        this._changeDetectorRef.detectChanges();
     }
-
-    updateSharePrice(priceData) {
-        this.sharePriceList = immutableHelper.reduce(priceData, (result, item) => {
-            const fundName = item.get('issuer', '');
-            const shareName = item.get('shareName', '');
-            const fullName = fundName + '|' + shareName;
-
-            result[fullName] = this._numberConverterService.toFrontEnd(item.get('price', 0));
-            return result;
-        }, {});
-    }
-
-    /**
-     * Request my fund access base of the requested state.
-     * @param requested
-     * @return void
-     */
-    requestMyFundAccess(requested): void {
-        if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux);
-        }
-    }
-
 }
