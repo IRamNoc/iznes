@@ -78,11 +78,11 @@ export class UserAdminService {
     public userTypes: any = [
         {
             'id': '15',
-            'text': 'System Admin',
+            'text': 'System admin'
         },
         {
             'id': '25',
-            'text': 'Chain Admin',
+            'text': 'Chain admin'
         },
         {
             'id': '26',
@@ -93,16 +93,36 @@ export class UserAdminService {
             'text': 'Bank',
         },
         {
+            'id': '35',
+            'text': 'Member'
+        },
+        {
             'id': '36',
-            'text': 'Investor Admin',
+            'text': 'Asset manager'
+        },
+        {
+            'id': '45',
+            'text': 'Standard user'
         },
         {
             'id': '46',
-            'text': 'Investor with KYC',
+            'text': 'Investor'
         },
         {
             'id': '47',
-            'text': 'Investor without KYC',
+            'text': 'Valuer'
+        },
+        {
+            'id': '48',
+            'text': 'Custodian'
+        },
+        {
+            'id': '49',
+            'text': 'CAC'
+        },
+        {
+            'id': '50',
+            'text': 'Registrar'
         },
     ];
 
