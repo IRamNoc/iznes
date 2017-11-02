@@ -159,16 +159,21 @@ export class ChannelService {
                 );
                 break;
 
-            default:
-                break;
-
             case 'email_send': // send email
-
                 // request new emails
                 this.ngRedux.dispatch(clearRequestedMailInitial());
                 this.ngRedux.dispatch(clearRequestedMailList());
 
                 this.toasterService.pop('info', 'You got mail!');
+                break;
+
+            case 'email_mark_read': // email read
+            case 'email_mark_isdelete': // email deleted
+                this.ngRedux.dispatch(clearRequestedMailInitial());
+
+                break;
+
+            default:
                 break;
         }
     }
