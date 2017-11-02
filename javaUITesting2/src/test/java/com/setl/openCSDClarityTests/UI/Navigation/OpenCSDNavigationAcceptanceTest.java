@@ -54,18 +54,21 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPage("home");
         clickLoginButton();
     }
+    @Ignore
     @Test
     public void shouldNavigateToWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("wallets");
         clickLoginButton();
     }
+    @Ignore
     @Test
     public void shouldNavigateToKYCAdmin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("kyc-admin");
 
     }
+    @Ignore
     @Test
     public void shouldNavigateToManageOrders() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -89,6 +92,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-administration/permissions");
     }
+    @Ignore
     @Test
     public void shouldNavigateToWizard() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -113,18 +117,21 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-asset-servicing");
         navigateToPage("asset-servicing/issue-asset");
     }
+    @Ignore
     @Test
     public void shouldNavigateToBalancesReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-reports");
         navigateToPage("reports/balances");
     }
+    @Ignore
     @Test
     public void shouldNavigateToIssueReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-reports");
         navigateToPage("reports/issue");
     }
+    @Ignore
     @Test
     public void shouldNavigateToTransactionReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -152,42 +159,49 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-asset-managment");
         navigateToPage("asset-managment/fund-holdings");
     }
+    @Ignore
     @Test
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("account/my-account");
     }
+    @Ignore
     @Test
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("account/relationships");
     }
+    @Ignore
     @Test
     public void shouldNavigateToDocuments() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("account/documents");
     }
+    @Ignore
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-module/management-company");
     }
+    @Ignore
     @Test
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-module/sicav");
     }
+    @Ignore
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-module/fund");
     }
+    @Ignore
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
