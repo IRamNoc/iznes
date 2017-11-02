@@ -1,3 +1,3 @@
-export {OfiFundAccessMyReducer} from './reducer';
-export {OfiFundAccessMyState} from './model';
-export {SET_FUND_ACCESS_MY, setRequestedFundAccessMy, clearRequestedFundAccessMy} from './actions';
+export {OfiCollectiveArchiveReducer} from './reducer';
+export {OfiCollectiveArchiveState} from './model';
+export {setRequestedCollectiveArchive, SET_COLLECTIVE_ARCHIVE, clearRequestedCollectiveArchive} from './actions';

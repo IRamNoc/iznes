@@ -1,42 +1,14 @@
-export interface FundShareAccessDetail {
-    shareId: number;
-    shareName: string;
-    fundId: number;
-    entryFee: number;
-    exitFee: number;
-    /**
-     * 0: suspended
-     * 1: active
-     * 2: deleted (merged)
-     */
-    shareStatus: number;
-    issuer: string;
-    metaData: object;
-    // 1: has access
-    // 0: no access
-    userStatus: number;
-    managementCompany: string;
+import {ArrangementType} from '../../../ofi-req-services/ofi-fund-invest/model';
+
+export interface CollectiveArchiveEntry {
+    total: number;
+    cutoffDate: string;
+    asset: string;
     price: number;
+    type: ArrangementType;
 }
 
-export interface FundShareAccessList {
-    [fundShareId: number]: FundShareAccessDetail;
-}
-
-export interface FundAccessDetail {
-    fundId: number;
-    fundName: string;
-    fundProspectus: string;
-    fundReport: string;
-    fundSicavId: number;
-}
-
-export interface FundAccessList {
-    [fundId: number]: FundAccessDetail;
-}
-
-export interface OfiFundAccessMyState {
-    fundAccessList: FundAccessList;
-    fundShareAccessList: FundShareAccessList;
+export interface OfiCollectiveArchiveState {
+    collectiveArchiveList: Array<CollectiveArchiveEntry>;
     requested: boolean;
 }
