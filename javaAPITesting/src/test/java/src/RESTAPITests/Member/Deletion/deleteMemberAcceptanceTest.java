@@ -1,7 +1,5 @@
 package src.RESTAPITests.Member.Deletion;
 
-import SETLAPIHelpers.JsonToJava;
-import SETLAPIHelpers.User;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Rule;
@@ -9,13 +7,10 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import src.WebSocketAPITests.io.setl.Container;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static SETLAPIHelpers.AccountDetailsHelper.generateAccountDetails;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static junit.framework.TestCase.assertTrue;
 

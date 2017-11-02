@@ -179,10 +179,11 @@ public class LoginAndNavigationHelper {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
+
         clickLoginButton();
       Thread.sleep(750);
       try {
-        driver.findElement(By.id("search_input")).isDisplayed();
+        driver.findElement(By.id("ofi-homepage")).isDisplayed();
       }catch (Error e){
         System.out.println("logout button not present");
         fail();
@@ -204,7 +205,6 @@ public class LoginAndNavigationHelper {
             assertTrue(isElementPresent(By.id("login_btn")));
         } catch (Error e) {
             verificationErrors.append(e.toString());
-
         }
     }
 
