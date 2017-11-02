@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> Coupon Payment</h1>
+    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> <span mltag="txt_couponpayment">Coupon Payment</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,22 +36,21 @@
     <ng-template #staticCouponsList>
         <div class="panel-body">
             <clr-datagrid #walletDataGrid>
-                <clr-dg-column>Action</clr-dg-column>
-                <clr-dg-column>Coupon ID</clr-dg-column>
-                <clr-dg-column>Fund</clr-dg-column>
-                <clr-dg-column>Fund ISIN</clr-dg-column>
-                <clr-dg-column>Ratio</clr-dg-column>
-                <clr-dg-column>Gross Amount</clr-dg-column>
-                <clr-dg-column>Date Valuation</clr-dg-column>
-                <clr-dg-column>Date Settlement</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column mltag="txt_action">Action</clr-dg-column>
+                <clr-dg-column mltag="txt_couponid">Coupon ID</clr-dg-column>
+                <clr-dg-column mltag="txt_fund">Fund</clr-dg-column>
+                <clr-dg-column mltag="txt_fundisin">Fund ISIN</clr-dg-column>
+                <clr-dg-column mltag="txt_ratio">Ratio</clr-dg-column>
+                <clr-dg-column mltag="txt_grossamount">Gross Amount</clr-dg-column>
+                <clr-dg-column mltag="txt_datevaluation">Date Valuation</clr-dg-column>
+                <clr-dg-column mltag="txt_datesettlement">Date Settlement</clr-dg-column>
+                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let coupon of couponList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button id="view-{{coupon.couponID}}" (click)="handleViewCoupon(coupon.couponID)" class="btn">
-                                <i class="fa fa-search"></i> View
-                            </button>
+                                <i class="fa fa-search"></i> <span mltag="txt_view">View</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{padNumberLeft(coupon.couponID, 11)}}</clr-dg-cell>
@@ -83,7 +82,7 @@
                         </span>
 
                         <span *ngIf="coupon.status == '6'" class="label label-info">
-                            <span mltag="txt_waitingpayment">Waiting for payment</span>
+                            <span mltag="txt_waitingforpayment">Waiting for payment</span>
                         </span>
 
                         <span *ngIf="coupon.status == '-1'" class="label label-success">
@@ -133,9 +132,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_fundsharename">
-                                Fund Share Name
-                            </label>
+                            <label class="control-label" mltag="txt_fundsharename"> Fund Share Name</label>
                             <ng-select
                                 [items]="filteredUserAssetList"
                                 [allowClear]="true"
@@ -288,9 +285,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_fundsharename">
-                                Fund Share Name
-                            </label>
+                            <label class="control-label" mltag="txt_fundsharename"> Fund Share Name</label>
                             <ng-select
                                 [items]="filteredUserAssetList"
                                 [allowClear]="false"
@@ -404,9 +399,7 @@
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <a (click)="closeTab(tabid)" class="btn btn-secondary">
-                                Close
-                            </a>
+                            <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close"> Close</a>
 
                             <ng-container *ngIf="tabsControl[tabid].couponStatus == 1">
                                 <!-- Buttons for status 1 coupons -->
@@ -421,7 +414,7 @@
                             <ng-container *ngIf="tabsControl[tabid].couponStatus == 2">
                                 <!-- Buttons for status 1 coupons -->
                                 <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'confirm-payment')" class="btn btn-primary">
-                                    <i class="fa fa-check"></i> <span mltag="txt_confirm_payment">Confirm Payment</span>
+                                    <i class="fa fa-check"></i> <span mltag="txt_confirmpayment">Confirm Payment</span>
                                 </a>
                             </ng-container>
                         </div>
