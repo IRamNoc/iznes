@@ -16,18 +16,20 @@ import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
 import {FundHoldingsComponent} from './fund-holdings/component'
+import {MyDashboardComponent} from './my-dashboard/component'
 
 /* Graphs. */
-// import {NgxChartsModule} from '@swimlane/ngx-charts';
-// import {NgxUIModule} from '@swimlane/ngx-ui';
+import {ChartsModule} from 'ng2-charts';
 
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
-        FundHoldingsComponent
+        FundHoldingsComponent,
+        MyDashboardComponent
     ],
     exports: [
-        FundHoldingsComponent
+        FundHoldingsComponent,
+        MyDashboardComponent
     ],
     imports: [
         CommonModule,
@@ -38,8 +40,7 @@ import {FundHoldingsComponent} from './fund-holdings/component'
         SelectModule,
         SetlPipesModule,
         MultilingualModule,
-        // NgxUIModule,
-        // NgxChartsModule
+        ChartsModule,
     ],
     providers: []
 })

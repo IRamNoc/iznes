@@ -38,7 +38,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Public properties. */
     public connectedWalletName: string = '';
     public fundShareForm: FormGroup;
