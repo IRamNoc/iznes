@@ -16,6 +16,7 @@ import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
 import {FundHoldingsComponent} from './fund-holdings/component'
+import {MyDashboardComponent} from './my-dashboard/component'
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
@@ -23,10 +24,12 @@ import {ChartsModule} from 'ng2-charts';
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
-        FundHoldingsComponent
+        FundHoldingsComponent,
+        MyDashboardComponent
     ],
     exports: [
-        FundHoldingsComponent
+        FundHoldingsComponent,
+        MyDashboardComponent
     ],
     imports: [
         CommonModule,
