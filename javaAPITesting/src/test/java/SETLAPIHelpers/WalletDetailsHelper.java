@@ -9,10 +9,9 @@ public class WalletDetailsHelper {
   public static String[] generateWalletDetails()
   {
     String str = randomAlphabetic(5);
-    String userName = "Test_User_" + str;
-    String password = randomAlphabetic(12);
-    String email = userName + "@test.com";
+    String walletName = "Test_Wallet_" + str;
+    String walletAccount = randomAlphabetic(12);
 
-    return new String[] {userName, password, email};
+    return new String[] {walletName, walletAccount};
   }
 }
