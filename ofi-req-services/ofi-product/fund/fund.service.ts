@@ -42,7 +42,6 @@ export class OfiFundService {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
-
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
         if (!boolValue) {
