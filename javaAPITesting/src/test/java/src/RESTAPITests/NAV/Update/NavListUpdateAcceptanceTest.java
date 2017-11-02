@@ -24,10 +24,6 @@ public class NavListUpdateAcceptanceTest {
   @Test
   public void failToUpdateNavPriceWhenNavIsFinalised(){
 
-    int expectedPrice = 1200000;
-    int expectedstatus = -1;
-    int expectedTotal = 1;
-
     RestApi api = new RestApi(localAddress);
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
 
@@ -35,7 +31,7 @@ public class NavListUpdateAcceptanceTest {
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", "25000", 0, 0), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("Fail".equals(response.get("Status").toString()));
-    assertTrue("Nav is finaled.".equals(response.get("Message").toString()));
+    assertTrue("Nav is finalised.".equals(response.get("Message").toString()));
    });
   }
 
