@@ -5,6 +5,8 @@ import {OfiManagementCompanyService} from './ofi-product/management-company/mana
 import {OfiSicavService} from './ofi-product/sicav/sicav.service';
 import {OfiFundService} from './ofi-product/fund/fund.service';
 import {OfiNavService} from './ofi-product/nav/service';
+import {OfiClientTxService} from './ofi-client-tx/service';
+import {OfiWalletnodeChannelService} from '../ofi-req-services/ofi-walletnode-channel/service';
 import {OfiAmDashboardService} from './ofi-am-dashboard/service';
 
 import {OfiCorpActionService} from './ofi-corp-actions/service';
@@ -20,6 +22,8 @@ import {OfiMemberNodeChannelService} from './ofi-member-node-channel/service';
         OfiSicavService,
         OfiFundService,
         OfiNavService,
+        OfiClientTxService,
+        OfiWalletnodeChannelService,
         OfiAmDashboardService
     ]
 })

@@ -10,7 +10,7 @@ import {SagaHelper, Common} from '@setl/utils';
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
-    OfiRequestNavList,
+    OfiRequestWalletIdsByAddresses,
 } from './model';
 
 @Injectable()
@@ -20,6 +20,29 @@ export class OfiAmDashboardService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,) {
         /* Stub. */
+    }
+
+    /**
+     * Get Wallet IDs by Many Addresses
+     * --------------------------------
+     * Get's a list of wallet IDs by wallet addresses.
+     *
+     * @param {Array<string>} walletAddresses
+     *
+     * @return {Promise<any>} walletIds
+     */
+    public getWalletIdsByAddresses(walletAddresses: Array<string>): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiRequestWalletIdsByAddresses = {
+            RequestName: 'gwidbyma',
+            token: this.memberSocketService.token,
+            addresses: walletAddresses,
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
     }
 
     /**

@@ -100,7 +100,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get fee() {
-        return (Number(this._moneyValuePipe.parse(this.grossAmount.value)) * this.metaData.feePercent / 100) + 1;
+        return (Number(this._moneyValuePipe.parse(String(Number(this.quantity.value) * Number(this.metaData.nav))))
+            * this.metaData.feePercent / 100) + this.metaData.platformFee;
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -236,6 +237,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0),
             decimalisation: immutableHelper.get(shareCharacteristic, 'decimalisation', 2)
         };
+
     }
 
     updateAddressList(addressList) {
@@ -376,10 +378,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             'quantity': (value) => {
                 const newValue = this._moneyValuePipe.parse(value, this.metaData.decimalisation);
                 /**
-                 * grossAmount = ((unit * nav) * (1 + feePercent)) + 1
+                 * grossAmount = ((unit * nav) * (1 + feePercent)) + platformfee
                  */
                 const grossAmoutBeforeFee = newValue * this.metaData.nav;
-                const grossAmountAfterFee = (grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + 1;
+                const grossAmountAfterFee = (grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee;
                 beTriggered.setValue(this._moneyValuePipe.transform(grossAmountAfterFee));
             },
             'grossAmount': (value) => {
@@ -390,11 +392,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  * investment * (feePercent + 1) + platformFee = grossAmount
                  *
                  * so:
-                 * unit = ((grossAmount - platformFee) * (1 - feePercent)) / nav
+                 * unit = ((grossAmount - platformFee) / (1 + feePercent)) / nav
                  */
 
-                const investment = ((newValue - this.metaData.platformFee) * (1 - (this.metaData.feePercent / 100)));
-                const resultUnit = (investment) / this.metaData.nav;
+                const investment = ((newValue - this.metaData.platformFee) / (1 + (this.metaData.feePercent / 100))).toFixed(2);
+                const resultUnit = Number(investment) / this.metaData.nav;
                 beTriggered.setValue(this._moneyValuePipe.transform(resultUnit, this.metaData.decimalisation));
             }
         }[type];

@@ -11,3 +11,8 @@ export interface OfiRequestNavList extends OfiMemberNodeBody {
     pageNum: number;
     pageSize: number;
 }
+
+export interface OfiRequestWalletIdsByAddresses extends OfiMemberNodeBody {
+    addresses: Array<string>;
+}
+

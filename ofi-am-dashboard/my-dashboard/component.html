@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-bar-chart"></i>
-        <span mltag="txt_fund_holdings">Funds Holdings</span> - {{ connectedWalletName }}</h1>
+    <h1 id="am-fund-holdings"><i class="fa fa-user"></i>
+        <span mltag="txt_fund_holdings">My Dashboard</span> - {{ connectedWalletName }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -80,39 +80,41 @@
                             </div>
                         </form>
 
-                        <hr class="dashed"/>
+                        <div *ngIf="fundStats.holders.length">
+                            <hr class="dashed"/>
 
-                        <!-- Holder list table. -->
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th><span mltag="txt_holder">Holder</span></th>
-                                        <th><span mltag="txt_amount">Amount</span></th>
-                                        <th><span mltag="txt_quantity">Quantity</span></th>
-                                        <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr *ngFor="let holder of fundStats.holders">
-                                        <!--<td colspan="4">{{ holder | json }}</td>-->
-                                        <td class="text-left">{{ holder.walletName }}</td>
-                                        <td class="text-right">{{ holder.amount | moneyValue }}</td>
-                                        <td class="text-right">{{ holder.quantity | moneyValue }}</td>
-                                        <td class="text-right">{{ holder.ratio }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <canvas *ngIf="fundStats.graphLabels"
-                                        baseChart
-                                        [data]="fundStats.graphData"
-                                        [labels]="fundStats.graphLabels"
-                                        [chartType]="'pie'"
-                                        (chartHover)="chartHovered($event)"
-                                        (chartClick)="chartClicked($event)"></canvas>
+                            <!-- Holder list table. -->
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th><span mltag="txt_holder">Holder</span></th>
+                                            <th><span mltag="txt_amount">Amount</span></th>
+                                            <th><span mltag="txt_quantity">Quantity</span></th>
+                                            <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let holder of fundStats.holders">
+                                            <!--<td colspan="4">{{ holder | json }}</td>-->
+                                            <td class="text-left">{{ holder.walletName }}</td>
+                                            <td class="text-right">{{ holder.amount | moneyValue }}</td>
+                                            <td class="text-right">{{ holder.quantity | moneyValue }}</td>
+                                            <td class="text-right">{{ holder.ratio }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <canvas *ngIf="fundStats.graphLabels"
+                                            baseChart
+                                            [data]="fundStats.graphData"
+                                            [labels]="fundStats.graphLabels"
+                                            [chartType]="'pie'"
+                                            (chartHover)="chartHovered($event)"
+                                            (chartClick)="chartClicked($event)"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>

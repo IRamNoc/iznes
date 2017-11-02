@@ -8,7 +8,6 @@ import _ from 'lodash';
 import {
     MemberService,
 } from '@setl/core-req-services';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -36,7 +35,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
 
     constructor(private _ngRedux: NgRedux<any>,
-                private _alertsService: AlertsService,
                 private _memberService: MemberService,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _ofiFundInvestService: OfiFundInvestService) {

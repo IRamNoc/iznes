@@ -23,34 +23,43 @@
     <ng-template #balanceTab>
         <div class="panel-body">
             <clr-datagrid #myDataGrid>
-                <clr-dg-column>Actions</clr-dg-column>
+                <clr-dg-column>Action</clr-dg-column>
                 <clr-dg-column>Fund name</clr-dg-column>
-                <clr-dg-column>Fund ISIN</clr-dg-column>
-                <clr-dg-column>Date</clr-dg-column>
-                <clr-dg-column>Nav</clr-dg-column>
+                <clr-dg-column>Active quantity</clr-dg-column>
+                <clr-dg-column>Realise P&L</clr-dg-column>
+                <clr-dg-column>Unrealise P&L</clr-dg-column>
+                <clr-dg-column>Last movement</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let assetBalance of assetBalances">
+                <clr-dg-row *clrDgItems="let tx of activeBalanceList">
+
                     <clr-dg-cell>
-                        <button class="btn">
-                            <i class="fa fa-pencil-square-o"></i> Edit
-                        </button>
+                        <div class="btn-group btn-sm">
+                            <button class="btn text-primary" (click)="viewRelateTxs(tx.fundName)">
+                                <i class="fa fa-eye"></i> Related Transactions
+                            </button>
+                        </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{assetBalance.fundName}}
+                        {{tx.fundName}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{assetBalance.balance}}
+                        {{tx.activeQuantity | moneyValue }}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{assetBalance.disposalGainLoss}}
+                        {{tx.realisePnl | moneyValue}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{assetBalance.unrealisedGainLoss}}
+                        {{tx.unRealisePnl | moneyValue}}
                     </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{tx.lastMovement | date : 'dd/MM/yyyy'}}
+                    </clr-dg-cell>
+
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -64,3 +73,61 @@
 
 </div>
 
+<clr-modal [(clrModalOpen)]="showRelatedTxModal" class="large">
+    <div class="modal-title">
+        <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
+        <h4 class="modal-title-text"><span class="ml_translated">Related Transactions</span></h4>
+    </div>
+    <div class="modal-body">
+        <clr-datagrid #myDataGrid>
+            <clr-dg-column>Fund name</clr-dg-column>
+            <clr-dg-column>Type</clr-dg-column>
+            <clr-dg-column>Ref</clr-dg-column>
+            <clr-dg-column>Price</clr-dg-column>
+            <clr-dg-column>Quantity</clr-dg-column>
+            <clr-dg-column>Gross Amount</clr-dg-column>
+            <clr-dg-column>Delivery Date</clr-dg-column>
+
+            <clr-dg-row *clrDgItems="let tx of relatedTxList">
+
+                <clr-dg-cell>
+                    {{tx.transactionInstrumentName}}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionType | txType}}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionRefId | padding : 10 }}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionPrice | moneyValue}}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionUnits | moneyValue}}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionSettlement | moneyValue}}
+                </clr-dg-cell>
+
+                <clr-dg-cell>
+                    {{tx.transactionDate | date : 'dd/MM/yyyy' }}
+                </clr-dg-cell>
+
+            </clr-dg-row>
+
+            <clr-dg-footer>
+                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                of {{pagination.totalItems}} accounts
+                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false">Close</button>
+    </div>
+</clr-modal>
