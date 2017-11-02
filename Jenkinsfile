@@ -48,6 +48,13 @@ node {
               testResults: '/TESTS-Headless**'
           }
 
+          stage('Copy code to deployment folder'){
+             node {
+                  sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
+                        rm -rf /var/lib/jenkins/Deploy/dist &&
+                        rsync -a ./dist /var/lib/jenkins/Deploy/'''
+                }
+            }
 
           stage('Sonar Scan'){
             withSonarQubeEnv {
