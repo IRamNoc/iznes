@@ -1,6 +1,4 @@
 {
-    <<<<<<<
-    HEAD
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "project": {
         "name": "clarity-sample"
@@ -45,7 +43,7 @@
         "protractor": {
             "config": "./protractor.conf.js"
         }
-    }
+    },
     "lint": [
         {
             "project": "src/tsconfig.app.json",
