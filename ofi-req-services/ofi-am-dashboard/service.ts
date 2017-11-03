@@ -23,6 +23,24 @@ export class OfiAmDashboardService {
     }
 
     /**
+     * Get Fund Manager Assets
+     * -----------------------
+     *
+     */
+    public getFundManagerAssets(): Promise<any> {
+        /* Setup the message body. */
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'getfundmanageasset',
+            token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
+    }
+
+    /**
      * Get Wallet IDs by Many Addresses
      * --------------------------------
      * Get's a list of wallet IDs by wallet addresses.

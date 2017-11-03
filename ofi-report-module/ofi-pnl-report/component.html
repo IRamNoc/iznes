@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list-alt"></i> P&L</h1>
+    <h1><i class="fa fa-list-alt"></i> <span mltag="txt_pl">P&L</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -23,20 +23,19 @@
     <ng-template #balanceTab>
         <div class="panel-body">
             <clr-datagrid #myDataGrid>
-                <clr-dg-column>Action</clr-dg-column>
-                <clr-dg-column>Fund name</clr-dg-column>
-                <clr-dg-column>Active quantity</clr-dg-column>
-                <clr-dg-column>Realise P&L</clr-dg-column>
-                <clr-dg-column>Unrealise P&L</clr-dg-column>
-                <clr-dg-column>Last movement</clr-dg-column>
+                <clr-dg-column mltag="txt_action">Action</clr-dg-column>
+                <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
+                <clr-dg-column mltag="txt_activequantity">Active quantity</clr-dg-column>
+                <clr-dg-column mltag="txt_realisepl">Realise P&L</clr-dg-column>
+                <clr-dg-column mltag="txt_unrealisepl">Unrealise P&L</clr-dg-column>
+                <clr-dg-column mltag="txt_lastmovement">Last movement</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let tx of activeBalanceList">
 
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button class="btn text-primary" (click)="viewRelateTxs(tx.fundName)">
-                                <i class="fa fa-eye"></i> Related Transactions
-                            </button>
+                                <i class="fa fa-eye"></i> <span mltag="txt_relatedtransactions">Related Transactions</span></button>
                         </div>
                     </clr-dg-cell>
 
@@ -76,17 +75,17 @@
 <clr-modal [(clrModalOpen)]="showRelatedTxModal" class="large">
     <div class="modal-title">
         <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
-        <h4 class="modal-title-text"><span class="ml_translated">Related Transactions</span></h4>
+        <h4 class="modal-title-text"><span class="ml_translated" mltag="txt_relatedtransactions">Related Transactions</span></h4>
     </div>
     <div class="modal-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>Fund name</clr-dg-column>
-            <clr-dg-column>Type</clr-dg-column>
-            <clr-dg-column>Ref</clr-dg-column>
-            <clr-dg-column>Price</clr-dg-column>
-            <clr-dg-column>Quantity</clr-dg-column>
-            <clr-dg-column>Gross Amount</clr-dg-column>
-            <clr-dg-column>Delivery Date</clr-dg-column>
+            <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
+            <clr-dg-column mltag="txt_type">Type</clr-dg-column>
+            <clr-dg-column mltag="txt_ref">Ref</clr-dg-column>
+            <clr-dg-column mltag="txt_price">Price</clr-dg-column>
+            <clr-dg-column mltag="txt_quantity">Quantity</clr-dg-column>
+            <clr-dg-column mltag="txt_grossamount">Gross Amount</clr-dg-column>
+            <clr-dg-column mltag="txt_deliverydate">Delivery Date</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let tx of relatedTxList">
 
@@ -128,6 +127,6 @@
         </clr-datagrid>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false">Close</button>
+        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false" mltag="txt_close">Close</button>
     </div>
 </clr-modal>

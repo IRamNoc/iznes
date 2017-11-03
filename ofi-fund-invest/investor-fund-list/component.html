@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list-ul"></i> List of funds</h1>
+    <h1><i class="fa fa-list-ul"></i> <span mltag="txt_listoffunds">List of funds</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -35,26 +35,24 @@
     <ng-template #listOfFundsTab>
         <div class="panel-body">
             <clr-datagrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Asset manager</clr-dg-column>
-                <clr-dg-column>ISIN</clr-dg-column>
-                <clr-dg-column>Fund name</clr-dg-column>
-                <clr-dg-column>NAV</clr-dg-column>
-                <clr-dg-column>Currency</clr-dg-column>
-                <clr-dg-column>Asset class</clr-dg-column>
-                <clr-dg-column>Sub class of asset</clr-dg-column>
-                <clr-dg-column>Geographical area</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_assetmanager">Asset manager</clr-dg-column>
+                <clr-dg-column mltag="txt_isin">ISIN</clr-dg-column>
+                <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
+                <clr-dg-column mltag="txt_nav">NAV</clr-dg-column>
+                <clr-dg-column mltag="txt_currency">Currency</clr-dg-column>
+                <clr-dg-column mltag="txt_assetclass">Asset class</clr-dg-column>
+                <clr-dg-column mltag="txt_subclassofasset">Sub class of asset</clr-dg-column>
+                <clr-dg-column mltag="txt_geographicalarea">Geographical area</clr-dg-column>
 
 
                 <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button class="btn text-primary" (click)="handleSubscribe(i)">
-                                <i class="fa fa-sign-in"></i> Subscribe
-                            </button>
+                                <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
                             <button class="btn text-success" (click)="handleRedeem(i)">
-                                <i class="fa fa-sign-out"></i> Redeem
-                            </button>
+                                <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{fund.assetManager}}</clr-dg-cell>

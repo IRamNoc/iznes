@@ -56,7 +56,12 @@ export {MyDashboardComponent} from './ofi-am-dashboard/my-dashboard/component';
 /**
  * Report module
  */
-export {OfiPnlReportComponent, OfiTaxReportComponent, OfiReportModule} from './ofi-report-module';
+export {
+    OfiPnlReportComponent,
+    OfiTaxReportComponent,
+    OfiCollectiveArchiveComponent,
+    OfiReportModule
+} from './ofi-report-module';
 
 /**
  * Ofi main module
