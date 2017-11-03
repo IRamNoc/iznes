@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="my-orders"><i class="fa fa-university"></i> <span mltag="txt_my_orders">My Orders</span> - {{ connectedWalletName }}</h1>
+    <h1 id="my-orders"><i class="fa fa-university"></i> <span mltag="txt_myorders">My Orders</span> - {{ connectedWalletName }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,7 +36,7 @@
                             <span mltag="txt_fundname">Fund Name</span>
                         </label>
                         <div class="input-button-group">
-                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" mltag="txt_fundname" name="search-fundname" type="text" placeholder="Fund Name" />
+                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-fundname" type="text" placeholder="Fund Name" mltag="txt_fundname"/>
                             <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                                 (removed)="getOrdersBySearch()"
                                 [formControl]="tabsControl[0].searchForm.controls['status']"
                                 placeholder="Status"
-                            ></ng-select>
+                            mltag="txt_status"></ng-select>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -71,7 +71,7 @@
                                 (removed)="getOrdersBySearch()"
                                 [formControl]="tabsControl[0].searchForm.controls['type']"
                                 placeholder="Type"
-                            ></ng-select>
+                            mltag="txt_type"></ng-select>
                         </div>
                     </div>
                 </div>
@@ -79,15 +79,15 @@
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_order_type">Order type</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_order_ref">Order REF</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_fund_name">Fund name</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_ordertype">Order type</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_fundname">Fund name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_cut-off_date">Cut-off date</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_delivery_date">Delivery date</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
@@ -116,12 +116,8 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Order type -->
-                            <span *ngIf="order.type == 3" class="label label-info">
-                                Subscription
-                            </span>
-                            <span *ngIf="order.type == 4" class="label label-success">
-                                Redemption
-                            </span>
+                            <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
+                            <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Order REF -->
@@ -159,15 +155,15 @@
                         <clr-dg-cell>
                             <!-- Status -->
                             <span *ngIf="order.status == 1" class="label label-warning">
-                                <span class="txt_initiated">Initiated</span>
+                                <span class="txt_initiated" mltag="txt_initiated">Initiated</span>
                             </span>
 
                             <span *ngIf="order.status == 2" class="label label-info">
-                                <span class="ml" mltag="txt_waitingnav">Waiting for NAV</span>
+                                <span class="ml" mltag="txt_waitingfornav">Waiting for NAV</span>
                             </span>
 
                             <span *ngIf="order.status == 3" class="label label-info">
-                                <span class="txt_waitingnav">Waiting for settlement</span>
+                                <span class="txt_waitingnav" mltag="txt_waitingforsettlement">Waiting for settlement</span>
                             </span>
 
                             <span *ngIf="order.status == 0" class="label label-error">
@@ -179,7 +175,7 @@
                             </span>
 
                             <span *ngIf="order.status == -2" class="label label-error">
-                                <span class="ml" mltag="txt_order_expired">Order expired</span>
+                                <span class="ml" mltag="txt_orderexpired">Order expired</span>
                             </span>
                         </clr-dg-cell>
                     </clr-dg-row>
@@ -203,12 +199,8 @@
                     <div class="col-sm-12">
                         <div>
                             <!-- Order type -->
-                            <h2 *ngIf="orderData.type == 3" mltag="txt_subscription">
-                                Subscription
-                            </h2>
-                            <h2 *ngIf="orderData.type == 4" mltag="txt_redemption">
-                                Redemption
-                            </h2>
+                            <h2 *ngIf="orderData.type == 3" mltag="txt_subscription"> Subscription</h2>
+                            <h2 *ngIf="orderData.type == 4" mltag="txt_redemption"> Redemption</h2>
                         </div>
                     </div>
                 </div>
@@ -226,7 +218,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label>
-                            <span mltag="txt_fund_share">Fund share</span>
+                            <span mltag="txt_fundshare">Fund share</span>
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.asset}}</span>
@@ -234,7 +226,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label>
-                            <span mltag="txt_isin_code">ISIN Code</span>
+                            <span mltag="txt_isincode">ISIN Code</span>
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.assetISIN}}</span>
@@ -263,7 +255,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label>
-                            <span mltag="txt_net_asset_value">Net Asset Value</span>
+                            <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.price | moneyValueOfi}}</span>
@@ -276,7 +268,7 @@
                 <div class="row form-group">
                     <div class="col-sm-6">
                         <label>
-                            <span mltag="txt_gross_amount">Gross Amount</span>
+                            <span mltag="txt_grossamount">Gross Amount</span>
                         </label>
                         <div>
                             <span class="readonly-field">{{(orderData.metaData.units * orderData.price) | moneyValueOfi}}</span>
@@ -289,21 +281,17 @@
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <label>
-                            <span mltag="txt_cut-off_date">Cut-Off Date</span>
+                            <span mltag="txt_cutoffdate">Cut-Off Date</span>
                         </label>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_date">
-                            Date
-                        </span>
+                        <span mltag="txt_date"> Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.cutoffDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_time_utc">
-                            Time (UTC)
-                        </span>
+                        <span mltag="txt_timeutc"> Time (UTC)</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.cutoffDate ) }}</span>
                         </div>
@@ -315,21 +303,17 @@
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <label>
-                            <span mltag="txt_valuation_date">Valuation Date</span>
+                            <span mltag="txt_valuationdate">Valuation Date</span>
                         </label>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_date">
-                            Date
-                        </span>
+                        <span mltag="txt_date"> Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.valuationDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_time_utc">
-                            Time (UTC)
-                        </span>
+                        <span mltag="txt_timeutc"> Time (UTC)</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.valuationDate ) }}</span>
                         </div>
@@ -341,21 +325,17 @@
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <label>
-                            <span mltag="txt_settlement_date">Settlement Date</span>
+                            <span mltag="txt_settlementdate">Settlement Date</span>
                         </label>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_date">
-                            Date
-                        </span>
+                        <span mltag="txt_date"> Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.deliveryDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_time_utc">
-                            Time (UTC)
-                        </span>
+                        <span mltag="txt_timeutc"> Time (UTC)</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.deliveryDate ) }}</span>
                         </div>
@@ -367,7 +347,7 @@
                 <div class="row form-group">
                     <div class="col-sm-6">
                         <label>
-                            <span mltag="txt_entry_fee_percent">Entry Fee (3.75%)</span>
+                            <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
                         </label>
                         <div>
                             <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValueOfi }}</span>
@@ -392,12 +372,8 @@
 
                 <div class="form-group button-group">
                     <div class="col-sm-12">
-                        <a (click)="closeTab(tabid)" class="btn btn-secondary">
-                            Close
-                        </a>
-                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning">
-                            Cancel
-                        </button>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close"> Close</a>
+                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning" mltag="txt_cancel"> Cancel</button>
                     </div>
                 </div>
             </form>
