@@ -52,12 +52,11 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private walletDirectoryList: any = [];
     private walletHoldingsByAsset: any = {};
     private myDetails: any = {};
-    private fundAssetList: Array<any> = [];
-    private filteredFundAssetList: Array<{ id: string, text: string }> = [];
+    private fundAssetList: any = [];
+    private filteredFundAssetList: any = [];
 
     /* Redux observables. */
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
-    @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
@@ -116,20 +115,6 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Update wallet name. */
             this.updateWalletConnection();
-        });
-
-        /* Subscribe for the user issued asset list. */
-        this.subscriptions['user-issued-assets'] = this.userAssetListOb.subscribe((list) => {
-            /* Assign list to a property. */
-            this.userAssetList = list;
-
-            /* Also map the array for ui elements. */
-            this.filteredUserAssetList = list.map(asset => {
-                return {
-                    id: asset.asset,
-                    text: asset.asset
-                }
-            })
         });
 
         /* TODO - Store this data in redux and subscribe for it. */
@@ -226,7 +211,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Ok, let's get shares under this company. */
         console.log(' | id: ', fundShareFormValue.selectFund[0].text);
         let
-            assets = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text),
+            assets: any = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text),
             holdings, totalHoldings = 0;
 
         /* Now let's sort the assets. */
@@ -271,7 +256,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      * Get Company name
      * @param {string} name
      */
-    getAssetsByCompanyName(name: string): string {
+    getAssetsByCompanyName(name: string): any {
         /* Variables. */
         let load = {};
 
