@@ -1,11 +1,11 @@
 /* Core/Angular imports. */
-import { Injectable } from '@angular/core';
-import { select, NgRedux } from '@angular-redux/store';
+import {Injectable} from '@angular/core';
+import {select, NgRedux} from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
-import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
-import { SagaHelper, Common } from '@setl/utils';
+import {MemberSocketService} from '@setl/websocket-service';
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {SagaHelper, Common} from '@setl/utils';
 
 /* Import actions. */
 import {
@@ -13,7 +13,9 @@ import {
     OFI_SET_MY_ORDER_LIST,
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
-    OFI_RESET_HOME_ORDER_BUFFER
+    OFI_RESET_HOME_ORDER_BUFFER,
+    setRequestedCollectiveArchive,
+    SET_COLLECTIVE_ARCHIVE
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
@@ -22,17 +24,38 @@ import {
     OfiRequestArrangements,
     OfiUpdateArrangement,
     OfiGetContractByOrder,
+    OfiGetArrangementCollectiveArchive
 } from './model';
 
 @Injectable()
 export class OfiOrdersService {
 
     /* Constructor. */
-    constructor(
-        private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>,
-    ) {
+    constructor(private memberSocketService: MemberSocketService,
+                private ngRedux: NgRedux<any>) {
         /* Stub. */
+    }
+
+    /**
+     * Default static call to get arrangement collective archive, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiOrdersService
+     * @param ngRedux
+     */
+    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCollectiveArchive());
+
+        // Request the list.
+        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_COLLECTIVE_ARCHIVE],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**
@@ -60,7 +83,7 @@ export class OfiOrdersService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [ OFI_SET_MANAGE_ORDER_LIST ]
+            'successActions': [OFI_SET_MANAGE_ORDER_LIST]
         });
     }
 
@@ -89,7 +112,7 @@ export class OfiOrdersService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [ OFI_SET_MY_ORDER_LIST ]
+            'successActions': [OFI_SET_MY_ORDER_LIST]
         });
     }
 
@@ -118,7 +141,7 @@ export class OfiOrdersService {
         /* Return the new member node saga request. */
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [ OFI_SET_HOME_ORDER_LIST ]
+            'successActions': [OFI_SET_HOME_ORDER_LIST]
         });
     }
 
@@ -131,7 +154,7 @@ export class OfiOrdersService {
      *
      * @return {Promise<any>}
      */
-    public updateOrder (data: any): Promise<any> {
+    public updateOrder(data: any): Promise<any> {
         /* Setup the message body. */
         const messageBody: OfiUpdateArrangement = {
             RequestName: 'updatearrangement',
@@ -158,7 +181,7 @@ export class OfiOrdersService {
      *
      * @return {Promise<any>}
      */
-    public getContractsByOrder (data: any): Promise<any> {
+    public getContractsByOrder(data: any): Promise<any> {
         /* Setup the message body. */
         const messageBody: OfiGetContractByOrder = {
             RequestName: 'gconbarr',
@@ -173,7 +196,7 @@ export class OfiOrdersService {
         });
     }
 
-    //gconbarr
+    // gconbarr
 
     /**
      * Set Order Buffer
@@ -184,7 +207,7 @@ export class OfiOrdersService {
      *
      * @return {void}
      */
-    public setOrderBuffer (orderId: number):void {
+    public setOrderBuffer(orderId: number): void {
         /* Dispatch the event. */
         this.ngRedux.dispatch({
             'type': OFI_SET_HOME_ORDER_BUFFER,
@@ -199,7 +222,7 @@ export class OfiOrdersService {
      *
      * @return {void}
      */
-    public resetOrderBuffer ():void {
+    public resetOrderBuffer(): void {
         /* Dispatch the event. */
         this.ngRedux.dispatch({
             'type': OFI_SET_HOME_ORDER_BUFFER,
@@ -208,14 +231,14 @@ export class OfiOrdersService {
     }
 
     /**
-    * Build Request
-    * -------------
-    * Builds a request and sends it, responsing when it completes.
-    *
-    * @param {options} Object - and object of options.
-    *
-    * @return {Promise<any>} [description]
-    */
+     * Build Request
+     * -------------
+     * Builds a request and sends it, responsing when it completes.
+     *
+     * @param {options} Object - and object of options.
+     *
+     * @return {Promise<any>} [description]
+     */
     public buildRequest(options): Promise<any> {
         /* Check for taskPipe,  */
         return new Promise((resolve, reject) => {
@@ -234,7 +257,15 @@ export class OfiOrdersService {
                     }
                 )
             );
-        })
+        });
     }
 
+    getCollectiveArchive(): any {
+        const messageBody: OfiGetArrangementCollectiveArchive = {
+            RequestName: 'getarrangementcollectivearchive',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

@@ -89,6 +89,11 @@ export {
     /* My orders */
     getOfiMyOrderList,
     OFI_SET_MY_ORDER_LIST,
+
+    // Collective report
+    setRequestedCollectiveArchive,
+    clearRequestedCollectiveArchive,
+    SET_COLLECTIVE_ARCHIVE
 } from './ofi-orders';
 
 export {

@@ -256,8 +256,8 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     transactionId: tx.transactionId,
                     transactionRefId: tx.transactionRefId,
                     transactionPrice,
-                    transactionUnits: tx.transactionUnits,
-                    transactionSettlement: tx.transactionSettlement,
+                    transactionUnits: this._numberConverterService.toFrontEnd(tx.transactionUnits),
+                    transactionSettlement: this._numberConverterService.toFrontEnd(tx.transactionSettlement),
                     transactionDeliveryDate
                 });
                 return result;
