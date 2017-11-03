@@ -34,5 +34,17 @@ export interface AddArrangementContractMapRequestBody extends MemberNodeMessageB
     expiry: number;
 }
 
+export interface NewFundAccessBody extends MemberNodeMessageBody {
+    userID: string;
+    shareId: string;
+    status: string;
+    entryFee: string;
+    exitFee: string;
+}
 
-
+export interface InsertIssueAssetMapBody extends MemberNodeMessageBody {
+    address: string;
+    asset: string;
+    isin: string;
+    companyId: string;
+}
