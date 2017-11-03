@@ -304,7 +304,28 @@ export class OfiPostTxService implements OnDestroy {
             asyncTaskPipe,
             (data) => {
                 console.log('6) saveCoupon : success', data); // success
+                this.saveIssueAssetMap(requestData);
+            },
+            (data) => {
+                console.log('saveCoupon Error: ', data);
+            })
+        );
+    }
 
+    saveIssueAssetMap(requestData) {
+        const asyncTaskPipe = this._ofiFundInvestService.insertIssueAssetMap(
+            {
+                address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
+                asset: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin + '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName,
+                isin: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
+                companyId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].companyID
+            }
+        );
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('7) saveIssueAssetMap : success', data); // success
                 const nbShares = requestData.metaData.arrangementData.sharesList.length;
                 if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
                     requestData.metaData.arrangementData.currentShare++;
@@ -324,7 +345,7 @@ export class OfiPostTxService implements OnDestroy {
                 }
             },
             (data) => {
-                console.log('saveCoupon Error: ', data);
+                console.log('saveIssueAssetMap Error: ', data);
             })
         );
     }

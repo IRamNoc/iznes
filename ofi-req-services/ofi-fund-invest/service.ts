@@ -4,7 +4,9 @@ import {
     RequetFundAccessMy,
     AddArrangementRequestBody,
     ArrangementType,
-    AddArrangementContractMapRequestBody
+    AddArrangementContractMapRequestBody,
+    NewFundAccessBody,
+    InsertIssueAssetMapBody,
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -98,5 +100,27 @@ export class OfiFundInvestService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    insertIssueAssetMap(requestData: {
+        address: string;
+        asset: string;
+        isin: string;
+        companyId: string;
+    }): any {
+        const messageBody: InsertIssueAssetMapBody = {
+            RequestName: 'niasm',
+            token: this.memberSocketService.token,
+            address: _.get(requestData, 'address', 0),
+            asset: _.get(requestData, 'asset', ''),
+            isin: _.get(requestData, 'isin', ''),
+            companyId: _.get(requestData, 'companyId', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
+
+
 
 }
