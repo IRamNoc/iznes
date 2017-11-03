@@ -21,9 +21,10 @@
         >
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline" (click)="_toggleSidebar()">Close</button>
+                    <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()">Close</button>
                 </div>
-                <div class="ng-sidebar-header-middle">
+                <div class="ng-sidebar-header-middle title_text">
+                    <i class="fa fa-cogs"></i>
                     Settings
                 </div>
                 <div class="ng-sidebar-header-right">
@@ -32,29 +33,35 @@
             </div>
             <div class="ng-sidebar-body">
 
-
                 <div class="ng-sidebar-section-header">
-
-                    Change Language
+                    <div class="title_text">
+                        <i class="fa fa-language"></i>
+                        Language
+                    </div>
+                    Choose your language.
                 </div>
                 <div class="ng-sidebar-section-body">
 
-
                     <section class="form-block">
-                        <label>Radio Buttons</label>
                         <div class="form-group">
-                            <label>Inline radio button group</label>
-                            <div class="radio-inline" (click)="changeLanguage('eng')">
+                            <div class="radio" (click)="changeLanguage('eng')">
                                 <input type="radio" name="gridRadios1" id="lang_eng" checked>
                                 <label for="lang_eng">English</label>
                             </div>
-                            <div class="radio-inline" (click)="changeLanguage('fra')">
+                            <div class="radio" (click)="changeLanguage('fra')">
                                 <input type="radio" name="gridRadios1" id="lang_fra">
-                                <label for="lang_fra">Francais</label>
+                                <label for="lang_fra">Français</label>
+                            </div>
+                            <div class="radio" (click)="changeLanguage('eng')">
+                                <input type="radio" name="gridRadios1" id="lang_tch">
+                                <label for="lang_tch">繁體中文</label>
+                            </div>
+                            <div class="radio" (click)="changeLanguage('eng')">
+                                <input type="radio" name="gridRadios1" id="lang_sch">
+                                <label for="lang_sch">中文</label>
                             </div>
                         </div>
                     </section>
-
 
                 </div>
             </div>
@@ -63,7 +70,7 @@
                 <span></span>
             </button>
 
-            <p>Sidebar contents</p>
+
 
 
         </ng-sidebar>
