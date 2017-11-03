@@ -5,9 +5,11 @@
 
 </section>
 <ng-template #menuItem let-childMenuJson="childMenuJson">
+
     <a *ngIf="!childMenuJson.children" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
         <i class="{{childMenuJson.icon_class}}"></i>
-        <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></a>
+        <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
+    </a>
 
     <section *ngIf="childMenuJson.children" class="nav-group collapsible">
         <label [attr.id]="childMenuJson.element_id" menu-dropdown><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
