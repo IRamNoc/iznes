@@ -311,10 +311,10 @@ export class SetlMessagesComponent implements OnDestroy {
     /**
      * Refresh Mailbox
      */
-    refreshMailbox() {
-        this.currentPage = 0;
+    refreshMailbox(page=0) {
+        this.currentPage = page;
         const categoryType = this.categories[this.currentCategory].type;
-        this.requestMailboxByCategory(categoryType, 0);
+        this.requestMailboxByCategory(categoryType, page);
     }
 
     /**
@@ -341,7 +341,8 @@ export class SetlMessagesComponent implements OnDestroy {
             })
         );
 
-        this.refreshMailbox();
+        this.refreshMailbox(this.currentPage);
+
     }
 
     /**
@@ -351,11 +352,11 @@ export class SetlMessagesComponent implements OnDestroy {
      */
     showMessage(index) {
 
+        if (!this.messages[index].isRead) this.markAsRead(this.messages[index]);
+
         // set message to active to apply message-active css class
         this.messages[index].active = true;
         this.messages[index].isRead = true;
-
-        this.markAsRead(this.messages[index]);
 
         // set the current message that appears on the right hand side
         this.currentMessage = this.messages[index];
@@ -397,6 +398,7 @@ export class SetlMessagesComponent implements OnDestroy {
             (data) => {
                 console.log('success: ');
                 console.log(data);
+
             },
             (data) => {
                 console.log('error: ');
