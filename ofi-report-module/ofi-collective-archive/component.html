@@ -1,0 +1,132 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-list-alt"></i> Collects Archive</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            </button>
+
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container>
+                    <ng-container *ngTemplateOutlet="archiveTab"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Archive Table. -->
+    <ng-template #archiveTab>
+        <div class="panel-body">
+
+            <form [formGroup]="dateRangeForm" class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated">From date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input
+                                    formControlName="fromDate"
+                                    [(ngModel)]="dateRangeForm.controls['fromDate'].value"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    (ngModelChange)="dateChange('from', $event)"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated">To date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input
+                                    formControlName="toDate"
+                                    [(ngModel)]="dateRangeForm.controls['toDate'].value"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    (ngModelChange)="dateChange('to', $event)"
+                                />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Name of the share / Isin Code</clr-dg-column>
+                <clr-dg-column>Currency</clr-dg-column>
+                <clr-dg-column>Centralisation Date</clr-dg-column>
+                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column>Amount subscribed</clr-dg-column>
+                <clr-dg-column>Quantity Subscribed</clr-dg-column>
+                <clr-dg-column>Acquired entry fees</clr-dg-column>
+                <clr-dg-column>Amount redeemed</clr-dg-column>
+                <clr-dg-column>Quantity redeemed</clr-dg-column>
+                <clr-dg-column>Acquired exist fees</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let archive of archiveListFiltered">
+
+                    <clr-dg-cell>
+                        {{archive.asset}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        EUR
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{archive.cutoffDateNumber | date : 'dd/MM/yyyy'}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{archive.status}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        € {{archive.subscriptionTotal | moneyValue}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{archive.subscriptionQuantity | moneyValue : 5}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        € 0.00
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        € {{archive.redemptionTotal | moneyValue}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{archive.redemptionQuantity | moneyValue : 5}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        € 0.00
+                    </clr-dg-cell>
+
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{pagination.totalItems}} accounts
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>
