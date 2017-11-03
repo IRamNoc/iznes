@@ -10,6 +10,7 @@ import {Observable} from 'rxjs/Observable';
 import {NgRedux} from '@angular-redux/store';
 import {getAuthentication} from '@setl/core-store';
 import {ToasterService} from 'angular2-toaster';
+import {MyUserService} from '@setl/core-req-services';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
@@ -17,7 +18,8 @@ export class LoginGuardService implements CanActivate {
 
     constructor(private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                private router: Router) {
+                private router: Router,
+                private _myUserService: MyUserService) {
         this.isLogin = false;
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -30,6 +32,9 @@ export class LoginGuardService implements CanActivate {
             this.toasterService.pop('warning', 'Session Expired!');
             this.router.navigateByUrl('');
 
+        } else {
+            // refresh token.
+            this._myUserService.defaultRefreshToken(this.ngRedux);
         }
         return this.isLogin;
     }
