@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-industrial"></i> NAV</h1>
+    <h1><i class="fa fa-industrial"></i> <span mltag="txt_nav">NAV</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">Search by</span>
+                                <span class="ml_translated" mltag="txt_searchby">Search by</span>
                             </label>
                             <div>
                                 <ng-select
@@ -40,7 +40,7 @@
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">Fund name</span>
+                                <span class="ml_translated" mltag="txt_fundname">Fund name</span>
                             </label>
                             <div>
                                 <ng-select
@@ -55,7 +55,7 @@
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">Date</span>
+                                <span class="ml_translated" mltag="txt_date">Date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
@@ -67,7 +67,7 @@
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     [disabled]="searchBy === 'byFund'"
                                     (ngModelChange)="dateChange($event)"
-                                />
+                                mltag="txt_chooseadate"/>
                             </div>
                         </div>
                     </div>
@@ -75,18 +75,17 @@
             </form>
 
             <clr-datagrid #myDataGrid>
-                <clr-dg-column>Actions</clr-dg-column>
-                <clr-dg-column>Fund name</clr-dg-column>
-                <clr-dg-column>Fund ISIN</clr-dg-column>
-                <clr-dg-column>Date</clr-dg-column>
-                <clr-dg-column>Nav</clr-dg-column>
-                <clr-dg-column>Status</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
+                <clr-dg-column mltag="txt_fundisin">Fund ISIN</clr-dg-column>
+                <clr-dg-column mltag="txt_date">Date</clr-dg-column>
+                <clr-dg-column mltag="txt_nav">Nav</clr-dg-column>
+                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let nav of navList;">
                     <clr-dg-cell>
                         <button class="btn" (click)="showEdit(nav.fundName, nav.nav, nav.date)" [disabled]="nav.status === -1">
-                            <i class="fa fa-pencil-square-o"></i> Edit
-                        </button>
+                            <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -112,7 +111,7 @@
                                 </span>
 
                                 <span *ngSwitchCase="2">
-                                    <span class="text-warning">Pending</span>
+                                    <span class="text-warning" mltag="txt_pending">Pending</span>
                                 </span>
                             </span>
 
@@ -122,14 +121,14 @@
                     <clr-dg-cell>
                             <span [ngSwitch]="nav.status">
                                 <span *ngSwitchCase="-1">
-                                    <span class="label label-success">Final</span>
+                                    <span class="label label-success" mltag="txt_final">Final</span>
                                 </span>
                                 <span *ngSwitchCase="1">
-                                    <span class="label label-warning">Estimated</span>
+                                    <span class="label label-warning" mltag="txt_estimated">Estimated</span>
                                 </span>
 
                                 <span *ngSwitchCase="2">
-                                    <span class="label label-warning">Pending</span>
+                                    <span class="label label-warning" mltag="txt_pending">Pending</span>
                                 </span>
                             </span>
                     </clr-dg-cell>
@@ -171,7 +170,7 @@
 
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <label class="control-label"><span class="ml_translated" mltag="txt_price">NAV</span> (€)</label>
+                        <label class="control-label"><span class="ml_translated" mltag="txt_nav">NAV</span> (€)</label>
                         <div>
                             <input formControlName="nav" type="text" class="form-control" value="" appNumberFormatter="2">
                         </div>
@@ -183,10 +182,10 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-warning price-update" data-action="estimate">
-            <span class="ml_translated" mltag="txt_estimate" (click)="handleUpdateNav(1)">Estimate</span>
+            <span class="ml_translated" (click)="handleUpdateNav(1)" mltag="txt_estimate">Estimate</span>
         </button>
         <button type="button" class="btn btn-primary price-update" data-action="final" (click)="handleUpdateNav(-1)">
             <span class="ml_translated" mltag="txt_final">Final</span></button>
-        <button type="button" class="btn btn-outline" (click)="editing = false">Cancel</button>
+        <button type="button" class="btn btn-outline" (click)="editing = false" mltag="txt_cancel">Cancel</button>
     </div>
 </clr-modal>

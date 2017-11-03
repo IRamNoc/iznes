@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1 id="am-fund-holdings"><i class="fa fa-user"></i>
-        <span mltag="txt_fund_holdings">My Dashboard</span> - {{ connectedWalletName }}</h1>
+        <span mltag="txt_mydashboard">My Dashboard</span> - {{ connectedWalletName }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -8,16 +8,14 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-bar-chart"></i> <span mltag="txt_fund_holdings">Fund Holdings</span>
+                <i class="fa fa-bar-chart"></i> <span mltag="txt_fundholdings">Fund Holdings</span>
             </button>
             <clr-tab-content *clrIfActive="true">
                 <div class="panel-body">
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label mltag="txt_fund_share">
-                                    Fund Share
-                                </label>
+                                <label mltag="txt_fundshare"> Fund Share</label>
                                 <ng-select
                                         [items]="filteredUserAssetList"
                                         [allowClear]="true"
@@ -25,9 +23,7 @@
                                 </ng-select>
                                 <button
                                         (click)="handleFundSelection()"
-                                        class="btn btn-primary btn-end">
-                                    Go
-                                </button>
+                                        class="btn btn-primary btn-end" mltag="txt_go"> Go</button>
                             </div>
                         </div>
                     </form>
@@ -39,7 +35,7 @@
                             <div class="row form-group">
                                 <div class="col-sm-6">
                                     <label>
-                                        <span mltag="txt_isin_code">ISIN Code</span>
+                                        <span mltag="txt_isincode">ISIN Code</span>
                                     </label>
                                     <div>
                                         <span class="readonly-field">{{fundStats.isin}}</span>
@@ -47,7 +43,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label>
-                                        <span mltag="txt_asset_management_company">Asset Management Company</span>
+                                        <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
                                     </label>
                                     <div>
                                         <span class="readonly-field">{{fundStats.company}}</span>
@@ -63,7 +59,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label>
-                                        <span mltag="txt_number_of_units">Number of Units</span>
+                                        <span mltag="txt_numberofunits">Number of Units</span>
                                     </label>
                                     <div>
                                         <span class="readonly-field">{{fundStats.units | moneyValue}}</span>
@@ -71,7 +67,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label>
-                                        <span mltag="txt_net_asset">Net Asset</span>
+                                        <span mltag="txt_netasset">Net Asset</span>
                                     </label>
                                     <div>
                                         <span class="readonly-field">{{fundStats.netAsset | moneyValue}}</span>
@@ -92,7 +88,7 @@
                                             <th><span mltag="txt_holder">Holder</span></th>
                                             <th><span mltag="txt_amount">Amount</span></th>
                                             <th><span mltag="txt_quantity">Quantity</span></th>
-                                            <th><span mltag="txt_ratio_amount">Ratio Amount</span></th>
+                                            <th><span mltag="txt_ratioamount">Ratio Amount</span></th>
                                         </tr>
                                         </thead>
                                         <tbody>

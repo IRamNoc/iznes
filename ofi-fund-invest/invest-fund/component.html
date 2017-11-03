@@ -3,7 +3,7 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Registrar</span>
+                    <span class="ml_translated" mltag="txt_registrar">Registrar</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.registrar" [readonly]="true">
@@ -12,7 +12,7 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Fund share</span>
+                    <span class="ml_translated" mltag="txt_fundshare">Fund share</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.shareName" [readonly]="true">
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">ISIN code</span>
+                    <span class="ml_translated" mltag="txt_isincode">ISIN code</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.isin" [readonly]="true">
@@ -34,7 +34,7 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Currency</span>
+                    <span class="ml_translated" mltag="txt_currency">Currency</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.currency" [readonly]="true">
@@ -60,7 +60,7 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Quantity</span>
+                    <span class="ml_translated" mltag="txt_quantity">Quantity</span>
                 </label>
                 <div>
                     <input type="text" formControlName="quantity" class="form-control mlp_translated"
@@ -72,7 +72,7 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Sub-portfolio</span>
+                    <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
                 </label>
                 <div>
                     <ng-select
@@ -82,7 +82,7 @@
                         placeholder="Select sub-portfolio"
                         formControlName="address"
                         (selected)="handleSelectedAddress($event)"
-                    >
+                    mltag="txt_selectsubportfolio">
                     </ng-select>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Net asset value</span>
+                    <span class="ml_translated" mltag="txt_netassetvalue">Net asset value</span>
                 </label>
                 <div>
                     <input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">
@@ -102,7 +102,7 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Gross amount</span>
+                    <span class="ml_translated" mltag="txt_grossamount">Gross amount</span>
                 </label>
                 <div>
                     <input type="text" formControlName="grossAmount" class="form-control mlp_translated"
@@ -125,24 +125,24 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Cut-off date</span>
+                    <span class="ml_translated" mltag="txt_cutoffdate">Cut-off date</span>
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
                 </div>
             </div>
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Valuation date</span>
+                    <span class="ml_translated" mltag="txt_valuationdate">Valuation date</span>
                 </label>
 
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
                 </div>
             </div>
 
@@ -153,12 +153,12 @@
 
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Settlement date</span>
+                    <span class="ml_translated" mltag="txt_settlementdate">Settlement date</span>
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true"/>
+                    <input [dpDayPicker]="configDate" [value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
                 </div>
             </div>
 
@@ -178,7 +178,7 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="control-label">
-                    <span class="ml_translated">Comment</span>
+                    <span class="ml_translated" mltag="txt_comment">Comment</span>
                 </label>
                 <div>
                     <input type="text" formControlName="comment" class="form-control mlp_translated">
@@ -194,9 +194,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                     </button>
-                    <button (click)="handleClose()" class="btn btn-secondary">
-                        Close
-                    </button>
+                    <button (click)="handleClose()" class="btn btn-secondary" mltag="txt_close"> Close</button>
                 </div>
             </div>
         </div>
@@ -206,9 +204,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text">
-                Invalid quantity
-                </span>
+                <span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>
                     </div>
                 </div>
             </div>
@@ -220,9 +216,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text">
-                Invalid gross amount
-                </span>
+                <span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>
                     </div>
                 </div>
             </div>
@@ -234,9 +228,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text">
-                Comment exceed max length
-                </span>
+                <span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>
                     </div>
                 </div>
             </div>
@@ -248,9 +240,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text">
-                    Select a sub-portfolio
-                </span>
+                <span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>
                     </div>
                 </div>
             </div>
