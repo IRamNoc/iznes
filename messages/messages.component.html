@@ -159,7 +159,12 @@
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted" [innerHtml]="currentMessage.content"></p>
+                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted">
+                                <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
+                            </p>
+                            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
+                                <setl-message-attachment [attachmentType]="'pdf'" [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
+                            </p>
                         </div>
                     </div>
                 </div>

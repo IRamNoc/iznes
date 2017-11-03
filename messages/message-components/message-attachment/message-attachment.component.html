@@ -1,0 +1,6 @@
+<div class="message-attachment">
+    <setl-file-viewer *ngIf="attachmentType != 'pdf'" fileHash="{{attachmentId}}">
+    </setl-file-viewer>
+    <setl-file-viewer *ngIf="attachmentType =='pdf'" pdfId="{{attachmentId}}">
+    </setl-file-viewer>
+</div>

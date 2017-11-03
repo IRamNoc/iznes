@@ -376,7 +376,10 @@ export class SetlMessagesComponent implements OnDestroy {
             } else {
                 this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
             }
+            return;
         }
+
+        console.log('Current Message: ', this.currentMessage);
 
         this.currentMessage.isRead = true;
     }

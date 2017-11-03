@@ -18,6 +18,9 @@ import {MultilingualModule} from '@setl/multilingual';
 import {
     MyMessagesService,
 } from '@setl/core-req-services';
+import {FileViewerModule} from "../core-fileviewer/fileviewer.module";
+import {SetlMessageAttachmentComponent} from "./messages/message-components/message-attachment/message-attachment.component";
+import {SetlMessageBodyComponent} from "./messages/message-components/message-body/message-body.component";
 
 
 @NgModule({
@@ -31,13 +34,18 @@ import {
         FormsModule,
         ReactiveFormsModule,
         NgxPaginationModule,
-        MultilingualModule
+        MultilingualModule,
+        FileViewerModule
     ],
     declarations: [
-        SetlMessagesComponent
+        SetlMessagesComponent,
+        SetlMessageBodyComponent,
+        SetlMessageAttachmentComponent
     ],
     exports: [
         SetlMessagesComponent,
+        SetlMessageBodyComponent,
+        SetlMessageAttachmentComponent
     ],
     providers: [
         MyMessagesService
