@@ -43,6 +43,7 @@ export interface NewFundAccessBody extends MemberNodeMessageBody {
 }
 
 export interface InsertIssueAssetMapBody extends MemberNodeMessageBody {
+    token: string;
     address: string;
     asset: string;
     isin: string;
