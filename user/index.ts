@@ -37,14 +37,18 @@ import {
     setConnectedWallet,
     getConnected,
     getConnectedChain,
-    getConnectedWallet
+    getConnectedWallet,
+    setMembernodeSessionManager,
+    resetMembernodeSessionManager
 } from './connected';
 
 export {
     setConnectedWallet,
     getConnected,
     getConnectedChain,
-    getConnectedWallet
+    getConnectedWallet,
+    setMembernodeSessionManager,
+    resetMembernodeSessionManager
 };
 
 

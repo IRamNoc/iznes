@@ -4,11 +4,13 @@ import {
 } from 'redux';
 
 import {name} from './__init__';
+import {kAction} from '@setl/utils/common';
 
 /**
  * Set connected wallet
  */
 export const SET_CONNECTED_WALLET = `${name}/SET_CONNECTED_WALLET`;
+
 interface SetConnectedWalletAction extends Action {
     walletId: number;
 }
@@ -18,4 +20,19 @@ export const setConnectedWallet: ActionCreator<SetConnectedWalletAction> = (wall
     walletId: walletId
 });
 
+export const RESET_MEMBERNODE_SESSION_MANAGER = `${name}/RESET_MEMBERNODE_SESSION_MANAGER`;
+export const resetMembernodeSessionManager = kAction(RESET_MEMBERNODE_SESSION_MANAGER);
+
+export const SET_MEMBERNODE_SESSION_MANAGER = `${name}/SET_MEMBERNODE_SESSION_MANAGER`;
+
+interface SetMembernodeSessionManager extends Action {
+    remainingSecond: number;
+}
+
+export const setMembernodeSessionManager: ActionCreator<SetMembernodeSessionManager> = (remainingSecond: number) => (
+    {
+        type: SET_MEMBERNODE_SESSION_MANAGER,
+        remainingSecond
+    }
+);
 
