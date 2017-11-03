@@ -8,7 +8,7 @@
     <!-- Navigation buttons. -->
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <button class="btn btn-primary home-button red">
+            <button [routerLink]="['/reports/balances']" class="btn btn-primary home-button red">
                 <div class="row">
                     <div class="col-sm-4">
                         <i class="fa fa-cubes"></i>
@@ -54,7 +54,7 @@
         <div>
             <i class="fa fa-th-list"></i> <span mltag="txt_precentralisedorders">Precentralised Orders</span></div>
 
-        <hr class="dashed" />
+        <hr class="dashed"/>
 
         <clr-datagrid #ordersDataGrid>
             <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
@@ -82,7 +82,7 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Investor -->
-                    {{ order.metaData.investorWalletName }}<br />
+                    {{ order.metaData.investorWalletName }}<br/>
                     {{ order.advisorAccountName }}
                 </clr-dg-cell>
                 <clr-dg-cell>
@@ -96,7 +96,7 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Fund name -->
-                    {{ order.metaData.assetISIN }}<br />
+                    {{ order.metaData.assetISIN }}<br/>
                     {{ order.asset }}
                 </clr-dg-cell>
                 <clr-dg-cell>
