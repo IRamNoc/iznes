@@ -5,7 +5,6 @@ import {
     AddArrangementRequestBody,
     ArrangementType,
     AddArrangementContractMapRequestBody,
-    NewFundAccessBody,
     InsertIssueAssetMapBody,
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
