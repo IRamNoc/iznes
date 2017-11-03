@@ -28,7 +28,7 @@ export interface SaveUserDetailsRequestBody extends MemberNodeMessageBody {
     profileText: string;
 }
 
-export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody{
+export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
     token: string;
     oldPassword: string;
     newPassword: string;
@@ -36,5 +36,9 @@ export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody{
 
 export interface LoginRequestMessage extends MemberNodeRequest {
     MessageBody: LoginRequestMessageBody;
+}
+
+export interface RefreshTokenRequestBody extends MemberNodeMessageBody {
+    token: string;
 }
 
