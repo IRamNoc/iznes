@@ -63,3 +63,22 @@
         </button>
     </div>
 </header>
+
+<clr-modal [(clrModalOpen)]="showCountdownModal" class="large">
+    <div class="modal-title">
+        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
+        <h4 class="modal-title-text">
+            <span class="ml_translated" mltag="txt_sessionexpiringsoon">Session expiring soon</span></h4>
+    </div>
+    <div class="modal-body">
+        <p>Your session will expire in <span class="text-warning">{{remainingSecond && remainingSecond}}</span> seconds.
+        </p>
+        <p>Press <span class="text-primary font-weight-bold">Continue</span> to continue using this site.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary">
+            <span class="ml_translated" (click)="handleExtendSession()" mltag="txt_continue">Continue</span>
+        </button>
+        <button type="button" class="btn btn-outline" (click)="showCountdownModal = false" mltag="txt_close">Close</button>
+    </div>
+</clr-modal>
