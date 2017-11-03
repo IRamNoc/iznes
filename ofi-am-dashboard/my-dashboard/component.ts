@@ -50,10 +50,10 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
     private myWallets: any = [];
     private walletDirectoryList: any = [];
-    private walletHoldingsByAddress: any = {};
+    private walletHoldingsByAsset: any = {};
     private myDetails: any = {};
-    private userAssetList: Array<any> = [];
-    private filteredUserAssetList: Array<{ id: string, text: string }> = [];
+    private fundAssetList: Array<any> = [];
+    private filteredFundAssetList: Array<{ id: string, text: string }> = [];
 
     /* Redux observables. */
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
@@ -106,7 +106,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Subscribe for wallet holdings by address. */
         this.subscriptions['wallet-holdings-by-address'] = this.walletHoldingsOb.subscribe((holdingsList) => {
             /* Assign list to a property. */
-            this.walletHoldingsByAddress = holdingsList;
+            this.walletHoldingsByAsset = holdingsList;
         });
 
         /* Subscribe for this user's connected info. */
@@ -131,6 +131,59 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             })
         });
+
+        /* TODO - Store this data in redux and subscribe for it. */
+        this.ofiAmDashboardService.getFundManagerAssets().then((response) => {
+            /* Ok, let's save and filter the list. */
+            console.log(' |--- getFundManagerAssets: ', response);
+            let
+                fundAssetList = response[1].Data,
+                sortedByCompany = {};
+
+            /* Check it's there.... */
+            if (fundAssetList) {
+                console.log(' | fundAssetList: ', fundAssetList);
+                /* Let's sort the data by company name. */
+                for (const asset of fundAssetList) {
+                    /* Check the company has a object. */
+                    if (!sortedByCompany[asset.companyName]) sortedByCompany[asset.companyName] = {};
+
+                    /* Build the new structure. */
+                    sortedByCompany[asset.companyName][asset.asset] = {
+                        'price': asset.price,
+                        'navDate': asset.navDate,
+                        'companyId': asset.managementCompanyID,
+                        'companyName': asset.companyName
+                    }
+                }
+
+                this.fundAssetList = sortedByCompany;
+
+                /* Default the array with the any selection. */
+                this.filteredFundAssetList = [{
+                    id: '0',
+                    text: 'All'
+                }];
+
+                /* Now let's also push a UI object into the filtered list for each company. */
+                let i = 1;
+                for (const company in sortedByCompany) {
+                    /* If the company name isn't null and it has assets... */
+                    if (company !== "null" && Object.keys(sortedByCompany[company]).length > 0) {
+                        /* ...push into the filtered list. */
+                        this.filteredFundAssetList.push({
+                            id: sortedByCompany[company][Object.keys(sortedByCompany[company])[0]].companyId,
+                            text: company
+                        });
+                    }
+                }
+
+                console.log(' | sortedByCompany: ', sortedByCompany);
+            }
+        }).catch((error) => {
+            /* Handle error */
+            console.log('failed to getFundManagerAssets: ', error);
+        })
     }
 
     public ngAfterViewInit() {
@@ -150,6 +203,8 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.warn('Failed to get your issued assets: ', error);
             });
         }
+
+        this.requestWalletHolding(false);
     }
 
     /**
@@ -159,53 +214,51 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleFundSelection(): void {
+    public handleCompanySelection(): void {
         console.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
-        let
-            fund: any = false,
-            fundShareFormValue = this.fundShareForm.value;
+        let fundShareFormValue = this.fundShareForm.value;
 
         /* Fail safely if nothing was select. */
-        console.log(' | fundShareFormValue:', fundShareFormValue);
         if (!fundShareFormValue.selectFund.length) return;
+        console.log(' | fundShareFormValue:', fundShareFormValue);
 
-        /* Ok, so let's get the fund information. */
-        fund = this.getFundById(fundShareFormValue.selectFund[0].id);
-        console.log(' | fund:', fund);
+        /* Ok, let's get shares under this company. */
+        console.log(' | id: ', fundShareFormValue.selectFund[0].text);
+        let
+            assets = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text),
+            holdings, totalHoldings = 0;
 
-        /* Fail if we didn't find it. */
-        if (!fund) return;
+        /* Now let's sort the assets. */
+        this.fundStats.assets = [];
+        for (const asset in assets) {
+            if (!this.walletHoldingsByAsset[this.connectedWalletId]) continue;
+            holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
+            console.log(" | holdings: ", holdings);
+            console.log(" | asset: ", assets[asset]);
+            if (holdings) {
+                this.fundStats.assets.push({
+                    'asset': asset.split('|')[1],
+                    'assetManager': assets[asset].companyName,
+                    'amount': this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price),
+                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
+                    'ratio': 0,// 100 / total * amount
+                });
+                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
+            }
+        }
 
-        /* Let's fetch the wallet holdings. */
-        InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, fund.walletId);
+        this.fundStats.graphData = [];
+        this.fundStats.graphLabels = [];
+        /* Now let's use the total to work out the ratio. */
+        for (const row in this.fundStats.assets) {
+            this.fundStats.assets[row].ratio = (100 / totalHoldings) * this.fundStats.assets[row].quantity
+            this.fundStats.graphLabels.push(this.fundStats.assets[row].asset);
+            this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
+        }
 
-        /* Pre-fill the fund information we have, and show the data... */
+        /* Show the stats. */
         this.showStats = true;
-        this.fundStats.isin = fund.isin;
-        this.fundStats.company = fund.companyName;
-        console.log(' | fundStats:', this.fundStats);
-
-        /* Now, let's request all the other information needed. */
-        this.getFundDashboardData(fund).then((data) => {
-            console.log(' | dashboardData:', data);
-            /* Now let's set the extras we asked for... */
-            this.fundStats.navPrice = data.nav.price;
-            this.fundStats.navDate = data.nav.navDate;
-            this.fundStats.units = data.units;
-            this.fundStats.netAsset = (data.nav.price / 5) * data.units;
-
-            /* Now let's set the holders in this fund. */
-            this.fundStats.holders = data.holders;
-            this.fundStats.graphData = data.graphData;
-            this.fundStats.graphLabels = data.graphLabels;
-
-            /* Detect changes. */
-            this.changeDetectorRef.detectChanges();
-        }).catch((error) => {
-            console.log(' | dashboardData Error:', error)
-        });
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -215,134 +268,40 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Get Fund Dashboard Data
-     * ------------------
-     * Get's all fund information for the dashboard.
-     *
-     * @param  {object} fund  - the fund information.
-     *
-     * @return {Promise<any>}
+     * Get Company name
+     * @param {string} name
      */
-    public getFundDashboardData(fund: any): Promise<any> {
-        /* Return a promise. */
-        return new Promise((resolve, reject) => {
-            /* Ok, let's build the request to get the NAV list... */
-            let navRequest = {
-                fundname: fund.asset,
-                navdate: null,
-                status: 0,
-                pagenum: 0,
-                pagesize: 1
-            };
-            console.log(' |--- Get Fund Dash Data');
+    getAssetsByCompanyName(name: string): string {
+        /* Variables. */
+        let load = {};
 
-            /* Return data. */
-            let oReturn: any = {};
+        /* If no name. */
+        if (!name) return load;
 
-            /* ...and send it. */
-            this.ofiAmDashboardService.buildRequest({
-                'taskPipe': this.ofiNavService.requestNavList(navRequest)
-            }).then((response) => {
-                console.log(' | success: ', response);
-                /* Success, let's set the NAV. */
-                oReturn.nav = response[1].Data[0];
-                delete oReturn.nav.Status;
-                oReturn.nav.navDate = oReturn.nav.navDate.split(' ')[0];
+        /* Check if all. */
+        if (name == "All") {
+            for (const cname in this.fundAssetList) {
+                if (cname == "null") continue;
+                for (const asset in this.fundAssetList[cname]) {
+                    load[asset] = this.fundAssetList[cname][asset];
+                }
+            }
+        }
+        /* ...else individual. */
+        else {
+            for (const cname in this.fundAssetList) {
+                if (cname == "null") continue;
+                if (cname == name) {
+                    for (const asset in this.fundAssetList[cname]) {
+                        load[asset] = this.fundAssetList[cname][asset];
+                    }
+                }
+            }
+        }
 
-                console.log(' | fund: ', fund.asset);
-                /* Split asset name... */
-                let assetParts = fund.asset.split('|');
-
-                /* Request holders of this fund. */
-                this.requestWalletIssueHolding(assetParts[0], assetParts[1], fund.walletId).then((response) => {
-                    /* Get the list of holders. */
-                    let
-                        holdersList = response[1].data['holders'],
-                        key, addresses = [];
-
-                    /* Push all the keys (addresses) into an array */
-                    for (key in holdersList) addresses.push(key);
-
-                    /* Request all the wallet IDs of these addresses. */
-                    this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response) => {
-                        console.log(' | > getWalletIdsByAddresses response: ', response);
-                        let walletIdList = response[1].Data;
-
-                        /* Now let's map the holders to wallets. */
-                        console.log(' | ~ map: ', this.walletDirectoryList, walletIdList);
-                        let
-                            key,
-                            id,
-                            i: number,
-                            finalHoldersList = [],
-                            numberOfUnits = 0;
-
-                        /* For each wallet, loop the directory list and find it... */
-                        i = 0;
-                        for (key in walletIdList) {
-                            for (id in this.walletDirectoryList) {
-                                /* ...check if we've found it... */
-                                if (this.walletDirectoryList[id].commuPub === walletIdList[key].commuPub) {
-                                    /* ...if we have, push a nice object into the array. */
-                                    finalHoldersList.push({
-                                        'walletName': this.walletDirectoryList[id].walletName,
-                                        'amount': (this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])),
-                                        'quantity': this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
-                                    });
-                                    /* Add to total number of units. */
-                                    numberOfUnits += holdersList[Object.keys(holdersList)[i]];
-                                }
-                            }
-
-                            /* Inc the position, keeps us inline with the original holders list array. */
-                            i++;
-                        }
-
-                        /* Set he number of holdings. */
-                        oReturn['units'] = this._numberConverterService.toFrontEnd(numberOfUnits);
-                        oReturn.nav.price = this._numberConverterService.toFrontEnd(oReturn.nav.price);
-
-                        /* For each holder, let's figure out  */
-                        let finalHolder: any;
-                        for (finalHolder in finalHoldersList) {
-                            finalHoldersList[finalHolder]['ratio'] = (100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity'];
-                        }
-
-                        /* Assign them to the return. */
-                        oReturn['holders'] = finalHoldersList;
-
-                        /* Workout the graph data. */
-                        oReturn['graphData'] = [];
-                        oReturn['graphLabels'] = [];
-                        let returnHolder: any;
-                        for (returnHolder in oReturn['holders']) {
-                            oReturn['graphData'].push(oReturn['holders'][returnHolder]['ratio']);
-                            oReturn['graphLabels'].push(oReturn['holders'][returnHolder]['walletName']);
-                        }
-
-
-                        /* Resolve the original promise. */
-                        resolve(oReturn);
-                    }).catch((error) => {
-                        console.log(' | > getWalletIdsByAddresses error: ', error);
-                    })
-                    console.log(" | holdersList: ", holdersList);
-
-
-                }).catch((error) => {
-                    console.log(" | error: ", error);
-                });
-            }).catch((error) => {
-                /* Handle error. */
-                console.warn(' | error: ', error);
-                reject(false);
-            })
-
-            /* Return. */
-            return;
-        });
+        /* Load. */
+        return load;
     }
-
 
     /**
      * Request Wallet Issue Holding
@@ -370,36 +329,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletHolding());
-            console.log(InitialisationService.requestWalletHolding);
-
+            console.log('this.connectedWalletId', this.connectedWalletId);
             InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
-    }
-
-    /**
-     * Get Fund By Id
-     * --------------
-     * Get's a fund by Id.
-     *
-     * @param {number} id - the fund ID.
-     *
-     * @return {object} - the fund wanted.
-     */
-    private getFundById(id): any {
-        /* Variables. */
-        let userAsset;
-
-        /* Loop over each fund... */
-        for (userAsset of this.userAssetList) {
-            /* ...if this is the one, breaking will leave userAsset as it... */
-            if (userAsset.asset == id) break;
-
-            /* ... if not, set to false in case there are no more. */
-            userAsset = false;
-        }
-
-        /* Return whatever we found. */
-        return userAsset;
     }
 
     /**

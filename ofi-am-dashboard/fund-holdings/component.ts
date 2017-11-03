@@ -104,7 +104,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         /* Subscribe for wallet holdings by address. */
-        this.subscriptions['wallet-holdings-by-address'] = this.walletHoldingsOb.subscribe((holdingsList) => {
+        this.subscriptions['wallet-holdings-by-asset'] = this.walletHoldingsOb.subscribe((holdingsList) => {
             /* Assign list to a property. */
             this.walletHoldingsByAddress = holdingsList;
         });
