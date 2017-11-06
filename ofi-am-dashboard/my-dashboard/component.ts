@@ -217,10 +217,15 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Now let's sort the assets. */
         this.fundStats.assets = [];
         for (const asset in assets) {
+            /* Continue if we don't have the holdings for this wallet. */
             if (!this.walletHoldingsByAsset[this.connectedWalletId]) continue;
+
+            /*  Get holdings. */
             holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
             console.log(" | holdings: ", holdings);
             console.log(" | asset: ", assets[asset]);
+
+
             if (holdings) {
                 this.fundStats.assets.push({
                     'asset': asset.split('|')[1],

@@ -28,6 +28,12 @@ export const getOfiHomeOrderViewBuffer = createSelector(
     }
 );
 
+export const getOfiHomeOrderViewFilter = createSelector(
+    getOfiHomeOrders,
+    (state: HomeOrders): string => {
+        return state.orderFilter
+    }
+);
 
 export const getOfiHomeOrderList = createSelector(
     getOfiHomeOrders,

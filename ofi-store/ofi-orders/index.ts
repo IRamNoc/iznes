@@ -32,6 +32,8 @@ export {
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
     OFI_RESET_HOME_ORDER_BUFFER,
+    OFI_SET_HOME_ORDER_FILTER,
+    OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderList,
     getOfiHomeOrderViewBuffer,
 } from './home-orders';

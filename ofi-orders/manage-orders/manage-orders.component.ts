@@ -94,10 +94,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb:any;
+    @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ofiCorpActionService: OfiCorpActionService,
@@ -187,13 +188,36 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }, 100);
         });
 
+        /* Subscribe for the order filter. */
+        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
+            /* Check if we have a filter set. */
+            console.log(' | preset filter: ', filter);
+            setTimeout(() => {
+                if (filter != '' && this.ordersList.length) {
+                    /* If we do, then let's patch the form value... */
+                    console.log(' | preset filter: ', filter);
+                    this.tabsControl[0].searchForm.controls.status.patchValue(
+                        this.getStatusByName(filter) // resolve the status
+                    );
+
+                    /* ...also, reset the filter... */
+                    this.ofiOrdersService.resetOrderFilter();
+
+                    /* ...and update the view. */
+                    this.getOrdersBySearch();
+
+                    /* Detect changes. */
+                    this.changeDetectorRef.detectChanges();
+                }
+            }, 100);
+        });
 
         /* State. */
         let state = this.ngRedux.getState();
 
         /* Check if we need to request the user issued assets. */
         let userIssuedAssetsList = getOfiUserIssuedAssets(state);
-        if ( ! userIssuedAssetsList.length ) {
+        if (!userIssuedAssetsList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
@@ -203,6 +227,27 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.warn('Failed to get your issued assets: ', error);
             });
         }
+    }
+
+    /**
+     * getStatusByName
+     * @param requestedName
+     */
+    public getStatusByName(requestedName: string): Array<{ id: number, text: string }> {
+        /* Variables. */
+        let finds = [];
+
+        /* Let's see if we can find the status. */
+        for (const status of this.orderStatuses) {
+            if (status.text.toLowerCase() == requestedName) {
+                finds.push(status);
+                break;
+            }
+        }
+
+        /* Return. */
+        console.log(finds);
+        return finds;
     }
 
     /**
@@ -658,7 +703,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return formatString
             .replace('YYYY', dateObj.getFullYear().toString())
             .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
             .replace('DD', this.numPad(dateObj.getDate().toString()))
             .replace('hh', this.numPad(dateObj.getHours()))
             .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))

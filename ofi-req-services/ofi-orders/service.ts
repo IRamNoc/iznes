@@ -14,6 +14,8 @@ import {
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
     OFI_RESET_HOME_ORDER_BUFFER,
+    OFI_SET_HOME_ORDER_FILTER,
+    OFI_RESET_HOME_ORDER_FILTER,
     setRequestedCollectiveArchive,
     SET_COLLECTIVE_ARCHIVE
 } from '../../ofi-store';
@@ -225,8 +227,40 @@ export class OfiOrdersService {
     public resetOrderBuffer(): void {
         /* Dispatch the event. */
         this.ngRedux.dispatch({
-            'type': OFI_SET_HOME_ORDER_BUFFER,
-            'payload': -1
+            'type': OFI_RESET_HOME_ORDER_BUFFER,
+            'payload': -1,
+        });
+    }
+
+    /**
+     * Set Order Filter
+     * ------------------
+     * Sets the order filter.
+     *
+     * @param {string} filter - the order id.
+     *
+     * @return {void}
+     */
+    public setOrderFilter(filter: string): void {
+        /* Dispatch the event. */
+        this.ngRedux.dispatch({
+            'type': OFI_SET_HOME_ORDER_FILTER,
+            'payload': filter
+        });
+    }
+
+    /**
+     * Reset Order Filter
+     * ------------------
+     * Sets the order filter to ''.
+     *
+     * @return {void}
+     */
+    public resetOrderFilter(): void {
+        /* Dispatch the event. */
+        this.ngRedux.dispatch({
+            'type': OFI_RESET_HOME_ORDER_FILTER,
+            'payload': '',
         });
     }
 
