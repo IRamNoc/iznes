@@ -28,6 +28,7 @@ import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-navigation-topbar',
