@@ -47,14 +47,14 @@ export class OfiPostTxService implements OnDestroy {
 
         const needHandle = lastCreated.needHandle;
         const inBlockchain = lastCreated.inBlockchain;
-        console.log('needHandle', needHandle);
-        console.log('inBlockchain', inBlockchain);
+        // console.log('needHandle', needHandle);
+        // console.log('inBlockchain', inBlockchain);
 
         const actionType = _.get(lastCreated, 'metaData.actionType');
-        console.log('actionType', actionType);
+        // console.log('actionType', actionType);
 
         if (actionType === 'ofi-create-new-share') {
-            console.log('handleLastCreatedIssuer', lastCreated);
+            // console.log('handleLastCreatedIssuer', lastCreated);
             const currentStep = _.get(lastCreated, 'metaData.arrangementData.currentStep');
             if (needHandle && inBlockchain) {
                 if (currentStep === 'saveRegisterAsset') {
@@ -173,7 +173,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('1) saveNewWallet : success', data); // success
+                // console.log('1) saveNewWallet : success', data); // success
                 const walletID = data[1].Data[0].walletID;
                 requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID = walletID;
                 this.saveNewWalletPermission(requestData);
@@ -198,7 +198,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('2) saveNewWalletPermission : success', data); // success
+                // console.log('2) saveNewWalletPermission : success', data); // success
                 setTimeout(() => {
                     this.saveNewAddress(requestData);
                 }, 2000);
@@ -219,7 +219,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('3) saveNewAddress : success', data); // success
+                // console.log('3) saveNewAddress : success', data); // success
                 const address = data[1].data.address;
                 requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address = address;
                 this.saveRegisterIssuer(requestData);
@@ -243,7 +243,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('4) saveRegisterIssuer : success', data); // success
+                // console.log('4) saveRegisterIssuer : success', data); // success
                 this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
                     actionType: 'ofi-create-new-share',
                     arrangementData: {
@@ -278,7 +278,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('5) saveRegisterAsset : success', data); // success
+                // console.log('5) saveRegisterAsset : success', data); // success
                 this.saveCoupon(requestData);
             },
             (data) => {
@@ -303,7 +303,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('6) saveCoupon : success', data); // success
+                // console.log('6) saveCoupon : success', data); // success
                 this.saveIssueAssetMap(requestData);
             },
             (data) => {
@@ -325,7 +325,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                console.log('7) saveIssueAssetMap : success', data); // success
+                // console.log('7) saveIssueAssetMap : success', data); // success
                 const nbShares = requestData.metaData.arrangementData.sharesList.length;
                 if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
                     requestData.metaData.arrangementData.currentShare++;
