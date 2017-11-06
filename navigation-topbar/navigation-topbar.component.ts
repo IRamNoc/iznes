@@ -80,7 +80,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         this.appConfig = appConfig;
         this.showCountdownModal = false;
-        this.showSessionExpiredModal = false;
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -153,12 +152,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
             (memberNodeSessionManager) => {
-                const startCountDown = _.get(memberNodeSessionManager, 'startCountDown', 0);
-                if (startCountDown) {
-                    this.showCountdownModal = true;
-                } else {
-                    this.showCountdownModal = false;
-                }
+                this.showCountdownModal = _.get(memberNodeSessionManager, 'startCountDown', 0);
 
                 const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
                 this.remainingSecond = remainingSecond;
