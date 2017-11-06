@@ -14,3 +14,13 @@ export const OFI_SET_HOME_ORDER_BUFFER = `${name}/OFI_SET_HOME_ORDER_BUFFER`;
  * Reset the order buffer.
  */
 export const OFI_RESET_HOME_ORDER_BUFFER = `${name}/OFI_RESET_HOME_ORDER_BUFFER`;
+
+/**
+ * Set the order filter
+ */
+export const OFI_SET_HOME_ORDER_FILTER = `${name}/OFI_SET_HOME_ORDER_FILTER`;
+
+/**
+ * Reset the order filter.
+ */
+export const OFI_RESET_HOME_ORDER_FILTER = `${name}/OFI_RESET_HOME_ORDER_FILTER`;

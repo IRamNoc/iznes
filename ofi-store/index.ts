@@ -84,6 +84,8 @@ export {
     /* Home orders buffer */
     OFI_SET_HOME_ORDER_BUFFER,
     OFI_RESET_HOME_ORDER_BUFFER,
+    OFI_SET_HOME_ORDER_FILTER,
+    OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderViewBuffer,
 
     /* My orders */
