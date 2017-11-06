@@ -31,7 +31,7 @@ import {
 
 /* Types. */
 interface SelectedItem {
-    id: number | string;
+    id: any;
     text: number | string;
 }
 
@@ -195,12 +195,13 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * getStatusByName
      * @param requestedName
      */
-    public getStatusByName(requestedName: string): Array<{ id: number, text: string }> {
+    public getStatusByName(requestedName: string): Array<SelectedItem> {
         /* Variables. */
         let finds = [];
 
         /* Let's see if we can find the status. */
-        for (const status of this.orderStatuses) {
+        let status: any;
+        for (status of this.orderStatuses) {
             if (status.text.toLowerCase() == requestedName) {
                 finds.push(status);
                 break;
