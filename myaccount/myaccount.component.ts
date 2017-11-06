@@ -171,7 +171,7 @@ export class SetlMyAccountComponent {
 
         this.updateState();
 
-        this.getMyFirstname.subscribe((getMyFirstname) => this.myFirstName(getMyFirstname));
+        // this.getMyFirstname.subscribe((getMyFirstname) => this.myFirstName(getMyFirstname));
         this.getUserDetails.subscribe((getUserDetails) => this.myUserDetails(getUserDetails));
     }
 
@@ -186,7 +186,7 @@ export class SetlMyAccountComponent {
     }
 
     changePass(formValues){
-        console.log(formValues);
+        // console.log(formValues);
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
             oldPassword: formValues.oldPassword,
@@ -201,10 +201,10 @@ export class SetlMyAccountComponent {
                 asyncTaskPipe,
                 {},
                 (data) => { // anonymous : don't' loose this context
-                    console.clear();
-                    console.log('success: ');
-                    console.log(data); // success
-                    console.log(data[1].Data[0].Token); // token
+                    // console.clear();
+                    // console.log('success: ');
+                    // console.log(data); // success
+                    // console.log(data[1].Data[0].Token); // token
                     this.changePassForm.reset();
                     this.alertsService.create('success', `
                         Your password has been successfully changed!
@@ -222,12 +222,12 @@ export class SetlMyAccountComponent {
 
         const myDetails = getMyDetail(newState);
 
-        console.log(newWalletId);
-        console.log(myDetails);
+        // console.log(newWalletId);
+        // console.log(myDetails);
     }
 
-    myFirstName(firstName){
-        console.log(firstName);
+    myFirstName(firstName) {
+        // console.log(firstName);
     }
 
     myUserDetails(userDetails){
@@ -241,14 +241,14 @@ export class SetlMyAccountComponent {
         if(userDetails.address3) this.address3.setValue(userDetails.address3);
         if(userDetails.address4) this.address4.setValue(userDetails.address4);
         if(userDetails.postalCode) this.postalCode.setValue(userDetails.postalCode);
-        if(userDetails.country) this.country.setValue([userDetails.country]); // array for ng-select
+        if(userDetails.country) this.country.setValue([{text: userDetails.country, id: userDetails.country}]); // array for ng-select
         if(userDetails.memorableQuestion) this.memorableQuestion.setValue(userDetails.memorableQuestion);
         if(userDetails.memorableAnswer) this.memorableAnswer.setValue(userDetails.memorableAnswer);
         if(userDetails.profileText) this.profileText.setValue(userDetails.profileText);
     }
 
     submitDetails(formValues) {
-        console.log(formValues);
+        // console.log(formValues);
 
         const asyncTaskPipe = this.myUserService.saveMyUserDetails({
             displayName: formValues.displayName,
@@ -270,13 +270,14 @@ export class SetlMyAccountComponent {
         // Get response from set active wallet
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            function (data) {
-                console.log('success: ');
-                console.log(data); // success
+            (data) => {
+                // console.log('success: ', data);
+                this.alertsService.create('success', `Your form has been saved successfully!`);
+
             },
-            function (data) {
-                console.log('error: ');
-                console.log(data); // error
+            (data) => {
+                // console.log('error: ', data);
+                this.alertsService.create('error', JSON.stringify(data));
             })
         );
     }

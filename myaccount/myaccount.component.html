@@ -90,7 +90,7 @@
                             <div *ngIf="postalCode.hasError('required') && postalCode.touched" class="alert alert-danger" mltag="txt_postalcoderequired">Postal Code is required</div>
                             <div *ngIf="!postalCode.valid && postalCode.touched && !postalCode.hasError('required')" class="alert alert-danger" mltag="txt_postalcodeinvalid">Postal Code is not valid</div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="form-group col-sm-6">
                             <div class="form-group">
                                 <label mltag="txt_country">Country</label>
                             </div>
@@ -126,6 +126,11 @@
                         </div>
                     </div>
                     <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid" mltag="txt_send">Send</button>
+                    <button type="reset" class="btn btn-warning" mltag="txt_reset">Reset</button>
+                    <!--<div class="margin-20">-->
+                        <!--<pre>form valid: {{userDetailsForm.valid | json}}</pre>-->
+                        <!--<pre>form values: {{userDetailsForm.value | json}}</pre>-->
+                    <!--</div>-->
                 </form>
             </section>
         </clr-tab-content>
