@@ -31,7 +31,7 @@ import {
 
 /* Types. */
 interface SelectedItem {
-    id: number | string;
+    id: any;
     text: number | string;
 }
 
