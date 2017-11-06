@@ -36,7 +36,7 @@ export class WalletNodeSocketService {
                 if (this.websocket) {
                     // toast('Wallet Node Connection', 'Wallet Node Closed', 'info');
                     console.log('reconnect to wallet node');
-                    setTimeout(this.websocket.openWebSocket, 2000);
+                    setTimeout(() => this.websocket.openWebSocket(), 2000);
                 }
             }, {}
         );
