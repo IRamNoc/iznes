@@ -47,7 +47,7 @@ node {
         }
 
         stage ('Restart Node Server'){
-            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps ; bash && killall node\''
+            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps ; bash && supervisorctl restart node-server\''
         }
 
     } catch (e) {
