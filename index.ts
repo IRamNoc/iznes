@@ -20,6 +20,8 @@ export {
     getConnected,
     getConnectedChain,
     getConnectedWallet,
+    setMembernodeSessionManager,
+    resetMembernodeSessionManager,
 
     // site settings
     setLanguage
