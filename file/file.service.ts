@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {AddFileMessageBody} from './file.service.model';
+import {AddFileMessageBody, GetHistoricalCsvMessageBody} from './file.service.model';
 import {select} from '@angular-redux/store';
 import _ from 'lodash';
 
@@ -30,6 +30,19 @@ export class FileService {
             token: this.memberSocketService.token,
             walletId: this.connectedWallet,
             files: _.get(requestData, 'files', [])
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getHistoricalCsv(dateFrom: string, dateTo: string): any {
+        const messageBody: GetHistoricalCsvMessageBody = {
+            RequestName: 'historicalcsv',
+            token: this.memberSocketService.token,
+            walletId: this.connectedWallet,
+            dateFrom: dateFrom,
+            dateTo: dateTo
+
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
