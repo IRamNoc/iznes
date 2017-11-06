@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -6,8 +6,17 @@ import {
     LoginRequestMessageBody,
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
-    SaveNewPasswordRequestBody
+    SaveNewPasswordRequestBody,
+    RefreshTokenRequestBody
 } from './my-user.service.model';
+import {NgRedux} from '@angular-redux/store';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
+import {Subscription} from 'rxjs/Subscription';
+import {
+    setMembernodeSessionManager,
+    resetMembernodeSessionManager
+} from '@setl/core-store';
 
 interface LoginRequestData {
     username: string;
@@ -36,10 +45,47 @@ interface NewPasswordData {
     newPassword: string;
 }
 
+// const TIMEOUT = 14 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 1000;
+
 @Injectable()
-export class MyUserService {
+export class MyUserService implements OnDestroy {
+    subscriptionsArray: Array<Subscription>;
 
     constructor(private memberSocketService: MemberSocketService) {
+        this.subscriptionsArray = [];
+    }
+
+    defaultRefreshToken(ngRedux: NgRedux<any>) {
+        const asynTask = this.refreshToken();
+
+        ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asynTask,
+            (data) => {
+                // clear timer
+                this.ngOnDestroy();
+
+                ngRedux.dispatch(resetMembernodeSessionManager());
+
+                const timer = Observable.timer(TIMEOUT, 1000);
+                // // subscribing to a observable returns a subscription object
+                this.subscriptionsArray.push(timer.subscribe((t) => {
+                    if (t > 60) {
+                        this.ngOnDestroy();
+                    } else {
+                        ngRedux.dispatch(setMembernodeSessionManager(t));
+                    }
+                }));
+            },
+            (data) => {
+                throw new Error('Fail to refresh session token');
+            }));
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 
     loginRequest(loginData: LoginRequestData): any {
@@ -91,6 +137,15 @@ export class MyUserService {
             token: this.memberSocketService.token,
             oldPassword: userData.oldPassword,
             newPassword: userData.newPassword
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    refreshToken(): any {
+        const messageBody: RefreshTokenRequestBody = {
+            RequestName: 'extendsession',
+            token: this.memberSocketService.token
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
