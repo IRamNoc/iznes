@@ -45,7 +45,8 @@ interface NewPasswordData {
     newPassword: string;
 }
 
-const TIMEOUT = 14 * 60 * 1000;
+// const TIMEOUT = 14 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 1000;
 
 @Injectable()
 export class MyUserService implements OnDestroy {
