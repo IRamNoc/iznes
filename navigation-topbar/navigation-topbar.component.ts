@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Output, EventEmitter, Inject, ChangeDetectionStrategy,
-    ChangeDetectorRef, AfterViewInit
+    ChangeDetectorRef, AfterViewInit, OnDestroy
 } from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {
@@ -21,13 +21,13 @@ import {
     MyWalletsService,
     WalletNodeRequestService,
     InitialisationService,
-    MyMessagesService
+    MyMessagesService,
+    MyUserService
 } from '@setl/core-req-services';
 import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
-
-// setActiveWallet
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -35,7 +35,7 @@ import {WalletNodeSocketService} from '@setl/websocket-service';
     styleUrls: ['./navigation-topbar.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavigationTopbarComponent implements OnInit, AfterViewInit {
+export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     walletSelectItems: Array<any>;
     searchForm: FormGroup;
@@ -43,7 +43,13 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
 
     connectedToWalletNode: boolean;
 
+    remainingSecond: number;
+    showCountdownModal: boolean;
+
     appConfig: AppConfig;
+
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
 
     public hasMail = {};
 
@@ -54,12 +60,15 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
 
     @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
+    @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private myWalletsService: MyWalletsService,
                 private messageService: MyMessagesService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private fb: FormBuilder,
+                private router: Router,
+                private _myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
@@ -70,9 +79,12 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
         this.connectedToWalletNode = false;
 
         this.appConfig = appConfig;
+        this.showCountdownModal = false;
+        this.showSessionExpiredModal = false;
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+
     }
 
 
@@ -104,7 +116,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
             this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey).then(() => {
                 // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
 
-
                 if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
                     this.selectedWalletId.setValue([this.walletSelectItems[0]], {
                         onlySelf: true,
@@ -124,20 +135,48 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+
     }
 
     ngAfterViewInit() {
-        this.requestMailInitial.subscribe(
+        this.subscriptionsArray.push(this.requestMailInitial.subscribe(
             (requestedState) => {
                 this.requestMailInitialCounts(requestedState);
             }
-        );
+        ));
 
-        this.inboxUnread.subscribe(
+        this.subscriptionsArray.push(this.inboxUnread.subscribe(
             (unreadMessages) => {
                 this.triggerUnreadMessages(unreadMessages);
             }
-        );
+        ));
+
+        this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
+            (memberNodeSessionManager) => {
+                const startCountDown = _.get(memberNodeSessionManager, 'startCountDown', 0);
+                if (startCountDown) {
+                    this.showCountdownModal = true;
+                } else {
+                    this.showCountdownModal = false;
+                }
+
+                const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
+                this.remainingSecond = remainingSecond;
+
+                if (remainingSecond <= 0) {
+                    this.router.navigateByUrl('');
+                    this.logout();
+                }
+
+                this.changeDetectorRef.detectChanges();
+            }
+        ));
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 
     public triggerUnreadMessages(unreadMessages) {
@@ -211,6 +250,10 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit {
             ));
 
         }
+    }
+
+    handleExtendSession() {
+        this._myUserService.defaultRefreshToken(this.ngRedux);
     }
 }
 
