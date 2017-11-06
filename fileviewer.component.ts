@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {select, NgRedux} from '@angular-redux/store';
 import {Http} from '@angular/http';
@@ -10,13 +10,14 @@ import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 @Component({
     selector: 'setl-file-viewer',
     templateUrl: 'fileviewer.component.html',
-    styleUrls: ['fileviewer.component.css']
+    styleUrls: ['fileviewer.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class FileViewerComponent implements OnInit {
     @Input() fileHash: string = null;
     @Input() pdfId: string = null;
-    public token: string =  null;
+    public token: string = null;
     public userId: string = null;
     public walletId: string = null;
     public fileUrl: SafeResourceUrl = null;
@@ -29,17 +30,17 @@ export class FileViewerComponent implements OnInit {
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
+
     /**
      * Constructor
      */
-    public constructor (
-        private alertsService: AlertsService,
-        private http: Http,
-        private memberSocketService: MemberSocketService,
-        private sanitizer: DomSanitizer,
-        private pdfService: PdfService,
-        private ngRedux: NgRedux<any>
-    ) {
+    public constructor(private alertsService: AlertsService,
+                       private http: Http,
+                       private memberSocketService: MemberSocketService,
+                       private sanitizer: DomSanitizer,
+                       private pdfService: PdfService,
+                       private changeDetectorRef: ChangeDetectorRef,
+                       private ngRedux: NgRedux<any>) {
         this.token = this.memberSocketService.token;
         this.getUser.subscribe(
             (data) => {
@@ -52,6 +53,7 @@ export class FileViewerComponent implements OnInit {
             }
         );
     }
+
     /**
      * On Init
      *
@@ -88,6 +90,7 @@ export class FileViewerComponent implements OnInit {
             '&token=' + this.token +
             '&fileHash=' + this.fileHash;
     }
+
     /**
      * Open File Modal
      *
@@ -120,12 +123,15 @@ export class FileViewerComponent implements OnInit {
                     this.fileName = data.fileName;
                     this.fileType = data.mimeType;
                 }
+
+                this.changeDetectorRef.markForCheck();
             },
             err => {
                 this.showAlert(err, 'error');
             }
         );
     }
+
     /**
      * Close File Modal
      *
@@ -134,6 +140,7 @@ export class FileViewerComponent implements OnInit {
     public closeFileModal() {
         this.fileModal = false;
     }
+
     /**
      * Show Alert
      *
@@ -153,6 +160,7 @@ export class FileViewerComponent implements OnInit {
               </table>
           `);
     }
+
     /**
      * Get PDF
      *
