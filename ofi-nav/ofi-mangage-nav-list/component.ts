@@ -125,7 +125,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         this.tabDetail = {
             title: {
                 text: 'Manage NAV',
-                icon: '<i class="fa fa-industry">'
+                icon: 'fa-industry'
             }
         };
 
