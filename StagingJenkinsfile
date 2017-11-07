@@ -2,59 +2,62 @@ node {
 
 }
 def notifySlack(String buildStatus = 'STARTED') {
-  // Build status of null means success.
-  buildStatus = buildStatus ?: 'SUCCESS'
+    // Build status of null means success.
+    buildStatus = buildStatus ?: 'SUCCESS'
 
-  def color
+    def color
 
-  if (buildStatus == 'STARTED') {
-    color = '#0000CD'
-  } else if (buildStatus == 'SUCCESS') {
-    color = '#008000'
-  } else if (buildStatus == 'UNSTABLE') {
-    color = '#FFFF00'
-  } else {
-    color = '#FF0000'
-  }
-  def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-  slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
+    if (buildStatus == 'STARTED') {
+        color = '#0000CD'
+    } else if (buildStatus == 'SUCCESS') {
+        color = '#008000'
+    } else if (buildStatus == 'UNSTABLE') {
+        color = '#FFFF00'
+    } else {
+        color = '#FF0000'
+    }
+    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+    slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
 }
 
 node {
-  timestamps {
-    try {
-      notifySlack()
+    timestamps {
+        try {
+            notifySlack()
 
-        stage('Deploy Frontend to Test Environment'){
-            node{
-                sh '''
-              ssh root@172.104.147.135 mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
-              ssh root@172.104.147.135 mkdir /var/www_setltestnet && 
-              scp -pr /var/lib/jenkins/Deploy/dist/*  root@172.104.147.135:/var/www_setltestnet'''
+            stage('Deploy Frontend to Test Environment'){
+                node{
+                    sh '''
+              ssh jenkins@172.104.147.135 sudo mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
+              ssh jenkins@172.104.147.135 sudo mkdir /var/www_setltestnet && 
+              ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/www_setltestnet &&
+              scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
+                }
             }
-        }
-        stage('Deploy Backend to Test Environment') {
-            node {
-                sh '''
-                            ssh root@172.104.147.135 mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
-                            ssh root@172.104.147.135 mkdir /var/phpapps/backend && 
-                            scp -pr /var/lib/jenkins/Deploy/backend/*  root@172.104.147.135:/var/phpapps/backend'''
+            stage('Deploy Backend to Test Environment') {
+                node {
+                    sh '''
+                            ssh -t jenkins@172.104.147.135 sudo mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
+                            ssh -t jenkins@172.104.147.135 sudo mkdir /var/phpapps/backend && 
+                            ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/phpapps &&
+                            scp -pr /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
+                }
             }
-        }
 
-        stage ('Update Dependencies'){
-            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
-        }
+            stage ('Update Dependencies'){
+                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
+            }
 
-        stage ('Restart Node Server'){
-            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps ; bash && supervisorctl restart node-server\''
-        }
+            stage ('Restart Node Server'){
+                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo supervisorctl restart node-server\''
+            }
 
-    } catch (e) {
-      currentBuild.result = 'FAILURE'
-      throw e
-    } finally {
-      notifySlack(currentBuild.result)
+        } catch (e) {
+            currentBuild.result = 'FAILURE'
+            throw e
+        } finally {
+            notifySlack(currentBuild.result)
+        }
     }
-  }
 }
+
