@@ -13,9 +13,9 @@ export class CommonService {
         const currentTimeStamp = mDateHelper.getCurrentUnixTimestamp();
 
         // Cutoff
-        const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscription_cut-off'], 0);
+        const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOff'], 0);
         const sCutoffDate = mDateHelper.addDay(new Date(), sCutOffOffset);
-        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscription_cut-off_hour'], 0) + ':00';
+        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOffHour'], 0) + ':00';
         const sCutoffDateStr = mDateHelper.unixTimestampToDateStr(sCutoffDate, 'YYYY-MM-DD');
         let sCutoffDateTimeStr = sCutoffDateStr + ' ' + sCutoffTime;
         let sCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -26,9 +26,9 @@ export class CommonService {
         }
 
 
-        const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemption_cut-off'], 0);
+        const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemptionCutOff'], 0);
         const rCutoffDate = mDateHelper.addDay(new Date(), rCutOffOffset);
-        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemption_cut-off_hour'], 0) + ':00';
+        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemptionCutOffHour'], 0) + ':00';
         const rCutoffDateStr = mDateHelper.unixTimestampToDateStr(rCutoffDate, 'YYYY-MM-DD');
         let rCutoffDateTimeStr = rCutoffDateStr + ' ' + rCutoffTime;
         let rCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -39,7 +39,7 @@ export class CommonService {
         }
 
         // known nav
-        const knownNav = Number(immutableHelper.get(shareData, ['metaData', 'known_nav'], 0)) === 1;
+        const knownNav = Number(immutableHelper.get(shareData, ['metaData', 'knownNav', '0', 'id'], 0)) === 1;
 
         // Valuation
         let sValuationDate = 0;
@@ -64,7 +64,7 @@ export class CommonService {
 
 
         // settlement
-        const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlement_date'], 0);
+        const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlementDate'], 0);
         const sSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
 
         const rSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
@@ -105,20 +105,20 @@ export class CommonService {
             '3': 'both'
         };
 
-        const sAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'form_of_subscription_select'], 3);
+        const sAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'formOfsubscription', '0', 'id'], 3);
         const sAllowType = typeDef[sAllowTypeNum];
 
-        const rAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'form_of_redemption_select'], 3);
+        const rAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'formOfRedemption', '0', 'id'], 3);
         const rAllowType = typeDef[rAllowTypeNum];
 
         // decimalisation
-        const decimalisation = Number(immutableHelper.get(shareData, ['metaData', 'decimalisation_select'], 0));
+        const decimalisation = Number(immutableHelper.get(shareData, ['metaData', 'decimalisation', '0', 'id'], 0));
 
         // min value
-        const sMinValue = Number(immutableHelper.get(shareData, ['metaData', 'min_subscription_value'], 0));
+        const sMinValue = Number(immutableHelper.get(shareData, ['metaData', 'minSubscriptionvalue'], 0));
 
         // min unit
-        const sMinUnit = Number(immutableHelper.get(shareData, ['metaData', 'min_init_subscription'], 0));
+        const sMinUnit = Number(immutableHelper.get(shareData, ['metaData', 'minInitSubscription'], 0));
 
         // nav
         const nav = this._numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));

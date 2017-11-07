@@ -99,10 +99,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 isin: item.getIn(['metaData', 'isin'], ''),
                 fundName: item.getIn(['shareName'], ''),
                 nav: item.getIn(['price'], 0),
-                currency: item.getIn(['metaData', 'portfolio_currency_select'], ''),
-                mainClass: item.getIn(['metaData', 'asset_class_select'], ''),
-                subClass: item.getIn(['metaData', 'sub_class_of_asset_select'], ''),
-                geographic: item.getIn(['metaData', 'geographical_area_select'], '')
+                currency: item.getIn(['metaData', 'portfolioCurrency', '0', 'text'], ''),
+                mainClass: item.getIn(['metaData', 'assetClass', '0', 'text'], ''),
+                subClass: item.getIn(['metaData', 'subAssetClass', '0', 'text'], ''),
+                geographic: item.getIn(['metaData', 'geographicalArea', '0', 'text'], '')
             });
 
             return result;
