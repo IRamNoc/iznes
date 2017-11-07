@@ -11,6 +11,7 @@ import {OfiPnlReportComponent} from './ofi-pnl-report/component';
 import {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {ActionDirection} from './pnlHelper/class';
+import {OfiManageCsvComponent} from "./ofi-csv-report/component";
 
 @Pipe({name: 'txType'})
 export class TxTypePipe implements PipeTransform {
@@ -38,7 +39,7 @@ export class TxTypePipe implements PipeTransform {
         SetlDirectivesModule
     ],
     exports: [],
-    declarations: [OfiTaxReportComponent, OfiPnlReportComponent, OfiCollectiveArchiveComponent, TxTypePipe],
+    declarations: [OfiTaxReportComponent, OfiPnlReportComponent, OfiCollectiveArchiveComponent, TxTypePipe, OfiManageCsvComponent],
     providers: [],
 })
 export class OfiReportModule {
