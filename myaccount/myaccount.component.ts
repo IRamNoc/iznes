@@ -107,7 +107,7 @@ export class SetlMyAccountComponent {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.pattern(/^[a-zA-Z0-9]{5}$/)
+                    //Validators.pattern(/^[a-zA-Z0-9]{5}$/)
                 ])
             ),
             'country': new FormControl(
