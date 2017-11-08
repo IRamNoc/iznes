@@ -98,13 +98,13 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.currentUserDetails = getMyDetail(newState);
         this.username = this.currentUserDetails.firstName;
 
-        if (this.username === '') {
+        if (this.username === '' || this.username === null) {
             this.username = this.currentUserDetails.username;
         }
 
         this.lastLogin = this.currentUserDetails.lastLogin;
 
-        if (this.lastLogin === '') {
+        if (this.lastLogin === '' || this.lastLogin === null) {
             this.lastLogin = 'Never';
         }
 
