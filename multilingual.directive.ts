@@ -69,6 +69,7 @@ export class MultilingualDirective implements AfterViewInit {
             switch (tagname) {
                 /* Inputs need their placeholder changed. */
                 case 'input':
+                case 'ng-select':
                     this.el.nativeElement.setAttribute('placeholder', translation);
                     break;
 
