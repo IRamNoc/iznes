@@ -97,6 +97,7 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
             thisConnection.sendRequest(request, (errorCode, data) => {
                 const status = _.get(data, 'status', 'Fail');
                 // No error code and status is ok -> success.
+                console.log('walletnode response: ', data);
                 if (status === 'OK') {
                     // success
                     resolve([errorCode, data]);
