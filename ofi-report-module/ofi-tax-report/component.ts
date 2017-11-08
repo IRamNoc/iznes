@@ -66,19 +66,13 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
     // The related subscription txs that we want to check of particular redemption.
     relatedRedemptionTxList: Array<any>;
+    totalAmountToDeclared: number;
 
 
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'allTxList']) clientTxListOb;
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'requested']) clientTxListRequestedOb;
-
-    // total amount to be declared in the date range.
-    get totalAmountToDeclared() {
-        return immutableHelper.reduce(this.pnlRegister, (result, item) => {
-            return result + item.realisePnl;
-        }, 0);
-    }
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _ofiClientTxService: OfiClientTxService,
@@ -186,6 +180,11 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             result.push(thisTx);
             return result;
         }, []);
+
+        this.totalAmountToDeclared = immutableHelper.reduce(this.pnlRegister, (result, item) => {
+            return result + item.realisePnl;
+        }, 0);
+
         this._changeDetectorRef.markForCheck();
     }
 
