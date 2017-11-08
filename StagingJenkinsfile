@@ -25,7 +25,7 @@ node {
         try {
             notifySlack()
 
-            stage('Deploy Frontend to Test Environment'){
+            stage('Deploy Frontend to Staging Environment'){
                 node{
                     sh '''
               ssh jenkins@172.104.147.135 sudo mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
@@ -34,7 +34,7 @@ node {
               scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
                 }
             }
-            stage('Deploy Backend to Test Environment') {
+            stage('Deploy Backend to Staging Environment') {
                 node {
                     sh '''
                             ssh -t jenkins@172.104.147.135 sudo mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
