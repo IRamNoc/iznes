@@ -142,7 +142,7 @@ export const menuSpec: MenuSpec = {
                 {
                     label: 'Fund',
                     label_txt: 'txt_fund',
-                    icon_class: 'fa fa-area-char',
+                    icon_class: 'fa fa-area-chart',
                     element_id: 'menu-product-fund',
                     router_link: '/product-module/fund'
                 },
@@ -398,7 +398,7 @@ export const menuSpec: MenuSpec = {
                 {
                     label: 'Fund',
                     label_txt: 'txt_fund',
-                    icon_class: 'fa fa-area-char',
+                    icon_class: 'fa fa-area-chart',
                     element_id: 'menu-product-fund',
                     router_link: '/product-module/fund'
                 },
