@@ -82,6 +82,16 @@ export class SetlLoginComponent implements OnDestroy {
             return false;
         }
 
+        //if the alert popup exists.
+        if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
+            //remove the popup and return false.
+            var elements = document.getElementsByClassName('error');
+            if(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+            return false;
+        }
+
         // Dispatch a login request action.
         // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
         const loginRequestAction = loginRequestAC();
