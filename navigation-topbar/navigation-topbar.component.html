@@ -12,16 +12,19 @@
     </form>
     <div class="header-actions">
         <div class="wallet">
-            <div class="wallet-tile"><span mltag="txt_wallet">Wallet</span>:</div>
-            <ng-select [allowClear]="false"
-                       [items]="walletSelectItems"
-                       (selected)="selected($event)"
-                       (removed)="removed($event)"
-                       placeholder="No wallet selected"
-                       [formControl]="selectedWalletId"
-                       [multiple]="false"
-                       mltag="txt_nowalletselected">
-            </ng-select>
+            <div>
+                <ng-select [allowClear]="false"
+                           [items]="walletSelectItems"
+                           (selected)="selected($event)"
+                           (removed)="removed($event)"
+                           placeholder="No wallet selected"
+                           [formControl]="selectedWalletId"
+                           [multiple]="false"
+                           inlineLabel="Wallet"
+                           inlineLabelMlTag="txt_wallet"
+                           mltag="txt_nowalletselected">
+                </ng-select>
+            </div>
         </div>
 
 
