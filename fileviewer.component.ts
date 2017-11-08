@@ -25,7 +25,7 @@ export class FileViewerComponent implements OnInit {
     public fileType: string = null;
     public fileModal = false;
 
-    private baseUrl = 'http://devnet.setl.io:9788';
+    private baseUrl = 'http://localhost:9788';
     private validateUrl = '';
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
