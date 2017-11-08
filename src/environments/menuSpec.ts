@@ -142,7 +142,7 @@ export const menuSpec: MenuSpec = {
                 {
                     label: 'Fund',
                     label_txt: 'txt_fund',
-                    icon_class: 'fa fa-area-char',
+                    icon_class: 'fa fa-area-chart',
                     element_id: 'menu-product-fund',
                     router_link: '/product-module/fund'
                 },
@@ -174,6 +174,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-book',
                     element_id: 'menu-am-reports-section-collective-archives',
                     router_link: '/am-reports-section/collects-archive'
+                },
+                {
+                    label: 'Historical Orders',
+                    label_txt: 'txt_historical_orders',
+                    icon_class: 'fa fa-book',
+                    element_id: 'menu-am-reports-section-historical-orders',
+                    router_link: '/reports-section/csv'
                 }
             ]
         }
@@ -391,7 +398,7 @@ export const menuSpec: MenuSpec = {
                 {
                     label: 'Fund',
                     label_txt: 'txt_fund',
-                    icon_class: 'fa fa-area-char',
+                    icon_class: 'fa fa-area-chart',
                     element_id: 'menu-product-fund',
                     router_link: '/product-module/fund'
                 },
