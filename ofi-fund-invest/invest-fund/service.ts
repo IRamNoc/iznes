@@ -153,7 +153,7 @@ export class InvestFundFormService {
                 }));
             },
             (data) => {
-                this.showErrorResponse(data);
+                this.showWalletNodeErrorResponse(data);
             }
         ));
 
@@ -318,9 +318,9 @@ export class InvestFundFormService {
         };
     }
 
-    showErrorResponse(response) {
+    showWalletNodeErrorResponse(response) {
 
-        const message = _.get(response, '[1].Data[0].Message', '');
+        const message = _.get(response, '[1].data.status', '');
 
         this._alertsService.create('error', `
                     <table class="table grid">

@@ -11,6 +11,7 @@ import {InvestFundComponent} from './invest-fund/component';
 import {FundViewComponent} from './fund-view/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {CommonService} from './common-service/service';
+import {FileViewerModule} from '@setl/core-fileviewer';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import {CommonService} from './common-service/service';
         SetlPipesModule,
         DpDatePickerModule,
         SetlComponentsModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
+        FileViewerModule
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [

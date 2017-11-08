@@ -102,8 +102,8 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         /* tab meta */
         this.tabDetail = {
             title: {
-                text: 'Manage NAV',
-                icon: 'fa-industry'
+                text: 'Historical CSV Data ',
+                icon: 'fa-history'
             }
         };
 
