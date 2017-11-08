@@ -39,7 +39,7 @@ export class CommonService {
         }
 
         // known nav
-        const knownNav = Number(immutableHelper.get(shareData, ['metaData', 'knownNav'], false));
+        const knownNav = immutableHelper.get(shareData, ['metaData', 'knownNav'], false);
 
         // Valuation
         let sValuationDate = 0;
