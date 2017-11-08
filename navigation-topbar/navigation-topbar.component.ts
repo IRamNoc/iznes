@@ -56,6 +56,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     public currentUserDetails;
     public username;
+    public lastLogin;
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
@@ -97,6 +98,15 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.currentUserDetails = getMyDetail(newState);
         this.username = this.currentUserDetails.firstName;
 
+        if (this.username === '') {
+            this.username = this.currentUserDetails.username;
+        }
+
+        this.lastLogin = this.currentUserDetails.lastLogin;
+
+        if (this.lastLogin === '') {
+            this.lastLogin = 'Never';
+        }
 
         const chainAccess = getDefaultMyChainAccess(newState);
 
