@@ -250,7 +250,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             /* Let's now ask the user if they're sure... */
             this._confirmationService.create(
                 '<span>Deleting a permission group</span>',
-                '<span>"Are you sure you want to delete \'' + this.allGroupList[index].groupName + '\'?</span>'
+                '<span>Are you sure you want to delete \'' + this.allGroupList[index].groupName + '\'?</span>'
             ).subscribe((ans) => {
                 /* ...if they are... */
                 if (ans.resolved) {
