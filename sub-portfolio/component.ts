@@ -198,7 +198,6 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             (data) => {
                 this.showSuccessResponse('Portfolio created');
 
-
                 const address = _.get(data, [1, 'data', 'address'], '');
                 // create address label
                 const labelAsynTaskPipe = this._myWalletService.newWalletLabel({

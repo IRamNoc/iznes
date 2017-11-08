@@ -473,7 +473,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 userId: userId,
                 toAdd: this.arrayToGroups(newUser.txGroups),
                 toDelete: [],
-                chainId: '2000'
+                chainId: thisTab['selectedChain']
             }).then((response) => {
                 /* Stub. */
             }).catch((error) => {
