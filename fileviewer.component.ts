@@ -46,10 +46,9 @@ export class FileViewerComponent implements OnInit {
                        @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
-        if (this.appConfig.MEMBER_NODE_CONNECTION.port === '443') {
+        if (this.appConfig.MEMBER_NODE_CONNECTION.port === 443) {
             this.baseUrl = 'https';
         }
-        //
         this.baseUrl += '://' + this.appConfig.MEMBER_NODE_CONNECTION.host + ':' +
             this.appConfig.MEMBER_NODE_CONNECTION.port;
         this.token = this.memberSocketService.token;
