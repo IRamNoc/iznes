@@ -44,6 +44,7 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
         const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (messageId, data, userData) => {
                 const status = _.get(data, 'Status', 'Fail');
+                console.log('membernode response: ', data);
                 // status is ok -> success.
                 if (status === 'OK') {
                     // success
