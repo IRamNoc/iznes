@@ -69,56 +69,52 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_isin">ISIN</td>
-                    <td>FR0000970097</td>
+                    <td>{{metaData.isin}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_portfoliocode">Portfolio Code</td>
-                    <td>1336</td>
+                    <td>{{metaData.portfolioCode}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sharename">Share Name</td>
-                    <td mltag="txt_ofirsdynamiquecd">OFI RS Dynamique C D</td>
+                    <td>{{metaData.shareName}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_status">Status</td>
-                    <td mltag="txt_active">Active</td>
+                    <td>{{metaData.fundShareStatus[0] && metaData.fundShareStatus[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
                     <td>
-                        22 Rue Vernier, Paris, France, 75017
+                        {{metaData.fundAddressPrefix && metaData.fundAddressPrefix + ','}}
+                        {{metaData.fundAddress1 && metaData.fundAddress1 + ','}}
+                        {{metaData.fundAddress2 && metaData.fundAddress2 + ','}}
+                        {{metaData.fundAddress3 && metaData.fundAddress3 + ','}}
+                        {{metaData.fundAddress4 && metaData.fundAddress4 + ','}}
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_lei">LEI</td>
-                    <td>
-                        LEI00001
-                    </td>
+                    <td>{{metaData.leiCode}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sharetype">Share type</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td>{{metaData.shareType[0] && metaData.shareType[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_incomeallocation">Income Allocation</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td>{{metaData.incomeAllocation[0] && metaData.incomeAllocation[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_currencyofshare">Currency of Share</td>
-                    <td>
-                        EUR
-                    </td>
+                    <td>{{metaData.shareCurrency[0] && metaData.shareCurrency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_portfoliocurrency">Portfolio Currency</td>
-                    <td>
-                        EUR
-                    </td>
+                    <td>{{metaData.portfolioCurrency[0] && metaData.portfolioCurrency[0]['text']}}</td>
                 </tr>
+                <!--<setl-file-viewer fileHash="5fbae10e71c4fb42269be9da2e921c1c135505588948bc5a778fced290f1cb67">-->
+                <!--</setl-file-viewer>-->
             </table>
         </div>
         <div class="col-md-6 col-sm-12">
@@ -132,64 +128,80 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_approvaldate">Approval Date</td>
-                    <td>
-                        01/08/2000
-                    </td>
+                    <td>{{metaData.approvalDate}}</td>
                 </tr>
 
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_creationdate">Creation Date</td>
-                    <td>
-                        01/08/2000
-                    </td>
+                    <td>{{metaData.creationDate}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_dissolutiondate">Dissolution Date</td>
-                    <td>01/08/2000</td>
+                    <td>{{metaData.dissolutionDate}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sidepocket">Side Pocket</td>
-                    <td mltag="txt_yes">Yes</td>
+                    <td *ngIf="metaData.sidePocket" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.sidePocket" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_inliquidation">In liquidation</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundInLiquidation" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundInLiquidation" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_valuationfrequency">Valuation Frequency</td>
-                    <td mltag="txt_dairy">Dairy</td>
+                    <td>{{metaData.valuationFrequency[0] && metaData.valuationFrequency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_businessdayrule">Business Day Rule</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundBusinessDayRule" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundBusinessDayRule" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_applicablerights">Applicable Rights</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.applicableRight[0] && metaData.applicableRight[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_estimatednav">Estimated NAV</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundEstimated" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundEstimated" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_estimatednavdate">Estimated NAV Date</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.estimatedNavDate}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_regulatordisclosure">Regulator Disclosure</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.amfDisclosure}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_reportingcountry">Reporting Country</td>
-                    <td mltag="txt_france">France</td>
+                    <td>{{metaData.reportingCountry[0] && metaData.reportingCountry[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_endoffirstfinancialyear">End of First Financial Year</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.endOfFirstYearDate}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_closingdate">Closing Date</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.closingDate}}</td>
                 </tr>
             </table>
         </div>
@@ -210,66 +222,69 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_assetmanagementcompany">Asset management company</td>
-                    <td mltag="txt_ofiassetmanagement">OFI asset management</td>
+                    <td>{{metaData.assetManagementCompany[0] && metaData.assetManagementCompany[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td>
+                        {{metaData.managementCompanyAddressPrefix && metaData.managementCompanyAddressPrefix + ','}}
+                        {{metaData.managementCompanyAddress1 && metaData.managementCompanyAddress1 + ','}}
+                        {{metaData.managementCompanyAddress2 && metaData.managementCompanyAddress2 + ','}}
+                        {{metaData.managementCompanyAddress3 && metaData.managementCompanyAddress3 + ','}}
+                        {{metaData.managementCompanyAddress4 && metaData.managementCompanyAddress4 + ','}}
+                        {{metaData.managementCompanyCodePostal && metaData.managementCompanyCodePostal}}
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_delegatedassetmanagementcompany">Delegated asset management company</td>
-                    <td>OFI asset management</td>
+                    <td>{{metaData.delegatedAssetManagementCompany[0] && metaData.delegatedAssetManagementCompany[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td>
+                        {{metaData.delegatedManagementCompanyAddressPrefix && metaData.delegatedManagementCompanyAddressPrefix + ','}}
+                        {{metaData.delegatedManagementCompanyAddress1 && metaData.delegatedManagementCompanyAddress1 + ','}}
+                        {{metaData.delegatedManagementCompanyAddress2 && metaData.delegatedManagementCompanyAddress2 + ','}}
+                        {{metaData.delegatedManagementCompanyAddress3 && metaData.delegatedManagementCompanyAddress3 + ','}}
+                        {{metaData.delegatedManagementCompanyAddress4 && metaData.delegatedManagementCompanyAddress4 + ','}}
+                        {{metaData.delegatedManagementCompanyCodePostal && metaData.delegatedManagementCompanyCodePostal}}
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_delegationoffxandtreasury">Delegation of FX and Treasury</td>
-                    <td>OFI RS Dynamique C D</td>
+                    <td>{{metaData.delegationFxTreasury}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_promoter">Promoter</td>
-                    <td>OFI AM</td>
+                    <td>{{metaData.promoter}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_statutoryadvisor">Statutory Advisor</td>
-                    <td>APLITEC</td>
+                    <td>{{metaData.statutoryAdvisor}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_cacmandaterenewaldate">CAC Mandate Renewal Date</td>
-                    <td>
-                        31/03/2013
-                    </td>
+                    <td>{{metaData.cacRenewalDate}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_compensator">Compensator</td>
-                    <td>
-                        NEWEDGE GROUP (UK BRANCH)
-                    </td>
+                    <td>{{metaData.compensator}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_fininvestallocadviser">Fin/Invest/Alloc Adviser</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td>{{metaData.finInvestAllocAdviser}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_custodian">Custodian</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td>{{metaData.custodian}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_depositary">Depositary</td>
-                    <td>
-                        SOCIETE GENERALE PARIS
-                    </td>
+                    <td>{{metaData.depositary}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_subcustodian">Sub Custodian</td>
-                    <td>
-                    </td>
+                    <td>{{metaData.subCustodian}}</td>
                 </tr>
             </table>
         </div>
@@ -284,31 +299,28 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_centralisingorderagent">Centralising Order Agent</td>
-                    <td>
-                    </td>
+                    <td>{{metaData.orderAgent}}</td>
                 </tr>
 
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_primebroker">Prime Broker</td>
-                    <td>
-                        01/08/2000
-                    </td>
+                    <td>{{metaData.primeBroker}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_regulatoryreporting">Regulatory Reporting</td>
-                    <td>QUANDAX</td>
+                    <td>{{metaData.regulatoryReporting}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_registryaccountmanager">Registry Account Manager</td>
-                    <td mltag="txt_yes">Yes</td>
+                    <td>{{metaData.registryAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_administrativeandaccountingmanager">Administrative and Accounting Manager</td>
-                    <td mltag="txt_no">No</td>
+                    <td>{{metaData.adminAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_administratornav">Administrator NAV</td>
-                    <td mltag="txt_dairy">Dairy</td>
+                    <td>{{metaData.administratorNav[0] && metaData.administratorNav[0]['text']}}</td>
                 </tr>
             </table>
         </div>
@@ -328,30 +340,41 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_assetclass">Asset class</td>
-                    <td mltag="txt_equities">Equities</td>
+                    <td>{{metaData.assetClass[0] && metaData.assetClass[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_subclassofasset">Sub class of asset</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td>{{metaData.subAssetClass[0] && metaData.subAssetClass[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_geographicalarea">Geographical area</td>
-                    <td>EUR</td>
+                    <td>{{metaData.geographicalArea[0] && metaData.geographicalArea[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sri">SRI</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundSri" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundSri" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_copromotion">Co-promotion</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundCopromotion" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundCopromotion" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </ng-template>
 
-<ng-template #legalTab> <span mltag="txt_legal">Legal</span><div class="row">
+<ng-template #legalTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -363,23 +386,23 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_supervisoryauthority">Supervisory Authority</td>
-                    <td mltag="txt_ofiassetmanagement">OFI asset management</td>
+                    <td>{{metaData.supervisoryAuthority[0] && metaData.supervisoryAuthority[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_amfclassification">AMF classification</td>
-                    <td>Actions des pays de la zone euro</td>
+                    <td>{{metaData.amfClassification[0] && metaData.amfClassification[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_ucitsivclassification">UcitsIV classification</td>
-                    <td mltag="txt_fondsdinvestissementavocationgnrale">Fonds d’investissement a vocation générale</td>
+                    <td>{{metaData.ucitsIVClassification[0] && metaData.ucitsIVClassification[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_legalnature">legal_nature</td>
-                    <td mltag="txt_sicav">SICAV</td>
+                    <td>{{metaData.legalNature[0] && metaData.legalNature[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_formofopcvm">Form of opcvm</td>
-                    <td mltag="txt_fia">FIA</td>
+                    <td>{{metaData.formOfOpcvm[0] && metaData.formOfOpcvm[0]['text']}}</td>
                 </tr>
             </table>
         </div>
@@ -394,15 +417,29 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_ucitsofucits">UCITS of UCITS</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundUcitsOfUcits" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundUcitsOfUcits" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_feeder">Feeder</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundFeeder" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundFeeder" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_master">Master</td>
-                    <td>Yes
+                    <td *ngIf="metaData.fundMaster" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundMaster" mltag="txt_no">
+                        No
                     </td>
                 </tr>
             </table>
@@ -410,7 +447,8 @@
     </div>
 </ng-template>
 
-<ng-template #feesTab> <span mltag="txt_fees">Fees</span><div class="row">
+<ng-template #feesTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -422,49 +460,43 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_maxindirectfees">Max Indirect Fees</td>
-                    <td mltag="txt_2">2</td>
+                    <td>{{metaData.maxIndirectFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_maxmanagementfees">Max Management Fees</td>
-                    <td>1.59</td>
+                    <td>{{metaData.maxManagementFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_prospectuscalculationbasis">Prospectus Calculation Basis</td>
-                    <td>Valeur liquidative * nombre de parts</td>
+                    <td>{{metaData.prospectusCalcBasis}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_actualcalculationbasis">Actual Calculation Basis</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td>{{metaData.actualCalcBasis}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_provisionedactualmanagementfee">Provisioned Actual Management Fee</td>
-                    <td>OFI RS Dynamique C D</td>
+                    <td>{{metaData.provisionedActualManagementFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_acquiredsubscriptionfee">Acquired Subscription Fee</td>
-                    <td>3.75</td>
+                    <td>{{metaData.acquiredSubscriptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_acquiredredemptionfee">Acquired Redemption Fee</td>
-                    <td>0</td>
+                    <td>{{metaData.acquiredRedemptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_maximumnonacquiredsubscriptionfee">Maximum non-acquired Subscription Fee</td>
-                    <td>
-                        5
-                    </td>
+                    <td>{{metaData.maxSubscriptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_maximumnonaccruedredemptionfee">Maximum non-accrued Redemption Fee</td>
-                    <td>
-                        5
-                    </td>
+                    <td>{{metaData.maxRedemptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_outperformancefee">Outperformance Fee</td>
-                    <td>
-                        0
-                    </td>
+                    <td>{{metaData.outPerformanceFee}} %</td>
                 </tr>
             </table>
         </div>
@@ -479,42 +511,31 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_hurdle">Hurdle</td>
-                    <td>
-                        0
-                    </td>
+                    <td>{{metaData.hurdle}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_highwatermark">High Water Mark</td>
-                    <td>
-                        0
-                    </td>
+                    <td>{{metaData.highWaterMark}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_vmffirstcollectiondate">VMF First Collection Date</td>
-                    <td>
-                        01-20
-                    </td>
+                    <td>{{metaData.vmfFirstCollectionDate}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_vmfbillingmonth">VMF billing month</td>
-                    <td>
-                        01
-                    </td>
+                    <td>{{metaData.vmfBillingMonth[0] && metaData.vmfBillingMonth[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_vmffrequency">VMF frequency</td>
-                    <td>
-                        01
-                    </td>
+                    <td>{{metaData.vmfFrequency[0] && metaData.vmfFrequency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_acquisitiononredemption">Acquisition on Redemption</td>
-                    <td mltag="txt_no"> No</td>
-                </tr>
-                <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_vmffirstcollectiondate">VMF First Collection Date</td>
-                    <td>
-                        01-20
+                    <td *ngIf="metaData.fundAcquisitionOnRedemption" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundAcquisitionOnRedemption" mltag="txt_no">
+                        No
                     </td>
                 </tr>
             </table>
@@ -522,7 +543,8 @@
     </div>
 </ng-template>
 
-<ng-template #riskTab> <span mltag="txt_risk">Risk</span><div class="row">
+<ng-template #riskTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -534,30 +556,36 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_guaranteeofcapital">Guarantee of Capital</td>
-                    <td mltag="txt_yes">Yes</td>
+                    <td *ngIf="metaData.fundGuaranteeOfCapital" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundGuaranteeOfCapital" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_methodofengagement">Method of Engagement</td>
-                    <td mltag="txt_linear">Linear</td>
+                    <td>{{metaData.methodOfEngagement[0] && metaData.methodOfEngagement[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_regulatorylevelofleverage">Regulatory Level of Leverage</td>
-                    <td>0</td>
+                    <td>{{metaData.regulatoryLevelOfLeverage}} %</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_srri">SRRI</td>
-                    <td>5</td>
+                    <td>{{metaData.srri[0] && metaData.srri[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_mainrisks">Main risks</td>
-                    <td mltag="txt_expositionmarchsactionsettaux">Exposition marchés actions et taux</td>
+                    <td>{{metaData.regulatoryLevelOfLeverage}}</td>
                 </tr>
             </table>
         </div>
     </div>
 </ng-template>
 
-<ng-template #profileTab> <span mltag="txt_profile">Profile</span><div class="row">
+<ng-template #profileTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -569,42 +597,68 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_subscriberprofile">Subscriber profile</td>
-                    <td mltag="txt_toussouscripteurs">Tous souscripteurs</td>
+                    <td>{{metaData.subscriberProfile[0] && metaData.subscriberProfile[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_dedicated">Dedicated</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundDedicated" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundDedicated" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_reserved">Reserved</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundReserved" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundReserved" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_accessconditions">Access Conditions</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td>{{metaData.accessCondition}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_investmenthorizon">Investment Horizon</td>
-                    <td>5 ans</td>
+                    <td>{{metaData.investmentHorizon}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_peaeligability">PEA Eligability</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundPeaEligibility" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundPeaEligibility" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_taxration90">Tax Ration 90%</td>
-                    <td mltag="txt_no">No</td>
+                    <td *ngIf="metaData.fundTaxRatio90Percent" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundTaxRatio90Percent" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_reversesolictation">Reverse Solictation</td>
-                    <td mltag="txt_yes"> Yes</td>
+                    <td *ngIf="metaData.fundReverseSolicitation" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundReverseSolicitation" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </ng-template>
 
-<ng-template #characteristicTab> <span mltag="txt_charateristic">Charateristic</span><div class="row">
+<ng-template #characteristicTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -615,67 +669,45 @@
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_assetmanagementcompany">Asset management company</td>
-                    <td mltag="txt_ofiassetmanagement">OFI asset management</td>
+                    <td mltag="txt_initialnav">Initial NAV</td>
+                    <td>{{metaData.initialNav}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_delegatedassetmanagementcompany">Delegated asset management company</td>
-                    <td mltag="txt_ofiassetmanagement">OFI asset management</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_delegationoffxandtreasury">Delegation of FX and Treasury</td>
-                    <td>OFI RS Dynamique C D</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_promoter">Promoter</td>
-                    <td>OFI AM</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_statutoryadvisor">Statutory Advisor</td>
-                    <td>APLITEC</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_cacmandaterenewaldate">CAC Mandate Renewal Date</td>
-                    <td>
-                        31/03/2013
+                    <td mltag="txt_isknownnav">Is Known NAV</td>
+                    <td *ngIf="metaData.knownNav" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.knownNav" mltag="txt_no">
+                        No
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_compensator">Compensator</td>
-                    <td>
-                        NEWEDGE GROUP (UK BRANCH)
-                    </td>
+                    <td mltag="txt_decimalisation">Decimalisation</td>
+                    <td>{{metaData.decimalisation[0] && metaData.decimalisation[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_fininvestallocadviser">Fin/Invest/Alloc Adviser</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td mltag="txt_formofunit">Form of Unit</td>
+                    <td>{{metaData.formOfUnit[0] && metaData.formOfUnit[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_custodian">Custodian</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td mltag="txt_formofredemption">Form of Redemption</td>
+                    <td>{{metaData.formOfRedemption[0] && metaData.formOfRedemption[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_depositary">Depositary</td>
-                    <td>
-                        SOCIETE GENERALE PARIS
-                    </td>
+                    <td mltag="txt_formofsubscription">Form of Subscription</td>
+                    <td>{{metaData.formOfsubscription[0] && metaData.formOfsubscription[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_subcustodian">Sub Custodian</td>
-                    <td>
-                    </td>
+                    <td mltag="txt_minimuminitialsubscription">Minimum Initial Subscription</td>
+                    <td>{{metaData.minInitSubscription}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_minimumsubscriptionvalue">Minimum Subscription Value</td>
+                    <td>{{metaData.minSubscriptionvalue}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_minimumsubscriptionunit">Minimum Subscription Units</td>
+                    <td>{{metaData.minsubscriptionUnits}}</td>
                 </tr>
             </table>
         </div>
@@ -689,39 +721,48 @@
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_centralisingorderagent">Centralising Order Agent</td>
-                    <td>
+                    <td mltag="txt_swingpricing">Swing Pricing</td>
+                    <td *ngIf="metaData.fundSwingPricing" mltag="txt_yes">
+                        Yes
                     </td>
-                </tr>
-
-                <tr class="data-row">
-                    <td mltag="txt_primebroker">Prime Broker</td>
-                    <td>
-                        01/08/2000
+                    <td *ngIf="!metaData.fundSwingPricing" mltag="txt_no">
+                        No
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_regulatoryreporting">Regulatory Reporting</td>
-                    <td>QUANDAX</td>
+                    <td mltag="txt_admissiontoblockchain">Admission to Blockchain</td>
+                    <td *ngIf="metaData.fundAdmissionToBlockchain" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundAdmissionToBlockchain" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_registryaccountmanager">Registry Account Manager</td>
-                    <td mltag="txt_yes">Yes</td>
+                    <td mltag="txt_currencyhedgedamount">Currency Hedged Amount</td>
+                    <td *ngIf="metaData.fundCurrencyHedgedAmount" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundCurrencyHedgedAmount" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_administrativeandaccountingmanager">Administrative and Accounting Manager</td>
-                    <td mltag="txt_no">No</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_administratornav">Administrator NAV</td>
-                    <td mltag="txt_dairy">Dairy</td>
+                    <td mltag="txt_guaranteeorprotection">Guarantee or Protection</td>
+                    <td *ngIf="metaData.fundGuaranteeOrProtection" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundGuaranteeOrProtection" mltag="txt_no">
+                        No
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </ng-template>
 
-<ng-template #calendarTab> <span mltag="txt_calender">Calender</span><div class="row">
+<ng-template #calendarTab>
+    <div class="row">
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
@@ -732,67 +773,57 @@
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_assetmanagementcompany">Asset management company</td>
-                    <td>OFI asset management</td>
+                    <td mltag="txt_srschedule">S/R Schedule</td>
+                    <td>{{metaData.srSchedule && metaData.srSchedule[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
+                    <td mltag="txt_valuationprice">Valuation Price</td>
+                    <td>{{metaData.valuationPrice && metaData.valuationPrice[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_delegatedassetmanagementcompany">Delegated asset management company</td>
-                    <td>OFI asset management</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_address">Address</td>
-                    <td>22 Rue Vernier, Paris, France, 75017</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_delegationoffxandtreasury">Delegation of FX and Treasury</td>
-                    <td>OFI RS Dynamique C D</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_promoter">Promoter</td>
-                    <td>OFI AM</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_statutoryadvisor">Statutory Advisor</td>
-                    <td>APLITEC</td>
-                </tr>
-                <tr class="data-row">
-                    <td mltag="txt_cacmandaterenewaldate">CAC Mandate Renewal Date</td>
-                    <td>
-                        31/03/2013
+                    <td mltag="txt_dvp">DVP</td>
+                    <td *ngIf="metaData.fundDvp" mltag="txt_yes">
+                        Yes
+                    </td>
+                    <td *ngIf="!metaData.fundDvp" mltag="txt_no">
+                        No
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_compensator">Compensator</td>
-                    <td>
-                        NEWEDGE GROUP (UK BRANCH)
-                    </td>
+                    <td mltag="txt_datecalculationcondition">Date Calculation Conditions</td>
+                    <td>{{metaData.dateCalculationConditions && metaData.dateCalculationConditions[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_fininvestallocadviser">Fin/Invest/Alloc Adviser</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td mltag="txt_cashdeliverydate">Cash Delivery Date</td>
+                    <td>{{metaData.cashDeliveryDate && metaData.cashDeliveryDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_custodian">Custodian</td>
-                    <td>
-                        Diversifiée
-                    </td>
+                    <td mltag="txt_settlementdate">Settlement Date</td>
+                    <td>{{metaData.settlementDate && metaData.settlementDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_depositary">Depositary</td>
-                    <td>
-                        SOCIETE GENERALE PARIS
-                    </td>
+                    <td mltag="txt_subscriptioncutoff">Subscription Cut-off</td>
+                    <td>{{metaData.subscriptionCutOff && metaData.subscriptionCutOff[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_subcustodian">Sub Custodian</td>
-                    <td>
-                    </td>
+                    <td mltag="txt_subscriptioncutoffhour">Subscription Cut-off Hour</td>
+                    <td>{{metaData.subscriptionCutOffHour && metaData.subscriptionCutOffHour[0]['text']}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_advanceNotice">Advance Notice</td>
+                    <td>{{metaData.advancedNotice}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_redemptioncutoff">Redemption Cut-off</td>
+                    <td>{{metaData.redemptionCutOff && metaData.redemptionCutOff[0]['text']}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_redemptioncutoffhour">Redemption Cut-off Hour</td>
+                    <td>{{metaData.redemptionCutOffHour && metaData.redemptionCutOffHour[0]['text']}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_redemptionadvancednotice">Redemption Advanced Notice</td>
+                    <td>{{metaData.redemptionAdvancedNotice}}</td>
                 </tr>
             </table>
         </div>
@@ -806,36 +837,60 @@
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_centralisingorderagent">Centralising Order Agent</td>
-                    <td>
-                    </td>
-                </tr>
-
-                <tr class="data-row">
-                    <td mltag="txt_primebroker">Prime Broker</td>
-                    <td>
-                        01/08/2000
-                    </td>
+                    <td mltag="txt_blockingperiod">Blocking Period</td>
+                    <td>{{metaData.blockingPeriod}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_regulatoryreporting">Regulatory Reporting</td>
-                    <td>QUANDAX</td>
+                    <td mltag="txt_gate">Gate</td>
+                    <td>{{metaData.gate}} %</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_registryaccountmanager">Registry Account Manager</td>
-                    <td mltag="txt_yes">Yes</td>
+                    <td mltag="txt_salepurchaseconditions">Sale/Purchase Conditions</td>
+                    <td>{{metaData.salePurchaseConditions && metaData.salePurchaseConditions[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_administrativeandaccountingmanager">Administrative and Accounting Manager</td>
-                    <td mltag="txt_no">No</td>
+                    <td mltag="txt_initialnavdate">Initial NAV date</td>
+                    <td>{{metaData.initialNavDate && metaData.initialNavDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_administratornav">Administrator NAV</td>
-                    <td mltag="txt_dairy">Dairy</td>
+                    <td mltag="txt_settlementdateoninitialnav">Settlement Date on Initial NAV</td>
+                    <td>{{metaData.settlementDateOnInitial && metaData.settlementDateOnInitial[0]['text']}}</td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_freeswitchallowable">Free Switch Allowable</td>
+                    <td>{{metaData.fundSwitchFreePossibility && metaData.fundSwitchFreePossibility[0]['text']}}</td>
                 </tr>
             </table>
         </div>
     </div>
 </ng-template>
 
-<ng-template #documentTab mltag="txt_document"> Document</ng-template>
+<ng-template #documentTab mltag="txt_document">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <table class="rwd-table">
+                <tr>
+                    <th colspan="2" mltag="txt_document">Document</th>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0px"></td>
+                    <td style="padding:4px 0px"></td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_keyinvestorinformation">Key Investor Information</td>
+                    <td>
+                        <setl-file-viewer *ngIf="metaData.fundDocDici != ''" [fileHash]="metaData.fundDocDici">
+                        </setl-file-viewer>
+                    </td>
+                </tr>
+                <tr class="data-row">
+                    <td mltag="txt_productsheet">Product Sheet</td>
+                    <td>
+                        <setl-file-viewer *ngIf="metaData.fundDocProductSheet != ''" [fileHash]="metaData.fundDocProductSheet">
+                        </setl-file-viewer>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-template>

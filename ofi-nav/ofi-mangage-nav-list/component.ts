@@ -317,11 +317,11 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
     fillNavGapsIfByFundName(navList, fundName) {
         const hasToday = immutableHelper.filter(navList, (asset) => {
-            const navDate = asset.get('navDate', '');
+            const navDate = asset.get('date', '');
 
             const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'DD/MM/YYYY');
             // if is today
-            return (moment().diff(moment(navDateNum), 'day') === 0);
+            return !isNaN(navDateNum) && (moment().diff(moment(navDateNum), 'day') === 0);
         });
 
         if (hasToday.length === 0) {
