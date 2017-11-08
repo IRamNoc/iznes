@@ -1,0 +1,72 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-industrial"></i> <span mltag="txt_nav">Historical CSV Data</span></h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa {{tabDetail.title.icon}}"></i> {{tabDetail.title.text}}</button>
+            <clr-tab-content *clrIfActive="true">
+                <!-- NAV list tab. -->
+                <ng-container>
+                    <ng-container
+                            *ngTemplateOutlet="navListTab"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Nav Data Table. -->
+    <ng-template #navListTab>
+        <div class="panel-body">
+            <form [formGroup]="searchForm">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_download">Download:</span>
+                            </label>
+                            <div>
+                                <button class="btn btn-primary" (click)="getCsvReport()">
+                                    Historical CSV Data
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_datefrom">Date From:</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input
+                                        formControlName="navDateFrom"
+                                        [(ngModel)]="navDateFrom.value"
+                                        [dpDayPicker]="configDate" placeholder="Choose a date from"
+                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                        mltag="txt_chooseadatefrom"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_dateto">Date To:</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input
+                                        formControlName="navDateTo"
+                                        [(ngModel)]="navDateTo.value"
+                                        [dpDayPicker]="configDate" placeholder="Choose a date to"
+                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                        mltag="txt_chooseadateto"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

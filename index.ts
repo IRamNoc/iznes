@@ -60,7 +60,8 @@ export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
-    OfiReportModule
+    OfiReportModule,
+    OfiManageCsvComponent
 } from './ofi-report-module';
 
 /**
