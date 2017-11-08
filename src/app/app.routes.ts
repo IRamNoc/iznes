@@ -70,7 +70,7 @@ import {OfiInvestorFundListComponent, OfiManageOfiNavComponent} from '@ofi/ofi-m
 /**
  * Ofi report module
  */
-import {OfiPnlReportComponent, OfiTaxReportComponent, OfiManageCsvComponent} from '@ofi/ofi-main';
+import {OfiPnlReportComponent, OfiTaxReportComponent, OfiCollectiveArchiveComponent, OfiManageCsvComponent} from '@ofi/ofi-main';
 
 /**
  * Login Guard service
@@ -353,6 +353,17 @@ export const ROUTES: Routes = [
                         path: 'csv',
                         canActivate: [LoginGuardService],
                         component: OfiManageCsvComponent
+                    }
+                ]
+            },
+            {
+                path: 'am-reports-section',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'collects-archive',
+                        canActivate: [LoginGuardService],
+                        component: OfiCollectiveArchiveComponent
                     }
                 ]
             }
