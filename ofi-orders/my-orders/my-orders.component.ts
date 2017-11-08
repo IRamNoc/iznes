@@ -31,8 +31,8 @@ import {
 
 /* Types. */
 interface SelectedItem {
-    id: number|string;
-    text: number|string;
+    id: any;
+    text: number | string;
 }
 
 /* Decorator. */
@@ -51,13 +51,13 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Ui Lists. */
     public orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id:  4, text: 'Precentralised'},
-        {id:  5, text: 'Centralised'},
-        {id:  1, text: 'Initiated'},
-        {id:  2, text: 'Waiting for NAV'},
-        {id:  3, text: 'Waiting for Settlement'},
+        {id: 4, text: 'Precentralised'},
+        {id: 5, text: 'Centralised'},
+        {id: 1, text: 'Initiated'},
+        {id: 2, text: 'Waiting for NAV'},
+        {id: 3, text: 'Waiting for Settlement'},
         {id: -1, text: 'Order settled'},
-        {id:  "0", text: 'Cancelled'},
+        {id: "0", text: 'Cancelled'},
     ];
     public orderTypes: Array<SelectedItem> = [
         {id: "0", text: 'All'},
@@ -70,45 +70,44 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
-    private reduxUnsubscribe:Unsubscribe;
+    private reduxUnsubscribe: Unsubscribe;
     private ordersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
     private connectedWalletId: any = 0;
-    private requestedSearch:any;
-    private sort:{name: string, direction: string} = { name: 'dateEntered', direction: 'ASC' }; // default search.
+    private requestedSearch: any;
+    private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.
 
     /* Observables. */
-    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb:any;
-    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb:any;
-    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
-    @select(['user', 'myDetail']) myDetailOb:any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
+    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+    @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
 
-    constructor (
-        private ofiOrdersService: OfiOrdersService,
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private walletNodeRequestService: WalletNodeRequestService,
-        private _confirmationService: ConfirmationService,
-    ) {
+    constructor(private ofiOrdersService: OfiOrdersService,
+                private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private _confirmationService: ConfirmationService,) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
 
-    ngOnInit () {
+    ngOnInit() {
         /* State. */
         let state = this.ngRedux.getState();
 
         /* Ok, let's check that we have the orders list, if not... */
-        if ( ! getOfiMyOrderList(state).length ) {
+        if (!getOfiMyOrderList(state).length) {
             /* ...request using the defaults in the form. */
             this.getOrdersBySearch();
         }
     }
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
         /* Do observable subscriptions here. */
 
         /* Orders list. */
@@ -159,13 +158,59 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Check if we have an Id. */
             setTimeout(() => {
                 if (orderId !== -1 && this.ordersList.length) {
-                    /* If we do, then hande the viewing of it. */
+                    /* If we do, then handle the viewing of it. */
                     this.handleViewOrder(orderId);
 
                     this.ofiOrdersService.resetOrderBuffer();
                 }
             }, 100);
         });
+
+        /* Subscribe for the order filter. */
+        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
+            /* Check if we have a filter set. */
+            console.log(' | preset filter: ', filter);
+            setTimeout(() => {
+                if (filter != '' && this.ordersList.length) {
+                    /* If we do, then let's patch the form value... */
+                    console.log(' | preset filter: ', filter);
+                    this.tabsControl[0].searchForm.controls.status.patchValue(
+                        this.getStatusByName(filter) // resolve the status
+                    );
+
+                    /* ...also, reset the filter... */
+                    this.ofiOrdersService.resetOrderFilter();
+
+                    /* ...and update the view. */
+                    this.getOrdersBySearch();
+
+                    /* Detect changes. */
+                    this.changeDetectorRef.detectChanges();
+                }
+            }, 100);
+        });
+    }
+
+    /**
+     * getStatusByName
+     * @param requestedName
+     */
+    public getStatusByName(requestedName: string): Array<SelectedItem> {
+        /* Variables. */
+        let finds = [];
+
+        /* Let's see if we can find the status. */
+        let status: any;
+        for (status of this.orderStatuses) {
+            if (status.text.toLowerCase() == requestedName) {
+                finds.push(status);
+                break;
+            }
+        }
+
+        /* Return. */
+        console.log(finds);
+        return finds;
     }
 
     /**
@@ -175,13 +220,13 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleViewOrder (orderId: number):void {
+    public handleViewOrder(orderId: number): void {
         /* Find the order. */
         let
             i = 0,
             foundActive = false,
             order = this.getOrderById(orderId);
-        if (! order) return;
+        if (!order) return;
 
         /* Check if the tab is already open. */
         this.tabsControl.map((tab) => {
@@ -238,11 +283,11 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleCancelOrder (orderId: number):void {
+    public handleCancelOrder(orderId: number): void {
         /* Let's first find the order... */
         let
-        request= {},
-        order = this.getOrderById(orderId);
+            request = {},
+            order = this.getOrderById(orderId);
 
         /* ...or return if we couldn't find it. */
         if (!order) return;
@@ -283,7 +328,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private updateWalletConnection ():void {
+    private updateWalletConnection(): void {
         /* Loop over my wallets, and find the one we're connected to. */
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
@@ -310,12 +355,12 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} orderId - an order id.
      * @return {any|boolean} - the order, if found or just false.
      */
-    private getOrderById (orderId: number):any|boolean {
+    private getOrderById(orderId: number): any | boolean {
         /* Ok, let's loop over the orders list... */
         let order;
         for (order of this.ordersList) {
             /* ..if this is the order, break, to return it... */
-            if ( order.arrangementID === orderId ) break;
+            if (order.arrangementID === orderId) break;
 
             /* ...else set order to false, incase this is last loop. */
             order = false;
@@ -334,9 +379,9 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private requestSearch ():void {
+    private requestSearch(): void {
         /* Let's check if we've got a request already... */
-        if ( this.requestedSearch ) {
+        if (this.requestedSearch) {
             /* ...if we do, cancel it. */
             clearTimeout(this.requestedSearch);
         }
@@ -359,14 +404,14 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private getOrdersBySearch ():void {
+    private getOrdersBySearch(): void {
         /* Ok, let's get the search form information... */
         let
-        searchForm = this.tabsControl[0].searchForm.value,
-        request = {};
+            searchForm = this.tabsControl[0].searchForm.value,
+            request = {};
 
         /* Check if we have search parameters. */
-        if (! searchForm.status[0] || ! searchForm.type[0]) {
+        if (!searchForm.status[0] || !searchForm.type[0]) {
             return;
         }
 
@@ -383,11 +428,11 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* ...then request the new list. */
         this.ofiOrdersService.getMyOrdersList(request)
-        .then(response => true) // no need to do anything here.
-        .catch((error) => {
-            console.warn('failed to fetch orders list: ', error);
-            this.showError('Failed to fetch the latest orders.');
-        });
+            .then(response => true) // no need to do anything here.
+            .catch((error) => {
+                console.warn('failed to fetch orders list: ', error);
+                this.showError('Failed to fetch the latest orders.');
+            });
     }
 
     /**
@@ -398,7 +443,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} event - the click event.
      * @param {string} name - the sort name.
      */
-    switchSort (event: any, name: string):void {
+    switchSort(event: any, name: string): void {
         /* Find the header's caret. */
         let elms = event.target.getElementsByTagName('i'), caret;
         if (elms.length && elms[0].classList) {
@@ -408,7 +453,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* If we've clicked the one we're sorting by, reverse sort. */
         if (name === this.sort.name && caret) {
             /* Reverse. */
-            if ( this.sort.direction === "ASC" ) {
+            if (this.sort.direction === "ASC") {
                 this.sort.direction = "DESC";
                 caret.classList.remove('fa-caret-up');
                 caret.classList.add('fa-caret-down');
@@ -439,11 +484,11 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {FormGroup} - the new FormGroup.
      */
-    private newSearchFormGroup ():FormGroup {
+    private newSearchFormGroup(): FormGroup {
         return new FormGroup({
             'name': new FormControl(''),
-            'status': new FormControl([ this.orderStatuses[0] ]),
-            'type': new FormControl([ this.orderTypes[0] ]),
+            'status': new FormControl([this.orderStatuses[0]]),
+            'type': new FormControl([this.orderTypes[0]]),
         });
     }
 
@@ -464,23 +509,24 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {string}              [description]
      */
-    private formatDate (formatString:string, dateObj:Date):string {
+    private formatDate(formatString: string, dateObj: Date): string {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return '';
+        if (!formatString || !dateObj) return '';
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
-        .replace('DD', this.numPad( dateObj.getDate().toString() ))
-        .replace('hh', this.numPad( dateObj.getHours() ))
-        .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
-        .replace('mm', this.numPad( dateObj.getMinutes() ))
-        .replace('ss', this.numPad( dateObj.getSeconds() ))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
-    private numPad (num) {
-        return num < 10 ? "0"+num : num;
+
+    private numPad(num) {
+        return num < 10 ? "0" + num : num;
     }
 
     /**
@@ -491,7 +537,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} grossAmount - the grossAmount.
      * @return {number}             - the entry fee.
      */
-    private calcEntryFee (grossAmount:number): number {
+    private calcEntryFee(grossAmount: number): number {
         return Math.round(grossAmount * .0375);
     }
 
@@ -501,7 +547,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted date or empty string.
      */
-    private getOrderDate (dateString):string {
+    private getOrderDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
@@ -511,7 +557,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted time or empty string.
      */
-    private getOrderTime (dateString):string {
+    private getOrderTime(dateString): string {
         return this.formatDate('hh:mm:ss', new Date(dateString));
     }
 
@@ -523,16 +569,16 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} num - the couponId.
      * @return {string}
      */
-    private padNumberLeft (num: number|string, zeros?: number):string {
+    private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if ( ! num && num != 0) return "";
+        if (!num && num != 0) return "";
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
-        requiredZeros = zeros - num.length,
-        returnString = "";
+            requiredZeros = zeros - num.length,
+            returnString = "";
 
         /* Now add the zeros. */
         while (requiredZeros--) {
@@ -555,7 +601,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {array} - tabsControl object.
      */
-    private defaultTabControl():Array<any> {
+    private defaultTabControl(): Array<any> {
         return [
             {
                 "title": {

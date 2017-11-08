@@ -33,21 +33,19 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
 
     /* Observables. */
-    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb:any;
-    @select(['user', 'myDetail']) myDetailOb:any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb:any;
-    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderList']) homeOrdersListOb:any;
+    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+    @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderList']) homeOrdersListOb: any;
 
     /* Constructor. */
-    constructor (
-        private _changeDetectorRef: ChangeDetectorRef,
-        private ofiOrdersService:OfiOrdersService,
-        private _router:Router
-    ) {
+    constructor(private _changeDetectorRef: ChangeDetectorRef,
+                private ofiOrdersService: OfiOrdersService,
+                private _router: Router) {
         /* Stub. */
     }
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
         /* Do observable subscriptions here. */
 
         /* Orders list. */
@@ -122,14 +120,18 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         }
 
         this.ofiOrdersService.getHomeOrdersList(request)
-        .then(() => true)
-        .catch((error) => {
-            /* Handle error. */
-            console.warn('Failed to fetch precentralised orders:', error);
-        });
+            .then(() => true)
+            .catch((error) => {
+                /* Handle error. */
+                console.warn('Failed to fetch precentralised orders:', error);
+            });
     }
 
-    public handleViewOrder (orderId):void {
+    /**
+     * handleViewOrder
+     * @param orderId
+     */
+    public handleViewOrder(orderId: number): void {
         /* Set the buffer. */
         this.ofiOrdersService.setOrderBuffer(orderId);
 
@@ -143,9 +145,13 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public handleCancelOrder (orderId):void {
-        /* Set the buffer. */
-        this.ofiOrdersService.setOrderBuffer(orderId);
+    /**
+     * beginOrderJourney
+     * @param journey
+     */
+    public beginOrderJourney(journey: string): void {
+        /* Dispatch the action to register the journey. */
+        this.ofiOrdersService.setOrderFilter(journey);
 
         /* Send the user to their order page. */
         if (this.myDetails.userType <= 26) {
@@ -155,6 +161,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             /* Is holder. */
             this._router.navigateByUrl('/order-book/my-orders');
         }
+
+        /* Return. */
+        return;
     }
 
     /**
@@ -174,23 +183,24 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {string}              [description]
      */
-    private formatDate (formatString:string, dateObj:Date):string {
+    private formatDate(formatString: string, dateObj: Date): string {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return '';
+        if (!formatString || !dateObj) return '';
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
-        .replace('DD', this.numPad( dateObj.getDate().toString() ))
-        .replace('hh', this.numPad( dateObj.getHours() ))
-        .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
-        .replace('mm', this.numPad( dateObj.getMinutes() ))
-        .replace('ss', this.numPad( dateObj.getSeconds() ))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
-    private numPad (num) {
-        return num < 10 ? "0"+num : num;
+
+    private numPad(num) {
+        return num < 10 ? "0" + num : num;
     }
 
     /**
@@ -201,16 +211,16 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      * @param  {number} num - the orderId.
      * @return {string}
      */
-    private padNumberLeft (num: number|string, zeros?: number):string {
+    private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if ( ! num && num != 0) return "";
+        if (!num && num != 0) return "";
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
-        requiredZeros = zeros - num.length,
-        returnString = "";
+            requiredZeros = zeros - num.length,
+            returnString = "";
 
         /* Now add the zeros. */
         while (requiredZeros--) {
@@ -227,7 +237,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private updateWalletConnection ():void {
+    private updateWalletConnection(): void {
         /* Loop over my wallets, and find the one we're connected to. */
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {

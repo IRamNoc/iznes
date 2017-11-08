@@ -9,14 +9,13 @@ import * as ofiHomeOrdersActions from './actions';
 /* Initial state. */
 const initialState: HomeOrders = {
     orderList: [],
-    orderBuffer: -1
+    orderBuffer: -1,
+    orderFilter: '',
 };
 
 /* Reducer. */
-export const OfiHomeOrderListReducer = function (
-    state: HomeOrders = initialState,
-    action: Action
-) {
+export const OfiHomeOrderListReducer = function (state: HomeOrders = initialState,
+                                                 action: Action) {
     switch (action.type) {
         /* Set Order List. */
         case ofiHomeOrdersActions.OFI_SET_HOME_ORDER_LIST:
@@ -30,6 +29,14 @@ export const OfiHomeOrderListReducer = function (
         case ofiHomeOrdersActions.OFI_RESET_HOME_ORDER_BUFFER:
             return ofiResetHomeOrderBuffer(state, action);
 
+        /* Set Order View Filter. */
+        case ofiHomeOrdersActions.OFI_SET_HOME_ORDER_FILTER:
+            return ofiSetHomeOrderFilter(state, action);
+
+        /* Reset Order View Filter. */
+        case ofiHomeOrdersActions.OFI_RESET_HOME_ORDER_FILTER:
+            return ofiResetHomeOrderFilter(state, action);
+
         /* Default. */
         default:
             return state;
@@ -42,20 +49,20 @@ export const OfiHomeOrderListReducer = function (
  * Deals with replacing the local orders list with a new one.
  *
  * @param {state} HomeOrders - the current state.
- * @param {action} Action - the action requested.
+ * @param {action} Action    - the action requested.
  *
  * @return {newState} object - the new state.
  */
-function ofiSetHomeOrderList ( state: HomeOrders, action: Action ) {
+function ofiSetHomeOrderList(state: HomeOrders, action: Action) {
     /* Variables. */
     let
-    newState,
-    newOrderList = _.get(action, 'payload[1].Data', []);
+        newState,
+        newOrderList = _.get(action, 'payload[1].Data', []);
 
     /* Let's unpack the metaData... */
     newOrderList = newOrderList.map((order) => {
         /* ...json parse it... */
-        order.metaData = JSON.parse( order.metaData );
+        order.metaData = JSON.parse(order.metaData);
 
         /* ..return. */
         return order;
@@ -72,11 +79,11 @@ function ofiSetHomeOrderList ( state: HomeOrders, action: Action ) {
 /**
  * Ofi Set Home Order Buffer
  * -------------------------
- * @param  {HomeOrders} state  [description]
- * @param  {Action}     action [description]
- * @return {[type]}            [description]
+ * @param  {HomeOrders} state  - the current state.
+ * @param  {Action}     action - the action to be made on the state.
+ * @return {HomeOrders}        - the new state
  */
-function ofiSetHomeOrderBuffer (state: HomeOrders, action: any) {
+function ofiSetHomeOrderBuffer(state: HomeOrders, action: any): HomeOrders {
     return Object.assign({}, state, {
         orderBuffer: action.payload
     });
@@ -84,12 +91,37 @@ function ofiSetHomeOrderBuffer (state: HomeOrders, action: any) {
 /**
  * Ofi Reset Home Order Buffer
  * -------------------------
- * @param  {HomeOrders} state  [description]
- * @param  {Action}     action [description]
- * @return {[type]}            [description]
+ * @param  {HomeOrders} state  - the current state.
+ * @param  {Action}     action - the action to be made on the state.
+ * @return {HomeOrders}        - the new state
  */
-function ofiResetHomeOrderBuffer (state: HomeOrders, action: any) {
+function ofiResetHomeOrderBuffer(state: HomeOrders, action: any): HomeOrders {
     return Object.assign({}, state, {
         orderBuffer: -1
+    });
+}
+
+/**
+ * Ofi Set Home Order Filter
+ * -------------------------
+ * @param  {HomeOrders} state  - the current state.
+ * @param  {Action}     action - the action to be made on the state.
+ * @return {HomeOrders}        - the new state
+ */
+function ofiSetHomeOrderFilter(state: HomeOrders, action: any): HomeOrders {
+    return Object.assign({}, state, {
+        orderFilter: action.payload
+    });
+}
+/**
+ * Ofi Reset Home Order Filter
+ * -------------------------
+ * @param  {HomeOrders} state  - the current state.
+ * @param  {Action}     action - the action to be made on the state.
+ * @return {HomeOrders}        - the new state
+ */
+function ofiResetHomeOrderFilter(state: HomeOrders, action: any): HomeOrders {
+    return Object.assign({}, state, {
+        orderFilter: ''
     });
 }

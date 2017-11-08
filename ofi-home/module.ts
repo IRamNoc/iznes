@@ -1,5 +1,6 @@
 /* Core/Angular imports. */
 import {NgModule} from "@angular/core";
+import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 
@@ -21,6 +22,7 @@ import {OfiHomeComponent} from './home/component';
         CommonModule,
         BrowserModule,
         ClarityModule,
+        RouterModule,
     ],
     providers: []
 })
