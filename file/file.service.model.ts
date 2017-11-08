@@ -6,3 +6,9 @@ export interface AddFileMessageBody extends MemberNodeMessageBody {
     files: string;
 }
 
+export interface GetHistoricalCsvMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: string;
+    dateFrom: string;
+    dateTo: string;
+}
