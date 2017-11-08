@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {select, NgRedux} from '@angular-redux/store';
 import {Http} from '@angular/http';
@@ -6,6 +6,7 @@ import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper} from '@setl/utils';
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
+import {APP_CONFIG, AppConfig} from '@setl/utils';
 
 @Component({
     selector: 'setl-file-viewer',
@@ -25,7 +26,8 @@ export class FileViewerComponent implements OnInit {
     public fileType: string = null;
     public fileModal = false;
 
-    private baseUrl = 'http://localhost:9788';
+    private appConfig: AppConfig;
+    private baseUrl = '';
     private validateUrl = '';
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
@@ -40,7 +42,16 @@ export class FileViewerComponent implements OnInit {
                        private sanitizer: DomSanitizer,
                        private pdfService: PdfService,
                        private changeDetectorRef: ChangeDetectorRef,
-                       private ngRedux: NgRedux<any>) {
+                       private ngRedux: NgRedux<any>,
+                       @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
+        this.baseUrl = 'http';
+        if (this.appConfig.MEMBER_NODE_CONNECTION.port === '443') {
+            this.baseUrl = 'https';
+        }
+        //
+        this.baseUrl += '://' + this.appConfig.MEMBER_NODE_CONNECTION.host + ':' +
+            this.appConfig.MEMBER_NODE_CONNECTION.port;
         this.token = this.memberSocketService.token;
         this.getUser.subscribe(
             (data) => {
