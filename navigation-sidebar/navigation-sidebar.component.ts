@@ -5,6 +5,7 @@ import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
 import {immutableHelper} from '@setl/utils';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -69,15 +70,20 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     translateMenu(rawMenuData) {
         return immutableHelper.reduce(rawMenuData, (result, item) => {
             const mltag = item.get('label_txt', '');
-            const label = this.multilingualService.getTranslation(mltag);
-            const children_old = _.get(item, 'children', []);
+            const label = this.multilingualService.getTranslation(mltag) || item.get('label', '');
+            const children_old = item.get('children', []);
             const children = immutableHelper.reduce(children_old, (childrenResult, childrenItem) => {
                 const cmltag = childrenItem.get('label_txt', '');
-                const clabel = this.multilingualService.getTranslation(cmltag);
+                const clabel = this.multilingualService.getTranslation(cmltag) || childrenItem.get('label', '');
                 childrenResult.push(childrenItem.set('label', clabel).toJS());
                 return childrenResult;
             }, []);
-            result.push(item.set('label', label).set('children', children).toJS());
+            if (children.length > 0) {
+                result.push(item.set('label', label).set('children', children).toJS());
+            } else {
+                result.push(item.set('label', label).toJS());
+            }
+
             return result;
         }, []);
     }
