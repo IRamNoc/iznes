@@ -62,12 +62,11 @@
 
                                 <input
                                     formControlName="navDate"
-                                    [(ngModel)]="navDate.value"
                                     [dpDayPicker]="configDate" placeholder="Choose a date"
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     [disabled]="searchBy === 'byFund'"
                                     (ngModelChange)="dateChange($event)"
-                                mltag="txt_chooseadate"/>
+                                    mltag="txt_chooseadate"/>
                             </div>
                         </div>
                     </div>
