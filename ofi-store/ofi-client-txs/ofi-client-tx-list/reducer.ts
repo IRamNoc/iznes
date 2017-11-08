@@ -11,7 +11,8 @@ import {
 
 const initialState: OfiClientTxsListState = {
     allTxList: {},
-    requested: false
+    requested: false,
+    version: 1
 };
 
 /**
