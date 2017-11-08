@@ -118,7 +118,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const myDetail = getMyDetail(newState);
             const {userId} = myDetail;
             const {apiKey} = myAuthenData;
-            const protocol = this.appConfig.production ? 'wss' : 'wss';
+            const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
             const nodePath = _.get(chainAccess, 'nodePath', '');
