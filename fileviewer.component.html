@@ -1,5 +1,5 @@
 <div *ngIf="(pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')">
-    <button (click)="openFileModal();" mltag="txt_viewfile">View File</button>
+    <button type="button" class="btn btn-primary" (click)="openFileModal();" mltag="txt_viewfile">View File</button>
     <clr-modal [(clrModalOpen)]="fileModal" [clrModalSize]="'xl'" [clrModalClosable]="false">
         <div class="modal-title">
             <div class="alert alert-success">
