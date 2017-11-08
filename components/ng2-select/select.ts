@@ -8,6 +8,7 @@ import {SelectItem} from './select-item';
 import {stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
+import {MultilingualService} from '@setl/multilingual';
 
 let styles = `
   .ui-select-toggle {
@@ -130,14 +131,15 @@ let styles = `
             <div [ngClass]="{'ui-disabled': disabled}"></div>
             <div class="ui-select-match"
                  *ngIf="!inputMode">
-      <span tabindex="-1"
-            class="btn btn-default btn-secondary form-control ui-select-toggle"
-            (click)="matchClick($event)"
-            style="outline: 0;">
+                <span tabindex="-1"
+                    class="btn btn-default btn-secondary form-control ui-select-toggle"
+                    (click)="matchClick($event)"
+                    style="outline: 0;">
+                <span *ngIf="inlineLabel !== ''" class="pull-left">{{this.multilingualService.getTranslation(inlineLabelMlTag) || inlineLabel}}:</span>
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text)"></span>
+              [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px !important"></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
@@ -263,6 +265,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public textField: string = 'text';
     @Input() public childrenField: string = 'children';
     @Input() public multiple: boolean = false;
+    @Input() public inlineLabel: string = '';
+    @Input() public inlineLabelMlTag: string = '';
 
     @Input()
     public set items(value: Array<any>) {
@@ -349,7 +353,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private _active: Array<SelectItem> = [];
 
     public constructor(element: ElementRef, private sanitizer: DomSanitizer,
-                       private changeDetectorRef: ChangeDetectorRef) {
+                       private changeDetectorRef: ChangeDetectorRef, private multilingualService: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
     }
