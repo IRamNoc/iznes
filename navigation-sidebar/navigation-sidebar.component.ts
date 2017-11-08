@@ -1,8 +1,10 @@
-import {Component, OnInit, AfterViewInit, Inject} from '@angular/core';
+import {Component, OnInit, AfterViewInit, Inject, ChangeDetectorRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
+import {MultilingualService} from '@setl/multilingual/multilingual.service';
+import {immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -16,32 +18,42 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
     appConfig: AppConfig;
 
+    private subscription: any;
+
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
 
     constructor(private router: Router,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private multilingualService: MultilingualService,
                 private ngRedux: NgRedux<any>) {
         /* Stub. */
         this.appConfig = appConfig;
+
     }
 
     ngOnInit() {
-        const currentState = this.ngRedux.getState();
-        const currentUserDetails = getMyDetail(currentState);
-        const userType = currentUserDetails.userType;
-        const userTypeStr = {
-            '15': 'system_admin',
-            '25': 'chain_admin',
-            '35': 'member_user',
-            '36': 'am',
-            '45': 'standard_user',
-            '46': 'investor',
-            '47': 'valuer',
-            '48': 'custodian',
-            '49': 'cac',
-            '50': 'registrar',
-        }[userType];
-        this.menuJson = this.appConfig.menuSpec[userTypeStr];
+        /* Subscribe for language change. */
+        this.subscription = this.multilingualService.getLanguage.subscribe((data) => {
+            const currentState = this.ngRedux.getState();
+            const currentUserDetails = getMyDetail(currentState);
+            const userType = currentUserDetails.userType;
+            const userTypeStr = {
+                '15': 'system_admin',
+                '25': 'chain_admin',
+                '35': 'member_user',
+                '36': 'am',
+                '45': 'standard_user',
+                '46': 'investor',
+                '47': 'valuer',
+                '48': 'custodian',
+                '49': 'cac',
+                '50': 'registrar',
+            }[userType];
+            this.menuJson = this.translateMenu(this.appConfig.menuSpec[userTypeStr]);
+
+            this._changeDetectorRef.detectChanges();
+        });
 
     }
 
@@ -52,6 +64,22 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 this.unreadMessages = unreadMessages;
             }
         );
+    }
+
+    translateMenu(rawMenuData) {
+        return immutableHelper.reduce(rawMenuData, (result, item) => {
+            const mltag = item.get('label_txt', '');
+            const label = this.multilingualService.getTranslation(mltag);
+            const children_old = _.get(item, 'children', []);
+            const children = immutableHelper.reduce(children_old, (childrenResult, childrenItem) => {
+                const cmltag = childrenItem.get('label_txt', '');
+                const clabel = this.multilingualService.getTranslation(cmltag);
+                childrenResult.push(childrenItem.set('label', clabel).toJS());
+                return childrenResult;
+            }, []);
+            result.push(item.set('label', label).set('children', children).toJS());
+            return result;
+        }, []);
     }
 
 
