@@ -136,12 +136,12 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.ofiOrdersService.setOrderBuffer(orderId);
 
         /* Send the user to their order page. */
-        if (this.myDetails.userType <= 26) {
-            /* Is am. */
-            this._router.navigateByUrl('/manage-orders');
-        } else {
+        if ([46].indexOf(this.myDetails.userType) != -1) {
             /* Is holder. */
             this._router.navigateByUrl('/order-book/my-orders');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/manage-orders');
         }
     }
 
@@ -154,12 +154,12 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.ofiOrdersService.setOrderFilter(journey);
 
         /* Send the user to their order page. */
-        if (this.myDetails.userType <= 26) {
-            /* Is am. */
-            this._router.navigateByUrl('/manage-orders');
-        } else {
+        if ([46].indexOf(this.myDetails.userType) != -1) {
             /* Is holder. */
             this._router.navigateByUrl('/order-book/my-orders');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/manage-orders');
         }
 
         /* Return. */
