@@ -167,6 +167,24 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * beginListOfFundsJourney
+     * @return {void}
+     */
+    public beginListOfFundsJourney(): void {
+        /* Send the user to their order page. */
+        if ([46].indexOf(this.myDetails.userType) != -1) {
+            /* Is holder. */
+            this._router.navigateByUrl('/list-of-funds');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/product-module/fund');
+        }
+
+        /* Return. */
+        return;
+    }
+
+    /**
      * Format Date
      * -----------
      * Formats a date to a string.
