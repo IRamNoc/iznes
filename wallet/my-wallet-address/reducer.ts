@@ -53,7 +53,6 @@ function formatAddressResponse(rawAddressData: Array<any>): AddressDetailList {
             const formattedDetail = {
                 addr: thisAddressDetail.get(0),
                 pub: thisAddressDetail.get(1),
-                label: ''
             };
 
             result[thisAddressDetail.get(0)] = formattedDetail;
@@ -133,6 +132,7 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
         const label = _.get(item, 'label', '');
 
         result[address] = {
+            addr: address,
             label
         };
 
