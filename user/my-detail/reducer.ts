@@ -31,7 +31,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const username = _.get(loginedData, 'UserName', '');
             const emailAddress = _.get(loginedData, 'EMailAddress', '');
             const userId = _.get(loginedData, 'UserID', 0);
-            const lastLogin = _.get(loginedData, 'lastLogin', '');
+            const lastLogin = _.get(loginedData, 'last_login', '');
             const userType = _.get(loginedData, 'userType', '');
             const admin = _.get(loginedData, 'admin', 0) ? true : false;
             const accountId = _.get(loginedData, 'accontID', '');
