@@ -6,6 +6,7 @@ import {
     MoneyValuePipe,
     NumberConverterService,
     immutableHelper,
+    mDateHelper,
     ConditionType,
     ArrangementActionType,
     SagaHelper
@@ -44,7 +45,9 @@ export class InvestFundFormService {
         const asset = issuer + '|' + shareName;
         const byType = immutableHelper.get(formValue, 'byType', '');
         let authoriseRef = '';
-        const settleTimeStamp = immutableHelper.get(shareMetaData, 'settlementDateTimeNumber', 0) / 1000;
+        const settlementDateTimeStr = immutableHelper.get(formValue, 'settlementDate', '') + ' ' +
+            immutableHelper.get(shareMetaData, 'settlementTime', '');
+        const settleTimeStamp = mDateHelper.dateStrToUnixTimestamp(settlementDateTimeStr, 'DD/MM/YYYY HH:mm') / 1000;
         // const expiryTimeStamp = settleTimeStamp + 3600; // + 1h from settlement.
         const expiryTimeStamp = settleTimeStamp + 600; // + 1min from settlement.
         const issuerAddress = immutableHelper.get(formValue, 'shareIssuerAddress', '');
@@ -133,6 +136,16 @@ export class InvestFundFormService {
                     }
                 };
 
+                const cutoffDateTimeStr = formValue.cutoffDate + ' ' + shareMetaData.cutoffTime;
+                const valuationDateTimeStr = formValue.valuationDate + ' ' + shareMetaData.valuationTime;
+
+                const cutoffDateTimeNum = mDateHelper.dateStrToUnixTimestamp(cutoffDateTimeStr, 'DD/MM/YYYY HH:mm');
+                const valuationDateTimeNum = mDateHelper.dateStrToUnixTimestamp(valuationDateTimeStr, 'DD/MM/YYYY HH:mm');
+
+                const cutoffDateTimeDBFormat = mDateHelper.unixTimestampToDateStr(cutoffDateTimeNum, 'YYYY-MM-DD HH:mm');
+                const valuationDateTimeDBFormat = mDateHelper.unixTimestampToDateStr(valuationDateTimeNum, 'YYYY-MM-DD HH:mm');
+                const settlementDateTimeDBFormat = mDateHelper.unixTimestampToDateStr(settleTimeStamp * 1000, 'YYYY-MM-DD HH:mm');
+
                 this._ngRedux.dispatch(setLastCreatedContractDetail(data, {
                     actionType: 'ofi-arrangement',
                     arrangementData: {
@@ -146,11 +159,12 @@ export class InvestFundFormService {
                         feePercent: feePercentInt,
                         platFormFee: platFormFeeParse,
                         parties,
-                        cutoff: shareMetaData.cutoffDateTimeStr,
-                        delivery: shareMetaData.settlementDateTimeStr,
-                        valuation: shareMetaData.valuationDateTimeStr
+                        cutoff: cutoffDateTimeDBFormat,
+                        delivery: valuationDateTimeDBFormat,
+                        valuation: settlementDateTimeDBFormat
                     }
-                }));
+                }))
+                ;
             },
             (data) => {
                 this.showWalletNodeErrorResponse(data);
@@ -320,7 +334,10 @@ export class InvestFundFormService {
 
     showWalletNodeErrorResponse(response) {
 
-        const message = _.get(response, '[1].data.status', '');
+        let message = _.get(response, '[1].data.status', '');
+        if (message === '') {
+            message = _.get(response, '[1].status', '');
+        }
 
         this._alertsService.create('error', `
                     <table class="table grid">
