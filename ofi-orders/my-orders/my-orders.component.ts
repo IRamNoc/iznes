@@ -1,35 +1,20 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
+import {NgRedux, select} from "@angular-redux/store";
+import {Unsubscribe} from "redux";
+import {FormControl, FormGroup} from "@angular/forms";
 /* Services. */
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
-
+import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
-
+import {AlertsService} from "@setl/jaspero-ng2-alerts";
+import {ConfirmationService, NumberConverterService} from "@setl/utils";
 /* Utils. */
-import {MoneyValueOfiPipe} from '@setl/utils/pipes';
-
 /* Ofi Corp Actions request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-
-import {NumberConverterService} from '@setl/utils'
-
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Core store stuff. */
-import {
-    getConnectedWallet,
-    setRequestedWalletHolding,
-    getWalletHoldingByAsset
-} from '@setl/core-store';
-
 /* Ofi Store stuff. */
-import {
-    getOfiMyOrderList
-} from '../../ofi-store';
+import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
+
 
 /* Types. */
 interface SelectedItem {
@@ -82,6 +67,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -94,7 +80,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
-                public numberConverterService: NumberConverterService) {
+                private _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -124,12 +110,25 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
+                let metaData = order.metaData;
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * metaData.price;
+
+                fixed.metaData = metaData;
+
                 /* Return. */
                 return fixed;
             });
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
+            this.getOrdersBySearch(requested);
         });
 
         /* Subscribe for this user's details. */
@@ -405,9 +404,16 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Simply reads the search form, and requests data based on what has been entered,
      * or by defualts. Also, refreshes the order list.
      *
+     * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(): void {
+    private getOrdersBySearch(requested = false): void {
+        if (requested) {
+            return;
+        }
+
+        this.ngRedux.dispatch(ofiSetRequestedMyOrder());
+
         /* Ok, let's get the search form information... */
         let
             searchForm = this.tabsControl[0].searchForm.value,
@@ -541,7 +547,9 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {number}             - the entry fee.
      */
     private calcEntryFee(grossAmount: number): number {
-        return Math.round(grossAmount * .0375);
+        return 0; // for OFI test this is 0
+        // TODO: Real example
+        // return Math.round(grossAmount * .0375);
     }
 
     /**

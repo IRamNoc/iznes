@@ -80,6 +80,10 @@ export {
     /* Home orders */
     getOfiHomeOrderList,
     OFI_SET_HOME_ORDER_LIST,
+    ofiSetRequestedHomeOrder,
+    ofiClearRequestedHomeOrder,
+    ofiClearRequestedManageOrder,
+    ofiSetRequestedManageOrder,
 
     /* Home orders buffer */
     OFI_SET_HOME_ORDER_BUFFER,
@@ -91,6 +95,8 @@ export {
     /* My orders */
     getOfiMyOrderList,
     OFI_SET_MY_ORDER_LIST,
+    ofiClearRequestedMyOrder,
+    ofiSetRequestedMyOrder,
 
     // Collective report
     setRequestedCollectiveArchive,

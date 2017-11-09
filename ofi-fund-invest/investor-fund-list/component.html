@@ -37,7 +37,6 @@
             <clr-datagrid>
                 <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_assetmanager">Asset manager</clr-dg-column>
-                <clr-dg-column mltag="txt_isin">ISIN</clr-dg-column>
                 <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
                 <clr-dg-column mltag="txt_nav">NAV</clr-dg-column>
                 <clr-dg-column mltag="txt_currency">Currency</clr-dg-column>
@@ -56,11 +55,11 @@
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{fund.assetManager}}</clr-dg-cell>
-                    <clr-dg-cell>{{fund.isin}}</clr-dg-cell>
                     <clr-dg-cell>
+                        <span class="text_small">{{ fund.isin }}</span><br/>
                         <a class="text-primary fake-link" (click)="handleView(i)">{{fund.fundName}}</a>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{fund.nav | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>€ {{fund.nav | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.currency}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.mainClass}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.subClass}}</clr-dg-cell>

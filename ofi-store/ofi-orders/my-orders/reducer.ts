@@ -8,18 +8,23 @@ import * as ofiMyOrdersActions from './actions';
 
 /* Initial state. */
 const initialState: MyOrders = {
-    orderList: []
+    orderList: [],
+    requested: false
 };
 
 /* Reducer. */
-export const OfiMyOrderListReducer = function (
-    state: MyOrders = initialState,
-    action: Action
-) {
+export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
+                                               action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
         case ofiMyOrdersActions.OFI_SET_MY_ORDER_LIST:
             return ofiSetMyOrderList(state, action);
+
+        case ofiMyOrdersActions.OFI_SET_REQUESTED_MY_ORDER:
+            return toggleRequestState(state, true);
+
+        case ofiMyOrdersActions.OFI_CLEAR_REQUESTED_MY_ORDER:
+            return toggleRequestState(state, false);
 
         /* Default. */
         default:
@@ -37,26 +42,34 @@ export const OfiMyOrderListReducer = function (
  *
  * @return {newState} object - the new state.
  */
-function ofiSetMyOrderList ( state: MyOrders, action: Action ) {
+function ofiSetMyOrderList(state: MyOrders, action: Action) {
     /* Variables. */
     let
-    newState:MyOrders,
-    newOrderList = _.get(action, 'payload[1].Data', []);
+        newState: MyOrders,
+        newOrderList = _.get(action, 'payload[1].Data', []);
 
     /* Let's unpack the metaData... */
     newOrderList = newOrderList.map((order) => {
         /* ...json parse it... */
-        order.metaData = JSON.parse( order.metaData );
+        order.metaData = JSON.parse(order.metaData);
 
         /* ..return. */
         return order;
     })
 
     /* Set the new state. */
-    newState = {
-        orderList: newOrderList
-    };
+    newState = Object.assign({}, state, {orderList: newOrderList});
 
     /* Return. */
     return newState;
+}
+
+/**
+ *
+ * @param {MyOrders} state
+ * @param {boolean} requested
+ * @return {MyOrders}
+ */
+function toggleRequestState(state: MyOrders, requested: boolean): MyOrders {
+    return Object.assign({}, state, {requested});
 }

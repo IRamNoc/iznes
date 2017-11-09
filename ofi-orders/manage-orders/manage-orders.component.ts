@@ -26,7 +26,8 @@ import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/serv
 
 /* Ofi Store stuff. */
 import {
-    getOfiUserIssuedAssets
+    getOfiUserIssuedAssets,
+    ofiSetRequestedManageOrder
 } from '../../ofi-store';
 
 /* Core store stuff. */
@@ -40,6 +41,9 @@ import {
 import {
     getOfiManageOrderList
 } from '../../ofi-store';
+
+
+import {NumberConverterService} from '@setl/utils';
 
 /* Types. */
 interface SelectedItem {
@@ -93,6 +97,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -107,7 +112,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
-                private _blockchainContractService: BlockchainContractService) {
+                private _blockchainContractService: BlockchainContractService,
+                private _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -137,12 +143,25 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
+                let metaData = order.metaData;
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * metaData.price;
+
+                fixed.metaData = metaData;
+
                 /* Return. */
                 return fixed;
             });
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
+            this.getOrdersBySearch(requested);
         });
 
         /* Subscribe for this user's details. */
@@ -590,9 +609,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Simply reads the search form, and requests data based on what has been entered,
      * or by defualts. Also, refreshes the order list.
      *
+     * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(): void {
+    private getOrdersBySearch(requested: boolean = false): void {
+        if (requested) {
+            return;
+        }
+
+        this.ngRedux.dispatch(ofiSetRequestedManageOrder());
+
         /* Ok, let's get the search form information... */
         let
             searchForm = this.tabsControl[0].searchForm.value,
@@ -725,7 +751,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {number}             - the entry fee.
      */
     private calcEntryFee(grossAmount: number): number {
-        return Math.round(grossAmount * .0375);
+        return 0; // for OFI test this is 0
+        // TODO: Real example
+        // return Math.round(grossAmount * .0375);
     }
 
     /**
