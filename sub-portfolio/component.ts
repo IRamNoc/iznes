@@ -191,6 +191,12 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     handleNewSubPortfolio(name) {
+        /* Check if we have a name. */
+        if (!name || name == '') {
+            this.showErrorMessage('Please give your sub portfolio a name');
+            return;
+        }
+
         // create address
         const asynTaskPipe = this._walletnodeTxService.newAddress({walletId: this.connectedWalletId});
 
@@ -223,15 +229,27 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
-                    <table class="table grid">
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
 
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+    showErrorMessage(message) {
+
+        this.alertsService.create('error', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
     showSuccessResponse(message) {
