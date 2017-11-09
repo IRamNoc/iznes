@@ -11,7 +11,7 @@ import {select} from '@angular-redux/store';
 import {NgRedux} from '@angular-redux/store';
 
 // Internal
-import {immutableHelper, MoneyValuePipe} from '@setl/utils';
+import {immutableHelper, MoneyValuePipe, mDateHelper} from '@setl/utils';
 import {CommonService} from '../common-service/service';
 import {InvestFundFormService} from './service';
 import {
@@ -73,6 +73,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         locale: 'en',
     };
 
+    // Dates
+    cutoffDate: FormControl;
+    valuationDate: FormControl;
+    settlementDate: FormControl;
+
+
     // subscription form meta data.
     metaData: any;
 
@@ -123,6 +129,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+        this.cutoffDate = new FormControl(currentDate);
+        this.valuationDate = new FormControl(currentDate);
+        this.settlementDate = new FormControl(currentDate);
+
         this.quantity = new FormControl(0, [Validators.required, numberValidator]);
         this.grossAmount = new FormControl(0, [Validators.required, numberValidator]);
         this.address = new FormControl('', [Validators.required]);
@@ -132,7 +143,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             quantity: this.quantity,
             grossAmount: this.grossAmount,
             comment: new FormControl('', Validators.maxLength(100)),
-            address: this.address
+            address: this.address,
+            cutoffDate: this.cutoffDate,
+            valuationDate: this.valuationDate,
+            settlementDate: this.settlementDate
         });
 
         this.formConfig = {

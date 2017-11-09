@@ -36,6 +36,8 @@ export {
     OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderList,
     getOfiHomeOrderViewBuffer,
+    ofiSetRequestedHomeOrder,
+    ofiClearRequestedHomeOrder
 } from './home-orders';
 
 // Collective Archive
