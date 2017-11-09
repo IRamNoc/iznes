@@ -9,10 +9,11 @@ import {
 import {Router} from '@angular/router';
 
 /* Redux */
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 
 /* Ofi orders request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+import {ofiSetRequestedHomeOrder} from '../../ofi-store';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -37,10 +38,12 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderList']) homeOrdersListOb: any;
+    @select(['ofi', 'ofiOrders', 'homeOrders', 'requested']) homeOrdersRequestedOb: any;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private ofiOrdersService: OfiOrdersService,
+                private _ngRedux: NgRedux<any>,
                 private _router: Router) {
         /* Stub. */
     }
@@ -67,6 +70,10 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             this._changeDetectorRef.detectChanges();
         });
 
+        this.subscriptions['home-order-requested'] = this.homeOrdersRequestedOb.subscribe((requested) => {
+            this.requestHomeOrderList(requested);
+        });
+
         /* Subscribe for this user's details. */
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
@@ -90,6 +97,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             /* Update wallet name. */
             this.updateWalletConnection();
         });
+
+    }
+
+    requestHomeOrderList(requested: boolean): void {
+        if (requested) {
+            return;
+        }
+
+        this._ngRedux.dispatch(ofiSetRequestedHomeOrder());
 
         /* Now, let's fetch the precentralised orders list. */
         let request;
