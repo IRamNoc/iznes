@@ -305,6 +305,8 @@ export class InvestFundFormService {
         return {
             actions: actionData,
             conditions: [
+                // todo
+                // put it back in for production
                 // {
                 //     conditionData: {
                 //         executeTimeStamp: settleTimeStamp
@@ -325,7 +327,10 @@ export class InvestFundFormService {
                     'address': issuerAddress
                 }
             ],
-            expiry: expiryTimeStamp,
+            // expiry: expiryTimeStamp,
+            // todo
+            // change it back when production
+            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 3600,
             numStep: '1',
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
             creatorAddress: investorAddress
