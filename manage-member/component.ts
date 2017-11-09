@@ -15,6 +15,7 @@ import {
     SET_REQUESTED_MANAGE_MEMBER_LIST,
     SET_MANAGE_MEMBER_LIST
 } from '@setl/core-store';
+import {ConfirmationService} from '@setl/utils';
 import {SagaHelper} from '@setl/utils';
 
 interface NewMemberUserDetail {
@@ -49,6 +50,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private memberService: MemberService,
+                private confirmationService: ConfirmationService,
                 private changeDetectorRef: ChangeDetectorRef) {
         /* Default tabs. */
         this.tabsControl = [
@@ -132,21 +134,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         if (this.tabsControl[tabId].formControl.valid) {
             console.log(this.tabsControl[tabId].formControl.value);
 
-            var str = this.tabsControl[tabId].formControl.value['memberName'];
-            var patt = new RegExp("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u");
-            if (!patt.test(str)){
-                this.alertsService.create('error', `<table class="table grid">
-                        <tbody>
-                            <tr class="fadeIn">
-                                <td class="text-center" width="500px">
-                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                                &nbsp;Invalid characters in Member name.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `);
-                return false;
-            }
+            if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return false;
 
             /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
@@ -191,6 +179,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             console.log(this.tabsControl[tabId].formControl.value);
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
+
+            if (!this.acceptedCharacters(memberName)) return false;
 
             // Create a saga pipe.
             const asyncTaskPipe = this.memberService.editMember(
@@ -254,33 +244,40 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      */
     handleDelete(index: number): void {
 
-        // Check if the tab is already open.
-        // If yes, close the tab.
-        let i;
-        const memberId = this.manageMembersList[index].memberId;
-        for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].memberId === memberId) {
-                this.tabsControl.splice(i, 1);
-            }
-        }
 
-        // Send request to delete member.
-        const asyncTaskPipe = this.memberService.deleteMember(
-            {
-                memberId
-            }
-        );
+        this.confirmationService.create(
+            '<span>Deleting a Member</span>',
+            '<span>Are you sure you want to delete this member?</span>'
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                // Check if the tab is already open.
+                // If yes, close the tab.
+                let i;
+                const memberId = this.manageMembersList[index].memberId;
+                for (i = 0; i < this.tabsControl.length; i++) {
+                    if (this.tabsControl[i].memberId === memberId) {
+                        this.tabsControl.splice(i, 1);
+                    }
+                }
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                this.showSuccessResponse('Member is deleted');
-            },
-            (data) => {
-                this.showErrorResponse(data);
-            }
-        ));
+                // Send request to delete member.
+                const asyncTaskPipe = this.memberService.deleteMember(
+                    {
+                        memberId
+                    }
+                );
 
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        this.showSuccessResponse('Member is deleted');
+                    },
+                    (data) => {
+                        this.showErrorResponse(data);
+                    }
+                ));
+            }
+        });
     }
 
     /**
@@ -371,5 +368,24 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
 
         </table>
                     `);
+    }
+
+    acceptedCharacters(str){
+        var patt = new RegExp("^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
+        if (!patt.test(str)){
+            this.alertsService.create('error', `<table class="table grid">
+                        <tbody>
+                            <tr class="fadeIn">
+                                <td class="text-center" width="500px">
+                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                                &nbsp;Invalid characters in Member name.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `);
+            return false;
+        }else{
+            return true;
+        }
     }
 }
