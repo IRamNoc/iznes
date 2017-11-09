@@ -132,6 +132,22 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         if (this.tabsControl[tabId].formControl.valid) {
             console.log(this.tabsControl[tabId].formControl.value);
 
+            var str = this.tabsControl[tabId].formControl.value['memberName'];
+            var patt = new RegExp("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u");
+            if (!patt.test(str)){
+                this.alertsService.create('error', `<table class="table grid">
+                        <tbody>
+                            <tr class="fadeIn">
+                                <td class="text-center" width="500px">
+                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                                &nbsp;Invalid characters in Member name.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `);
+                return false;
+            }
+
             /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
                 this.tabsControl[tabId].formControl.value
