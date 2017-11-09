@@ -1,10 +1,6 @@
-import {
-    Directive,
-    ElementRef,
-    AfterViewInit
-} from '@angular/core';
+import {Directive, ElementRef} from "@angular/core";
 
-import { MenuDropdownService } from './menu-dropdown.service';
+import {MenuDropdownService} from "./menu-dropdown.service";
 
 /**
  * DropDown
@@ -15,17 +11,15 @@ import { MenuDropdownService } from './menu-dropdown.service';
 })
 export class DropdownDirective {
     /* Properties.*/
-    public isOpen:boolean = false;
+    public isOpen: boolean = false;
 
-    private list:any;
-    private identifier:number;
-    private targetHeight:string;
+    private list: any;
+    private identifier: number;
+    private targetHeight: string;
 
     /* Constructor. */
-    constructor (
-        private label: ElementRef,
-        private menuDropdownService:MenuDropdownService
-    ) {
+    constructor(private label: ElementRef,
+                private menuDropdownService: MenuDropdownService) {
         /* Check if the isOpen property was set... */
         let prop = label.nativeElement.getAttribute('isOpen');
         if (prop === true) {
@@ -34,7 +28,7 @@ export class DropdownDirective {
         }
 
         /* Register this dropdown, this returns an ID and lets the service know
-           who we are. */
+         who we are. */
         this.identifier = this.menuDropdownService.registerDropdown();
 
         /* Listen to the event, and call switch whenever it's broadcast. */
@@ -48,25 +42,25 @@ export class DropdownDirective {
      * At this point we can assign click handlers and deal with checking if
      * there is a list nextSlibling.
      */
-    ngAfterViewInit () {
+    ngAfterViewInit() {
         /* Check if we have a list next to us. */
-        if ( this.label.nativeElement.nextElementSibling.tagName === "UL" ) {
+        if (this.label.nativeElement.nextElementSibling.tagName === "UL") {
             /* Set the list reference. */
             this.list = this.label.nativeElement.nextElementSibling;
 
             /* Assign click handler. */
             this.label.nativeElement.addEventListener('click', () => {
-                if ( ! this.isOpen ) {
-                    this.menuDropdownService.requestActivation( this.identifier );
+                if (!this.isOpen) {
+                    this.menuDropdownService.requestActivation(this.identifier);
                 } else {
-                    this.menuDropdownService.requestDeactivation( this.identifier );
+                    this.menuDropdownService.requestDeactivation(this.identifier);
                 }
             });
 
             /* Workout height. */
             let height = this.list.getElementsByTagName('li').length
-                       ? (this.list.getElementsByTagName('li').length * this.list.getElementsByTagName('li')[0].offsetHeight)
-                       : 0;
+                ? (this.list.getElementsByTagName('li').length * this.list.getElementsByTagName('li')[0].offsetHeight)
+                : 0;
 
             /* Refer to the target. */
             this.targetHeight = height + "px";
@@ -80,16 +74,16 @@ export class DropdownDirective {
      * Render
      * Re-renders the list element on the dom.
      */
-    public render ():void {
+    public render(): void {
         /* If open, add class. */
-        if ( this.isOpen ) {
-            this.label.nativeElement.classList.add("active");
+        if (this.isOpen) {
+            //this.label.nativeElement.classList.add("active");
             this.list.classList.add("active");
             this.list.style.height = this.targetHeight;
         }
         /* Else, remove it. */
         else {
-            this.label.nativeElement.classList.remove("active");
+            //this.label.nativeElement.classList.remove("active");
             this.list.classList.remove("active");
             this.list.style.height = "0px";
         }
@@ -99,7 +93,7 @@ export class DropdownDirective {
      * Switch
      * Trigger the state to switch.
      */
-    public switch (activated):void {
+    public switch(activated): void {
         /* Toggle the state, ad update the list class. */
         this.isOpen = activated.id === this.identifier ? true : false;
 
