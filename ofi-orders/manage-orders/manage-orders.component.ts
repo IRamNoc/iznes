@@ -26,7 +26,8 @@ import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/serv
 
 /* Ofi Store stuff. */
 import {
-    getOfiUserIssuedAssets
+    getOfiUserIssuedAssets,
+    ofiSetRequestedManageOrder
 } from '../../ofi-store';
 
 /* Core store stuff. */
@@ -93,6 +94,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -143,6 +145,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
+            this.getOrdersBySearch(requested);
         });
 
         /* Subscribe for this user's details. */
@@ -590,9 +596,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Simply reads the search form, and requests data based on what has been entered,
      * or by defualts. Also, refreshes the order list.
      *
+     * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(): void {
+    private getOrdersBySearch(requested: boolean = false): void {
+        if (requested) {
+            return;
+        }
+
+        this.ngRedux.dispatch(ofiSetRequestedManageOrder());
+
         /* Ok, let's get the search form information... */
         let
             searchForm = this.tabsControl[0].searchForm.value,
