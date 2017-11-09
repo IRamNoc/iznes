@@ -29,6 +29,9 @@ import {
     getOfiMyOrderList
 } from '../../ofi-store';
 
+import {NumberConverterService} from '@setl/utils';
+
+
 /* Types. */
 interface SelectedItem {
     id: any;
@@ -91,7 +94,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                private _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -120,6 +124,15 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Fix dates. */
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+                
+                let metaData = order.metaData;
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * metaData.price;
+
+                fixed.metaData = metaData;
 
                 /* Return. */
                 return fixed;
@@ -538,7 +551,9 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {number}             - the entry fee.
      */
     private calcEntryFee(grossAmount: number): number {
-        return Math.round(grossAmount * .0375);
+        return 0; // for OFI test this is 0
+        // TODO: Real example
+        // return Math.round(grossAmount * .0375);
     }
 
     /**
