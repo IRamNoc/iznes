@@ -20,6 +20,8 @@ import {
 export {
     OFI_SET_MY_ORDER_LIST,
     getOfiMyOrderList,
+    ofiClearRequestedMyOrder,
+    ofiSetRequestedMyOrder
 } from './my-orders';
 
 /* Home Orders */

@@ -7,7 +7,8 @@ import _ from 'lodash';
 import {
     OFI_SET_COUPON_LIST,
     clearRequestedManageNavList,
-    ofiClearRequestedHomeOrder
+    ofiClearRequestedHomeOrder,
+    ofiClearRequestedMyOrder
 } from '../../ofi-store';
 
 /* Service class. */
@@ -71,6 +72,7 @@ export class OfiMemberNodeChannelService {
                 console.log('----------got new arrangement update-----');
 
                 this.ngRedux.dispatch(ofiClearRequestedHomeOrder());
+                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 break;
         }
     }
