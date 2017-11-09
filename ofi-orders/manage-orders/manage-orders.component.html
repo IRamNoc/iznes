@@ -82,19 +82,20 @@
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_ordertype">Order type</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_fundname">Fund name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
                         <clr-dg-cell>
+                            <!-- Order type -->
+                            <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
+                            <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
+
                             <!-- Action -->
                             <div class="btn-group btn-sm">
                                 <!-- If order status is 1, allow cancel. -->
@@ -114,16 +115,8 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Investor -->
-                            {{ order.metaData.investorWalletName }}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Order type -->
-                            <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
-                            <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Order REF -->
-                            {{ padNumberLeft(order.arrangementID, 5) }}
+                            {{ order.metaData.investorWalletName }}<br>
+                            <b class="text_small">Ref</b> {{ padNumberLeft(order.arrangementID, 5) }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Fund name -->
@@ -141,10 +134,6 @@
                         <clr-dg-cell>
                             <!-- Price -->
                             {{ order.metaData.price | moneyValue}}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Percentage -->
-                            {{ order.metaData.feePercent }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
