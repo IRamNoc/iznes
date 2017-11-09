@@ -10,6 +10,7 @@ import {
 } from '@setl/core-req-services';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {Subscription} from 'rxjs/Subscription';
+import {NumberConverterService} from '@setl/utils';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     constructor(private _ngRedux: NgRedux<any>,
                 private _memberService: MemberService,
                 private _changeDetectorRef: ChangeDetectorRef,
+                private _numberConverterService: NumberConverterService,
                 private _ofiFundInvestService: OfiFundInvestService) {
         /**
          * Default tabs.
@@ -98,7 +100,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 assetManager: item.getIn(['managementCompany'], ''),
                 isin: item.getIn(['metaData', 'isin'], ''),
                 fundName: item.getIn(['shareName'], ''),
-                nav: item.getIn(['price'], 0),
+                nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
                 currency: item.getIn(['metaData', 'portfolioCurrency', '0', 'text'], ''),
                 mainClass: item.getIn(['metaData', 'assetClass', '0', 'text'], ''),
                 subClass: item.getIn(['metaData', 'subAssetClass', '0', 'text'], ''),
