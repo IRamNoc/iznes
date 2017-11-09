@@ -80,6 +80,8 @@ export {
     /* Home orders */
     getOfiHomeOrderList,
     OFI_SET_HOME_ORDER_LIST,
+    ofiSetRequestedHomeOrder,
+    ofiClearRequestedHomeOrder,
 
     /* Home orders buffer */
     OFI_SET_HOME_ORDER_BUFFER,

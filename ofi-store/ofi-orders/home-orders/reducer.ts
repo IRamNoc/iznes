@@ -1,4 +1,3 @@
-/* Core/Redux imports. */
 import {Action} from 'redux';
 import _ from 'lodash';
 
@@ -11,6 +10,7 @@ const initialState: HomeOrders = {
     orderList: [],
     orderBuffer: -1,
     orderFilter: '',
+    requested: false
 };
 
 /* Reducer. */
@@ -36,6 +36,13 @@ export const OfiHomeOrderListReducer = function (state: HomeOrders = initialStat
         /* Reset Order View Filter. */
         case ofiHomeOrdersActions.OFI_RESET_HOME_ORDER_FILTER:
             return ofiResetHomeOrderFilter(state, action);
+
+        case ofiHomeOrdersActions.OFI_SET_REQUESTED_HOME_ORDER:
+            return toggleRequestState(state, true);
+
+        case ofiHomeOrdersActions.OFI_CLEAR_REQUESTED_HOME_ORDER:
+            return toggleRequestState(state, false);
+
 
         /* Default. */
         default:
@@ -76,6 +83,7 @@ function ofiSetHomeOrderList(state: HomeOrders, action: Action) {
     /* Return. */
     return newState;
 }
+
 /**
  * Ofi Set Home Order Buffer
  * -------------------------
@@ -88,6 +96,7 @@ function ofiSetHomeOrderBuffer(state: HomeOrders, action: any): HomeOrders {
         orderBuffer: action.payload
     });
 }
+
 /**
  * Ofi Reset Home Order Buffer
  * -------------------------
@@ -113,6 +122,7 @@ function ofiSetHomeOrderFilter(state: HomeOrders, action: any): HomeOrders {
         orderFilter: action.payload
     });
 }
+
 /**
  * Ofi Reset Home Order Filter
  * -------------------------
@@ -124,4 +134,14 @@ function ofiResetHomeOrderFilter(state: HomeOrders, action: any): HomeOrders {
     return Object.assign({}, state, {
         orderFilter: ''
     });
+}
+
+/**
+ *
+ * @param {HomeOrders} state
+ * @param {boolean} requested
+ * @return {HomeOrders}
+ */
+function toggleRequestState(state: HomeOrders, requested: boolean): HomeOrders {
+    return Object.assign({}, state, {requested});
 }
