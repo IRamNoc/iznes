@@ -26,7 +26,8 @@ import {
 
 /* Ofi Store stuff. */
 import {
-    getOfiMyOrderList
+    getOfiMyOrderList,
+    ofiSetRequestedMyOrder
 } from '../../ofi-store';
 
 /* Types. */
@@ -80,6 +81,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -127,6 +129,10 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
+            this.getOrdersBySearch(requested);
         });
 
         /* Subscribe for this user's details. */
@@ -402,9 +408,16 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Simply reads the search form, and requests data based on what has been entered,
      * or by defualts. Also, refreshes the order list.
      *
+     * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(): void {
+    private getOrdersBySearch(requested = false): void {
+        if (requested) {
+            return;
+        }
+
+        this.ngRedux.dispatch(ofiSetRequestedMyOrder());
+
         /* Ok, let's get the search form information... */
         let
             searchForm = this.tabsControl[0].searchForm.value,
