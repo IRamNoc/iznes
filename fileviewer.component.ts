@@ -85,7 +85,7 @@ export class FileViewerComponent implements OnInit {
     public setUrls() {
         this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
             this.baseUrl +
-            '/file?' +
+            '/mn/file?' +
             'method=retrieve' +
             '&userId=' + this.userId +
             '&walletId=' + this.walletId +
@@ -93,7 +93,7 @@ export class FileViewerComponent implements OnInit {
             '&fileHash=' + this.fileHash
         );
         this.validateUrl = this.baseUrl +
-            '/file?' +
+            '/mn/file?' +
             'method=validate' +
             '&userId=' + this.userId +
             '&walletId=' + this.walletId +
