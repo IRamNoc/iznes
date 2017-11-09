@@ -17,6 +17,8 @@ import {MoneyValueOfiPipe} from '@setl/utils/pipes';
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 
+import {NumberConverterService} from '@setl/utils'
+
 /* Core store stuff. */
 import {
     getConnectedWallet,
@@ -91,7 +93,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                public numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
