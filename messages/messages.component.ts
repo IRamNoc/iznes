@@ -530,37 +530,53 @@ export class SetlMessagesComponent implements OnDestroy {
             recipients[receipetId] = recipentPub;
         }
 
-        const asyncTaskPipe = this.myMessageService.sendMessage(
-            subject,
-            body,
-            senderId,
-            senderPub,
-            recipients
-        );
+        if (subject == '' || bodyObj.general == '' || formData.recipients == ''){
+            console.log('error: incomplete fields');
 
-        // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                console.log('success: ');
+            this._alertsService.create('error', `<table class="table grid">
+                    <tbody>
+                        <tr class="fadeIn">
+                            <td class="text-center" width="500px">
+                            <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                            &nbsp;Incomplete messages cannot be sent.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
 
-                this._alertsService.create('success', `<table class="table grid">
-                        <tbody>
-                            <tr class="fadeIn">
-                                <td class="text-center" width="500px">
-                                <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
-                                &nbsp;Your message has been sent!</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `);
+        }else {
+            const asyncTaskPipe = this.myMessageService.sendMessage(
+                subject,
+                body,
+                senderId,
+                senderPub,
+                recipients
+            );
 
-                this.closeAndResetComposed();
-            },
-            (data) => {
-                console.log('error: ');
-            })
-        );
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    console.log('success: ');
+
+                    this._alertsService.create('success', `<table class="table grid">
+                            <tbody>
+                                <tr class="fadeIn">
+                                    <td class="text-center" width="500px">
+                                    <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
+                                    &nbsp;Your message has been sent!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `);
+
+                    this.closeAndResetComposed();
+                },
+                (data) => {
+                    console.log('error: ');
+                })
+            );
+        }
 
     }
 
