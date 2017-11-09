@@ -8,7 +8,8 @@ import {
     OFI_SET_COUPON_LIST,
     clearRequestedManageNavList,
     ofiClearRequestedHomeOrder,
-    ofiClearRequestedMyOrder
+    ofiClearRequestedMyOrder,
+    ofiClearRequestedManageOrder
 } from '../../ofi-store';
 
 /* Service class. */
@@ -73,6 +74,7 @@ export class OfiMemberNodeChannelService {
 
                 this.ngRedux.dispatch(ofiClearRequestedHomeOrder());
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
+                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
                 break;
 
             case 'getfundaccessmy':

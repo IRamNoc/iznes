@@ -9,6 +9,8 @@ import {
 export {
     OFI_SET_MANAGE_ORDER_LIST,
     getOfiManageOrderList,
+    ofiClearRequestedManageOrder,
+    ofiSetRequestedManageOrder
 } from './manage-orders';
 
 /* My Orders */

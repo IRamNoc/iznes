@@ -4,22 +4,27 @@ import _ from 'lodash';
 
 /* Local types. */
 import {ManageOrders} from './';
-import * as ofiCouponActions from './actions';
+import * as ofiManageOrdersActions from './actions';
 
 /* Initial state. */
 const initialState: ManageOrders = {
-    orderList: []
+    orderList: [],
+    requested: false
 };
 
 /* Reducer. */
-export const OfiManageOrderListReducer = function (
-    state: ManageOrders = initialState,
-    action: Action
-) {
+export const OfiManageOrderListReducer = function (state: ManageOrders = initialState,
+                                                   action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
-        case ofiCouponActions.OFI_SET_MANAGE_ORDER_LIST:
+        case ofiManageOrdersActions.OFI_SET_MANAGE_ORDER_LIST:
             return ofiSetOrderList(state, action);
+
+        case ofiManageOrdersActions.OFI_SET_REQUESTED_MANAGE_ORDER:
+            return toggleRequestState(state, true);
+
+        case ofiManageOrdersActions.OFI_CLEAR_REQUESTED_MANAGE_ORDER:
+            return toggleRequestState(state, false);
 
         /* Default. */
         default:
@@ -37,26 +42,34 @@ export const OfiManageOrderListReducer = function (
  *
  * @return {newState} object - the new state.
  */
-function ofiSetOrderList ( state: ManageOrders, action: Action ) {
+function ofiSetOrderList(state: ManageOrders, action: Action) {
     /* Variables. */
     let
-    newState:ManageOrders,
-    newOrderList = _.get(action, 'payload[1].Data', []);
+        newState: ManageOrders,
+        newOrderList = _.get(action, 'payload[1].Data', []);
 
     /* Let's unpack the metaData... */
     newOrderList = newOrderList.map((order) => {
         /* ...json parse it... */
-        order.metaData = JSON.parse( order.metaData );
+        order.metaData = JSON.parse(order.metaData);
 
         /* ..return. */
         return order;
-    })
+    });
 
     /* Set the new state. */
-    newState = {
-        orderList: newOrderList
-    };
+    newState = Object.assign({}, state, {orderList: newOrderList});
 
     /* Return. */
     return newState;
+}
+
+/**
+ *
+ * @param {ManageOrders} state
+ * @param {boolean} requested
+ * @return {ManageOrders}
+ */
+function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
+    return Object.assign({}, state, {requested});
 }
