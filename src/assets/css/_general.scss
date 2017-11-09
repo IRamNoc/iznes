@@ -433,3 +433,12 @@ hr.dashed {
 .text_small {
     font-size: 80%;
 }
+
+.btn {
+    min-width: auto !important;
+    max-width: auto !important;
+}
+
+#search-orders-form {
+    padding: 0px;
+}
