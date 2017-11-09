@@ -134,7 +134,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         if (this.tabsControl[tabId].formControl.valid) {
             console.log(this.tabsControl[tabId].formControl.value);
 
-            if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return false;
+            if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return;
 
             /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
@@ -180,7 +180,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
 
-            if (!this.acceptedCharacters(memberName)) return false;
+            if (!this.acceptedCharacters(memberName)) return;
 
             // Create a saga pipe.
             const asyncTaskPipe = this.memberService.editMember(
