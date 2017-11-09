@@ -74,6 +74,11 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(ofiClearRequestedHomeOrder());
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 break;
+
+            case 'getfundaccessmy':
+                //this.ngRedux.dispatch(clearRequestedFundAccessMy());
+
+                break;
         }
     }
 

@@ -11,7 +11,7 @@
                 <!-- NAV list tab. -->
                 <ng-container>
                     <ng-container
-                        *ngTemplateOutlet="navListTab"
+                            *ngTemplateOutlet="navListTab"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -30,10 +30,10 @@
                             </label>
                             <div>
                                 <ng-select
-                                    class="fluid-width"
-                                    [items]="allowSearchTypes"
-                                    formControlName="searchBy"
-                                    (selected)="selectSearchBy($event)"
+                                        class="fluid-width"
+                                        [items]="allowSearchTypes"
+                                        formControlName="searchBy"
+                                        (selected)="selectSearchBy($event)"
                                 ></ng-select>
                             </div>
                         </div>
@@ -44,11 +44,11 @@
                             </label>
                             <div>
                                 <ng-select
-                                    class="fluid-width"
-                                    [items]="assetList"
-                                    formControlName="fundName"
-                                    [disabled]="searchBy === 'byDate'"
-                                    (selected)="fundChange($event)"
+                                        class="fluid-width"
+                                        [items]="assetList"
+                                        formControlName="fundName"
+                                        [disabled]="searchBy === 'byDate'"
+                                        (selected)="fundChange($event)"
                                 ></ng-select>
                             </div>
                         </div>
@@ -61,12 +61,12 @@
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
                                 <input
-                                    formControlName="navDate"
-                                    [dpDayPicker]="configDate" placeholder="Choose a date"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    [disabled]="searchBy === 'byFund'"
-                                    (ngModelChange)="dateChange($event)"
-                                    mltag="txt_chooseadate"/>
+                                        formControlName="navDate"
+                                        [dpDayPicker]="configDate" placeholder="Choose a date"
+                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                        [disabled]="searchBy === 'byFund'"
+                                        (ngModelChange)="dateChange($event)"
+                                        mltag="txt_chooseadate"/>
                             </div>
                         </div>
                     </div>
@@ -83,8 +83,10 @@
 
                 <clr-dg-row *clrDgItems="let nav of navList;">
                     <clr-dg-cell>
-                        <button class="btn" (click)="showEdit(nav.fundName, nav.nav, nav.date)" [disabled]="nav.status === -1">
-                            <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                        <div class="input-button-group">
+                            <button class="btn" (click)="showEdit(nav.fundName, nav.nav, nav.date)" [disabled]="nav.status === -1">
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                        </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>

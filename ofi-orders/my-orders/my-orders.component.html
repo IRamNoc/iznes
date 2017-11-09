@@ -130,15 +130,15 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Amount -->
-                            {{ order.metaData.units }}
+                            {{ order.metaData.units | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Quantity -->
-                            {{ order.total }}
+                            {{ order.metaData.total | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ order.metaData.price }}
+                            {{ order.metaData.price | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Percentage -->
@@ -250,7 +250,7 @@
                             <span mltag="txt_quantity">Quantity</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.units | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.units | moneyValue}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -258,7 +258,7 @@
                             <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.price | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.price | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
@@ -271,7 +271,7 @@
                             <span mltag="txt_grossamount">Gross Amount</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{(orderData.metaData.units * orderData.price) | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.total | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
