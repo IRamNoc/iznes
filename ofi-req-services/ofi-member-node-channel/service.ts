@@ -70,6 +70,11 @@ export class OfiMemberNodeChannelService {
                 console.log('----------got new arrangement update-----');
 
                 break;
+
+            case 'getfundaccessmy':
+                this.ngRedux.dispatch(clearRequestedFundAccessMy());
+
+                break;
         }
     }
 
