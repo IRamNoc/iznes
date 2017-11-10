@@ -20,7 +20,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
 import static org.junit.Assert.fail;
 
-/*
+
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 
@@ -41,6 +41,9 @@ public class OpenCSDAccountsAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
+}
+
+    /*
 
     @Ignore
   @Test

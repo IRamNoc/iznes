@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-/*
+
 @RunWith(OrderedJUnit4ClassRunner.class)
 public class OpenCSDCouponPaymentAcceptanceTest {
 
