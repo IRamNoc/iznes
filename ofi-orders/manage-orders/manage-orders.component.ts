@@ -6,7 +6,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {_} from "lodash";
 /* Services. */
 import {WalletNodeRequestService} from "@setl/core-req-services";
-import {BlockchainContractService, ConfirmationService, NumberConverterService} from "@setl/utils";
+import {BlockchainContractService, ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Ofi Corp Actions request service. */
@@ -84,7 +84,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
                 private _blockchainContractService: BlockchainContractService,
-                private _numberConverterService: NumberConverterService) {
+                public _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -115,7 +115,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
-                let metaData = order.metaData;
+                let metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);

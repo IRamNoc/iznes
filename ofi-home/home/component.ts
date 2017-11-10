@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 /* Redux */
 import {NgRedux, select} from "@angular-redux/store";
 
-import {NumberConverterService} from "@setl/utils";
+import {immutableHelper, NumberConverterService} from "@setl/utils";
 /* Ofi orders request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 import {ofiSetRequestedHomeOrder} from "../../ofi-store";
@@ -48,6 +48,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
         /* Orders list. */
         this.subscriptions['home-orders-list'] = this.homeOrdersListOb.subscribe((orderList) => {
+            /* Fail safely... */
+            if (!orderList.length) return;
+
             /* Subscribe and set the orders list. */
             this.ordersList = orderList.map((order) => {
                 /* Pointer. */
@@ -57,7 +60,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
-                let metaData = order.metaData;
+                let metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
