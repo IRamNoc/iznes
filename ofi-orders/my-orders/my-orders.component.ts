@@ -1,36 +1,19 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
+import {NgRedux, select} from "@angular-redux/store";
+import {Unsubscribe} from "redux";
+import {FormControl, FormGroup} from "@angular/forms";
 /* Services. */
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
-
+import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
-
+import {AlertsService} from "@setl/jaspero-ng2-alerts";
+import {ConfirmationService, NumberConverterService} from "@setl/utils";
 /* Utils. */
-import {MoneyValueOfiPipe} from '@setl/utils/pipes';
-
 /* Ofi Corp Actions request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Core store stuff. */
-import {
-    getConnectedWallet,
-    setRequestedWalletHolding,
-    getWalletHoldingByAsset
-} from '@setl/core-store';
-
 /* Ofi Store stuff. */
-import {
-    getOfiMyOrderList,
-    ofiSetRequestedMyOrder
-} from '../../ofi-store';
-
-import {NumberConverterService} from '@setl/utils';
+import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
 
 
 /* Types. */
@@ -126,7 +109,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Fix dates. */
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
-                
+
                 let metaData = order.metaData;
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);

@@ -1,10 +1,12 @@
-import {combineReducers, Reducer} from 'redux';
-
+import {combineReducers, Reducer} from "redux";
 /* Manage Orders */
-import {
-    ManageOrders,
-    OfiManageOrderListReducer,
-} from './manage-orders';
+import {ManageOrders, OfiManageOrderListReducer} from "./manage-orders";
+/* My Orders */
+import {MyOrders, OfiMyOrderListReducer} from "./my-orders";
+/* Home Orders */
+import {HomeOrders, OfiHomeOrderListReducer} from "./home-orders";
+// Collective Archive
+import {OfiCollectiveArchiveReducer, OfiCollectiveArchiveState} from "./collective-archive";
 
 export {
     OFI_SET_MANAGE_ORDER_LIST,
@@ -13,11 +15,6 @@ export {
     ofiSetRequestedManageOrder
 } from './manage-orders';
 
-/* My Orders */
-import {
-    MyOrders,
-    OfiMyOrderListReducer,
-} from './my-orders';
 
 export {
     OFI_SET_MY_ORDER_LIST,
@@ -26,11 +23,6 @@ export {
     ofiSetRequestedMyOrder
 } from './my-orders';
 
-/* Home Orders */
-import {
-    HomeOrders,
-    OfiHomeOrderListReducer,
-} from './home-orders';
 
 export {
     OFI_SET_HOME_ORDER_LIST,
@@ -40,15 +32,11 @@ export {
     OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderList,
     getOfiHomeOrderViewBuffer,
+    getOfiHomeOrderViewFilter,
     ofiSetRequestedHomeOrder,
     ofiClearRequestedHomeOrder
 } from './home-orders';
 
-// Collective Archive
-import {
-    OfiCollectiveArchiveState,
-    OfiCollectiveArchiveReducer
-} from './collective-archive';
 
 export {
     SET_COLLECTIVE_ARCHIVE,

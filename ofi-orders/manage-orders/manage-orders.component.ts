@@ -1,49 +1,20 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-
-import {_} from 'lodash';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
+import {NgRedux, select} from "@angular-redux/store";
+import {Unsubscribe} from "redux";
+import {FormControl, FormGroup} from "@angular/forms";
+import {_} from "lodash";
 /* Services. */
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
-
-import {BlockchainContractService} from '@setl/utils';
-
+import {WalletNodeRequestService} from "@setl/core-req-services";
+import {BlockchainContractService, ConfirmationService, NumberConverterService} from "@setl/utils";
+/* Ofi Corp Actions request service. */
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
+/* Ofi Corp Actions request service. */
+import {OfiCorpActionService} from "../../ofi-req-services/ofi-corp-actions/service";
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
-
-/* Utils. */
-import {MoneyValueOfiPipe} from '@setl/utils/pipes';
-
-/* Ofi Corp Actions request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-
-/* Ofi Corp Actions request service. */
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-
+import {AlertsService} from "@setl/jaspero-ng2-alerts";
 /* Ofi Store stuff. */
-import {
-    getOfiUserIssuedAssets,
-    ofiSetRequestedManageOrder
-} from '../../ofi-store';
-
-/* Core store stuff. */
-import {
-    getConnectedWallet,
-    setRequestedWalletHolding,
-    getWalletHoldingByAsset
-} from '@setl/core-store';
-
-/* Ofi Store stuff. */
-import {
-    getOfiManageOrderList
-} from '../../ofi-store';
-
-
-import {NumberConverterService} from '@setl/utils';
+import {getOfiManageOrderList, getOfiUserIssuedAssets, ofiSetRequestedManageOrder} from "../../ofi-store";
 
 /* Types. */
 interface SelectedItem {
@@ -131,6 +102,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         /* Do observable subscriptions here. */
+        const state = this.ngRedux.getState();
 
         /* Orders list. */
         this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
@@ -211,28 +183,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
             /* Check if we have a filter set. */
             console.log(' | preset filter: ', filter);
-            setTimeout(() => {
-                if (filter != '' && this.ordersList.length) {
-                    /* If we do, then let's patch the form value... */
-                    console.log(' | preset filter: ', filter);
-                    this.tabsControl[0].searchForm.controls.status.patchValue(
-                        this.getStatusByName(filter) // resolve the status
-                    );
-
-                    /* ...also, reset the filter... */
-                    this.ofiOrdersService.resetOrderFilter();
-
-                    /* ...and update the view. */
-                    this.getOrdersBySearch();
-
-                    /* Detect changes. */
-                    this.changeDetectorRef.detectChanges();
-                }
-            }, 100);
+            this.handlePresetFilter(filter);
         });
-
-        /* State. */
-        let state = this.ngRedux.getState();
 
         /* Check if we need to request the user issued assets. */
         let userIssuedAssetsList = getOfiUserIssuedAssets(state);
@@ -246,6 +198,32 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.warn('Failed to get your issued assets: ', error);
             });
         }
+    }
+
+    /**
+     * Handle Preset Filter
+     * @param filter
+     */
+    private handlePresetFilter(filter: string): void {
+        if (filter != '') {
+            /* If we do, then let's patch the form value... */
+            console.log(' | preset filter: ', filter);
+            this.tabsControl[0].searchForm.controls['status'].patchValue(
+                this.getStatusByName(filter) // resolve the status
+            );
+
+            /* Detect changes. */
+            this.changeDetectorRef.markForCheck();
+
+            /* ...also, reset the filter... */
+            this.ofiOrdersService.resetOrderFilter();
+
+            /* ...and update the view. */
+            this.getOrdersBySearch();
+        }
+
+        /* Return. */
+        return;
     }
 
     /**

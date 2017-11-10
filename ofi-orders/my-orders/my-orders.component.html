@@ -94,7 +94,7 @@
                     <clr-dg-row *clrDgItems="let order of ordersList">
                         <clr-dg-cell>
                             <!-- Action -->
-                            <div class="btn-group btn-sm">
+                            <div class="btn-group btn-sm compact">
                                 <!-- If order status is 1, allow cancel. -->
                                 <button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">
                                     <i class="fa fa-times"></i>
@@ -134,11 +134,11 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Quantity -->
-                            {{ order.metaData.total | moneyValue}}
+                            {{ numberConverterService.toFrontEnd(order.total) | moneyValue }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ order.metaData.price | moneyValue}}
+                            {{ numberConverterService.toFrontEnd(order.metaData.price) | moneyValue }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Percentage -->
@@ -349,7 +349,7 @@
                             <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValueOfi }}</span>
+                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue }}</span>
                         </div>
                     </div>
                 </div>
