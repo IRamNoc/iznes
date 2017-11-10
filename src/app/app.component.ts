@@ -1,15 +1,21 @@
-import {Component} from '@angular/core';
+import {Component, HostListener, AfterViewInit} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {WalletnodeChannelService, InitialisationService} from '@setl/core-req-services';
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
+import {NgRedux, select} from '@angular-redux/store';
+
+import {
+    setMenuShown
+} from '@setl/core-store';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+
+export class AppComponent implements AfterViewInit {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any;
@@ -27,7 +33,8 @@ export class AppComponent {
         declineText: 'No'
     };
 
-    constructor(private memberSocketService: MemberSocketService,
+    constructor(private ngRedux: NgRedux<any>,
+                private memberSocketService: MemberSocketService,
                 private walletnodeChannelService: WalletnodeChannelService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private  toasterService: ToasterService,
@@ -64,4 +71,22 @@ export class AppComponent {
             this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
         });
     }
+
+    /**
+     * Handle Menu hiding on Smaller Screens less than 1400
+     * @param event
+     */
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+        if (event.target.innerWidth <= 1440) {
+            this.ngRedux.dispatch(setMenuShown(false));
+        } else {
+            this.ngRedux.dispatch(setMenuShown(true));
+        }
+    }
+
+    ngAfterViewInit() {
+
+    }
 }
+

@@ -7,7 +7,7 @@ import {menuSpec} from './menuSpec';
 export const environment = {
     production: false,
     MEMBER_NODE_CONNECTION: {
-        // host: 'uk-lon-li-006.opencsd.io',
+        //host: 'staging.iznes.io',
         host: window.location.hostname,
         // host: '10.0.1.106', // Ming's Socket Server
         // host: '10.0.1.163',  // Ollie's Socket Server
