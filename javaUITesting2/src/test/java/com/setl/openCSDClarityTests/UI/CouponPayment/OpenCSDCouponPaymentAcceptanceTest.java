@@ -34,7 +34,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
-    @Ignore
+ /*   @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -214,5 +214,5 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
-  }
+  }*/
 }
