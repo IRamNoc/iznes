@@ -100,6 +100,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userIssuedAssetsOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'requested']) navRequestedOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
@@ -131,6 +132,8 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
         // if editing price or not, if yes, show modal.
         this.editing = false;
+
+        this.navList = [];
 
         // search formGroup
         this.searchBy = 'byDate';
@@ -173,7 +176,6 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             this.updateNavList(navList);
         }));
 
-        this.navList = [];
         this._changeDetectorRef.markForCheck();
     }
 
@@ -233,10 +235,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     }
 
     requestNavList(requested) {
+        const currentState = this._ngRedux.getState();
+        const currentRequest = getOfiManageNavListCurrentRequest(currentState);
+
         if (!requested) {
-            const currentState = this._ngRedux.getState();
-            const currentRequest = getOfiManageNavListCurrentRequest(currentState);
             OfiNavService.defaultRequestNavList(this._ofiNavService, this._ngRedux, currentRequest);
+        } else if (currentRequest.fundName === '' && currentRequest.navDate === '') {
+            const navDateNum = mDateHelper.getCurrentUnixTimestamp();
+            const navDateParse = mDateHelper.unixTimestampToDateStr(navDateNum, 'YYYY-MM-DD');
+            this.handleSearchSubmit({fundName: '', navDate: navDateParse});
         }
     }
 
