@@ -49,4 +49,5 @@ export interface AllTxList {
 export interface OfiClientTxsListState {
     allTxList: AllTxList;
     requested: boolean;
+    version: number;
 }

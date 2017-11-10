@@ -1,5 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-orders"><i class="fa fa-university"></i> <span mltag="txt_manageorders">Manage Orders</span> - {{ connectedWalletName }}</h1>
+    <h1 id="manage-orders"><i class="fa fa-university"></i>
+        <span mltag="txt_manageorders">Manage Orders</span> - {{ connectedWalletName }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -11,14 +12,14 @@
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon Payment list tab. -->
                     <ng-container
-                        *ngTemplateOutlet="staticOrdersList"
+                            *ngTemplateOutlet="staticOrdersList"
                     ></ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="id >= 1">
                     <!-- Create Coupon Payment tab. -->
                     <ng-container
-                        *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
+                            *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -47,15 +48,15 @@
                             </label>
                             <div>
                                 <ng-select
-                                    id="orders-search-status"
-                                    class="fluid-width"
-                                    [items]="orderStatuses"
-                                    [allowClear]="true"
-                                    (selected)="getOrdersBySearch()"
-                                    (removed)="getOrdersBySearch()"
-                                    [formControl]="tabsControl[0].searchForm.controls['status']"
-                                    placeholder="Status"
-                                mltag="txt_status"></ng-select>
+                                        id="orders-search-status"
+                                        class="fluid-width"
+                                        [items]="orderStatuses"
+                                        [allowClear]="true"
+                                        (selected)="getOrdersBySearch()"
+                                        (removed)="getOrdersBySearch()"
+                                        [formControl]="tabsControl[0].searchForm.controls['status']"
+                                        placeholder="Status"
+                                        mltag="txt_status"></ng-select>
                             </div>
                         </div>
                         <div class="form-group col-sm-4">
@@ -64,15 +65,15 @@
                             </label>
                             <div>
                                 <ng-select
-                                    id="orders-search-type"
-                                    class="fluid-width"
-                                    [items]="orderTypes"
-                                    [allowClear]="true"
-                                    (selected)="getOrdersBySearch()"
-                                    (removed)="getOrdersBySearch()"
-                                    [formControl]="tabsControl[0].searchForm.controls['type']"
-                                    placeholder="Type"
-                                mltag="txt_type"></ng-select>
+                                        id="orders-search-type"
+                                        class="fluid-width"
+                                        [items]="orderTypes"
+                                        [allowClear]="true"
+                                        (selected)="getOrdersBySearch()"
+                                        (removed)="getOrdersBySearch()"
+                                        [formControl]="tabsControl[0].searchForm.controls['type']"
+                                        placeholder="Type"
+                                        mltag="txt_type"></ng-select>
                             </div>
                         </div>
                     </div>
@@ -81,19 +82,20 @@
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_ordertype">Order type</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_fundname">Fund name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
-                        <clr-dg-cell>
+                        <clr-dg-cell class="manageOrderStatus">
+                            <!-- Order type -->
+                            <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
+                            <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
+
                             <!-- Action -->
                             <div class="btn-group btn-sm">
                                 <!-- If order status is 1, allow cancel. -->
@@ -113,38 +115,25 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Investor -->
-                            {{ order.metaData.investorWalletName }}<br />
-                            {{ order.advisorAccountName }}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Order type -->
-                            <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
-                            <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Order REF -->
-                            {{ padNumberLeft(order.arrangementID, 5) }}
+                            {{ order.metaData.investorWalletName }}<br>
+                            <b class="text_small">Ref</b> {{ padNumberLeft(order.arrangementID, 5) }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Fund name -->
-                            {{ order.metaData.assetISIN }}<br />
-                            {{ order.asset }}
+                            {{ order.metaData.assetISIN }}<br/>
+                            <span class="text_small">{{ order.asset }}</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Amount -->
-                            {{ order.metaData.units }}
+                            {{ order.metaData.total | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Quantity -->
-                            {{ order.total }}
+                            {{ order.metaData.units | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ order.metaData.price }}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Percentage -->
-                            {{ order.metaData.feePercent }}
+                            {{ order.metaData.price | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
@@ -211,7 +200,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -248,7 +237,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -256,7 +245,7 @@
                             <span mltag="txt_quantity">Quantity</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.units | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.units | moneyValue}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -264,12 +253,12 @@
                             <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.price | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.price | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -277,12 +266,12 @@
                             <span mltag="txt_grossamount">Gross Amount</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{(orderData.metaData.units * orderData.price) | moneyValueOfi}}</span>
+                            <span class="readonly-field">{{orderData.metaData.total | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-12">
@@ -304,7 +293,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-12">
@@ -326,7 +315,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-12">
@@ -348,7 +337,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -356,12 +345,12 @@
                             <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValueOfi }}</span>
+                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue }}</span>
                         </div>
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -374,7 +363,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed" />
+                <hr class="dashed"/>
 
                 <div class="form-group button-group">
                     <div class="col-sm-12">

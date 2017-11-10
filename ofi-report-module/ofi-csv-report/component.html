@@ -11,7 +11,7 @@
                 <!-- NAV list tab. -->
                 <ng-container>
                     <ng-container
-                            *ngTemplateOutlet="navListTab"
+                        *ngTemplateOutlet="navListTab"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -42,11 +42,10 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
                                 <input
-                                        formControlName="navDateFrom"
-                                        [(ngModel)]="navDateFrom.value"
-                                        [dpDayPicker]="configDate" placeholder="Choose a date from"
-                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                        mltag="txt_chooseadatefrom"/>
+                                    formControlName="navDateFrom"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date from"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    mltag="txt_chooseadatefrom"/>
                             </div>
                         </div>
 
@@ -57,11 +56,10 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
                                 <input
-                                        formControlName="navDateTo"
-                                        [(ngModel)]="navDateTo.value"
-                                        [dpDayPicker]="configDate" placeholder="Choose a date to"
-                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                        mltag="txt_chooseadateto"/>
+                                    formControlName="navDateTo"
+                                    [dpDayPicker]="configDate" placeholder="Choose a date to"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    mltag="txt_chooseadateto"/>
                             </div>
                         </div>
                     </div>

@@ -132,6 +132,8 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
         // if editing price or not, if yes, show modal.
         this.editing = false;
 
+        this.navList = [];
+
         // search formGroup
         this.searchBy = 'byDate';
         this.selectedFund = new FormControl([]);
@@ -173,7 +175,6 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
             this.updateNavList(navList);
         }));
 
-        this.navList = [];
         this._changeDetectorRef.markForCheck();
     }
 
@@ -233,10 +234,15 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     }
 
     requestNavList(requested) {
+        const currentState = this._ngRedux.getState();
+        const currentRequest = getOfiManageNavListCurrentRequest(currentState);
+
         if (!requested) {
-            const currentState = this._ngRedux.getState();
-            const currentRequest = getOfiManageNavListCurrentRequest(currentState);
             OfiNavService.defaultRequestNavList(this._ofiNavService, this._ngRedux, currentRequest);
+        } else if (currentRequest.fundName === '' && currentRequest.navDate === '') {
+            const navDateNum = mDateHelper.getCurrentUnixTimestamp();
+            const navDateParse = mDateHelper.unixTimestampToDateStr(navDateNum, 'YYYY-MM-DD');
+            this.handleSearchSubmit({fundName: '', navDate: navDateParse});
         }
     }
 
@@ -317,11 +323,11 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
 
     fillNavGapsIfByFundName(navList, fundName) {
         const hasToday = immutableHelper.filter(navList, (asset) => {
-            const navDate = asset.get('navDate', '');
+            const navDate = asset.get('date', '');
 
             const navDateNum = mDateHelper.dateStrToUnixTimestamp(navDate, 'DD/MM/YYYY');
             // if is today
-            return (moment().diff(moment(navDateNum), 'day') === 0);
+            return !isNaN(navDateNum) && (moment().diff(moment(navDateNum), 'day') === 0);
         });
 
         if (hasToday.length === 0) {

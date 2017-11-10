@@ -9,6 +9,8 @@ import {
 export {
     OFI_SET_MANAGE_ORDER_LIST,
     getOfiManageOrderList,
+    ofiClearRequestedManageOrder,
+    ofiSetRequestedManageOrder
 } from './manage-orders';
 
 /* My Orders */
@@ -20,6 +22,8 @@ import {
 export {
     OFI_SET_MY_ORDER_LIST,
     getOfiMyOrderList,
+    ofiClearRequestedMyOrder,
+    ofiSetRequestedMyOrder
 } from './my-orders';
 
 /* Home Orders */
@@ -36,6 +40,8 @@ export {
     OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderList,
     getOfiHomeOrderViewBuffer,
+    ofiSetRequestedHomeOrder,
+    ofiClearRequestedHomeOrder
 } from './home-orders';
 
 // Collective Archive

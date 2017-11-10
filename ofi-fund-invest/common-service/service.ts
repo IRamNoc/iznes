@@ -13,9 +13,9 @@ export class CommonService {
         const currentTimeStamp = mDateHelper.getCurrentUnixTimestamp();
 
         // Cutoff
-        const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOff'], 0);
+        const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOff', '0', 'id'], 0);
         const sCutoffDate = mDateHelper.addDay(new Date(), sCutOffOffset);
-        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOffHour'], 0) + ':00';
+        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOffHour', '0', 'id'], 0) + ':00';
         const sCutoffDateStr = mDateHelper.unixTimestampToDateStr(sCutoffDate, 'YYYY-MM-DD');
         let sCutoffDateTimeStr = sCutoffDateStr + ' ' + sCutoffTime;
         let sCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -26,9 +26,9 @@ export class CommonService {
         }
 
 
-        const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemptionCutOff'], 0);
+        const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemptionCutOff', '0', 'id'], 0);
         const rCutoffDate = mDateHelper.addDay(new Date(), rCutOffOffset);
-        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemptionCutOffHour'], 0) + ':00';
+        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemptionCutOffHour', '0', 'id'], 0) + ':00';
         const rCutoffDateStr = mDateHelper.unixTimestampToDateStr(rCutoffDate, 'YYYY-MM-DD');
         let rCutoffDateTimeStr = rCutoffDateStr + ' ' + rCutoffTime;
         let rCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -39,7 +39,7 @@ export class CommonService {
         }
 
         // known nav
-        const knownNav = Number(immutableHelper.get(shareData, ['metaData', 'knownNav', '0', 'id'], 0)) === 1;
+        const knownNav = immutableHelper.get(shareData, ['metaData', 'knownNav'], false);
 
         // Valuation
         let sValuationDate = 0;
@@ -64,7 +64,7 @@ export class CommonService {
 
 
         // settlement
-        const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlementDate'], 0);
+        const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlementDate', '0', 'id'], 0);
         const sSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
 
         const rSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);

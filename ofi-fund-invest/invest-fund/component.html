@@ -82,7 +82,7 @@
                         placeholder="Select sub-portfolio"
                         formControlName="address"
                         (selected)="handleSelectedAddress($event)"
-                    mltag="txt_selectsubportfolio">
+                        mltag="txt_selectsubportfolio">
                     </ng-select>
                 </div>
             </div>
@@ -130,7 +130,8 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
+                    <!--<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
+                    <input formControlName="cutoffDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>
                 </div>
             </div>
 
@@ -142,7 +143,8 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
+                    <!--<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
+                    <input formControlName="valuationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>
                 </div>
             </div>
 
@@ -158,7 +160,21 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                    <input [dpDayPicker]="configDate" [value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [disabled]="true" mltag="txt_chooseadate"/>
+                    <!--<input [dpDayPicker]="configDate" -->
+                    <!--[value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' "-->
+                    <!--placeholder="Choose a date"-->
+                    <!--mode="day"-->
+                    <!--theme="dp-material"-->
+                    <!--[ngStyle]="{'width':'100%'}" -->
+                    <!--mltag="txt_chooseadate"/>-->
+                    <input
+                        formControlName="settlementDate"
+                        [dpDayPicker]="configDate"
+                        placeholder="Choose a date"
+                        mode="day"
+                        theme="dp-material"
+                        [ngStyle]="{'width':'100%'}"
+                        mltag="txt_chooseadate"/>
                 </div>
             </div>
 
@@ -204,7 +220,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>
+                        <span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>
                     </div>
                 </div>
             </div>
@@ -216,7 +232,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>
+                        <span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>
                     </div>
                 </div>
             </div>
@@ -228,7 +244,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>
+                        <span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>
                     </div>
                 </div>
             </div>
@@ -240,7 +256,7 @@
             <div class="alert alert-danger">
                 <div class="alert-items">
                     <div class="alert-item">
-                <span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>
+                        <span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>
                     </div>
                 </div>
             </div>

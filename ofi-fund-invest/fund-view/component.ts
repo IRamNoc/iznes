@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-fund-view',
@@ -25,6 +26,8 @@ export class FundViewComponent implements OnInit, OnDestroy {
 
     categories: Array<string>;
 
+    metaData: any;
+
     activeTabData: any;
 
     constructor(private _changeDetectorRef: ChangeDetectorRef) {
@@ -34,6 +37,7 @@ export class FundViewComponent implements OnInit, OnDestroy {
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.updateShareData(shareData);
+            this.metaData = _.get(shareData, [this.shareId, 'metaData'], {});
         }));
 
         this.categories = ['administrative', 'services', 'category', 'legal', 'fees', 'risk', 'profile', 'characteristic', 'calendar', 'documents'];
@@ -41,6 +45,7 @@ export class FundViewComponent implements OnInit, OnDestroy {
         this.activeTabData = {
             category: 'administrative'
         };
+        // fundDocDici fundDocProductSheet fundProspectus fundReport
     }
 
     ngOnDestroy() {
