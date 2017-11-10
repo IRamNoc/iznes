@@ -83,7 +83,7 @@
 
                 <clr-dg-row *clrDgItems="let nav of navList;">
                     <clr-dg-cell>
-                        <div class="input-button-group">
+                        <div class="btn-group btn-sm">
                             <button class="btn" (click)="showEdit(nav.fundName, nav.nav, nav.date)" [disabled]="nav.status === -1">
                                 <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                         </div>
