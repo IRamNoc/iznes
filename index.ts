@@ -24,7 +24,8 @@ export {
     resetMembernodeSessionManager,
 
     // site settings
-    setLanguage
+    setLanguage,
+    setMenuShown
 
 } from './user';
 

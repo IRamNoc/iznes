@@ -1,9 +1,10 @@
-import {SET_LANGUAGE} from './actions';
+import {SET_LANGUAGE, SET_MENU_SHOWN} from './actions';
 import {SiteSettingsState} from './model';
 import _ from 'lodash';
 
 const initialState: SiteSettingsState = {
     language: 'eng',
+    menuShown: true
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action) {
@@ -11,6 +12,8 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
     switch (action.type) {
         case SET_LANGUAGE:
             return setLanguage(SET_LANGUAGE, action, state);
+        case SET_MENU_SHOWN:
+            return setMenuShown(SET_MENU_SHOWN, action, state);
         default:
             return state;
     }
@@ -31,6 +34,18 @@ function setLanguage(actionType, action, state) {
 
     newState = Object.assign({}, state, {
         language
+    });
+
+    return newState;
+};
+
+function setMenuShown(actionType, action, state) {
+    let newState;
+
+    const menuShown = _.get(action, 'menuShown', []);
+
+    newState = Object.assign({}, state, {
+        menuShown
     });
 
     return newState;

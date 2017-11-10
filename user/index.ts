@@ -56,11 +56,13 @@ export {
 import {
     SiteSettingsReducer,
     SiteSettingsState,
-    setLanguage
+    setLanguage,
+    setMenuShown
 } from './site-settings';
 
 export {
-    setLanguage
+    setLanguage,
+    setMenuShown
 };
 
 
