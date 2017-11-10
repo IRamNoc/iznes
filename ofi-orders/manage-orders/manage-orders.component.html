@@ -97,7 +97,7 @@
                             <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
 
                             <!-- Action -->
-                            <div class="btn-group btn-sm">
+                            <div class="btn-group btn-sm compact">
                                 <!-- If order status is 1, allow cancel. -->
                                 <button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">
                                     <i class="fa fa-times"></i>

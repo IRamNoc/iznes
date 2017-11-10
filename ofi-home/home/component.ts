@@ -1,19 +1,13 @@
 /* Core/Angular imports. */
-import {
-    Component,
-    AfterViewInit,
-    OnDestroy,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy
-} from '@angular/core';
-import {Router} from '@angular/router';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from "@angular/core";
+import {Router} from "@angular/router";
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
+import {NgRedux, select} from "@angular-redux/store";
 
+import {NumberConverterService} from "@setl/utils";
 /* Ofi orders request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {ofiSetRequestedHomeOrder} from '../../ofi-store';
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
+import {ofiSetRequestedHomeOrder} from "../../ofi-store";
 
 @Component({
     styleUrls: ['./component.css'],
@@ -43,6 +37,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private ofiOrdersService: OfiOrdersService,
+                private _numberConverterService: NumberConverterService,
                 private _ngRedux: NgRedux<any>,
                 private _router: Router) {
         /* Stub. */
@@ -61,6 +56,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 /* Fix dates. */
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+
+                let metaData = order.metaData;
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * metaData.price;
+
+                fixed.metaData = metaData;
 
                 /* Return. */
                 return fixed;
