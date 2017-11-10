@@ -13,9 +13,9 @@ export class CommonService {
         const currentTimeStamp = mDateHelper.getCurrentUnixTimestamp();
 
         // Cutoff
-        const sCutOffOffset = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOff', '0', 'id'], 0);
+        const sCutOffOffset = Number(immutableHelper.get(shareData, ['metaData', 'subscriptionCutOff', '0', 'id'], 0));
         const sCutoffDate = mDateHelper.addDay(new Date(), sCutOffOffset);
-        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOffHour', '0', 'id'], 0) + ':00';
+        const sCutoffTime = immutableHelper.get(shareData, ['metaData', 'subscriptionCutOffHour', '0', 'id'], '00:00');
         const sCutoffDateStr = mDateHelper.unixTimestampToDateStr(sCutoffDate, 'YYYY-MM-DD');
         let sCutoffDateTimeStr = sCutoffDateStr + ' ' + sCutoffTime;
         let sCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -26,9 +26,9 @@ export class CommonService {
         }
 
 
-        const rCutOffOffset = immutableHelper.get(shareData, ['metaData', 'redemptionCutOff', '0', 'id'], 0);
+        const rCutOffOffset = Number(immutableHelper.get(shareData, ['metaData', 'redemptionCutOff', '0', 'id'], 0));
         const rCutoffDate = mDateHelper.addDay(new Date(), rCutOffOffset);
-        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemptionCutOffHour', '0', 'id'], 0) + ':00';
+        const rCutoffTime = immutableHelper.get(shareData, ['metaData', 'redemptionCutOffHour', '0', 'id'], '00:00');
         const rCutoffDateStr = mDateHelper.unixTimestampToDateStr(rCutoffDate, 'YYYY-MM-DD');
         let rCutoffDateTimeStr = rCutoffDateStr + ' ' + rCutoffTime;
         let rCutoffDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rCutoffDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -39,7 +39,7 @@ export class CommonService {
         }
 
         // known nav
-        const knownNav = immutableHelper.get(shareData, ['metaData', 'knownNav'], false);
+        const knownNav = immutableHelper.get(shareData, ['metaData', 'knownNav', '0', 'id'], '0') === '1';
 
         // Valuation
         let sValuationDate = 0;
@@ -105,14 +105,14 @@ export class CommonService {
             '3': 'both'
         };
 
-        const sAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'formOfsubscription', '0', 'id'], 3);
+        const sAllowTypeNum = Number(immutableHelper.get(shareData, ['metaData', 'formOfsubscription', '0', 'id'], '3'));
         const sAllowType = typeDef[sAllowTypeNum];
 
-        const rAllowTypeNum = immutableHelper.get(shareData, ['metaData', 'formOfRedemption', '0', 'id'], 3);
+        const rAllowTypeNum = Number(immutableHelper.get(shareData, ['metaData', 'formOfRedemption', '0', 'id'], '3'));
         const rAllowType = typeDef[rAllowTypeNum];
 
         // decimalisation
-        const decimalisation = Number(immutableHelper.get(shareData, ['metaData', 'decimalisation', '0', 'id'], 0));
+        const decimalisation = Number(immutableHelper.get(shareData, ['metaData', 'decimalisation', '0', 'id'], '0'));
 
         // min value
         const sMinValue = Number(immutableHelper.get(shareData, ['metaData', 'minSubscriptionvalue'], 0));
