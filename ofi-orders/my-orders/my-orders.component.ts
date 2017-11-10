@@ -7,7 +7,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
-import {ConfirmationService, NumberConverterService} from "@setl/utils";
+import {ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
 /* Utils. */
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
@@ -80,7 +80,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService) {
+                public _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -110,7 +110,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
-                let metaData = order.metaData;
+                let metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
