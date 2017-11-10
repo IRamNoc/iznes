@@ -100,7 +100,6 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userIssuedAssetsOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'requested']) navRequestedOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
