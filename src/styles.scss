@@ -368,3 +368,24 @@ body > .ui-select-bootstrap.open {
 .v-middle span {
     display: inline-block;
 }
+
+.homescreen_text {
+    @media screen and (max-width: 1540px) and (min-width: 1315px) {
+        font-size: 80%;
+    }
+    @media screen and (max-width: 1314px) and (min-width: 1092px) {
+        font-size: 60%;
+    }
+    @media screen and (max-width: 1091px) and (min-width: 992px) {
+        font-size: 50%;
+    }
+    @media screen and (max-width: 882px) and (min-width: 768px) {
+        font-size: 80%;
+    }
+    @media screen and (min-width: 576px) {
+        text-align: right!important;
+    }
+    @media screen and (max-width: 575px) {
+        text-align: center!important;
+    }
+}
