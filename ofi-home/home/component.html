@@ -101,15 +101,15 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Amount -->
-                    {{ order.metaData.units }}
+                    {{ order.metaData.total | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Quantity -->
-                    {{ order.total }}
+                    {{ order.metaData.units | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Price -->
-                    {{ order.metaData.price }}
+                    {{ order.metaData.price | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Percentage -->
@@ -136,6 +136,10 @@
                     <span *ngIf="order.status == 3" class="label label-info">
                         <span class="txt_waitingnav" mltag="txt_waitingforsettlement">Waiting for settlement</span>
                     </span>
+
+                    <!-- <span *ngIf="order.status == 5" class="label label-info">
+                        <span class="txt_waiting_for_payment">Waiting for payment</span>
+                    </span> -->
 
                     <span *ngIf="order.status == 0" class="label label-error">
                         <span class="ml" mltag="txt_cancelled">Cancelled</span>
