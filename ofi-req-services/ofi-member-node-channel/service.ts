@@ -80,7 +80,6 @@ export class OfiMemberNodeChannelService {
 
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
-
                 break;
         }
     }

@@ -91,7 +91,7 @@
                     <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
-                        <clr-dg-cell>
+                        <clr-dg-cell class="manageOrderStatus">
                             <!-- Order type -->
                             <span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
                             <span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
