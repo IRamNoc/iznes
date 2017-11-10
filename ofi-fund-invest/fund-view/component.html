@@ -674,12 +674,7 @@
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_isknownnav">Is Known NAV</td>
-                    <td *ngIf="metaData.knownNav" mltag="txt_yes">
-                        Yes
-                    </td>
-                    <td *ngIf="!metaData.knownNav" mltag="txt_no">
-                        No
-                    </td>
+                    <td>{{metaData.knownNav[0] && metaData.knownNav[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_decimalisation">Decimalisation</td>

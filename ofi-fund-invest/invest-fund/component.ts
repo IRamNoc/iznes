@@ -232,7 +232,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             shareName,
             fullAssetName: issuer + '|' + shareName,
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
-            currency: immutableHelper.get(thisShareData, ['metaData', 'portfolio_currency_select'], ''),
+            currency: immutableHelper.get(thisShareData, ['metaData', 'portfolioCurrency', '0', 'text'], ''),
             cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
             cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeStrKey], 0),
             cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),

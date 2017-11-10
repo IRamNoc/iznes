@@ -163,7 +163,11 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         if (!dateTo) dateTo = this.formatDate('YYYY-MM-DD', new Date());
         if (!dateFrom) dateFrom = moment(dateTo).subtract(1, 'days');
 
-        let url = 'http://' + window.location.hostname + ':9788/file?token=' + this.socketToken + '&method=historicalCsv&walletId=' + this.connectedWalletId + '&userId=' + this.userId + '&dateFrom=' + encodeURIComponent(dateFrom) + '&dateTo=' + encodeURIComponent(dateTo);
+        //production:
+        let url = 'https://' + window.location.hostname + '/mn/file?token=' + this.socketToken + '&method=historicalCsv&walletId=' + this.connectedWalletId + '&userId=' + this.userId + '&dateFrom=' + encodeURIComponent(dateFrom) + '&dateTo=' + encodeURIComponent(dateTo);
+
+        //local:
+        //let url = 'http://' + window.location.hostname + ':9788/file?token=' + this.socketToken + '&method=historicalCsv&walletId=' + this.connectedWalletId + '&userId=' + this.userId + '&dateFrom=' + encodeURIComponent(dateFrom) + '&dateTo=' + encodeURIComponent(dateTo);
 
         window.open(url, '_blank');
     }
