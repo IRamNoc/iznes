@@ -226,6 +226,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const issuer = immutableHelper.get(thisShareData, 'issuer', '');
         const shareName = immutableHelper.get(thisShareData, 'shareName', '');
 
+        const decimalisation = immutableHelper.get(shareCharacteristic, 'decimalisation', 2);
+        const decimalisationNumber = Math.pow(10, -decimalisation);
+
+
         this.metaData = {
             registrar: immutableHelper.get(thisShareData, 'managementCompany', ''),
             issuer,
@@ -249,7 +253,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             acquiredFee,
             feePercent,
             platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0),
-            decimalisation: immutableHelper.get(shareCharacteristic, 'decimalisation', 2)
+            decimalisation,
+            decimalisationNumber
         };
 
     }
