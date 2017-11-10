@@ -37,7 +37,7 @@ public class OpenCSDAccountsAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
-
+/*
     @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
@@ -162,7 +162,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
-    @Ignore
+
   @Test
   public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -219,5 +219,5 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
-  }
+  }*/
 }
