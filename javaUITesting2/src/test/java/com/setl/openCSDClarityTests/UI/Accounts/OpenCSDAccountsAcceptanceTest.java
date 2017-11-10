@@ -224,4 +224,3 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }*/
-}
