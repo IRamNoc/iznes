@@ -130,15 +130,15 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Amount -->
-                            {{ order.metaData.units | moneyValue}}
+                            {{ order.metaData.total | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Quantity -->
-                            {{ numberConverterService.toFrontEnd(order.total) | moneyValue }}
+                            {{ order.metaData.units | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ numberConverterService.toFrontEnd(order.metaData.price) | moneyValue }}
+                            {{ order.metaData.price | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Percentage -->
