@@ -71,8 +71,6 @@
             </button>
 
 
-
-
         </ng-sidebar>
 
         <div ng-sidebar-content class="main-container-sidebar-content">
@@ -83,11 +81,11 @@
             <div class="content-container">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav">
+                <nav class="sidenav" [ngClass]="{'menuHideNav': menuShown === 0}">
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
-                <main class="content-area">
+                <main class="content-area" [ngClass]="{'menuHideContent': menuShown === 0}">
                     <!--
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.

@@ -30,6 +30,8 @@ import {WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
+import {setMenuShown} from '@setl/core-store';
+
 @Component({
     selector: 'app-navigation-topbar',
     templateUrl: './navigation-topbar.component.html',
@@ -57,12 +59,15 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public currentUserDetails;
     public username;
     public lastLogin;
+    public menuState;
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
     @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
     @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
+
+    @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private myWalletsService: MyWalletsService,
@@ -85,7 +90,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
-
     }
 
 
@@ -161,6 +165,13 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             }
         ));
 
+        this.subscriptionsArray.push(this.menuShowOb.subscribe(
+            (menuState) => {
+                this.menuState = menuState;
+                this.menuHasChanged();
+            }
+        ));
+
         this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
             (memberNodeSessionManager) => {
                 this.showCountdownModal = _.get(memberNodeSessionManager, 'startCountDown', 0);
@@ -176,6 +187,15 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 this.changeDetectorRef.detectChanges();
             }
         ));
+
+
+        console.log(window.innerWidth);
+
+        if (window.innerWidth <= 1440) {
+            this.ngRedux.dispatch(setMenuShown(false));
+        } else {
+            this.ngRedux.dispatch(setMenuShown(true));
+        }
     }
 
     ngOnDestroy() {
@@ -235,6 +255,21 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     logout() {
         this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+    }
+
+    controlMenu() {
+        console.log('menu pressed');
+
+        if (this.menuState) {
+            this.ngRedux.dispatch(setMenuShown(false));
+        } else {
+            this.ngRedux.dispatch(setMenuShown(true));
+        }
+    }
+
+    menuHasChanged() {
+        console.log('menu has changed');
+        console.log(this.menuState);
     }
 
     requestMailInitialCounts(requestedState: boolean): void {
