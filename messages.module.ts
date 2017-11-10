@@ -18,7 +18,7 @@ import {MultilingualModule} from '@setl/multilingual';
 import {
     MyMessagesService,
 } from '@setl/core-req-services';
-import {FileViewerModule} from "../core-fileviewer/fileviewer.module";
+import {FileViewerModule} from '@setl/core-fileviewer';
 import {SetlMessageAttachmentComponent} from "./messages/message-components/message-attachment/message-attachment.component";
 import {SetlMessageBodyComponent} from "./messages/message-components/message-body/message-body.component";
 
