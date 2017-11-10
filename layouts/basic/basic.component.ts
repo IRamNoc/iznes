@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
+import {Subscription} from 'rxjs/Subscription';
 
 import {
     setLanguage
@@ -28,6 +29,13 @@ export class BasicLayoutComponent implements OnInit {
     public _MODES: Array<string> = ['over', 'push', 'slide'];
     public _POSITIONS: Array<string> = ['left', 'right', 'top', 'bottom'];
 
+    @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+
+    public menuShown;
+
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
+
     public _toggleSidebar() {
         this._opened = !this._opened;
         return false;
@@ -43,9 +51,31 @@ export class BasicLayoutComponent implements OnInit {
     }
 
     constructor(private ngRedux: NgRedux<any>) {
+        this.menuShown = 1;
+        console.log(this.menuShown);
+
+        this.subscriptionsArray.push(this.menuShowOb.subscribe(
+            (menuState) => {
+                this.menuHasChanged(menuState);
+            }
+        ));
+    }
+
+    public menuHasChanged(menuState) {
+        if (menuState) {
+            this.menuShown = 1;
+        } else {
+            this.menuShown = 0;
+        }
     }
 
     ngOnInit() {
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 
 }
