@@ -442,3 +442,35 @@ hr.dashed {
 #search-orders-form {
     padding: 0px;
 }
+
+.menuHideNav {
+    display: none !important;
+}
+
+.menuHideContent {
+    width: 100% !important;
+}
+
+.branding button {
+    width: 45px;
+    background: transparent;
+    border: 0px solid white;
+    margin-right: 10px;
+}
+
+.branding button I {
+    font-size: 24px;
+    color: white;
+}
+
+.branding {
+    padding-left: 5px !important;
+}
+
+.manageOrderStatus {
+    text-align: center !important;
+}
+
+.manageOrderStatus span {
+    margin-bottom: 10px;
+}
