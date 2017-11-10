@@ -352,6 +352,7 @@ export class SetlMessagesComponent implements OnDestroy {
      */
     showMessage(index) {
 
+        if (typeof this.messages[index] === 'undefined') index = 0;
         if (!this.messages[index].isRead) this.markAsRead(this.messages[index]);
 
         // set message to active to apply message-active css class
