@@ -10,7 +10,7 @@ import {
 } from '@setl/core-req-services';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {Subscription} from 'rxjs/Subscription';
-import {NumberConverterService} from '@setl/utils';
+import {NumberConverterService, immutableHelper} from '@setl/utils';
 
 
 @Component({
@@ -109,6 +109,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
             return result;
         }, []);
+
+        this.tabsControl = immutableHelper.copy(this.tabsControl);
 
         this._changeDetectorRef.markForCheck();
     }

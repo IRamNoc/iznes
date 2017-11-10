@@ -154,8 +154,8 @@ export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
     }
 
     filterTxsWithDate(archiveListData): any {
-        const fromDate = mDateHelper.dateStrToUnixTimestamp(this.fromDateValue, 'DD/MM/YYYY');
-        const toDate = mDateHelper.dateStrToUnixTimestamp(this.toDateValue, 'DD/MM/YYYY');
+        const fromDate = mDateHelper.dateStrToUnixTimestamp(this.fromDateValue + ' ' + '00:00', 'DD/MM/YYYY HH:mm');
+        const toDate = mDateHelper.dateStrToUnixTimestamp(this.toDateValue + ' ' + '23:59', 'DD/MM/YYYY HH:mm');
 
         return immutableHelper.reduce(archiveListData, (result, item) => {
             const thisDate = item.get('cutoffDateNumber', 0);
