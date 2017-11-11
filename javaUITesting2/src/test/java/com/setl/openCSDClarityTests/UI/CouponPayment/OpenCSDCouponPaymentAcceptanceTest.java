@@ -34,15 +34,17 @@ public class OpenCSDCouponPaymentAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
-
+ /*   @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
   }
+    @Ignore
   @Test
   public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
   }
+    @Ignore
   @Test
   public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -55,6 +57,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     enterLoginCredentialsUserName("Emmanuel");
     driver.findElement(By.id("login-submit")).click();
   }
+    @Ignore
   @Test
   public void shouldEditDisplayname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -64,6 +67,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -73,6 +77,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditLastname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -82,6 +87,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditMobilePhone() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -91,6 +97,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditAddress() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -100,6 +107,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditAddressPrefix() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -109,6 +117,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditCity() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -118,6 +127,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditState() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -127,6 +137,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditPostalCode() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -136,6 +147,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -146,6 +158,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -174,6 +187,7 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     //myAccountSendKeys("ProfileText", "Testing");
     clickMyAccountSubmit();
   }
+  @Ignore
   @Test
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -201,4 +215,4 @@ public class OpenCSDCouponPaymentAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }
-}
+}*/

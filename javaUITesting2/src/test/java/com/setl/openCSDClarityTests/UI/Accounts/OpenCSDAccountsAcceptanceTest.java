@@ -20,7 +20,11 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
 import static org.junit.Assert.fail;
 
+
 @RunWith(OrderedJUnit4ClassRunner.class)
+
+
+
 public class OpenCSDAccountsAcceptanceTest {
 
     @Rule
@@ -37,15 +41,21 @@ public class OpenCSDAccountsAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
+}
 
+    /*
+
+ o   @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
   }
+    @Ignore
   @Test
   public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
   }
+    @Ignore
   @Test
   public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -58,6 +68,7 @@ public class OpenCSDAccountsAcceptanceTest {
     enterLoginCredentialsUserName("Emmanuel");
     driver.findElement(By.id("login-submit")).click();
   }
+    @Ignore
   @Test
   public void shouldEditDisplayname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -67,6 +78,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -76,6 +88,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditLastname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -85,6 +98,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditMobilePhone() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -94,6 +108,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditAddress() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -103,6 +118,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditAddressPrefix() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -112,6 +128,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditCity() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -121,6 +138,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditState() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -130,6 +148,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditPostalCode() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -139,6 +158,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -149,6 +169,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
   }
+
   @Test
   public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -158,6 +179,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldEditMemorableAnswer() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -177,6 +199,7 @@ public class OpenCSDAccountsAcceptanceTest {
     //myAccountSendKeys("ProfileText", "Testing");
     clickMyAccountSubmit();
   }
+    @Ignore
   @Test
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -204,4 +227,4 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }
-}
+  }*/
