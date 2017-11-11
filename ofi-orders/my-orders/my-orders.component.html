@@ -80,7 +80,8 @@
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
                     <clr-dg-column style="min-width: 180px;"><span mltag="txt_investor">Investor</span></clr-dg-column>
-                    <clr-dg-column style="min-width: 120px;"><span mltag="txt_ordertype">Order type</span></clr-dg-column>
+                    <clr-dg-column style="min-width: 120px;"><span mltag="txt_ordertype">Order type</span>
+                    </clr-dg-column>
                     <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
                     <clr-dg-column style="min-width: 210px;"><span mltag="txt_fundname">Fund name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
@@ -137,7 +138,7 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ order.metaData.price | moneyValue}}
+                            {{ order.price | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
@@ -252,7 +253,7 @@
                             <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.price | moneyValue}}</span>
+                            <span class="readonly-field">{{orderData.price | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
