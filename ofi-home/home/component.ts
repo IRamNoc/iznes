@@ -52,7 +52,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             if (!orderList.length) return;
 
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList.map((order) => {
+            const ordersList_new = immutableHelper.copy(orderList);
+            this.ordersList = ordersList_new.map((order) => {
                 /* Pointer. */
                 let fixed = order;
 

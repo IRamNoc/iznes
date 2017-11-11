@@ -107,7 +107,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Orders list. */
         this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList.map((order) => {
+
+            const orderListNew = immutableHelper.copy(orderList);
+
+            this.ordersList = orderListNew.map((order) => {
                 /* Pointer. */
                 let fixed = order;
 
