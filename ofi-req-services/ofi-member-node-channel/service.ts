@@ -10,7 +10,8 @@ import {
     ofiClearRequestedHomeOrder,
     ofiClearRequestedMyOrder,
     ofiClearRequestedManageOrder,
-    clearRequestedFundAccessMy
+    clearRequestedFundAccessMy,
+    ofiClearRequestedIssuedAssets
 } from '../../ofi-store';
 
 /* Service class. */
@@ -79,14 +80,14 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'getfundaccessmy':
+                this.ngRedux.dispatch(clearRequestedManageNavList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
                 break;
         }
     }
-
 }
 
 function handleUpdateNav(ngRedux) {
-    console.log(clearRequestedManageNavList());
+    ngRedux.dispatch(ofiClearRequestedIssuedAssets());
     ngRedux.dispatch(clearRequestedManageNavList());
 }

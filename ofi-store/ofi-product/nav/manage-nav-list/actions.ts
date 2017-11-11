@@ -35,4 +35,3 @@ export const ofiSetCurrentManageNavRequest: ActionCreator<OfiSetCurrentManageNav
     type: OFI_SET_CURRENT_MANAGE_NAV_REQUEST,
     currentRequest
 });
-
