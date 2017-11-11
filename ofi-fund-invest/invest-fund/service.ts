@@ -330,7 +330,9 @@ export class InvestFundFormService {
             // expiry: expiryTimeStamp,
             // todo
             // change it back when production
-            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 3600,
+            // should use settlement plus 30 days.
+            // one month expiry
+            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 2592000,
             numStep: '1',
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
             creatorAddress: investorAddress
