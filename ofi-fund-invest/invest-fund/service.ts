@@ -63,6 +63,8 @@ export class InvestFundFormService {
         const platFormFeeParse = this._numberConverterService.toBlockchain(platFormFee);
         const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
 
+        const subPortfolio = immutableHelper.get(formValue, 'subPortfolio', '');
+
         authoriseRef = 'Confirm receipt of payment';
 
         const arrangementData = this.constructArrangementData({
@@ -124,7 +126,8 @@ export class InvestFundFormService {
                     investorWalletCommuPub: walletCommuPub,
                     investorWalletAddr: investorAddress,
                     investorWalletBankID: 0,
-                    investorWalletBankCommuPub: ''
+                    investorWalletBankCommuPub: '',
+                    investorSubPortfolio: subPortfolio
                 };
 
                 const parties = {

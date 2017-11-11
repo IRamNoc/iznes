@@ -96,6 +96,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     addressList: Array<any>;
 
+    subPortfolio;
+    addressListObj;
 
     set actionBy(value) {
         this._actionBy = value;
@@ -261,6 +263,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     updateAddressList(addressList) {
 
+        this.addressListObj = addressList;
         this.addressList = immutableHelper.reduce(addressList, (result, item) => {
 
             const addr = item.get('addr', false);
@@ -367,15 +370,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const fullAssetName = this.metaData.fullAssetName;
             const shareIssuerAddress = immutableHelper.get(this.allInstruments, [fullAssetName, 'issuerAddress'], '');
 
+            const address = this.form.value.address[0]['id'];
+            this.subPortfolio = this.addressListObj[address].label;
+
             // Add actionBy
             const formValue = Object.assign({}, this.form.value, {
                 byType: this.actionBy,
                 shareIssuerAddress,
-                address: this.form.value.address[0]['id'],
+                address,
                 userId: this.userId,
                 walletId: this.connectedWalletId,
                 walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
-                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], '')
+                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], ''),
+                subPortfolio: this.subPortfolio
             });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }
