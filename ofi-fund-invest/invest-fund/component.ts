@@ -360,7 +360,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this.form.value.quantity;
         const quantityParsed = this._moneyValuePipe.parse(quantity, this.metaData.decimalisation);
         if (quantityParsed === 0) {
-            this._investFundFormService.showInvalidForm('Quantity must be greater than 0');
+            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10,this.metaData.decimalisation)) + ' or greater.');
             return false;
         }
 
