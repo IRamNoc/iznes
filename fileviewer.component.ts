@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {select, NgRedux} from '@angular-redux/store';
 import {Http} from '@angular/http';
@@ -15,7 +15,7 @@ import {APP_CONFIG, AppConfig} from '@setl/utils';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FileViewerComponent implements OnInit {
+export class FileViewerComponent implements OnInit, OnChanges {
     @Input() fileHash: string = null;
     @Input() pdfId: string = null;
     public token: string = null;
@@ -71,10 +71,13 @@ export class FileViewerComponent implements OnInit {
      */
     public ngOnInit() {
         if (this.pdfId !== null) {
-
         } else {
             this.setUrls();
         }
+    }
+
+    public ngOnChanges() {
+        this.fileUrl = null;
     }
 
     /**
