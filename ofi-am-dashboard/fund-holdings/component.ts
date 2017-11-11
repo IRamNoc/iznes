@@ -31,7 +31,6 @@ import {
     NumberConverterService,
 } from '@setl/utils';
 
-
 @Component({
     selector: 'core-am-dashboard',
     templateUrl: './component.html',
@@ -193,7 +192,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundStats.navPrice = data.nav.price;
             this.fundStats.navDate = data.nav.navDate;
             this.fundStats.units = data.units;
-            this.fundStats.netAsset = (data.nav.price / 5) * data.units;
+            this.fundStats.netAsset = (data.nav.price) * data.units;
 
             /* Now let's set the holders in this fund. */
             this.fundStats.holders = data.holders;
@@ -213,6 +212,16 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Return. */
         return;
     }
+
+
+    public getNavForAsset(asset, navs) {
+        for (const nav of navs) {
+            if (nav.fundName === asset) {
+                return nav;
+            }
+        }
+    }
+
 
     /**
      * Get Fund Dashboard Data
@@ -244,8 +253,9 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 'taskPipe': this.ofiNavService.requestNavList(navRequest)
             }).then((response) => {
                 console.log(' | success: ', response);
+
                 /* Success, let's set the NAV. */
-                oReturn.nav = response[1].Data[0];
+                oReturn.nav = this.getNavForAsset(fund.asset, response[1].Data);
                 delete oReturn.nav.Status;
                 oReturn.nav.navDate = oReturn.nav.navDate.split(' ')[0];
 

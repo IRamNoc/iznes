@@ -110,12 +110,14 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
+                fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
+
                 let metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = metaData.units * metaData.price;
+                metaData.total = metaData.units * fixed.price;
 
                 fixed.metaData = metaData;
 
