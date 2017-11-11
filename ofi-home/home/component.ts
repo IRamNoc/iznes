@@ -207,6 +207,20 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         return;
     }
 
+    public beginBalanceJourney(): void {
+        /* Send the user to their order page. */
+        if ([46].indexOf(this.myDetails.userType) != -1) {
+            /* Is holder. */
+            this._router.navigateByUrl('/reports-section/pnl');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/am-reports-section/collects-archive');
+        }
+
+        /* Return. */
+        return;
+    }
+
     /**
      * Format Date
      * -----------
