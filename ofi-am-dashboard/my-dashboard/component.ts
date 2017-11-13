@@ -242,7 +242,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.fundStats.graphLabels = [];
         /* Now let's use the total to work out the ratio. */
         for (const row in this.fundStats.assets) {
-            this.fundStats.assets[row].ratio = parseFloat((100 / totalHoldings) * this.fundStats.assets[row].quantity).toFixed(2);
+            this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
             this.fundStats.graphLabels.push(this.fundStats.assets[row].asset);
             this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
         }
