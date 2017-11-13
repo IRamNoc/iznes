@@ -94,6 +94,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             const addressItem = {
                 address: item.get('addr', ''),
                 label: item.get('label', ''),
+                iban: item.get('iban', ''),
                 editing: false
             };
 
@@ -190,9 +191,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
 
     }
 
-    handleNewSubPortfolio(name) {
+    handleNewSubPortfolio(name, iban) {
         /* Check if we have a name. */
-        if (!name || name == '') {
+        if (!name || name === '' || !iban || iban === '') {
             this.showErrorMessage('Please give your sub portfolio a name');
             return;
         }
@@ -209,7 +210,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 const labelAsynTaskPipe = this._myWalletService.newWalletLabel({
                     walletId: this.connectedWalletId,
                     option: address,
-                    label: name
+                    label: name,
+                    iban
                 });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(labelAsynTaskPipe,
