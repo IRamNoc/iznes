@@ -127,7 +127,8 @@ export class InvestFundFormService {
                     investorWalletAddr: investorAddress,
                     investorWalletBankID: 0,
                     investorWalletBankCommuPub: '',
-                    investorSubPortfolio: subPortfolio
+                    investorSubPortfolio: subPortfolio,
+                    iban: _.get(formValue, 'iban', '')
                 };
 
                 const parties = {

@@ -360,7 +360,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this.form.value.quantity;
         const quantityParsed = this._moneyValuePipe.parse(quantity, this.metaData.decimalisation);
         if (quantityParsed === 0) {
-            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10,this.metaData.decimalisation)) + ' or greater.');
+            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10, this.metaData.decimalisation)) + ' or greater.');
             return false;
         }
 
@@ -372,6 +372,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const address = this.form.value.address[0]['id'];
             this.subPortfolio = this.addressListObj[address].label;
+            const iban = _.get(this.addressListObj, [address, 'iban'], '');
 
             // Add actionBy
             const formValue = Object.assign({}, this.form.value, {
@@ -382,7 +383,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 walletId: this.connectedWalletId,
                 walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
                 walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], ''),
-                subPortfolio: this.subPortfolio
+                subPortfolio: this.subPortfolio,
+                iban
             });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }
