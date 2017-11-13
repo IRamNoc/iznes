@@ -57,12 +57,12 @@ node {
 
             }
 
-            stage('Sonar Scan') {
+         /*   stage('Sonar Scan') {
                 withSonarQubeEnv {
 
                     sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
                 }
-            }
+            }*/
 
         } catch (e) {
             currentBuild.result = 'FAILURE'
