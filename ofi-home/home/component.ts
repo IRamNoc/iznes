@@ -52,7 +52,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             if (!orderList.length) return;
 
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList.map((order) => {
+            const ordersList_new = immutableHelper.copy(orderList);
+            this.ordersList = ordersList_new.map((order) => {
                 /* Pointer. */
                 let fixed = order;
 
@@ -201,6 +202,20 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         } else {
             /* Is other. */
             this._router.navigateByUrl('/product-module/fund');
+        }
+
+        /* Return. */
+        return;
+    }
+
+    public beginBalanceJourney(): void {
+        /* Send the user to their order page. */
+        if ([46].indexOf(this.myDetails.userType) != -1) {
+            /* Is holder. */
+            this._router.navigateByUrl('/reports-section/pnl');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/am-reports-section/collects-archive');
         }
 
         /* Return. */
