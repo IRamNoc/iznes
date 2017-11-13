@@ -42,8 +42,8 @@
                                     <tr>
                                         <th><span mltag="txt_fund_share">Fund share</span></th>
                                         <th><span mltag="txt_asset_manager">Asset Manager</span></th>
-                                        <th><span mltag="txt_amount">Amount</span></th>
                                         <th><span mltag="txt_quantity">Quantity</span></th>
+                                        <th><span mltag="txt_amount">Estimated Amount</span></th>
                                         <th><span mltag="txt_ratio">Ratio</span></th>
                                     </tr>
                                     </thead>
@@ -52,9 +52,9 @@
                                         <!--<td colspan="5">{{ holding | json }}</td>-->
                                         <td class="text-left">{{ holding.asset }}</td>
                                         <td class="text-right">{{ holding.assetManager }}</td>
-                                        <td class="text-right">{{ holding.amount }}</td>
                                         <td class="text-right">{{ holding.quantity }}</td>
-                                        <td class="text-right">{{ holding.ratio }}</td>
+                                        <td class="text-right">{{ holding.amount }}</td>
+                                        <td class="text-right">{{ holding.ratio }}%</td>
                                     </tr>
                                     </tbody>
                                 </table>
