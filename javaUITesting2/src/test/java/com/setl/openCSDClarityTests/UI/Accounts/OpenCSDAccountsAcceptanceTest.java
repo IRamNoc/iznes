@@ -45,7 +45,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
     /*
 
- o   @Ignore
+  @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
