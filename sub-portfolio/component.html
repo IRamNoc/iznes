@@ -21,30 +21,58 @@
     <!-- Address Data Table. -->
     <ng-template #addressListTab>
         <div class="panel-body">
-            <form class="row" (submit)="handleNewSubPortfolio(portfolioName.value)">
-                <div class="button-input col-sm-6 p-0">
-                    <input #portfolioName class="form-control" type="text" placeholder="Sub-portfolio name">
-                  <button type="submit" class="btn-primary btn"><i class="fa fa-plus"></i> <span mltag="txt_newsubportfolio">New Sub-portfolio</span></button>
+            <form (submit)="handleNewSubPortfolio(portfolioName.value, portfolioIban.value)" class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_sub_portfolio_name">Sub-portfolio Name</span>
+                            </label>
+                            <div>
+                                <input type="text" #portfolioName placeholder="Sub-portfolio name" class="form-control mlp_translated" mltag="txt_sub_portfolio_name">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_sub_portfolio_iban">Sub-portfolio IBAN</span>
+                            </label>
+                            <div>
+                                <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN" class="form-control mlp_translated" mltag="txt_sub_portfolio_iban">
+                            </div>
+                        </div>
+
+                        <div class="form-group button-group">
+                            <div class="col-sm-12 p-0">
+                                <button id="new-user-submit" type="submit" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i>
+                                    <span mltag="txt_newsubportfolio">New Sub-portfolio</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
 
             <clr-datagrid>
                 <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_subportfolio">Sub-portfolio</clr-dg-column>
+                <clr-dg-column mltag="txt_iban">IBAN</clr-dg-column>
                 <clr-dg-column mltag="txt_blockchainaddressidentifier">Blockchain address identifier</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button *ngIf="!address.editing" (click)="handleEdit(address.address)" class="btn">
-                              <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>
                             </button>
 
                             <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)" class="btn">
-                              <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
+                                <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
                             </button>
                         </div>
                     </clr-dg-cell>
+
                     <clr-dg-cell>
                         <span *ngIf="!address.editing">
                         {{address.label}}
@@ -58,6 +86,10 @@
                                    (click)="handleUpdateLabel(input.value, address.address)"></i>
                             </form>
                         </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+                        {{address.iban}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
