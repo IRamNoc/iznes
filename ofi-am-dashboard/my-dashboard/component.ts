@@ -232,15 +232,16 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                     'assetManager': assets[asset].companyName,
                     'amount': this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price),
                     'quantity': this._numberConverterService.toFrontEnd(holdings.total),
-                    'ratio': 0,// 100 / total * amount
+                    'ratio': 0, // Get's set just below (total needs to be calculated first).
                 });
                 totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
             }
         }
 
+        /* Now let's use the total to work out the ratio,
+           and whilst we're at it, build the data arrays for the graph. */
         this.fundStats.graphData = [];
         this.fundStats.graphLabels = [];
-        /* Now let's use the total to work out the ratio. */
         for (const row in this.fundStats.assets) {
             this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
             this.fundStats.graphLabels.push(this.fundStats.assets[row].asset);
