@@ -3,7 +3,7 @@ import {SiteSettingsState} from './model';
 import _ from 'lodash';
 
 const initialState: SiteSettingsState = {
-    language: 'eng',
+    language: 'fra',
     menuShown: true
 };
 

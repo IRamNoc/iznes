@@ -130,10 +130,12 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
     const formattedLabelData = labelData.reduce((result, item) => {
         const address = _.get(item, 'option', '');
         const label = _.get(item, 'label', '');
+        const iban = _.get(item, 'iban', '');
 
         result[address] = {
             addr: address,
-            label
+            label,
+            iban
         };
 
         return result;
