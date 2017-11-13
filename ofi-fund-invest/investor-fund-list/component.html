@@ -35,9 +35,9 @@
     <ng-template #listOfFundsTab>
         <div class="panel-body">
             <clr-datagrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_actions" style="min-width: 190px;">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_assetmanager">Asset manager</clr-dg-column>
-                <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
+                <clr-dg-column mltag="txt_fundname" style="min-width: 200px;">Fund name</clr-dg-column>
                 <clr-dg-column mltag="txt_nav">NAV</clr-dg-column>
                 <clr-dg-column mltag="txt_currency">Currency</clr-dg-column>
                 <clr-dg-column mltag="txt_assetclass">Asset class</clr-dg-column>
@@ -68,7 +68,6 @@
 
                 <clr-dg-footer>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{pagination.totalItems}} accounts
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>

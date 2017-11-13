@@ -96,6 +96,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     addressList: Array<any>;
 
+    subPortfolio;
+    addressListObj;
 
     set actionBy(value) {
         this._actionBy = value;
@@ -226,6 +228,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const issuer = immutableHelper.get(thisShareData, 'issuer', '');
         const shareName = immutableHelper.get(thisShareData, 'shareName', '');
 
+        const decimalisation = immutableHelper.get(shareCharacteristic, 'decimalisation', 2);
+        const decimalisationNumber = Math.pow(10, -decimalisation);
+
+
         this.metaData = {
             registrar: immutableHelper.get(thisShareData, 'managementCompany', ''),
             issuer,
@@ -249,13 +255,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             acquiredFee,
             feePercent,
             platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0),
-            decimalisation: immutableHelper.get(shareCharacteristic, 'decimalisation', 2)
+            decimalisation,
+            decimalisationNumber
         };
 
     }
 
     updateAddressList(addressList) {
 
+        this.addressListObj = addressList;
         this.addressList = immutableHelper.reduce(addressList, (result, item) => {
 
             const addr = item.get('addr', false);
@@ -352,7 +360,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this.form.value.quantity;
         const quantityParsed = this._moneyValuePipe.parse(quantity, this.metaData.decimalisation);
         if (quantityParsed === 0) {
-            this._investFundFormService.showInvalidForm('Quantity must be greater than 0');
+            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10,this.metaData.decimalisation)) + ' or greater.');
             return false;
         }
 
@@ -362,15 +370,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const fullAssetName = this.metaData.fullAssetName;
             const shareIssuerAddress = immutableHelper.get(this.allInstruments, [fullAssetName, 'issuerAddress'], '');
 
+            const address = this.form.value.address[0]['id'];
+            this.subPortfolio = this.addressListObj[address].label;
+
             // Add actionBy
             const formValue = Object.assign({}, this.form.value, {
                 byType: this.actionBy,
                 shareIssuerAddress,
-                address: this.form.value.address[0]['id'],
+                address,
                 userId: this.userId,
                 walletId: this.connectedWalletId,
                 walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
-                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], '')
+                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], ''),
+                subPortfolio: this.subPortfolio
             });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }

@@ -79,22 +79,22 @@
 
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_ordertype">Order type</span></clr-dg-column>
+                    <clr-dg-column style="min-width: 180px;"><span mltag="txt_investor">Investor</span></clr-dg-column>
+                    <clr-dg-column style="min-width: 120px;"><span mltag="txt_ordertype">Order type</span>
+                    </clr-dg-column>
                     <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_fundname">Fund name</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
+                    <clr-dg-column style="min-width: 210px;"><span mltag="txt_fundname">Fund name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
-                    <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
+                    <clr-dg-column style="min-width: 100px;"><span mltag="txt_status">Status</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
                         <clr-dg-cell>
                             <!-- Action -->
-                            <div class="btn-group btn-sm">
+                            <div class="btn-group btn-sm compact">
                                 <!-- If order status is 1, allow cancel. -->
                                 <button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">
                                     <i class="fa fa-times"></i>
@@ -130,19 +130,15 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Amount -->
-                            {{ order.metaData.units | moneyValue}}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Quantity -->
                             {{ order.metaData.total | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- Price -->
-                            {{ order.metaData.price | moneyValue}}
+                            <!-- Quantity -->
+                            {{ order.metaData.units | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- Percentage -->
-                            {{ order.metaData.feePercent }}
+                            <!-- Price -->
+                            {{ order.price | moneyValue}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
@@ -182,7 +178,6 @@
 
                     <clr-dg-footer>
                         {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                        of {{pagination.totalItems}} coupon payments
                         <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
@@ -258,7 +253,7 @@
                             <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.price | moneyValue}}</span>
+                            <span class="readonly-field">{{orderData.price | moneyValue}}</span>
                         </div>
                     </div>
                 </div>
@@ -350,7 +345,7 @@
                             <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValueOfi }}</span>
+                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue }}</span>
                         </div>
                     </div>
                 </div>

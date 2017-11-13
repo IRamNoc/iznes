@@ -63,6 +63,8 @@ export class InvestFundFormService {
         const platFormFeeParse = this._numberConverterService.toBlockchain(platFormFee);
         const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
 
+        const subPortfolio = immutableHelper.get(formValue, 'subPortfolio', '');
+
         authoriseRef = 'Confirm receipt of payment';
 
         const arrangementData = this.constructArrangementData({
@@ -124,7 +126,8 @@ export class InvestFundFormService {
                     investorWalletCommuPub: walletCommuPub,
                     investorWalletAddr: investorAddress,
                     investorWalletBankID: 0,
-                    investorWalletBankCommuPub: ''
+                    investorWalletBankCommuPub: '',
+                    investorSubPortfolio: subPortfolio
                 };
 
                 const parties = {
@@ -330,7 +333,9 @@ export class InvestFundFormService {
             // expiry: expiryTimeStamp,
             // todo
             // change it back when production
-            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 3600,
+            // should use settlement plus 30 days.
+            // one month expiry
+            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 2592000,
             numStep: '1',
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
             creatorAddress: investorAddress

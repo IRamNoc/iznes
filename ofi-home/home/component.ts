@@ -1,19 +1,13 @@
 /* Core/Angular imports. */
-import {
-    Component,
-    AfterViewInit,
-    OnDestroy,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy
-} from '@angular/core';
-import {Router} from '@angular/router';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from "@angular/core";
+import {Router} from "@angular/router";
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
+import {NgRedux, select} from "@angular-redux/store";
 
+import {immutableHelper, NumberConverterService} from "@setl/utils";
 /* Ofi orders request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {ofiSetRequestedHomeOrder} from '../../ofi-store';
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
+import {ofiSetRequestedHomeOrder} from "../../ofi-store";
 
 @Component({
     styleUrls: ['./component.css'],
@@ -43,6 +37,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private ofiOrdersService: OfiOrdersService,
+                private _numberConverterService: NumberConverterService,
                 private _ngRedux: NgRedux<any>,
                 private _router: Router) {
         /* Stub. */
@@ -53,14 +48,27 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
         /* Orders list. */
         this.subscriptions['home-orders-list'] = this.homeOrdersListOb.subscribe((orderList) => {
+            /* Fail safely... */
+            if (!orderList.length) return;
+
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList.map((order) => {
+            const ordersList_new = immutableHelper.copy(orderList);
+            this.ordersList = ordersList_new.map((order) => {
                 /* Pointer. */
                 let fixed = order;
 
                 /* Fix dates. */
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+
+                let metaData = immutableHelper.copy(order.metaData);
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * metaData.price;
+
+                fixed.metaData = metaData;
 
                 /* Return. */
                 return fixed;
@@ -194,6 +202,20 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         } else {
             /* Is other. */
             this._router.navigateByUrl('/product-module/fund');
+        }
+
+        /* Return. */
+        return;
+    }
+
+    public beginBalanceJourney(): void {
+        /* Send the user to their order page. */
+        if ([46].indexOf(this.myDetails.userType) != -1) {
+            /* Is holder. */
+            this._router.navigateByUrl('/reports-section/pnl');
+        } else {
+            /* Is other. */
+            this._router.navigateByUrl('/am-reports-section/collects-archive');
         }
 
         /* Return. */

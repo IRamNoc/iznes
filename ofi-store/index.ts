@@ -1,12 +1,36 @@
-import {Reducer, combineReducers} from 'redux';
-
+import {combineReducers, Reducer} from "redux";
 /*
  Ofi Invest
  */
+import {OfiFundInvestReducer, OfiFundInvestState} from "./ofi-fund-invest";
+/*
+ Ofi client tx
+ */
 import {
-    OfiFundInvestState,
-    OfiFundInvestReducer
-} from './ofi-fund-invest';
+    clearRequestedClientTxList,
+    OfiClientTxReducer,
+    OfiClientTxState,
+    SET_CLIENT_TX_LIST,
+    setRequestedClientTxList
+} from "./ofi-client-txs";
+/*
+ Ofi Corp Actions
+ */
+import {OfiCorpActionsReducer, OfiCorpActionsState} from "./ofi-corp-actions";
+/*
+ Ofi Product
+ */
+import {
+    OfiProductReducer,
+    OfiProductState,
+    SET_FUND_LIST,
+    SET_MANAGEMENT_COMPANY_LIST,
+    SET_SICAV_LIST
+} from "./ofi-product";
+/*
+ Ofi Orders
+ */
+import {OfiOrdersReducer, OfiOrdersState} from "./ofi-orders";
 
 export {
     SET_FUND_ACCESS_MY,
@@ -14,17 +38,6 @@ export {
     setRequestedFundAccessMy
 } from './ofi-fund-invest';
 
-/*
- Ofi client tx
- */
-import {
-    OfiClientTxReducer,
-    OfiClientTxState,
-
-    SET_CLIENT_TX_LIST,
-    setRequestedClientTxList,
-    clearRequestedClientTxList
-} from './ofi-client-txs';
 
 export {
     SET_CLIENT_TX_LIST,
@@ -32,25 +45,6 @@ export {
     clearRequestedClientTxList
 } from './ofi-client-txs';
 
-/*
- Ofi Corp Actions
- */
-import {
-    OfiCorpActionsState,
-    OfiCorpActionsReducer
-} from './ofi-corp-actions';
-
-/*
- Ofi Product
- */
-import {
-    OfiProductState,
-    OfiProductReducer,
-    SET_MANAGEMENT_COMPANY_LIST,
-    SET_SICAV_LIST,
-    SET_FUND_LIST,
-
-} from './ofi-product';
 
 export {
     /* Coupons */
@@ -64,13 +58,6 @@ export {
     ofiSetRequestedUserIssuedAssets
 } from './ofi-corp-actions';
 
-/*
- Ofi Orders
- */
-import {
-    OfiOrdersState,
-    OfiOrdersReducer
-} from './ofi-orders';
 
 export {
     /* Manage orders */
@@ -91,6 +78,7 @@ export {
     OFI_SET_HOME_ORDER_FILTER,
     OFI_RESET_HOME_ORDER_FILTER,
     getOfiHomeOrderViewBuffer,
+    getOfiHomeOrderViewFilter,
 
     /* My orders */
     getOfiMyOrderList,

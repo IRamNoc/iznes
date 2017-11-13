@@ -8,7 +8,7 @@
     <!-- Navigation buttons. -->
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <button [routerLink]="['/reports/balances']" class="btn btn-primary home-button red">
+            <button (click)="beginBalanceJourney()" class="btn btn-primary home-button red">
                 <div class="row homescreen_text">
                     <div class="col-sm-4">
                         <i class="fa fa-cubes"></i>
@@ -58,14 +58,13 @@
 
         <clr-datagrid #ordersDataGrid>
             <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
-            <clr-dg-column><span mltag="txt_investor">Investor</span></clr-dg-column>
-            <clr-dg-column><span mltag="txt_ordertype">Order type</span></clr-dg-column>
+            <clr-dg-column style="min-width: 170px;"><span mltag="txt_investor">Investor</span></clr-dg-column>
+            <clr-dg-column style="min-width: 115px;"><span mltag="txt_ordertype">Order type</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
-            <clr-dg-column><span mltag="txt_fundname">Fund name</span></clr-dg-column>
+            <clr-dg-column style="min-width: 240px;"><span mltag="txt_fundname">Fund name</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
-            <clr-dg-column><span mltag="txt_percentage">Percentage</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_status">Status</span></clr-dg-column>
@@ -101,19 +100,15 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Amount -->
-                    {{ order.metaData.units }}
+                    {{ order.metaData.total | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Quantity -->
-                    {{ order.total }}
+                    {{ order.metaData.units | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Price -->
-                    {{ order.metaData.price }}
-                </clr-dg-cell>
-                <clr-dg-cell>
-                    <!-- Percentage -->
-                    {{ order.metaData.feePercent }}
+                    {{ order.metaData.price | moneyValue}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Cut-off date -->
@@ -137,6 +132,10 @@
                         <span class="txt_waitingnav" mltag="txt_waitingforsettlement">Waiting for settlement</span>
                     </span>
 
+                    <!-- <span *ngIf="order.status == 5" class="label label-info">
+                        <span class="txt_waiting_for_payment">Waiting for payment</span>
+                    </span> -->
+
                     <span *ngIf="order.status == 0" class="label label-error">
                         <span class="ml" mltag="txt_cancelled">Cancelled</span>
                     </span>
@@ -153,7 +152,6 @@
 
             <clr-dg-footer>
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                of {{pagination.totalItems}} coupon payments
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>

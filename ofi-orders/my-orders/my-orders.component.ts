@@ -1,36 +1,19 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
+import {NgRedux, select} from "@angular-redux/store";
+import {Unsubscribe} from "redux";
+import {FormControl, FormGroup} from "@angular/forms";
 /* Services. */
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
-
+import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
-
+import {AlertsService} from "@setl/jaspero-ng2-alerts";
+import {ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
 /* Utils. */
-import {MoneyValueOfiPipe} from '@setl/utils/pipes';
-
 /* Ofi Corp Actions request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-
+import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Core store stuff. */
-import {
-    getConnectedWallet,
-    setRequestedWalletHolding,
-    getWalletHoldingByAsset
-} from '@setl/core-store';
-
 /* Ofi Store stuff. */
-import {
-    getOfiMyOrderList,
-    ofiSetRequestedMyOrder
-} from '../../ofi-store';
-
-import {NumberConverterService} from '@setl/utils';
+import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
 
 
 /* Types. */
@@ -97,7 +80,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService) {
+                public _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -119,20 +102,23 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Orders list. */
         this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
             /* Subscribe and set the orders list. */
-            this.ordersList = orderList.map((order) => {
+            const ordersListNew = immutableHelper.copy(orderList);
+            this.ordersList = ordersListNew.map((order) => {
                 /* Pointer. */
                 let fixed = order;
 
                 /* Fix dates. */
                 fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
-                
-                let metaData = order.metaData;
+
+                fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
+
+                let metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = metaData.units * metaData.price;
+                metaData.total = metaData.units * fixed.price;
 
                 fixed.metaData = metaData;
 

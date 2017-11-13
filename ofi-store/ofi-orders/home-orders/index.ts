@@ -18,5 +18,6 @@ export {
 /* Selectors. */
 export {
     getOfiHomeOrderList,
-    getOfiHomeOrderViewBuffer
+    getOfiHomeOrderViewBuffer,
+    getOfiHomeOrderViewFilter
 } from './selectors';

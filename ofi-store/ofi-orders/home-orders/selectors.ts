@@ -1,7 +1,7 @@
-import {createSelector} from 'reselect';
-import {OfiState} from '../../index';
-import {HomeOrders} from '.';
-import {OfiOrdersState} from '../index';
+import {createSelector} from "reselect";
+import {OfiState} from "../../index";
+import {HomeOrders} from ".";
+import {OfiOrdersState} from "../index";
 
 const getOfi = (state): OfiState => {
     return state.ofi
