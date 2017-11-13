@@ -210,9 +210,8 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ok, let's get shares under this company. */
         console.log(' | id: ', fundShareFormValue.selectFund[0].text);
-        let
-            assets: any = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text),
-            holdings, totalHoldings = 0;
+        const
+            assets: any = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text);
 
         /* Now let's sort the assets. */
         this.fundStats.assets = [];
@@ -220,39 +219,61 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Continue if we don't have the holdings for this wallet. */
             if (!this.walletHoldingsByAsset[this.connectedWalletId]) continue;
 
+            let
+                totalHoldings = 0;
+
             /*  Get holdings. */
-            holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
+            const holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
             console.log(" | holdings: ", holdings);
             console.log(" | asset: ", assets[asset]);
 
-
             if (holdings) {
-                this.fundStats.assets.push({
-                    'asset': asset.split('|')[1],
-                    'assetManager': assets[asset].companyName,
-                    'amount': this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price),
-                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
-                    'ratio': 0, // Get's set just below (total needs to be calculated first).
+                let address, addresses = [];
+                for (address in holdings.breakdown) {
+                    addresses.push(address);
+                }
+
+                this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response)=>{
+                    console.log(' | addresses resolved: ', response);
+                    let key, id, walletIdList = response[1].Data;
+
+                    for (key in walletIdList) {
+                        for (id in this.walletDirectoryList) {
+                            /* ...check if we've found it... */
+                            if (this.walletDirectoryList[id].commuPub === walletIdList[key].commuPub) {
+                                this.fundStats.assets.push({
+                                    'asset': asset.split('|')[1],
+                                    'walletName': this.walletDirectoryList[id].walletName,
+                                    'assetManager': assets[asset].companyName,
+                                    'amount': this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price),
+                                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
+                                    'ratio': 0, // Get's set just below (total needs to be calculated first).
+                                });
+                                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
+
+                                /* Now let's use the total to work out the ratio,
+                                 and whilst we're at it, build the data arrays for the graph. */
+                                this.fundStats.graphData = [];
+                                this.fundStats.graphLabels = [];
+                                for (const row in this.fundStats.assets) {
+                                    this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
+                                    this.fundStats.graphLabels.push(this.fundStats.assets[row].walletName);
+                                    this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
+                                }
+
+                                /* Show the stats. */
+                                this.showStats = true;
+
+                                /* Detect changes. */
+                                this.changeDetectorRef.detectChanges();
+                            }
+                        }
+                    }
+                }).catch((error) => {
+                    console.warn(error);
                 });
-                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
             }
         }
-
-        /* Now let's use the total to work out the ratio,
-           and whilst we're at it, build the data arrays for the graph. */
-        this.fundStats.graphData = [];
-        this.fundStats.graphLabels = [];
-        for (const row in this.fundStats.assets) {
-            this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
-            this.fundStats.graphLabels.push(this.fundStats.assets[row].asset);
-            this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
-        }
-
-        /* Show the stats. */
-        this.showStats = true;
-
-        /* Detect changes. */
-        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
