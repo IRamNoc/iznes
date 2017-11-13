@@ -1,17 +1,20 @@
 /* Core imports. */
-import {Component, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
-import {JsonPipe} from '@angular/common';
-import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
-import {OnDestroy} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    ViewChild
+} from "@angular/core";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
-import {select, NgRedux} from '@angular-redux/store';
-
+import {NgRedux, select} from "@angular-redux/store";
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
-
+import {AlertsService} from "@setl/jaspero-ng2-alerts";
+import {ConfirmationService} from "@setl/utils";
 /* User Admin Service. */
-import {UserAdminService} from '../useradmin.service';
+import {UserAdminService} from "../useradmin.service";
 
 /* Decorator. */
 @Component({
@@ -1011,13 +1014,6 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             this.showError('Failed to fetch this user\'s chain access.');
         });
 
-        /* TODO - get user meta;
-         [x] Admin groups.
-         [x] Tx groups.
-         [x] Wallet access.
-         [ ] Chain access.
-         */
-
         /* Activate the new tab. */
         this.setTabActive(this.tabsControl.length - 1);
 
@@ -1146,11 +1142,17 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     getNewUserFormGroup(): FormGroup {
         return new FormGroup(
             {
-                "username": new FormControl(''),
-                "email": new FormControl(''),
+                "username": new FormControl('', [
+                    Validators.required
+                ]),
+                "email": new FormControl('', [
+                    Validators.required
+                ]),
                 "accountType": new FormControl([]),
                 "userType": new FormControl([]),
-                "password": new FormControl(''),
+                "password": new FormControl('', [
+                    Validators.required
+                ]),
                 "adminGroups": new FormControl([]),
                 "txGroups": new FormControl([]),
                 "walletsFull": new FormControl([]),
