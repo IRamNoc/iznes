@@ -27,7 +27,7 @@ import {fromJS} from "immutable";
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
-export class SetlMessagesComponent implements OnDestroy {
+export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public messageComposeForm: FormGroup;
     public editor;
@@ -67,6 +67,11 @@ export class SetlMessagesComponent implements OnDestroy {
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private _alertsService: AlertsService) {
+
+    }
+
+    ngOnInit() {
+        this.currentCategory = 0;
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
