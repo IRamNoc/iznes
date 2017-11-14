@@ -233,6 +233,8 @@ export class DatePickerComponent implements OnChanges,
     registerOnTouched(fn: any): void {
     }
 
+    e
+
     validate(formControl: FormControl): ValidationErrors | any {
         if (this.minDate || this.maxDate || this.minTime || this.maxTime) {
             return this.validateFn(formControl.value);
