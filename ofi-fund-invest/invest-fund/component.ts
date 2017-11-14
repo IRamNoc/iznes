@@ -9,6 +9,7 @@ import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 import {NgRedux} from '@angular-redux/store';
+import * as moment from 'moment-business-days';
 
 // Internal
 import {immutableHelper, MoneyValuePipe, mDateHelper} from '@setl/utils';
@@ -155,6 +156,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subscribe: {
                 nonAcquiredFeeKey: 'entryFee',
                 acquiredFeeKey: 'sAcquiredFee',
+                cutoffOffSet: 'sCutOffOffset',
                 cutoffTimeKey: 'sCutoffTime',
                 cutoffDateTimeStrKey: 'sCutoffDateTimeStr',
                 cutoffDateTimeNumberKey: 'sCutoffDateTimeNumber',
@@ -173,6 +175,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             redeem: {
                 nonAcquiredFeeKey: 'exitFee',
                 acquiredFeeKey: 'rAcquiredFee',
+                cutoffOffSet: 'rCutOffOffset',
                 cutoffTimeKey: 'rCutoffTime',
                 cutoffDateTimeStrKey: 'rCutoffDateTimeStr',
                 cutoffDateTimeNumberKey: 'rCutoffDateTimeNumber',
@@ -239,12 +242,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             fullAssetName: issuer + '|' + shareName,
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
             currency: immutableHelper.get(thisShareData, ['metaData', 'portfolioCurrency', '0', 'text'], ''),
+            cutoffOffset: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffOffSet], 0),
             cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
             cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeStrKey], 0),
             cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
             valuationTime: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationTimeKey], 0),
             valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeStrKey], 0),
             valuationDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
+            settlementDateOffset: immutableHelper.get(shareCharacteristic, 'settlementDateOffset'),
             settlementTime: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementTimeKey], 0),
             settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeStrKey], 0),
             settlementDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
@@ -430,6 +435,72 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }[type];
 
         this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
+    }
+
+    subscribeForChangeDate(type: string, $event: any): boolean {
+
+        // define which one trigger which, depend on type.
+        const triggering: FormControl = {
+            'cutoff': this.cutoffDate,
+            'valuation': this.valuationDate,
+        }[type];
+
+        const beTriggered: FormControl = {
+            'cutoff': this.valuationDate,
+            'valuation': this.cutoffDate
+        }[type];
+
+        const momentDateValue = $event[0];
+
+        if (type === 'cutoff') {
+            const cutoffTimeStr = this.metaData.cutoffTime;
+            const cutoffDateStr = momentDateValue.format('DD/MM/YYYY');
+            const cutoffDateTimeStr = cutoffDateStr + ' ' + cutoffTimeStr;
+            const cutoffDateTimeNum = mDateHelper.dateStrToUnixTimestamp(cutoffDateTimeStr, 'DD/MM/YYYY HH:mm');
+            const nowTimeStamp = mDateHelper.getCurrentUnixTimestamp();
+            if (nowTimeStamp > cutoffDateTimeNum) {
+                this._investFundFormService.showInvalidForm('Invalid cutoff date');
+                return false;
+            }
+
+            const mCutoffDateTime = moment(cutoffDateTimeNum);
+            const mValuationDateTime = mCutoffDateTime.nextBusinessDay();
+            const settlementOffSet = Number(this.metaData.settlementDateOffset);
+            const mSettlementDateTime = mCutoffDateTime.businessAdd(settlementOffSet);
+
+            const valuationDateTimeStr = mDateHelper.unixTimestampToDateStr(mValuationDateTime, 'DD/MM/YYYY');
+            const settlementDateTimeStr = mDateHelper.unixTimestampToDateStr(mSettlementDateTime, 'DD/MM/YYYY');
+
+            beTriggered.setValue(valuationDateTimeStr);
+            this.settlementDate.setValue(settlementDateTimeStr);
+        } else if (type === 'valuation') {
+            const valuationTimeStr = this.metaData.valuationTime;
+            const valuationDateStr = momentDateValue.format('DD/MM/YYYY');
+            const valuationDateTimeStr = valuationDateStr + ' ' + valuationTimeStr;
+            const valuationDateTimeNum = mDateHelper.dateStrToUnixTimestamp(valuationDateTimeStr, 'DD/MM/YYYY HH:mm');
+
+            const mValuationDateTime = moment(valuationDateTimeNum);
+            const mCutoffDateTime = mValuationDateTime.prevBusinessDay();
+
+            const nowTimeStamp = mDateHelper.getCurrentUnixTimestamp();
+
+            if (nowTimeStamp > mCutoffDateTime.valueOf()) {
+                this._investFundFormService.showInvalidForm('Invalid cutoff date');
+                return false;
+            }
+
+            const settlementOffSet = Number(this.metaData.settlementDateOffset);
+            const mSettlementDateTime = mCutoffDateTime.businessAdd(settlementOffSet);
+
+            const cutoffDateTimeStr = mDateHelper.unixTimestampToDateStr(mCutoffDateTime, 'DD/MM/YYYY');
+            const settlementDateTimeStr = mDateHelper.unixTimestampToDateStr(mSettlementDateTime, 'DD/MM/YYYY');
+
+            beTriggered.setValue(cutoffDateTimeStr);
+            this.settlementDate.setValue(settlementDateTimeStr);
+        }
+
+        return false;
+
     }
 
     unSubscribeForChange(): void {

@@ -131,7 +131,9 @@
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
                     <!--<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
-                    <input formControlName="cutoffDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>
+                    <input formControlName="cutoffDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
+                           (dateChange)="subscribeForChangeDate('cutoff', $event)"
+                    />
                 </div>
             </div>
 
@@ -144,7 +146,9 @@
                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
                     <!--<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
-                    <input formControlName="valuationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>
+                    <input formControlName="valuationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
+                           (dateChange)="subscribeForChangeDate('valuation', $event)"
+                    />
                 </div>
             </div>
 
@@ -174,6 +178,8 @@
                         mode="day"
                         theme="dp-material"
                         [ngStyle]="{'width':'100%'}"
+                        [readonly]="true"
+                        [disabled]="true"
                         mltag="txt_chooseadate"/>
                 </div>
             </div>
