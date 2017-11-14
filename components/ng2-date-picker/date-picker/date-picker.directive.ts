@@ -136,6 +136,7 @@ export class DatePickerDirective implements OnInit {
 
     @Output() open = new EventEmitter<void>();
     @Output() close = new EventEmitter<void>();
+    @Output() dateChange = new EventEmitter<void>();
 
     get maxTime(): Moment | string {
         return this._maxTime;
@@ -157,6 +158,9 @@ export class DatePickerDirective implements OnInit {
         this.updateDatepickerConfig();
         this.attachModelToDatePicker();
         this.datePicker.theme = this.theme;
+        this.datePicker.selectedDate.subscribe((data) => {
+            this.dateChange.emit(data);
+        });
     }
 
     createDatePicker(): DatePickerComponent {
