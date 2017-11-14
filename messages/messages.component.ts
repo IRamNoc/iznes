@@ -452,6 +452,13 @@ export class SetlMessagesComponent implements OnDestroy {
                 page,
                 true
             );
+        } else if (type === 'workflow') {
+            this.requestMessages(
+                page,
+                false,
+                false,
+                false,
+            );
         } else if (type === 'sent') {
             this.requestMessages(
                 page,
