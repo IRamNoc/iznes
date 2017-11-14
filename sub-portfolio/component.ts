@@ -98,7 +98,10 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 editing: false
             };
 
-            result.push(addressItem);
+            if (addressItem.iban !== '' && addressItem.address !== '') {
+                result.push(addressItem);
+            }
+
 
             return result;
         }, []);
