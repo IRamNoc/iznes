@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {immutableHelper} from '@setl/utils';
 
 import {
     SET_MESSAGE_LIST,
@@ -26,7 +27,7 @@ import {fromJS} from "immutable";
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
-export class SetlMessagesComponent implements OnDestroy {
+export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public messageComposeForm: FormGroup;
     public editor;
@@ -66,6 +67,11 @@ export class SetlMessagesComponent implements OnDestroy {
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private _alertsService: AlertsService) {
+
+    }
+
+    ngOnInit() {
+        this.currentCategory = 0;
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = [
@@ -311,7 +317,7 @@ export class SetlMessagesComponent implements OnDestroy {
     /**
      * Refresh Mailbox
      */
-    refreshMailbox(page=0) {
+    refreshMailbox(page = 0) {
         this.currentPage = page;
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
@@ -351,21 +357,24 @@ export class SetlMessagesComponent implements OnDestroy {
      * @param index
      */
     showMessage(index) {
+        let messages = immutableHelper.copy(this.messages);
 
-        if (typeof this.messages[index] === 'undefined') index = 0;
-        if (!this.messages[index].isRead) this.markAsRead(this.messages[index]);
+        if (typeof messages[index] === 'undefined') index = 0;
+        if (!messages[index].isRead) this.markAsRead(messages[index]);
 
         // set message to active to apply message-active css class
-        this.messages[index].active = true;
-        this.messages[index].isRead = true;
+        messages[index].active = true;
+        messages[index].isRead = true;
+
+        this.messages = messages;
 
         // set the current message that appears on the right hand side
-        this.currentMessage = this.messages[index];
+        let currentMessage = this.messages[index];
 
         // set the id so that message-active an be compared to index and set
-        this.currentMessage.id = index;
+        currentMessage.id = index;
 
-        const message = this.currentMessage;
+        const message = currentMessage;
 
         const categoryIndex = this.currentCategory;
         const categoryType = this.categories[categoryIndex].type;
@@ -382,13 +391,16 @@ export class SetlMessagesComponent implements OnDestroy {
 
         console.log('Current Message: ', this.currentMessage);
 
-        this.currentMessage.isRead = true;
+        currentMessage.isRead = true;
+
+        this.currentMessage = currentMessage;
+        this.changeDetectorRef.detectChanges();
     }
 
     /**
      * Mark message as read.
      */
-    markAsRead(message){
+    markAsRead(message) {
 
         // Create a saga pipe.
         const asyncTaskPipe = this.myMessageService.markRead(
@@ -538,7 +550,7 @@ export class SetlMessagesComponent implements OnDestroy {
             recipients[receipetId] = recipentPub;
         }
 
-        if (subject == '' || bodyObj.general == '' || formData.recipients == ''){
+        if (subject == '' || bodyObj.general == '' || formData.recipients == '') {
             console.log('error: incomplete fields');
 
             this._alertsService.create('error', `<table class="table grid">
@@ -552,7 +564,7 @@ export class SetlMessagesComponent implements OnDestroy {
                 </table>
             `);
 
-        }else {
+        } else {
             const asyncTaskPipe = this.myMessageService.sendMessage(
                 subject,
                 body,
