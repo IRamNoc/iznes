@@ -373,7 +373,7 @@ export class OfiPostTxService implements OnDestroy {
                     <tr>
                         <td class="text-center text-warning" width="500px">
                             <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;Do not close your browser window</h3>
-                            <p>We are saving your progress. This may take a few moment.</p>
+                            <p>We are saving your progress. This may take a few moments.</p>
                         </td>                       
                     </tr>
                 </tbody>
