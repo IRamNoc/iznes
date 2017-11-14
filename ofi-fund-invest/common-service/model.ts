@@ -1,7 +1,9 @@
 export interface FundCharacteristic {
+    sCutOffOffset: number;
     sCutoffTime: string;
     sCutoffDateTimeStr: string;
     sCutoffDateTimeNumber: number;
+    rCutOffOffset: number;
     rCutoffTime: string;
     rCutoffDateTimeStr: string;
     rCutoffDateTimeNumber: number;
@@ -11,6 +13,7 @@ export interface FundCharacteristic {
     rValuationTime: string;
     rValuationDateTimeStr: string;
     rValuationDateTimeNumber: number;
+    settlementDateOffset: number;
     sSettlementTime: string;
     sSettlementDateTimeStr: string;
     sSettlementDateTimeNumber: number;

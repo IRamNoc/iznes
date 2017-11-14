@@ -124,9 +124,11 @@ export class CommonService {
         const nav = this._numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));
 
         return {
+            sCutOffOffset,
             sCutoffTime,
             sCutoffDateTimeStr,
             sCutoffDateTimeNumber,
+            rCutOffOffset,
             rCutoffTime,
             rCutoffDateTimeStr,
             rCutoffDateTimeNumber,
@@ -136,6 +138,7 @@ export class CommonService {
             rValuationTime,
             rValuationDateTimeStr,
             rValuationDateTimeNumber,
+            settlementDateOffset,
             sSettlementTime,
             sSettlementDateTimeStr,
             sSettlementDateTimeNumber,
