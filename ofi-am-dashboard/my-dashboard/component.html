@@ -40,21 +40,23 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th><span mltag="txt_fund_share">Fund share</span></th>
-                                        <th><span mltag="txt_asset_manager">Asset Manager</span></th>
-                                        <th><span mltag="txt_amount">Amount</span></th>
-                                        <th><span mltag="txt_quantity">Quantity</span></th>
-                                        <th><span mltag="txt_ratio">Ratio</span></th>
+                                        <!--<th><span mltag="txt_fund_share">Fund share</span></th>-->
+                                        <th class="text-left"><span mltag="txt_sub_portfolio">Sub Portfolio</span></th>
+                                        <th class="text-left"><span mltag="txt_asset_manager">Asset Manager</span></th>
+                                        <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
+                                        <th class="text-right"><span mltag="txt_amount">Estimated Amount</span></th>
+                                        <th class="text-right"><span mltag="txt_ratio">Ratio</span></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr *ngFor="let holding of fundStats.assets">
                                         <!--<td colspan="5">{{ holding | json }}</td>-->
-                                        <td class="text-left">{{ holding.asset }}</td>
-                                        <td class="text-right">{{ holding.assetManager }}</td>
-                                        <td class="text-right">{{ holding.amount }}</td>
+                                        <!--<td class="text-left">{{ holding.asset }}</td>-->
+                                        <td class="text-left">{{ holding.walletName }}</td>
+                                        <td class="text-left">{{ holding.assetManager }}</td>
                                         <td class="text-right">{{ holding.quantity }}</td>
-                                        <td class="text-right">{{ holding.ratio }}</td>
+                                        <td class="text-right">&euro; {{ holding.amount }}</td>
+                                        <td class="text-right">{{ holding.ratio }}%</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -64,9 +66,7 @@
                                         baseChart
                                         [data]="fundStats.graphData"
                                         [labels]="fundStats.graphLabels"
-                                        [chartType]="'pie'"
-                                        (chartHover)="chartHovered($event)"
-                                        (chartClick)="chartClicked($event)"></canvas>
+                                        [chartType]="'pie'"></canvas>
                             </div>
                         </div>
                     </div>

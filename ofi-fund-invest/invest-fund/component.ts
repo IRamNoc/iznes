@@ -9,6 +9,7 @@ import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 import {NgRedux} from '@angular-redux/store';
+import * as moment from 'moment-business-days';
 
 // Internal
 import {immutableHelper, MoneyValuePipe, mDateHelper} from '@setl/utils';
@@ -65,12 +66,26 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     formConfig: any;
 
     // Date picker configuration
-    configDate = {
+    configDateCutoff = {
         firstDayOfWeek: 'mo',
         format: 'DD-MM-YYYY',
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
+        isDayDisabledCallback: (thisDate) => {
+            return false;
+        }
+    };
+
+    configDateValuation = {
+        firstDayOfWeek: 'mo',
+        format: 'DD-MM-YYYY',
+        closeOnSelect: true,
+        opens: 'right',
+        locale: 'en',
+        isDayDisabledCallback: (thisDate) => {
+            return false;
+        }
     };
 
     // Dates
@@ -155,6 +170,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subscribe: {
                 nonAcquiredFeeKey: 'entryFee',
                 acquiredFeeKey: 'sAcquiredFee',
+                cutoffOffSet: 'sCutOffOffset',
                 cutoffTimeKey: 'sCutoffTime',
                 cutoffDateTimeStrKey: 'sCutoffDateTimeStr',
                 cutoffDateTimeNumberKey: 'sCutoffDateTimeNumber',
@@ -173,6 +189,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             redeem: {
                 nonAcquiredFeeKey: 'exitFee',
                 acquiredFeeKey: 'rAcquiredFee',
+                cutoffOffSet: 'rCutOffOffset',
                 cutoffTimeKey: 'rCutoffTime',
                 cutoffDateTimeStrKey: 'rCutoffDateTimeStr',
                 cutoffDateTimeNumberKey: 'rCutoffDateTimeNumber',
@@ -194,6 +211,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.updateShareMetaData(shareData);
+
+            this.updateDateInputs();
+
+            this.pickDefaultDate();
         }));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
@@ -209,6 +230,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
         this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
         this.subscriptionsArray.push(this.userIdOb.subscribe(userId => this.userId = userId));
+
     }
 
     updateShareMetaData(shareData) {
@@ -239,12 +261,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             fullAssetName: issuer + '|' + shareName,
             isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
             currency: immutableHelper.get(thisShareData, ['metaData', 'portfolioCurrency', '0', 'text'], ''),
+            cutoffOffset: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffOffSet], 0),
             cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
             cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeStrKey], 0),
             cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
             valuationTime: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationTimeKey], 0),
             valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeStrKey], 0),
             valuationDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
+            settlementDateOffset: immutableHelper.get(shareCharacteristic, 'settlementDateOffset'),
             settlementTime: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementTimeKey], 0),
             settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeStrKey], 0),
             settlementDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
@@ -259,6 +283,41 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             decimalisationNumber
         };
 
+    }
+
+    updateDateInputs() {
+
+        this.configDateCutoff.isDayDisabledCallback = (thisDate) => {
+            // if day in the past.
+            // if day if not the cutoff day for the fund.
+            const cutoffDay = this.metaData.cutoffOffset;
+            return (cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+        };
+
+        this.configDateValuation.isDayDisabledCallback = (thisDate) => {
+            // if day in the past.
+            // if day if not the valuation day for the fund.
+            // todo
+            // hardcode on Friday today.
+            const valuationDay = 5;
+            return (valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+        };
+
+        this._changeDetectorRef.detectChanges();
+
+    }
+
+    pickDefaultDate() {
+        const cutoffOffset = this.metaData.cutoffOffset;
+        const defaultCutoffDateStr = closestDay(cutoffOffset);
+        this.cutoffDate.patchValue(defaultCutoffDateStr, {
+            onlySelf: false,
+            emitEvent: true,
+            emitModelToViewChange: true,
+            emitViewToModelChange: true
+        });
+
+        this.subscribeForChangeDate('cutoff', [moment(defaultCutoffDateStr, 'DD/MM/YYYY')]);
     }
 
     updateAddressList(addressList) {
@@ -360,7 +419,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this.form.value.quantity;
         const quantityParsed = this._moneyValuePipe.parse(quantity, this.metaData.decimalisation);
         if (quantityParsed === 0) {
-            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10,this.metaData.decimalisation)) + ' or greater.');
+            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10, this.metaData.decimalisation)) + ' or greater.');
             return false;
         }
 
@@ -372,6 +431,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const address = this.form.value.address[0]['id'];
             this.subPortfolio = this.addressListObj[address].label;
+            const iban = _.get(this.addressListObj, [address, 'iban'], '');
 
             // Add actionBy
             const formValue = Object.assign({}, this.form.value, {
@@ -382,7 +442,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 walletId: this.connectedWalletId,
                 walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
                 walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], ''),
-                subPortfolio: this.subPortfolio
+                subPortfolio: this.subPortfolio,
+                iban
             });
             this._investFundFormService.handleForm(formValue, this.metaData, this.type);
         }
@@ -430,6 +491,101 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
     }
 
+    subscribeForChangeDate(type: string, $event: any): boolean {
+
+        // define which one trigger which, depend on type.
+        const triggering: FormControl = {
+            'cutoff': this.cutoffDate,
+            'valuation': this.valuationDate,
+        }[type];
+
+        const beTriggered: FormControl = {
+            'cutoff': this.valuationDate,
+            'valuation': this.cutoffDate
+        }[type];
+
+        const momentDateValue = $event[0];
+
+        if (type === 'cutoff') {
+            // if valuation day - cutoff day is positive.
+            // e.g. valuation day: Friday, cutoff day: Monday.
+            // 5 - 1 = 4
+            // offset is 4.
+
+            // if valuation day - cutoff day is negative.
+            // e.g. valuation day: Monday, cutoff day: Friday.
+            // 1 - 5 = -4
+            // offset is 7 + (-4) = 3
+
+            const cutoffOffset = this.metaData.cutoffOffset;
+            // todo
+            // hardcoded to Friday atm
+            const valuationOffset = 5;
+            const diff = valuationOffset - cutoffOffset;
+            let offset = 0;
+            if (diff >= 0) {
+                offset = diff;
+            } else {
+                offset = 7 + diff;
+            }
+
+            const mValuationDate = momentDateValue.add(offset, 'days');
+            const valuationDateStr = mValuationDate.format('DD/MM/YYYY');
+            const valuationDateNum = mValuationDate.valueOf();
+
+            const settlementOffset = this.metaData.settlementDateOffset;
+            // business moment js object;
+            const bMValuationDate = moment(valuationDateNum);
+            const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
+
+
+            beTriggered.setValue(valuationDateStr);
+            this.settlementDate.setValue(settlementDateStr);
+        } else if (type === 'valuation') {
+            // if valuation day - cutoff day is positive.
+            // e.g. valuation day: Friday, cutoff day: Monday.
+            // 5 - 1 = 4
+            // offset is -4.
+
+            // if valuation day - cutoff day is negative.
+            // e.g. valuation day: Monday, cutoff day: Friday.
+            // 1 - 5 = -4
+            // offset is 7 + (-4) = 3 : -3
+
+
+            const cutoffOffset = this.metaData.cutoffOffset;
+            // todo
+            // hardcoded to Friday atm
+            const valuationOffset = 5;
+            const diff = valuationOffset - cutoffOffset;
+            let offset = 0;
+            if (diff >= 0) {
+                offset = diff;
+            } else {
+                offset = 7 + diff;
+            }
+
+            const mCutoffDate = momentDateValue.subtract(offset, 'days');
+            const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY');
+
+            const valuationDateNum = momentDateValue.valueOf();
+
+            const settlementOffset = this.metaData.settlementDateOffset;
+            // business moment js object;
+            const bMValuationDate = moment(valuationDateNum);
+            const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
+
+
+            beTriggered.setValue(cutoffDateStr);
+            this.settlementDate.setValue(settlementDateStr);
+        }
+
+        return false;
+
+    }
+
     unSubscribeForChange(): void {
         if (this.inputSubscription) {
             this.inputSubscription.unsubscribe();
@@ -451,4 +607,22 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString)) {
         return {invalidNumber: true};
     }
+}
+
+/**
+ *
+ * @param {number} dayToFind
+ * @return {string}
+ */
+function closestDay(dayToFind: number): string {
+    const maxLoop = 7;
+    let i = 0;
+    for (i; i <= maxLoop; i++) {
+        const newDate = moment().add(i, 'days');
+        const newDay = newDate.day();
+        if (newDay === dayToFind) {
+            return newDate.format('DD/MM/YYYY');
+        }
+    }
+    return moment().format('DD/MM/YYYY');
 }

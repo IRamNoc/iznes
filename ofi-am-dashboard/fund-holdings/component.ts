@@ -14,6 +14,7 @@ import {
     SET_ISSUE_HOLDING,
     setRequestedWalletIssuer,
     setRequestedWalletHolding,
+    setRequestedWalletAddresses,
 } from '@setl/core-store';
 
 /* Ofi corp service. */
@@ -24,7 +25,7 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import {WalletNodeRequestService, InitialisationService, MyWalletsService} from '@setl/core-req-services';
 
 /* Utils. */
 import {
@@ -53,6 +54,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     private myDetails: any = {};
     private userAssetList: Array<any> = [];
     private filteredUserAssetList: Array<{ id: string, text: string }> = [];
+    private requestedWalletAddress;
 
     /* Redux observables. */
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
@@ -62,10 +64,13 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb: any;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) walletHoldingsOb: any;
+    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
+                private _myWalletService: MyWalletsService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private ofiNavService: OfiNavService,
@@ -77,7 +82,11 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         })
 
         /* Subscribe to wallet holdings. */
-        this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested));
+        this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe(requested => this.requestWalletHolding(requested));
+        this.subscriptions['wallet-addressList'] = this.requestedAddressListOb.subscribe(requested => {
+            this.requestAddressList(requested);
+        });
+        this.subscriptions['wallet-labels'] = this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested));
     }
 
     public ngOnInit() {
@@ -148,6 +157,30 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showError('Failed to get your issued assets.');
                 console.warn('Failed to get your issued assets: ', error);
             });
+        }
+    }
+
+    requestAddressList(requestedState) {
+        this.requestedWalletAddress = requestedState;
+        console.log('requested wallet address', this.requestedWalletAddress);
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
+
+            // Request the list.
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    requestWalletLabel(requestedState) {
+
+        console.log('checking requested', this.requestedWalletAddress);
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
         }
     }
 
@@ -315,7 +348,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         /* For each holder, let's figure out  */
                         let finalHolder: any;
                         for (finalHolder in finalHoldersList) {
-                            finalHoldersList[finalHolder]['ratio'] = (100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity'];
+                            finalHoldersList[finalHolder]['ratio'] = Math.round((100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity']*100)/100;
                         }
 
                         /* Assign them to the return. */
