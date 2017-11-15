@@ -619,5 +619,5 @@ function closestDay(dayToFind: number): string {
             return newDate.format('DD/MM/YYYY');
         }
     }
-    return today.format('DD/MM/YYYY');
+    return moment().format('DD/MM/YYYY');
 }
