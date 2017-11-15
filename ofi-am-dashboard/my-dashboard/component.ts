@@ -14,6 +14,7 @@ import {
     SET_ISSUE_HOLDING,
     setRequestedWalletIssuer,
     setRequestedWalletHolding,
+    setRequestedWalletAddresses,
 } from '@setl/core-store';
 
 /* Ofi corp service. */
@@ -24,11 +25,12 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import {WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
 
 /* Utils. */
 import {
     NumberConverterService,
+    immutableHelper,
 } from '@setl/utils';
 
 
@@ -44,6 +46,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     public fundShareForm: FormGroup;
     public showStats: boolean = false;
     public fundStats: any = {};
+    public requestedWalletAddress: boolean;
+    public addressList: Array<any>;
+    public addressSelected: any;
 
     /* Private properties. */
     private subscriptions: any = {};
@@ -59,18 +64,22 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb: any;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) walletHoldingsOb: any;
 
-    constructor(private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
+
+    constructor(private _ngRedux: NgRedux<any>,
+                private _changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiAmDashboardService: OfiAmDashboardService,
-                private ofiNavService: OfiNavService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,) {
+                private _numberConverterService: NumberConverterService,
+                private _myWalletService: MyWalletsService) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
             'selectFund': new FormControl(0)
@@ -169,11 +178,19 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Handle error */
             console.log('failed to getFundManagerAssets: ', error);
         })
+
+        this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe(requested => {
+            this.requestAddressList(requested);
+        });
+
+        this.subscriptions['address-list'] = this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList));
+
+        this.subscriptions['requested-label-list'] = this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested));
     }
 
     public ngAfterViewInit() {
         /* State. */
-        let state = this.ngRedux.getState();
+        let state = this._ngRedux.getState();
 
         /* Check if we need to request the user issued assets. */
         let userIssuedAssetsList = getOfiUserIssuedAssets(state);
@@ -181,7 +198,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
-                this.changeDetectorRef.detectChanges();
+                this._changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get your issued assets.');
@@ -190,6 +207,36 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.requestWalletHolding(false);
+    }
+
+    requestWalletLabel(requestedState) {
+
+        console.log('checking requested', this.requestedWalletAddress);
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+
+            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+        }
+    }
+
+
+    updateAddressList(addressList) {
+        console.log(" | UPDATED ADDRESSES: ", addressList);
+        this.addressList = addressList;
+    }
+
+    requestAddressList(requestedState) {
+        this.requestedWalletAddress = requestedState;
+        console.log('requested wallet address', this.requestedWalletAddress);
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            // Set the state flag to true. so we do not request it again.
+            this._ngRedux.dispatch(setRequestedWalletAddresses());
+
+            // Request the list.
+            InitialisationService.requestWalletAddresses(this._ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
     }
 
     /**
@@ -229,49 +276,37 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (holdings) {
                 let address, addresses = [];
+                console.log(" | holdings.breakdown: ", holdings.breakdown);
+                console.log(" | this.addressList: ", this.addressList);
                 for (address in holdings.breakdown) {
-                    addresses.push(address);
+                    addresses.push(this.addressList[address].label);
                 }
 
-                this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response)=>{
-                    console.log(' | addresses resolved: ', response);
-                    let key, id, walletIdList = response[1].Data;
-
-                    for (key in walletIdList) {
-                        for (id in this.walletDirectoryList) {
-                            /* ...check if we've found it... */
-                            if (this.walletDirectoryList[id].commuPub === walletIdList[key].commuPub) {
-                                this.fundStats.assets.push({
-                                    'asset': asset.split('|')[1],
-                                    'walletName': this.walletDirectoryList[id].walletName,
-                                    'assetManager': assets[asset].companyName,
-                                    'amount': this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price),
-                                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
-                                    'ratio': 0, // Get's set just below (total needs to be calculated first).
-                                });
-                                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
-
-                                /* Now let's use the total to work out the ratio,
-                                 and whilst we're at it, build the data arrays for the graph. */
-                                this.fundStats.graphData = [];
-                                this.fundStats.graphLabels = [];
-                                for (const row in this.fundStats.assets) {
-                                    this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
-                                    this.fundStats.graphLabels.push(this.fundStats.assets[row].walletName);
-                                    this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
-                                }
-
-                                /* Show the stats. */
-                                this.showStats = true;
-
-                                /* Detect changes. */
-                                this.changeDetectorRef.detectChanges();
-                            }
-                        }
-                    }
-                }).catch((error) => {
-                    console.warn(error);
+                this.fundStats.assets.push({
+                    'asset': asset.split('|')[1],
+                    'walletName': addresses[0],
+                    'assetManager': assets[asset].companyName,
+                    'amount': Math.round(this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
+                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
+                    'ratio': 0, // Get's set just below (total needs to be calculated first).
                 });
+                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
+
+                /* Now let's use the total to work out the ratio,
+                 and whilst we're at it, build the data arrays for the graph. */
+                this.fundStats.graphData = [];
+                this.fundStats.graphLabels = [];
+                for (const row in this.fundStats.assets) {
+                    this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
+                    this.fundStats.graphLabels.push(this.fundStats.assets[row].walletName);
+                    this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
+                }
+
+                /* Show the stats. */
+                this.showStats = true;
+
+                /* Detect changes. */
+                this._changeDetectorRef.detectChanges();
             }
         }
 
@@ -340,9 +375,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
-            this.ngRedux.dispatch(setRequestedWalletHolding());
+            this._ngRedux.dispatch(setRequestedWalletHolding());
             console.log('this.connectedWalletId', this.connectedWalletId);
-            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletHolding(this._ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -366,7 +401,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this.changeDetectorRef.detectChanges();
+        this._changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
@@ -416,7 +451,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
+        this._changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (var key in this.subscriptions) {
