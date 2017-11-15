@@ -311,12 +311,12 @@ export class InvestFundFormService {
             conditions: [
                 // todo
                 // put it back in for production
-                // {
-                //     conditionData: {
-                //         executeTimeStamp: settleTimeStamp
-                //     },
-                //     conditionType: ConditionType.TIME
-                // },
+                {
+                    conditionData: {
+                        executeTimeStamp: settleTimeStamp
+                    },
+                    conditionType: ConditionType.TIME
+                },
                 {
                     conditionData: {
                         authoriseRef: authoriseRef,
