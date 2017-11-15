@@ -12,14 +12,14 @@
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon Payment list tab. -->
                     <ng-container
-                            *ngTemplateOutlet="staticOrdersList"
+                        *ngTemplateOutlet="staticOrdersList"
                     ></ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="id >= 1">
                     <!-- Create Coupon Payment tab. -->
                     <ng-container
-                            *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
+                        *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -48,15 +48,15 @@
                             </label>
                             <div>
                                 <ng-select
-                                        id="orders-search-status"
-                                        class="fluid-width"
-                                        [items]="orderStatuses"
-                                        [allowClear]="true"
-                                        (selected)="getOrdersBySearch()"
-                                        (removed)="getOrdersBySearch()"
-                                        [formControl]="tabsControl[0].searchForm.controls['status']"
-                                        placeholder="Status"
-                                        mltag="txt_status"></ng-select>
+                                    id="orders-search-status"
+                                    class="fluid-width"
+                                    [items]="orderStatuses"
+                                    [allowClear]="true"
+                                    (selected)="getOrdersBySearch()"
+                                    (removed)="getOrdersBySearch()"
+                                    [formControl]="tabsControl[0].searchForm.controls['status']"
+                                    placeholder="Status"
+                                    mltag="txt_status"></ng-select>
                             </div>
                         </div>
                         <div class="form-group col-sm-4">
@@ -65,15 +65,15 @@
                             </label>
                             <div>
                                 <ng-select
-                                        id="orders-search-type"
-                                        class="fluid-width"
-                                        [items]="orderTypes"
-                                        [allowClear]="true"
-                                        (selected)="getOrdersBySearch()"
-                                        (removed)="getOrdersBySearch()"
-                                        [formControl]="tabsControl[0].searchForm.controls['type']"
-                                        placeholder="Type"
-                                        mltag="txt_type"></ng-select>
+                                    id="orders-search-type"
+                                    class="fluid-width"
+                                    [items]="orderTypes"
+                                    [allowClear]="true"
+                                    (selected)="getOrdersBySearch()"
+                                    (removed)="getOrdersBySearch()"
+                                    [formControl]="tabsControl[0].searchForm.controls['type']"
+                                    placeholder="Type"
+                                    mltag="txt_type"></ng-select>
                             </div>
                         </div>
                     </div>
@@ -123,14 +123,17 @@
                             {{ order.metaData.assetISIN }}<br/>
                             <span class="text_small">{{ order.asset }}</span>
                         </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Amount -->
-                            {{ order.metaData.total | moneyValue}}
-                        </clr-dg-cell>
+
                         <clr-dg-cell>
                             <!-- Quantity -->
                             {{ order.metaData.units | moneyValue}}
                         </clr-dg-cell>
+
+                        <clr-dg-cell>
+                            <!-- Amount -->
+                            {{ order.metaData.total | moneyValue}}
+                        </clr-dg-cell>
+
                         <clr-dg-cell>
                             <!-- Price -->
                             {{ order.price | moneyValue}}

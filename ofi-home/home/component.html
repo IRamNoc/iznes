@@ -62,8 +62,8 @@
             <clr-dg-column style="min-width: 115px;"><span mltag="txt_ordertype">Order type</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_orderref">Order REF</span></clr-dg-column>
             <clr-dg-column style="min-width: 240px;"><span mltag="txt_fundname">Fund name</span></clr-dg-column>
-            <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>
+            <clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>
             <clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>
@@ -98,14 +98,17 @@
                     {{ order.metaData.assetISIN }}<br/>
                     {{ order.asset }}
                 </clr-dg-cell>
-                <clr-dg-cell>
-                    <!-- Amount -->
-                    {{ order.metaData.total | moneyValue}}
-                </clr-dg-cell>
+
                 <clr-dg-cell>
                     <!-- Quantity -->
                     {{ order.metaData.units | moneyValue}}
                 </clr-dg-cell>
+
+                <clr-dg-cell>
+                    <!-- Amount -->
+                    {{ order.metaData.total | moneyValue}}
+                </clr-dg-cell>
+
                 <clr-dg-cell>
                     <!-- Price -->
                     {{ order.metaData.price | moneyValue}}

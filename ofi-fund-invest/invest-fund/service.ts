@@ -48,8 +48,9 @@ export class InvestFundFormService {
         const settlementDateTimeStr = immutableHelper.get(formValue, 'settlementDate', '') + ' ' +
             immutableHelper.get(shareMetaData, 'settlementTime', '');
         const settleTimeStamp = mDateHelper.dateStrToUnixTimestamp(settlementDateTimeStr, 'DD/MM/YYYY HH:mm') / 1000;
-        // const expiryTimeStamp = settleTimeStamp + 3600; // + 1h from settlement.
-        const expiryTimeStamp = settleTimeStamp + 600; // + 1min from settlement.
+        // should use settlement plus 30 day
+        const expirySecond = 2592000;
+        const expiryTimeStamp = settleTimeStamp + expirySecond; // + 1min from settlement.
         const issuerAddress = immutableHelper.get(formValue, 'shareIssuerAddress', '');
         const walletId = immutableHelper.get(formValue, 'walletId', 0);
         const walletName = immutableHelper.get(formValue, 'walletName', 0);
@@ -164,8 +165,8 @@ export class InvestFundFormService {
                         platFormFee: platFormFeeParse,
                         parties,
                         cutoff: cutoffDateTimeDBFormat,
-                        delivery: valuationDateTimeDBFormat,
-                        valuation: settlementDateTimeDBFormat
+                        delivery: settlementDateTimeDBFormat,
+                        valuation: valuationDateTimeDBFormat
                     }
                 }))
                 ;
@@ -306,6 +307,7 @@ export class InvestFundFormService {
         } else {
             throw new Error('Invalid investment action type.');
         }
+
         return {
             actions: actionData,
             conditions: [
@@ -331,12 +333,7 @@ export class InvestFundFormService {
                     'address': issuerAddress
                 }
             ],
-            // expiry: expiryTimeStamp,
-            // todo
-            // change it back when production
-            // should use settlement plus 30 days.
-            // one month expiry
-            expiry: mDateHelper.getCurrentUnixTimestamp() / 1000 + 2592000,
+            expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
             creatorAddress: investorAddress
