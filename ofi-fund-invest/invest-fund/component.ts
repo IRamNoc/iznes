@@ -72,7 +72,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
-        isDayDisabledCallback: () => {
+        isDayDisabledCallback: (thisDate) => {
             return false;
         }
     };
@@ -83,7 +83,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
-        isDayDisabledCallback: () => {
+        isDayDisabledCallback: (thisDate) => {
             return false;
         }
     };
@@ -214,7 +214,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.updateDateInputs();
 
-            this.pickDefaultDate(Date);
+            this.pickDefaultDate();
         }));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
