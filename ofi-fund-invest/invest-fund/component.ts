@@ -71,8 +71,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         format: 'DD-MM-YYYY',
         closeOnSelect: true,
         opens: 'right',
-        locale: 'en'
-
+        locale: 'en',
+        isDayDisabledCallback: (thisDate) => {
+            return false;
+        }
     };
 
     configDateValuation = {
@@ -80,7 +82,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         format: 'DD-MM-YYYY',
         closeOnSelect: true,
         opens: 'right',
-        locale: 'en'
+        locale: 'en',
+        isDayDisabledCallback: (thisDate) => {
+            return false;
+        }
     };
 
     // Dates
