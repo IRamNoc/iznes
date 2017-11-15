@@ -1,60 +1,70 @@
+
 node {
 
 }
 def notifySlack(String buildStatus = 'STARTED') {
-  // Build status of null means success.
-  buildStatus = buildStatus ?: 'SUCCESS'
+    // Build status of null means success.
+    buildStatus = buildStatus ?: 'SUCCESS'
 
-  def color
+    def color
 
-  if (buildStatus == 'STARTED') {
-    color = '#0000CD'
-  } else if (buildStatus == 'SUCCESS') {
-    color = '#008000'
-  } else if (buildStatus == 'UNSTABLE') {
-    color = '#FFFF00'
-  } else {
-    color = '#FF0000'
-  }
-  def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-  slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
+    if (buildStatus == 'STARTED') {
+        color = '#0000CD'
+    } else if (buildStatus == 'SUCCESS') {
+        color = '#008000'
+    } else if (buildStatus == 'UNSTABLE') {
+        color = '#FFFF00'
+    } else {
+        color = '#FF0000'
+    }
+    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+    slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
 }
 
 node {
-  timestamps {
-    try {
-      notifySlack()
+    timestamps {
+        try {
+            notifySlack()
 
-        stage('Deploy Frontend to Test Environment'){
-            node{
-                sh '''
+            stage('Deploy Frontend to Test Environment'){
+                node{
+                    sh '''
               ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
               ssh root@139.162.213.130 mkdir /var/www_setltestnet && 
               scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
+                }
             }
-        }
-        stage('Deploy Backend to Test Environment') {
-            node {
-                sh '''
+            stage('Deploy Backend to Test Environment') {
+                node {
+                    sh '''
                             ssh root@139.162.213.130 mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
                             ssh root@139.162.213.130 mkdir /var/phpapps/backend && 
                             scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
+                }
             }
-        }
 
-        stage ('Update Dependencies'){
-            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
-        }
+            stage('Deploy French Fund Daemon to Test Environment') {
+                node {
+                    sh '''
+                            ssh root@139.162.213.130 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh root@139.162.213.130 mkdir /var/phpapps/frenchfunddaemon && 
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
+                }
+            }
 
-        stage ('Restart Node Server'){
-            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
-        }
+            stage ('Update Dependencies'){
+                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
+            }
 
-    } catch (e) {
-      currentBuild.result = 'FAILURE'
-      throw e
-    } finally {
-      notifySlack(currentBuild.result)
+            stage ('Restart Node Server'){
+                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
+            }
+
+        } catch (e) {
+            currentBuild.result = 'FAILURE'
+            throw e
+        } finally {
+            notifySlack(currentBuild.result)
+        }
     }
-  }
 }
