@@ -72,7 +72,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
-        isDayDisabledCallback: (thisDate) => {
+        isDayDisabledCallback: () => {
             return false;
         }
     };
@@ -83,7 +83,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
-        isDayDisabledCallback: (thisDate) => {
+        isDayDisabledCallback: () => {
             return false;
         }
     };
