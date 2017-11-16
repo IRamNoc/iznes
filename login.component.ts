@@ -25,7 +25,7 @@ import {
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    getAuthentication
+    getAuthentication, SET_PRODUCTION
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -86,7 +86,7 @@ export class SetlLoginComponent implements OnDestroy {
         if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
             //remove the popup and return false.
             var elements = document.getElementsByClassName('error');
-            if(elements.length > 0){
+            if (elements.length > 0) {
                 elements[0].parentNode.removeChild(elements[0]);
             }
             return false;
@@ -108,7 +108,7 @@ export class SetlLoginComponent implements OnDestroy {
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL],
+            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
             asyncTaskPipe,
             {},
