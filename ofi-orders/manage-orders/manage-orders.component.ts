@@ -98,6 +98,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* ...request using the defaults in the form. */
             this.getOrdersBySearch();
         }
+
+        /* Subscribe for the order filter. */
+        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
+            /* Check if we have a filter set. */
+            console.log(' | preset filter: ', filter);
+            this.handlePresetFilter(filter);
+
+            /* Detect changes. */
+            this.changeDetectorRef.detectChanges();
+        });
     }
 
     ngAfterViewInit() {
@@ -186,13 +196,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }, 100);
         });
 
-        /* Subscribe for the order filter. */
-        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
-            /* Check if we have a filter set. */
-            console.log(' | preset filter: ', filter);
-            this.handlePresetFilter(filter);
-        });
-
         /* Check if we need to request the user issued assets. */
         let userIssuedAssetsList = getOfiUserIssuedAssets(state);
         if (!userIssuedAssetsList.length) {
@@ -220,7 +223,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             );
 
             /* Detect changes. */
-            this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.detectChanges();
 
             /* ...also, reset the filter... */
             this.ofiOrdersService.resetOrderFilter();
@@ -228,6 +231,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* ...and update the view. */
             this.getOrdersBySearch();
         }
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;

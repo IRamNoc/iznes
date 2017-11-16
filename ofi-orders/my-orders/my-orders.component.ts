@@ -94,6 +94,16 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* ...request using the defaults in the form. */
             this.getOrdersBySearch();
         }
+
+        /* Subscribe for the order filter. */
+        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
+            /* Check if we have a filter set. */
+            console.log(' | preset filter: ', filter);
+            this.handlePresetFilter(filter);
+
+            /* Detect changes. */
+            this.changeDetectorRef.detectChanges();
+        });
     }
 
     ngAfterViewInit() {
@@ -172,30 +182,35 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }, 100);
         });
+    }
 
-        /* Subscribe for the order filter. */
-        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
-            /* Check if we have a filter set. */
+    /**
+     * Handle Preset Filter
+     * @param filter
+     */
+    private handlePresetFilter(filter: string): void {
+        if (filter != '') {
+            /* If we do, then let's patch the form value... */
             console.log(' | preset filter: ', filter);
-            setTimeout(() => {
-                if (filter != '' && this.ordersList.length) {
-                    /* If we do, then let's patch the form value... */
-                    console.log(' | preset filter: ', filter);
-                    this.tabsControl[0].searchForm.controls.status.patchValue(
-                        this.getStatusByName(filter) // resolve the status
-                    );
+            this.tabsControl[0].searchForm.controls['status'].patchValue(
+                this.getStatusByName(filter) // resolve the status
+            );
 
-                    /* ...also, reset the filter... */
-                    this.ofiOrdersService.resetOrderFilter();
+            /* Detect changes. */
+            this.changeDetectorRef.detectChanges();
 
-                    /* ...and update the view. */
-                    this.getOrdersBySearch();
+            /* ...also, reset the filter... */
+            this.ofiOrdersService.resetOrderFilter();
 
-                    /* Detect changes. */
-                    this.changeDetectorRef.detectChanges();
-                }
-            }, 100);
-        });
+            /* ...and update the view. */
+            this.getOrdersBySearch();
+        }
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
+
+        /* Return. */
+        return;
     }
 
     /**
