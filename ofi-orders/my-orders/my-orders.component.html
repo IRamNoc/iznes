@@ -112,8 +112,7 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Investor -->
-                            {{ order.portfolioLabel || '' }}
-                            <!--{{ order.metaData.investorWalletName }}-->
+                            {{ order.investorSubPortfolio }}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Order type -->
@@ -143,11 +142,13 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
-                            {{ order.cutoffDate }}
+                            {{ order.cutoffDateStr }} <br>
+                            <span class="text_small">{{ order.cutoffTimeStr}}</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Delivery date -->
-                            {{ order.deliveryDate }}
+                            {{ order.deliveryDateStr }} <br>
+                            <span class="text_small">{{ order.deliveryTimeStr}}</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Status -->
@@ -287,7 +288,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_timeutc"> Time (UTC)</span>
+                        <span mltag="txt_time"> Time</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.cutoffDate ) }}</span>
                         </div>
@@ -309,7 +310,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_timeutc"> Time (UTC)</span>
+                        <span mltag="txt_time"> Time</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.valuationDate ) }}</span>
                         </div>
@@ -331,7 +332,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_timeutc"> Time (UTC)</span>
+                        <span mltag="txt_time"> Time</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.deliveryDate ) }}</span>
                         </div>

@@ -4,22 +4,17 @@ import {NgRedux, select} from "@angular-redux/store";
 import {Unsubscribe} from "redux";
 import {FormControl, FormGroup} from "@angular/forms";
 /* Services. */
-import {WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
-
+import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
-
-/* Utils. */
 import {ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
-
+/* Utils. */
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
-
+/* Core store stuff. */
 /* Ofi Store stuff. */
 import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
 
-/* Core store stuff. */
-import {setRequestedWalletAddresses} from '@setl/core-store';
 
 /* Types. */
 interface SelectedItem {
@@ -59,14 +54,11 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Public Properties */
     public connectedWalletName: string = '';
-    public requestedWalletAddress: boolean;
-    public addressList: Array<any>;
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
     private ordersList: Array<any> = [];
-    private rawOrdersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
     private connectedWalletId: any = 0;
@@ -80,11 +72,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
-
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ngRedux: NgRedux<any>,
@@ -92,8 +80,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
-                public _numberConverterService: NumberConverterService,
-                private myWalletsService:MyWalletsService) {
+                public _numberConverterService: NumberConverterService) {
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
     }
@@ -117,36 +104,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Detect changes. */
             this.changeDetectorRef.detectChanges();
         });
-
-        /* Subscribe for this user's connected info. */
-        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            /* Assign list to a property. */
-            this.connectedWalletId = connectedWalletId;
-
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
-
-        this.subscriptions['address-list'] = this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList));
-
-        this.subscriptions['requested-label-list'] = this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested));
-
-        this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe(requested => {
-            this.requestAddressList(requested);
-        });
-
-        /* Subscribe for the order buffer. */
-        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
-            /* Check if we have an Id. */
-            setTimeout(() => {
-                if (orderId !== -1 && this.ordersList.length) {
-                    /* If we do, then handle the viewing of it. */
-                    this.handleViewOrder(orderId);
-
-                    this.ofiOrdersService.resetOrderBuffer();
-                }
-            }, 100);
-        });
     }
 
     ngAfterViewInit() {
@@ -155,10 +112,31 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Orders list. */
         this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
             /* Subscribe and set the orders list. */
-            this.rawOrdersList = immutableHelper.copy(orderList);
+            const ordersListNew = immutableHelper.copy(orderList);
+            this.ordersList = ordersListNew.map((order) => {
+                /* Pointer. */
+                let fixed = order;
 
-            /* Re-render the list. */
-            this.mapOrdersList();
+                /* Fix dates. */
+                fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+                fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
+                fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+                fixed.deliveryTimeStr = this.formatDate('hh:mm', new Date(fixed.deliveryDate));
+
+                fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
+
+                let metaData = immutableHelper.copy(order.metaData);
+
+                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+
+                metaData.total = metaData.units * fixed.price;
+
+                fixed.metaData = metaData;
+
+                /* Return. */
+                return fixed;
+            });
 
             /* Detect Changes. */
             this.changeDetectorRef.detectChanges();
@@ -182,107 +160,28 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Update wallet name. */
             this.updateWalletConnection();
         });
-    }
 
-    /**
-     * Map Orders List
-     */
-    private mapOrdersList ():void {
-        console.log(' | Mapping orders list: ', this.rawOrdersList);
-        /* Set the orders list. */
-        this.ordersList = this.rawOrdersList.map((order) => {
-            /* Pointer. */
-            let fixed = order;
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+            /* Assign list to a property. */
+            this.connectedWalletId = connectedWalletId;
 
-            /* Fix dates. */
-            fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
-            fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
-
-            fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
-
-            let metaData = immutableHelper.copy(order.metaData);
-
-            metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
-            metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
-
-            metaData.total = metaData.units * fixed.price;
-
-            fixed.metaData = metaData;
-
-            /* Get the wallet label. */
-            fixed.portfolioLabel = this.getAddressLabel(fixed.metaData.investorWalletAddr);
-
-            /* Return. */
-            return fixed;
+            /* Update wallet name. */
+            this.updateWalletConnection();
         });
 
-        /* Detect changes. */
-        this.changeDetectorRef.detectChanges();
+        /* Subscribe for the order buffer. */
+        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+            /* Check if we have an Id. */
+            setTimeout(() => {
+                if (orderId !== -1 && this.ordersList.length) {
+                    /* If we do, then handle the viewing of it. */
+                    this.handleViewOrder(orderId);
 
-        return;
-    }
-
-    /**
-     * Get Address Label
-     *
-     * @param {string} address
-     * @returns {string|boolean}
-     */
-    public getAddressLabel (address: string):string|boolean {
-        return this.addressList[address] ? this.addressList[address].label : false;
-    }
-
-    /**
-     *
-     * @param addressList
-     */
-    updateAddressList(addressList: Array<any>):void {
-        console.log(" | UPDATED ADDRESSES: ", addressList);
-        /* Update the property. */
-        this.addressList = addressList;
-
-        /* Re-render the order list. */
-        this.mapOrdersList();
-
-        /* Return. */
-        return;
-    }
-
-    /**
-     * Request Address List
-     * ====================
-     * @param {boolean} requestedState
-     */
-    requestAddressList(requestedState:boolean ):void {
-        this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
-
-        // If the state is false, that means we need to request the list.
-        if (!requestedState && this.connectedWalletId !== 0) {
-            // Set the state flag to true. so we do not request it again.
-            this.ngRedux.dispatch(setRequestedWalletAddresses());
-
-            // Request the list.
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
-        }
-
-        return;
-    }
-
-    /**
-     *
-     * @param requestedState
-     */
-    requestWalletLabel(requestedState: boolean): void {
-
-        console.log('checking requested', requestedState);
-        // If the state is false, that means we need to request the list.
-        if (!requestedState && this.connectedWalletId !== 0) {
-
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletsService, this.connectedWalletId);
-        }
-
-        return;
+                    this.ofiOrdersService.resetOrderBuffer();
+                }
+            }, 100);
+        });
     }
 
     /**
@@ -366,7 +265,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Inc. */
             i++;
-        });
+        })
 
         /* If we found an active tab, no need to do anymore... */
         if (foundActive) {
