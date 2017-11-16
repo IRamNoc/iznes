@@ -132,6 +132,7 @@
 
                     <!--<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
                     <input formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
+                           [readonly]="true"
                            (dateChange)="subscribeForChangeDate('cutoff', $event)"
                     />
                 </div>
@@ -147,6 +148,7 @@
 
                     <!--<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
                     <input formControlName="valuationDate" [dpDayPicker]="configDateValuation" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
+                           [readonly]="true"
                            (dateChange)="subscribeForChangeDate('valuation', $event)"
                     />
                 </div>

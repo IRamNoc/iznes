@@ -121,7 +121,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
                 fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
-                fixed.deliveryTimeStr = this.formatDate('hh:mm', new Date(fixed.deliveryDate));
 
                 fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
 

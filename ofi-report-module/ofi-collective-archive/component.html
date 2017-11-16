@@ -38,6 +38,7 @@
                                     [dpDayPicker]="configDate" placeholder="Choose a date"
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     (ngModelChange)="dateChange('from', $event)"
+                                    [readonly]="true"
                                 />
                             </div>
                         </div>
@@ -54,6 +55,7 @@
                                     [dpDayPicker]="configDate" placeholder="Choose a date"
                                     mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
                                     (ngModelChange)="dateChange('to', $event)"
+                                    [readonly]="true"
                                 />
                             </div>
                         </div>
