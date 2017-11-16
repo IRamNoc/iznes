@@ -68,7 +68,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     // Date picker configuration
     configDateCutoff = {
         firstDayOfWeek: 'mo',
-        format: 'DD-MM-YYYY',
+        format: 'DD/MM/YYYY',
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -79,7 +79,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     configDateValuation = {
         firstDayOfWeek: 'mo',
-        format: 'DD-MM-YYYY',
+        format: 'DD/MM/YYYY',
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
