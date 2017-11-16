@@ -35,6 +35,7 @@ import {setRequestedWalletAddresses} from '@setl/core-store';
 export class InvestFundComponent implements OnInit, OnDestroy {
     @Input() shareId: number;
     @Input() type: string;
+    @Input() doValidate: boolean;
 
     @Output() close: EventEmitter<any> = new EventEmitter();
 
@@ -146,7 +147,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+        this._investFundFormService.doValidate = this.doValidate;
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY 23:59');
         this.cutoffDate = new FormControl(currentDate);
         this.valuationDate = new FormControl(currentDate);
         this.settlementDate = new FormControl(currentDate);
@@ -214,7 +216,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.updateDateInputs();
 
-            this.pickDefaultDate();
+            if (this.doValidate) {
+                this.pickDefaultDate();
+            }
         }));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
