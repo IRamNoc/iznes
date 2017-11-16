@@ -36,7 +36,7 @@
                         <label>
                             <span mltag="txt_fundname">Fund Name</span>
                         </label>
-                        <div class="input-button-group">
+                        <div class="input-button-group" style="margin-top:-6px">
                             <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-fundname" type="text" placeholder="Fund Name" mltag="txt_fundname"/>
                             <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
                         </div>

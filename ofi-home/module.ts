@@ -26,7 +26,7 @@ import {OfiHomeComponent} from "./home/component";
         BrowserModule,
         ClarityModule,
         RouterModule,
-        MultilingualModule
+        MultilingualModule,
         SetlPipesModule
     ],
     providers: [
