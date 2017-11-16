@@ -44,15 +44,17 @@ node {
                 }
             }
 
+/*
 
-            stage('Deploy French Fund Daemon to Test Environment') {
+            stage('Deploy French Fund Daemon to Staging Environment') {
                 node {
                     sh '''
                             ssh root@172.104.147.135 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh root@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon && 
+                            ssh root@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
                             scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
+*/
 
             stage ('Update Dependencies'){
                 sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
