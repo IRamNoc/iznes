@@ -58,8 +58,10 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 let fixed = order;
 
                 /* Fix dates. */
-                fixed.cutoffDate = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
-                fixed.deliveryDate = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+                fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+                fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
+                fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+                fixed.deliveryTimeStr = this.formatDate('hh:mm', new Date(fixed.deliveryDate));
 
                 let metaData = immutableHelper.copy(order.metaData);
 
