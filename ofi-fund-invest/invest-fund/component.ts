@@ -79,7 +79,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     configDateValuation = {
         firstDayOfWeek: 'mo',
-        format: 'DD/MM/YYYY HH:mm',
+        format: 'DD/MM/YYYY',
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -545,7 +545,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
             const mValuationDate = momentDateValue.add(offset, 'days');
-            const valuationDateStr = mValuationDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const valuationDateStr = mValuationDate.format('DD/MM/YYYY');
 
             const valuationDateNum = mValuationDate.valueOf();
 
@@ -553,7 +553,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // business moment js object;
             const bMValuationDate = moment(valuationDateNum);
             const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
             triggering.setValue(cutoffDateStr);
@@ -583,7 +583,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 offset = 7 + diff;
             }
 
-            const valuationDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const valuationDateStr = momentDateValue.format('DD/MM/YYYY');
 
             const mCutoffDate = momentDateValue.subtract(offset, 'days');
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
@@ -594,7 +594,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // business moment js object;
             const bMValuationDate = moment(valuationDateNum);
             const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
             triggering.setValue(valuationDateStr);
