@@ -112,7 +112,8 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Investor -->
-                            {{ order.metaData.investorWalletName }}
+                            {{ order.portfolioLabel || '' }}
+                            <!--{{ order.metaData.investorWalletName }}-->
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Order type -->

@@ -177,7 +177,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle error */
             console.log('failed to getFundManagerAssets: ', error);
-        })
+        });
 
         this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
