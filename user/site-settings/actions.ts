@@ -7,6 +7,7 @@ import {name} from './__init__';
 
 export const SET_LANGUAGE = `${name}/SET_LANGUAGE`;
 export const SET_MENU_SHOWN = `${name}/SET_MENU_SHOWN`;
+export const SET_PRODUCTION = `${name}/SET_PRODUCTION`;
 
 export interface SetLanguageAction extends Action {
     language: string;
