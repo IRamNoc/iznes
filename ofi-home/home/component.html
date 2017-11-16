@@ -115,11 +115,13 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Cut-off date -->
-                    {{ order.cutoffDate }}
+                    {{ order.cutoffDateStr }} <br>
+                    <span class="text_small">{{order.cutoffTimeStr}}</span>
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Delivery date -->
-                    {{ order.deliveryDate }}
+                    {{ order.deliveryDateStr }} <br>
+                    <span class="text_small">{{order.deliveryTimeStr}}</span>
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Status -->
