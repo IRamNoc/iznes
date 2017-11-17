@@ -27,6 +27,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     fundList: Array<any>;
 
+    // production or not
+    production: boolean;
+
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
@@ -34,6 +37,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     // List of redux observable.
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
+    @select(['user', 'siteSettings', 'production']) productionOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _memberService: MemberService,
@@ -55,6 +59,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 active: true
             }
         ];
+
+        this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
 
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));

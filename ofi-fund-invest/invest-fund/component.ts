@@ -35,6 +35,7 @@ import {setRequestedWalletAddresses} from '@setl/core-store';
 export class InvestFundComponent implements OnInit, OnDestroy {
     @Input() shareId: number;
     @Input() type: string;
+    @Input() doValidate: boolean;
 
     @Output() close: EventEmitter<any> = new EventEmitter();
 
@@ -79,7 +80,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     configDateValuation = {
         firstDayOfWeek: 'mo',
-        format: 'DD/MM/YYYY HH:mm',
+        format: 'DD/MM/YYYY',
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -146,7 +147,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY');
+        this._investFundFormService.doValidate = this.doValidate;
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY HH:mm');
         this.cutoffDate = new FormControl(currentDate);
         this.valuationDate = new FormControl(currentDate);
         this.settlementDate = new FormControl(currentDate);
@@ -214,7 +216,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.updateDateInputs();
 
-            this.pickDefaultDate();
+            if (this.doValidate) {
+                this.pickDefaultDate();
+            }
         }));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
@@ -291,7 +295,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // if day in the past.
             // if day if not the cutoff day for the fund.
             const cutoffDay = this.metaData.cutoffOffset;
-            return (cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+            return ((cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
         };
 
 
@@ -302,7 +306,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // hardcode on Friday today.
             const valuationDay = 5;
             // same at cutoff time atm
-            return (valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+            return ((valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
         };
 
         this._changeDetectorRef.detectChanges();
@@ -430,7 +434,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // check if cutoff is pass.
         const cutoffDateTime = this.cutoffDate.value;
         const cutoffTimeNumber = moment(cutoffDateTime, 'DD/MM/YYYY HH:mm').valueOf();
-        if (cutoffTimeNumber < moment().valueOf()) {
+        if (cutoffTimeNumber < moment().valueOf() && this.doValidate) {
             this._investFundFormService.showInvalidForm('Cutoff time is already passed for today, please choose other day.');
             return false;
         }
@@ -545,7 +549,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
             const mValuationDate = momentDateValue.add(offset, 'days');
-            const valuationDateStr = mValuationDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const valuationDateStr = mValuationDate.format('DD/MM/YYYY');
 
             const valuationDateNum = mValuationDate.valueOf();
 
@@ -553,7 +557,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // business moment js object;
             const bMValuationDate = moment(valuationDateNum);
             const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
             triggering.setValue(cutoffDateStr);
@@ -583,7 +587,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 offset = 7 + diff;
             }
 
-            const valuationDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const valuationDateStr = momentDateValue.format('DD/MM/YYYY');
 
             const mCutoffDate = momentDateValue.subtract(offset, 'days');
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
@@ -594,7 +598,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // business moment js object;
             const bMValuationDate = moment(valuationDateNum);
             const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
             triggering.setValue(valuationDateStr);

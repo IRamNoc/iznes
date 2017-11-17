@@ -23,6 +23,7 @@ import _ from 'lodash';
 export class InvestFundFormService {
     private _appConfig: AppConfig;
     private divider: number;
+    doValidate: boolean;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _walletNodeTxService: WalletnodeTxService,
@@ -32,6 +33,7 @@ export class InvestFundFormService {
                 private _ofiFundInvestService: OfiFundInvestService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.divider = _appConfig.numberDivider;
+        this.doValidate = true;
     }
 
     handleForm(formValue, shareMetaData, actionType): void {
@@ -308,25 +310,30 @@ export class InvestFundFormService {
             throw new Error('Invalid investment action type.');
         }
 
+        const conditions = [
+            {
+                conditionData: {
+                    executeTimeStamp: settleTimeStamp
+                },
+                conditionType: ConditionType.TIME
+            },
+            {
+                conditionData: {
+                    authoriseRef: authoriseRef,
+                    address: issuerAddress
+                },
+                conditionType: ConditionType.AUTHORISE
+            }
+        ];
+
+        // If not production, remove the execution time condition
+        if (!this.doValidate) {
+            conditions.shift();
+        }
+
         return {
             actions: actionData,
-            conditions: [
-                // todo
-                // put it back in for production
-                {
-                    conditionData: {
-                        executeTimeStamp: settleTimeStamp
-                    },
-                    conditionType: ConditionType.TIME
-                },
-                {
-                    conditionData: {
-                        authoriseRef: authoriseRef,
-                        address: issuerAddress
-                    },
-                    conditionType: ConditionType.AUTHORISE
-                }
-            ],
+            conditions,
             datas: [
                 {
                     'parameter': 'nav',
