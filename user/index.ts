@@ -57,12 +57,14 @@ import {
     SiteSettingsReducer,
     SiteSettingsState,
     setLanguage,
-    setMenuShown
+    setMenuShown,
+    SET_PRODUCTION
 } from './site-settings';
 
 export {
     setLanguage,
-    setMenuShown
+    setMenuShown,
+    SET_PRODUCTION
 };
 
 

@@ -25,7 +25,8 @@ export {
 
     // site settings
     setLanguage,
-    setMenuShown
+    setMenuShown,
+    SET_PRODUCTION
 
 } from './user';
 

@@ -1,10 +1,11 @@
-import {SET_LANGUAGE, SET_MENU_SHOWN} from './actions';
+import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
 import {SiteSettingsState} from './model';
 import _ from 'lodash';
 
 const initialState: SiteSettingsState = {
     language: 'fra',
-    menuShown: true
+    menuShown: true,
+    production: true
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action) {
@@ -14,6 +15,8 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
             return setLanguage(SET_LANGUAGE, action, state);
         case SET_MENU_SHOWN:
             return setMenuShown(SET_MENU_SHOWN, action, state);
+        case SET_PRODUCTION:
+            return setProduction(state, action);
         default:
             return state;
     }
@@ -50,3 +53,17 @@ function setMenuShown(actionType, action, state) {
 
     return newState;
 };
+
+/**
+ *
+ * @param {SiteSettingsState} state
+ * @param action
+ * @return {SiteSettingsState}
+ */
+function setProduction(state: SiteSettingsState, action: any): SiteSettingsState {
+    const loginData = _.get(action, 'payload[1].Data[0]');
+    const isProduction = _.get(loginData, 'setting', '1');
+
+    const production = isProduction === '1';
+    return Object.assign({}, state, {production});
+}
