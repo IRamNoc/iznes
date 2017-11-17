@@ -196,8 +196,13 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
 
     handleNewSubPortfolio(name, iban) {
         /* Check if we have a name. */
-        if (!name || name === '' || !iban || iban === '') {
+        if (!name || name === '') {
             this.showErrorMessage('Please give your sub portfolio a name');
+            return;
+        }
+
+        if (!iban || iban === '') {
+            this.showErrorMessage('Please give your sub portfolio an IBAN');
             return;
         }
 
