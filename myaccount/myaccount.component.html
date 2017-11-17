@@ -49,7 +49,6 @@
                             <label for="udAddressPrefix" mltag="txt_addressprefix">Address prefix</label>
                             <div>
                                 <input type="text" id="udAddressPrefix" mltag="txt_apartmentorhouse" placeholder="Apartment or house" [formControl]="addressPrefix" size="45">
-                                <div class="mandatory text-danger"> *</div>
                             </div>
                             <div *ngIf="addressPrefix.hasError('required') && addressPrefix.touched" class="alert alert-danger" mltag="txt_addressprefixrequired">Address prefix is required</div>
                         </div>
@@ -114,7 +113,6 @@
                             <label for="udMemorableQuestion" mltag="txt_memorablequestion">Memorable question</label>
                             <div>
                                 <input type="text" id="udMemorableQuestion" mltag="txt_memorablequestion" placeholder="Memorable question" [formControl]="memorableQuestion" size="45" style="width:97.5%">
-                                <div class="mandatory text-danger"> *</div>
                             </div>
                             <div *ngIf="memorableQuestion.hasError('required') && memorableQuestion.touched" class="alert alert-danger" mltag="txt_memorablequestionrequired">Memorable question is required</div>
                         </div>
@@ -124,7 +122,6 @@
                             <label for="udMemorableAnswer" mltag="txt_memorableanswer">Memorable answer</label>
                             <div>
                                 <input type="text" id="udMemorableAnswer" mltag="txt_memorableanswer" placeholder="Memorable answer" [formControl]="memorableAnswer" size="45" style="width:97.5%">
-                                <div class="mandatory text-danger"> *</div>
                             </div>
                             <div *ngIf="memorableAnswer.hasError('required') && memorableAnswer.touched" class="alert alert-danger" mltag="txt_memorableanswerrequired">Memorable answer is required</div>
                         </div>
