@@ -148,7 +148,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._investFundFormService.doValidate = this.doValidate;
-        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY 23:59');
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY HH:mm');
         this.cutoffDate = new FormControl(currentDate);
         this.valuationDate = new FormControl(currentDate);
         this.settlementDate = new FormControl(currentDate);
@@ -295,7 +295,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // if day in the past.
             // if day if not the cutoff day for the fund.
             const cutoffDay = this.metaData.cutoffOffset;
-            return (cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+            return ((cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
         };
 
 
@@ -306,7 +306,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             // hardcode on Friday today.
             const valuationDay = 5;
             // same at cutoff time atm
-            return (valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0);
+            return ((valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
         };
 
         this._changeDetectorRef.detectChanges();
@@ -434,7 +434,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // check if cutoff is pass.
         const cutoffDateTime = this.cutoffDate.value;
         const cutoffTimeNumber = moment(cutoffDateTime, 'DD/MM/YYYY HH:mm').valueOf();
-        if (cutoffTimeNumber < moment().valueOf()) {
+        if (cutoffTimeNumber < moment().valueOf() && this.doValidate) {
             this._investFundFormService.showInvalidForm('Cutoff time is already passed for today, please choose other day.');
             return false;
         }
