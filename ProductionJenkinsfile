@@ -45,6 +45,17 @@ node {
                 }
             }
 
+
+            stage('Deploy French Fund Daemon to Prod Environment') {
+                node {
+                    sh '''
+                            ssh jenkins@prod.iznes.io mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh jenkins@prod.iznes.io mkdir /var/phpapps/frenchfunddaemon &&
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@prod.iznes.io:/var/phpapps/frenchfunddaemon'''
+                }
+            }
+
+
             stage ('Update Dependencies'){
                 sh 'ssh -t jenkins@prod.iznes.io \'cd /var/phpapps/backend/ ; bash && npm install\''
             }
