@@ -23,7 +23,6 @@ import _ from 'lodash';
 export class InvestFundFormService {
     private _appConfig: AppConfig;
     private divider: number;
-    doValidate: boolean;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _walletNodeTxService: WalletnodeTxService,
@@ -33,7 +32,6 @@ export class InvestFundFormService {
                 private _ofiFundInvestService: OfiFundInvestService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.divider = _appConfig.numberDivider;
-        this.doValidate = true;
     }
 
     handleForm(formValue, shareMetaData, actionType): void {
@@ -325,11 +323,6 @@ export class InvestFundFormService {
                 conditionType: ConditionType.AUTHORISE
             }
         ];
-
-        // If not production, remove the execution time condition
-        if (!this.doValidate) {
-            conditions.shift();
-        }
 
         return {
             actions: actionData,

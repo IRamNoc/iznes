@@ -52,12 +52,12 @@ export class CommonService {
             sValuationDate = (new Date()).getTime();
             rValuationDate = (new Date()).getTime();
         }
-        const sValuationTime = sCutoffTime;
+        const sValuationTime = '00:00';
         const sValuationDateStr = mDateHelper.unixTimestampToDateStr(sValuationDate, 'YYYY-MM-DD');
         const sValuationDateTimeStr = sValuationDateStr + ' ' + sValuationTime;
         const sValuationDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(sValuationDateTimeStr, 'YYYY-MM-DD HH:mm');
 
-        const rValuationTime = rCutoffTime;
+        const rValuationTime = '00:00';
         const rValuationDateStr = mDateHelper.unixTimestampToDateStr(rValuationDate, 'YYYY-MM-DD');
         const rValuationDateTimeStr = rValuationDateStr + ' ' + rValuationTime;
         const rValuationDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rValuationDateTimeStr, 'YYYY-MM-DD HH:mm');
@@ -69,8 +69,8 @@ export class CommonService {
 
         const rSettlementDate = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), settlementDateOffset);
 
-        const sSettlementTime = sCutoffTime;
-        const rSettlementTime = rCutoffTime;
+        const sSettlementTime = '00:00';
+        const rSettlementTime = '00:00';
 
         const sSettlementDateStr = mDateHelper.unixTimestampToDateStr(sSettlementDate, 'YYYY-MM-DD');
         const sSettlementDateTimeStr = sSettlementDateStr + ' ' + sSettlementTime;

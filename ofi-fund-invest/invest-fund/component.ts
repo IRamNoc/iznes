@@ -147,8 +147,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._investFundFormService.doValidate = this.doValidate;
-        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY HH:mm');
+        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY') + ' 00:00';
         this.cutoffDate = new FormControl(currentDate);
         this.valuationDate = new FormControl(currentDate);
         this.settlementDate = new FormControl(currentDate);
@@ -508,6 +507,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     subscribeForChangeDate(type: string, $event: any): boolean {
+        if (!this.doValidate) {
+            return true;
+        }
 
         // define which one trigger which, depend on type.
         const triggering: FormControl = {
