@@ -6,7 +6,10 @@ import {BrowserModule} from "@angular/platform-browser";
 /* Pipes. */
 import {SetlPipesModule} from "@setl/utils";
 /* Clarity module. */
-import {ClarityModule} from "clarity-angular";
+import {ClarityModule} from 'clarity-angular';
+
+import {MultilingualModule} from '@setl/multilingual';
+
 /* Components. */
 import {OfiHomeComponent} from "./home/component";
 
@@ -16,16 +19,19 @@ import {OfiHomeComponent} from "./home/component";
         OfiHomeComponent,
     ],
     exports: [
-        OfiHomeComponent,
+        OfiHomeComponent
     ],
     imports: [
         CommonModule,
         BrowserModule,
         ClarityModule,
         RouterModule,
+        MultilingualModule,
         SetlPipesModule
     ],
-    providers: []
+    providers: [
+
+    ]
 })
 
 /* Class. */
