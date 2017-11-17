@@ -48,9 +48,9 @@ node {
             stage('Deploy French Fund Daemon to Staging Environment') {
                 node {
                     sh '''
-                            ssh root@172.104.147.135 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh root@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
+                            ssh jenkins@172.104.147.135 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh jenkins@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
