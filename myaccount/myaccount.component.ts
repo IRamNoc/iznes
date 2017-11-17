@@ -340,8 +340,7 @@ export class SetlMyAccountComponent implements OnDestroy {
                 Validators.required
             ),
             'addressPrefix': new FormControl(
-                '',
-                Validators.required
+                ''
             ),
             'address1': new FormControl(
                 '',
@@ -369,12 +368,10 @@ export class SetlMyAccountComponent implements OnDestroy {
                 Validators.required
             ),
             'memorableQuestion': new FormControl(
-                '',
-                Validators.required
+                ''
             ),
             'memorableAnswer': new FormControl(
-                '',
-                Validators.required
+                ''
             ),
             'profileText': new FormControl(
                 ''
