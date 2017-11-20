@@ -348,7 +348,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         /* For each holder, let's figure out  */
                         let finalHolder: any;
                         for (finalHolder in finalHoldersList) {
-                            finalHoldersList[finalHolder]['ratio'] = Math.round((100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity']*100)/100;
+                            finalHoldersList[finalHolder]['ratio'] = Math.round((100 / oReturn['units']) * finalHoldersList[finalHolder]['quantity'] * 100) / 100;
                         }
 
                         /* Assign them to the return. */
