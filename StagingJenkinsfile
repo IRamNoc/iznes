@@ -29,7 +29,7 @@ node {
                 node{
                     sh '''
               ssh jenkins@172.104.147.135 sudo mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
-              ssh jenkins@172.104.147.135 sudo mkdir /var/www_setltestnet && 
+              ssh jenkins@172.104.147.135 sudo mkdir /var/www_setltestnet &&
               ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/www_setltestnet &&
               scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
                 }
@@ -38,23 +38,21 @@ node {
                 node {
                     sh '''
                             ssh -t jenkins@172.104.147.135 sudo mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
-                            ssh -t jenkins@172.104.147.135 sudo mkdir /var/phpapps/backend && 
+                            ssh -t jenkins@172.104.147.135 sudo mkdir /var/phpapps/backend &&
                             ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/phpapps &&
                             scp -pr /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
                 }
             }
 
-/*
 
             stage('Deploy French Fund Daemon to Staging Environment') {
                 node {
                     sh '''
-                            ssh root@172.104.147.135 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh root@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
+                            ssh jenkins@172.104.147.135 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh jenkins@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
-*/
 
             stage ('Update Dependencies'){
                 sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
