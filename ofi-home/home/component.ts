@@ -118,7 +118,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
         /* Now, let's fetch the precentralised orders list. */
         let request;
-        if (this.myDetails.userType <= 26) {
+        if (this.myDetails.userType !== 46) {
             /* Is am. */
             request = {
                 partyType: 2,
