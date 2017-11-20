@@ -515,7 +515,13 @@ export class SetlMyAccountComponent implements OnDestroy {
         if(userDetails.address3) this.address3.setValue(userDetails.address3);
         if(userDetails.address4) this.address4.setValue(userDetails.address4);
         if(userDetails.postalCode) this.postalCode.setValue(userDetails.postalCode);
-        if(userDetails.country) this.country.setValue(JSON.parse(userDetails.country)); // array for ng-select
+        if(userDetails.country) {
+            try {
+                this.country.setValue(JSON.parse(userDetails.country));
+            } catch (e) {
+                this.country.setValue([]);
+            }
+        } // array for ng-select
         if(userDetails.memorableQuestion) this.memorableQuestion.setValue(userDetails.memorableQuestion);
         if(userDetails.memorableAnswer) this.memorableAnswer.setValue(userDetails.memorableAnswer);
         if(userDetails.profileText) this.profileText.setValue(userDetails.profileText);
