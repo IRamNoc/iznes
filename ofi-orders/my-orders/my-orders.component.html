@@ -293,43 +293,20 @@
                 <hr class="dashed"/>
 
                 <div class="row form-group">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <label>
                             <span mltag="txt_valuationdate">Valuation Date</span>
                         </label>
-                    </div>
-                    <div class="col-sm-6">
-                        <span mltag="txt_date"> Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.valuationDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_time"> Time</span>
-                        <div>
-                            <span class="readonly-field">{{ getOrderTime( orderData.valuationDate ) }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="dashed"/>
-
-                <div class="row form-group">
-                    <div class="col-sm-12">
                         <label>
                             <span mltag="txt_settlementdate">Settlement Date</span>
                         </label>
-                    </div>
-                    <div class="col-sm-6">
-                        <span mltag="txt_date"> Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.deliveryDate ) }}</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <span mltag="txt_time"> Time</span>
-                        <div>
-                            <span class="readonly-field">{{ getOrderTime( orderData.deliveryDate ) }}</span>
                         </div>
                     </div>
                 </div>
@@ -345,11 +322,7 @@
                             <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue }}</span>
                         </div>
                     </div>
-                </div>
 
-                <hr class="dashed"/>
-
-                <div class="row form-group">
                     <div class="col-sm-6">
                         <label>
                             <span mltag="txt_comment">Comment</span>
