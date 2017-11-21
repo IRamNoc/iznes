@@ -292,7 +292,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                         'address': address,
                         'walletName': '',
                         'assetManager': assets[asset].companyName,
-                        'amount': Math.round(this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
+                        'estimatedAmount': Math.round(this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
                         'quantity': this._numberConverterService.toFrontEnd(thisAddressBalance),
                         'ratio': 0, // Get's set just below (total needs to be calculated first).
                     });
