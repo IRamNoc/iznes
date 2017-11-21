@@ -68,8 +68,8 @@
                                 class="fluid-width"
                                 [items]="orderTypes"
                                 [allowClear]="true"
-                                (selected)="getOrdersBySearch(false, $event)"
-                                (removed)="getOrdersBySearch(false, $event)"
+                                (selected)="getOrdersBySearch()"
+                                (removed)="getOrdersBySearch()"
                                 [formControl]="tabsControl[0].searchForm.controls['type']"
                                 placeholder="Type"
                                 mltag="txt_type"></ng-select>

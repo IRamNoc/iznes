@@ -616,6 +616,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             searchForm = this.tabsControl[0].searchForm.value,
             request = {};
 
+        /* Check if we have an event to override with. */
         if (event.hasOwnProperty('id')) {
             searchForm.status = [event];
         }
