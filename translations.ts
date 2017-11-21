@@ -4263,7 +4263,7 @@ export const Translations = {
             "txt_chaindetail": "",
             "txt_chaindetailfor": "",
             "txt_chaindetails": "チェーン詳細",
-            "txt_composemessage": "チェーン詳細",
+            "txt_composemessage": "",
             "txt_chainidnotnumber": "",
             "txt_chainidshouldbeanumber": "チェーンIDは数値でなければなりません。例えば1",
             "txt_chainid": "チェーンの同定",
