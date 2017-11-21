@@ -6,7 +6,7 @@
 </section>
 <ng-template #menuItem let-childMenuJson="childMenuJson">
 
-    <a *ngIf="!childMenuJson.children" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
+    <a *ngIf="!childMenuJson.children" [attr.id]="childMenuJson.element_id" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
         <i class="{{childMenuJson.icon_class}}"></i>
         <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
     </a>
@@ -16,7 +16,7 @@
             <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
         <ul class="nav-list">
             <li *ngFor="let innerChild of childMenuJson.children">
-                <a [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link">
+                <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link">
                     <i class="{{innerChild.icon_class}}" aria-hidden="true"></i>
                     <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span></a>
             </li>
