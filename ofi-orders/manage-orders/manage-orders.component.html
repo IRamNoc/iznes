@@ -52,8 +52,8 @@
                                     class="fluid-width"
                                     [items]="orderStatuses"
                                     [allowClear]="true"
-                                    (selected)="getOrdersBySearch()"
-                                    (removed)="getOrdersBySearch()"
+                                    (selected)="getOrdersBySearch(false, $event)"
+                                    (removed)="getOrdersBySearch(false, $event)"
                                     [formControl]="tabsControl[0].searchForm.controls['status']"
                                     placeholder="Status"
                                     mltag="txt_status"></ng-select>

@@ -602,10 +602,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(requested: boolean = false): void {
+    private getOrdersBySearch(requested: boolean = false, event = {}): void {
         if (requested) {
             return;
         }
+
+        console.log(" |--- Filtering");
 
         this.ngRedux.dispatch(ofiSetRequestedManageOrder());
 
@@ -614,10 +616,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             searchForm = this.tabsControl[0].searchForm.value,
             request = {};
 
+        /* Check if we have an event to override with. */
+        if (event.hasOwnProperty('id')) {
+            searchForm.status = [event];
+        }
+
         /* Check if we have search parameters. */
         if (!searchForm.status[0] || !searchForm.type[0]) {
             return;
         }
+
+        console.log(" | Search form: ", searchForm);
 
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
@@ -628,6 +637,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['pageNum'] = 0; // no need for this.
         request['asset'] = searchForm.name;
         request['arrangementType'] = searchForm.type[0].id;
+
+        console.log(" | Filter: ", searchForm.status[0].text);
 
         /* ...then request the new list. */
         this.ofiOrdersService.getManageOrdersList(request)
@@ -807,7 +818,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {array} - tabsControl object.
      */
     private defaultTabControl(): Array<any> {
-        return [
+        /* Define the array. */
+        let tabsArray = [
             {
                 "title": {
                     "icon": "fa-search",
@@ -818,6 +830,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 "active": true
             }
         ];
+
+        /* Return. */
+        return tabsArray;
     }
 
     /**
