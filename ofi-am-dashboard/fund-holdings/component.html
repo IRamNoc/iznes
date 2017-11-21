@@ -80,7 +80,7 @@
                         <hr class="dashed"/>
 
                         <!-- Holder list table. -->
-                        <div class="row">
+                        <div *ngIf="fundStats.holders && fundStats.holders.length > 0" class="row">
                             <div class="col-sm-12 col-md-6">
                                 <table class="table">
                                     <thead>
@@ -110,6 +110,11 @@
                                         [chartType]="'pie'"
                                         (chartHover)="chartHovered($event)"
                                         (chartClick)="chartClicked($event)"></canvas>
+                            </div>
+                        </div>
+                        <div *ngIf="fundStats.holders && fundStats.holders.length == 0" class="row">
+                            <div class="col-sm-12">
+                                <h2 class="statement">No data to show</h2>
                             </div>
                         </div>
                     </div>

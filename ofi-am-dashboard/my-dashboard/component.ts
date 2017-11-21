@@ -289,7 +289,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                     const thisAddressBalance = holdings.breakdown[address][0];
 
                     this.fundStats.assets.push({
-                        'asset': asset.split('|')[1],
+                        'asset': asset,
                         'address': address,
                         'walletName': '',
                         'assetManager': assets[asset].companyName,
