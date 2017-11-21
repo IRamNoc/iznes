@@ -332,7 +332,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         newFundStats.graphLabels = [];
         let row = 0;
         for (row; row < newFundStats.assets.length; row++) {
-            newFundStats.assets[row].ratio = ((newFundStats.assets[row].quantity / totalHoldings) * 100).toFixed(5);
+            newFundStats.assets[row].ratio = ((newFundStats.assets[row].quantity / totalHoldings) * 100).toFixed(2);
             newFundStats.graphLabels.push(newFundStats.assets[row].address);
             newFundStats.graphData.push(newFundStats.assets[row].ratio);
         }
