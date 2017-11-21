@@ -30,6 +30,7 @@ import {WalletNodeRequestService, InitialisationService, MyWalletsService} from 
 /* Utils. */
 import {
     NumberConverterService,
+    commonHelper
 } from '@setl/utils';
 
 @Component({
@@ -225,7 +226,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundStats.navPrice = data.nav.price;
             this.fundStats.navDate = data.nav.navDate;
             this.fundStats.units = data.units;
-            this.fundStats.netAsset = (data.nav.price) * data.units;
+            this.fundStats.netAsset = commonHelper.numberRoundUp((data.nav.price) * data.units, 2);
 
             /* Now let's set the holders in this fund. */
             this.fundStats.holders = data.holders;
