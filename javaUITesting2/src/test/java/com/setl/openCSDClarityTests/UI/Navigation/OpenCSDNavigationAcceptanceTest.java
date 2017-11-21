@@ -51,113 +51,113 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToHome() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
-        navigateToPage("home");
+        navigateToPage2("home");
         clickLoginButton();
     }
     @Ignore
     @Test
     public void shouldNavigateToWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToPage("wallets");
+        navigateToPage2("wallets");
         clickLoginButton();
     }
     @Ignore
     @Test
     public void shouldNavigateToKYCAdmin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToPage("kyc-admin");
+        navigateToPage2("kyc-admin");
 
     }
     @Ignore
     @Test
     public void shouldNavigateToManageOrders() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToPage("manage-orders");
+        navigateToPage2("manage-orders");
     }
     @Test
     public void shouldNavigateToUsers() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/users");
+        navigateToPage2("user-administration/users");
     }
     @Test
     public void shouldNavigateToUserWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/wallets");
+        navigateToPage2("user-administration/wallets");
     }
     @Test
     public void shouldNavigateToPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/permissions");
+        navigateToPage2("user-administration/permissions");
     }
     @Ignore
     @Test
     public void shouldNavigateToWizard() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/wizard");
+        navigateToPage2("user-administration/wizard");
     }
     @Test
     public void shouldNavigateToRegisterIssuer() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
-        navigateToPage("asset-servicing/register-issuer");
+        navigateToPage2("asset-servicing/register-issuer");
     }
     @Test
     public void shouldNavigateToRegisterAsset() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
-        navigateToPage("asset-servicing/register-asset");
+        navigateToPage2("asset-servicing/register-asset");
     }
     @Test
     public void shouldNavigateToIssueAsset() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
-        navigateToPage("asset-servicing/issue-asset");
+        navigateToPage2("asset-servicing/issue-asset");
     }
     @Ignore
     @Test
     public void shouldNavigateToBalancesReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-reports");
-        navigateToPage("reports/balances");
+        navigateToPage2("reports/balances");
     }
     @Ignore
     @Test
     public void shouldNavigateToIssueReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-reports");
-        navigateToPage("reports/issue");
+        navigateToPage2("reports/issue");
     }
     @Ignore
     @Test
     public void shouldNavigateToTransactionReports() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-reports");
-        navigateToPage("reports/transactions");
+        navigateToPage2("reports/transactions");
     }
     @Ignore
     @Test
     public void shouldNavigateToMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
+        navigateToPage2("chain-admin/manage-member");
     }
     @Ignore
     @Test
     public void shouldNavigateToChainMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/chain-membership");
+        navigateToPage2("chain-admin/chain-membership");
     }
     @Ignore
     @Test
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-managment");
-        navigateToPage("asset-managment/fund-holdings");
+        navigateToPage2("asset-managment/fund-holdings");
     }
     @Ignore
     @Test
@@ -178,70 +178,70 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToDocuments() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
-        navigateToPage("account/documents");
+        navigateToPage2("account/documents");
     }
     @Ignore
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/management-company");
+        navigateToPage2("product-module/management-company");
     }
     @Ignore
     @Test
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/sicav");
+        navigateToPage2("product-module/sicav");
     }
     @Ignore
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/fund");
+        navigateToPage2("product-module/fund");
     }
     @Ignore
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/net-asset-value");
+        navigateToPage2("product-module/net-asset-value");
     }
     @Ignore
     @Test
     public void shouldNavigateToCreateResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
-        navigateToPage("corporate-actions/create-resolution");
+        navigateToPage2("corporate-actions/create-resolution");
     }
     @Ignore
     @Test
     public void shouldNavigateToIssueResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
-        navigateToPage("corporate-actions/issue-resolution");
+        navigateToPage2("corporate-actions/issue-resolution");
     }
     @Ignore
     @Test
     public void shouldNavigateToDistribution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
-        navigateToPage("corporate-actions/distribution");
+        navigateToPage2("corporate-actions/distribution");
     }
     @Ignore
     @Test
     public void shouldNavigateToMergerAbsorption() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
-        navigateToPage("corporate-actions/merger-absorption");
+        navigateToPage2("corporate-actions/merger-absorption");
     }
     @Ignore
     @Test
     public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
-        navigateToPage("corporate-actions/coupon-payment");
+        navigateToPage2("corporate-actions/coupon-payment");
     }
     @Ignore
     @Test

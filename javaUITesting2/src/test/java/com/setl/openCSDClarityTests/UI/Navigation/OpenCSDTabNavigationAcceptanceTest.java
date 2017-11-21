@@ -43,7 +43,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/users");
+        navigateToPage2("user-administration/users");
         headingIsPresent("manage-users");
         Thread.sleep(500);
         clickLink("user-tab-1");
@@ -52,7 +52,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/wallets");
+        navigateToPage2("user-administration/wallets");
         headingIsPresent("manage-wallets");
         Thread.sleep(500);
         driver.findElement(By.id("wallet-tab-1")).click();
@@ -67,7 +67,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/permissions");
+        navigateToPage2("user-administration/permissions");
         Thread.sleep(500);
         clickLink("testlink1");
     }
@@ -76,7 +76,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToChainAdminTabMember() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
+        navigateToPage2("chain-admin/manage-member");
         Thread.sleep(500);
         clickLink("link1");
     }

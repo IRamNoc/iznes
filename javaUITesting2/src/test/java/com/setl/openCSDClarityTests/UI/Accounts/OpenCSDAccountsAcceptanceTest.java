@@ -41,10 +41,6 @@ public class OpenCSDAccountsAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
-}
-
-    /*
-
   @Ignore
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
@@ -73,17 +69,16 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditDisplayname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("DisplayName");
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
   }
-    @Ignore
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
@@ -93,7 +88,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditLastname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("LastName");
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
@@ -103,7 +98,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditMobilePhone() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("MobilePhone");
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
@@ -113,7 +108,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditAddress() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("Address1");
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
@@ -123,7 +118,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditAddressPrefix() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("AddressPrefix");
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
@@ -133,7 +128,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditCity() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("Address3");
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
@@ -143,7 +138,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditState() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("Address4");
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
@@ -153,7 +148,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditPostalCode() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("PostalCode");
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
@@ -163,7 +158,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("Address3");
     Thread.sleep(2);
     myAccountSendKeys("Address3", "Testing");
@@ -174,7 +169,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("MemorableQuestion");
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
@@ -184,7 +179,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditMemorableAnswer() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "Testing");
     clickMyAccountSubmit();
@@ -194,7 +189,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldEditProfileText() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     //myAccountClearField("ProfileText");
     //myAccountSendKeys("ProfileText", "Testing");
     clickMyAccountSubmit();
@@ -204,7 +199,7 @@ public class OpenCSDAccountsAcceptanceTest {
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
-    navigateToPage("account/my-account");
+    navigateToPage("my-account");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "null");
     myAccountClearField("LastName");
@@ -227,4 +222,4 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }
-  }*/
+  }
