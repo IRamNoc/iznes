@@ -22,6 +22,28 @@
     <!-- balance Table. -->
     <ng-template #balanceTab>
         <div class="panel-body">
+            <form class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    [items]="addressList"
+                                    [allowClear]="false"
+                                    placeholder="Select sub-portfolio"
+                                    [formControl]="address"
+                                    (selected)="handleSelectedAddress($event)"
+                                    mltag="txt_selectsubportfolio">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
             <clr-datagrid #myDataGrid>
                 <clr-dg-column mltag="txt_action">Action</clr-dg-column>
                 <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
@@ -35,7 +57,8 @@
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button class="btn text-primary" (click)="viewRelateTxs(tx.fundName)">
-                                <i class="fa fa-eye"></i> <span mltag="txt_relatedtransactions">Related Transactions</span></button>
+                                <i class="fa fa-eye"></i>
+                                <span mltag="txt_relatedtransactions">Related Transactions</span></button>
                         </div>
                     </clr-dg-cell>
 
@@ -44,7 +67,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.activeQuantity | moneyValue }}
+                        {{tx.activeQuantity | moneyValue : 5 }}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -74,7 +97,8 @@
 <clr-modal [(clrModalOpen)]="showRelatedTxModal" class="large">
     <div class="modal-title">
         <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
-        <h4 class="modal-title-text"><span class="ml_translated" mltag="txt_relatedtransactions">Related Transactions</span></h4>
+        <h4 class="modal-title-text">
+            <span class="ml_translated" mltag="txt_relatedtransactions">Related Transactions</span></h4>
     </div>
     <div class="modal-body">
         <clr-datagrid #myDataGrid>
@@ -105,7 +129,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionUnits | moneyValue}}
+                    {{tx.transactionUnits | moneyValue : 5}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>

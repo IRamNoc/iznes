@@ -2,15 +2,24 @@ import {
     Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Pipe,
     PipeTransform
 } from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
-import {immutableHelper, NumberConverterService, mDateHelper} from '@setl/utils';
+import {immutableHelper, NumberConverterService, mDateHelper, commonHelper} from '@setl/utils';
 import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
 import _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
+import {
+    InitialisationService,
+    MyWalletsService,
+    WalletNodeRequestService
+} from '@setl/core-req-services';
+import {
+    setRequestedWalletAddresses
+} from '@setl/core-store';
 
 interface ActiveBalanceListItem {
     fundName: string;
@@ -33,6 +42,11 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     showRelatedTxModal: boolean;
 
     connectedWalletId: number;
+    requestedWalletAddress: boolean;
+    addressSelected: any;
+    address: FormControl;
+
+    addressList: Array<any>;
 
     // client txt data
     clientTxListObj: any;
@@ -62,12 +76,17 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'requested']) clientTxListRequestedOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) shareDataOb;
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _ofiClientTxService: OfiClientTxService,
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
                 private _ofiFundInvestService: OfiFundInvestService,
+                private _myWalletService: MyWalletsService,
+                private _walletNodeRequestService: WalletNodeRequestService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 
@@ -98,6 +117,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         this.activeBalanceList = [];
         this.sharePriceList = {};
 
+        this.address = new FormControl('', [Validators.required]);
+
         // List of observable subscription.
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));
@@ -111,6 +132,11 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.clientTxListOb.subscribe(clientTxList => {
             this.updateActiveBalanceList(clientTxList);
         }));
+        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
+        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
+            this.requestAddressList(requested);
+        }));
+        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
 
         this.showRelatedTxModal = false;
     }
@@ -130,6 +156,9 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
     updateActiveBalanceList(clientTxListData) {
         this.clientTxListObj = clientTxListData;
+
+        clientTxListData = this.filterTxsWithAddress(clientTxListData, this.addressSelected);
+
         this.pnlRegister = this.processClientTxList(clientTxListData);
 
         this.activeBalanceList = immutableHelper.reduce(this.pnlRegister, (result, item, key) => {
@@ -137,9 +166,15 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
             const thisBalance: ActiveBalanceListItem = {
                 fundName: key,
-                activeQuantity: item.activeBalance,
-                realisePnl: item.realisePnl,
-                unRealisePnl: item.unRealisePnl,
+                // todo
+                // hardcoded
+                activeQuantity: item.activeBalance / 1000,
+                // todo
+                // hardcoded
+                realisePnl: commonHelper.numberRoundUp(item.realisePnl / 1000),
+                // todo
+                // hardcoded
+                unRealisePnl: commonHelper.numberRoundUp(item.unRealisePnl / 1000),
                 lastMovement
             };
 
@@ -148,6 +183,33 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         }, []);
 
         this._changeDetectorRef.detectChanges();
+    }
+
+    filterTxsWithAddress(clientTxListData, addressObj): any {
+        const address = _.get(addressObj, 'id', '');
+
+        return immutableHelper.reduce(clientTxListData, (result, shareTxs, shareName) => {
+
+            result[shareName] = shareTxs.reduce((txResult, tx) => {
+                const thisTxAddr = tx.get('transactionAddress', '');
+
+                if (thisTxAddr === address) {
+                    const thisTxId = tx.get('transactionId', 0);
+                    txResult[thisTxId] = tx.toJS();
+                }
+
+                return txResult;
+
+            }, {});
+
+            return result;
+
+        }, {});
+    }
+
+    handleSelectedAddress(value) {
+        this.addressSelected = value;
+        this.updateActiveBalanceList(this.clientTxListObj);
     }
 
     /**
@@ -176,7 +238,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     }
 
     viewRelateTxs(shareName: string) {
-        const txsObj = this.clientTxListObj[shareName];
+        const clientTxListData = this.filterTxsWithAddress(this.clientTxListObj, this.addressSelected);
+        const txsObj = clientTxListData[shareName];
 
         this.relatedTxList = immutableHelper.reduce(txsObj, (result, item) => {
 
@@ -189,7 +252,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 transactionRefId: item.get('transactionRefId', ''),
                 transactionPrice: this._numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
                 transactionUnits: this._numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
-                transactionSettlement: this._numberConverterService.toFrontEnd(item.get('transactionSettlement', '')),
+                transactionSettlement: commonHelper.numberRoundUp(this._numberConverterService.toFrontEnd(item.get('transactionSettlement', ''))),
                 transactionDate: txDateNumber,
             });
             return result;
@@ -221,6 +284,80 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         if (!requested) {
             OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux);
         }
+    }
+
+    requestAddressList(requestedState) {
+        this.requestedWalletAddress = requestedState;
+        console.log('requested wallet address', this.requestedWalletAddress);
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            // Set the state flag to true. so we do not request it again.
+            this._ngRedux.dispatch(setRequestedWalletAddresses());
+
+            // Request the list.
+            InitialisationService.requestWalletAddresses(this._ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    requestWalletLabel(requestedState) {
+
+        console.log('checking requested', this.requestedWalletAddress);
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+
+            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+        }
+    }
+
+    updateAddressList(addressList) {
+
+        this.addressList = immutableHelper.reduce(addressList, (result, item) => {
+
+            const addr = item.get('addr', false);
+            const label = item.get('label', false);
+
+            if (addr && label) {
+                const addressItem = {
+                    id: item.get('addr', ''),
+                    text: item.get('label', '')
+                };
+
+                result.push(addressItem);
+            }
+
+            return result;
+        }, []);
+
+        // Set default or selected address.
+        const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
+            return thisItem.get('id') === (this.addressSelected && this.addressSelected.id);
+        });
+
+
+        if (this.addressList.length > 0) {
+            if (!this.addressSelected || hasSelectedAddressInList.length === 0) {
+                console.log('selecting', this.addressList[0]);
+                this.address.setValue([this.addressList[0]], {
+                    onlySelf: true,
+                    emitEvent: true,
+                    emitModelToViewChange: true,
+                    emitViewToModelChange: true
+                });
+                this.handleSelectedAddress(this.addressList[0]);
+            } else {
+                this.address.setValue([this.addressSelected], {
+                    onlySelf: true,
+                    emitEvent: true,
+                    emitModelToViewChange: true,
+                    emitViewToModelChange: true
+                });
+                this.handleSelectedAddress(this.addressSelected);
+            }
+        }
+
+        this._changeDetectorRef.markForCheck();
+
     }
 
 }
