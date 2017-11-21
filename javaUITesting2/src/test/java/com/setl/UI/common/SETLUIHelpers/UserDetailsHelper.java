@@ -335,7 +335,7 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
   public static void navigateToAddUser() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-user-administration");
-    navigateToPage("user-administration/users");
+    navigateToPage2("user-administration/users");
     Thread.sleep(500);
     driver.findElement(By.id("user-tab-1")).click();
     try {

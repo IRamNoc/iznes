@@ -43,12 +43,7 @@ public class OpenCSDWalletsAcceptanceTest {
         screenshotRule.setDriver(driver);
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-administration/wallets");
-
-    }
-
-    @Test
-    public void shouldNavigateToWallets() throws IOException, InterruptedException {
+        navigateToPage2("user-administration/wallets");
 
     }
 
