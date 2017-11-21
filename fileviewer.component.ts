@@ -36,21 +36,23 @@ export class FileViewerComponent implements OnInit, OnChanges {
     /**
      * Constructor
      */
-    public constructor(private alertsService: AlertsService,
-                       private http: Http,
-                       private memberSocketService: MemberSocketService,
-                       private sanitizer: DomSanitizer,
-                       private pdfService: PdfService,
-                       private changeDetectorRef: ChangeDetectorRef,
-                       private ngRedux: NgRedux<any>,
-                       @Inject(APP_CONFIG) appConfig: AppConfig) {
+    public constructor(
+        private alertsService: AlertsService,
+        private http: Http,
+        private memberSocketService: MemberSocketService,
+        private sanitizer: DomSanitizer,
+        private pdfService: PdfService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ngRedux: NgRedux<any>,
+        @Inject(APP_CONFIG) appConfig: AppConfig
+    ) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
         if (this.appConfig.MEMBER_NODE_CONNECTION.port === 443) {
             this.baseUrl = 'https';
         }
         this.baseUrl += '://' + this.appConfig.MEMBER_NODE_CONNECTION.host + ':' +
-            this.appConfig.MEMBER_NODE_CONNECTION.port;
+           this.appConfig.MEMBER_NODE_CONNECTION.port;
         this.token = this.memberSocketService.token;
         this.getUser.subscribe(
             (data) => {
