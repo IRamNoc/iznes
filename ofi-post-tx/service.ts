@@ -63,6 +63,9 @@ export class OfiPostTxService implements OnDestroy {
             } else if (needHandle && !inBlockchain) {
                 if (currentStep === 'saveNewWallet') {
                     this.saveNewWallet(lastCreated);
+                } else if (currentStep === 'saveFinished') {
+                    // set need handle to false;
+                    this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
                 }
             }
         }
@@ -337,11 +340,23 @@ export class OfiPostTxService implements OnDestroy {
                             currentStep: 'saveNewWallet',
                             accountId: requestData.metaData.arrangementData.accountId,
                             userId: requestData.metaData.arrangementData.userId,
-                            sharesList: requestData.metaData.arrangementData.sharesList
+                            sharesList: requestData.metaData.arrangementData.sharesList,
+                            isFinished: requestData.metaData.arrangementData.isFinished
                         }
                     }));
                 } else {
                     this.updateSuccessResponse();
+                    this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                        actionType: 'ofi-create-new-share',
+                        arrangementData: {
+                            currentShare: requestData.metaData.arrangementData.currentShare,
+                            currentStep: 'saveFinished',
+                            accountId: requestData.metaData.arrangementData.accountId,
+                            userId: requestData.metaData.arrangementData.userId,
+                            sharesList: requestData.metaData.arrangementData.sharesList,
+                            isFinished: true
+                        }
+                    }));
                 }
             },
             (data) => {
