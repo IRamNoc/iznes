@@ -443,6 +443,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
+        console.log(" | Search form: ", searchForm);
+
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
         request['sortOrder'] = this.sort.direction;

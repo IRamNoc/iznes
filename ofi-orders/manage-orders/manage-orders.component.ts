@@ -607,6 +607,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
+        console.log(" |--- Filtering");
+
         this.ngRedux.dispatch(ofiSetRequestedManageOrder());
 
         /* Ok, let's get the search form information... */
@@ -619,6 +621,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
+        console.log(" | Search form: ", searchForm);
+
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
         request['sortOrder'] = this.sort.direction;
@@ -628,6 +632,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         request['pageNum'] = 0; // no need for this.
         request['asset'] = searchForm.name;
         request['arrangementType'] = searchForm.type[0].id;
+
+        console.log(" | Filter: ", searchForm.status[0].text);
 
         /* ...then request the new list. */
         this.ofiOrdersService.getManageOrdersList(request)
@@ -807,7 +813,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {array} - tabsControl object.
      */
     private defaultTabControl(): Array<any> {
-        return [
+        /* Define the array. */
+        let tabsArray = [
             {
                 "title": {
                     "icon": "fa-search",
@@ -818,6 +825,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 "active": true
             }
         ];
+
+        /* Return. */
+        return tabsArray;
     }
 
     /**
