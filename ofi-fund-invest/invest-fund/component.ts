@@ -349,7 +349,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
-            return thisItem.get('id') === this.addressSelected && this.addressSelected.id;
+            return thisItem.get('id') === (this.addressSelected && this.addressSelected.id);
         });
 
 
