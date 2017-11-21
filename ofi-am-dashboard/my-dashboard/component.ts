@@ -5,6 +5,7 @@ import {fromJS} from 'immutable';
 import {SagaHelper} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
+import _ from 'lodash';
 
 /* Selectors */
 import {getOfiUserIssuedAssets} from '@ofi/ofi-main/ofi-store';
@@ -223,6 +224,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     updateAddressList(addressList) {
         console.log(" | UPDATED ADDRESSES: ", addressList);
         this.addressList = addressList;
+
+        // Update the lable in fundStat in there is any.
+        this.fundStats = this.fillAddressLabel(this.fundStats, addressList);
     }
 
     requestAddressList(requestedState) {
@@ -262,56 +266,102 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Now let's sort the assets. */
         this.fundStats.assets = [];
+        let
+            totalHoldings = 0;
         for (const asset in assets) {
             /* Continue if we don't have the holdings for this wallet. */
-            if (!this.walletHoldingsByAsset[this.connectedWalletId]) continue;
+            if (!this.walletHoldingsByAsset[this.connectedWalletId]) {
+                continue;
+            }
 
-            let
-                totalHoldings = 0;
 
             /*  Get holdings. */
             const holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
-            console.log(" | holdings: ", holdings);
-            console.log(" | asset: ", assets[asset]);
+            console.log(' | holdings: ', holdings);
+            console.log(' | asset: ', assets[asset]);
 
             if (holdings) {
                 let address, addresses = [];
-                console.log(" | holdings.breakdown: ", holdings.breakdown);
-                console.log(" | this.addressList: ", this.addressList);
-                for (address in holdings.breakdown) {
-                    addresses.push(this.addressList[address].label);
+                console.log(' | holdings.breakdown: ', holdings.breakdown);
+                console.log(' | this.addressList: ', this.addressList);
+                for (address of Object.keys(holdings.breakdown)) {
+                    const thisAddressBalance = holdings.breakdown[address][0];
+
+                    this.fundStats.assets.push({
+                        'asset': asset.split('|')[1],
+                        'address': address,
+                        'walletName': '',
+                        'assetManager': assets[asset].companyName,
+                        'estimatedAmount': Math.round(this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
+                        'quantity': this._numberConverterService.toFrontEnd(thisAddressBalance),
+                        'ratio': 0, // Get's set just below (total needs to be calculated first).
+                    });
+
+                    totalHoldings += this._numberConverterService.toFrontEnd(thisAddressBalance);
                 }
-
-                this.fundStats.assets.push({
-                    'asset': asset.split('|')[1],
-                    'walletName': addresses[0],
-                    'assetManager': assets[asset].companyName,
-                    'estimatedAmount': Math.round(this._numberConverterService.toFrontEnd(holdings.total) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
-                    'quantity': this._numberConverterService.toFrontEnd(holdings.total),
-                    'ratio': 0, // Get's set just below (total needs to be calculated first).
-                });
-                totalHoldings += this._numberConverterService.toFrontEnd(holdings.total);
-
-                /* Now let's use the total to work out the ratio,
-                 and whilst we're at it, build the data arrays for the graph. */
-                this.fundStats.graphData = [];
-                this.fundStats.graphLabels = [];
-                for (const row in this.fundStats.assets) {
-                    this.fundStats.assets[row].ratio = Math.round(((100 / totalHoldings) * this.fundStats.assets[row].quantity*100))/100;
-                    this.fundStats.graphLabels.push(this.fundStats.assets[row].walletName);
-                    this.fundStats.graphData.push(this.fundStats.assets[row].ratio);
-                }
-
-                /* Show the stats. */
-                this.showStats = true;
-
-                /* Detect changes. */
-                this._changeDetectorRef.detectChanges();
             }
         }
 
+        // Generate data for chat.
+        this.fundStats = this.parseToChatData(this.fundStats, totalHoldings);
+
+        // Fill address label, if we have the data.
+        this.fundStats = this.fillAddressLabel(this.fundStats, this.addressList);
+
+        /* Show the stats. */
+        this.showStats = true;
+
+        /* Detect changes. */
+        this._changeDetectorRef.detectChanges();
         /* Return. */
         return;
+    }
+
+    /**
+     * Parse fundStats data, so we can use it to paint the chat.
+     * @param fundStats
+     * @param totalHoldings
+     * @return {any}
+     */
+    parseToChatData(fundStats, totalHoldings) {
+        const newFundStats = immutableHelper.copy(fundStats);
+
+        /* Now let's use the total to work out the ratio,
+		 and whilst we're at it, build the data arrays for the graph. */
+        newFundStats.graphData = [];
+        newFundStats.graphLabels = [];
+        let row = 0;
+        for (row; row < newFundStats.assets.length; row++) {
+            newFundStats.assets[row].ratio = ((newFundStats.assets[row].quantity / totalHoldings) * 100).toFixed(5);
+            newFundStats.graphLabels.push(newFundStats.assets[row].address);
+            newFundStats.graphData.push(newFundStats.assets[row].ratio);
+        }
+
+        return newFundStats;
+    }
+
+    fillAddressLabel(fundStats, addressList) {
+        const newFundStats = immutableHelper.copy(fundStats);
+
+        if (newFundStats.graphLabels) {
+            const graphLabels = immutableHelper.map(newFundStats.graphLabels, (item) => {
+                return _.get(addressList, [item, 'label'], item);
+            });
+
+            newFundStats.graphLabels = graphLabels;
+        }
+
+        if (newFundStats.assets) {
+            const assets = immutableHelper.map(newFundStats.assets, (item) => {
+                const address = item.get('address', '');
+                const label = _.get(addressList, [address, 'label'], address);
+                return item.set('walletName', label);
+            });
+
+            newFundStats.assets = assets;
+        }
+
+        return newFundStats;
     }
 
     /**

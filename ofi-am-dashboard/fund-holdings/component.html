@@ -17,13 +17,14 @@
                             <div class="col-sm-12">
                                 <label mltag="txt_fundshare"> Fund Share</label>
                                 <ng-select
-                                        [items]="filteredUserAssetList"
-                                        [allowClear]="true"
-                                        [formControl]="fundShareForm.controls['selectFund']">
+                                    [items]="filteredUserAssetList"
+                                    [allowClear]="true"
+                                    [formControl]="fundShareForm.controls['selectFund']">
                                 </ng-select>
                                 <button
-                                        (click)="handleFundSelection()"
-                                        class="btn btn-primary btn-end" mltag="txt_go"> Go</button>
+                                    (click)="handleFundSelection()"
+                                    class="btn btn-primary btn-end" mltag="txt_go"> Go
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -102,7 +103,7 @@
                                 </table>
                             </div>
                             <div class="col-sm-12 col-md-6">
-                                <canvas *ngIf="fundStats.graphLabels"
+                                <canvas *ngIf="fundStats.graphLabels && fundStats.graphLabels.length > 0"
                                         baseChart
                                         [data]="fundStats.graphData"
                                         [labels]="fundStats.graphLabels"
