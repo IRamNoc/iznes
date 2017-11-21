@@ -426,7 +426,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(requested = false): void {
+    private getOrdersBySearch(requested = false, event = {}): void {
         if (requested) {
             return;
         }
@@ -435,8 +435,12 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ok, let's get the search form information... */
         let
-            searchForm = this.tabsControl[0].searchForm.value,
+            searchForm = immutableHelper.copy(this.tabsControl[0].searchForm.value),
             request = {};
+
+        if (event.hasOwnProperty('id')) {
+            searchForm.status = [event];
+        }
 
         /* Check if we have search parameters. */
         if (!searchForm.status[0] || !searchForm.type[0]) {
