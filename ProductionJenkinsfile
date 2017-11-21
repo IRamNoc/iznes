@@ -64,6 +64,12 @@ node {
                 sh 'ssh -t jenkins@prod.iznes.io \'cd /var/phpapps ; bash && sudo supervisorctl restart node-server\''
             }
 
+            stage ('Delete old backups'){
+                sh 'ssh -t jenkins@prod.iznes.io \'cd /var/phpapps ; bash && find . -type d -mtime +4 -name \'*backend_*\' | xargs rm -rf\''
+                sh 'ssh -t jenkins@prod.iznes.io \'cd /var/phpapps ; bash && find . -type d -mtime +4 -name \'*frenchfunddaemon_*\' | xargs rm -rf\''
+                sh 'ssh -t jenkins@prod.iznes.io \'cd /var ; bash && find . -type d -mtime +4 -name \'*www-setltestnet_*\' | xargs rm -rf\''
+            }
+
         } catch (e) {
             currentBuild.result = 'FAILURE'
             throw e
