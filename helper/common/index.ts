@@ -20,3 +20,20 @@ export function pad(num: number, width: number, fill: string): string {
     const len = numberStr.length;
     return len >= width ? numberStr : new Array(width - len + 1).join(fill) + numberStr;
 }
+
+/**
+ * Round number up, with specific decimal place.
+ * @param {number} num
+ * @param {number} numDecimal
+ * @return {number}
+ */
+export function numberRoundUp(num: number, numDecimal: number = 2) {
+    if (numDecimal < 0) {
+        throw new Error('Number of decimal have to be positive number');
+    }
+
+    const divider = Math.pow(10, numDecimal);
+    let rVal = num * divider;
+    rVal = Math.ceil(rVal);
+    return rVal / divider;
+}
