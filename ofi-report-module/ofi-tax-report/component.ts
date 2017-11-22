@@ -201,7 +201,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             const transactionId = item.get('transactionId', 0);
             // todo
             // hardcoded
-            const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0) / 1000;
+            const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0) / 100;
             const quantity = this._numberConverterService.toFrontEnd(item.get('transactionUnits', 0));
             const taxCredit = 0;
             const amountToDeclared = commonHelper.numberRoundUp(grossAmount + taxCredit);
@@ -227,7 +227,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             return result + item.realisePnl;
             // todo
             // hardcoded
-        }, 0) / 1000);
+        }, 0) / 100);
 
         this._changeDetectorRef.markForCheck();
     }

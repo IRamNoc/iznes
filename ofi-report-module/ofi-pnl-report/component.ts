@@ -168,13 +168,13 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 fundName: key,
                 // todo
                 // hardcoded
-                activeQuantity: item.activeBalance / 1000,
+                activeQuantity: item.activeBalance / 100,
                 // todo
                 // hardcoded
-                realisePnl: commonHelper.numberRoundUp(item.realisePnl / 1000),
+                realisePnl: commonHelper.numberRoundUp(item.realisePnl / 100),
                 // todo
                 // hardcoded
-                unRealisePnl: commonHelper.numberRoundUp(item.unRealisePnl / 1000),
+                unRealisePnl: commonHelper.numberRoundUp(item.unRealisePnl / 100),
                 lastMovement
             };
 
