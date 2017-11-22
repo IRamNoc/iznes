@@ -65,8 +65,8 @@ export class PnlHelper {
         const direction = tx.transactionType;
         const price = this.numberConverter.toFrontEnd(tx.transactionPrice);
         // todo
-        // force support 3 decimal place for now
-        const quantity = this.numberConverter.toFrontEnd(tx.transactionUnits) * 1000;
+        // force support 2 decimal place for now
+        const quantity = this.numberConverter.toFrontEnd(tx.transactionUnits) * 100;
         if (direction === ActionDirection.SUBSCRIPTION) {
             this.executeSubscription(direction, quantity, price, transactionId);
         } else if (direction === ActionDirection.REDEMPTION) {
