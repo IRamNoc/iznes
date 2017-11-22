@@ -11,6 +11,7 @@ import {SetlLoginComponent} from './login.component';
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 import {ClarityModule} from 'clarity-angular';
+import {MultilingualModule} from '@setl/multilingual';
 
 /**
  * Login guard service
@@ -28,7 +29,8 @@ import {LoginGuardService} from './login-guard.service';
         FormsModule,
         RouterModule,
         ReactiveFormsModule,
-        ClarityModule
+        ClarityModule,
+        MultilingualModule
     ],
     exports: [
         SetlLoginComponent
