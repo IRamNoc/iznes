@@ -7,7 +7,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {WalletNodeRequestService} from "@setl/core-req-services";
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
-import {ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
+import {ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
 /* Utils. */
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
@@ -129,7 +129,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = metaData.units * fixed.price;
+                metaData.total = commonHelper.numberRoundUp(metaData.units * fixed.price);
 
                 fixed.metaData = metaData;
 

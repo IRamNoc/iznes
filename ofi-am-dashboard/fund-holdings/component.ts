@@ -30,6 +30,7 @@ import {WalletNodeRequestService, InitialisationService, MyWalletsService} from 
 /* Utils. */
 import {
     NumberConverterService,
+    commonHelper
 } from '@setl/utils';
 
 @Component({
@@ -225,7 +226,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundStats.navPrice = data.nav.price;
             this.fundStats.navDate = data.nav.navDate;
             this.fundStats.units = data.units;
-            this.fundStats.netAsset = (data.nav.price) * data.units;
+            this.fundStats.netAsset = commonHelper.numberRoundUp((data.nav.price) * data.units, 2);
 
             /* Now let's set the holders in this fund. */
             this.fundStats.holders = data.holders;
@@ -329,7 +330,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                                     /* ...if we have, push a nice object into the array. */
                                     finalHoldersList.push({
                                         'walletName': this.walletDirectoryList[id].walletName,
-                                        'amount': (this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])),
+                                        'label': walletIdList[key].label,
+                                        'amount': commonHelper.numberRoundUp((this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]))),
                                         'quantity': this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
                                     });
                                     /* Add to total number of units. */
@@ -360,7 +362,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         let returnHolder: any;
                         for (returnHolder in oReturn['holders']) {
                             oReturn['graphData'].push(oReturn['holders'][returnHolder]['ratio']);
-                            oReturn['graphLabels'].push(oReturn['holders'][returnHolder]['walletName']);
+                            oReturn['graphLabels'].push(oReturn['holders'][returnHolder]['label']);
                         }
 
 

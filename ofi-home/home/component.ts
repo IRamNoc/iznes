@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 /* Redux */
 import {NgRedux, select} from "@angular-redux/store";
 
-import {immutableHelper, NumberConverterService} from "@setl/utils";
+import {immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
 /* Ofi orders request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 import {ofiSetRequestedHomeOrder} from "../../ofi-store";
@@ -67,7 +67,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = metaData.units * metaData.price;
+                metaData.total = commonHelper.numberRoundUp(metaData.units * metaData.price);
 
                 fixed.metaData = metaData;
 

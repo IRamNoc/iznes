@@ -32,6 +32,7 @@ import {WalletNodeRequestService, MyWalletsService, InitialisationService} from 
 import {
     NumberConverterService,
     immutableHelper,
+    commonHelper
 } from '@setl/utils';
 
 
@@ -292,7 +293,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                         'address': address,
                         'walletName': '',
                         'assetManager': assets[asset].companyName,
-                        'estimatedAmount': Math.round(this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price) * 100) / 100,
+                        'estimatedAmount': commonHelper.numberRoundUp((this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price))),
                         'quantity': this._numberConverterService.toFrontEnd(thisAddressBalance),
                         'ratio': 0, // Get's set just below (total needs to be calculated first).
                     });
@@ -332,7 +333,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         newFundStats.graphLabels = [];
         let row = 0;
         for (row; row < newFundStats.assets.length; row++) {
-            newFundStats.assets[row].ratio = ((newFundStats.assets[row].quantity / totalHoldings) * 100).toFixed(2);
+            newFundStats.assets[row].ratio = Math.floor(((newFundStats.assets[row].quantity / totalHoldings) * 100) * 100) / 100;
             newFundStats.graphLabels.push(newFundStats.assets[row].address);
             newFundStats.graphData.push(newFundStats.assets[row].ratio);
         }

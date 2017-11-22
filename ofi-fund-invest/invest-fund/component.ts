@@ -12,7 +12,7 @@ import {NgRedux} from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 
 // Internal
-import {immutableHelper, MoneyValuePipe, mDateHelper} from '@setl/utils';
+import {immutableHelper, MoneyValuePipe, mDateHelper, commonHelper} from '@setl/utils';
 import {CommonService} from '../common-service/service';
 import {InvestFundFormService} from './service';
 import {
@@ -349,7 +349,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
-            return thisItem.get('id') === this.addressSelected && this.addressSelected.id;
+            return thisItem.get('id') === (this.addressSelected && this.addressSelected.id);
         });
 
 
@@ -483,7 +483,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  * grossAmount = ((unit * nav) * (1 + feePercent)) + platformfee
                  */
                 const grossAmoutBeforeFee = newValue * this.metaData.nav;
-                const grossAmountAfterFee = (grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee;
+                const grossAmountAfterFee = commonHelper.numberRoundUp((grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee);
                 beTriggered.setValue(this._moneyValuePipe.transform(grossAmountAfterFee));
             },
             'grossAmount': (value) => {

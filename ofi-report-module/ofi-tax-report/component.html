@@ -22,6 +22,28 @@
     <!-- balance Table. -->
     <ng-template #balanceTab>
         <div class="panel-body">
+            <form class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    [items]="addressList"
+                                    [allowClear]="false"
+                                    placeholder="Select sub-portfolio"
+                                    [formControl]="address"
+                                    (selected)="handleSelectedAddress($event)"
+                                    mltag="txt_selectsubportfolio">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
             <form [formGroup]="dateRangeForm" class="p-0">
                 <div class="form-horizontal">
                     <div class="row">
@@ -109,7 +131,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.quantity | moneyValue}}
+                        {{tx.quantity | moneyValue : 5}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -171,7 +193,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionUnits | moneyValue}}
+                    {{tx.transactionUnits | moneyValue : 5}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>

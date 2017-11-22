@@ -94,7 +94,7 @@
                                     <tbody>
                                     <tr *ngFor="let holder of fundStats.holders">
                                         <!--<td colspan="4">{{ holder | json }}</td>-->
-                                        <td class="text-left">{{ holder.walletName }}</td>
+                                        <td class="text-left">{{ holder.label }}</td>
                                         <td class="text-right">{{ holder.amount | moneyValue }}</td>
                                         <td class="text-right">{{ holder.quantity | moneyValue }}</td>
                                         <td class="text-right">{{ holder.ratio }}%</td>

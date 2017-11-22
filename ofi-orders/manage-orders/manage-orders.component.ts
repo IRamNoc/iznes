@@ -6,7 +6,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {_} from "lodash";
 /* Services. */
 import {WalletNodeRequestService} from "@setl/core-req-services";
-import {BlockchainContractService, ConfirmationService, immutableHelper, NumberConverterService} from "@setl/utils";
+import {BlockchainContractService, ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Ofi Corp Actions request service. */
@@ -136,7 +136,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = metaData.units * fixed.price;
+                metaData.total = commonHelper.numberRoundUp(metaData.units * fixed.price);
 
                 fixed.metaData = metaData;
 
