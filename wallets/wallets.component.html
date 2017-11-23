@@ -57,8 +57,8 @@
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="wallet.walletLocked === false" class="label label-success" mltag="txt_unlocked">Unlocked</span>
-                        <span *ngIf="wallet.walletLocked === true" class="label label-warning" mltag="txt_locked">Locked</span>
+                        <span *ngIf="wallet.walletLocked === 0" class="label label-success" mltag="txt_unlocked">Unlocked</span>
+                        <span *ngIf="wallet.walletLocked === 1" class="label label-warning" mltag="txt_locked">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -237,10 +237,10 @@
                                 <span mltag="txt_walletstatus">Wallet Status</span>
                             </label>
                             <div class="wallet-status">
-                                <span *ngIf="formControl.controls['walletLocked']._value">
+                                <span *ngIf="formControl.controls['walletLocked']._value == 0">
                                     <i class="fa fa-unlock"></i>
                                 </span>
-                                <span *ngIf="!formControl.controls['walletLocked']._value">
+                                <span *ngIf="formControl.controls['walletLocked']._value == 1">
                                     <i class="fa fa-lock"></i>
                                 </span>
 
