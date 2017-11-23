@@ -1,6 +1,7 @@
 import {List, Set} from 'immutable';
 import {immutableHelper, NumberConverterService} from '@setl/utils';
 import _ from 'lodash';
+import * as math from 'mathjs';
 
 export const enum ActionDirection {
     SUBSCRIPTION = 1,
@@ -13,7 +14,6 @@ export interface TradeDetail {
         direction: ActionDirection;
         price: number;
         quantity: number;
-        granularTxs: Array<any>;
         pnl: number;
         relatedSubscription: Array<number>
     };
@@ -39,7 +39,8 @@ export class PnlHelper {
     get unRealisePnl() {
 
         return this.fifoDeque.reduce((result, item) => {
-            const thisPnl = this.currentPrice - _.get(item, 'price', 0);
+            const thisRemaining = _.get(item, 'remainingQuantity', 0);
+            const thisPnl = math.format(math.chain((this.currentPrice - _.get(item, 'price', 0))).multiply(thisRemaining), 14);
             return result + thisPnl;
         }, 0);
     }
@@ -49,7 +50,13 @@ export class PnlHelper {
     }
 
     get activeBalance() {
-        return this.fifoDeque.size;
+        return immutableHelper.reduce(this.fifoDeque, (total, item) => {
+            const itemRemaining = _.get(item, 'remainingQuantity', 0);
+            if (itemRemaining === 0) {
+                throw new Error('Something gone wrong, when calculating active-balance in Pnl helper.');
+            }
+            return total + itemRemaining;
+        }, 0);
     }
 
     constructor(currentPrice, numberConverter: NumberConverterService) {
@@ -64,80 +71,89 @@ export class PnlHelper {
         const transactionId = tx.transactionId;
         const direction = tx.transactionType;
         const price = this.numberConverter.toFrontEnd(tx.transactionPrice);
-        // todo
-        // force support 2 decimal place for now
-        const quantity = this.numberConverter.toFrontEnd(tx.transactionUnits) * 100;
+
+        const quantity = this.numberConverter.toFrontEnd(tx.transactionUnits);
         if (direction === ActionDirection.SUBSCRIPTION) {
             this.executeSubscription(direction, quantity, price, transactionId);
         } else if (direction === ActionDirection.REDEMPTION) {
-            this.executeRedemptioin(direction, quantity, price, transactionId);
+            this.executeRedemption(direction, quantity, price, transactionId);
         }
         this.lastMovement = tx.transactionDate;
     }
 
     executeSubscription(direction, quantity: number, price: number, transactionId: number) {
 
-        const granularTxs = this.getTradeGranular(quantity, price, transactionId);
         this.tradeList[transactionId] = {
             direction,
             price,
             quantity,
-            granularTxs,
             pnl: 0,
             relatedSubscription: []
         };
 
-        let i = 0;
-        for (i; i < granularTxs.length; i++) {
-            this.fifoDeque = this.fifoDeque.push(granularTxs[i]);
-        }
+        this.fifoDeque = this.fifoDeque.push({
+            price,
+            quantity,
+            transactionId,
+            remainingQuantity: quantity,
+        });
     }
 
-    executeRedemptioin(direction, quantity: number, price: number, transactionId: number) {
+    executeRedemption(direction, quantity: number, price: number, transactionId: number) {
 
-        const granularTxs = this.getTradeGranular(quantity, price, transactionId);
         let pnl = 0;
+        let remainingRedemptionQuantity = quantity;
         let relatedSubscriptionSet = Set();
 
-        let i = 0;
-        for (i; i < granularTxs.length; i++) {
-            const counterGranularTx = this.fifoDeque.first();
-            this.fifoDeque = this.fifoDeque.shift();
+        while (remainingRedemptionQuantity > 0) {
+            // Take the first one in the stack.
+            const counterTx = this.fifoDeque.first();
+            const counterTxQuantity = counterTx.remainingQuantity;
+            const counterTxPrice = _.get(counterTx, 'price', 0);
+            const counterTxTransactionId = _.get(counterTx, 'transactionId', 0);
 
-            const counterPrice = _.get(counterGranularTx, 'price', 0);
-            const counterTransactionId = _.get(counterGranularTx, 'transactionId', 0);
-            if (counterPrice === 0) {
+            if (counterTxPrice === 0) {
                 throw new Error('Price can not be 0, something is gone wrong in pnl helper');
             }
-            if (counterTransactionId === 0) {
+            if (counterTxTransactionId === 0) {
                 throw new Error('Transaction ID can not be 0, something is gone wrong in pnl helper');
             }
-            relatedSubscriptionSet = relatedSubscriptionSet.add(counterTransactionId);
-            pnl += (price - counterPrice);
+
+            // update the redemption remaining quantity
+            const newRemainingRedemptionQuantity = remainingRedemptionQuantity - counterTxQuantity;
+
+            if (newRemainingRedemptionQuantity < 0) {
+                // If there is remaining quantity in the counterTx, put it back in the fifoDeque.
+                counterTx.remainingQuantity = Math.abs(newRemainingRedemptionQuantity);
+                this.fifoDeque.unshift(counterTx);
+            }
+
+            // update pnl
+            // if countertx(subscription) quantity is greater than remainRedemption quantity,
+            // the usedSubscriptionUnit should be same as the remaining Redemption quantity,
+            // otherwise the counterTxQuantity should be used.
+            const usedSubscriptionUnit = newRemainingRedemptionQuantity < 0 ? remainingRedemptionQuantity : counterTxQuantity;
+
+            const costOnSubscription = math.format(math.chain(usedSubscriptionUnit).multiply(counterTxPrice).done(), 14);
+            const receivedOnRedemption = math.format(math.chain(remainingRedemptionQuantity).multiply(price).done(), 14);
+            console.log('costOnSubscription', costOnSubscription);
+            console.log('receivedOnRedemption', receivedOnRedemption);
+
+            relatedSubscriptionSet = relatedSubscriptionSet.add(counterTxTransactionId);
+            pnl += (receivedOnRedemption - costOnSubscription);
+
+            // update new remaining quantity
+            remainingRedemptionQuantity = newRemainingRedemptionQuantity;
         }
+
 
         this.tradeList[transactionId] = {
             direction,
             price,
             quantity,
-            granularTxs,
             pnl,
             relatedSubscription: relatedSubscriptionSet.toJS()
         };
     }
 
-    getTradeGranular(quantity, price, transactionId) {
-        let thisQuantity = quantity;
-        const granularTxs = [];
-
-        let i = 0;
-        for (i; thisQuantity > 0; i++, thisQuantity--) {
-            granularTxs.push({
-                price,
-                transactionId
-            });
-        }
-
-        return granularTxs;
-    }
 }
