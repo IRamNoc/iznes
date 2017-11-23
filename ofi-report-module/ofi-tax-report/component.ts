@@ -23,6 +23,7 @@ import {
 
 interface ClientTxViewListItem {
     transactionId: number;
+    transactionRefId: number;
     fundName: string;
     type: ActionDirection;
     grossAmount: number;
