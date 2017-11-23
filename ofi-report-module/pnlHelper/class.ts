@@ -136,8 +136,6 @@ export class PnlHelper {
 
             const costOnSubscription = math.format(math.chain(usedSubscriptionUnit).multiply(counterTxPrice).done(), 14);
             const receivedOnRedemption = math.format(math.chain(remainingRedemptionQuantity).multiply(price).done(), 14);
-            console.log('costOnSubscription', costOnSubscription);
-            console.log('receivedOnRedemption', receivedOnRedemption);
 
             relatedSubscriptionSet = relatedSubscriptionSet.add(counterTxTransactionId);
             pnl += (receivedOnRedemption - costOnSubscription);
