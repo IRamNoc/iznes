@@ -5,14 +5,16 @@ import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 
 // Internal
-import { MemberSocketService } from '@setl/websocket-service';
-import { OfiFundInvestService } from '@ofi/ofi-main';
-import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
-import { WalletnodeTxService } from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { SagaHelper, commonHelper } from '@setl/utils';
-import { clearContractNeedHandle, clearRegisterIssuerNeedHandle } from '@setl/core-store';
-import { setLastCreatedRegisterIssuerDetail } from '@setl/core-store/assets/my-issuers/actions';
+import {MemberSocketService} from '@setl/websocket-service';
+import {OfiFundInvestService} from '@ofi/ofi-main';
+import {OfiNavService} from '../ofi-req-services/ofi-product/nav/service';
+import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
+import {WalletnodeTxService} from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {SagaHelper, commonHelper} from '@setl/utils';
+import {clearContractNeedHandle, clearRegisterIssuerNeedHandle} from '@setl/core-store';
+import {setLastCreatedRegisterIssuerDetail} from '@setl/core-store/assets/my-issuers/actions';
+import * as moment from 'moment';
 
 @Injectable()
 export class OfiPostTxService implements OnDestroy {
@@ -27,6 +29,7 @@ export class OfiPostTxService implements OnDestroy {
                 private _ofiFundInvestService: OfiFundInvestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private _adminUsersService: AdminUsersService,
+                private _ofiNavService: OfiNavService,
                 private _alertsService: AlertsService) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
@@ -194,7 +197,7 @@ export class OfiPostTxService implements OnDestroy {
             {
                 walletName: shareName,
                 userId: requestData.metaData.arrangementData.userId,
-                walletAccess: { [requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID]: 3 },
+                walletAccess: {[requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID]: 3},
             }
         );
 
@@ -316,10 +319,11 @@ export class OfiPostTxService implements OnDestroy {
     }
 
     saveIssueAssetMap(requestData) {
+        const asset = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin + '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
         const asyncTaskPipe = this._ofiFundInvestService.insertIssueAssetMap(
             {
                 address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
-                asset: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin + '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName,
+                asset,
                 isin: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
                 companyId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].companyID
             }
@@ -328,6 +332,10 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
+                // Save estimated nav for the fundshare.
+                const estimatedNav = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].initialEstimatedNav;
+                this.saveFundShareEstimatedNav(asset, estimatedNav);
+
                 // console.log('7) saveIssueAssetMap : success', data); // success
                 const nbShares = requestData.metaData.arrangementData.sharesList.length;
                 if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
@@ -363,6 +371,23 @@ export class OfiPostTxService implements OnDestroy {
                 console.log('saveIssueAssetMap Error: ', data);
             })
         );
+    }
+
+    saveFundShareEstimatedNav(fundShare: string, estimatedNav: number) {
+        console.log('saving nav', fundShare, estimatedNav);
+        const asyncTaskPipe = this._ofiNavService.updateNav({
+            fundName: fundShare,
+            fundDate: moment().format('YYYY-MM-DD'),
+            price: estimatedNav,
+            priceStatus: 1
+        });
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+            },
+            (data) => {
+            }
+        ));
     }
 
     showErrorResponse(response) {
