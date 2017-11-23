@@ -40,14 +40,11 @@ function formatToWalletList(rawWalletList: Array<any>): {
 
     const walletsObject = Map(rawWalletDataList.reduce(
         function (result, item) {
-            const walletLocked = item.get('walletLocked') === '1';
-
             result[item.get('walletID')] = {
-
                 walletId: item.get('walletID'),
                 walletName: item.get('walletName'),
                 walletType: item.get('walletType'),
-                walletLocked: walletLocked,
+                walletLocked: item.get('walletLocked'),
                 Glei: item.get('GLEI'),
                 accountId: item.get('accountID'),
                 accountName: item.get('accountName'),
