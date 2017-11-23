@@ -55,23 +55,23 @@
             </form>
 
             <clr-datagrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <!--<clr-dg-column mltag="txt_actions">Actions</clr-dg-column>-->
                 <clr-dg-column mltag="txt_subportfolio">Sub-portfolio</clr-dg-column>
                 <clr-dg-column mltag="txt_iban">IBAN</clr-dg-column>
                 <clr-dg-column mltag="txt_blockchainaddressidentifier">Blockchain address identifier</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button *ngIf="!address.editing" (click)="handleEdit(address.address)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>
-                            </button>
+                    <!--<clr-dg-cell>-->
+                    <!--<div class="btn-group btn-sm">-->
+                    <!--<button *ngIf="!address.editing" (click)="handleEdit(address.address)" class="btn">-->
+                    <!--<i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>-->
+                    <!--</button>-->
 
-                            <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)" class="btn">
-                                <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
-                            </button>
-                        </div>
-                    </clr-dg-cell>
+                    <!--<button *ngIf="address.editing" (click)="handleCancelEdit(address.address)" class="btn">-->
+                    <!--<i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>-->
+                    <!--</button>-->
+                    <!--</div>-->
+                    <!--</clr-dg-cell>-->
 
                     <clr-dg-cell>
                         <span *ngIf="!address.editing">
