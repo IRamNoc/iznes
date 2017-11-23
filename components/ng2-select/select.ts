@@ -267,6 +267,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public multiple: boolean = false;
     @Input() public inlineLabel: string = '';
     @Input() public inlineLabelMlTag: string = '';
+    @Input() public captureKeys: boolean = true;
 
     @Input()
     public set items(value: Array<any>) {
@@ -363,6 +364,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     public inputEvent(e: any, isUpMode: boolean = false): void {
+        if (!this.captureKeys) {
+            e.preventDefault();
+            return;
+        }
         // tab
         if (e.keyCode === 9) {
             return;
