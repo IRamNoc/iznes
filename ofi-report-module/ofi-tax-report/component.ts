@@ -23,6 +23,7 @@ import {
 
 interface ClientTxViewListItem {
     transactionId: number;
+    transactionRefId: number;
     fundName: string;
     type: ActionDirection;
     grossAmount: number;
@@ -202,7 +203,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             const transactionRefId = item.get('transactionRefId', 0);
             // todo
             // hardcoded
-            const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0) / 100;
+            const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0);
             const quantity = this._numberConverterService.toFrontEnd(item.get('transactionUnits', 0));
             const taxCredit = 0;
             const amountToDeclared = commonHelper.numberRoundUp(grossAmount + taxCredit);
@@ -227,9 +228,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
         this.totalAmountToDeclared = commonHelper.numberRoundUp(immutableHelper.reduce(this.pnlRegister, (result, item) => {
             return result + item.realisePnl;
-            // todo
-            // hardcoded
-        }, 0) / 100);
+        }, 0));
 
         this._changeDetectorRef.markForCheck();
     }
