@@ -199,6 +199,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
             const fundName = item.get('transactionInstrumentName', '');
             const transactionId = item.get('transactionId', 0);
+            const transactionRefId = item.get('transactionRefId', 0);
             // todo
             // hardcoded
             const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0) / 100;
@@ -210,6 +211,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
             const thisTx: ClientTxViewListItem = {
                 transactionId,
+                transactionRefId,
                 fundName,
                 type: item.get('transactionType', 0),
                 grossAmount,

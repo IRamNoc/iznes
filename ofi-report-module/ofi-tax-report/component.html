@@ -98,7 +98,7 @@
                 <clr-dg-column mltag="txt_fundname">Fund name</clr-dg-column>
                 <clr-dg-column mltag="txt_type">Type</clr-dg-column>
                 <clr-dg-column mltag="txt_ref">Ref</clr-dg-column>
-                <clr-dg-column mltag="txt_grossamount">Gross Amount</clr-dg-column>
+                <clr-dg-column mltag="txt_pl">P&L</clr-dg-column>
                 <clr-dg-column mltag="txt_quantity">Quantity</clr-dg-column>
                 <clr-dg-column mltag="txt_taxcredit">Tax credit</clr-dg-column>
                 <clr-dg-column mltag="txt_amounttobedeclared">Amount to be declared</clr-dg-column>
@@ -123,7 +123,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.transactionId | padding : 10 }}
+                        {{tx.transactionRefId | padding : 10 }}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
