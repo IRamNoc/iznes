@@ -123,7 +123,7 @@
                     <div class="row">
                         <div class="form-group button-group">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" [disabled]="!canSave(tabid)" class="btn btn-primary">
                                     <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                                 </button>
                                 <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
