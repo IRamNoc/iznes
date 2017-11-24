@@ -21,14 +21,26 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
-    public static void navigateToPage(String pageHref) throws InterruptedException {
-      Thread.sleep(750);
+    public static void navigateToPage2(String pageHref) throws InterruptedException {
+      Thread.sleep(1750);
+        System.out.println("//a[@href='#/" + pageHref + "']");
       try {
         driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']")).click();
       }catch (Error e){
         System.out.println(pageHref + "page not present");
         fail("goodjob");
       }
+    }
+
+    public static void navigateToPage(String pageHref) throws InterruptedException {
+        Thread.sleep(1750);
+        System.out.println("//a[@href='#/" + pageHref + "']");
+        try {
+            driver.findElement(By.id("menu-" + pageHref)).click();
+        }catch (Error e){
+            System.out.println(pageHref + "page not present");
+            fail("goodjob");
+        }
     }
 
     public static void navigateToIncorrectUrl(String restOfURL, String headerText) throws InterruptedException {
