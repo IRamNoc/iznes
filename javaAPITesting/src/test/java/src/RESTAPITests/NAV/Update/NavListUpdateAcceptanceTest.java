@@ -6,10 +6,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 public class NavListUpdateAcceptanceTest {
 
@@ -17,15 +22,18 @@ public class NavListUpdateAcceptanceTest {
   @Rule
   public Timeout globalTimeout = Timeout.millis(3000);
   //String localAddress = "http://apidev.iznes.io:9788/api";
+  //String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   String localAddress = "http://localhost:9788/api";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
+  int userId = 195;
+  String apiKey = "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=";
 
   @Test
   public void failToUpdateNavPriceWhenNavIsFinalised(){
 
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", "25000", 0, 0), claim -> {
@@ -43,7 +51,7 @@ public class NavListUpdateAcceptanceTest {
     int expectedTotal = 1;
 
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200005, 0, 1), claim -> {
@@ -65,7 +73,7 @@ public class NavListUpdateAcceptanceTest {
     int expectedTotal = 1;
 
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-08", 1200000, 0, 1), claim -> {
@@ -87,7 +95,7 @@ public class NavListUpdateAcceptanceTest {
     int expectedTotal = 1;
 
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D 1", "2017-07-08", 1200000, 0, 1), claim -> {
@@ -104,27 +112,43 @@ public class NavListUpdateAcceptanceTest {
   @Test
   public void createNav(){
 
-    int expectedPrice = 9999;
-    int expectedStatus = 0;
+      String str = randomAlphabetic(5);
+      String fundName = "Test_Fund_" + str;
+      LocalDate startDate = LocalDate.of(2017, 1, 1); //start date
+      long start = startDate.toEpochDay();
+
+      LocalDate endDate = LocalDate.now(); //end date
+      long end = endDate.toEpochDay();
+
+      long randomDate = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+
+      String fundDate = String.valueOf(LocalDate.ofEpochDay(randomDate));
+      String fundTime = "00:00:00";
+      String fundDateTime = fundDate + " " + fundTime;
+
+      int price = Integer.parseInt(randomNumeric(1, 5));
+      int priceStatus = -1;
+      int force = 0;
+
+
 
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(195, "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=");
 
     MessageFactory msfFactory = api.getMessageFactory();
-    api.sendMessage(msfFactory.updateNav("TEST2", "2017-10-08", 9999, -1, 0), claim -> {
+    api.sendMessage(msfFactory.updateNav(fundName, fundDate, price, priceStatus, force), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("OK".equals(response.get("Status").toString()));
-    assertTrue("TEST2".equals(response.get("fundName")));
-    assertTrue("2017-10-08 00:00:00".equals(response.get("navDate")));
-    assertEquals(expectedPrice, response.get("price"));
-    assertEquals(expectedStatus, response.get("status"));
+    assertTrue(fundName.equals(response.get("fundName")));
+    assertEquals(fundDateTime, response.get("navDate"));
+    assertEquals(price, response.get("price"));
+    assertEquals(priceStatus, response.get("status"));
     });
-    resetDate();
   }
 
   private void resetPrice() {
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200000, 0, 1), claim -> {
@@ -133,7 +157,7 @@ public class NavListUpdateAcceptanceTest {
 
   private void resetDate() {
     RestApi api = new RestApi(localAddress);
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
+    api.start(17, "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=");
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200000, 0, 1), claim -> {

@@ -54,17 +54,16 @@ public static User createUserAndCaptureDetails(String localAddress,
                                        String userName,
                                        String email,
                                        String userType,
-                                       String password
-                                       //int userId,
-                                       //String apiKey
+                                       String password,
+                                       int userId,
+                                       String apiKey
                                )
                                throws InterruptedException {
 
 
     RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
-    //api.start(userId, apiKey);
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
@@ -79,17 +78,16 @@ public static User createUserAndCaptureDetails(String localAddress,
                                        String userName,
                                        String email,
                                        String userType,
-                                       String password
-                                       //int userId,
-                                       //String apiKey
+                                       String password,
+                                       int userId,
+                                       String apiKey
                                )
                                throws InterruptedException {
 
 
     RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
-    api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
-    //api.start(userId, apiKey);
+    api.start(userId, apiKey);
 
     MessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {

@@ -1,0 +1,70 @@
+
+node {
+
+}
+def notifySlack(String buildStatus = 'STARTED') {
+    // Build status of null means success.
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    def color
+
+    if (buildStatus == 'STARTED') {
+        color = '#0000CD'
+    } else if (buildStatus == 'SUCCESS') {
+        color = '#008000'
+    } else if (buildStatus == 'UNSTABLE') {
+        color = '#FFFF00'
+    } else {
+        color = '#FF0000'
+    }
+    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+    slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
+}
+
+node {
+    timestamps {
+        try {
+            notifySlack()
+
+            stage('Deploy Frontend to Sales Environment'){
+                node{
+                    sh '''
+              ssh root@sales.iznes.io mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
+              ssh root@sales.iznes.io mkdir /var/www_setltestnet && 
+              scp -pr /var/lib/jenkins/Deploy/dist/*  root@sales.iznes.io:/var/www_setltestnet'''
+                }
+            }
+            stage('Deploy Backend to Sales Environment') {
+                node {
+                    sh '''
+                            ssh root@sales.iznes.io mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
+                            ssh root@sales.iznes.io mkdir /var/phpapps/backend && 
+                            scp -pr /var/lib/jenkins/Deploy/backend/*  root@sales.iznes.io:/var/phpapps/backend'''
+                }
+            }
+
+            stage('Deploy French Fund Daemon to Sales Environment') {
+                node {
+                    sh '''
+                            ssh root@sales.iznes.io mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh root@sales.iznes.io mkdir /var/phpapps/frenchfunddaemon && 
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@sales.iznes.io:/var/phpapps/frenchfunddaemon'''
+                }
+            }
+
+            stage ('Update Dependencies'){
+                sh 'ssh -t root@sales.iznes.io \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
+            }
+
+            stage ('Restart Node Server'){
+                sh 'ssh -t root@sales.iznes.io \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
+            }
+
+        } catch (e) {
+            currentBuild.result = 'FAILURE'
+            throw e
+        } finally {
+            notifySlack(currentBuild.result)
+        }
+    }
+}
