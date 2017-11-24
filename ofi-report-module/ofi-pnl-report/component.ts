@@ -1,6 +1,5 @@
 import {
-    Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Pipe,
-    PipeTransform
+    Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef
 } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
@@ -8,9 +7,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
 import {immutableHelper, NumberConverterService, mDateHelper, commonHelper} from '@setl/utils';
-import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
+import {PnlHelper} from '../pnlHelper/class';
 import _ from 'lodash';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {
     InitialisationService,
@@ -64,8 +62,6 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    assetBalances: Array<any>;
-
     // The related txs that we want to check of particular asset.
     relatedTxList: Array<any>;
 
@@ -83,7 +79,6 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     constructor(private _ngRedux: NgRedux<any>,
                 private _ofiClientTxService: OfiClientTxService,
                 private _numberConverterService: NumberConverterService,
-                private _alertsService: AlertsService,
                 private _ofiFundInvestService: OfiFundInvestService,
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
@@ -218,7 +213,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
         for (const shareName of Object.keys(clientTxList)) {
             const price = this.sharePriceList[shareName];
-            // creat the pnl register for the fund share.
+            // create the pnl register for the fund share.
             newPnlRegister[shareName] = new PnlHelper(price, this._numberConverterService);
 
             // process all the tx for the fund share;
@@ -246,7 +241,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 transactionRefId: item.get('transactionRefId', ''),
                 transactionPrice: this._numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
                 transactionUnits: this._numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
-                transactionSettlement: commonHelper.numberRoundUp(this._numberConverterService.toFrontEnd(item.get('transactionSettlement', ''))),
+                transactionSettlement: commonHelper.numberRoundUp(
+                    this._numberConverterService.toFrontEnd(item.get('transactionSettlement', ''))),
                 transactionDate: txDateNumber,
             });
             return result;
