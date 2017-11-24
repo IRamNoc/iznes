@@ -4,6 +4,7 @@ import {WalletnodeChannelService, InitialisationService} from '@setl/core-req-se
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
 import {NgRedux, select} from '@angular-redux/store';
+import {MyUserService} from '@setl/core-req-services';
 
 import {
     setMenuShown
@@ -41,6 +42,7 @@ export class AppComponent implements AfterViewInit {
                 private initialisationService: InitialisationService,
                 private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
                 private ofiPostTxService: OfiPostTxService,
+                private _myUserService: MyUserService,
                 private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
 
         memberSocketService.disconnectCallback = () => {
@@ -54,6 +56,10 @@ export class AppComponent implements AfterViewInit {
 
         memberSocketService.reconnectCallback = () => {
             this.toasterService.pop('success', 'Member node connection reconnected');
+
+            // If this connection is connected, let backend know about it, by sending the backend a request(in the case,
+            // extend session call would do here).
+            this._myUserService.defaultRefreshToken(this.ngRedux);
         };
 
         /**
