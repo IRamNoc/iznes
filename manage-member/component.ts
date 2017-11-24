@@ -36,6 +36,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     tabsControl: Array<any>;
     manageMembersList: Array<any>;
     isSymAdmin: boolean;
+    allowedToSave: Array<boolean>;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -52,6 +53,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 private memberService: MemberService,
                 private confirmationService: ConfirmationService,
                 private changeDetectorRef: ChangeDetectorRef) {
+        this.allowedToSave = [];
         /* Default tabs. */
         this.tabsControl = [
             {
@@ -88,6 +90,13 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+    }
+
+    canSave(tabId: number): boolean {
+        if (typeof this.allowedToSave[tabId] === 'undefined') {
+            this.allowedToSave[tabId] = false;
+        }
+        return this.allowedToSave[tabId];
     }
 
     updateMemberList(memberList: object): void {
@@ -132,8 +141,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleAddMember(tabId: number): void {
         /* If the form is valid... */
         if (this.tabsControl[tabId].formControl.valid) {
-            console.log(this.tabsControl[tabId].formControl.value);
-
             if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return;
 
             /* ...prepare the task pipe... */
@@ -176,7 +183,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      */
     handleEditMember(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
-            console.log(this.tabsControl[tabId].formControl.value);
+            this.allowedToSave[tabId] = false;
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
 
@@ -212,7 +219,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].memberId === this.manageMembersList[index].memberId) {
                 this.setTabActive(i);
-
                 return;
             }
         }
@@ -230,6 +236,12 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             ),
             active: false
         });
+        this.allowedToSave[this.tabsControl.length - 1] = false;
+        this.tabsControl[this.tabsControl.length - 1].formControl.controls.memberName.valueChanges.subscribe(
+            () => {
+                this.allowedToSave[this.tabsControl.length - 1] = true;
+            }
+        );
 
         // Activate the new tab.
         this.setTabActive(this.tabsControl.length - 1);
@@ -371,7 +383,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     }
 
     acceptedCharacters(str){
-        var patt = new RegExp("^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
+        let patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
         if (!patt.test(str)){
             this.alertsService.create('error', `<table class="table grid">
                         <tbody>
