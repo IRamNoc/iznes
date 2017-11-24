@@ -6,26 +6,27 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="wallet-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button clrTabLink id="wallet-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- Wallet list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="staticWalletListTab"
+                            *ngTemplateOutlet="staticWalletListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Wallet add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                        *ngTemplateOutlet="staticWalletAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="staticWalletAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Wallet edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -46,17 +47,18 @@
                 <clr-dg-row *clrDgItems="let wallet of walletList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                          <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                          <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                            <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn">
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                            <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn">
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
-                            {{ wallet.walletLocked }}
-                            <span *ngIf="wallet.walletLocked === false" class="label label-success" mltag="txt_unlocked">Unlocked</span>
-                            <span *ngIf="wallet.walletLocked === true" class="label label-warning" mltag="txt_locked">Locked</span>
+                        <span *ngIf="wallet.walletLocked === false" class="label label-success" mltag="txt_unlocked">Unlocked</span>
+                        <span *ngIf="wallet.walletLocked === true" class="label label-warning" mltag="txt_locked">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -76,7 +78,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                              <span mltag="txt_walletname">Wallet Name</span>
+                                <span mltag="txt_walletname">Wallet Name</span>
                             </label>
                             <div>
                                 <input id="new-wallet-name" type="text" formControlName="walletName" placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
@@ -101,12 +103,12 @@
                                 <span mltag="txt_account">Account</span>
                             </label>
                             <ng-select
-                                id="new-wallet-account-select"
-                                [items]="accountTypes"
-                                [allowClear]="true"
-                                mltag="txt_selecttype"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletAccount']">
+                                    id="new-wallet-account-select"
+                                    [items]="accountTypes"
+                                    [allowClear]="true"
+                                    mltag="txt_selecttype"
+                                    placeholder="Select Type"
+                                    [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
                             <div *ngIf="!formControl.controls['walletAccount'].valid && formControl.controls['walletAccount'].touched" class="alert-items">
                                 <div class="alert alert-danger">
@@ -128,12 +130,12 @@
                                 <span mltag="txt_usertype">Wallet Type</span>
                             </label>
                             <ng-select
-                                id="new-wallet-usertype-select"
-                                [items]="walletTypes"
-                                [allowClear]="true"
-                                mltag="txt_selecttype"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletType']">
+                                    id="new-wallet-usertype-select"
+                                    [items]="walletTypes"
+                                    [allowClear]="true"
+                                    mltag="txt_selecttype"
+                                    placeholder="Select Type"
+                                    [formControl]="formControl.controls['walletType']">
                             </ng-select>
                         </div>
                         <div *ngIf="!formControl.controls['walletType'].valid && formControl.controls['walletType'].touched" class="alert-items">
@@ -208,12 +210,12 @@
                                 <span mltag="txt_account">Account</span>
                             </label>
                             <ng-select
-                                id="new-wallet-account-select"
-                                [items]="accountTypes"
-                                [allowClear]="true"
-                                mltag="txt_selecttype"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletAccount']">
+                                    id="new-wallet-account-select"
+                                    [items]="accountTypes"
+                                    [allowClear]="true"
+                                    mltag="txt_selecttype"
+                                    placeholder="Select Type"
+                                    [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
                             <div *ngIf="!formControl.controls['walletAccount'].valid && formControl.controls['walletAccount'].touched" class="alert-items">
                                 <div class="alert alert-danger">
@@ -256,12 +258,12 @@
                                 <span mltag="txt_wallettype">Wallet Type</span>
                             </label>
                             <ng-select
-                                id="new-wallet-usertype-select"
-                                [items]="walletTypes"
-                                [allowClear]="true"
-                                mltag="txt_selecttype"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletType']">
+                                    id="new-wallet-usertype-select"
+                                    [items]="walletTypes"
+                                    [allowClear]="true"
+                                    mltag="txt_selecttype"
+                                    placeholder="Select Type"
+                                    [formControl]="formControl.controls['walletType']">
                             </ng-select>
                             <div *ngIf="!formControl.controls['walletType'].valid && formControl.controls['walletType'].touched" class="alert-items">
                                 <div class="alert alert-danger">
@@ -309,7 +311,7 @@
     <ng-template #walletMetaLegal let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
+                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -353,7 +355,8 @@
             </clr-tab>
 
             <clr-tab>
-              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
+                <a clrTabLink><i class="fa fa-users"></i>
+                    <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -364,9 +367,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                            [items]="countriesList"
-                                            [allowClear]="true"
-                                            [formControl]="formControl.controls['walletAddrCountry']">
+                                                [items]="countriesList"
+                                                [allowClear]="true"
+                                                [formControl]="formControl.controls['walletAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -430,7 +433,7 @@
     <ng-template #walletMetaIndividual let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-              <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
+                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-group col-sm-12">
@@ -464,7 +467,8 @@
             </clr-tab>
 
             <clr-tab>
-              <a clrTabLink><i class="fa fa-map-marker"></i> <span mltag="txt_residentialaddr">Residential Address</span></a>
+                <a clrTabLink><i class="fa fa-map-marker"></i>
+                    <span mltag="txt_residentialaddr">Residential Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -475,9 +479,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                            [items]="countriesList"
-                                            [allowClear]="true"
-                                            [formControl]="formControl.controls['rdaAddrCountry']">
+                                                [items]="countriesList"
+                                                [allowClear]="true"
+                                                [formControl]="formControl.controls['rdaAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -536,14 +540,16 @@
             </clr-tab>
 
             <clr-tab>
-              <a clrTabLink><i class="fa fa-map-marker"></i> <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
+                <a clrTabLink><i class="fa fa-map-marker"></i>
+                    <span mltag="txt_correspondenceaddr">Correspondence Address</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div *ngIf="tabsControl[tabid].walletId == -1" class="form-group col-sm-12">
                                     <label>
-                                      <span mltag="txt_sameasresidentialaddress">Same as Residential address</span> <input type="checkbox" [formControl]="formControl.controls['caSame']" />
+                                        <span mltag="txt_sameasresidentialaddress">Same as Residential address</span>
+                                        <input type="checkbox" [formControl]="formControl.controls['caSame']"/>
                                     </label>
                                 </div>
                             </div>
@@ -554,9 +560,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                            [items]="countriesList"
-                                            [allowClear]="true"
-                                            [formControl]="formControl.controls['caAddrCountry']">
+                                                [items]="countriesList"
+                                                [allowClear]="true"
+                                                [formControl]="formControl.controls['caAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -615,7 +621,8 @@
             </clr-tab>
 
             <clr-tab>
-              <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_settlementdetail">Settlement Detail</span></a>
+                <a clrTabLink><i class="fa fa-chain"></i>
+                    <span mltag="txt_settlementdetail">Settlement Detail</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
@@ -626,9 +633,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                            [items]="filteredWalletList"
-                                            [allowClear]="true"
-                                            [formControl]="formControl.controls['bankWalletId']"
+                                                [items]="filteredWalletList"
+                                                [allowClear]="true"
+                                                [formControl]="formControl.controls['bankWalletId']"
                                         ></ng-select>
                                         <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet"> -->
                                     </div>
@@ -685,9 +692,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                            [items]="countriesList"
-                                            [allowClear]="true"
-                                            [formControl]="formControl.controls['bdAddrCountry']">
+                                                [items]="countriesList"
+                                                [allowClear]="true"
+                                                [formControl]="formControl.controls['bdAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
