@@ -79,17 +79,29 @@
                         </span>
                         <div *ngIf="address.editing">
 
-                            <form (submit)="handleUpdateLabel(input.value, address.address)" style="padding: 0">
-                                <input type="text" [value]="address.label" #input style="width: inherit">
+                            <form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)" style="padding: 0">
+                                <input type="text" [value]="address.label" #subportfolio style="width: inherit">
                                 <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
                                    type="submit"
-                                   (click)="handleUpdateLabel(input.value, address.address)"></i>
+                                   (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"></i>
                             </form>
                         </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
+
+                        <span *ngIf="!address.editing">
                         {{address.iban}}
+                        </span>
+                        <div *ngIf="address.editing">
+
+                            <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)" style="padding: 0">
+                                <input type="text" [value]="address.iban" #iban style="width: inherit">
+                                <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
+                                   type="submit"
+                                   (click)="handleUpdateLabel(address.label, address.address, iban.value)"></i>
+                            </form>
+                        </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
