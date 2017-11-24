@@ -242,7 +242,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         this.allowedToSave[this.tabsControl.length - 1] = false;
         this.tabsControl[this.tabsControl.length - 1].formControl.controls.memberName.valueChanges.subscribe(
             () => {
-                console.log('Value changed');
                 this.allowedToSave[this.tabsControl.length - 1] = true;
             }
         );
