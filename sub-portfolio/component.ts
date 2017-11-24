@@ -182,12 +182,13 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             option: address,
             label: value
         });
-        console.log(address);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
             (data) => {
-                this.showSuccessResponse('Portfolio name updated');
                 this.ngRedux.dispatch(clearRequestedWalletLabel());
+
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
+                this.handleLabelResponse(message);
             }, (data) => {
                 this.showErrorResponse(data);
             }));
@@ -211,7 +212,6 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asynTaskPipe,
             (data) => {
-                this.showSuccessResponse('Portfolio created');
 
                 const address = _.get(data, [1, 'data', 'address'], '');
                 // create address label
@@ -225,13 +225,43 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(labelAsynTaskPipe,
                     (labelResponse) => {
                         this.ngRedux.dispatch(clearRequestedWalletLabel());
+                        const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
+                        this.handleLabelResponse(message);
+
                     },
                     (labelResponse) => {
+                        this.showErrorMessage('<span mltag="txt_address_created_sub_fail">' +
+                            'Portfolio address created in the blockchain, but fail to create sub-portfolio' +
+                            '</span>');
                     }));
             }, (data) => {
                 this.showErrorResponse(data);
             }));
 
+    }
+
+    handleLabelResponse(message) {
+        switch (message) {
+            case 'All OK':
+                this.showSuccessResponse('<span mltag="txt_portfolio_created">Portfolio created</span>');
+                break;
+
+            case 'Duplicate Label':
+                this.showWarningResponse('<span mltag="txt_subportfolioname_is_exist">Sub-portfolio name has already exist</span>');
+                break;
+
+            case 'Duplicate IBAN':
+                this.showWarningResponse('<span mltag="txt_iban_is_exist">IBAN has already exist</span>');
+                break;
+
+            case 'Duplicate Label and IBAN':
+                this.showWarningResponse('<span mltag="txt_subportfolioname_and_iban_is_exist">Sub-portfolio and IBAN has already exist</span>');
+                break;
+
+            default:
+                this.showSuccessResponse('<span mltag="txt_portfolio_created">Portfolio created</span>');
+                break;
+        }
     }
 
     showErrorResponse(response) {
@@ -274,6 +304,19 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                         </tbody>
                     </table>
                     `);
+    }
+
+    showWarningResponse(message) {
+
+        this.alertsService.create('warning', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-warning">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
 }
