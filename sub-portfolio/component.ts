@@ -175,22 +175,23 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleUpdateLabel(value, address) {
+    handleUpdateLabel(value, address, iban) {
 
         const asyncTaskPipe = this._myWalletService.updateWalletLabel({
             walletId: this.connectedWalletId,
             option: address,
-            label: value
+            label: value,
+            iban
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-            (data) => {
+            (labelResponse) => {
                 this.ngRedux.dispatch(clearRequestedWalletLabel());
 
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
                 this.handleLabelResponse(message);
-            }, (data) => {
-                this.showErrorResponse(data);
+            }, (labelResponse) => {
+                this.showErrorResponse(labelResponse);
             }));
 
     }
