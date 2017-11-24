@@ -142,6 +142,10 @@ export class MyUserService implements OnDestroy {
     }
 
     refreshToken(): any {
+        if (!this.memberSocketService.token) {
+            throw new Error('Fail to refresh token, due to token is missing');
+        }
+
         const messageBody: RefreshTokenRequestBody = {
             RequestName: 'extendsession',
             token: this.memberSocketService.token
