@@ -141,8 +141,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleAddMember(tabId: number): void {
         /* If the form is valid... */
         if (this.tabsControl[tabId].formControl.valid) {
-            console.log(this.tabsControl[tabId].formControl.value);
-
             if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return;
 
             /* ...prepare the task pipe... */
@@ -186,7 +184,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleEditMember(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
             this.allowedToSave[tabId] = false;
-            console.log(this.tabsControl[tabId].formControl);
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
 
