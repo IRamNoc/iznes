@@ -1,7 +1,9 @@
 package src.RESTAPITests.Fund.Creation;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -19,6 +21,15 @@ public class createFundAcceptanceTest {
   String localAddress = "http://localhost:9788/api";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
+  RestApi<MemberNodeMessageFactory> api;
+
+
+  @Before
+  public void setup(){
+      api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+  }
+
+
 
   @Test
   public void createFundWithValidDataTest(){
@@ -33,10 +44,10 @@ public class createFundAcceptanceTest {
     String companyId = fundDetails[6];
 
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(4, "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newFund(fundName, "432a709ccb6a728192d67f916b41e815ddf75b101bc684142740102f49bdfbd4",
       "432a709ccb6a728192d67f916b41e815ddf75b101bc684142740102f49bdfbd4", fundShares, "test002", "2", companyId), claim -> {
       Map response = claim.get("data").asList(Map.class).get(0);

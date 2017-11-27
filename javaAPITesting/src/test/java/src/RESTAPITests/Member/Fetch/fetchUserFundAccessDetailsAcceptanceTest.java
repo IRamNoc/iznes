@@ -1,7 +1,9 @@
 package src.RESTAPITests.Member.Fetch;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -23,14 +25,21 @@ public class fetchUserFundAccessDetailsAcceptanceTest {
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   int userId = 6;
   String apiKey = "LR6hDr++WJotI8W46BKwL4hKtc47wplHgGqM9JzRSWM=";
+    RestApi<MemberNodeMessageFactory> api;
+
+    @Before
+    public void setup(){
+        api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+    }
+
 
     @Test
     public void fetchUserDetails() throws ExecutionException, InterruptedException {
 
-        RestApi api = new RestApi(localAddress);
+
         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+        MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getDetails(), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);

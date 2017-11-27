@@ -3,8 +3,10 @@ package src.RESTAPITests.Wallet.Creation;
 import SETLAPIHelpers.Wallet;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -33,18 +35,25 @@ public class createWalletAcceptanceTest {
   String localAddress = "http://localhost:9788/api";
   int userId = 4;
   String apiKey = "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=";
+    RestApi<MemberNodeMessageFactory> api;
+
+    @Before
+    public void setup(){
+        api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+    }
 
 
-  @Test
+
+    @Test
   public void createNewCommercialWallet() throws ExecutionException, InterruptedException {
     String walletDetails[] = generateWalletDetails();
     String walletName = walletDetails[0];
     String email = walletDetails[1];
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
     api.sendMessage(msfFactory.newWallet(walletName,
                                          email,
@@ -83,10 +92,9 @@ public class createWalletAcceptanceTest {
      String walletName = walletDetails[0];
      String email = walletDetails[1];
 
-     RestApi api = new RestApi(localAddress);
      api.start(userId, apiKey);
 
-     MessageFactory msfFactory = api.getMessageFactory();
+     MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
      api.sendMessage(msfFactory.newWallet(walletName,
                                           email,
@@ -125,10 +133,10 @@ public class createWalletAcceptanceTest {
     String walletName = walletDetails[0];
     String email = walletDetails[1];
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
     api.sendMessage(msfFactory.newWallet(walletName,
                                          email,

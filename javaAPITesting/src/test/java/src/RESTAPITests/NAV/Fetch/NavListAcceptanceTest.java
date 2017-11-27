@@ -1,7 +1,9 @@
 package src.RESTAPITests.NAV.Fetch;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -21,6 +23,13 @@ public class NavListAcceptanceTest {
   //String localAddress = "http://apidev.iznes.io:9788/api";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
+  RestApi<MemberNodeMessageFactory> api;
+
+  @Before
+  public void setup(){
+      api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+  }
+
 
   @Test
   public void getValidNavList(){
@@ -29,10 +38,9 @@ public class NavListAcceptanceTest {
     int expectedstatus = -1;
     int expectedTotal = 1;
 
-    RestApi api = new RestApi(localAddress);
     api.start( 14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.getNavList("LEI00001|OFI RS Dynamique C D ", "2017-11-09", "-1", 0, 100), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("LEI00001|OFI RS Dynamique C D ".equals(response.get("fundName")));
@@ -55,10 +63,10 @@ public class NavListAcceptanceTest {
     int expectedstatus = -1;
     int expectedTotal = 6;
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.getNavList("TEST1|OFI RS Dynamique C D ", "", "-1", 0, 100), claim -> {
     Map response1 = claim.get("data").asList(Map.class).get(0);
     assertTrue("TEST1|OFI RS Dynamique C D ".equals(response1.get("fundName")));
@@ -120,10 +128,10 @@ public class NavListAcceptanceTest {
     int expectedstatus = -1;
     int expectedTotal = 6;
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.getNavList("TEST1|OFI RS Dynamique C D ", null, "-1", 0, 100), claim -> {
       Map response1 = claim.get("data").asList(Map.class).get(0);
       assertTrue("TEST1|OFI RS Dynamique C D ".equals(response1.get("fundName")));

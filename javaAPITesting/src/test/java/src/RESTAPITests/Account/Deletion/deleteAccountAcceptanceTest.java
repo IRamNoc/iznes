@@ -1,7 +1,9 @@
 package src.RESTAPITests.Account.Deletion;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -24,6 +26,14 @@ public class deleteAccountAcceptanceTest {
   int userId = 17;
   String localAddress = "http://localhost:9788/api";
   String apiKey = "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=";
+  RestApi<MemberNodeMessageFactory> api;
+
+
+  @Before
+  public void setup(){
+      api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+  }
+
 
   @Test
   public void deleteAccount() throws ExecutionException, InterruptedException {
@@ -32,9 +42,8 @@ public class deleteAccountAcceptanceTest {
     String accountName = accountDetails[0];
     String accountDescription = accountDetails[1];
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newAccount(accountDescription, accountName, 5), claim -> {
 
       Map resp = claim.get("data").asList(Map.class).get(0);
@@ -55,9 +64,9 @@ public class deleteAccountAcceptanceTest {
     String accountName = accountDetails[0];
     String accountDescription = accountDetails[1];
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newAccount(accountDescription, accountName, 5), claim -> {
       Map response = claim.get("data").asList(Map.class).get(0);
       assertTrue("OK".equals(response.get("Status").toString()));

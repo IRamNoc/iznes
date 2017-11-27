@@ -1,7 +1,9 @@
 package src.RESTAPITests.Member.Deletion;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -24,6 +26,12 @@ public class deleteMemberAcceptanceTest {
   String localAddress = "http://localhost:9788/api";
   int userId = 4;
   String apiKey = "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=";
+  RestApi<MemberNodeMessageFactory> api;
+
+  @Before
+  public void setup(){
+      api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+  }
 
   @Test
   public void deleteMember() throws ExecutionException, InterruptedException {
@@ -32,9 +40,8 @@ public class deleteMemberAcceptanceTest {
     String memberName = memberDetails[0];
     String memberEmail = memberDetails[1];
 
-      RestApi api = new RestApi(localAddress);
       api.start(userId, apiKey);
-      MessageFactory msfFactory = api.getMessageFactory();
+      MemberNodeMessageFactory msfFactory = api.getMessageFactory();
       api.sendMessage(msfFactory.newMember(memberName, memberEmail), claim -> {
       Map response = claim.get("data").asList(Map.class).get(0);
       System.out.println(response);
@@ -57,9 +64,8 @@ public class deleteMemberAcceptanceTest {
     int userId = 4;
     String apiKey = "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=";
 
-      RestApi api = new RestApi(localAddress);
       api.start(userId, apiKey);
-      MessageFactory msfFactory = api.getMessageFactory();
+      MemberNodeMessageFactory msfFactory = api.getMessageFactory();
       api.sendMessage(msfFactory.newMember(memberName, memberEmail), claim -> {
       Map response = claim.get("data").asList(Map.class).get(0);
       assertTrue("OK".equals(response.get("Status").toString()));

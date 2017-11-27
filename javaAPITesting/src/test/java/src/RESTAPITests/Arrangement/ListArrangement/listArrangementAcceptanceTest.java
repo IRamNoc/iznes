@@ -1,7 +1,9 @@
 package src.RESTAPITests.Arrangement.ListArrangement;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -24,13 +26,21 @@ public class listArrangementAcceptanceTest {
     String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
     int userId = 6;
     String apiKey = "LR6hDr++WJotI8W46BKwL4hKtc47wplHgGqM9JzRSWM=";
+    RestApi<MemberNodeMessageFactory> api;
+
+
+    @Before
+    public void setup(){
+     api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+    }
+
 
     @Test
     public void listArrangementsByAssetAsAssetManager() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+       MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(2, 0, 10, "1231|BTF5", "", 0, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -41,10 +51,9 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listArrangementsByArrangementTypeAsAssetManager() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+        MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(2, 0, 10, "", "", 3, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -56,10 +65,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listArrangementsByStatusAsAssetManager() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(2, 0, 10, "", "", 0, -1, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -70,10 +79,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listAllArrangementsAsAssetManager() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(2, 0, 10, "", "", 0, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -84,10 +93,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listAllArrangementsByAssetAsInvestor() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(1, 0, 10, "1231|BTF5", "", 0, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -98,10 +107,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listAllArrangementsByArrangementTypeAsInvestor() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(1, 0, 10, "", "", 3, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -113,10 +122,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listAllArrangementsByStatusAsInvestor() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(1, 0, 10, "", "", 0, 2, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -127,10 +136,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void listAllArrangementsAsInvestor() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+        MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getArrangementsList(1, 0, 10, "", "", 0, -3, ""), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
@@ -141,10 +150,10 @@ public class listArrangementAcceptanceTest {
 
     @Test
     public void insertArrangementAcceptanceTest() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+         MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.insertArrangementContractMap(4,20," 'SELECT * FROM setlnet.tblUsers;' ",1508860449), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
