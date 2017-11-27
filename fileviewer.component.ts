@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {select, NgRedux} from '@angular-redux/store';
+import {select} from '@angular-redux/store';
 import {Http} from '@angular/http';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper} from '@setl/utils';
+
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 
@@ -26,7 +26,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public fileType: string = null;
     public fileModal = false;
 
-    private appConfig: AppConfig;
+    // private appConfig: AppConfig;
     private baseUrl = '';
     private validateUrl = '';
 
@@ -43,8 +43,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
         private sanitizer: DomSanitizer,
         private pdfService: PdfService,
         private changeDetectorRef: ChangeDetectorRef,
-        private ngRedux: NgRedux<any>,
-        @Inject(APP_CONFIG) appConfig: AppConfig
+        @Inject(APP_CONFIG) private appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
@@ -54,16 +53,20 @@ export class FileViewerComponent implements OnInit, OnChanges {
         this.baseUrl += '://' + this.appConfig.MEMBER_NODE_CONNECTION.host + ':' +
            this.appConfig.MEMBER_NODE_CONNECTION.port;
         this.token = this.memberSocketService.token;
-        this.getUser.subscribe(
-            (data) => {
-                this.userId = data;
-            }
-        );
-        this.getConnectedWallet.subscribe(
-            (data) => {
-                this.walletId = data;
-            }
-        );
+        if (this.getUser) {
+            this.getUser.subscribe(
+                (data) => {
+                    this.userId = data;
+                }
+            );
+        }
+        if (this.getConnectedWallet) {
+            this.getConnectedWallet.subscribe(
+                (data) => {
+                    this.walletId = data;
+                }
+            );
+        }
     }
 
     /**
@@ -72,8 +75,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
      * @return {void}
      */
     public ngOnInit() {
-        if (this.pdfId !== null) {
-        } else {
+        if (this.pdfId === null) {
             this.setUrls();
         }
     }
@@ -113,13 +115,15 @@ export class FileViewerComponent implements OnInit, OnChanges {
      */
     public openFileModal() {
         if (this.pdfId !== null && this.fileUrl === null) {
-            this.getPdf(this.pdfId).then(
+            this.pdfService.getPdf(this.pdfId).then(
                 (fileHash: string) => {
+                    console.log('FileHash returned:', fileHash);
                     this.fileHash = fileHash;
                     this.setUrls();
                     this.openFileModal();
                 },
                 (error) => {
+                    console.log('Error occurred');
                     this.showAlert(error, 'error');
                 }
             );
@@ -174,33 +178,5 @@ export class FileViewerComponent implements OnInit, OnChanges {
                   </tbody>
               </table>
           `);
-    }
-
-    /**
-     * Get PDF
-     *
-     * @param pdfID
-     *
-     * @return {void}
-     */
-    getPdf(pdfID) {
-        const asyncTaskPipe = this.pdfService.getPdf({
-            pdfID: pdfID
-        });
-        return new Promise((resolve, reject) => {
-            this.ngRedux.dispatch(
-                SagaHelper.runAsyncCallback(
-                    asyncTaskPipe,
-                    (data) => {
-                        if (data && data[1] && data[1].Data) {
-                            resolve(data[1].Data);
-                        }
-                    },
-                    (error) => {
-                        reject(error);
-                    }
-                )
-            );
-        });
     }
 }
