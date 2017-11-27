@@ -34,7 +34,7 @@ import {
     immutableHelper,
     commonHelper
 } from '@setl/utils';
-
+import * as math from 'mathjs';
 
 @Component({
     selector: 'core-am-dashboard',
@@ -293,7 +293,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                         'address': address,
                         'walletName': '',
                         'assetManager': assets[asset].companyName,
-                        'estimatedAmount': commonHelper.numberRoundUp((this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price))),
+                        'estimatedAmount': math.round((this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price)), 2),
                         'quantity': this._numberConverterService.toFrontEnd(thisAddressBalance),
                         'ratio': 0, // Get's set just below (total needs to be calculated first).
                     });

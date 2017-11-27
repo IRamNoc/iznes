@@ -20,6 +20,7 @@ import {
 import {
     setRequestedWalletAddresses
 } from '@setl/core-store';
+import * as math from 'mathjs';
 
 interface ClientTxViewListItem {
     transactionId: number;
@@ -201,12 +202,10 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             const fundName = item.get('transactionInstrumentName', '');
             const transactionId = item.get('transactionId', 0);
             const transactionRefId = item.get('transactionRefId', 0);
-            // todo
-            // hardcoded
-            const grossAmount = commonHelper.numberRoundUp(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 0);
+            const grossAmount = math.round(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 2);
             const quantity = this._numberConverterService.toFrontEnd(item.get('transactionUnits', 0));
             const taxCredit = 0;
-            const amountToDeclared = commonHelper.numberRoundUp(grossAmount + taxCredit);
+            const amountToDeclared = math.round(grossAmount + taxCredit, 2);
             const dateStr = item.get('transactionSettlementDate', '');
             const deliveryDate = mDateHelper.dateStrToUnixTimestamp(dateStr, 'YYYY-MM-DD HH:mm:ss');
 
@@ -226,9 +225,9 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             return result;
         }, []);
 
-        this.totalAmountToDeclared = commonHelper.numberRoundUp(immutableHelper.reduce(this.pnlRegister, (result, item) => {
+        this.totalAmountToDeclared = math.round(immutableHelper.reduce(this.pnlRegister, (result, item) => {
             return result + item.realisePnl;
-        }, 0));
+        }, 2));
 
         this._changeDetectorRef.markForCheck();
     }
@@ -328,7 +327,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     transactionRefId: tx.transactionRefId,
                     transactionPrice,
                     transactionUnits: this._numberConverterService.toFrontEnd(tx.transactionUnits),
-                    transactionSettlement: commonHelper.numberRoundUp(this._numberConverterService.toFrontEnd(tx.transactionSettlement)),
+                    transactionSettlement: math.round(this._numberConverterService.toFrontEnd(tx.transactionSettlement), 2),
                     transactionDeliveryDate
                 });
                 return result;

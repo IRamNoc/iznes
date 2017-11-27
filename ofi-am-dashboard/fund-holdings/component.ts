@@ -32,6 +32,7 @@ import {
     NumberConverterService,
     commonHelper
 } from '@setl/utils';
+import * as math from 'mathjs';
 
 @Component({
     selector: 'core-am-dashboard',
@@ -226,7 +227,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundStats.navPrice = data.nav.price;
             this.fundStats.navDate = data.nav.navDate;
             this.fundStats.units = data.units;
-            this.fundStats.netAsset = commonHelper.numberRoundUp((data.nav.price) * data.units, 2);
+            this.fundStats.netAsset = math.round((data.nav.price) * data.units, 2);
 
             /* Now let's set the holders in this fund. */
             this.fundStats.holders = data.holders;
@@ -331,7 +332,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                                     finalHoldersList.push({
                                         'walletName': this.walletDirectoryList[id].walletName,
                                         'label': walletIdList[key].label,
-                                        'amount': commonHelper.numberRoundUp((this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]))),
+                                        'amount': math.round((this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])), 2),
                                         'quantity': this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
                                     });
                                     /* Add to total number of units. */

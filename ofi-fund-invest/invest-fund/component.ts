@@ -10,6 +10,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 import {NgRedux} from '@angular-redux/store';
 import * as moment from 'moment-business-days';
+import * as math from 'mathjs';
 
 // Internal
 import {immutableHelper, MoneyValuePipe, mDateHelper, commonHelper} from '@setl/utils';
@@ -483,7 +484,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  * grossAmount = ((unit * nav) * (1 + feePercent)) + platformfee
                  */
                 const grossAmoutBeforeFee = newValue * this.metaData.nav;
-                const grossAmountAfterFee = commonHelper.numberRoundUp((grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee);
+                const grossAmountAfterFee = math.round((grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee, 2);
                 beTriggered.setValue(this._moneyValuePipe.transform(grossAmountAfterFee));
             },
             'grossAmount': (value) => {

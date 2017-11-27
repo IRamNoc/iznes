@@ -18,6 +18,7 @@ import {
 import {
     setRequestedWalletAddresses
 } from '@setl/core-store';
+import * as math from 'mathjs';
 
 interface ActiveBalanceListItem {
     fundName: string;
@@ -162,8 +163,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
             const thisBalance: ActiveBalanceListItem = {
                 fundName: key,
                 activeQuantity: item.activeBalance,
-                realisePnl: commonHelper.numberRoundUp(item.realisePnl),
-                unRealisePnl: commonHelper.numberRoundUp(item.unRealisePnl),
+                realisePnl: math.round(item.realisePnl, 2),
+                unRealisePnl: math.round(item.unRealisePnl, 2),
                 lastMovement
             };
 
@@ -241,8 +242,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 transactionRefId: item.get('transactionRefId', ''),
                 transactionPrice: this._numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
                 transactionUnits: this._numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
-                transactionSettlement: commonHelper.numberRoundUp(
-                    this._numberConverterService.toFrontEnd(item.get('transactionSettlement', ''))),
+                transactionSettlement: math.round(
+                    this._numberConverterService.toFrontEnd(item.get('transactionSettlement', '')), 2),
                 transactionDate: txDateNumber,
             });
             return result;

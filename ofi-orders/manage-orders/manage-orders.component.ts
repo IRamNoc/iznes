@@ -15,6 +15,7 @@ import {OfiCorpActionService} from "../../ofi-req-services/ofi-corp-actions/serv
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
 /* Ofi Store stuff. */
 import {getOfiManageOrderList, getOfiUserIssuedAssets, ofiSetRequestedManageOrder} from "../../ofi-store";
+import * as math from 'mathjs';
 
 /* Types. */
 interface SelectedItem {
@@ -136,7 +137,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = commonHelper.numberRoundUp(metaData.units * fixed.price);
+                metaData.total = math.round(metaData.units * fixed.price, 2);
 
                 fixed.metaData = metaData;
 

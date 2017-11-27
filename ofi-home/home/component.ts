@@ -8,6 +8,7 @@ import {immutableHelper, NumberConverterService, commonHelper} from "@setl/utils
 /* Ofi orders request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 import {ofiSetRequestedHomeOrder} from "../../ofi-store";
+import * as math from 'mathjs';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -67,7 +68,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = commonHelper.numberRoundUp(metaData.units * metaData.price);
+                metaData.total = math.round(metaData.units * metaData.price, 2);
 
                 fixed.metaData = metaData;
 

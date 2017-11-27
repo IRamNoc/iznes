@@ -14,6 +14,7 @@ import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Core store stuff. */
 /* Ofi Store stuff. */
 import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
+import * as math from 'mathjs';
 
 
 /* Types. */
@@ -129,7 +130,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
 
-                metaData.total = commonHelper.numberRoundUp(metaData.units * fixed.price);
+                metaData.total = math.round(metaData.units * fixed.price, 2);
 
                 fixed.metaData = metaData;
 
