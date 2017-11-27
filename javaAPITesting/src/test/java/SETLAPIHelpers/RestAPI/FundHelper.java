@@ -4,7 +4,9 @@ import SETLAPIHelpers.Fund;
 import SETLAPIHelpers.JsonToJava;
 import SETLAPIHelpers.User;
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import src.WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
@@ -16,7 +18,17 @@ import static junit.framework.TestCase.assertTrue;
 public class FundHelper {
 
 
-public static Fund createFundAndCaptureDetails(String localAddress,
+    String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
+    static RestApi<MemberNodeMessageFactory> api;
+
+    @Before
+    public void setup(){
+        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
+    }
+
+
+
+    public static Fund createFundAndCaptureDetails(String localAddress,
                               String fundName,
                               String fundProspectus,
                               String fundReport,
@@ -30,10 +42,9 @@ public static Fund createFundAndCaptureDetails(String localAddress,
                                throws InterruptedException{
   Container<Fund> container = new Container<>();
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newFund(fundName, fundProspectus, fundReport, fundShares, fundLei, sicavId, companyId), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       try {
@@ -60,12 +71,12 @@ public static Fund createFundAndCaptureDetails(String localAddress,
                                throws InterruptedException {
 
 
-    RestApi api = new RestApi(localAddress);
+
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
     //api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("OK".equals(resp.get("Status")));
@@ -85,12 +96,11 @@ public static Fund createFundAndCaptureDetails(String localAddress,
                                throws InterruptedException {
 
 
-    RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
     //api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newUser(account, userName, email, userType, password), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("Fail".equals(resp.get("Status")));
@@ -101,12 +111,11 @@ public static Fund createFundAndCaptureDetails(String localAddress,
 
   public static void deleteUserSuccess(String localAddress, String userID) {
 
-    RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
     //api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteUser(userID), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       String deletedUser = resp.get("userID").toString();
@@ -118,12 +127,11 @@ public static Fund createFundAndCaptureDetails(String localAddress,
 
   public static void deleteUserError(String localAddress, String userID) {
 
-    RestApi api = new RestApi(localAddress);
     //api.start(14, "rL8pvhh/g19nUTUCwfJVXSx4aoUOWW0sZ4Tx8wD4H38=");
     api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
     //api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteUser(userID), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("Fail".equals(resp.get("Status")));

@@ -3,7 +3,9 @@ package SETLAPIHelpers.RestAPI;
 import SETLAPIHelpers.JsonToJava;
 import SETLAPIHelpers.Wallet;
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import src.WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
@@ -15,7 +17,19 @@ import static junit.framework.TestCase.assertTrue;
 public class WalletHelper {
 
 
-public static Wallet createWalletAndCaptureDetails(String localAddress,
+    String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
+    static RestApi<MemberNodeMessageFactory> api;
+
+    @Before
+    public void setup(){
+        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
+    }
+
+
+
+
+
+    public static Wallet createWalletAndCaptureDetails(String localAddress,
                               String account,
                               String walletName,
                               String email,
@@ -27,11 +41,10 @@ public static Wallet createWalletAndCaptureDetails(String localAddress,
                                throws InterruptedException{
   Container<Wallet> container = new Container<>();
 
-    RestApi api = new RestApi(localAddress);
 
   api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newWallet(walletName,
                                          email,
                                         "",
@@ -79,10 +92,9 @@ public static Wallet createWalletAndCaptureDetails(String localAddress,
                                throws InterruptedException {
 
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newWallet(walletName,
                                          email,
                                         "",
@@ -123,10 +135,10 @@ public static Wallet createWalletAndCaptureDetails(String localAddress,
                                throws InterruptedException {
 
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newWallet(walletName,
                                          email,
                                         "",
@@ -158,10 +170,9 @@ public static Wallet createWalletAndCaptureDetails(String localAddress,
 
   public static void deleteWalletSuccess(String localAddress, String walletID, int userId, String apiKey) {
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteWallet(walletID), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       String deletedWallet = resp.get("WalletID").toString();
@@ -173,10 +184,10 @@ public static Wallet createWalletAndCaptureDetails(String localAddress,
 
   public static void deleteWalletError(String localAddress, String walletID, int userId, String apiKey) {
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteWallet(walletID), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("Fail".equals(resp.get("Status")));

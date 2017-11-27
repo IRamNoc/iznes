@@ -1,7 +1,9 @@
 package src.RESTAPITests.Account.List;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -24,14 +26,22 @@ public class listAccountAcceptanceTest {
     String localAddress = "http://localhost:9788/api";
     int userId = 4;
     String apiKey = "gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=";
+    RestApi<MemberNodeMessageFactory> api;
+
+
+    @Before
+    public void setup(){
+        api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+    }
+
 
 
     @Test
     public void listAccounts() throws ExecutionException, InterruptedException {
-        RestApi api = new RestApi(localAddress);
+
         api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
 
-        MessageFactory msfFactory = api.getMessageFactory();
+        MemberNodeMessageFactory msfFactory = api.getMessageFactory();
 
         api.sendMessage(msfFactory.getAccountList(), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
