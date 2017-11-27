@@ -5,13 +5,14 @@ import {SocketClusterWrapper} from '@setl/socketcluster-wrapper';
 export class MemberSocketService {
     private socket: SocketClusterWrapper;
     public accessToken: string;
+    public token: string;
     public disconnectCallback: any;
     public errorCallback: any;
     public connectCallback: any;
     public reconnectCallback: any;
 
     constructor(private hostname: string,
-                private port: string,
+                private port: number,
                 private path: string) {
         this.socket = new SocketClusterWrapper(
             'ws',
