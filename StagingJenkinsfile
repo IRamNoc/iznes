@@ -17,7 +17,7 @@ def notifySlack(String buildStatus = 'STARTED') {
         color = '#FF0000'
     }
     def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
+    slackSend(channel : "staging_deployment", color: color, message: msg)
 }
 
 node {
