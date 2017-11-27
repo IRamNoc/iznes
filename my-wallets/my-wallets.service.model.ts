@@ -44,4 +44,5 @@ export interface UpdateWalletLabelMessageBody extends MemberNodeMessageBody {
     walletId: number;
     option: string;
     label: string;
+    iban: string;
 }

@@ -144,13 +144,15 @@ export class MyWalletsService {
         const walletId = _.get(requestData, 'walletId', 0);
         const option = _.get(requestData, 'option', '');
         const label = _.get(requestData, 'label', '');
+        const iban = _.get(requestData, 'iban', '');
 
         const messageBody: UpdateWalletLabelMessageBody = {
             RequestName: 'updateWalletLabels',
             token: this.memberSocketService.token,
             walletId,
             option,
-            label
+            label,
+            iban
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
