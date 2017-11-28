@@ -6,6 +6,7 @@ export {MyMessagesService} from './my-messages/my-messages.service';
 export {AdminUsersService} from './useradmin/useradmin.service';
 export {ChannelService} from './channel/channel.service';
 export {MyUserService} from './my-user/my-user.service';
+export {MyUserMockService} from './my-user/my-user-mock.service';
 export {AccountsService} from './account/account.service';
 export {PermissionGroupService} from './permission-group/permission-group.service';
 export {MemberService} from './member/service';
