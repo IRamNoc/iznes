@@ -82,10 +82,10 @@ export class SetlLoginComponent implements OnDestroy {
             return false;
         }
 
-        //if the alert popup exists.
+        // if the alert popup exists.
         if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
-            //remove the popup and return false.
-            var elements = document.getElementsByClassName('error');
+            // remove the popup and return false.
+            const elements = document.getElementsByClassName('error');
             if (elements.length > 0) {
                 elements[0].parentNode.removeChild(elements[0]);
             }
@@ -168,7 +168,8 @@ export class SetlLoginComponent implements OnDestroy {
                 break;
             case 'locked':
                 this.showLoginErrorMessage(
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. Please contact Setl support.</span>'
+                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                    'Please contact Setl support.</span>'
                 );
                 break;
             default:
