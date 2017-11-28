@@ -87,13 +87,15 @@ import {environment} from '../environments/environment';
  * Membersocket service factory
  */
 export function memberSocketServiceFactory() {
-    return new MemberSocketService(
+    const memberSocketService = new MemberSocketService();
+    memberSocketService.updateConfig(
         environment.MEMBER_NODE_CONNECTION.host,
         environment.MEMBER_NODE_CONNECTION.port,
         environment.MEMBER_NODE_CONNECTION.path
-    )
-}
+    );
 
+    return memberSocketService;
+}
 
 
 @NgModule({
