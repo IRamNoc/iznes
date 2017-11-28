@@ -570,6 +570,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-paper-plane',
                     element_id: 'menu-asset-servicing-issue-asset',
                     router_link: '/asset-servicing/issue-asset'
+                },
+                {
+                    label: 'Send Asset',
+                    label_txt: 'txt_sendasset',
+                    icon_class: 'fa fa-share-square-o',
+                    element_id: 'menu-asset-servicing-send-asset',
+                    router_link: '/asset-servicing/send-asset'
                 }
             ]
         },
@@ -725,6 +732,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-paper-plane',
                     element_id: 'menu-asset-servicing-issue-asset',
                     router_link: '/asset-servicing/issue-asset'
+                },
+                {
+                    label: 'Send Asset',
+                    label_txt: 'txt_sendasset',
+                    icon_class: 'fa fa-share-square-o',
+                    element_id: 'menu-asset-servicing-send-asset',
+                    router_link: '/asset-servicing/send-asset'
                 }
             ]
         },
@@ -880,6 +894,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-paper-plane',
                     element_id: 'menu-asset-servicing-issue-asset',
                     router_link: '/asset-servicing/issue-asset'
+                },
+                {
+                    label: 'Send Asset',
+                    label_txt: 'txt_sendasset',
+                    icon_class: 'fa fa-share-square-o',
+                    element_id: 'menu-asset-servicing-send-asset',
+                    router_link: '/asset-servicing/send-asset'
                 }
             ]
         },
