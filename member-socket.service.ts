@@ -10,15 +10,35 @@ export class MemberSocketService {
     public errorCallback: any;
     public connectCallback: any;
     public reconnectCallback: any;
+    private hostname = 'localhost';
+    private port = 9788;
+    private path = 'db';
 
-    constructor(private hostname: string,
-                private port: number,
-                private path: string) {
+    constructor() {
+    }
+
+    updateConfig(hostname: string, port: number, path: string) {
+        this.hostname = hostname;
+        this.port = port;
+        this.path = path;
+
+        this.connect();
+    }
+
+    connect() {
+        if (this.socket) {
+            try {
+                this.socket.closeWebSocket();
+            } catch (err) {
+                throw new Error('Warning - Fail to close membernode websocket.');
+            }
+        }
+
         this.socket = new SocketClusterWrapper(
             'ws',
-            hostname,
-            port,
-            path
+            this.hostname,
+            this.port,
+            this.path
         );
 
         this.socket.disconnectCallback = () => {
@@ -40,7 +60,6 @@ export class MemberSocketService {
 
 
         this.socket.openWebSocket();
-
 
     }
 
