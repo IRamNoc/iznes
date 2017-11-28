@@ -4,7 +4,8 @@
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink clrTabLinkId="link1"><i class="fa fa-user"></i> <span mltag="txt_userdetails">User details</span></button>
+        <button clrTabLink clrTabLinkId="link1"><i class="fa fa-user"></i>
+            <span mltag="txt_userdetails">User details</span></button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
                 <form [formGroup]="userDetailsForm" (ngSubmit)="submitDetails(userDetailsForm.value)">
@@ -12,7 +13,7 @@
                         <div class="form-group col-sm-12">
                             <label for="udDisplayName" mltag="txt_displayname">Display name</label>
                             <div>
-                                <input type="text" id="udDisplayName" mltag="txt_displayname" placeholder="Display name" [formControl]="displayName" size="45" style="width:97.5%">
+                                <input type="text" id="udDisplayName" mltag="txt_displayname" placeholder="Display name" [formControl]="displayName" size="45" style="width:97.5%" class="udDisplayName">
                                 <div class="mandatory text-danger"> *</div>
                             </div>
                             <div *ngIf="displayName.hasError('required') && displayName.touched" class="alert alert-danger" mltag="txt_displaynamerequired">Display name is required</div>
@@ -137,15 +138,16 @@
                     </div>
                     <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid" mltag="txt_update">Update</button>
                     <!--<div class="margin-20">-->
-                        <!--<pre>form valid: {{userDetailsForm.valid | json}}</pre>-->
-                        <!--<pre>form values: {{userDetailsForm.value | json}}</pre>-->
+                    <!--<pre>form valid: {{userDetailsForm.valid | json}}</pre>-->
+                    <!--<pre>form values: {{userDetailsForm.value | json}}</pre>-->
                     <!--</div>-->
                 </form>
             </section>
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
-      <button clrTabLink clrTabLinkId="link2"><i class="fa fa-lock"></i> <span mltag="txt_changepassword">Change password</span></button>
+        <button clrTabLink clrTabLinkId="link2"><i class="fa fa-lock"></i>
+            <span mltag="txt_changepassword">Change password</span></button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
                 <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
