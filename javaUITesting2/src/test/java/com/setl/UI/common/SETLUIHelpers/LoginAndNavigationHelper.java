@@ -22,8 +22,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage2(String pageHref) throws InterruptedException {
-      Thread.sleep(1750);
-        System.out.println("//a[@href='#/" + pageHref + "']");
+      Thread.sleep(750);
       try {
         driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']")).click();
       }catch (Error e){

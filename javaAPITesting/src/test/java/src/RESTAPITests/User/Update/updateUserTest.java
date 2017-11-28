@@ -3,11 +3,14 @@ package src.RESTAPITests.User.Update;
 
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.User;
+import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -33,8 +36,15 @@ public class updateUserTest {
   String localAddress = "ws://localhost:9788/db/";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
+  RestApi<MemberNodeMessageFactory> api;
 
-  @Test
+    @Before
+    public void setup(){
+        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
+    }
+
+
+    @Test
   public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
 
     String userDetails[] = generateUserDetails();

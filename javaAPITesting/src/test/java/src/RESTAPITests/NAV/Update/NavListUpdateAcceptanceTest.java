@@ -1,7 +1,10 @@
 package src.RESTAPITests.NAV.Update;
 
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import jnr.x86asm.Mem;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -28,14 +31,21 @@ public class NavListUpdateAcceptanceTest {
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
   int userId = 195;
   String apiKey = "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=";
+  RestApi<MemberNodeMessageFactory> api;
+
+  @Before
+  public void setup(){
+      api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
+  }
+
 
   @Test
   public void failToUpdateNavPriceWhenNavIsFinalised(){
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", "25000", 0, 0), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("Fail".equals(response.get("Status").toString()));
@@ -50,10 +60,9 @@ public class NavListUpdateAcceptanceTest {
     int expectedStatus = 0;
     int expectedTotal = 1;
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200005, 0, 1), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("OK".equals(response.get("Status").toString()));
@@ -72,10 +81,9 @@ public class NavListUpdateAcceptanceTest {
     int expectedStatus = 0;
     int expectedTotal = 1;
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-08", 1200000, 0, 1), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("OK".equals(response.get("Status").toString()));
@@ -94,10 +102,9 @@ public class NavListUpdateAcceptanceTest {
     int expectedStatus = 0;
     int expectedTotal = 1;
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D 1", "2017-07-08", 1200000, 0, 1), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("OK".equals(response.get("Status").toString()));
@@ -131,11 +138,9 @@ public class NavListUpdateAcceptanceTest {
       int force = 0;
 
 
-
-    RestApi api = new RestApi(localAddress);
     api.start(195, "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav(fundName, fundDate, price, priceStatus, force), claim -> {
     Map response = claim.get("data").asList(Map.class).get(0);
     assertTrue("OK".equals(response.get("Status").toString()));
@@ -147,19 +152,17 @@ public class NavListUpdateAcceptanceTest {
   }
 
   private void resetPrice() {
-    RestApi api = new RestApi(localAddress);
-    api.start(userId, apiKey);
+      api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200000, 0, 1), claim -> {
     });
   }
 
   private void resetDate() {
-    RestApi api = new RestApi(localAddress);
-    api.start(17, "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=");
+        api.start(17, "3TNmTB37bn/A836LgdVsNaaY7iwJmqleeeswHBPOGb0=");
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200000, 0, 1), claim -> {
     });
   }

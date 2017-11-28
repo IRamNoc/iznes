@@ -3,7 +3,9 @@ package SETLAPIHelpers.RestAPI;
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.JsonToJava;
 import io.setl.restapi.client.RestApi;
+import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.junit.Before;
 import src.WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
@@ -12,15 +14,26 @@ import java.util.Map;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static junit.framework.TestCase.assertTrue;
 
+
+
 public class AccountHelper {
 
-  public static Account createAccountAndCaptureDetails(String localAddress, String description, String name, String member, int userId, String apiKey) throws InterruptedException {
+    String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
+    static RestApi<MemberNodeMessageFactory> api;
+
+    @Before
+    public void setup(){
+        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
+    }
+
+
+    public static Account createAccountAndCaptureDetails(String localAddress, String description, String name, String member, int userId, String apiKey) throws InterruptedException {
 
       Container<Account> container = new Container<>();
-         RestApi api = new RestApi(localAddress);
-         api.start(userId, apiKey);
 
-        MessageFactory msfFactory = api.getMessageFactory();
+        api.start(userId, apiKey);
+
+        MemberNodeMessageFactory msfFactory = api.getMessageFactory();
         api.sendMessage(msfFactory.newAccount(description, name, member), claim -> {
           Map resp = claim.get("data").asList(Map.class).get(0);
           try {
@@ -36,10 +49,10 @@ public class AccountHelper {
 
   public static void createAccountSuccess(String localAddress, String description, String name, String member, int userId, String apiKey) throws InterruptedException {
 
-    RestApi api = new RestApi(localAddress);
+
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newAccount(description, name, member), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("OK".equals(resp.get("Status")));
@@ -48,10 +61,9 @@ public class AccountHelper {
 
   public static void createAccountFailure(String localAddress, int userId, String apiKey, String description, String name, int member, String expectedError) throws InterruptedException{
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.newAccount(description, name, member), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("Fail".equals(resp.get("Status")));
@@ -65,10 +77,9 @@ public class AccountHelper {
       String memberName = memberDetails[0];
       String email = memberDetails[1];
 
-      RestApi api = new RestApi(localAddress);
       api.start(userId, apiKey);
 
-      MessageFactory msfFactory = api.getMessageFactory();
+      MemberNodeMessageFactory msfFactory = api.getMessageFactory();
       api.sendMessage(msfFactory.newAccount(description, name, member), claim -> {
         Map resp = claim.get("data").asList(Map.class).get(0);
         assertTrue("OK".equals(resp.get("Status")));
@@ -79,10 +90,9 @@ public class AccountHelper {
 
   public static void deleteAccountSuccess(String localAddress, int userId, String apiKey, String memberId) throws InterruptedException {
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteAccount(memberId), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("OK".equals(resp.get("Status")));
@@ -91,10 +101,9 @@ public class AccountHelper {
 
   public static void deleteAccountFailure(String localAddress, int userId, String apiKey, String memberId) throws InterruptedException {
 
-    RestApi api = new RestApi(localAddress);
     api.start(userId, apiKey);
 
-    MessageFactory msfFactory = api.getMessageFactory();
+    MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.deleteAccount(memberId), claim -> {
       Map resp = claim.get("data").asList(Map.class).get(0);
       assertTrue("Fail".equals(resp.get("Status")));
