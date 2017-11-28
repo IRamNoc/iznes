@@ -1,6 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {walletHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
+import {
+    getMyInstrumentsList
+} from '@setl/core-store';
 import {Unsubscribe} from 'redux';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -14,6 +18,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     subscriptionsArry: Array<Subscription> = [];
 
     sendAssetForm: FormGroup;
+
+    walletInstrumentsSelectItems: Array<any>;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -37,7 +43,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     }
 
     updateState() {
-        //
+        const newState = this.ngRedux.getState();
+
+        const walletInstruments = getMyInstrumentsList(newState);
+
+        this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
     }
 
     sendAsset() {

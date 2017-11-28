@@ -8,7 +8,16 @@
     <clr-tab-content *clrIfActive>
       <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
         <section class="form-block">
-          form
+          <div class="form-group col-sm-6">
+            <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
+            <ng-select id="asset"
+                       [items]="walletInstrumentsSelectItems"
+                       [allowClear]="true"
+                       placeholder="Select Issuer Address"
+                       [formControl]="sendAssetForm.controls['asset']"
+            >
+            </ng-select>
+          </div>
         </section>
 
       </form>
