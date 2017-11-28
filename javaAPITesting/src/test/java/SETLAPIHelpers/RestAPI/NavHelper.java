@@ -4,9 +4,8 @@ import SETLAPIHelpers.JsonToJava;
 import SETLAPIHelpers.NavList;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
-import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Before;
-import src.WebSocketAPITests.io.setl.Container;
+import WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
 import java.util.Map;

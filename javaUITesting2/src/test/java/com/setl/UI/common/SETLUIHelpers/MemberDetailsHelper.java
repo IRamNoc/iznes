@@ -18,7 +18,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClick
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
-public class MemberDetailsHelper extends LoginAndNavigationHelper {
+public class MemberDetailsHelper extends com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper {
 
     public static void navigateToAddNewMemberTab() throws InterruptedException {
 

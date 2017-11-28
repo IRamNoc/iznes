@@ -63,6 +63,8 @@ public class OpenCSDFundsAcceptanceTest {
         Navigate to list of funds
         See fund AM created
     */
+
+
     }
     @Test
     public void shouldNotAcceptFundWithQuantityLowerThan0() throws IOException, InterruptedException {

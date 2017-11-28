@@ -7,7 +7,7 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import src.WebSocketAPITests.io.setl.Container;
+import WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
