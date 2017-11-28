@@ -8,6 +8,7 @@
         "build": "ng build",
         "test": "ng test",
         "test-single": "ng test --single-run",
+        "test-coverage": "ng test --code-coverage",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build-prod": "cd src; sass  styles.scss:styles.css; cd ../; node --max_old_space_size=4096 ./node_modules/.bin/ng build --prod",
