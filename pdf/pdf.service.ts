@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
+import {select, NgRedux} from '@angular-redux/store';
+import {SagaHelper} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
-import {select} from '@angular-redux/store';
 import _ from 'lodash';
 
 interface CreatePdfMetadata {
@@ -24,23 +25,31 @@ export class PdfService {
     private token: string =  null;
     private userId: string = null;
     private walletId: string = null;
-    private baseUrl: string = 'http://localhost:9788';
+    private baseUrl: string = null;
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>
+    ) {
+        this.baseUrl = 'http://localhost:9788';
         this.token = this.memberSocketService.token;
-        this.getConnectedWallet.subscribe(
-            (data) => {
-                this.walletId = data;
-            }
-        );
-        this.getUser.subscribe(
-            (data) => {
-                this.userId = data;
-            }
-        );
+        if (this.getConnectedWallet) {
+            this.getConnectedWallet.subscribe(
+                (data) => {
+                    this.walletId = data;
+                }
+            );
+        }
+        if (this.getUser) {
+            this.getUser.subscribe(
+                (data) => {
+                    this.userId = data;
+                }
+            );
+        }
     }
 
     public createPdfMetadata(requestData: CreatePdfMetadata): any {
@@ -56,7 +65,35 @@ export class PdfService {
         }
     }
 
-    public getPdf(requestData: GetPdf): any {
+    /**
+     * Get PDF
+     *
+     * @param pdfID
+     *
+     * @return {Promise}
+     */
+    public getPdf(pdfID: any): any {
+        const asyncTaskPipe = this.getPdfRequest({
+            pdfID: pdfID
+        });
+        return new Promise((resolve, reject) => {
+            this.ngRedux.dispatch(
+                SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        if (data && data[1] && data[1].Data) {
+                            resolve(data[1].Data);
+                        }
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
+
+    public getPdfRequest(requestData: GetPdf): any {
         if (this.walletId) {
             const messageBody: GetPdfMessageBody = {
                 RequestName: 'getpdf',

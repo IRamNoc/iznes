@@ -427,6 +427,8 @@ export class AdminUsersService {
             token: this.memberSocketService.token
         };
 
+        console.log('REQUESTING WALLET NODE LIST');
+
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
