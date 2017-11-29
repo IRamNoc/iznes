@@ -15,7 +15,8 @@ import {ClarityModule} from 'clarity-angular';
         BrowserModule,
         ClarityModule
     ],
-    providers: []
+    providers: [
+    ]
 })
 export class FileViewerModule {
 }
