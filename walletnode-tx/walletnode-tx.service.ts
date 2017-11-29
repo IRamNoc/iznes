@@ -93,8 +93,8 @@ export class WalletnodeTxService {
             walletid: _.get(requestData, 'walletId', 0),
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
-            fromaddress: _.get(requestData, 'fromaddress', ''),
-            toaddress: _.get(requestData, 'toaddress', ''),
+            fromaddress: _.get(requestData, 'fromAddress', ''),
+            toaddress: _.get(requestData, 'toAddress', ''),
             amount: _.get(requestData, 'amount', 0)
         };
         console.log(messageBody);
