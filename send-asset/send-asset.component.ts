@@ -29,7 +29,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
     // Observable subscription array.
-    subscriptionsArry: Array<Subscription> = [];
+    subscriptionsArray: Array<Subscription> = [];
 
     sendAssetForm: FormGroup;
     connectedWalletId: number;
@@ -41,6 +41,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
     @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -48,7 +49,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsServie: MyWalletsService) {
+                private myWalletService: MyWalletsService) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
@@ -65,7 +66,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         // List of observable subscriptions
         this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState));
         this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState));
-        this.subscriptionsArry.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
     }
 
     ngOnInit() {
@@ -107,6 +109,15 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    requestWalletLabel(requestedState) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
+        }
+    }
+
     requestWalletInstruments(requestedInstrumentState) {
 
         if (!requestedInstrumentState) {
@@ -128,15 +139,15 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             // relationship.
             this.ngRedux.dispatch(setRequestedWalletToRelationship());
 
-            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsServie, walletId);
+            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, walletId);
         }
     }
 
     sendAsset() {
         if (this.sendAssetForm.valid) {
             const walletId = this.connectedWalletId;
-            const fromaddress = _.get(this.sendAssetForm.value.sendFrom, '[0].id', '');
-            const toaddress = this.sendAssetForm.value.recipient;
+            const fromAddress = _.get(this.sendAssetForm.value.sendFrom, '[0].id', '');
+            const toAddress = this.sendAssetForm.value.recipient;
             const fullAssetId = _.get(this.sendAssetForm.value.asset, '[0].id', '');
             const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
             const namespace = fullAssetIdSplit.issuer;
@@ -146,12 +157,13 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             // Create a saga pipe.
             const asyncTaskPipe = this.walletnodeTxService.sendAsset({
                 walletId,
-                fromaddress,
-                toaddress,
+                fromAddress,
+                toAddress,
                 namespace,
                 instrument,
                 amount
             });
+
             //
             // this.ngRedux.dispatch(SagaHelper.runAsync(
             //     [ISSUE_ASSET_SUCCESS],
@@ -171,7 +183,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.reduxUnsubscribe();
 
-        for (const subscription of this.subscriptionsArry) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
