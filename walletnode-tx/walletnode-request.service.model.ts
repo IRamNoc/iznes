@@ -27,6 +27,15 @@ export interface IssueAssetMessageBody extends WalletNodeMessageBody {
     amount: number;
 }
 
+export interface SendAssetMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    namespace: string;
+    instrument: string;
+    fromaddress: string;
+    toaddress: string;
+    amount: number;
+}
+
 export interface NewAddressMessageBody extends WalletNodeMessageBody {
     walletid: number;
     register: string;

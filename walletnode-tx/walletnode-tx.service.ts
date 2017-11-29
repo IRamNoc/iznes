@@ -5,6 +5,7 @@ import {
     RegisterIssuerMessageBody,
     RegisterAssetMessageBody,
     IssueAssetMessageBody,
+    SendAssetMessageBody,
     NewAddressMessageBody,
     NewContractMessageBody
 } from './walletnode-request.service.model';
@@ -30,6 +31,15 @@ interface IssueAsset {
     address: string;
     namespace: string;
     instrument: string;
+    amount: number;
+}
+
+interface SendAsset {
+    walletId: number;
+    namespace: string;
+    instrument: string;
+    fromAddress: string;
+    toAddress: string;
     amount: number;
 }
 
@@ -75,6 +85,20 @@ export class WalletnodeTxService {
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    sendAsset(requestData: SendAsset): any {
+        const messageBody: SendAssetMessageBody = {
+            topic: 'asiss',
+            walletid: _.get(requestData, 'walletId', 0),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            fromaddress: _.get(requestData, 'fromaddress', ''),
+            toaddress: _.get(requestData, 'toaddress', ''),
+            amount: _.get(requestData, 'amount', 0)
+        };
+        console.log(messageBody);
+        // return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
     newAddress(requestData: { walletId: number }): any {
