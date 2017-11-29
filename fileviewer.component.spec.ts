@@ -2,28 +2,33 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
 import { MemberSocketService } from '@setl/websocket-service';
 import { ClarityModule } from 'clarity-angular';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { APP_CONFIG } from '@setl/utils';
 import { FileViewerComponent } from './fileviewer.component';
-import { PdfService } from "../core-req-services/pdf/pdf.service";
-import { PdfServiceFixture } from "../test-fixtures/core-req-services/pdf/pdf-service-fixture";
+import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
+import { PdfMockService } from '@setl/core-req-services/pdf/pdf.mock.service';
+import { HttpMock } from '@setl/core-fileviewer/http.mock';
 
 describe('FileViewerComponent', () => {
 
     let component: FileViewerComponent;
     let fixture: ComponentFixture<FileViewerComponent>;
-    let sanitizer: DomSanitizer;
+    const pdfMockService = new PdfMockService('', '');
+    const sanitizer: DomSanitizer = new DomSanitizer();
+    const httpMock: HttpMock = new HttpMock();
 
     beforeEach(() => {
+
         TestBed.configureTestingModule({
-            imports: [ ClarityModule, HttpModule ],
+            imports: [ ClarityModule ],
             declarations: [ FileViewerComponent ],
             providers: [
                 AlertsService,
-                {provide: PdfService, useClass: PdfServiceFixture},
+                { provide: Http, useValue: httpMock },
+                { provide: PdfService, useValue: pdfMockService },
                 { provide: MemberSocketService, useValue: {hostname: '127.0.0.1', port: '9788', path: '/'} },
                 NgRedux,
                 {
@@ -31,7 +36,7 @@ describe('FileViewerComponent', () => {
                     useValue: {
                         MEMBER_NODE_CONNECTION: {
                             host: '127.0.0.1',
-                            port: 9788
+                            port: 443
                         }
                     }
                 }
@@ -39,7 +44,6 @@ describe('FileViewerComponent', () => {
         });
         fixture = TestBed.createComponent(FileViewerComponent);
         component = fixture.componentInstance;
-        sanitizer = new DomSanitizer();
     });
 
     it('should display message given no fileHash or pdfID', () => {
@@ -86,7 +90,7 @@ describe('FileViewerComponent', () => {
         expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.validateUrl)).toBe(expectedValidateUrl);
     });
 
-    it ('should create a valid file download URL given a pdfId', () => {
+    it ('should create a valid file download URL given a pdfId', (done) => {
         component.token = 'token';
         component.userId = 'userId';
         component.walletId = 'walletId';
@@ -95,14 +99,18 @@ describe('FileViewerComponent', () => {
             component.baseUrl +
             '/mn/file?method=retrieve&userId=userId&walletId=walletId&token=token&fileHash=fileHash'
         );
-        component.openFileModal();
-        fixture.detectChanges();
-        console.log('File URL : ', component.fileUrl);
-        spyOn(component, 'getPdf');
-        expect(component.getPdf).toHaveBeenCalled();
-
-        expect(typeof component.fileUrl === 'undefined').toBeFalsy();
-        expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-        expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
+        spyOn(pdfMockService, 'getPdf').and.callThrough();
+        component.openFileModal().then(() => {
+            fixture.detectChanges();
+            expect(pdfMockService.getPdf).toHaveBeenCalled();
+            console.log('File URL: ', component.fileUrl);
+            expect(typeof component.fileUrl === 'undefined').toBeFalsy();
+            expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
+            expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
+            done();
+        },
+            () => {
+                done();
+            });
     });
 });

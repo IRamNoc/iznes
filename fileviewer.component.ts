@@ -25,10 +25,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public fileName: string = null;
     public fileType: string = null;
     public fileModal = false;
-
-    // private appConfig: AppConfig;
-    private baseUrl = '';
-    private validateUrl = '';
+    public baseUrl = '';
+    public validateUrl = '';
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
@@ -84,71 +82,62 @@ export class FileViewerComponent implements OnInit, OnChanges {
         this.fileUrl = null;
     }
 
-    /**
-     * Set URLs
-     *
-     * @return {void}
-     */
     public setUrls() {
-        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            this.baseUrl +
-            '/mn/file?' +
-            'method=retrieve' +
-            '&userId=' + this.userId +
-            '&walletId=' + this.walletId +
-            '&token=' + this.token +
-            '&fileHash=' + this.fileHash
-        );
-        this.validateUrl = this.baseUrl +
-            '/mn/file?' +
-            'method=validate' +
-            '&userId=' + this.userId +
-            '&walletId=' + this.walletId +
-            '&token=' + this.token +
-            '&fileHash=' + this.fileHash;
+        return new Promise((resolve, reject) => {
+            this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+                this.baseUrl +
+                '/mn/file?' +
+                'method=retrieve' +
+                '&userId=' + this.userId +
+                '&walletId=' + this.walletId +
+                '&token=' + this.token +
+                '&fileHash=' + this.fileHash
+            );
+            this.validateUrl = this.baseUrl +
+                '/mn/file?' +
+                'method=validate' +
+                '&userId=' + this.userId +
+                '&walletId=' + this.walletId +
+                '&token=' + this.token +
+                '&fileHash=' + this.fileHash;
+            resolve();
+        });
     }
 
-    /**
-     * Open File Modal
-     *
-     * @return {void}
-     */
     public openFileModal() {
-        if (this.pdfId !== null && this.fileUrl === null) {
-            this.pdfService.getPdf(this.pdfId).then(
-                (fileHash: string) => {
-                    console.log('FileHash returned:', fileHash);
-                    this.fileHash = fileHash;
-                    this.setUrls();
-                    this.openFileModal();
+        return new Promise((resolve, reject) => {
+            this.setUrls().then(() => {
+                this.validateFileExists().then(() => {
+                    resolve();
+                },(error) => {
+                    reject();
+                });
+            });
+        });
+    }
+
+    public validateFileExists() {
+        return new Promise((resolve, reject) => {
+            this.http.get(this.validateUrl).subscribe(
+                (response) => {
+                    const data = response.json();
+                    if (data.error) {
+                        this.fileModal = false;
+                        this.showAlert('Unable to view file', 'error');
+                    } else {
+                        this.fileModal = true;
+                        this.fileName = data.fileName;
+                        this.fileType = data.mimeType;
+                    }
+                    this.changeDetectorRef.markForCheck();
+                    resolve();
                 },
-                (error) => {
-                    console.log('Error occurred');
-                    this.showAlert(error, 'error');
+                err => {
+                    this.showAlert(err, 'error');
+                    reject();
                 }
             );
-        }
-        if (this.fileUrl === null) {
-            return;
-        }
-        this.http.get(this.validateUrl).subscribe(
-            (response) => {
-                const data = response.json();
-                if (data.error) {
-                    this.fileModal = false;
-                    this.showAlert('Unable to view file', 'error');
-                } else {
-                    this.fileModal = true;
-                    this.fileName = data.fileName;
-                    this.fileType = data.mimeType;
-                }
-
-                this.changeDetectorRef.markForCheck();
-            },
-            err => {
-                this.showAlert(err, 'error');
-            }
-        );
+        });
     }
 
     /**
