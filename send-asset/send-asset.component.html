@@ -18,8 +18,23 @@
             >
             </ng-select>
           </div>
-        </section>
 
+          <various-address-select [formControl]="sendAssetForm.controls['recipient']"
+                                  [relationshipArray]="toRelationshipSelectItems"
+                                  [ownWalletAddressArray]="walletAddressSelectItems"
+                                  [class.error]="!sendAssetForm.controls['recipient'].valid &&
+                   sendAssetForm.controls['recipient'].touched"></various-address-select>
+
+          <div class="form-group col-sm-6">
+            <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
+            <input type="text" id="amount" placeholder="Amount" size="45"
+                   [formControl]="sendAssetForm.controls['amount']"
+                   [class.error]="!sendAssetForm.controls['amount'].valid &&
+                   sendAssetForm.controls['amount'].touched" mltag="txt_amount"/>
+          </div>
+
+          <button type="submit" class="btn btn-primary" mltag="txt_sendasset">Send Asset</button>
+        </section>
       </form>
     </clr-tab-content>
   </clr-tab>

@@ -3,7 +3,10 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {walletHelper} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {
-    getMyInstrumentsList
+    getMyInstrumentsList,
+    getWalletToRelationshipList,
+    getWalletDirectoryList,
+    getWalletAddressList
 } from '@setl/core-store';
 import {Unsubscribe} from 'redux';
 import {Subscription} from 'rxjs/Subscription';
@@ -20,6 +23,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     sendAssetForm: FormGroup;
 
     walletInstrumentsSelectItems: Array<any>;
+    toRelationshipSelectItems: Array<any>;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -45,9 +49,16 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     updateState() {
         const newState = this.ngRedux.getState();
 
-        const walletInstruments = getMyInstrumentsList(newState);
+        // Get wallet addresses and update wallet address items list
+        const currentWalletAddressList = getWalletAddressList(newState);
+        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
 
+        const walletInstruments = getMyInstrumentsList(newState);
         this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
+
+        const walletToRelationship = getWalletToRelationshipList(newState);
+        const walletDirectoryList = getWalletDirectoryList(newState);
+        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
     }
 
     sendAsset() {
