@@ -309,12 +309,10 @@ export class SetlMyAccountComponent implements OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    constructor(
-        private alertsService: AlertsService,
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private myUserService: MyUserService
-    ) {
+    constructor(private alertsService: AlertsService,
+                private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private myUserService: MyUserService) {
         ngRedux.subscribe(() => this.updateState());
 
         // changeUserDetails form
@@ -455,11 +453,11 @@ export class SetlMyAccountComponent implements OnDestroy {
         return (oldNew) ? oldNew : mismatch;
     }
 
-    toggleShowPasswords(){
+    toggleShowPasswords() {
         this.showPasswords = (this.showPasswords === false) ? true : false;
     }
 
-    changePass(formValues){
+    changePass(formValues) {
         // console.log(formValues);
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
@@ -505,26 +503,26 @@ export class SetlMyAccountComponent implements OnDestroy {
     }
 
     myUserDetails(userDetails) {
-        if(userDetails.displayName) this.displayName.setValue(userDetails.displayName);
-        if(userDetails.firstName) this.firstName.setValue(userDetails.firstName);
-        if(userDetails.lastName) this.lastName.setValue(userDetails.lastName);
-        if(userDetails.mobilePhone) this.mobilePhone.setValue(userDetails.mobilePhone);
-        if(userDetails.addressPrefix) this.addressPrefix.setValue(userDetails.addressPrefix);
-        if(userDetails.address1) this.address1.setValue(userDetails.address1);
-        if(userDetails.address2) this.address2.setValue(userDetails.address2);
-        if(userDetails.address3) this.address3.setValue(userDetails.address3);
-        if(userDetails.address4) this.address4.setValue(userDetails.address4);
-        if(userDetails.postalCode) this.postalCode.setValue(userDetails.postalCode);
-        if(userDetails.country) {
+        if (userDetails.displayName) this.displayName.setValue(userDetails.displayName);
+        if (userDetails.firstName) this.firstName.setValue(userDetails.firstName);
+        if (userDetails.lastName) this.lastName.setValue(userDetails.lastName);
+        if (userDetails.mobilePhone) this.mobilePhone.setValue(userDetails.mobilePhone);
+        if (userDetails.addressPrefix) this.addressPrefix.setValue(userDetails.addressPrefix);
+        if (userDetails.address1) this.address1.setValue(userDetails.address1);
+        if (userDetails.address2) this.address2.setValue(userDetails.address2);
+        if (userDetails.address3) this.address3.setValue(userDetails.address3);
+        if (userDetails.address4) this.address4.setValue(userDetails.address4);
+        if (userDetails.postalCode) this.postalCode.setValue(userDetails.postalCode);
+        if (userDetails.country) {
             try {
                 this.country.setValue(JSON.parse(userDetails.country));
             } catch (e) {
                 this.country.setValue([]);
             }
         } // array for ng-select
-        if(userDetails.memorableQuestion) this.memorableQuestion.setValue(userDetails.memorableQuestion);
-        if(userDetails.memorableAnswer) this.memorableAnswer.setValue(userDetails.memorableAnswer);
-        if(userDetails.profileText) this.profileText.setValue(userDetails.profileText);
+        if (userDetails.memorableQuestion) this.memorableQuestion.setValue(userDetails.memorableQuestion);
+        if (userDetails.memorableAnswer) this.memorableAnswer.setValue(userDetails.memorableAnswer);
+        if (userDetails.profileText) this.profileText.setValue(userDetails.profileText);
     }
 
     submitDetails(formValues) {

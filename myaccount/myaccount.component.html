@@ -102,7 +102,7 @@
                             <div class="form-group">
                                 <label mltag="txt_country">Country</label>
                             </div>
-                            <div>
+                            <div id="country">
                                 <ng-select [items]="countries" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" [formControl]="country"></ng-select>
                                 <div class="mandatory text-danger"> *</div>
                                 <div *ngIf="country.hasError('required') && country.touched" class="alert alert-danger" mltag="txt_countryrequired">Country is required</div>
