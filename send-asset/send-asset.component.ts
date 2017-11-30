@@ -16,7 +16,9 @@ import {
     getWalletAddressList,
     setRequestedWalletAddresses,
     setRequestedWalletInstrument,
-    setRequestedWalletToRelationship
+    setRequestedWalletToRelationship,
+    SEND_ASSET_SUCCESS,
+    SEND_ASSET_FAIL
 } from '@setl/core-store';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
@@ -85,9 +87,39 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     ngOnInit() { }
 
     sendAsset(): void {
-        console.log("send asset");
+        if (this.sendAssetForm.valid) {
+            const walletId = this.connectedWalletId;
+            const toAddress = this.sendAssetForm.value.recipient;
+            const fullAssetId = _.get(this.sendAssetForm.value.asset, '[0].id', '');
+            const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
+            const fromAddress = _.get(this.sendAssetForm.value.assetAddress, '[0].id', '');
+            const namespace = fullAssetIdSplit.issuer;
+            const instrument = fullAssetIdSplit.instrument;
+            const amount = this.sendAssetForm.value.amount;
 
-        console.log(this.getError());
+            // Create a saga pipe.
+            const asyncTaskPipe = this.walletnodeTxService.sendAsset({
+                walletId,
+                toAddress,
+                fromAddress,
+                namespace,
+                instrument,
+                amount
+            });
+
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SEND_ASSET_SUCCESS],
+                [SEND_ASSET_FAIL],
+                asyncTaskPipe,
+                {},
+                function (data) {
+                    console.log('send asset:', data);
+                },
+                function (data) {
+                    console.log('fail', data);
+                }
+            ));
+        }
     }
 
     updateState(): void {
