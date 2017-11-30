@@ -9,7 +9,7 @@
       <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
         <section class="form-block">
             <div class="form-group col-sm-6">
-                <label class="control-label" for="asset" mltag="txt_asset">Asset to be sent</label>
+                <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
                 <ng-select id="asset"
                     [items]="walletInstrumentsSelectItems"
                     [allowClear]="true"
@@ -20,7 +20,7 @@
             </div>
 
             <div class="form-group col-sm-6">
-                <label class="control-label" for="asset" mltag="txt_asset_send_from">Asset Address</label>
+                <label class="control-label" for="asset" mltag="txt_sendfromaddress">Send From Address</label>
                 <ng-select id="assetAddress"
                     [items]="addressList"
                     [allowClear]="true"
@@ -44,14 +44,13 @@
                     sendAssetForm.controls['amount'].touched" mltag="txt_amount"/>
             </div>
 
-            <button type="submit" class="btn btn-primary" mltag="txt_sendasset">Send Asset</button>
-            
-            <div *ngIf="!sendAssetForm.controls['asset'].valid &&
-          sendAssetForm.controls['asset'].touched" class="alert-items col-sm-5">
+            <button type="submit" class="btn btn-primary" mltag="txt_send_asset">Send Asset</button>
+
+            <div *ngIf="getError()" class="alert-items col-sm-5">
                 <div class="alert alert-danger">
                     <div class="alert-items">
                         <div class="alert-item">
-                            <span class="alert-text" mltag="txt_assetisrequired">Asset is required</span>
+                            <span class="alert-text" mltag="getError().mltag">{{getError().text}}</span>
                         </div>
                     </div>
                 </div>

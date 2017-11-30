@@ -84,6 +84,12 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
     ngOnInit() { }
 
+    sendAsset(): void {
+        console.log("send asset");
+
+        console.log(this.getError());
+    }
+
     updateState(): void {
         const newState = this.ngRedux.getState();
         
@@ -143,9 +149,40 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         return dropdownItems;
     }
 
+    getError(): any {
+        if(this.fieldHasError('asset')) {
+            return {
+                mltag: 'txt_assetisrequired',
+                text: 'Asset is Required'
+            }
+        } else if(this.fieldHasError('assetAddress')) {
+            return {
+                mltag: 'txt_assetisrequired',
+                text: 'Asset Address is Required'
+            }
+        } else if(this.fieldHasError('recipient')) {
+            return {
+                mltag: 'txt_recipientisrequired',
+                text: 'Recipient is Required'
+            }
+        } else if(this.fieldHasError('amount')) {
+            return {
+                mltag: 'txt_amountisrequired',
+                text: 'Amount is Required'
+            }
+        } else {
+            return false;
+        }
+    }
+
+    fieldHasError(field: string): boolean {
+        return !this.sendAssetForm.controls[field].valid &&
+            this.sendAssetForm.controls[field].touched;
+    }
+
     ngOnDestroy() {
         this.reduxUnsubscribe();
-        
+
         for(const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
