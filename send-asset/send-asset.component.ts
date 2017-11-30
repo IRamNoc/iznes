@@ -36,12 +36,13 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     subscriptionsArray: Array<Subscription> = [];
 
     connectedWalletId: number;
-    walletInstrumentsSelectItems: Array<any>;
+    allInstrumentList: Array<any>;
     addressList: any;
     toRelationshipSelectItems: Array<any>;
 
     // Asset
-    @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
+    @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
+    @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
     
     // Asset Address
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -69,14 +70,17 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         });
 
         /* data subscriptions */
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe(requested => this.requestWalletInstrumentLabel(requested)));
+        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
+        this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
+            this.allInstrumentList = this.convertInstrumentItemsForDropdown(instrumentList);
+        }));
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
 
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
-            this.addressList = this.convertItemsForDropdown(addressList);
+            this.addressList = this.convertAddressItemsForDropdown(addressList);
         }));
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
@@ -128,8 +132,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         // Set connected WalletId
         this.connectedWalletId = getConnectedWallet(newState);
 
-        const walletInstruments = getMyInstrumentsList(newState);        
-        this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
+        // const walletInstruments = getMyInstrumentsList(newState);        
+        // this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
 
         const walletToRelationship = getWalletToRelationshipList(newState);
         const walletDirectoryList = getWalletDirectoryList(newState);
@@ -137,14 +141,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
     }
 
-    requestWalletInstrumentLabel(requested: boolean): void {
+    requestAllInstrument(requested: boolean): void {
         if (!requested) {
-            const walletId = this.connectedWalletId;
-
-            // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
-            this.ngRedux.dispatch(setRequestedWalletInstrument());
-
-            InitialisationService.requestWalletInstruments(this.ngRedux, this.walletNodeRequestService, walletId);
+            // request all instruments
+            InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
         }
     }
 
@@ -166,7 +166,22 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         }
     }
 
-    convertItemsForDropdown(items: any[]): any[] {
+    convertInstrumentItemsForDropdown(items: any[]): any[] {
+        const dropdownItems = [];
+
+        _.forEach(items, item => {
+            const id = `${item.issuer}|${item.instrument}`;
+
+            dropdownItems.push({
+                id,
+                text: id
+            });
+        });
+        
+        return dropdownItems;
+    }
+
+    convertAddressItemsForDropdown(items: any[]): any[] {
         const dropdownItems = [];
 
         _.forEach(items, item => {

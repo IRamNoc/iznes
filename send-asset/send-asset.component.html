@@ -11,7 +11,7 @@
             <div class="form-group col-sm-6">
                 <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
                 <ng-select id="asset"
-                    [items]="walletInstrumentsSelectItems"
+                    [items]="allInstrumentList"
                     [allowClear]="true"
                     placeholder="Select Issuer"
                     [formControl]="sendAssetForm.controls['asset']"
