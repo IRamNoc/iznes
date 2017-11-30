@@ -10,16 +10,14 @@ import {
 } from '@setl/core-req-services';
 import {
     getConnectedWallet,
-    getMyInstrumentsList,
     getWalletToRelationshipList,
     getWalletDirectoryList,
-    getWalletAddressList,
     setRequestedWalletAddresses,
-    setRequestedWalletInstrument,
-    setRequestedWalletToRelationship,
     SEND_ASSET_SUCCESS,
-    SEND_ASSET_FAIL
+    SEND_ASSET_FAIL,
+    finishSendAssetNotification
 } from '@setl/core-store';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
@@ -50,10 +48,14 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
+    // Send Asset
+    @select(['asset', 'myInstruments', 'newSendAssetRequest']) newSendAssetRequest;
+
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
+                private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletService: MyWalletsService) {
@@ -86,6 +88,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+
+        this.subscriptionsArray.push(this.newSendAssetRequest.subscribe(newSendAssetRequest => this.showResponseModal(newSendAssetRequest)));
     }
 
     ngOnInit() { }
@@ -116,14 +120,62 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 [SEND_ASSET_FAIL],
                 asyncTaskPipe,
                 {},
-                function (data) {
+                (data) => {
                     console.log('send asset:', data);
                 },
-                function (data) {
+                (data) => {
                     console.log('fail', data);
+
+                    this.showErrorModal(data);
                 }
             ));
         }
+    }
+
+    showResponseModal(sendAssetResponse) {
+        if (sendAssetResponse.needNotify) {
+            this.alertsService.create('success', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="left"><b>Issuer:</b></td>
+                            <td>${sendAssetResponse.issuerIdentifier}</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Instrument:</b></td>
+                            <td>${sendAssetResponse.instrument}</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Issuer Address:</b></td>
+                            <td>${sendAssetResponse.issuerAddress}</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>To Address:</b></td>
+                            <td>${sendAssetResponse.toAddress}</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Amount</b></td>
+                            <td>${sendAssetResponse.amount}</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Tx hash:</b></td>
+                            <td>${sendAssetResponse.txHash.substring(0, 10)}...</td>
+                        </tr>
+                        <tr>
+                            <td class="left"><b>Tx hash:</b></td>
+                            <td>${sendAssetResponse.needNotify}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `);
+
+            this.ngRedux.dispatch(finishSendAssetNotification());
+        }      
+    }
+
+    showErrorModal(data): void {
+        this.alertsService.create('error',
+            `${data[1].status}`);
     }
 
     updateState(): void {
@@ -131,9 +183,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         
         // Set connected WalletId
         this.connectedWalletId = getConnectedWallet(newState);
-
-        // const walletInstruments = getMyInstrumentsList(newState);        
-        // this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
 
         const walletToRelationship = getWalletToRelationshipList(newState);
         const walletDirectoryList = getWalletDirectoryList(newState);
@@ -167,6 +216,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     }
 
     convertInstrumentItemsForDropdown(items: any[]): any[] {
+        // Creates an array of data suitable for ng-select
         const dropdownItems = [];
 
         _.forEach(items, item => {
@@ -182,11 +232,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     }
 
     convertAddressItemsForDropdown(items: any[]): any[] {
+        // Creates an array of data suitable for ng-select
         const dropdownItems = [];
 
         _.forEach(items, item => {
-            console.log(item);
-
             dropdownItems.push({
                 id: item.addr,
                 text: (item.label) ? item.label : item.addr
