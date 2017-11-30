@@ -89,7 +89,7 @@ export class WalletnodeTxService {
 
     sendAsset(requestData: SendAsset): any {
         const messageBody: SendAssetMessageBody = {
-            topic: 'asiss',
+            topic: 'astra',
             walletid: _.get(requestData, 'walletId', 0),
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
@@ -97,7 +97,7 @@ export class WalletnodeTxService {
             toaddress: _.get(requestData, 'toAddress', ''),
             amount: _.get(requestData, 'amount', 0)
         };
-        
+
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
