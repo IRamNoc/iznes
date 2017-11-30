@@ -442,6 +442,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
     }
 
     handleUpdateNav(status) {
+        this.closeEdit();
         const priceParse = this._moneyValuePipe.parse(this.navFormPrice.value);
         const dateParseNum = mDateHelper.dateStrToUnixTimestamp(this.navFormDate, 'DD/MM/YYYY');
         const dateParse = mDateHelper.unixTimestampToDateStr(dateParseNum, 'YYYY-MM-DD');
@@ -455,6 +456,7 @@ export class OfiManageOfiNavComponent implements OnInit, OnDestroy {
                 if (isConfirm) {
                     this.sendUpdateNav(this.navFormFundName, dateParse, priceParse, status);
                 } else {
+                    this.showEdit(this.navFormFundName, this.navFormPrice.value, this.navFormDate);
                     return false;
                 }
             });
