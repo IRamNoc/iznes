@@ -312,13 +312,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             if (response[1].Data[0]) {
                 updatedWallet = response[1].Data[0];
             }
-            if (typeof updatedWallet === 'object') {
-                _.each(this.walletList, wallet => {
-                    if (wallet.walletId === updatedWallet.walletID) {
-                        wallet.walletLocked = updatedWallet.walletLocked;
-                    }
-                });
-            }
+            // TODO Update Wallet Locked status
             /* Handle Success. */
             this.showSuccess('Successfully updated this wallet.');
         }).catch((error) => {
