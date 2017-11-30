@@ -3,6 +3,7 @@ import {Component, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionS
 import {JsonPipe} from '@angular/common';
 import {FormsModule, FormGroup, FormControl, NgModel, Validators} from '@angular/forms';
 import {OnDestroy} from '@angular/core';
+import _ from 'lodash';
 
 /* Redux. */
 import {select, NgRedux} from '@angular-redux/store';
@@ -311,11 +312,13 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             if (response[1].Data[0]) {
                 updatedWallet = response[1].Data[0];
             }
-            _.each(this.walletList, function (wallet) {
-               if (wallet.walletId === updatedWallet.walletID) {
-                   wallet.walletLocked = updatedWallet.walletLocked;
-               }
-            });
+            if (typeof updatedWallet === 'object') {
+                _.each(this.walletList, wallet => {
+                    if (wallet.walletId === updatedWallet.walletID) {
+                        wallet.walletLocked = updatedWallet.walletLocked;
+                    }
+                });
+            }
             /* Handle Success. */
             this.showSuccess('Successfully updated this wallet.');
         }).catch((error) => {
