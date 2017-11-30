@@ -823,8 +823,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let tabsArray = [
             {
                 "title": {
-                    "icon": "fa-search",
-                    "text": "Search"
+                    "icon": "",
+                    "text": "List"
                 },
                 "orderId": -1,
                 "searchForm": this.newSearchFormGroup(),

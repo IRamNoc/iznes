@@ -643,8 +643,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return [
             {
                 "title": {
-                    "icon": "fa-search",
-                    "text": "Search"
+                    "icon": "",
+                    "text": "List"
                 },
                 "orderId": -1,
                 "searchForm": this.newSearchFormGroup(),
