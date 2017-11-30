@@ -8,47 +8,46 @@
     <clr-tab-content *clrIfActive>
       <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
         <section class="form-block">
-          <div class="form-group col-sm-6">
-            <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
-            <ng-select id="asset"
-                       [items]="walletInstrumentsSelectItems"
-                       [allowClear]="true"
-                       placeholder="Select Issuer"
-                       [formControl]="sendAssetForm.controls['asset']"
-            >
-            </ng-select>
-          </div>
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="asset" mltag="txt_asset">Asset to be sent</label>
+                <ng-select id="asset"
+                    [items]="walletInstrumentsSelectItems"
+                    [allowClear]="true"
+                    placeholder="Select Issuer"
+                    [formControl]="sendAssetForm.controls['asset']"
+                >
+                </ng-select>
+            </div>
 
-          <div class="form-group col-sm-6">
-            <label class="control-label" for="asset" mltag="txt_asset_send_from">Send from Address</label>
-            <ng-select id="assetAddress"
-                       [items]="walletAddressSelectItems"
-                       [allowClear]="true"
-                       placeholder="Select Address"
-                       [formControl]="sendAssetForm.controls['sendFrom']"
-            >
-            </ng-select>
-          </div>
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="asset" mltag="txt_asset_send_from">Asset Address</label>
+                <ng-select id="assetAddress"
+                    [items]="addressList"
+                    [allowClear]="true"
+                    placeholder="Asset Address"
+                    [formControl]="sendAssetForm.controls['assetAddress']"
+                >
+                </ng-select>
+            </div>
 
-          <various-address-select [formControl]="sendAssetForm.controls['recipient']"
-                                  [relationshipArray]="toRelationshipSelectItems"
-                                  [ownWalletAddressArray]="walletAddressSelectItems"
-                                  [class.error]="!sendAssetForm.controls['recipient'].valid &&
-                   sendAssetForm.controls['recipient'].touched"></various-address-select>
+            <various-address-select [formControl]="sendAssetForm.controls['recipient']"
+                [relationshipArray]="toRelationshipSelectItems"
+                [ownWalletAddressArray]="addressList"
+                [class.error]="!sendAssetForm.controls['recipient'].valid &&
+                sendAssetForm.controls['recipient'].touched"></various-address-select>
 
-          <div class="form-group col-sm-6">
-            <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
-            <input type="text" id="amount" placeholder="Amount" size="45"
-                   [formControl]="sendAssetForm.controls['amount']"
-                   [class.error]="!sendAssetForm.controls['amount'].valid &&
-                   sendAssetForm.controls['amount'].touched" mltag="txt_amount"/>
-          </div>
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
+                <input type="text" id="amount" placeholder="Amount" size="45"
+                    [formControl]="sendAssetForm.controls['amount']"
+                    [class.error]="!sendAssetForm.controls['amount'].valid &&
+                    sendAssetForm.controls['amount'].touched" mltag="txt_amount"/>
+            </div>
 
-          <button type="submit" class="btn btn-primary" mltag="txt_sendasset">Send Asset</button>
-
+            <button type="submit" class="btn btn-primary" mltag="txt_sendasset">Send Asset</button>
+            
             <div *ngIf="!sendAssetForm.controls['asset'].valid &&
           sendAssetForm.controls['asset'].touched" class="alert-items col-sm-5">
-
                 <div class="alert alert-danger">
                     <div class="alert-items">
                         <div class="alert-item">
@@ -56,46 +55,6 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div *ngIf="!sendAssetForm.controls['sendFrom'].valid &&
-          sendAssetForm.controls['sendFrom'].touched" class="alert-items col-sm-5">
-
-                <div class="alert alert-danger">
-                    <div class="alert-items">
-                        <div class="alert-item">
-                            <span class="alert-text" mltag="txt_assetisrequired">Send From is required</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div *ngIf="!sendAssetForm.controls['recipient'].valid &&
-           sendAssetForm.controls['recipient'].touched" class="alert-items col-sm-5">
-
-                <div class="alert alert-danger">
-                    <div class="alert-items">
-                        <div class="alert-item">
-                            <span class="alert-text" mltag="txt_recipientisrequired">Recipient is required</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div *ngIf="!sendAssetForm.controls['amount'].valid &&
-           sendAssetForm.controls['amount'].touched" class="alert-items col-sm-5">
-
-                <div class="alert alert-danger">
-                    <div class="alert-items">
-                        <div class="alert-item">
-                            <span class="alert-text" mltag="txt_amountisrequired">Amount is required</span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
       </form>
