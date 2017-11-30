@@ -25,13 +25,11 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 // Then we find all the tests.
-const filterRegExp = new RegExp('/setl|ofi|setl_modules/', 'g');
 const context = require.context('../', true, /\.spec\.ts$/);
 const setlFiles = context.keys().filter(path => new RegExp('@setl', 'g').test(path));
 const ofiFiles = context.keys().filter(path => new RegExp('@setl', 'g').test(path));
 const setlModuleFiles = context.keys().filter(path => new RegExp('setl_modules', 'g').test(path));
 const specFiles = setlFiles.concat(ofiFiles.concat(setlModuleFiles));
-console.log(specFiles);
 // and load the modules.
 specFiles.map(context);
 // Finally, start Karma to run the tests.
