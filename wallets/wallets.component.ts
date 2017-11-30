@@ -223,7 +223,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
      * ----------------
      * Handles saving an edited wallet.
      *
-     * @param {tabid} number - The formcontrol obbject that relates
+     * @param {number} tabid The formcontrol object that relates
      * to this edit form tab.
      * @return {void}
      */
@@ -245,7 +245,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         editWalletData.walletName = formData.walletName;
         editWalletData.walletAccount = formData.walletAccount[0].id;
         editWalletData.walletType = formData.walletType[0].id;
-        editWalletData.walletLocked = formData.walletLocked ? "0" : "1"; // inverted for the ui, so switch back.
+        editWalletData.walletLocked = formData.walletLocked ? 1 : 0; // inverted for the ui, so switch back.
 
         /* Add other fields depending on walletType. */
         if ( editWalletData.walletType == "1" ) {
@@ -305,15 +305,24 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             editWalletData.bdAddrPostcode = formData.bdAddrPostcode;
         }
 
-        /* Send the pdate request. */
+        /* Send the Update request. */
         this.userAdminService.updateWallet(editWalletData).then((response) => {
+            let updatedWallet = '';
+            if (response[1].Data[0]) {
+                updatedWallet = response[1].Data[0];
+            }
+            _.each(this.walletList, function (wallet) {
+               if (wallet.walletId === updatedWallet.walletID) {
+                   wallet.walletLocked = updatedWallet.walletLocked;
+               }
+            });
             /* Handle Success. */
             this.showSuccess('Successfully updated this wallet.');
         }).catch((error) => {
             /* Handle error. */
             this.showError('Failed to update this wallet.');
-            console.warn(error)
-        })
+            console.warn(error);
+        });
 
         /* Return */
         return;
@@ -379,7 +388,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 }).catch((error) => {
                     /* Handle error message. */
                     this.showError('Failed to delete wallet.');
-                    console.warn(error)
+                    console.warn(error);
                 });
             }
         });
@@ -434,7 +443,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         /* Now let's patch the core values. */
         thisTab.formControl.controls['walletName'].patchValue(wallet.walletName);
         thisTab.formControl.controls['walletAccount'].patchValue(walletAccount);
-        thisTab.formControl.controls['walletLocked'].patchValue(wallet.walletLocked == 1 ? false : true); // invert for the ui.
+        thisTab.formControl.controls['walletLocked'].patchValue(wallet.walletLocked === 0 ? false : true);
         thisTab.formControl.controls['walletType'].patchValue(walletType);
 
         /* Then figure out what type we are... then patch the values needed for the forms shown.
