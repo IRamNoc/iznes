@@ -97,8 +97,8 @@ export class WalletnodeTxService {
             toaddress: _.get(requestData, 'toAddress', ''),
             amount: _.get(requestData, 'amount', 0)
         };
-        console.log(messageBody);
-        // return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+        
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
     newAddress(requestData: { walletId: number }): any {
