@@ -29,4 +29,7 @@ export const getNewIssueAssetRequest = createSelector(
     (state: MyInstrumentsState) => state.newIssueAssetRequest
 );
 
-
+export const getNewSendAssetRequest = createSelector(
+    getMyInstruments,
+    (state: MyInstrumentsState) => state.newSendAssetRequest
+);

@@ -104,9 +104,10 @@ export {
     SET_MY_INSTRUMENTS_LIST,
     ISSUE_ASSET_SUCCESS,
     ISSUE_ASSET_FAIL,
+    finishIssueAssetNotification,
     SEND_ASSET_SUCCESS,
     SEND_ASSET_FAIL,
-    finishIssueAssetNotification,
+    finishSendAssetNotification,
 
     SET_ALL_INSTRUMENTS_LIST,
     setRequesteAllInstruments,
@@ -120,7 +121,8 @@ export {
     getNewInstrumentRequest,
     getRequestedInstrumentState,
     getMyInstrumentsList,
-    getNewIssueAssetRequest
+    getNewIssueAssetRequest,
+    getNewSendAssetRequest
 } from './assets';
 
 export {
