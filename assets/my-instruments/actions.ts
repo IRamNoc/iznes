@@ -49,6 +49,16 @@ export const ISSUE_ASSET_SUCCESS = `${name}/ISSUE_ASSET_SUCCESS`;
 export const ISSUE_ASSET_FAIL = `${name}/ISSUE_ASSET_FAIL`;
 
 /**
+ * Send new asset success
+ */
+export const SEND_ASSET_SUCCESS = `${name}/SEND_ASSET_SUCCESS`;
+
+/**
+ * Send new asset fail.
+ */
+export const SEND_ASSET_FAIL = `${name}/SEND_ASSET_FAIL`;
+
+/**
  * Finish issuer new Asset notification
  */
 export const FINISH_ISSUE_ASSET_NOTIFICATION = `${name}/FINISH_ISSUE_ASSET_NOTIFICATION`;

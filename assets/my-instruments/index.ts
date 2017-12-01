@@ -9,6 +9,8 @@ export {
     SET_MY_INSTRUMENTS_LIST,
     ISSUE_ASSET_SUCCESS,
     ISSUE_ASSET_FAIL,
+    SEND_ASSET_SUCCESS,
+    SEND_ASSET_FAIL,
     finishIssueAssetNotification
 } from './actions';
 export {

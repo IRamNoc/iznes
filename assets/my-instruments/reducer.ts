@@ -37,7 +37,9 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
     let instrumentListRawData;
     let instrumentList;
     let issueAssetRawData;
+    let sendAssetRawData;
     let newIssueAssetRequest;
+    let newSendAssetRequest;
 
     switch (action.type) {
         case MyInstrumentActions.REGISTER_ASSET_SUCCESS:
@@ -117,6 +119,44 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
             return newState;
 
         case MyInstrumentActions.ISSUE_ASSET_FAIL:
+            newIssueAssetRequest = {
+                issuerIdentifier: '',
+                issuerAddress: '',
+                instrument: '',
+                toAddress: '',
+                amount: 0,
+                txHash: '',
+                status: false,
+                needNotify: false
+            };
+
+            newState = Object.assign({}, state, {
+                newIssueAssetRequest
+            });
+
+            return newState;
+
+        case MyInstrumentActions.SEND_ASSET_SUCCESS:
+            sendAssetRawData = _.get(action, 'payload[1]data', []);
+
+            newSendAssetRequest = {
+                issuerIdentifier: _.get(sendAssetRawData, 'namespace', ''),
+                issuerAddress: _.get(sendAssetRawData, 'fromaddr', ''),
+                instrument: _.get(sendAssetRawData, 'classid', ''),
+                toAddress: _.get(sendAssetRawData, 'toaddr', ''),
+                amount: _.get(sendAssetRawData, 'amount', ''),
+                txHash: _.get(sendAssetRawData, 'hash', ''),
+                status: true,
+                needNotify: true
+            };
+
+            newState = Object.assign({}, state, {
+                newSendAssetRequest
+            });
+
+            return newState;
+
+        case MyInstrumentActions.SEND_ASSET_FAIL:
             newIssueAssetRequest = {
                 issuerIdentifier: '',
                 issuerAddress: '',
