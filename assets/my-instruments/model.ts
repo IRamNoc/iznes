@@ -24,6 +24,17 @@ export interface NewIssueAssetRequest {
     needNotify: boolean;
 }
 
+export interface NewSendAssetRequest {
+    issuerIdentifier: string;
+    issuerAddress: string;
+    instrument: string;
+    toAddress: string;
+    amount: number;
+    txHash: string;
+    status: boolean;
+    needNotify: boolean;
+}
+
 export interface MyInstrumentsState {
     instrumentList: {
         [key: string]: InstrumentDetail
@@ -31,5 +42,6 @@ export interface MyInstrumentsState {
     requestedWalletInstrument: boolean;
     newInstrumentRequest: NewInstrumentRequest;
     newIssueAssetRequest: NewIssueAssetRequest;
+    newSendAssetRequest: NewSendAssetRequest;
 }
 

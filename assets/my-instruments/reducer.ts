@@ -24,6 +24,16 @@ const initialState: MyInstrumentsState = {
         txHash: '',
         status: false,
         needNotify: false
+    },
+    newSendAssetRequest: {
+        issuerIdentifier: '',
+        issuerAddress: '',
+        instrument: '',
+        toAddress: '',
+        amount: 0,
+        txHash: '',
+        status: false,
+        needNotify: false
     }
 };
 
@@ -183,6 +193,18 @@ export const MyInstrumentsReducer = function (state: MyInstrumentsState = initia
             });
             newState = Object.assign({}, state, {
                 newIssueAssetRequest
+            });
+
+            return newState;
+
+        case MyInstrumentActions.FINISH_SEND_ASSET_NOTIFICATION:
+            needNotify = false;
+
+            newSendAssetRequest = Object.assign({}, state.newSendAssetRequest, {
+                needNotify
+            });
+            newState = Object.assign({}, state, {
+                newSendAssetRequest
             });
 
             return newState;
