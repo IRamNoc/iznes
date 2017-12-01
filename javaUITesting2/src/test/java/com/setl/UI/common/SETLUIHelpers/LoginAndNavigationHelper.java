@@ -32,8 +32,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage(String pageHref) throws InterruptedException {
-        Thread.sleep(1750);
-        System.out.println("//a[@href='#/" + pageHref + "']");
+        Thread.sleep(750);
         try {
             driver.findElement(By.id("menu-" + pageHref)).click();
         }catch (Error e){
