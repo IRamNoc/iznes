@@ -69,7 +69,7 @@ export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
         this.tabsControl = [
             {
                 title: {
-                    icon: '',
+                    icon: 'fa fa-th-list',
                     text: 'List',
                     colorClass: ''
                 },

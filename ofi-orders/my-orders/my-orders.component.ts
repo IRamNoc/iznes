@@ -643,7 +643,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return [
             {
                 "title": {
-                    "icon": "",
+                    "icon": "fa fa-th-list",
                     "text": "List"
                 },
                 "orderId": -1,

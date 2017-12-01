@@ -760,7 +760,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         return [
             {
                 "title": {
-                    "icon": "",
+                    "icon": "fa fa-th-list",
                     "text": "List"
                 },
                 "couponId": -1,

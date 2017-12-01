@@ -122,7 +122,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
         this.tabsControl = [
             {
                 title: {
-                    icon: '',
+                    icon: 'fa fa-th-list',
                     text: 'List',
                     colorClass: ''
                 },

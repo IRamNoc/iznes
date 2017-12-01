@@ -50,7 +50,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.tabsControl = [
             {
                 title: {
-                    icon: '',
+                    icon: 'fa fa-th-list',
                     text: 'List'
                 },
                 fundShareId: -1,

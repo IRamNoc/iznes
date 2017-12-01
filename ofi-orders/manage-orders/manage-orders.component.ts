@@ -823,7 +823,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let tabsArray = [
             {
                 "title": {
-                    "icon": "",
+                    "icon": "fa fa-th-list",
                     "text": "List"
                 },
                 "orderId": -1,
