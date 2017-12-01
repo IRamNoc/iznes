@@ -13,6 +13,8 @@ import {Router} from '@angular/router';
 import {AlertsService} from './alerts.service';
 import {AlertSettings} from './interfaces/alert-settings';
 import {AlertComponent} from './alert.component';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'jaspero-alerts',
@@ -43,6 +45,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     private _latestSub: any;
     private _listener: any;
     private _updateViewListener: any;
+    private _routerOb: Subscription<any>;
 
     ngOnInit() {
 
@@ -79,9 +82,11 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
             this._latestSub = component.instance.close.subscribe((res: any) => {
                 this._service.alert$.next(res);
+
+                this._routerOb.unsubscribe();
             });
 
-            this._router.events.subscribe(() => {
+            this._routerOb = this._router.events.subscribe(() => {
                 this._current.instance.closeSelf();
             });
         });
