@@ -1,10 +1,10 @@
 <div class="header-breadcrumbs">
-  <h1><i class="fa fa-users"></i> <span mltag="txt_issueasset">Send Asset</span></h1>
+  <h1><i class="fa fa-users"></i> <span mltag="txt_sendasset">Send Asset</span></h1>
 </div>
 
 <clr-tabs>
   <clr-tab>
-    <button clrTabLink mltag="txt_issueassetform">Send Asset Form</button>
+    <button clrTabLink mltag="txt_sendassetform">Send Asset Form</button>
     <clr-tab-content *clrIfActive>
       <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
         <section class="form-block">
