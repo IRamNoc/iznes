@@ -27,12 +27,12 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests.
 // const context = require.context('../', true, /\.spec\.ts$/);
 const setlContext = require.context('../node_modules/@setl/', true, /\.spec\.ts$/);
-const ofiContext = require.context('../node_modules/@ofi/', true, /\.spec\.ts$/);
-const setlModuleContext = require.context('../setl_modules/', true, /\.spec\.ts$/);
-// and load the modules.
 setlContext.keys().map(setlContext);
+const ofiContext = require.context('../node_modules/@ofi/', true, /\.spec\.ts$/);
 ofiContext.keys().map(ofiContext);
-setlModuleContext.keys().map(setlModuleContext);
+// const setlModuleContext = require.context('../setl_modules/', true, /\.spec\.ts$/);
+// setlModuleContext.keys().map(setlModuleContext);
+
 // Finally, start Karma to run the tests.
 __karma__.start();
 
