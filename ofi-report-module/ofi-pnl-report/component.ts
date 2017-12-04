@@ -101,8 +101,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         this.tabsControl = [
             {
                 title: {
-                    icon: 'fa-search',
-                    text: 'Search',
+                    icon: 'fa fa-th-list',
+                    text: 'List',
                     colorClass: ''
                 },
                 active: true
