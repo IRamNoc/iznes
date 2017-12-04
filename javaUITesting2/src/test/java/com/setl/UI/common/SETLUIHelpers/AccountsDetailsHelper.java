@@ -2,6 +2,7 @@ package com.setl.UI.common.SETLUIHelpers;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -349,4 +350,20 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
   public static void myAccountClearField(String field){
     driver.findElement(By.id("ud" + field)).clear();
   }
+
+    static void scrollElementIntoViewById(String elementId){
+        WebElement element = driver.findElement(By.id(elementId));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
+    public static void scrollElementIntoViewByXpath(String xpath){
+        WebElement element = driver.findElement(By.xpath(xpath));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
+    public static void scrollElementIntoViewByCss(String css){
+        WebElement element = driver.findElement(By.cssSelector(css));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
 }
