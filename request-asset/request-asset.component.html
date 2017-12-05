@@ -1,0 +1,16 @@
+<div class="header-breadcrumbs">
+  <h1><i class="fa fa-users"></i> <span mltag="txt_requestasset">Request Asset</span></h1>
+</div>
+
+<clr-tabs>
+  <clr-tab>
+    <button clrTabLink mltag="txt_requestassetform">Request Asset Form</button>
+    <clr-tab-content *clrIfActive>
+      <form [formGroup]="requestAssetForm" (ngSubmit)="requestAsset()">
+        <section class="form-block">
+            Form
+        </section>
+      </form>
+    </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
