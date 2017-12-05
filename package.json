@@ -48,7 +48,7 @@
         "@setl/permission-grid": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git",
         "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git",
         "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git",
-        "@webcomponents/custom-elements": "1.0.0-alpha.3",
+        "@webcomponents/custom-elements": "^1.0.0",
         "angular2-toaster": "^4.0.1",
         "clarity-angular": "0.10.7",
         "clarity-icons": "^0.10.1",
