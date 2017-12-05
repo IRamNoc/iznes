@@ -33,7 +33,7 @@ public class updateUserTest {
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-  String localAddress = "ws://localhost:9788/db/";
+  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
   RestApi<MemberNodeMessageFactory> api;
