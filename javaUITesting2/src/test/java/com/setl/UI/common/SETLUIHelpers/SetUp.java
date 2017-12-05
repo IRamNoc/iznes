@@ -124,7 +124,7 @@ public class SetUp {
     private static WebDriver getDriver() {
         String OS = System.getProperty("os.name");
         System.out.println(OS);
-        if (OS.contains("Mac")) {
+        if (OS.contains("MAC")) {
 
             SafariOptions options = new SafariOptions();
             options.setUseCleanSession(true);
