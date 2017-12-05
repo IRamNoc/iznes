@@ -1,6 +1,5 @@
 package com.setl.workflows;
 
-import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -10,7 +9,6 @@ import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import java.util.concurrent.ExecutionException;
@@ -44,10 +42,4 @@ public class CreateUser {
 
         connection.disconnect();
     }
-
-
 }
-
-
-
-
