@@ -174,7 +174,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
   }
-    @Ignore
+  @Ignore
   @Test
   public void shouldEditMemorableAnswer() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -222,4 +222,4 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
   }
-  }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="src.WebSocketAPITests.Account.Creation.createAccountTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2017-11-28T12:12:06" hostname="Bills-iMac.local" time="0.704">
+  <properties/>
+  <testcase name="createAccountWithValidDataTest" classname="src.WebSocketAPITests.Account.Creation.createAccountTest" time="0.238"/>
+  <testcase name="failToCreateAccountWithIncorrectAccountID" classname="src.WebSocketAPITests.Account.Creation.createAccountTest" time="0.229"/>
+  <testcase name="failToCreateDuplicateAccount" classname="src.WebSocketAPITests.Account.Creation.createAccountTest" time="0.237"/>
+  <system-out><![CDATA[Sending message :153 bytes
+message : {"RequestID":1001,"Version":2,"Request":"startRequest","Data":"4adec97b5ec8508adb28fbe3fdba3ac2273281dc32d23a842c2b1aff13de5529","MessageType":"Response"}
+res::ed6de7fdaef107075bb1881c6e56b4b211cdef757ec9cb9bf3b3fc3558ee79dd
+Sending message :320 bytes
+message : {"Status":"OK","Data":[{"Token":"1481e185450aada72c7b0e6e4cf6b836b8d98f20a74e89cf8fbb5d1a8c96d145","Status":"OK","Message":"","UserName":"Emmanuel","UserID":4,"EMailAddress":"emmanuel.rodriguez@setl.io","useTwoFactor":0,"copyMailToEmail":1,"admin":1,"userType":15,"accontID":1,"accountName":"SETL Private Admin","memberID":1,"last_login":"2017-11-28 12:12:05","apiKey":"gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=","investorType":null,"platformAddr":"1LsKRrgh2ewD9aA3jMYEqKVgYLQwhQp7gG","defaultAddress":"13jF8jCPmxJi6HBtaqxGyn8GLPcDj1VrJX","defaultWalletID":null}],"MessageType":"Response","Request":"login","RequestID":1002,"Version":2}
+Sending message :428 bytes
+message : {"Status":"OK","Data":[{"Status":"OK","accountID":262,"accountName":"Test_Account_Desc_SOIFw","description":"Test_Account_SOIFw","parent":1,"billingWallet":null}],"MessageType":"Response","Request":"newAccount","RequestID":1003,"Version":2}
+Sending message :153 bytes
+message : {"RequestID":1001,"Version":2,"Request":"startRequest","Data":"b4963912f5cc73dad41518a0cca6984cb4a8483f04d6a6f65f7aa5626c9cc40e","MessageType":"Response"}
+res::a2f2813e3fbbc9fe4a39b5a13f60a59146cd7145f0d14d19aad710367a1441f0
+Sending message :320 bytes
+message : {"Status":"OK","Data":[{"Token":"cfbb49510f4b02fa8c5a8fc55c9365ef04c57b8eb85ddd2e39f4a3bb7f0d4d82","Status":"OK","Message":"","UserName":"Emmanuel","UserID":4,"EMailAddress":"emmanuel.rodriguez@setl.io","useTwoFactor":0,"copyMailToEmail":1,"admin":1,"userType":15,"accontID":1,"accountName":"SETL Private Admin","memberID":1,"last_login":"2017-11-28 12:12:06","apiKey":"gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=","investorType":null,"platformAddr":"1LsKRrgh2ewD9aA3jMYEqKVgYLQwhQp7gG","defaultAddress":"13jF8jCPmxJi6HBtaqxGyn8GLPcDj1VrJX","defaultWalletID":null}],"MessageType":"Response","Request":"login","RequestID":1002,"Version":2}
+Sending message :428 bytes
+message : {"Status":"Fail","Data":[{"Status":"Fail","Message":"Permission Denied."}],"MessageType":"Response","Request":"newAccount","RequestID":1003,"Version":2}
+Sending message :153 bytes
+message : {"RequestID":1001,"Version":2,"Request":"startRequest","Data":"c05146abe1aedf0c686f3e73f2c78bf890050389c1ed4f1ca394b2e7bf2f1d1e","MessageType":"Response"}
+res::6cf591bcf3700fa76c8fa4d5f267392ea79fe305298884ba9e890b2f2f69a87d
+Sending message :320 bytes
+message : {"Status":"OK","Data":[{"Token":"fe00cc5e19ec3b06f9dc47835da34ed87780116326204578906d36f6e2334d26","Status":"OK","Message":"","UserName":"Emmanuel","UserID":4,"EMailAddress":"emmanuel.rodriguez@setl.io","useTwoFactor":0,"copyMailToEmail":1,"admin":1,"userType":15,"accontID":1,"accountName":"SETL Private Admin","memberID":1,"last_login":"2017-11-28 12:12:06","apiKey":"gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=","investorType":null,"platformAddr":"1LsKRrgh2ewD9aA3jMYEqKVgYLQwhQp7gG","defaultAddress":"13jF8jCPmxJi6HBtaqxGyn8GLPcDj1VrJX","defaultWalletID":null}],"MessageType":"Response","Request":"login","RequestID":1002,"Version":2}
+Sending message :428 bytes
+message : {"Status":"OK","Data":[{"Status":"OK","accountID":263,"accountName":"Test_Account_Desc_vjOfF","description":"Test_Account_vjOfF","parent":1,"billingWallet":null}],"MessageType":"Response","Request":"newAccount","RequestID":1003,"Version":2}
+Sending message :428 bytes
+message : {"Status":"Fail","Data":[{"Status":"Fail","Message":"Account already exist under this member."}],"MessageType":"Response","Request":"newAccount","RequestID":1004,"Version":2}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

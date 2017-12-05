@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="src.WebSocketAPITests.Member.Deletion.deleteMemberTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-11-28T12:12:13" hostname="Bills-iMac.local" time="0.244">
+  <properties/>
+  <testcase name="deleteMemberTest" classname="src.WebSocketAPITests.Member.Deletion.deleteMemberTest" time="0.244"/>
+  <system-out><![CDATA[Sending message :153 bytes
+message : {"RequestID":1001,"Version":2,"Request":"startRequest","Data":"c3503e6500313415f00ac4868b80591654edf445b3f89e0ca87861f598db1d29","MessageType":"Response"}
+res::a2da435349592b7107e75075fc81e37adad931e9232a0c5590b98fe28e583aa1
+Sending message :320 bytes
+message : {"Status":"OK","Data":[{"Token":"8f426d01c72ebe0fbd5fbfb5d5b7c86de338c9a275d026e555f6a131275dbcaf","Status":"OK","Message":"","UserName":"Emmanuel","UserID":4,"EMailAddress":"emmanuel.rodriguez@setl.io","useTwoFactor":0,"copyMailToEmail":1,"admin":1,"userType":15,"accontID":1,"accountName":"SETL Private Admin","memberID":1,"last_login":"2017-11-28 12:12:13","apiKey":"gV6Il3IAP0ML1WQ4jNkmYAb5FRExrAfWcGCaKzYMQ24=","investorType":null,"platformAddr":"1LsKRrgh2ewD9aA3jMYEqKVgYLQwhQp7gG","defaultAddress":"13jF8jCPmxJi6HBtaqxGyn8GLPcDj1VrJX","defaultWalletID":null}],"MessageType":"Response","Request":"login","RequestID":1002,"Version":2}
+Sending message :384 bytes
+message : {"Status":"OK","Data":[{"Status":"OK","memberID":242,"userID":454,"userName":"Admin_242","emailAddress":"Test_Member_Zeunc@test.com","accountID":270,"parent":242,"isManager":0,"accountLocked":0,"userType":35,"isAdmin":0,"accountName":"Test_Member_Zeunc_Admin_Account","description":"Test_Member_Zeunc admin account","billingWallet":"","memberName":"Test_Member_Zeunc","pass":"I7EV5WUF3ZLN"}],"MessageType":"Response","Request":"newMember","RequestID":1003,"Version":2}
+Sending message :320 bytes
+message : {"Status":"OK","Data":[{"Status":"OK","Message":"","memberID":242,"memberName":"Test_Member_Zeunc"}],"MessageType":"Response","Request":"deleteMember","RequestID":1004,"Version":2}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
