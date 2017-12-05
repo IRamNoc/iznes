@@ -8,7 +8,22 @@
     <clr-tab-content *clrIfActive>
       <form [formGroup]="requestAssetForm" (ngSubmit)="requestAsset()">
         <section class="form-block">
-            Form
+          <div class="form-group col-sm-6">
+            <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
+            <ng-select id="asset"
+                [items]="allInstrumentList"
+                [allowClear]="true"
+                placeholder="Select Issuer"
+                [formControl]="requestAssetForm.controls['asset']"
+            >
+            </ng-select>
+          </div>
+
+          <various-address-select [formControl]="requestAssetForm.controls['recipient']"
+            [relationshipArray]="walletRelationshipType"
+            [ownWalletAddressArray]="walletAddressList"
+            [class.error]="!requestAssetForm.controls['recipient'].valid &&
+              requestAssetForm.controls['recipient'].touched"></various-address-select>
         </section>
       </form>
     </clr-tab-content>
