@@ -42,8 +42,15 @@ public class OpenCSDFundsAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         testSetUp();
+        createFundViaApi();
         screenshotRule.setDriver(driver);
     }
+
+    private void createFundViaApi() {
+
+
+    }
+
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);

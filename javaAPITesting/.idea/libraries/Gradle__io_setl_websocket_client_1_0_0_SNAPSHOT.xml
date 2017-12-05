@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.setl:websocket-client:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.setl/websocket-client/1.0.0-SNAPSHOT/89355d396c71fa7e0601fcf9c21802d288c3a610/websocket-client-1.0.0-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.setl/websocket-client/1.0.0-SNAPSHOT/2e7ffe1c8afcf79ecf9268ed873c462d36fa1a92/websocket-client-1.0.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.setl/websocket-client/1.0.0-SNAPSHOT/3585f9ec9d62ffe06d200fd1157af1e26c39b034/websocket-client-1.0.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

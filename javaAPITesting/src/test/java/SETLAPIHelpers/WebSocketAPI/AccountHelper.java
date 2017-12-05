@@ -1,16 +1,14 @@
 package SETLAPIHelpers.WebSocketAPI;
 
-
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.AccountError;
 import SETLAPIHelpers.JsonToJava;
-
 import io.setl.wsclient.shared.Message;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import WebSocketAPITests.io.setl.Container;
+import src.WebSocketAPITests.io.setl.Container;
 
 import java.io.IOException;
 
