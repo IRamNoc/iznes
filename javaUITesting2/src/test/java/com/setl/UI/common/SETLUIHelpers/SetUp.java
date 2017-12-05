@@ -123,7 +123,8 @@ public class SetUp {
 
     private static WebDriver getDriver() {
         String OS = System.getProperty("os.name");
-        if (OS.contains("88")) {
+        System.out.println(OS);
+        if (OS.contains("Mac")) {
 
             SafariOptions options = new SafariOptions();
             options.setUseCleanSession(true);

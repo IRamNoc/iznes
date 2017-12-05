@@ -7,10 +7,11 @@ import SETLAPIHelpers.JsonToJava;
 import SETLAPIHelpers.User;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
+import io.setl.restapi.client.message.MessageFactory;
 
 
 import org.junit.Before;
-import WebSocketAPITests.io.setl.Container;
+import src.WebSocketAPITests.io.setl.Container;
 
 import static junit.framework.TestCase.assertTrue;
 
