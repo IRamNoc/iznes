@@ -45,7 +45,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     private _latestSub: any;
     private _listener: any;
     private _updateViewListener: any;
-    private _routerOb: Subscription<any>;
+    private _routerOb: Subscription;
 
     ngOnInit() {
 
@@ -86,7 +86,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
                 this._routerOb.unsubscribe();
             });
 
-            this._routerOb = this._router.events.subscribe(() => {
+            this._routerOb = this._router.events.subscribe((event) => {
                 this._current.instance.closeSelf();
             });
         });

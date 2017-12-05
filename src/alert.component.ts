@@ -9,17 +9,27 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
             <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
                 <ng-template ngSwitchCase="success">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 490">
-                        <path d="M245.2 0C110 0 0 110 0 245.2s110 245.2 245.2 245.2 245.2-110 245.2-245.2S380.4 0 245.2 0zm0 465.9c-121.7 0-220.7-99-220.7-220.7s99-220.7 220.7-220.7 220.7 99 220.7 220.7-99 220.7-220.7 220.7z"/>
-                        <path d="M309.4 185.5l-94 93.5-34.3-34.5c-4.8-4.8-12.5-4.8-17.3-.1-4.8 4.7-4.8 12.5-.1 17.3l42.9 43.2c2.4 2.4 5.5 3.6 8.7 3.6 3.1 0 6.2-1.2 8.6-3.6l102.7-102.1c4.8-4.8 4.8-12.5.1-17.3-4.8-4.8-12.5-4.8-17.3 0z"/>
-                    </svg>
+                    <div class="f-modal-alert">
+                        <div class="f-modal-icon f-modal-success animate">
+                            <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
+                            <span class="f-modal-line f-modal-long animateSuccessLong"></span>
+                            <div class="f-modal-placeholder"></div>
+                            <div class="f-modal-fix"></div>
+                        </div>
+                    </div>
                 </ng-template>
 
                 <ng-template ngSwitchCase="error">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 490" preserveAspectRatio="meet">
-                        <path d="M245.2 490.4c135.2 0 245.2-110 245.2-245.2S380.4 0 245.2 0 0 110 0 245.2s110 245.2 245.2 245.2zm0-465.9c121.7 0 220.7 99 220.7 220.7s-99 220.7-220.7 220.7-220.7-99-220.7-220.7 99-220.7 220.7-220.7z"/>
-                        <path d="M180.3 310.1c2.4 2.4 5.5 3.6 8.7 3.6s6.3-1.2 8.7-3.6l47.6-47.6 47.6 47.6c2.4 2.4 5.5 3.6 8.7 3.6s6.3-1.2 8.7-3.6c4.8-4.8 4.8-12.5 0-17.3l-47.8-47.6 47.6-47.6c4.8-4.8 4.8-12.5 0-17.3s-12.5-4.8-17.3 0l-47.6 47.6-47.6-47.6c-4.8-4.8-12.5-4.8-17.3 0s-4.8 12.5 0 17.3l47.6 47.6-47.6 47.6c-4.8 4.8-4.8 12.5 0 17.3z"/>
-                    </svg>
+                    <div class="f-modal-alert">
+                        <div class="f-modal-icon f-modal-error animate">
+                            <span class="f-modal-x-mark">
+                                <span class="f-modal-line f-modal-left animateXLeft"></span>
+                                <span class="f-modal-line f-modal-right animateXRight"></span>
+                            </span>
+                            <div class="f-modal-placeholder"></div>
+                            <div class="f-modal-fix"></div>
+                        </div>
+                    </div>
                 </ng-template>
 
                 <ng-template ngSwitchCase="warning">
