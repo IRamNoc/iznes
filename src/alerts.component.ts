@@ -6,11 +6,15 @@ import {
     Input,
     ReflectiveInjector,
     ComponentFactoryResolver,
+    ComponentRef,
     ViewChild
 } from '@angular/core';
+import {Router} from '@angular/router';
 import {AlertsService} from './alerts.service';
 import {AlertSettings} from './interfaces/alert-settings';
 import {AlertComponent} from './alert.component';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'jaspero-alerts',
@@ -20,7 +24,8 @@ import {AlertComponent} from './alert.component';
 })
 export class AlertsComponent implements OnInit, OnDestroy {
     constructor(private _service: AlertsService,
-                private _resolver: ComponentFactoryResolver) {
+                private _resolver: ComponentFactoryResolver,
+                private _router: Router) {
     }
 
     @ViewChild('comp', {read: ViewContainerRef}) compViewContainerRef: ViewContainerRef;
@@ -36,10 +41,11 @@ export class AlertsComponent implements OnInit, OnDestroy {
         duration: 3000
     };
 
-    private _current: any;
+    private _current: ComponentRef<AlertComponent>;
     private _latestSub: any;
     private _listener: any;
     private _updateViewListener: any;
+    private _routerOb: Subscription;
 
     ngOnInit() {
 
@@ -76,6 +82,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
             this._latestSub = component.instance.close.subscribe((res: any) => {
                 this._service.alert$.next(res);
+
+                this._routerOb.unsubscribe();
+            });
+
+            this._routerOb = this._router.events.subscribe((event) => {
+                this._current.instance.closeSelf();
             });
         });
 
