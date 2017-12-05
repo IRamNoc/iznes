@@ -51,7 +51,8 @@ import {
     RegisterIssuerComponent,
     RegisterAssetComponent,
     IssueAssetComponent,
-    SendAssetComponent
+    SendAssetComponent,
+    RequestAssetComponent
 } from '@setl/asset-servicing';
 
 /**
@@ -211,6 +212,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'send-asset',
                         component: SendAssetComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'request-asset',
+                        component: RequestAssetComponent,
                         canActivate: [LoginGuardService]
                     }
                 ],
