@@ -64,6 +64,10 @@
     },
     "defaults": {
         "styleExt": "scss",
-        "component": {}
-    }
+        "component": {},
+        "serve": {
+          "port": 4200,
+          "host": "localhost"
+        }
+      }
 }

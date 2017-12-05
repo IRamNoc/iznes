@@ -5,7 +5,16 @@
     transition: all 0.3s ease-out;
 }
 
-* {
+body *, body *:before, body *:after {
+    /* Chrome 9-, Safari 5-, iOS 4.2-, Android 3-, Blackberry 7- */
+    -webkit-box-sizing: border-box; 
+  
+    /* Firefox (desktop or Android) 28- */
+    -moz-box-sizing: border-box;
+  
+    /* Firefox 29+, IE 8+, Chrome 10+, Safari 5.1+, Opera 9.5+, iOS 5+, Opera Mini Anything, Blackberry 10+, Android 4+ */
+    box-sizing: border-box;
+
     outline: none;
 }
 
@@ -127,7 +136,6 @@ ul.breadcrumb li a:hover {
         }
 
         .content-area {
-            float: left;
             width: calc(100% - 230px);
             height: 100%;
         }
