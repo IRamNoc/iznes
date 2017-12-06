@@ -14,7 +14,7 @@ export function walletAddressListToSelectItem(walletAddressList: any, useLabel: 
 
             result.push({
                 id: key,
-                text: (useLabel && label) ? label : key;
+                text: (useLabel && label) ? label : key
             });
 
             return result;
