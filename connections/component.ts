@@ -1,6 +1,6 @@
 // Vendor
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 import { NgRedux, select } from '@angular-redux/store';
@@ -16,10 +16,11 @@ import {
 import { setRequestedWalletAddresses, setRequestedWalletToRelationship } from '@setl/core-store';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConnectionsService } from '../connections.service';
 
 @Component({
-    selector: 'app-connections',
-    templateUrl: './connection.component.html',
+    selector: 'app-my-connections',
+    templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
@@ -28,6 +29,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     walletList = [];
     addressList = [];
+    formGroup: FormGroup;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -47,16 +49,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
-                private fb: FormBuilder) {
+                private connectionService: ConnectionsService) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
 
         this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.requestWalletList(wallets)));
 
-        this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => {
-            this.connectedWalletId = connected;
-        }));
+        this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
 
         this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
@@ -90,7 +90,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     requestWalletList(wallets) {
         let data = [];
 
-        Object.keys(wallets).forEach((key) => {
+        Object.keys(wallets).map((key) => {
             data.push({
                 id: wallets[key].walletID,
                 text: wallets[key].walletName
@@ -137,7 +137,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     getAddressList(addresses) {
         let data = [];
 
-        Object.keys(addresses).forEach((key) => {
+        Object.keys(addresses).map((key) => {
             data.push({
                 id: key,
                 text: addresses[key].label
@@ -199,22 +199,22 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     getNewConnectionForm() {
-        return this.fb.group({
-            'connection': this.fb.control('', [Validators.required]),
-            'sub-portfolio': this.fb.control('', [Validators.required])
+        this.formGroup = new FormGroup({
+            'connection': new FormControl('', [Validators.required]),
+            'sub-portfolio': new FormControl('', [Validators.required])
         });
+
+        return this.formGroup;
     }
 
-    handleCreate(e) {
-        console.log(e);
-
-        // leiId = walletId(users > connectedWallet)
-        // senderLeiId = other
-        // party
-        // walletId
-        // address = subportfolio
-        // connectionid = 0
-        // status = 1
+    handleCreate() {
+        const data = {
+            leoId: this.connectedWalletId.toString(),
+            senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
+            address: this.formGroup.controls['sub-portfolio'].value[0].label,
+            connectionId: 0,
+            status: 1
+        };
     }
 
     handleEdit($e) {
