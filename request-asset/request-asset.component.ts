@@ -43,13 +43,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb: Observable<boolean>;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb: Observable<any>;
 
-    // Wallet
-    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedWalletAddressListOb: Observable<any>;
-    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedWalletAddressLabelsOb: Observable<any>;
-    @select(['wallet', 'myWalletAddress', 'addressList']) walletAddressListOb: Observable<any>;
-    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipOb: Observable<any>;
-    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipOb: Observable<any>;
-
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
 
@@ -62,13 +55,13 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         /* send asset form */
         this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required)
+            recipient: new FormControl('', Validators.required),
+            amount: new FormControl('', Validators.required)
         });
 
         /* data subscriptions */
         this.initWalletIdSubscription();
         this.initAssetSubscriptions();
-        this.initWalletRelationshipSubscriptions();
     }
 
     ngOnInit() { }
@@ -88,28 +81,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             }),
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
-            })
-        );
-    }
-
-    private initWalletRelationshipSubscriptions(): void {        
-        this.subscriptionsArray.push(
-            this.requestedToRelationshipOb.subscribe((requested) => {
-                if(!requested) InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
-            }),
-            this.requestedWalletAddressListOb.subscribe((requested) => {
-                if(!requested) InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
-            }),
-            this.requestedWalletAddressLabelsOb.subscribe((requested) => {
-                if(!requested && this.connectedWalletId !== 0) {
-                    MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
-                }
-            }),
-            this.walletAddressListOb.subscribe((walletAddressList) => {
-                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, true);
-            }),
-            this.walletRelationshipOb.subscribe((walletRelationships) => {
-                this.walletRelationshipType = walletHelper.walletToRelationshipToSelectItem(walletRelationships, this.walletAddressList);
             })
         );
     }

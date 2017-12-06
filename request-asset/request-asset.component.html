@@ -19,11 +19,17 @@
             </ng-select>
           </div>
 
-          <various-address-select [formControl]="requestAssetForm.controls['recipient']"
-            [relationshipArray]="walletRelationshipType"
-            [ownWalletAddressArray]="walletAddressList"
-            [class.error]="!requestAssetForm.controls['recipient'].valid &&
-              requestAssetForm.controls['recipient'].touched"></various-address-select>
+          <app-request-type-select></app-request-type-select>
+
+          <div class="form-group col-sm-6">
+            <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
+            <input type="text" id="amount" placeholder="Amount" size="45"
+                    [formControl]="requestAssetForm.controls['amount']"
+                    [class.error]="!requestAssetForm.controls['amount'].valid &&
+                    requestAssetForm.controls['amount'].touched" mltag="txt_amount"/>
+          </div>
+
+          <button type="submit" class="btn btn-primary" mltag="txt_requestasset">Request Asset</button>
         </section>
       </form>
     </clr-tab-content>
