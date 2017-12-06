@@ -6,15 +6,15 @@ import _ from 'lodash';
  * @param walletAddressList
  * @return {any}
  */
-export function walletAddressListToSelectItem(walletAddressList: any, useLabel: boolean = false): any {
+export function walletAddressListToSelectItem(walletAddressList: any, labelIdentifier: string = null): any {
     const walletAddressListImu = fromJS(walletAddressList);
     const walletAddressSelectItem = walletAddressListImu.reduce(
         (result, thisWalletAddress, key) => {
-            const label = thisWalletAddress.get('label');
+            const label = thisWalletAddress.get(labelIdentifier);
 
             result.push({
                 id: key,
-                text: (useLabel && label) ? label : key
+                text: (labelIdentifier && label) ? label : key
             });
 
             return result;
