@@ -19,26 +19,76 @@ import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 })
 export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     
-    @Input() connectedWalletId: number;
-
+    @Input() connectedWalletId: number = 6;
+    
+    requestTypeForm: FormGroup;
     subscriptionsArray: Array<Subscription> = [];
-    walletAddressList: Array<any>;
 
+    requestTypes = [
+        {id: 1, text: 'Relationship'},
+        {id: 2, text: 'Address'},
+    ];
+    selectedRequestType: number;
+
+    walletAddressList: Array<any>;
+    walletDirectoryListRaw: Array<any>;
+    walletDirectoryList: Array<any>;
+    walletRelationships: Array<any>;
+
+    // myWalletAddress
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedWalletAddressListOb: Observable<any>;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedWalletAddressLabelsOb: Observable<any>;
     @select(['wallet', 'myWalletAddress', 'addressList']) walletAddressListOb: Observable<any>;
+
+    // walletDirectory
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb: Observable<any>;
+
+    // walletRelationship
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedWalletRelationshipListOb: Observable<any>;
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb: Observable<any>;
 
     constructor(private ngRedux: NgRedux<any>,
         private alertsService: AlertsService,
         private walletNodeRequestService: WalletNodeRequestService,
         private walletnodeTxService: WalletnodeTxService,
-        private myWalletService: MyWalletsService) { }
+        private myWalletService: MyWalletsService) {
+        
+        this.requestTypeForm = new FormGroup({
+            type: new FormControl('', Validators.required),
+            fromRelationship: new FormControl('', Validators.required),
+            walletFrom: new FormControl('', Validators.required)
+        });
+    }
         
     ngOnInit() {
-        this.initWalletRelationshipSubscriptions();            
+        this.initWalletRelationshipsSubscriptions();
+        this.initWalletDirectorySubscriptions();
+        this.initMyWalletSubscriptions();
     }
 
-    private initWalletRelationshipSubscriptions(): void {        
+    private initWalletRelationshipsSubscriptions(): void {
+        this.subscriptionsArray.push(
+            this.requestedWalletRelationshipListOb.subscribe((requested) => {
+                if(!requested) InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
+            }),
+            this.walletRelationshipListOb.subscribe((walletList) => {
+                if(Object.keys(walletList).length !== 0) {
+                    this.walletRelationships = walletHelper.walletToRelationshipToSelectItem(walletList, this.walletDirectoryList);
+                }
+            })
+        );
+    }
+
+    private initWalletDirectorySubscriptions(): void {
+        this.subscriptionsArray.push(
+            this.walletDirectoryListOb.subscribe((walletList) => {
+                this.walletDirectoryListRaw = walletList;
+                this.walletDirectoryList = walletHelper.walletAddressListToSelectItem(walletList, 'walletName');
+            })
+        );
+    }
+
+    private initMyWalletSubscriptions(): void {        
         this.subscriptionsArray.push(
             this.requestedWalletAddressListOb.subscribe((requested) => {
                 if(!requested) InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
@@ -49,9 +99,13 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
                 }
             }),
             this.walletAddressListOb.subscribe((walletAddressList) => {
-                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, true);
+                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, 'walletName');
             })
         );
+    }
+
+    onRequestTypeSelect($event): void {
+        this.selectedRequestType = $event.id;
     }
 
     ngOnDestroy() {
