@@ -3,7 +3,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
-import {AlertIconAndTypesService} from 'clarity-angular/emphasis/alert/providers/icon-and-types-service';
 import {RouterModule} from '@angular/router';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
@@ -160,7 +159,6 @@ export function memberSocketServiceFactory() {
         LoginGuardService,
         ToasterService,
         ChannelService,
-        AlertIconAndTypesService,
         AccountsService,
         PermissionGroupService,
         MemberService,
