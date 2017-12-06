@@ -90,7 +90,7 @@
 
     <ng-template #addConnection let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="new-user-form" (ngSubmit)="handleCreate($event)" [formGroup]="formControl">
+            <form id="new-user-form" (ngSubmit)="handleCreate(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
