@@ -70,6 +70,7 @@
         "redux": "^3.7.2",
         "redux-observable": "^0.15.0",
         "rxjs": "^5.4.1",
+        "sha256": "^0.2.0",
         "zone.js": "^0.8.14"
     },
     "devDependencies": {
