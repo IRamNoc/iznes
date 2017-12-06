@@ -50,7 +50,8 @@ import {OfiHomeComponent} from '@ofi/ofi-main';
 import {
     RegisterIssuerComponent,
     RegisterAssetComponent,
-    IssueAssetComponent
+    IssueAssetComponent,
+    SendAssetComponent
 } from '@setl/asset-servicing';
 
 /**
@@ -206,8 +207,12 @@ export const ROUTES: Routes = [
                         path: 'issue-asset',
                         component: IssueAssetComponent,
                         canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'send-asset',
+                        component: SendAssetComponent,
+                        canActivate: [LoginGuardService]
                     }
-
                 ],
                 canActivate: [LoginGuardService]
             },

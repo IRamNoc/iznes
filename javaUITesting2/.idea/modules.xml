@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/javaUITesting2.iml" filepath="$PROJECT_DIR$/javaUITesting2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javaUITesting2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/javaUITesting2_main.iml" group="javaUITesting2" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javaUITesting2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/javaUITesting2_test.iml" group="javaUITesting2" />
+      <module fileurl="file://$PROJECT_DIR$/javaUITesting.iml" filepath="$PROJECT_DIR$/javaUITesting.iml" />
     </modules>
   </component>
 </project>
