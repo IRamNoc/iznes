@@ -44,7 +44,7 @@ export class MessagesService {
     /**
      * Send Message
      *
-     * @param recipientsArr
+     * @param recipientsArr - Array of WalletId'
      * @param subjectStr
      * @param bodyStr
      * @param {string} action
