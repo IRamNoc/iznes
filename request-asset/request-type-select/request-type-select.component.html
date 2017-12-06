@@ -34,7 +34,14 @@
             </ng-select>
         </div>
         <div class="form-group col-sm-6">
-            Receive to address
+            <label class="control-label" for="addressTo" mltag="txt_addressto">Receive to Address</label>
+            <ng-select id="addressTo"
+                [items]="walletAddressList"
+                [allowClear]="true"
+                placeholder="Select Address"
+                [formControl]="requestTypeForm.controls['addressTo']"
+            >
+            </ng-select>
         </div>
     </div>
 </div>

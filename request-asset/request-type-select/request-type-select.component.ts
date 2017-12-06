@@ -56,7 +56,8 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
         this.requestTypeForm = new FormGroup({
             type: new FormControl('', Validators.required),
             fromRelationship: new FormControl('', Validators.required),
-            walletFrom: new FormControl('', Validators.required)
+            walletFrom: new FormControl('', Validators.required),
+            addressTo: new FormControl('', Validators.required)
         });
     }
         
