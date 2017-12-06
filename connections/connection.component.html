@@ -1,0 +1,135 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-users"></i> Connections</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let t of tabsControl; let id = index">
+            <button clrTabLink id="connection-tab-{{id}}"><i class="{{t.iconClass}}"></i> {{t.title}}</button>
+            <clr-tab-content *clrIfActive="t.isActive">
+                <!-- Manage connections -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="addressListTab"></ng-container>
+                </ng-container>
+
+                <!-- Add connection -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                            *ngTemplateOutlet="addConnection; context: {'formControl': t.formControl, 'id': id}">
+
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Address Data Table. -->
+    <ng-template #addressListTab>
+        <div class="panel-body">
+            <clr-datagrid>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column>Connection</clr-dg-column>
+                <clr-dg-column>My sub-portfolios</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let address of addressList;">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button id="btnEditConnection" class="btn" (click)="handleEdit(connection)"><i
+                                    class="fa fa-edit"></i></button>
+                            <button id="btnDeleteConnection" class="btn" (click)="handleDelete(connection)"><i
+                                    class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+
+                    <!--<clr-dg-cell>-->
+                    <!--<span *ngIf="!address.editing">-->
+                    <!--{{address.label}}-->
+                    <!--</span>-->
+                    <!--<div *ngIf="address.editing">-->
+
+                    <!--<form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"-->
+                    <!--style="padding: 0">-->
+                    <!--<input type="text" [value]="address.label" #subportfolio style="width: inherit">-->
+                    <!--<i class="fa fa-floppy-o icon-btn" aria-hidden="true"-->
+                    <!--type="submit"-->
+                    <!--(click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"></i>-->
+                    <!--</form>-->
+                    <!--</div>-->
+                    <!--</clr-dg-cell>-->
+
+                    <!--<clr-dg-cell>-->
+
+                    <!--<span *ngIf="!address.editing">-->
+                    <!--{{address.iban}}-->
+                    <!--</span>-->
+                    <!--<div *ngIf="address.editing">-->
+
+                    <!--<form (submit)="handleUpdateLabel(address.label, address.address, iban.value)"-->
+                    <!--style="padding: 0">-->
+                    <!--<input type="text" [value]="address.iban" #iban style="width: inherit">-->
+                    <!--<i class="fa fa-floppy-o icon-btn" aria-hidden="true"-->
+                    <!--type="submit"-->
+                    <!--(click)="handleUpdateLabel(address.label, address.address, iban.value)"></i>-->
+                    <!--</form>-->
+                    <!--</div>-->
+                    <!--</clr-dg-cell>-->
+
+                    <clr-dg-cell>
+                        {{address.address}}
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <ng-template #addConnection let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="new-user-form" (ngSubmit)="handleCreate($event)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span>Connection's name</span>
+                            </label>
+                            <ng-select
+                                    id="connection-select"
+                                    [items]="walletList"
+                                    [allowClear]=true
+                                    placeholder="Select a connection"
+                                    [formControl]="formControl.controls['connection']">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span>Sub-portfolio's name</span>
+                            </label>
+                            <ng-select
+                                    id="sub-portfolio-select"
+                                    [items]="addressList"
+                                    [allowClear]=true
+                                    placeholder="Select a sub-portfolio"
+                                    [formControl]="formControl.controls['sub-portfolio']">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button id="new-connection-submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i>
+                            <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>
