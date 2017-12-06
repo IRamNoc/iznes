@@ -1,9 +1,18 @@
 package com.setl.openCSDClarityTests.UI.Users;
 
+import SETLAPIHelpers.User;
+import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+import SETLAPIHelpers.WebSocketAPI.UserHelper;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
+import com.setl.workflows.CreateUser;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
+import io.setl.wsclient.shared.Connection;
+import io.setl.wsclient.shared.SocketClientEndpoint;
+import io.setl.wsclient.shared.encryption.KeyHolder;
+import io.setl.wsclient.socketsrv.MessageFactory;
+import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -15,7 +24,12 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
+import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
+import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
+import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
@@ -34,11 +48,35 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
+    KeyHolder holder = new KeyHolder();
+    MessageFactory factory = new MessageFactory(holder);
+    SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
+    String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
+
     @Before
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
+    @Test
+    public void shouldCreateUser2() throws IOException, InterruptedException, ExecutionException {
+
+        String userDetails[] = generateUserDetails();
+        String userName = userDetails[0];
+        String password = userDetails[1];
+        String email = userDetails[2];
+
+        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+
+        connection.disconnect();
+
+        System.out.println("userID " + user.getUserID());
+        System.out.println("userName " + user.getUserName());
+        System.out.println("email " + user.getEmailAddress());
+        //System.out.println("password " + user.getPassword());
+    }
+
     @Test
     public void shouldCreateUser() throws IOException, InterruptedException {
         navigateToAddUser();
