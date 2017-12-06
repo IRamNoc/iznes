@@ -1,2 +1,2 @@
 export {ConnectionsModule} from './connections.module';
-export {ConnectionComponent} from './connections/connection.component';
+export {ConnectionComponent} from './connections/component';

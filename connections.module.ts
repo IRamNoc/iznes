@@ -14,7 +14,7 @@ import { SelectModule } from '@setl/utils';
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Connection component */
-import { ConnectionComponent } from './connections/connection.component';
+import { ConnectionComponent } from './connections/component';
 import { ConnectionsService } from './connections.service';
 
 @NgModule({
