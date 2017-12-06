@@ -1,4 +1,4 @@
-group 'javaUITesting'
+group 'javaUITesting2'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
@@ -15,7 +15,7 @@ buildscript {
 
 
 ext.junitVersion = '4.12'
-ext.seleniumVersion = '3.5.3'
+ext.seleniumVersion = '3.8.1'
 
 repositories {
     maven { url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/" }
@@ -34,6 +34,7 @@ dependencies {
     compile group: 'io.setl', name: 'restapi-client',  version: '1.0.8-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.apache.commons:commons-lang3:3.6'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 
