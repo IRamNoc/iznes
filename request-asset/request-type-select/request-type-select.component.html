@@ -1,0 +1,47 @@
+<div class="form-group col-sm-6">
+    <label class="control-label" for="requesttype" mltag="txt_requesttype">Request Type</label>
+    <ng-select id="requesttype"
+        [items]="requestTypes"
+        [allowClear]="true"
+        placeholder="Select Type"
+        [formControl]="requestTypeForm.controls['type']"
+        (selected)="onRequestTypeSelect($event)"
+    >
+    </ng-select>
+</div>
+
+<div [ngSwitch]="selectedRequestType">
+    <div class="form-group col-sm-6" *ngSwitchCase="1">
+        <label class="control-label" for="requestFromRelationship" mltag="txt_requestfromrelationship">Request From Relationship</label>
+        <ng-select id="requestFromRelationship"
+            [items]="walletRelationships"
+            [allowClear]="true"
+            placeholder="Select Relationship"
+            [formControl]="requestTypeForm.controls['fromRelationship']"
+        >
+        </ng-select>
+    </div>
+
+    <div *ngSwitchCase="2">
+        <div class="form-group col-sm-6">
+            <label class="control-label" for="walletFrom" mltag="txt_walletfrom">Request from LEI in Directory</label>
+            <ng-select id="walletFrom"
+                [items]="walletDirectoryList"
+                [allowClear]="true"
+                placeholder="Select Wallet"
+                [formControl]="requestTypeForm.controls['walletFrom']"
+            >
+            </ng-select>
+        </div>
+        <div class="form-group col-sm-6">
+            <label class="control-label" for="addressTo" mltag="txt_addressto">Receive to Address</label>
+            <ng-select id="addressTo"
+                [items]="walletAddressList"
+                [allowClear]="true"
+                placeholder="Select Address"
+                [formControl]="requestTypeForm.controls['addressTo']"
+            >
+            </ng-select>
+        </div>
+    </div>
+</div>

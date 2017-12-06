@@ -74,7 +74,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         /* data subscriptions */
         this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
-            this.allInstrumentList = this.convertInstrumentItemsForDropdown(instrumentList);
+            this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
         }));
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
@@ -82,7 +82,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         }));
 
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
-            this.addressList = this.convertAddressItemsForDropdown(addressList);
+            this.addressList = walletHelper.walletAddressListToSelectItem(addressList);
         }));
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
@@ -213,22 +213,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         if (!requested && this.connectedWalletId !== 0) {
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
-    }
-
-    convertInstrumentItemsForDropdown(items: any[]): any[] {
-        // Creates an array of data suitable for ng-select
-        const dropdownItems = [];
-
-        _.forEach(items, item => {
-            const id = `${item.issuer}|${item.instrument}`;
-
-            dropdownItems.push({
-                id,
-                text: id
-            });
-        });
-        
-        return dropdownItems;
     }
 
     convertAddressItemsForDropdown(items: any[]): any[] {
