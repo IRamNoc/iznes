@@ -122,6 +122,7 @@ public class NavListAcceptanceTest {
   }
 
   @Test
+  @Ignore
   public void getValidNavListUsingNullForDate(){
 
     int expectedPrice1 = 1200000;
