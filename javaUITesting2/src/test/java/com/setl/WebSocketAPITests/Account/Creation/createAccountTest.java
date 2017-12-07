@@ -39,6 +39,7 @@ public class createAccountTest {
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
   @Test
+  @Ignore
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
