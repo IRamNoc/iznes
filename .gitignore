@@ -105,6 +105,6 @@ javaUITesting2/build/tmp/test/jar_extract_8597650661880290832_tmp
 javaUITesting2/build/tmp/test/jar_extract_8958297893144126843_tmp
 javaUITesting2/javaUITesting2.iml
 javaUITesting2/out/test/classes/
-/javaUITesting2/build/reports/
-/javaUITesting2/build/test-results/
-/javaUITesting2/build/tmp/
+javaUITesting2/build/reports/
+javaUITesting2/build/test-results/
+javaUITesting2/build/tmp/

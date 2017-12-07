@@ -27,7 +27,7 @@ public class loginTest {
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-    String address = "ws://localhost:9788/db/";
+    String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
     public Timeout globalTimeout = Timeout.millis(3000);
@@ -62,6 +62,7 @@ public class loginTest {
     }
 
     @Test
+    @Ignore
     public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);

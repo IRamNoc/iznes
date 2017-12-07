@@ -3,11 +3,13 @@ package com.setl.RESTAPITests.Account.Deletion;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +24,7 @@ public class deleteAccountAcceptanceTest {
   public Timeout globalTimeout = Timeout.millis(10000);
 
   int userId = 17;
-  String localAddress = "http://localhost:9788/api";
+  String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   String apiKey = "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=";
   RestApi<MemberNodeMessageFactory> api;
 
@@ -34,6 +36,7 @@ public class deleteAccountAcceptanceTest {
 
 
   @Test
+  @Ignore
   public void deleteAccount() throws ExecutionException, InterruptedException {
 
     String accountDetails[] = generateAccountDetails();
@@ -56,6 +59,7 @@ public class deleteAccountAcceptanceTest {
   }
 
   @Test
+  @Ignore
   public void shouldNotDeleteAccountWithoutPermissions() throws ExecutionException, InterruptedException {
 
     String accountDetails[] = generateAccountDetails();

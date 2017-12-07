@@ -3,6 +3,7 @@ package com.setl.RESTAPITests.Arrangement.ListArrangement;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -35,6 +36,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
+    @Ignore
     public void listArrangementsByAssetAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -49,6 +51,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void listArrangementsByArrangementTypeAsAssetManager() throws ExecutionException, InterruptedException {
         api.start(userId, apiKey);
 
@@ -63,6 +66,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
+    @Ignore
     public void listArrangementsByStatusAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -77,6 +81,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void listAllArrangementsAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -91,6 +96,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void listAllArrangementsByAssetAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -105,6 +111,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void listAllArrangementsByArrangementTypeAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -120,6 +127,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
+    @Ignore
     public void listAllArrangementsByStatusAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -134,6 +142,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void listAllArrangementsAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -148,6 +157,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void insertArrangementAcceptanceTest() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -163,6 +173,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void failToCreateArrangementWithIncorrectPermissions() throws ExecutionException, InterruptedException {
         String accountDetails[] = generateAccountDetails();
         String accountName = accountDetails[0];
