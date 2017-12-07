@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {
     Router,
     CanActivate,
@@ -7,22 +7,32 @@ import {
 
 } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {getAuthentication} from '@setl/core-store';
 import {ToasterService} from 'angular2-toaster';
 import {MyUserService} from '@setl/core-req-services';
+import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
     isLogin: boolean;
+
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
+
+    @select(['user', 'authentication', 'isLogin']) isLoginOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private router: Router,
                 private _myUserService: MyUserService) {
         this.isLogin = false;
-        ngRedux.subscribe(() => this.updateState());
-        this.updateState();
+
+        // Reduce observable subscription
+        this.subscriptionsArray.push(this.isLoginOb.subscribe(isLogin => {
+            this.isLogin = isLogin;
+
+        }));
     }
 
     canActivate(next: ActivatedRouteSnapshot,
@@ -37,13 +47,6 @@ export class LoginGuardService implements CanActivate {
             this._myUserService.defaultRefreshToken(this.ngRedux);
         }
         return this.isLogin;
-    }
-
-    updateState() {
-        const authenData = getAuthentication(this.ngRedux.getState());
-
-
-        this.isLogin = authenData.isLogin;
     }
 
 }
