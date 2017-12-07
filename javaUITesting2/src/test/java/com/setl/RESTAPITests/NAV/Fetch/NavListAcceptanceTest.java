@@ -4,6 +4,7 @@ import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -32,6 +33,7 @@ public class NavListAcceptanceTest {
 
 
   @Test
+  @Ignore
   public void getValidNavList(){
 
     int expectedPrice = 1000000;
@@ -54,6 +56,7 @@ public class NavListAcceptanceTest {
 
 
   @Test
+  @Ignore
   public void getValidNavListUsingEmptyStringForDate(){
 
     int expectedPrice1 = 1200000;
