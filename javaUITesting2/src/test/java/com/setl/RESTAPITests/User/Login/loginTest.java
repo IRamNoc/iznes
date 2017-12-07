@@ -44,6 +44,7 @@ public class loginTest {
     }
 
     @Test
+    @Ignore
     public void loginSuccessWithValidCredentials() throws InterruptedException, ExecutionException {
         CountDownLatch l  = new CountDownLatch(1);
 
@@ -82,6 +83,7 @@ public class loginTest {
     }
 
     @Test
+    @Ignore
     public void loginFailureWithUnknownUser() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "bob", "alex01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);

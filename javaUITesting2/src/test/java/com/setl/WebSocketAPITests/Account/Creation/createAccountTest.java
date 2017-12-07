@@ -57,6 +57,7 @@ public class createAccountTest {
   }
 
   @Test
+  @Ignore
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);

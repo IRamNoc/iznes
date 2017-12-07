@@ -1,8 +1,8 @@
 package com.setl.RESTAPITests.User.Update;
 
 
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.User;
+import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.wsclient.shared.Connection;
@@ -10,18 +10,15 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.concurrent.ExecutionException;
 
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
@@ -56,6 +53,7 @@ public class updateUserTest {
   }
 
   @Test
+  @Ignore
   public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
 
 
@@ -67,6 +65,7 @@ public class updateUserTest {
   }
 
   @Test
+  @Ignore
   public void updateUserUserType() throws InterruptedException, ExecutionException {
 
     User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
@@ -76,6 +75,7 @@ public class updateUserTest {
   }
 
   @Test
+  @Ignore
   public void updateUserAccount() throws InterruptedException, ExecutionException {
 
     User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
