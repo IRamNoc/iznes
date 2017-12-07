@@ -2,11 +2,9 @@ package com.setl.openCSDClarityTests.UI.Users;
 
 import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import SETLAPIHelpers.WebSocketAPI.UserHelper;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
-import com.setl.workflows.CreateUser;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -21,7 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -29,9 +26,8 @@ import java.util.concurrent.ExecutionException;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
-import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -59,6 +55,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
+    @Ignore
     public void shouldCreateUser2() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
