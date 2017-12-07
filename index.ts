@@ -225,3 +225,6 @@ export {
     ChainReducer
 
 } from './chain';
+
+/* Connections */
+export { GET_CONNECTIONS, CREATE_CONNECTION, ConnectionState, ConnectionReducer } from './connection';
