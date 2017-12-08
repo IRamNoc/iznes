@@ -3,19 +3,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 /* Clarity module. */
 import { ClarityModule } from 'clarity-angular';
-
 /* 3rd party modules. */
 import { SelectModule } from '@setl/utils';
-
 /* Multilingual coolness. */
 import { MultilingualModule } from '@setl/multilingual';
-
 /* Connection component */
 import { ConnectionComponent } from './connections/component';
-import { ConnectionsService } from './connections.service';
+
+import { ConnectionService } from '@setl/core-req-services';
 
 @NgModule({
     declarations: [
@@ -33,7 +30,9 @@ import { ConnectionsService } from './connections.service';
         SelectModule,
         MultilingualModule
     ],
-    providers: [ConnectionsService]
+    providers: [
+        ConnectionService
+    ]
 })
 
 export class ConnectionsModule {
