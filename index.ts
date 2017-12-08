@@ -15,3 +15,4 @@ export { WalletnodeChannelService } from './walletnode-channel/service';
 export { FileService } from './file/file.service';
 export { PdfService } from './pdf/pdf.service';
 export { ConnectionService } from './connection/connection.service';
+export { T2sService } from './t2s/t2s.service';
