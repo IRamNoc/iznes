@@ -1,92 +1,80 @@
 import {Routes} from '@angular/router';
-
 /* Layouts. */
-import {BasicLayoutComponent} from '@setl/core-layout';
-import {BlankLayoutComponent} from '@setl/core-layout';
-
+import {BasicLayoutComponent, BlankLayoutComponent} from '@setl/core-layout';
 /* Components. */
 import {HomeComponent} from './home/home.component';
 import {SetlMyAccountComponent} from '@setl/core-account';
-import {SetlLoginComponent} from '@setl/core-login';
+/**
+ * Login Guard service
+ */
+import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
-
-import {FundHoldingsComponent} from '@ofi/ofi-main';
-import {MyDashboardComponent} from '@ofi/ofi-main';
-
+/* Ofi Manage Orders Module. */
+/* Ofi Home Page. */
+/**
+ * Ofi main module.
+ */
+/**
+ * Ofi report module
+ */
+import {
+    CouponPaymentComponent,
+    FundHoldingsComponent,
+    ManageOrdersComponent,
+    MyDashboardComponent,
+    MyOrdersComponent,
+    OfiCollectiveArchiveComponent,
+    OfiHomeComponent,
+    OfiInvestorFundListComponent,
+    OfiManageCsvComponent,
+    OfiManageOfiNavComponent,
+    OfiPnlReportComponent,
+    OfiTaxReportComponent
+} from '@ofi/ofi-main';
 /* UserAdmin Module. */
-import {AdminUsersComponent} from '@setl/core-useradmin';
-import {AdminWalletsComponent} from '@setl/core-useradmin';
-import {AdminPermissionsComponent} from '@setl/core-useradmin';
-import {AdminWizardComponent} from '@setl/core-useradmin';
-import {ManageSubPortfolioComponent} from '@setl/core-useradmin';
-
+import {
+    AdminPermissionsComponent,
+    AdminUsersComponent,
+    AdminWalletsComponent,
+    AdminWizardComponent,
+    ManageSubPortfolioComponent
+} from '@setl/core-useradmin';
 /* Product */
 import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
-
 /* Corporate Actions Components */
 import {
     CreateResolutionComponent,
-    IssueResolutionComponent,
     DistributionComponent,
+    IssueResolutionComponent,
     MergerAbsorptionComponent,
     SplitComponent
 } from '@setl/core-corp-actions';
-import {
-    CouponPaymentComponent,
-} from '@ofi/ofi-main';
-
-/* Ofi Manage Orders Module. */
-import {
-    ManageOrdersComponent,
-    MyOrdersComponent,
-} from '@ofi/ofi-main';
-
-/* Ofi Home Page. */
-import {OfiHomeComponent} from '@ofi/ofi-main';
-
 /**
  * Asset serving module
  */
 import {
-    RegisterIssuerComponent,
-    RegisterAssetComponent,
     IssueAssetComponent,
-    SendAssetComponent,
-    RequestAssetComponent
+    RegisterAssetComponent,
+    RegisterIssuerComponent,
+    RequestAssetComponent,
+    SendAssetComponent
 } from '@setl/asset-servicing';
-
 /**
  * Manage member module.
  */
-import {
-    ManageChainMembershipComponent,
-    ManageMemberComponent,
-    ManageAccountComponent
-} from '@setl/core-manage-member';
-
-/**
- * Ofi main module.
- */
-import {OfiInvestorFundListComponent, OfiManageOfiNavComponent} from '@ofi/ofi-main';
-
-/**
- * Ofi report module
- */
-import {OfiPnlReportComponent, OfiTaxReportComponent, OfiCollectiveArchiveComponent, OfiManageCsvComponent} from '@ofi/ofi-main';
-
-/**
- * Login Guard service
- */
-import {LoginGuardService} from '@setl/core-login';
+import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComponent} from '@setl/core-manage-member';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
+/** Connection module */
+import {ConnectionComponent} from '../../setl_modules/core-connections/connections/component';
 
 export const ROUTES: Routes = [
-    {path: '', redirectTo: 'login', pathMatch: 'full'},
-    {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
-    {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
+    { path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full' },
+    { path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full' },
 
-    /* Blank layout components */
+    /* Blank layout connections */
     {
         path: '', component: BlankLayoutComponent,
         children: [
@@ -187,6 +175,16 @@ export const ROUTES: Routes = [
                     {
                         path: 'issue',
                         component: SetlIssueComponent,
+                        canActivate: [LoginGuardService]
+                    }
+                ]
+            },
+            {
+                path: 'connections',
+                children: [
+                    {
+                        path: 'my-connections',
+                        component: ConnectionComponent,
                         canActivate: [LoginGuardService]
                     }
                 ]
