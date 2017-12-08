@@ -1,12 +1,11 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClarityModule } from 'clarity-angular';
-import { AlertIconAndTypesService } from 'clarity-angular/emphasis/alert/providers/icon-and-types-service';
-import { RouterModule } from '@angular/router';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { HttpModule } from '@angular/http';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ClarityModule} from 'clarity-angular';
+import {RouterModule} from '@angular/router';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {HttpModule} from '@angular/http';
 import {
     APP_CONFIG,
     SelectModule,
@@ -15,9 +14,10 @@ import {
     SetlPipesModule,
     SetlServicesModule
 } from '@setl/utils';
-import { NgxPaginationModule } from 'ngx-pagination';
+
+import {NgxPaginationModule} from 'ngx-pagination';
 /* Connection Services */
-import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 /* Core services*/
 import {
     AccountsService,
@@ -35,43 +35,43 @@ import {
     WalletnodeTxService
 } from '@setl/core-req-services';
 /* Routes. */
-import { ROUTES } from './app.routes';
+import {ROUTES} from './app.routes';
 /* SETL Modules. */
-import { LoginGuardService, SetlLoginModule } from '@setl/core-login';
-import { SetlMessagesModule } from '@setl/core-messages';
-import { SetlAccountModule } from '@setl/core-account';
-import { SetlBalancesModule } from '@setl/core-balances';
-import { UserAdminModule } from '@setl/core-useradmin';
-import { AssetServicingModule } from '@setl/asset-servicing';
-import { PermissionGridModule } from '@setl/permission-grid';
-import { CoreManageMemberModule } from '@setl/core-manage-member';
-import { CorpActionsModule } from '@setl/core-corp-actions';
-import { ConnectionsModule } from '@setl/core-connections/connections.module';
+import {LoginGuardService, SetlLoginModule} from '@setl/core-login';
+import {SetlMessagesModule} from '@setl/core-messages';
+import {SetlAccountModule} from '@setl/core-account';
+import {SetlBalancesModule} from '@setl/core-balances';
+import {UserAdminModule} from '@setl/core-useradmin';
+import {AssetServicingModule} from '@setl/asset-servicing';
+import {PermissionGridModule} from '@setl/permission-grid';
+import {CoreManageMemberModule} from '@setl/core-manage-member';
+import {CorpActionsModule} from '@setl/core-corp-actions';
+import {ConnectionsModule} from '@setl/core-connections/connections.module';
 /* OFI Modules */
-import { OfiProductModule } from '@ofi/product';
-import { OfiMainModule } from '@ofi/ofi-main';
+import {OfiProductModule} from '@ofi/product';
+import {OfiMainModule} from '@ofi/ofi-main';
 /* Internal App Modules. */
-import { AppCoreModule } from './core/app-core.module';
-import { AppViewsModule } from './app-views.module';
+import {AppCoreModule} from './core/app-core.module';
+import {AppViewsModule} from './app-views.module';
 /* Internal Components. */
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 /**
  * Vendor Modules and Services.
  */
-import { ToasterModule, ToasterService } from 'angular2-toaster';
-import { JasperoAlertsModule } from '@setl/jaspero-ng2-alerts';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
 /**
  * App main state
  */
-import { NgRedux, NgReduxModule } from '@angular-redux/store';
+import {NgRedux, NgReduxModule} from '@angular-redux/store';
 
-import { appSaga, createAppStore, sagaMiddleware } from './store/app.store';
+import {appSaga, createAppStore, sagaMiddleware} from './store/app.store';
 
-import { AppState } from './store/app.reducer';
+import {AppState} from './store/app.reducer';
 /**
  * Environment
  */
-import { environment } from '../environments/environment';
+import {environment} from '../environments/environment';
 
 /**
  * Membersocket service factory
@@ -150,7 +150,6 @@ export function memberSocketServiceFactory() {
         LoginGuardService,
         ToasterService,
         ChannelService,
-        AlertIconAndTypesService,
         AccountsService,
         PermissionGroupService,
         MemberService,

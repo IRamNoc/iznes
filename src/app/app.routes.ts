@@ -1,14 +1,14 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 /* Layouts. */
-import { BasicLayoutComponent, BlankLayoutComponent } from '@setl/core-layout';
+import {BasicLayoutComponent, BlankLayoutComponent} from '@setl/core-layout';
 /* Components. */
-import { HomeComponent } from './home/home.component';
-import { SetlMyAccountComponent } from '@setl/core-account';
+import {HomeComponent} from './home/home.component';
+import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
-import { LoginGuardService, SetlLoginComponent } from '@setl/core-login';
-import { FormElementsComponent } from './ui-elements/form-elements.component';
+import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
+import {FormElementsComponent} from './ui-elements/form-elements.component';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -40,7 +40,7 @@ import {
     ManageSubPortfolioComponent
 } from '@setl/core-useradmin';
 /* Product */
-import { OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent } from '@ofi/product';
+import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
 /* Corporate Actions Components */
 import {
     CreateResolutionComponent,
@@ -56,20 +56,17 @@ import {
     IssueAssetComponent,
     RegisterAssetComponent,
     RegisterIssuerComponent,
+    RequestAssetComponent,
     SendAssetComponent
 } from '@setl/asset-servicing';
 /**
  * Manage member module.
  */
-import {
-    ManageAccountComponent,
-    ManageChainMembershipComponent,
-    ManageMemberComponent
-} from '@setl/core-manage-member';
-import { SetlMessagesComponent } from '@setl/core-messages';
-import { SetlBalancesComponent, SetlIssueComponent } from '@setl/core-balances';
+import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComponent} from '@setl/core-manage-member';
+import {SetlMessagesComponent} from '@setl/core-messages';
+import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 /** Connection module */
-import { ConnectionComponent } from '../../setl_modules/core-connections/connections/component';
+import {ConnectionComponent} from '../../setl_modules/core-connections/connections/component';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -213,6 +210,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'send-asset',
                         component: SendAssetComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'request-asset',
+                        component: RequestAssetComponent,
                         canActivate: [LoginGuardService]
                     }
                 ],

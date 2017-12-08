@@ -3,6 +3,7 @@ package com.setl.RESTAPITests.ManagementCompany.Creation;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -35,6 +36,7 @@ public class createManagementCompanyAcceptanceTest {
 
 
   @Test
+  @Ignore
   public void createNewManagementCompany() throws ExecutionException, InterruptedException {
     String managementCompanyDetails[] = generateManagementCompanyDetails();
     String entityId = managementCompanyDetails[0];
@@ -80,6 +82,7 @@ public class createManagementCompanyAcceptanceTest {
     });
   }
   @Test
+  @Ignore
   public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
     String managementCompanyDetails[] = generateManagementCompanyDetails();
     String managementCompanyName = managementCompanyDetails[0];

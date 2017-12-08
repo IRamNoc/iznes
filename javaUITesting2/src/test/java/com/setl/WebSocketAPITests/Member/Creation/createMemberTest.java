@@ -10,6 +10,7 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -41,6 +42,7 @@ public class createMemberTest {
   String localAddress = "ws://localhost:9788/db/";
 
   @Test
+  @Ignore
   public void createNewMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     createMember(factory, socket);
@@ -48,6 +50,7 @@ public class createMemberTest {
   }
 
   @Test
+  @Ignore
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     String memberDetails[] = generateMemberDetails();
@@ -66,6 +69,7 @@ public class createMemberTest {
   }
 
   @Test
+  @Ignore
   public void createMultipleMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     createMember(factory, socket, 5);
@@ -73,6 +77,7 @@ public class createMemberTest {
   }
 
   @Test
+  @Ignore
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
   final AtomicInteger atomicInt = new AtomicInteger(0);

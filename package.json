@@ -51,7 +51,7 @@
         "@setl/core-connections": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-connections.git",
         "@webcomponents/custom-elements": "^1.0.0",
         "angular2-toaster": "^4.0.1",
-        "clarity-angular": "0.10.7",
+        "clarity-angular": "0.10.16",
         "clarity-icons": "^0.10.1",
         "clarity-ui": "^0.10.1",
         "core-js": "^2.4.1",
