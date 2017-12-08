@@ -15,6 +15,7 @@ import {SetlPipesModule} from '@setl/utils';
 import {QuillEditorModule} from 'ngx-quill-editor';
 import {MultilingualModule} from '@setl/multilingual';
 
+import { MessagesService } from './messages.service';
 import {
     MyMessagesService,
 } from '@setl/core-req-services';
@@ -48,7 +49,8 @@ import {SetlMessageBodyComponent} from "./messages/message-components/message-bo
         SetlMessageAttachmentComponent
     ],
     providers: [
-        MyMessagesService
+        MyMessagesService,
+        MessagesService
     ]
 })
 
