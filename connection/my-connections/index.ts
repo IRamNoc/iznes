@@ -1,4 +1,4 @@
 export { name } from './__init__';
 export { MyConnectionReducer } from './reducer';
-export { ConnectionState } from './model';
-export { GET_CONNECTIONS, CREATE_CONNECTION } from './actions';
+export { MyConnectionState } from './model';
+export { GET_CONNECTIONS, CREATE_CONNECTION, SET_REQUESTED_CONNECTIONS } from './actions';

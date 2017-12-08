@@ -227,4 +227,11 @@ export {
 } from './chain';
 
 /* Connections */
-export { GET_CONNECTIONS, CREATE_CONNECTION, ConnectionState, ConnectionReducer } from './connection';
+export {
+    GET_CONNECTIONS,
+    CREATE_CONNECTION,
+    SET_REQUESTED_CONNECTIONS,
+    ConnectionState,
+    ConnectionReducer,
+    setRequestedConnections
+} from './connection';
