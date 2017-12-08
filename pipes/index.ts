@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Pipe, PipeTransform} from '@angular/core';
 import {pad} from '../helper/common';
+import * as moment from 'moment'
 
 @Pipe({
     name: 'truncate'
@@ -108,6 +109,13 @@ export class PaddingPipe implements PipeTransform {
     }
 }
 
+@Pipe({name: 'datex'})
+export class DateXPipe implements PipeTransform {
+    transform(date: string, format): string {
+        return moment(date).format(format);
+    }
+}
+
 @NgModule({
     declarations: [
         TruncatePipe,
@@ -115,7 +123,8 @@ export class PaddingPipe implements PipeTransform {
         MoneyValuePipe,
         MoneyValueOfiPipe,
         CapitalizePipe,
-        PaddingPipe
+        PaddingPipe,
+        DateXPipe
     ],
     exports: [
         TruncatePipe,
@@ -123,7 +132,8 @@ export class PaddingPipe implements PipeTransform {
         MoneyValuePipe,
         MoneyValueOfiPipe,
         CapitalizePipe,
-        PaddingPipe
+        PaddingPipe,
+        DateXPipe
     ]
 })
 
