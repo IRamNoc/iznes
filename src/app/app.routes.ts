@@ -66,7 +66,7 @@ import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComp
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 /** Connection module */
-import {ConnectionComponent} from '../../setl_modules/core-connections/connections/component';
+import {ConnectionComponent} from '@setl/core-connections/connections/component';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
