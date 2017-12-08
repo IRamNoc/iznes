@@ -132,7 +132,7 @@
                             <span class="message-date">
                                 <clr-icon shape="balance" *ngIf="message.action"></clr-icon>
                                 <clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>
-                                {{message.date | date}}
+                                {{message.date | datex: "MMM D, YYYY"}}
                             </span>
                             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
                         </div>
