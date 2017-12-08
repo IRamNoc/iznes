@@ -50,7 +50,7 @@
                             <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell><span id="{{user.index}}">{{user.userName}}</span></clr-dg-cell>
+                    <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
