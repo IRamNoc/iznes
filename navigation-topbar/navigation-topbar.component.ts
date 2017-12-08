@@ -191,11 +191,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         console.log(window.innerWidth);
 
-        if (window.innerWidth <= 1440) {
-            this.ngRedux.dispatch(setMenuShown(false));
-        } else {
-            this.ngRedux.dispatch(setMenuShown(true));
-        }
+
+        this.ngRedux.dispatch(setMenuShown(true));
     }
 
     ngOnDestroy() {
