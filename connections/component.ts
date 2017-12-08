@@ -7,16 +7,17 @@ import { NgRedux, select } from '@angular-redux/store';
 import _ from 'lodash';
 // Internal
 import {
+    ConnectionService,
     InitialisationService,
     MyWalletsService,
     WalletNodeRequestService,
     WalletnodeTxService
 } from '@setl/core-req-services';
 
-import { setRequestedWalletAddresses, setRequestedWalletToRelationship } from '@setl/core-store';
-
+import { setRequestedConnections, setRequestedWalletAddresses } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConnectionsService } from '../connections.service';
+import { SagaHelper } from '@setl/utils/index';
+import { CREATE_CONNECTION } from '@setl/core-store/connection/my-connections';
 
 @Component({
     selector: 'app-my-connections',
@@ -24,23 +25,25 @@ import { ConnectionsService } from '../connections.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
+    formGroup: FormGroup;
     tabsControl: any = [];
     requestedWalletAddress: boolean;
     connectedWalletId: number;
     walletList = [];
     addressList = [];
-    formGroup: FormGroup;
+    connectionList = [];
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    // List of Redux observable.
-    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
-    @select(['wallet', 'walletDirectory', 'walletList']) walletListObs;
-    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
-    @select(['wallet', 'myWalletAddress', 'addressList']) addressListObs;
-    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
+    // List of Redux observable.
+    @select(['wallet', 'walletDirectory', 'walletList']) walletListObs;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
+    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
+    @select(['wallet', 'myWalletAddress', 'addressList']) subPortfolioAddressObs;
+    @select(['connection', 'myConnection', 'requestedConnections']) requestedConnectionsStateObs;
+    @select(['connection', 'myConnection', 'connectionList']) connectionListObs;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
@@ -49,22 +52,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
-                private connectionService: ConnectionsService) {
+                private connectionService: ConnectionService) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
 
-        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.requestWalletList(wallets)));
-
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
-
-        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
+        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.requestWalletList(wallets)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.addressListObs.subscribe((addresses) => this.getAddressList(addresses)));
-
-        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe(
-            (requestedState) => this.requestWalletToRelationship(requestedState)
-        ));
+        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
+        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
+        this.subscriptionsArray.push(this.requestedConnectionsStateObs.subscribe((requested) => this.requestConnectionList(requested)));
+        this.subscriptionsArray.push(this.connectionListObs.subscribe((connections) => this.getConnections(connections)));
     }
 
     ngOnInit() {
@@ -87,7 +86,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.forEach((subscription) => subscription.unsubscribe());
     }
 
-    requestWalletList(wallets) {
+    requestWalletList(wallets: Array<any>) {
         let data = [];
 
         Object.keys(wallets).map((key) => {
@@ -100,7 +99,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.walletList = data;
     }
 
-    requestAddressList(requested) {
+    requestAddressList(requested: boolean) {
         console.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
@@ -113,18 +112,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    requestWalletToRelationship(requestedInstrumentState) {
-        if (!requestedInstrumentState) {
-            const walletId = this.connectedWalletId;
-
-            // Set request wallet to-relationship flag to true, to indicate that we have already requested wallet to
-            // relationship.
-            this.ngRedux.dispatch(setRequestedWalletToRelationship());
-
-            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsService, walletId);
-        }
-    }
-
     requestWalletLabel(requestedState: boolean) {
         console.log('checking requested', this.requestedWalletAddress);
 
@@ -134,17 +121,49 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    getAddressList(addresses) {
+    requestConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId !== 0) {
+            this.ngRedux.dispatch(setRequestedConnections());
+
+            InitialisationService.requestConnectionList(this.ngRedux, this.connectionService, this.connectedWalletId);
+        }
+    }
+
+    getAddressList(addresses: Array<any>) {
         let data = [];
 
         Object.keys(addresses).map((key) => {
             data.push({
-                id: key,
+                id: addresses[key].addr,
                 text: addresses[key].label
             });
         });
 
         this.addressList = data;
+    }
+
+    getConnections(connections: any) {
+        let data = [];
+
+        console.log(this.walletList, this.addressList);
+
+        if (this.walletList && this.addressList) {
+            connections.map((connection) => {
+                const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
+                const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0];
+
+                data.push({
+                    connection: connectionName,
+                    subPortfolio: subPortfolioName
+                });
+            });
+
+            console.log('========= DATA =========');
+            console.log(data);
+            console.log('========================');
+
+            this.connectionList = data;
+        }
     }
 
     showErrorResponse(response) {
@@ -175,15 +194,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     showSuccessResponse(message) {
         this.alertsService.create('success', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-success">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
     showWarningResponse(message) {
@@ -209,19 +227,28 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     handleCreate() {
         const data = {
-            leoId: this.connectedWalletId.toString(),
+            leiId: this.connectedWalletId.toString(),
             senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
-            address: this.formGroup.controls['sub-portfolio'].value[0].label,
-            connectionId: 0,
+            address: this.formGroup.controls['sub-portfolio'].value[0].id,
+            connetionId: 0,
             status: 1
         };
+
+        const asyncTaskPipe = this.connectionService.createConnection(data);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [CREATE_CONNECTION],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
-    handleEdit($e) {
-
+    handleEdit() {
+        console.log('edit connection');
     }
 
-    handleDelete($e) {
-
+    handleDelete() {
+        console.log('delete connection');
     }
 }
