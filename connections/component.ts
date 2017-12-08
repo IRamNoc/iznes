@@ -1,9 +1,9 @@
 // Vendor
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import { Subscription } from 'rxjs/Subscription';
-import { NgRedux, select } from '@angular-redux/store';
+import {Subscription} from 'rxjs/Subscription';
+import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
 // Internal
 import {
@@ -14,10 +14,10 @@ import {
     WalletnodeTxService
 } from '@setl/core-req-services';
 
-import { setRequestedConnections, setRequestedWalletAddresses } from '@setl/core-store';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { SagaHelper } from '@setl/utils/index';
-import { CREATE_CONNECTION } from '@setl/core-store/connection/my-connections';
+import {setRequestedConnections, setRequestedWalletAddresses} from '@setl/core-store';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {SagaHelper} from '@setl/utils/index';
+import {CREATE_CONNECTION, DELETE_CONNECTION} from '@setl/core-store/connection/my-connections';
 
 @Component({
     selector: 'app-my-connections',
@@ -28,6 +28,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     formGroup: FormGroup;
     tabsControl: any = [];
     requestedWalletAddress: boolean;
+    requestedAddressLabel: boolean;
     connectedWalletId: number;
     walletList = [];
     addressList = [];
@@ -36,8 +37,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
     // List of Redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
     @select(['wallet', 'walletDirectory', 'walletList']) walletListObs;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
@@ -56,12 +57,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
+        this.requestedAddressLabel = false;
 
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
-        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.requestWalletList(wallets)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
+        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
+        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
+        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressLabelState(requested)));
         this.subscriptionsArray.push(this.requestedConnectionsStateObs.subscribe((requested) => this.requestConnectionList(requested)));
         this.subscriptionsArray.push(this.connectionListObs.subscribe((connections) => this.getConnections(connections)));
     }
@@ -86,19 +89,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.forEach((subscription) => subscription.unsubscribe());
     }
 
-    requestWalletList(wallets: Array<any>) {
-        let data = [];
-
-        Object.keys(wallets).map((key) => {
-            data.push({
-                id: wallets[key].walletID,
-                text: wallets[key].walletName
-            });
-        });
-
-        this.walletList = data;
-    }
-
     requestAddressList(requested: boolean) {
         console.log('requested wallet address', this.requestedWalletAddress);
 
@@ -110,6 +100,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             // Request the list.
             InitialisationService.requestWalletAddresses(this.ngRedux, this._walletNodeRequestService, this.connectedWalletId);
         }
+    }
+
+    requestAddressLabelState(requestedState: boolean) {
+        this.requestedAddressLabel = requestedState;
     }
 
     requestWalletLabel(requestedState: boolean) {
@@ -129,41 +123,57 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    getAddressList(addresses: Array<any>) {
+    getWalletList(wallets: Array<any>) {
         let data = [];
 
-        Object.keys(addresses).map((key) => {
+        Object.keys(wallets).map((key) => {
             data.push({
-                id: addresses[key].addr,
-                text: addresses[key].label
+                id: wallets[key].walletID,
+                text: wallets[key].walletName
             });
         });
 
-        this.addressList = data;
+        this.walletList = data;
     }
 
-    getConnections(connections: any) {
+    getAddressList(addresses: Array<any>) {
         let data = [];
 
-        console.log(this.walletList, this.addressList);
-
-        if (this.walletList && this.addressList) {
-            connections.map((connection) => {
-                const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
-                const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0];
-
+        if (this.requestedAddressLabel) {
+            Object.keys(addresses).map((key) => {
                 data.push({
-                    connection: connectionName,
-                    subPortfolio: subPortfolioName
+                    id: key,
+                    text: addresses[key].label
                 });
             });
 
-            console.log('========= DATA =========');
-            console.log(data);
-            console.log('========================');
+            this.addressList = data;
 
-            this.connectionList = data;
+            this.updateConnections();
         }
+    }
+
+    getConnections(connections: any) {
+        this.connectionList = connections;
+    }
+
+    updateConnections() {
+        const connections = this.connectionList;
+        let data = [];
+
+        connections.map((connection) => {
+            const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
+            const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
+
+            data.push({
+                id: connection.connectionId,
+                connection: connectionName,
+                subPortfolio: subPortfolioName
+            });
+        });
+
+        this.connectionList = data;
+        this.changeDetectorRef.markForCheck();
     }
 
     showErrorResponse(response) {
@@ -248,7 +258,19 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         console.log('edit connection');
     }
 
-    handleDelete() {
-        console.log('delete connection');
+    handleDelete(connection: any) {
+        const data = {
+            leiId: this.connectedWalletId,
+            senderLei: connection.connectionId
+        };
+
+        const asyncTaskPipe = this.connectionService.deleteConnection(data);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [DELETE_CONNECTION],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 }
