@@ -67,6 +67,12 @@ import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
 /** Connection module */
 import {ConnectionComponent} from '@setl/core-connections/connections/component';
+/**
+ * T2S Module.
+ */
+import {
+    T2sMessagesComponent
+} from '@setl/core-t2s';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -373,6 +379,17 @@ export const ROUTES: Routes = [
                         path: 'collects-archive',
                         canActivate: [LoginGuardService],
                         component: OfiCollectiveArchiveComponent
+                    }
+                ]
+            },
+            {
+                path: 't2s',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'messages',
+                        canActivate: [LoginGuardService],
+                        component: T2sMessagesComponent
                     }
                 ]
             }
