@@ -29,7 +29,7 @@ node {
             stage('Deploy Frontend to Test Environment'){
                 node{
                     sh '''
-              ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
+              ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/ofi_backups/www_setltestnet_$(date +%F-%H:%M) &&
               ssh root@139.162.213.130 mkdir /var/www_setltestnet && 
               scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
                 }
@@ -37,7 +37,7 @@ node {
             stage('Deploy Backend to Test Environment') {
                 node {
                     sh '''
-                            ssh root@139.162.213.130 mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
+                            ssh root@139.162.213.130 mv /var/phpapps/backend /var/ofi_backups/backend_$(date +%F-%H:%M) &&
                             ssh root@139.162.213.130 mkdir /var/phpapps/backend && 
                             scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
                 }
@@ -46,7 +46,7 @@ node {
             stage('Deploy French Fund Daemon to Test Environment') {
                 node {
                     sh '''
-                            ssh root@139.162.213.130 mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
+                            ssh root@139.162.213.130 mv /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon_$(date +%F-%H:%M) &&
                             ssh root@139.162.213.130 mkdir /var/phpapps/frenchfunddaemon && 
                             scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
                 }
@@ -61,9 +61,8 @@ node {
             }
 
             stage ('Delete old backups'){
-                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find . -type d -mtime +4 -name \'*backend_*\' | xargs rm -rf\''
-                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find . -type d -mtime +4 -name \'*frenchfunddaemon_*\' | xargs rm -rf\''
-                sh 'ssh -t root@139.162.213.130 \'cd /var ; bash && find . -type d -mtime +4 -name \'*www-setltestnet_*\' | xargs rm -rf\''
+                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find /var/ofi_backups -type d -mtime +4 | xargs rm -rf\''
+
             }
 
         } catch (e) {
