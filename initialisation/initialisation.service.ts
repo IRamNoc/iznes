@@ -1,44 +1,46 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {WalletNodeRequestService} from '../index';
-import {MyWalletsService} from '../index';
-import {ChannelService} from '../index';
-
-import {AccountsService} from '../index';
-import {MyUserService} from '../index';
-import {PermissionGroupService} from '../index';
-import {ChainService} from '../index';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import {
-    SET_WALLET_ADDRESSES,
-    SET_OWN_WALLETS,
-    SET_WALLET_DIRECTORY,
+    AccountsService,
+    ChainService,
+    ChannelService,
+    ConnectionService,
+    MyUserService,
+    MyWalletsService,
+    PermissionGroupService,
+    WalletNodeRequestService
+} from '../index';
+import {
+    clearRequestedAllInstruments,
+    clearRequestedWalletAddresses,
+    clearRequestedWalletHolding,
+    clearRequestedWalletInstrument,
+    clearRequestedWalletIssuer,
+    clearRequestedWalletLabel,
     SET_ACCOUNT_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
-    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_MANAGED_WALLETS,
-    SET_WALLET_HOLDING,
-    clearRequestedWalletIssuer,
-    clearRequestedWalletInstrument,
-    SET_MY_INSTRUMENTS_LIST,
-    SET_WALLET_TO_RELATIONSHIP,
-    setRequestedAccountList,
-    SET_USER_DETAILS,
-    setRequestedMyChainAccess,
-    SET_MY_CHAIN_ACCESS,
-    clearRequestedWalletHolding,
-    clearRequestedWalletAddresses,
-    clearRequestedAllInstruments,
-    setRequesteAllInstruments,
     SET_ALL_INSTRUMENTS_LIST,
+    SET_MANAGED_WALLETS,
+    SET_MY_CHAIN_ACCESS,
+    SET_MY_INSTRUMENTS_LIST,
+    SET_OWN_WALLETS,
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_USER_DETAILS,
+    SET_WALLET_ADDRESSES,
+    SET_WALLET_DIRECTORY,
+    SET_WALLET_HOLDING,
+    SET_WALLET_TO_RELATIONSHIP,
+    setRequesteAllInstruments,
+    setRequestedAccountList,
+    setRequestedMyChainAccess,
     updateLastCreatedContractDetail,
-    updateLastCreatedRegisterIssuerDetail,
-    clearRequestedWalletLabel
+    updateLastCreatedRegisterIssuerDetail
 } from '@setl/core-store';
 import _ from 'lodash';
 
-
-import {SagaHelper} from '@setl/utils';
-import {MemberSocketService} from '@setl/websocket-service';
+import { SagaHelper } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { GET_CONNECTIONS } from '@setl/core-store/connection/my-connections';
 
 @Injectable()
 export class InitialisationService {
@@ -160,7 +162,6 @@ export class InitialisationService {
 
         return false;
     }
-
 
     static membernodeInitialisation(ngRedux: NgRedux<any>,
                                     myWalletsService: MyWalletsService,
@@ -356,7 +357,6 @@ export class InitialisationService {
         // clear (set to false) the state of requested wallet instruments
         ngRedux.dispatch(clearRequestedWalletInstrument());
 
-
         // clear (set to false) the state of requested wallet address
         ngRedux.dispatch(clearRequestedWalletAddresses());
 
@@ -406,7 +406,6 @@ export class InitialisationService {
 
     }
 
-
     /**
      * Default static call to get my chain access, and dispatch default actions, and other
      * default task.
@@ -427,6 +426,21 @@ export class InitialisationService {
             asyncTaskPipe,
             {}
         ));
+    }
+
+    static requestConnectionList(ngRedux: NgRedux<any>, connectionService: ConnectionService, walletId: number) {
+        // Get connections
+        const asyncTaskPipes = connectionService.getMyConnections(walletId.toString());
+
+        // Set the "requestedConnections" state (which is a flag) to true
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_CONNECTIONS],
+            [],
+            asyncTaskPipes,
+            {}
+        ));
+
+        return true;
     }
 
 }
