@@ -368,7 +368,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public convertToArray(obj): Array<any> {
-        let i = 0, key, newArray = [];
+        let i = 1, key, newArray = [];
         for (key in obj) {
             newArray.push(obj[key]);
             newArray[newArray.length - 1].index = i++; // used to maintain order.

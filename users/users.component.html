@@ -43,14 +43,14 @@
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersList">
+                <clr-dg-row *clrDgItems="let user of usersList; let i = index">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button id="edit-{{user.userID}}" (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                             <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{user.userName}}</clr-dg-cell>
+                    <clr-dg-cell><span id="{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
