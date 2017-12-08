@@ -2,7 +2,9 @@
 import {Injectable} from '@angular/core';
 
 /* Package Imports. */
+import {Observable} from 'rxjs';
 import {Subscription} from 'rxjs/Subscription';
+import _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from "@setl/utils/index";
 import {MyMessagesService} from '@setl/core-req-services';
@@ -11,13 +13,14 @@ import {MyMessagesService} from '@setl/core-req-services';
 @Injectable()
 export class MessagesService {
 
-    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
-    @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectory;
+    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet: Observable<any>;
+    @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectory: Observable<any>;
 
     language;
     subscriptionsArray: Array<Subscription> = [];
 
-    public connectedWallet;
+    connectedWallet;
+    walletDirectory;
 
     /* Constructor. */
     constructor(private ngRedux: NgRedux<any>,
@@ -34,7 +37,7 @@ export class MessagesService {
         this.subscriptionsArray.push(
             this.getWalletDirectory.subscribe(
                 (data) => {
-                    this.getWalletDirectory = data;
+                    this.walletDirectory = data;
                 }
             )
         );
@@ -61,18 +64,24 @@ export class MessagesService {
         const subject = btoa(subjectStr);
 
         const recipients = {};
+        let senderPub;
 
         // get pub key for recipients
         for (const i in recipientsArr) {
             const walletId = recipientsArr[i];
-            const recipientId = walletId;
-            const recipientPub = this.getWalletDirectory[walletId].commuPub;
-            recipients[recipientId] = recipientPub;
+
+            const wallet = _.find(this.walletDirectory, (obj) => {
+                return obj.walletID === parseInt(walletId);
+            });
+
+            recipients[walletId] = wallet.commuPub;
         }
 
         // get current wallet
-        const currentWallet = this.getWalletDirectory[this.connectedWallet];
-        const senderPub = currentWallet.commuPub;
+        const currentWallet = _.find(this.walletDirectory, (obj) => {
+            return obj.walletID === parseInt(this.connectedWallet);
+        });
+        senderPub = currentWallet.commuPub;
 
         return this.sendMessageRequest(subject, body, this.connectedWallet, senderPub, recipients);
     }
