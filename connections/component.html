@@ -31,7 +31,7 @@
                 <clr-dg-column>Connection</clr-dg-column>
                 <clr-dg-column>My sub-portfolios</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let address of addressList;">
+                <clr-dg-row *clrDgItems="let connection of connectionList;">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button id="btnEditConnection" class="btn" (click)="handleEdit(connection)"><i
@@ -42,41 +42,12 @@
                         </div>
                     </clr-dg-cell>
 
-                    <!--<clr-dg-cell>-->
-                    <!--<span *ngIf="!address.editing">-->
-                    <!--{{address.label}}-->
-                    <!--</span>-->
-                    <!--<div *ngIf="address.editing">-->
-
-                    <!--<form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"-->
-                    <!--style="padding: 0">-->
-                    <!--<input type="text" [value]="address.label" #subportfolio style="width: inherit">-->
-                    <!--<i class="fa fa-floppy-o icon-btn" aria-hidden="true"-->
-                    <!--type="submit"-->
-                    <!--(click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"></i>-->
-                    <!--</form>-->
-                    <!--</div>-->
-                    <!--</clr-dg-cell>-->
-
-                    <!--<clr-dg-cell>-->
-
-                    <!--<span *ngIf="!address.editing">-->
-                    <!--{{address.iban}}-->
-                    <!--</span>-->
-                    <!--<div *ngIf="address.editing">-->
-
-                    <!--<form (submit)="handleUpdateLabel(address.label, address.address, iban.value)"-->
-                    <!--style="padding: 0">-->
-                    <!--<input type="text" [value]="address.iban" #iban style="width: inherit">-->
-                    <!--<i class="fa fa-floppy-o icon-btn" aria-hidden="true"-->
-                    <!--type="submit"-->
-                    <!--(click)="handleUpdateLabel(address.label, address.address, iban.value)"></i>-->
-                    <!--</form>-->
-                    <!--</div>-->
-                    <!--</clr-dg-cell>-->
+                    <clr-dg-cell>
+                        {{connection.connection}}
+                    </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{address.address}}
+                        {{connection.subPortfolio}}
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -90,7 +61,7 @@
 
     <ng-template #addConnection let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="new-user-form" (ngSubmit)="handleCreate(tabid)" [formGroup]="formControl">
+            <form id="new-user-form" (ngSubmit)="handleCreate()" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
