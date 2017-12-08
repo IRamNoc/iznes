@@ -5,4 +5,5 @@ export interface ConnectionDetail {
 
 export interface MyConnectionState {
     connectionList: Array<ConnectionDetail>;
+    requestedConnections: boolean;
 }
