@@ -12,6 +12,8 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Connection component */
 import { ConnectionComponent } from './connections/component';
 
+import { ConnectionService } from '@setl/core-req-services';
+
 @NgModule({
     declarations: [
         ConnectionComponent
@@ -28,7 +30,9 @@ import { ConnectionComponent } from './connections/component';
         SelectModule,
         MultilingualModule
     ],
-    providers: []
+    providers: [
+        ConnectionService
+    ]
 })
 
 export class ConnectionsModule {
