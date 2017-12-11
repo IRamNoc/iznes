@@ -393,6 +393,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         currentMessage.isRead = true;
 
+        if(typeof currentMessage.action === "string") currentMessage.action = JSON.parse(currentMessage.action);
+
         this.currentMessage = currentMessage;
         this.changeDetectorRef.detectChanges();
     }

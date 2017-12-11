@@ -8,6 +8,7 @@ import _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from "@setl/utils/index";
 import {MyMessagesService} from '@setl/core-req-services';
+import {MessageActionsConfig} from '@setl/core-messages';
 
 /* Service Class. */
 @Injectable()
@@ -53,11 +54,11 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action = '') {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig = null) {
 
         const bodyObj = {
             general: btoa(bodyStr),
-            action: action
+            action: JSON.stringify(action)
         };
 
         const body = JSON.stringify(bodyObj);

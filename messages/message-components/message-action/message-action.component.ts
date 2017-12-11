@@ -1,5 +1,10 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
+import {Common, SagaHelper} from '@setl/utils';
+import {WalletNodeSocketService} from '@setl/websocket-service';
+
+import {MessageAction, MessageActionsConfig} from './message-action.model';
 /**
  * SETL Message Action Component
  *
@@ -16,47 +21,29 @@ export class SetlMessageActionComponent implements OnInit, OnDestroy {
     
     @Input() config: MessageActionsConfig;
 
-    constructor() {}
+    constructor(private ngRedux: NgRedux<any>, private walletNodeSocketService: WalletNodeSocketService) {}
 
-    ngOnInit() {
-        this.config = new MessageActionsConfig();
-
-        this.config.actions.push({
-            text: "Submit",
-            styleClasses: "btn-primary",
-            callback: () => {
-                return new Observable();
-            }
-        });
-    }
+    ngOnInit() {}
 
     ngOnDestroy() {}
 
     onActionClick(action: MessageAction): void {
-        action.callback().subscribe(() => {
-            if(action.onSuccessFn) action.onSuccessFn();
-        }, (e: any) => {
-            if(action.onErrorFn) action.onErrorFn();
-        });
+        const request = Common.createWalletNodeSagaRequest(this.walletNodeSocketService, action.type, action.payload);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            action.successType,
+            action.failureType,
+            request,
+            {},
+            (data) => {
+                console.log('do action success:', data);
+            },
+            (data) => {
+                console.log('do action failed:', data);
+
+                // error modal?
+            }
+        ));
     }
 
-}
-
-export class MessageActionsConfig {
-    type: string = '';
-    actions: MessageAction[] = [];
-    content: MessageField[] = [];
-}
-
-export class MessageAction {
-    text: string = '';
-    styleClasses?: string = '';
-    callback: () => Observable<any>;
-    onSuccessFn?: () => void;
-    onErrorFn?: () => void;
-}
-
-export class MessageField {
-    name: string;
-    content: string;
 }

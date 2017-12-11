@@ -1,12 +1,15 @@
-<div class="message-body" *ngIf="config.content">
-    <div class="message-field" *ngFor="let field of config.content">
-        <div class="message-field--name">{{field.name}}</div>
-        <div class="message-field--content">{{field.content}}</div>
+<ng-container *ngIf="config">
+    <div class="message-body" *ngIf="config.content">
+        <div class="message-field" *ngFor="let field of config.content">
+            <div class="message-field--name" mltag="field.name_mltag">{{field.name}}</div>
+            <div class="message-field--content">{{field.content}}</div>
+            <div class="hr-line-dashed"></div>
+        </div>
     </div>
-</div>
-
-<div class="message-actions" *ngIf="config.actions">
-    <div class="message-action" *ngFor="let action of config.actions">
-        <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)">{{action.text}}</button>
+    
+    <div class="message-actions" *ngIf="config.actions">
+        <div class="message-action" *ngFor="let action of config.actions">
+            <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)" mltag="action.text_tag">{{action.text}}</button>
+        </div>
     </div>
-</div>
+</ng-container>
