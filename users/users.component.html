@@ -46,8 +46,8 @@
                 <clr-dg-row *clrDgItems="let user of usersList; let i = index">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.index)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.index)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                            <button id="edit-{{user.userID}}" (click)="handleEdit(i)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                            <button id="delete-{{user.userID}}" (click)="handleDelete(i)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
