@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {Common, SagaHelper} from '@setl/utils';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
-import {MessageAction, MessageActionsConfig} from './message-action.model';
+import {MessageAction, MessageActionsConfig} from './message-form-action.model';
 /**
  * SETL Message Action Component
  *
@@ -13,11 +13,11 @@ import {MessageAction, MessageActionsConfig} from './message-action.model';
  * @uses FileViewerComponent to download display the attachment
  */
 @Component({
-    selector: 'setl-message-action',
-    templateUrl: './message-action.component.html',
-    styleUrls: ['./message-action.component.css']
+    selector: 'setl-message-form-action',
+    templateUrl: './message-form-action.component.html',
+    styleUrls: ['./message-form-action.component.css']
 })
-export class SetlMessageActionComponent implements OnInit, OnDestroy {
+export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     
     @Input() config: MessageActionsConfig;
 
@@ -28,7 +28,7 @@ export class SetlMessageActionComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     onActionClick(action: MessageAction): void {
-        const request = Common.createWalletNodeSagaRequest(this.walletNodeSocketService, action.type, action.payload);
+        const request = Common.createWalletNodeSagaRequest(this.walletNodeSocketService, action.messageType, action.payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             action.successType,
@@ -36,10 +36,10 @@ export class SetlMessageActionComponent implements OnInit, OnDestroy {
             request,
             {},
             (data) => {
-                console.log('do action success:', data);
+                console.log('message action success:', data);
             },
             (data) => {
-                console.log('do action failed:', data);
+                console.log('message action failed:', data);
 
                 // error modal?
             }

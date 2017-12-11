@@ -160,14 +160,14 @@
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted">
+                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && currentMessage.action.type !== 'formAction'">
                                 <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
                                 <setl-message-attachment [attachmentType]="'pdf'" [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
-                                <setl-message-action [config]="currentMessage.action"></setl-message-action>
+                                <setl-message-form-action [config]="currentMessage.action"></setl-message-form-action>
                             </p>
                         </div>
                     </div>

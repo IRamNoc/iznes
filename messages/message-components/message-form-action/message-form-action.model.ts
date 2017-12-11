@@ -10,7 +10,7 @@ export class MessageActionsConfig {
 export class MessageAction {
     text: string = '';
     text_mltag: string = '';
-    type: string = ''; // tx
+    messageType: string = ''; // tx
     payload: any; // api payload,
     successType: string;
     failureType: string;
