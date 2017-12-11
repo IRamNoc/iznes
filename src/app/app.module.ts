@@ -46,6 +46,7 @@ import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
 import {CorpActionsModule} from '@setl/core-corp-actions';
+import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -127,7 +128,8 @@ export function memberSocketServiceFactory() {
         OfiMainModule,
         SetlDirectivesModule,
         SetlServicesModule,
-        ConnectionsModule
+        ConnectionsModule,
+        T2sModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
