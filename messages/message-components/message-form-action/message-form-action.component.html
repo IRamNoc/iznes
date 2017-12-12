@@ -1,5 +1,7 @@
 <ng-container *ngIf="config">
-    <div class="message-body" *ngIf="config.content">
+    <div class="message-body">{{config.messageBody}}</div>
+
+    <div class="message-fields" *ngIf="config.content">
         <div class="message-field" *ngFor="let field of config.content">
             <div class="message-field--name" mltag="field.name_mltag">{{field.name}}</div>
             <div class="message-field--content">{{field.content}}</div>

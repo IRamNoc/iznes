@@ -20,7 +20,7 @@ import {
     MyMessagesService,
 } from '@setl/core-req-services';
 import {FileViewerModule} from '@setl/core-fileviewer';
-import {SetlMessageActionComponent} from "./messages/message-components/message-action/message-action.component";
+import {SetlMessageFormActionComponent} from "./messages/message-components/message-form-action/message-form-action.component";
 import {SetlMessageAttachmentComponent} from "./messages/message-components/message-attachment/message-attachment.component";
 import {SetlMessageBodyComponent} from "./messages/message-components/message-body/message-body.component";
 
@@ -41,13 +41,13 @@ import {SetlMessageBodyComponent} from "./messages/message-components/message-bo
     ],
     declarations: [
         SetlMessagesComponent,
-        SetlMessageActionComponent,
+        SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
         SetlMessageAttachmentComponent
     ],
     exports: [
         SetlMessagesComponent,
-        SetlMessageActionComponent,
+        SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
         SetlMessageAttachmentComponent
     ],
