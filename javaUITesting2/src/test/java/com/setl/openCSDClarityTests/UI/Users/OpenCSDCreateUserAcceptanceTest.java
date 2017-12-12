@@ -19,16 +19,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import static SETLAPIHelpers.SetUp.username;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
+import static junit.framework.TestCase.assertTrue;
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.description;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 public class OpenCSDCreateUserAcceptanceTest {
@@ -55,8 +59,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    @Ignore
-    public void shouldCreateUser2() throws IOException, InterruptedException, ExecutionException {
+    public void shouldCreateUserAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
@@ -66,12 +69,40 @@ public class OpenCSDCreateUserAcceptanceTest {
         Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
         User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
-        connection.disconnect();
+            connection.disconnect();
 
-        System.out.println("userID " + user.getUserID());
-        System.out.println("userName " + user.getUserName());
-        System.out.println("email " + user.getEmailAddress());
-        //System.out.println("password " + user.getPassword());
+        navigateToAddUser();
+        navigateToUserSearch();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/cltr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
+
+        String userAmount1 = driver.findElement(By.className("datagrid-foot-description")).getText();
+        String userAmount = userAmount1.substring(userAmount1.length() - 3);
+        String usernameID = "username-" + userAmount;
+        assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
+    }
+    @Test
+    public void shouldNotCreateDuplicateUserAPI() throws IOException, InterruptedException, ExecutionException {
+        String userDetails[] = generateUserDetails();
+        String userName = userDetails[0];
+        String password = userDetails[1];
+        String email = userDetails[2];
+
+        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+
+            connection.disconnect();
+
+        navigateToAddUser();
+        enterManageUserUsername(userDetails[0]);
+        enterManageUserEmail(userDetails[2]);
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        enterManageUserPassword(userDetails[1]);
+        enterManageUserPasswordRepeat(userDetails[1]);
+        clickManageUserSubmit();
+
+        String userAmount1 = driver.findElement(By.className("jaspero__dialog-title")).getText();
+        assertTrue(userAmount1.contains("Error!"));
     }
 
     @Test
