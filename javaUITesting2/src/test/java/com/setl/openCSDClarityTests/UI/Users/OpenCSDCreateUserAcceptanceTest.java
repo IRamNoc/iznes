@@ -44,7 +44,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(300);
+    public Timeout globalTimeout = Timeout.millis(3000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
