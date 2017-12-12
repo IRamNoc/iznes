@@ -167,7 +167,7 @@
                                 <setl-message-attachment [attachmentType]="'pdf'" [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
-                                <setl-message-form-action [config]="currentMessage.action"></setl-message-form-action>
+                                <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed"></setl-message-form-action>
                             </p>
                         </div>
                     </div>

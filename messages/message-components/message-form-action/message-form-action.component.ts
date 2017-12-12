@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Common, SagaHelper} from '@setl/utils';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
@@ -20,8 +21,11 @@ import {MessageAction, MessageActionsConfig} from './message-form-action.model';
 export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     
     @Input() config: MessageActionsConfig;
+    @Input() isActed: boolean;
 
-    constructor(private ngRedux: NgRedux<any>, private walletNodeSocketService: WalletNodeSocketService) {}
+    constructor(private ngRedux: NgRedux<any>,
+        private walletNodeSocketService: WalletNodeSocketService,
+        private alertsService: AlertsService) {}
 
     ngOnInit() {}
 
@@ -37,13 +41,33 @@ export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
             {},
             (data) => {
                 console.log('message action success:', data);
+
+                this.onActionSuccess(data);
             },
             (data) => {
                 console.log('message action failed:', data);
 
-                // error modal?
+                this.onActionError(data);
             }
         ));
+    }
+
+    private onActionSuccess(data): void {
+        const message = ((data[1]) && data[1].data.hash) ? `<table class="table grid">
+            <tbody>
+                <tr>
+                    <td class="left"><b>Tx hash:</b></td>
+                    <td>${data[1].data.hash.substring(0, 10)}...</td>
+                </tr>
+            </tbody>
+        </table>` : '';
+
+        this.alertsService.create('success', message);
+    }
+
+    private onActionError(data): void {
+        this.alertsService.create('error',
+            `${data[1].status}`);
     }
 
 }

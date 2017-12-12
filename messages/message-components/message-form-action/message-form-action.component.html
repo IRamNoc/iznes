@@ -1,5 +1,5 @@
 <ng-container *ngIf="config">
-    <div class="message-body">{{config.messageBody}}</div>
+    <div class="message-body" *ngIf="config.messageBody">{{config.messageBody}}</div>
 
     <div class="message-fields" *ngIf="config.content">
         <div class="message-field" *ngFor="let field of config.content">
@@ -9,9 +9,13 @@
         </div>
     </div>
     
-    <div class="message-actions" *ngIf="config.actions">
+    <div class="message-actions" *ngIf="config.actions && !isActed">
         <div class="message-action" *ngFor="let action of config.actions">
             <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)" mltag="action.text_tag">{{action.text}}</button>
         </div>
+    </div>
+
+    <div class="message-state" *ngIf="isActed">
+        Complete
     </div>
 </ng-container>
