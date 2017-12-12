@@ -3,6 +3,7 @@ package com.setl.RESTAPITests.Account.Creation;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -35,6 +36,7 @@ public class createAccountAcceptanceTest {
 
 
   @Test
+  @Ignore
   public void createNewAccount() throws ExecutionException, InterruptedException {
     String accountDetails[] = generateAccountDetails();
     String accountName = accountDetails[0];
@@ -53,6 +55,7 @@ public class createAccountAcceptanceTest {
     });
   }
   @Test
+  @Ignore
   public void failToCreateAccountWithIncorrectPermissions() throws ExecutionException, InterruptedException {
     String accountDetails[] = generateAccountDetails();
     String accountName = accountDetails[0];

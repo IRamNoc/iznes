@@ -10,6 +10,7 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -21,9 +22,6 @@ import java.util.concurrent.ExecutionException;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUser;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 
@@ -41,6 +39,7 @@ public class createAccountTest {
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
   @Test
+  @Ignore
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -49,6 +48,7 @@ public class createAccountTest {
   }
 
   @Test
+  @Ignore
   public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -58,6 +58,7 @@ public class createAccountTest {
   }
 
   @Test
+  @Ignore
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);

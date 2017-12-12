@@ -1,41 +1,43 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-import {FormsModule, FormControl, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
 import {RouterModule} from '@angular/router';
-import {LocationStrategy, HashLocationStrategy} from '@angular/common';
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
-import {SetlPipesModule, SetlDirectivesModule, APP_CONFIG, SetlServicesModule} from '@setl/utils';
+import {
+    APP_CONFIG,
+    SelectModule,
+    SetlComponentsModule,
+    SetlDirectivesModule,
+    SetlPipesModule,
+    SetlServicesModule
+} from '@setl/utils';
+
 import {NgxPaginationModule} from 'ngx-pagination';
-
 /* Connection Services */
-import {MemberSocketService} from '@setl/websocket-service';
-import {WalletNodeSocketService} from '@setl/websocket-service';
-
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 /* Core services*/
 import {
-    MyUserService,
-    WalletNodeRequestService,
-    MyWalletsService,
-    WalletnodeTxService,
-    ChannelService,
     AccountsService,
-    PermissionGroupService,
-    MemberService,
     ChainService,
-    WalletnodeChannelService,
-    InitialisationService,
+    ChannelService,
     FileService,
-    PdfService
+    InitialisationService,
+    MemberService,
+    MyUserService,
+    MyWalletsService,
+    PdfService,
+    PermissionGroupService,
+    WalletnodeChannelService,
+    WalletNodeRequestService,
+    WalletnodeTxService
 } from '@setl/core-req-services';
-
 /* Routes. */
 import {ROUTES} from './app.routes';
-
 /* SETL Modules. */
-import {SetlLoginModule} from '@setl/core-login';
-import {LoginGuardService} from '@setl/core-login';
+import {LoginGuardService, SetlLoginModule} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
 import {SetlAccountModule} from '@setl/core-account';
 import {SetlBalancesModule} from '@setl/core-balances';
@@ -43,40 +45,30 @@ import {UserAdminModule} from '@setl/core-useradmin';
 import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
-import {SetlComponentsModule} from '@setl/utils';
 import {CorpActionsModule} from '@setl/core-corp-actions';
-
+import {T2sModule} from '@setl/core-t2s';
+import {ConnectionsModule} from '@setl/core-connections/connections.module';
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
 import {OfiMainModule} from '@ofi/ofi-main';
-
 /* Internal App Modules. */
 import {AppCoreModule} from './core/app-core.module';
 import {AppViewsModule} from './app-views.module';
-
 /* Internal Components. */
 import {AppComponent} from './app.component';
-
 /**
  * Vendor Modules and Services.
  */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {SelectModule} from '@setl/utils';
 import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
-
 /**
  * App main state
  */
 import {NgRedux, NgReduxModule} from '@angular-redux/store';
 
-import {
-    createAppStore,
-    appSaga,
-    sagaMiddleware
-} from './store/app.store';
+import {appSaga, createAppStore, sagaMiddleware} from './store/app.store';
 
 import {AppState} from './store/app.reducer';
-
 /**
  * Environment
  */
@@ -95,7 +87,6 @@ export function memberSocketServiceFactory() {
 
     return memberSocketService;
 }
-
 
 @NgModule({
     declarations: [
@@ -137,9 +128,11 @@ export function memberSocketServiceFactory() {
         OfiMainModule,
         SetlDirectivesModule,
         SetlServicesModule,
+        ConnectionsModule,
+        T2sModule
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
 
         {
             provide: MemberSocketService,

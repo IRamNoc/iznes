@@ -1,8 +1,8 @@
 package com.setl.RESTAPITests.User.Update;
 
 
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.User;
+import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.wsclient.shared.Connection;
@@ -10,17 +10,15 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.concurrent.ExecutionException;
 
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
@@ -40,19 +38,26 @@ public class updateUserTest {
 
     @Before
     public void setup(){
-        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
-    }
-
-
-    @Test
-  public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
+        api = new RestApi<>(localAddress, new MemberNodeMessageFactory());}
 
     String userDetails[] = generateUserDetails();
     String userName = userDetails[0];
     String password = userDetails[1];
     String email = userDetails[2];
-
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+
+
+  @After
+  public void teardown(){
+      connection.disconnect();
+  }
+
+  @Test
+  @Ignore
+  public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
+
+
+
     User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
     updateUser(factory, socket, user.getUserID(), "test@test.com", "8", "35", "test@test.com", "emailAddress", 0);
 
@@ -60,31 +65,21 @@ public class updateUserTest {
   }
 
   @Test
-  public void updateUserAccount() throws InterruptedException, ExecutionException {
+  @Ignore
+  public void updateUserUserType() throws InterruptedException, ExecutionException {
 
-    String userDetails[] = generateUserDetails();
-    String userName = userDetails[0];
-    String password = userDetails[1];
-    String email = userDetails[2];
-
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
-    updateUser(factory, socket, user.getUserID(), user.getEmailAddress(), "7", "35", "7", "accountID", 0);
+    updateUser(factory, socket, user.getUserID(), user.getEmailAddress(), user.getAccountID(), "36", "36", "userType", 0);
 
     connection.disconnect();
   }
 
   @Test
-  public void updateUserUserType() throws InterruptedException, ExecutionException {
+  @Ignore
+  public void updateUserAccount() throws InterruptedException, ExecutionException {
 
-    String userDetails[] = generateUserDetails();
-    String userName = userDetails[0];
-    String password = userDetails[1];
-    String email = userDetails[2];
-
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
-    updateUser(factory, socket, user.getUserID(), user.getEmailAddress(), user.getAccountID(), "36", "36", "userType", 0);
+    updateUser(factory, socket, user.getUserID(), user.getEmailAddress(), "7", "35", "7", "accountID", 0);
 
     connection.disconnect();
   }

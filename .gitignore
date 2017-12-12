@@ -35,6 +35,7 @@ testem.log
 /typings
 yarn-error.log
 yarn.lock
+package-lock.json
 
 # e2e
 /e2e/*.js
@@ -75,4 +76,36 @@ src/styles.css.map
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+#Build output
+*/reports/tests
 
+
+javaUITesting2/.gradle/4.3.1/
+javaUITesting2/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+javaUITesting2/.gradle/buildOutputCleanup/outputFiles.bin
+javaUITesting2/build/classes/
+javaUITesting2/build/libs/
+javaUITesting2/build/tmp/compileTestJava/
+javaUITesting2/build/tmp/test/jar_extract_1056916351181881689_tmp
+javaUITesting2/build/tmp/test/jar_extract_1666271230470598483_tmp
+javaUITesting2/build/tmp/test/jar_extract_1957590942160650249_tmp
+javaUITesting2/build/tmp/test/jar_extract_2655958462016374022_tmp
+javaUITesting2/build/tmp/test/jar_extract_2665180000407464348_tmp
+javaUITesting2/build/tmp/test/jar_extract_3055926168152573632_tmp
+javaUITesting2/build/tmp/test/jar_extract_3955627456455279876_tmp
+javaUITesting2/build/tmp/test/jar_extract_4437958398185308237_tmp
+javaUITesting2/build/tmp/test/jar_extract_4505840182637080546_tmp
+javaUITesting2/build/tmp/test/jar_extract_5016968724992320033_tmp
+javaUITesting2/build/tmp/test/jar_extract_5294121829849023862_tmp
+javaUITesting2/build/tmp/test/jar_extract_5698199600589558522_tmp
+javaUITesting2/build/tmp/test/jar_extract_5882412634396220057_tmp
+javaUITesting2/build/tmp/test/jar_extract_6828090183573258205_tmp
+javaUITesting2/build/tmp/test/jar_extract_7036862566151449263_tmp
+javaUITesting2/build/tmp/test/jar_extract_8446658430149806514_tmp
+javaUITesting2/build/tmp/test/jar_extract_8597650661880290832_tmp
+javaUITesting2/build/tmp/test/jar_extract_8958297893144126843_tmp
+javaUITesting2/javaUITesting2.iml
+javaUITesting2/out/test/classes/
+javaUITesting2/build/reports/
+javaUITesting2/build/test-results/
+javaUITesting2/build/tmp/
