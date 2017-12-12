@@ -67,13 +67,13 @@ public class OpenCSDCreateUserAcceptanceTest {
         String email = userDetails[2];
 
         Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
             connection.disconnect();
 
         navigateToAddUser();
         navigateToUserSearch();
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/cltr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
 
         String userAmount1 = driver.findElement(By.className("datagrid-foot-description")).getText();
         String userAmount = userAmount1.substring(userAmount1.length() - 3);
@@ -88,7 +88,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         String email = userDetails[2];
 
         Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
             connection.disconnect();
 
