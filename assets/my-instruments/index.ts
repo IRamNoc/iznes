@@ -12,7 +12,9 @@ export {
     finishIssueAssetNotification,
     SEND_ASSET_SUCCESS,
     SEND_ASSET_FAIL,
-    finishSendAssetNotification
+    finishSendAssetNotification,
+    TRANSFER_ASSET_SUCCESS,
+    TRANSFER_ASSET_FAIL
 } from './actions';
 export {
     getNewInstrumentRequest,

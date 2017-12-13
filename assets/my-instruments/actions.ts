@@ -65,6 +65,16 @@ export const SEND_ASSET_SUCCESS = `${name}/SEND_ASSET_SUCCESS`;
 export const SEND_ASSET_FAIL = `${name}/SEND_ASSET_FAIL`;
 
 /**
+ * transfer asset success
+ */
+export const TRANSFER_ASSET_SUCCESS = `${name}/TRANSFER_ASSET_SUCCESS`;
+
+/**
+ * transfer new asset fail.
+ */
+export const TRANSFER_ASSET_FAIL = `${name}/TRANSFER_ASSET_FAIL`;
+
+/**
  * Finish issuer new Asset notification
  */
 export const FINISH_SEND_ASSET_NOTIFICATION = `${name}/FINISH_SEND_ASSET_NOTIFICATION`;

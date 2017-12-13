@@ -108,6 +108,8 @@ export {
     SEND_ASSET_SUCCESS,
     SEND_ASSET_FAIL,
     finishSendAssetNotification,
+    TRANSFER_ASSET_SUCCESS,
+    TRANSFER_ASSET_FAIL,
 
     SET_ALL_INSTRUMENTS_LIST,
     setRequesteAllInstruments,
