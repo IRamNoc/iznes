@@ -5,6 +5,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Common, SagaHelper} from '@setl/utils';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
+import {MessagesService} from '../../../messages.service';
 import {MessageAction, MessageActionsConfig} from './message-form-action.model';
 /**
  * SETL Message Action Component
@@ -22,10 +23,13 @@ export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     
     @Input() config: MessageActionsConfig;
     @Input() isActed: boolean;
+    @Input() walletId: number;
+    @Input() mailId: number;
 
     constructor(private ngRedux: NgRedux<any>,
         private walletNodeSocketService: WalletNodeSocketService,
-        private alertsService: AlertsService) {}
+        private alertsService: AlertsService,
+        private messagesService: MessagesService) {}
 
     ngOnInit() {}
 
@@ -53,16 +57,22 @@ export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     }
 
     private onActionSuccess(data): void {
-        const message = ((data[1]) && data[1].data.hash) ? `<table class="table grid">
-            <tbody>
-                <tr>
-                    <td class="left"><b>Tx hash:</b></td>
-                    <td>${data[1].data.hash.substring(0, 10)}...</td>
-                </tr>
-            </tbody>
-        </table>` : '';
+        const hash = ((data[1]) && data[1].data.hash) ? data[1].data.hash : null;
 
-        this.alertsService.create('success', message);
+        const markAsReadRequest = this.messagesService.markMessageAsActed(this.walletId, this.mailId, hash).then((res) => {
+            const message = (hash) ? `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="left"><b>Tx hash:</b></td>
+                        <td>${data[1].data.hash.substring(0, 10)}...</td>
+                    </tr>
+                </tbody>
+            </table>` : '';
+
+            this.alertsService.create('success', message);
+        }).catch((e) => {
+            console.log("mark mail as acted error", e);
+        });
     }
 
     private onActionError(data): void {

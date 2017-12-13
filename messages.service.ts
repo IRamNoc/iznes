@@ -122,4 +122,43 @@ export class MessagesService {
         });
     }
 
+    /**
+     * Mark Message as Acted
+     *
+     * @param walletId
+     * @param mailsToMark
+     * @returns {Promise<any>}
+     */
+    public markMessageAsActed(walletId, mailsToMark, hash) {
+        return this.markMessageAsActedRequest(walletId, mailsToMark, hash);
+    }
+
+    /**
+     * Mark Message as Acted Request
+     *
+     * @param subject
+     * @param body
+     * @param senderId
+     * @param senderPub
+     * @param recipients
+     *
+     * @returns {Promise<any>}
+     */
+    public markMessageAsActedRequest(walletId, mailsToMark, hash) {
+        return new Promise((resolve, reject) => {
+            const asyncTaskPipe = this.myMessageService.markAsActed(walletId, mailsToMark, hash);
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                })
+            );
+        });
+    }
+
 }

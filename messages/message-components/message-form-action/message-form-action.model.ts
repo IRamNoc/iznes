@@ -5,6 +5,7 @@ export class MessageActionsConfig {
     messageBody?: string = '';
     actions: MessageAction[] = [];
     content: MessageField[] = [];
+    completeText: string = 'Complete';
 }
 
 export class MessageAction {
