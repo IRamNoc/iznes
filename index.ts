@@ -227,3 +227,13 @@ export {
     ChainReducer
 
 } from './chain';
+
+/* Connections */
+export {
+    GET_CONNECTIONS,
+    CREATE_CONNECTION,
+    SET_REQUESTED_CONNECTIONS,
+    ConnectionState,
+    ConnectionReducer,
+    setRequestedConnections
+} from './connection';
