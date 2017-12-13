@@ -8,6 +8,7 @@ import _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from "@setl/utils/index";
 import {MyMessagesService} from '@setl/core-req-services';
+import {MessageActionsConfig} from '@setl/core-messages';
 
 /* Service Class. */
 @Injectable()
@@ -53,11 +54,11 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action = '') {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig = null) {
 
         const bodyObj = {
             general: btoa(bodyStr),
-            action: action
+            action: JSON.stringify(action)
         };
 
         const body = JSON.stringify(bodyObj);
@@ -107,6 +108,45 @@ export class MessagesService {
                 senderPub,
                 recipients
             );
+
+            // Get response from set active wallet
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                })
+            );
+        });
+    }
+
+    /**
+     * Mark Message as Acted
+     *
+     * @param walletId
+     * @param mailsToMark
+     * @returns {Promise<any>}
+     */
+    public markMessageAsActed(walletId, mailsToMark, hash) {
+        return this.markMessageAsActedRequest(walletId, mailsToMark, hash);
+    }
+
+    /**
+     * Mark Message as Acted Request
+     *
+     * @param subject
+     * @param body
+     * @param senderId
+     * @param senderPub
+     * @param recipients
+     *
+     * @returns {Promise<any>}
+     */
+    public markMessageAsActedRequest(walletId, mailsToMark, hash) {
+        return new Promise((resolve, reject) => {
+            const asyncTaskPipe = this.myMessageService.markAsActed(walletId, mailsToMark, hash);
 
             // Get response from set active wallet
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
