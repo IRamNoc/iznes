@@ -59,7 +59,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    //@Ignore
+    @Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -82,7 +82,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
     }
     @Test
-    //@Ignore
+    @Ignore
     public void shouldNotCreateDuplicateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
