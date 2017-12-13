@@ -8,7 +8,8 @@ import {
     SendMessageBody,
     MailInitBody,
     MarkAsDelete,
-    MarkAsRead
+    MarkAsRead,
+    MarkAsActed
 } from './my-messages.service.model';
 
 
@@ -103,6 +104,18 @@ export class MyMessagesService {
             token: this.memberSocketService.token,
             walletId: walletId, // specific id
             mailsToMark: mailsToMark,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    markAsActed(walletId, mailsToMark, hash) {
+        const messageBody: MarkAsActed = {
+            RequestName: 'email_mark_acted',
+            token: this.memberSocketService.token,
+            walletId: walletId, // specific id
+            mailsToMarkActed: mailsToMark,
+            txHash: hash
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

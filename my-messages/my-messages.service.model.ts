@@ -60,3 +60,10 @@ export interface MarkAsRead extends MemberNodeMessageBody {
     walletId: number;
     mailsToMark: object;
 }
+
+export interface MarkAsActed extends MemberNodeMessageBody {
+    token: string;
+    walletId: number;
+    mailsToMarkActed: object;
+    txHash: string;
+}
