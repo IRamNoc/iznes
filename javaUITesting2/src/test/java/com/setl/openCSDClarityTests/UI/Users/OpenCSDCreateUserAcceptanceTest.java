@@ -108,7 +108,25 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(userErrorTitle.contentEquals("Error!"));
         assertTrue(userErrorText.contentEquals("Failed to update this user."));
     }
+    @Test
+    public void shouldEditUserAPI() throws IOException, InterruptedException, ExecutionException {
+        String userDetails[] = generateUserDetails();
+        String userName = userDetails[0];
+        String password = userDetails[1];
+        String email = userDetails[2];
 
+        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+
+        connection.disconnect();
+
+        //getUserID();
+
+        navigateToAddUser();
+        navigateToUserSearch();
+        navigateToEditUsers();
+        closeUserDetails();
+    }
     @Test
     public void shouldCreateUser() throws IOException, InterruptedException {
         navigateToAddUser();
