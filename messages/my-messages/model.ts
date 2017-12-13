@@ -10,6 +10,7 @@ export interface MessageDetail {
     date: string;
     isActive: boolean;
     isRead: boolean;
+    isActed: boolean;
     content: string;
     action: string;
     isDecrypted: boolean;

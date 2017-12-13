@@ -34,6 +34,8 @@ import {
     finishIssueAssetNotification,
     SEND_ASSET_SUCCESS,
     SEND_ASSET_FAIL,
+    TRANSFER_ASSET_SUCCESS,
+    TRANSFER_ASSET_FAIL,
     finishSendAssetNotification,
 
     // Selectors
@@ -83,6 +85,8 @@ export {
     ISSUE_ASSET_FAIL,
     SEND_ASSET_SUCCESS,
     SEND_ASSET_FAIL,
+    TRANSFER_ASSET_SUCCESS,
+    TRANSFER_ASSET_FAIL,
     getNewInstrumentRequest,
     getRequestedInstrumentState,
     getMyInstrumentsList,

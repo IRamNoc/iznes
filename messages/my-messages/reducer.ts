@@ -210,6 +210,7 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 date: thisMessageDetail.get('mailDate'),
                 isActive: thisMessageDetail.get('isActive'),
                 isRead: thisMessageDetail.get('isRead'),
+                isActed: thisMessageDetail.get('isActed'),
                 content: content,
                 action: null,
                 isDecrypted: false
