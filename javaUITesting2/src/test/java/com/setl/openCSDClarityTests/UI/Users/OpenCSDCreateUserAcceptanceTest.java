@@ -109,6 +109,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(userErrorText.contentEquals("Failed to update this user."));
     }
     @Test
+    @Ignore
     public void shouldEditUserAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
