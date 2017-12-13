@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
+import {MessagesService, MessageActionsConfig} from '@setl/core-messages';
 import {
     WalletNodeRequestService,
     WalletnodeTxService,
@@ -10,7 +11,9 @@ import {
 } from '@setl/core-req-services';
 import {
     getConnectedWallet,
-    setRequestedWalletToRelationship
+    setRequestedWalletToRelationship,
+    TRANSFER_ASSET_SUCCESS,
+    TRANSFER_ASSET_FAIL
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
@@ -36,12 +39,16 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     walletAddressList: Array<any>;
     walletRelationshipType: Array<any>;
 
-    // Wallet ID
-    @select(['wallet', 'connected', 'connectedWallet']) walletIdOb: Observable<any>;
+    requestType: number;
+    fromRelationship: number;
+    walletFrom: number;
+    addressTo: string;
 
     // Asset
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb: Observable<boolean>;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb: Observable<any>;
+
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     // Redux unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -50,30 +57,21 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                private messagesService: MessagesService) {
 
         /* send asset form */
         this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required)
         });
 
         /* data subscriptions */
-        this.initWalletIdSubscription();
         this.initAssetSubscriptions();
     }
 
     ngOnInit() { }
-
-    private initWalletIdSubscription(): void {
-        this.subscriptionsArray.push(
-            this.walletIdOb.subscribe((walletId: number) => {
-                this.connectedWalletId = 6;
-            })
-        );
-    }
-
+    
     private initAssetSubscriptions(): void {
         this.subscriptionsArray.push(
             this.requestedAllInstrumentOb.subscribe((requested) => {
@@ -81,8 +79,96 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             }),
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+            }),
+            this.connectedWalletOb.subscribe(connected => {
+                this.connectedWalletId = connected;
             })
         );
+    }
+
+    requestTypeOb(id: number): void {
+        this.requestType = id;
+    }
+
+    fromRelationshipOb(id: number): void {
+        this.fromRelationship = id;
+    }
+
+    walletFromOb(id: number): void {
+        this.walletFrom = id;
+    }
+
+    addressToOb(id: string): void {
+        this.addressTo = id;
+    }
+
+    requestAsset(): void {
+        const fullAssetId = _.get(this.requestAssetForm.value.asset, '[0].id', '');
+        const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
+        const namespace = fullAssetIdSplit.issuer;
+        const instrument = fullAssetIdSplit.instrument;
+
+        const amount = this.requestAssetForm.get('amount').value;
+        
+        const actionConfig: MessageActionsConfig = new MessageActionsConfig();
+        actionConfig.completeText = 'Transfer of Asset Complete';
+
+        // Add the action button that will apear on the email
+        actionConfig.actions.push({
+            text: "Transfer Asset",
+            text_mltag: "txt_transferasset",
+            styleClasses: "btn-primary",
+            messageType: "tx",
+            payload: {
+                topic: 'astra',
+                walletid: this.connectedWalletId,
+                toaddress: this.addressTo,
+                namespace: namespace,
+                instrument: instrument,
+                amount: amount
+            },
+            successType: TRANSFER_ASSET_SUCCESS,
+            failureType: TRANSFER_ASSET_FAIL
+        });
+
+        // Add the data regarding the asset transfer to the email
+        actionConfig.content.push({
+            name: 'Asset',
+            name_mltag: 'txt_asset',
+            content: fullAssetId
+        }, {
+            name: 'Address To',
+            name_mltag: 'txt_addressto',
+            content: this.addressTo
+        }, {
+            name: 'Amount',
+            name_mltag: 'txt_amount',
+            content: amount
+        });
+
+        this.messagesService.sendMessage(
+            [this.walletFrom],
+            'Transfer Asset Request',
+            null,
+            actionConfig
+        ).then((data) => {
+            this.alertsService.create('success', `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td>Transfer Request successfully sent</td>
+                    </tr>
+                </tbody>
+            </table>`);
+        }).catch((e) => {
+            this.alertsService.create('error', `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td>Transfer Request could not be sent</td>
+                    </tr>
+                </tbody>
+            </table>`);
+            console.log("transfer request email failed", e);
+        });
     }
 
     ngOnDestroy() {
