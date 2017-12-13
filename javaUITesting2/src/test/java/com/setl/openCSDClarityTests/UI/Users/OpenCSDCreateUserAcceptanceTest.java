@@ -59,8 +59,8 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    @Ignore
-    public void shouldCreateUserAPI() throws IOException, InterruptedException, ExecutionException {
+    //@Ignore
+    public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
@@ -70,7 +70,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
         createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
-            connection.disconnect();
+        connection.disconnect();
 
         navigateToAddUser();
         navigateToUserSearch();
@@ -82,8 +82,8 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
     }
     @Test
-    @Ignore
-    public void shouldNotCreateDuplicateUserAPI() throws IOException, InterruptedException, ExecutionException {
+    //@Ignore
+    public void shouldNotCreateDuplicateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
         String password = userDetails[1];
@@ -92,7 +92,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
         createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
-            connection.disconnect();
+        connection.disconnect();
 
         navigateToAddUser();
         enterManageUserUsername(userDetails[0]);
@@ -103,8 +103,10 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPasswordRepeat(userDetails[1]);
         clickManageUserSubmit();
 
-        String userAmount1 = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(userAmount1.contains("Error!"));
+        String userErrorTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+        String userErrorText = driver.findElement(By.className("jaspero__dialog-content")).getText();
+        assertTrue(userErrorTitle.contentEquals("Error!"));
+        assertTrue(userErrorText.contentEquals("Failed to update this user."));
     }
 
     @Test
