@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
@@ -9,6 +9,9 @@ import {
     InitialisationService,
     MyWalletsService
 } from '@setl/core-req-services';
+import {
+    setRequestedWalletAddresses
+} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 
@@ -19,8 +22,12 @@ import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 })
 export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     
-    @Input() connectedWalletId: number = 6;
+    @Output() requestType = new EventEmitter<number>();
+    @Output() fromRelationship = new EventEmitter<number>();
+    @Output() walletFrom = new EventEmitter<number>();
+    @Output() addressTo = new EventEmitter<string>();
     
+    connectedWalletId: number;
     requestTypeForm: FormGroup;
     subscriptionsArray: Array<Subscription> = [];
 
@@ -34,6 +41,9 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     walletDirectoryListRaw: Array<any>;
     walletDirectoryList: Array<any>;
     walletRelationships: Array<any>;
+
+    // Wallet ID
+    @select(['user', 'connected', 'connectedWallet']) walletIdOb: Observable<any>;
 
     // myWalletAddress
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedWalletAddressListOb: Observable<any>;
@@ -59,12 +69,21 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
             walletFrom: new FormControl('', Validators.required),
             addressTo: new FormControl('', Validators.required)
         });
-    }
-        
-    ngOnInit() {
+
+        this.initWalletIdSubscription();
         this.initWalletRelationshipsSubscriptions();
         this.initWalletDirectorySubscriptions();
         this.initMyWalletSubscriptions();
+    }
+        
+    ngOnInit() { }
+
+    private initWalletIdSubscription(): void {
+        this.subscriptionsArray.push(
+            this.walletIdOb.subscribe((walletId: number) => {
+                this.connectedWalletId = walletId;
+            })
+        );
     }
 
     private initWalletRelationshipsSubscriptions(): void {
@@ -92,7 +111,9 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     private initMyWalletSubscriptions(): void {        
         this.subscriptionsArray.push(
             this.requestedWalletAddressListOb.subscribe((requested) => {
-                if(!requested) InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+                if(!requested) {                    
+                    InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+                }
             }),
             this.requestedWalletAddressLabelsOb.subscribe((requested) => {
                 if(!requested && this.connectedWalletId !== 0) {
@@ -100,13 +121,26 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
                 }
             }),
             this.walletAddressListOb.subscribe((walletAddressList) => {
-                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, 'walletName');
+                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, 'addr');
             })
         );
     }
 
     onRequestTypeSelect($event): void {
         this.selectedRequestType = $event.id;
+        this.requestType.emit($event.id);
+    }
+
+    onRelationshipSelect($event): void {
+        this.fromRelationship.emit($event.id);
+    }
+
+    onWalletSelect($event): void {
+        this.walletFrom.emit($event.id);
+    }
+
+    onAddressSelect($event): void {
+        this.addressTo.emit($event.id);
     }
 
     ngOnDestroy() {

@@ -18,6 +18,7 @@
             [allowClear]="true"
             placeholder="Select Relationship"
             [formControl]="requestTypeForm.controls['fromRelationship']"
+            (selected)="onRelationshipSelect($event)"
         >
         </ng-select>
     </div>
@@ -30,6 +31,7 @@
                 [allowClear]="true"
                 placeholder="Select Wallet"
                 [formControl]="requestTypeForm.controls['walletFrom']"
+                (selected)="onWalletSelect($event)"
             >
             </ng-select>
         </div>
@@ -40,6 +42,7 @@
                 [allowClear]="true"
                 placeholder="Select Address"
                 [formControl]="requestTypeForm.controls['addressTo']"
+                (selected)="onAddressSelect($event)"
             >
             </ng-select>
         </div>
