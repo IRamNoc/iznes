@@ -237,3 +237,11 @@ export {
     ConnectionReducer,
     setRequestedConnections
 } from './connection';
+
+export {
+    SET_WORKFLOW_LIST,
+    setRequestedWorkflowList,
+    clearRequestedWorkflowList,
+    WorkflowState,
+    WorkflowReducer
+} from './workflow-engine';
