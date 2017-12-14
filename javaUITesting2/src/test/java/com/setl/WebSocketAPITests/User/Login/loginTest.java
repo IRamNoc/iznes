@@ -30,7 +30,7 @@ public class loginTest {
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-    String address = "ws://localhost:9788/db/";
+    String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
     public Timeout globalTimeout = Timeout.millis(3000);
@@ -47,7 +47,6 @@ public class loginTest {
     }
 
     @Test
-    @Ignore
     public void loginSuccessWithValidCredentials() throws InterruptedException, ExecutionException {
         CountDownLatch l  = new CountDownLatch(1);
 
@@ -59,14 +58,13 @@ public class loginTest {
             assertTrue(!token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start(address);
+        Future<Connection> connection = ws.start(address);
         l.await();
-        connexion.get().disconnect();
+        connection.get().disconnect();
 
     }
 
     @Test
-    @Ignore
     public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
@@ -86,7 +84,6 @@ public class loginTest {
     }
 
     @Test
-    @Ignore
     public void loginFailureWithUnknownUser() throws InterruptedException, ExecutionException {
         SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "bob", "alex01");
         SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
@@ -102,32 +99,11 @@ public class loginTest {
             assertTrue(accountName == "" || accountName.toString().isEmpty());
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start(address);
+        Future<Connection> connection = ws.start(address);
         l.await();
-        connexion.get().disconnect();
-
-    }
-
-    @Test
-    @Ignore
-    public void enumerationTest() throws InterruptedException, ExecutionException {
-        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
-        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-        CountDownLatch l  = new CountDownLatch(1);
-
-        socket.registerHandler(Type.Login.name(),message->{
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp =(JSONObject) data.get(0);
-            Object token = resp.get("Token");
-            assertNotNull(token);
-            assertTrue(token.toString().equalsIgnoreCase("fail"));
-            Object accountName = resp.get("accountName");
-            assertNull(accountName);
-            l.countDown();
-            return "";});
-        Future<Connection> connexion = ws.start(address);
-        l.await();
-        connexion.get().disconnect();
+        connection.get().disconnect();
 
     }
 }
+
+
