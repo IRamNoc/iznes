@@ -10,6 +10,7 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -21,9 +22,6 @@ import java.util.concurrent.ExecutionException;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUser;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 
@@ -31,14 +29,12 @@ import static junit.framework.TestCase.assertTrue;
 public class createAccountTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-  SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
+  //SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
-  //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
-  //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
   @Test
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {

@@ -1,23 +1,28 @@
-import {
-    Reducer,
-    combineReducers
-} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
 import {
-    UserState, userReducer,
-    WalletState, walletReducer,
-    MessageState, messageReducer,
-    AdminUsersState, adminUserReducer,
-    AssetState, assetReducer,
-    AccountState, AccountReducer,
-    MemberState, MemberReducer,
-    ChainState, ChainReducer
+    AccountReducer,
+    AccountState,
+    adminUserReducer,
+    AdminUsersState,
+    assetReducer,
+    AssetState,
+    ChainReducer,
+    ChainState,
+    ConnectionReducer,
+    MemberReducer,
+    MemberState,
+    messageReducer,
+    MessageState,
+    userReducer,
+    UserState,
+    walletReducer,
+    WalletState,
+    WorkflowState,
+    WorkflowReducer
 } from '@setl/core-store';
 
-import {
-    OfiState,
-    OfiReducer
-} from '@ofi/ofi-main';
+import { OfiReducer, OfiState } from '@ofi/ofi-main';
 
 export interface AppState {
     user: UserState;
@@ -28,7 +33,7 @@ export interface AppState {
     account: AccountState;
     member: MemberState;
     chain: ChainState;
-
+    workflow: WorkflowState;
     ofi: OfiState;
 }
 
@@ -41,7 +46,8 @@ const appReducer: Reducer<any> = combineReducers<any>({
     account: AccountReducer,
     member: MemberReducer,
     chain: ChainReducer,
-
+    connection: ConnectionReducer,
+    workflow: WorkflowReducer,
     ofi: OfiReducer
 });
 

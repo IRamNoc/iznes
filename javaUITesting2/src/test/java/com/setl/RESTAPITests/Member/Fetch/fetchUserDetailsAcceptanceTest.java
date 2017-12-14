@@ -4,6 +4,7 @@ import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -22,7 +23,7 @@ import static junit.framework.TestCase.assertTrue;
 public class fetchUserDetailsAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
 
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   int userId = 6;
@@ -36,6 +37,7 @@ public class fetchUserDetailsAcceptanceTest {
 
 
     @Test
+    @Ignore
     public void fetchUserDetails() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);

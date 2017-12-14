@@ -10,6 +10,7 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -33,12 +34,12 @@ import static junit.framework.TestCase.assertTrue;
 public class createMemberTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
-  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "trb2017");
+  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
   SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-  String localAddress = "ws://localhost:9788/db/";
+  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
   public void createNewMember() throws ExecutionException, InterruptedException {

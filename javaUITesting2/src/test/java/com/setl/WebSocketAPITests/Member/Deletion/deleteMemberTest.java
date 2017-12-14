@@ -8,6 +8,7 @@ import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -27,12 +28,12 @@ import static SETLAPIHelpers.WebSocketAPI.MemberHelper.deleteMember;
 public class deleteMemberTest {
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);;
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-    String localAddress = "ws://localhost:9788/db/";
+    String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Test
     public void deleteMemberTest() throws InterruptedException, ExecutionException {
