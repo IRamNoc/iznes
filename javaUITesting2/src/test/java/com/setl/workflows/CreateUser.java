@@ -20,11 +20,11 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails
 public class CreateUser {
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
-    SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "trb2017");
-    String localAddress = "ws://localhost:9788/db/";
+    SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
+    String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
     public static final Logger logger = (Logger) LogManager.getLogger(AssignGroupToUser.class);
 
 
