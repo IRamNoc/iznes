@@ -58,7 +58,6 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    //@Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -108,8 +107,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(userErrorText.contentEquals("Failed to update this user."));
     }
     @Test
-    @Ignore
-    public void shouldEditUserAPI() throws IOException, InterruptedException, ExecutionException {
+    public void shouldEditUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
         String password = userDetails[1];
