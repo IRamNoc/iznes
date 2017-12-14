@@ -1,28 +1,17 @@
-import {TestBed, inject, ComponentFixture, async} from '@angular/core/testing';
-import {NgRedux} from '@angular-redux/store';
+import {TestBed, inject, async} from '@angular/core/testing';
 import {LoginGuardService} from './login-guard.service';
-import {SetlLoginModule} from './login.module';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {RouterModule} from '@angular/router';
-import {Routes, Router} from '@angular/router';
-import {APP_BASE_HREF} from '@angular/common';
-import {MyUserMockService, MyUserService} from '@setl/core-req-services';
-import {MemberSocketService} from '@setl/websocket-service';
 import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
-import {Subject} from "rxjs/Subject";
-
-const ROUTES: Routes = [];
-
-class MemberSocketMockService {
-    token: string = '';
-}
-
-class ToasterMock extends ToasterService {
-    pop(type, message) {
-
-    }
-}
+import {
+    CoreTestUtilModule,
+    MyUserServiceMock,
+    MemberSocketServiceMock,
+    AlertsServiceMock,
+    ToasterServiceMock
+} from '@setl/core-test-util';
+import {MyUserService} from '@setl/core-req-services';
+import {MemberSocketService} from '@setl/websocket-service';
 
 
 describe('LoginGuardService', () => {
@@ -31,17 +20,15 @@ describe('LoginGuardService', () => {
         TestBed.configureTestingModule({
             imports: [
                 ToasterModule,
-                RouterModule.forRoot(ROUTES),
-                NgReduxTestingModule
+                NgReduxTestingModule,
+                CoreTestUtilModule
             ],
             providers: [
+                {provide: AlertsService, useClass: AlertsServiceMock},
+                {provide: ToasterService, useClass: ToasterServiceMock},
                 LoginGuardService,
-                // {provide: NgRedux, useClass: NgReduxMock},
-                AlertsService,
-                {provide: ToasterService, useClass: ToasterMock},
-                {provide: APP_BASE_HREF, useValue: '/'},
-                {provide: MyUserService, useClass: MyUserMockService},
-                {provide: MemberSocketService, useClass: MemberSocketMockService}
+                {provide: MyUserService, useClass: MyUserServiceMock},
+                {provide: MemberSocketService, useClass: MemberSocketServiceMock}
             ]
         });
 
