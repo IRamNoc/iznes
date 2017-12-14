@@ -50,7 +50,6 @@ public class createMemberTest {
   }
 
   @Test
-  @Ignore
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     String memberDetails[] = generateMemberDetails();

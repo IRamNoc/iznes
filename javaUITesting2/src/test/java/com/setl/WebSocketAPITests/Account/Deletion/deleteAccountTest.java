@@ -30,10 +30,9 @@ public class deleteAccountTest {
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-  String localAddress = "ws://localhost:9788/db/";
+  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
-  @Ignore
   public void deleteAccountTest() throws InterruptedException, ExecutionException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 

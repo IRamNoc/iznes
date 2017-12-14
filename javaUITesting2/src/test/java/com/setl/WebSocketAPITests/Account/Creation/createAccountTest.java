@@ -35,11 +35,8 @@ public class createAccountTest {
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
   SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
-  //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
-  //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
   @Test
-  @Ignore
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -48,7 +45,6 @@ public class createAccountTest {
   }
 
   @Test
-  @Ignore
   public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -58,7 +54,6 @@ public class createAccountTest {
   }
 
   @Test
-  @Ignore
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
