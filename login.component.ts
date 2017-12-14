@@ -1,5 +1,5 @@
 // Vendors
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {
     FormGroup,
@@ -7,7 +7,7 @@ import {
     AbstractControl,
     FormControl
 } from '@angular/forms';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
 
@@ -29,6 +29,7 @@ import {
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /* Dectorator. */
@@ -39,15 +40,17 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 })
 
 /* Class. */
-export class SetlLoginComponent implements OnDestroy {
+export class SetlLoginComponent implements OnDestroy, OnInit {
     isLogin: boolean;
 
     loginForm: FormGroup;
     username: AbstractControl;
     password: AbstractControl;
 
-    // Redux unsubscription
-    reduxUnsubscribe: Unsubscribe;
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
+
+    @select(['user', 'authentication']) authenticationOb;
 
     /* Constructor. */
     constructor(private ngRedux: NgRedux<any>,
@@ -61,9 +64,6 @@ export class SetlLoginComponent implements OnDestroy {
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService) {
-        // Subscribe to app store
-        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
-        this.updateState();
 
         /**
          * Form control setup
@@ -74,6 +74,15 @@ export class SetlLoginComponent implements OnDestroy {
         });
 
 
+    }
+
+    ngOnInit() {
+        this.isLogin = false;
+
+        // Reduce observable subscription
+        this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
+            this.updateState(authentication);
+        }));
     }
 
     login(value) {
@@ -123,10 +132,7 @@ export class SetlLoginComponent implements OnDestroy {
         return false;
     }
 
-    updateState() {
-        const newState = this.ngRedux.getState();
-        const myAuthenData = getAuthentication(newState);
-
+    updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
             this.router.navigateByUrl('/home');
@@ -154,7 +160,9 @@ export class SetlLoginComponent implements OnDestroy {
     }
 
     ngOnDestroy() {
-        this.reduxUnsubscribe();
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 
     handleLoginFailMessage(data) {
