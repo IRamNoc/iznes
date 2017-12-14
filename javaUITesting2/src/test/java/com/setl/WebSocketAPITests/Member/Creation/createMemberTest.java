@@ -37,12 +37,11 @@ public class createMemberTest {
   public Timeout globalTimeout = Timeout.millis(3000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
-  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "trb2017");
+  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
   SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-  String localAddress = "ws://localhost:9788/db/";
+  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
-  @Ignore
   public void createNewMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     createMember(factory, socket);
@@ -68,7 +67,6 @@ public class createMemberTest {
   }
 
   @Test
-  @Ignore
   public void createMultipleMember() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     createMember(factory, socket, 5);
@@ -76,7 +74,6 @@ public class createMemberTest {
   }
 
   @Test
-  @Ignore
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
   final AtomicInteger atomicInt = new AtomicInteger(0);
