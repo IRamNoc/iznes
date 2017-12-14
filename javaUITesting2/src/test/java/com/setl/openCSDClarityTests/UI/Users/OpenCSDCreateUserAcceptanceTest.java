@@ -24,7 +24,6 @@ import org.openqa.selenium.By;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static SETLAPIHelpers.SetUp.username;
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
@@ -32,7 +31,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static junit.framework.TestCase.assertTrue;
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.description;
+
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 public class OpenCSDCreateUserAcceptanceTest {
@@ -59,7 +58,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
-    @Ignore
+    //@Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
