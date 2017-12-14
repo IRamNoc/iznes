@@ -30,7 +30,7 @@ public class loginTest {
     String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);;
 
     @Before
     public void setUp() throws Exception

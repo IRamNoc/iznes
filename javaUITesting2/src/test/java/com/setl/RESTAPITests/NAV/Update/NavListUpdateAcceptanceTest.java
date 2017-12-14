@@ -24,7 +24,7 @@ public class NavListUpdateAcceptanceTest {
 
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
   //String localAddress = "http://apidev.iznes.io:9788/api";
   //String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   String localAddress = "http://localhost:9788/api";

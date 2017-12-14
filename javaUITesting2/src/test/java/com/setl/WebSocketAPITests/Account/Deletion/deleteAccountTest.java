@@ -25,7 +25,7 @@ import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 public class deleteAccountTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
 
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
