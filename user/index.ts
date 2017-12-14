@@ -35,6 +35,7 @@ import {
     ConnectedReducer,
     ConnectedState,
     setConnectedWallet,
+    setConnectedChain,
     getConnected,
     getConnectedChain,
     getConnectedWallet,
@@ -44,6 +45,7 @@ import {
 
 export {
     setConnectedWallet,
+    setConnectedChain,
     getConnected,
     getConnectedChain,
     getConnectedWallet,

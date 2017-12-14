@@ -17,6 +17,7 @@ export {
 
     // connected
     setConnectedWallet,
+    setConnectedChain,
     getConnected,
     getConnectedChain,
     getConnectedWallet,
