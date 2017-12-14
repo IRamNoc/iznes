@@ -7,6 +7,7 @@ import {WalletNodeSocketService} from '@setl/websocket-service';
 
 import {MessagesService} from '../../../messages.service';
 import {MessageAction, MessageActionsConfig} from './message-form-action.model';
+import {SetlMessageFormActionService} from './message-form-action.service';
 /**
  * SETL Message Action Component
  *
@@ -26,58 +27,14 @@ export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     @Input() walletId: number;
     @Input() mailId: number;
 
-    constructor(private ngRedux: NgRedux<any>,
-        private walletNodeSocketService: WalletNodeSocketService,
-        private alertsService: AlertsService,
-        private messagesService: MessagesService) {}
+    constructor(private service: SetlMessageFormActionService) {}
 
     ngOnInit() {}
 
     ngOnDestroy() {}
 
     onActionClick(action: MessageAction): void {
-        const request = Common.createWalletNodeSagaRequest(this.walletNodeSocketService, action.messageType, action.payload);
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            action.successType,
-            action.failureType,
-            request,
-            {},
-            (data) => {
-                console.log('message action success:', data);
-
-                this.onActionSuccess(data);
-            },
-            (data) => {
-                console.log('message action failed:', data);
-
-                this.onActionError(data);
-            }
-        ));
-    }
-
-    private onActionSuccess(data): void {
-        const hash = ((data[1]) && data[1].data.hash) ? data[1].data.hash : null;
-
-        const markAsReadRequest = this.messagesService.markMessageAsActed(this.walletId, this.mailId, hash).then((res) => {
-            const message = (hash) ? `<table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="left"><b>Tx hash:</b></td>
-                        <td>${data[1].data.hash.substring(0, 10)}...</td>
-                    </tr>
-                </tbody>
-            </table>` : '';
-
-            this.alertsService.create('success', message);
-        }).catch((e) => {
-            console.log("mark mail as acted error", e);
-        });
-    }
-
-    private onActionError(data): void {
-        this.alertsService.create('error',
-            `${data[1].status}`);
+        this.service.doAction(action, this.walletId, this.mailId);
     }
 
 }
