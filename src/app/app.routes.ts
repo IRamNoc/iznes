@@ -49,6 +49,7 @@ import {
     MergerAbsorptionComponent,
     SplitComponent
 } from '@setl/core-corp-actions';
+import { WorkflowEngineComponent } from '@setl/core-wfe';
 /**
  * Asset serving module
  */
@@ -373,6 +374,17 @@ export const ROUTES: Routes = [
                         path: 'collects-archive',
                         canActivate: [LoginGuardService],
                         component: OfiCollectiveArchiveComponent
+                    }
+                ]
+            },
+            {
+                path: 'workflow-engine',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'manage',
+                        canActivate: [LoginGuardService],
+                        component: WorkflowEngineComponent
                     }
                 ]
             }
