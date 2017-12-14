@@ -1,0 +1,8 @@
+{
+  "name": "@setl/core-test-util",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-test-util",
+  "author": "ming <mingrui.huang@setl.io>",
+  "license": "MIT"
+}
