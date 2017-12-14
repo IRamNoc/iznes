@@ -26,7 +26,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createMemberAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
 
   String localAddress = "http://localhost:9788/api";
   int userId = 4;

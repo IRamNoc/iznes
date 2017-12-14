@@ -28,7 +28,7 @@ import static SETLAPIHelpers.WebSocketAPI.MemberHelper.deleteMember;
 public class deleteMemberTest {
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);;
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
