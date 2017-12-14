@@ -33,7 +33,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class IssueAssetComponent implements OnInit, OnDestroy {
     // Observable subscription array.
-    subscriptionsArry: Array<Subscription> = [];
+    subscriptionsArray: Array<Subscription> = [];
 
     issueAssetForm: FormGroup;
     connectedWalletId: number;
@@ -46,24 +46,28 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
     walletAddressSelectItems: any;
 
-    toRelationshipSelectItems: Array<any>;
+    toRelationshipSelectItems: Array<any> = [];
+
+    toRelationshipList = {};
+    walletDirectoryList = {};
+
 
     // List of redux observable
-    @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
-    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
-    @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
-
-    // Redux unsubscription
-    reduxUnsubscribe: Unsubscribe;
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
+    @select(['asset', 'myInstruments', 'instrumentList']) instrumentListOb;
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) toRelationshipListOb;
+    @select(['wallet', 'walletDirectory', 'walletList']) directoryListOb;
+    @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletsServie: MyWalletsService) {
-        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
-        this.updateState();
 
         /**
          * Issuer Asset form
@@ -75,33 +79,29 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         });
 
         // List of observable subscriptions.
-        this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState));
-        this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState));
-        this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => this.showResponseModal(newIssueAssetRequest));
-        this.subscriptionsArry.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList)));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState)));
+        this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
+            this.toRelationshipList = toRelationshipList;
+            // this.updateToRelationship();
+        }));
+        this.subscriptionsArray.push(this.directoryListOb.subscribe((directoryList) => {
+            this.walletDirectoryList = directoryList;
+            // this.updateToRelationship();
+        }));
+
+        this.subscriptionsArray.push(this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => this.showResponseModal(newIssueAssetRequest)));
     }
 
     ngOnInit() {
     }
 
-    updateState() {
-        const newState = this.ngRedux.getState();
-
-        // Set connected WalletId
-        this.connectedWalletId = getConnectedWallet(newState);
-
-        // Get wallet addresses and update wallet address items list
-        const currentWalletAddressList = getWalletAddressList(newState);
-        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
-
-        const walletInstruments = getMyInstrumentsList(newState);
-
-        this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(walletInstruments);
-
-        const walletToRelationship = getWalletToRelationshipList(newState);
-        const walletDirectoryList = getWalletDirectoryList(newState);
-
-        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
+    updateToRelationship() {
+        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(this.toRelationshipList, this.walletDirectoryList);
     }
 
     /**
@@ -181,9 +181,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.reduxUnsubscribe();
-
-        for (const subscription of this.subscriptionsArry) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
