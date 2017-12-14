@@ -48,6 +48,8 @@ import {CoreManageMemberModule} from '@setl/core-manage-member';
 import {CorpActionsModule} from '@setl/core-corp-actions';
 import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
+import {CoreWorkflowEngineModule} from '@setl/core-wfe';
+
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
 import {OfiMainModule} from '@ofi/ofi-main';
@@ -129,6 +131,7 @@ export function memberSocketServiceFactory() {
         SetlDirectivesModule,
         SetlServicesModule,
         ConnectionsModule,
+        CoreWorkflowEngineModule,
         T2sModule
     ],
     providers: [

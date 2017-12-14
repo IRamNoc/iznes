@@ -45,6 +45,7 @@
         "@setl/core-store": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git",
         "@setl/core-t2s": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-t2s.git",
         "@setl/core-useradmin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git",
+        "@setl/core-wfe": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-wfe.git",
         "@setl/jaspero-ng2-alerts": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git",
         "@setl/multilingual": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/multilingual.git",
         "@setl/permission-grid": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git",
