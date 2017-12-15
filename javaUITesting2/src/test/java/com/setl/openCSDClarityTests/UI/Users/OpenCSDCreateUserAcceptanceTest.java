@@ -19,9 +19,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.TestTimedOutException;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
@@ -65,10 +67,21 @@ public class OpenCSDCreateUserAcceptanceTest {
         String password = userDetails[1];
         String email = userDetails[2];
 
-        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
-        connection.disconnect();
+
+        int MAXTRIES=2;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+                Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+                createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+                connection.disconnect();
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
 
         navigateToAddUser();
         navigateToUserSearch();
