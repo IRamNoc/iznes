@@ -2,12 +2,15 @@ package com.setl.WebSocketAPITests.Member.Deletion;
 
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.Member;
+import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountTest;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,6 +29,7 @@ import static SETLAPIHelpers.WebSocketAPI.MemberHelper.deleteMember;
 
 @RunWith(JUnit4.class)
 public class deleteMemberTest {
+    private static final Logger logger = LogManager.getLogger(deleteMemberTest.class);
 
     @Rule
     public Timeout globalTimeout = Timeout.millis(30000);;
@@ -37,15 +41,27 @@ public class deleteMemberTest {
 
     @Test
     public void deleteMemberTest() throws InterruptedException, ExecutionException {
-      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
       String memberDetails[] = generateMemberDetails();
 
       String memberName = memberDetails[0];
       String email = memberDetails[1];
+        int MAXTRIES=2;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+                Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
 
       Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
       deleteMember(factory, socket, member.getMemberID());
-      connection.disconnect();
-      }
+
+                connection.disconnect();
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
+    }
+
 }

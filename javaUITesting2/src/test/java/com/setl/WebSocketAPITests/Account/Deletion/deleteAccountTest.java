@@ -2,11 +2,14 @@ package com.setl.WebSocketAPITests.Account.Deletion;
 
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +27,8 @@ import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 @RunWith(JUnit4.class)
 public class deleteAccountTest {
 
+    private static final Logger logger = LogManager.getLogger(deleteAccountTest.class);
+
   @Rule
   public Timeout globalTimeout = Timeout.millis(30000);;
 
@@ -34,11 +39,19 @@ public class deleteAccountTest {
 
   @Test
   public void deleteAccountTest() throws InterruptedException, ExecutionException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-    Account account = createAccount(factory, socket, 1);
-    deleteAccount(factory, socket, account.getAccountID());
-    connection.disconnect();
+     int MAXTRIES=2;
+      for(int i=0; i<MAXTRIES; i++) {
+          try {
+              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+              Account account = createAccount(factory, socket, 1);
+              deleteAccount(factory, socket, account.getAccountID());
+              connection.disconnect();
+          } catch (Exception ex) {
+              logger.error("Login:", ex);
+              if(i>=MAXTRIES-1)
+                  throw(ex);
+          }
+          break;
+      }
   }
-
 }
