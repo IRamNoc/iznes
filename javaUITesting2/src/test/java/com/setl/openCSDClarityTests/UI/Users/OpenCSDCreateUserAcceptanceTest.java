@@ -60,6 +60,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
     @Test
+    @Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -69,7 +70,7 @@ public class OpenCSDCreateUserAcceptanceTest {
 
 
 
-        int MAXTRIES=2;
+        int MAXTRIES=4;
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
