@@ -67,13 +67,6 @@ public class createMemberTest {
   }
 
   @Test
-  public void createMultipleMember() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createMember(factory, socket, 5);
-    connection.disconnect();
-  }
-
-  @Test
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
   final AtomicInteger atomicInt = new AtomicInteger(0);
