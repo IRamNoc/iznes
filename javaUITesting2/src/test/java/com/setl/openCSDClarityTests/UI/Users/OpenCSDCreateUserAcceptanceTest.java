@@ -132,12 +132,15 @@ public class OpenCSDCreateUserAcceptanceTest {
 
         connection.disconnect();
 
-        //getUserID();
+        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+
+        connection.disconnect();
 
         navigateToAddUser();
         navigateToUserSearch();
-        navigateToEditUsers();
-        closeUserDetails();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
+        String test = user.getUserID();
+        driver.findElement(By.id("edit-" + test)).click();
     }
     @Test
     public void shouldCreateUser() throws IOException, InterruptedException {
