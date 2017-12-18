@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy, transition} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -30,6 +30,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     @select(['chain', 'myChainAccess', 'myChainAccess']) myChainAccessOb: Observable<number>;
 
     constructor(private ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
         private walletNodeRequestService: WalletNodeRequestService) {
         
         this.initTabs();
@@ -103,6 +104,66 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
                 console.log('get transaction history error:', data);
             }
         ));
+    }
+
+    /**
+     * Handle View
+     *
+     * @param {index} number - The index of a wallet to be editted.
+     *
+     * @return {void}
+     */
+    public handleView(index): void {
+        /* Check if the tab is already open. */
+        let i;
+        for (i = 0; i < this.tabs.length; i++) {
+            if (this.tabs[i].hash === this.transactions[index].hash) {
+                /* Found the index for that tab, lets activate it... */
+                this.setTabActive(i);
+
+                /* And return. */
+                return;
+            }
+        }
+
+        /* Push the edit tab into the array. */
+        let transaction = this.transactions[index];
+
+        /* And also prefill the form... let's sort some of the data out. */
+        this.tabs.push({
+            "title": "<i class='fa fa-th-list'></i> " + this.transactions[index].shortHash,
+            "hash": this.transactions[index].hash,
+            "transaction": transaction,
+            "active": false
+        });
+
+        /* Activate the new tab. */
+        this.setTabActive(this.tabs.length - 1);
+
+        /* Return. */
+        return;
+    }
+
+    /**
+     * Set Tab Active
+     * --------------
+     * Sets all tabs to inactive other than the given index, this means the
+     * view is switched to the wanted tab.
+     *
+     * @param {index} number - the tab inded to close.
+     *
+     * @return {void}
+     */
+    public setTabActive(index: number = 0) {
+        this.tabs.map((i) => {
+            i.active = false;
+        });
+
+        this.changeDetectorRef.detectChanges();
+
+        this.tabs[index].active = true;
+
+        this.changeDetectorRef.detectChanges();
     }
 
     ngOnDestroy() {

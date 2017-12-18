@@ -11,6 +11,13 @@
                     *ngTemplateOutlet="staticTransactionsList"
                 ></ng-container>
             </ng-container>
+
+            <!-- Transaction view tabs. -->
+            <ng-container *ngIf="idx >= 1">
+                <ng-container
+                    *ngTemplateOutlet="dynamicViewTab; context: {'tabid': id, 'transaction': tabdata.transaction}"
+                ></ng-container>
+            </ng-container>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
@@ -26,10 +33,10 @@
             <clr-dg-column class="col-type" mltag="txt_type">Type</clr-dg-column>
             
             <!-- <clr-dg-row *clrDgItems="let transaction of transactions"> -->
-            <clr-dg-row *clrDgItems="let transaction of transactions">
+            <clr-dg-row *clrDgItems="let transaction of transactions; let idx = index;">
                 <clr-dg-cell class="col-actions">
                     <div class="btn-group btn-sm">
-                        <button (click)="handleView(transaction.hash)" class="btn">
+                        <button (click)="handleView(idx)" class="btn">
                             <i class="fa fa-search"></i><span mltag="txt_view">View</span>
                         </button>
                     </div>
@@ -46,5 +53,11 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
+    </div>
+</ng-template>
+
+<ng-template #dynamicViewTab let-tabid="tabid" let-transaction="transaction">
+    <div class="transaction-tab-panel-body panel-body">
+        {{transaction.utc}}
     </div>
 </ng-template>
