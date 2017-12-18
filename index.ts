@@ -12,3 +12,4 @@ export {PermissionGroupServiceMock} from './mock/permission-group-service';
 export {WalletNodeSocketServiceMock} from './mock/walletnode-socket-service';
 export {WalletNodeRequestServiceMock} from './mock/walletnode-req-service';
 export {WalletnodeTxServiceMock} from './mock/walletnode-tx-service';
+export {RouterMock} from './mock/router';
