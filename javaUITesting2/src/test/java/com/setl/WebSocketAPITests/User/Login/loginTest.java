@@ -46,23 +46,23 @@ public class loginTest {
     {
     }
 
-    @Test
-    public void loginSuccessWithValidCredentials() throws InterruptedException, ExecutionException {
-        CountDownLatch l  = new CountDownLatch(1);
-
-        socket.registerHandler(Type.Login.name(),message->{
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp =(JSONObject) data.get(0);
-            Object token = resp.get("Token");
-            assertNotNull(token);
-            assertTrue(!token.toString().equalsIgnoreCase("fail"));
-            l.countDown();
-            return "";});
-        Future<Connection> connection = ws.start(address);
-        l.await();
-        connection.get().disconnect();
-
-    }
+//    @Test
+//    public void loginSuccessWithValidCredentials() throws InterruptedException, ExecutionException {
+//        CountDownLatch l  = new CountDownLatch(1);
+//
+//        socket.registerHandler(Type.Login.name(),message->{
+//            JSONArray data = (JSONArray) message.get("Data");
+//            JSONObject resp =(JSONObject) data.get(0);
+//            Object token = resp.get("Token");
+//            assertNotNull(token);
+//            assertTrue(!token.toString().equalsIgnoreCase("fail"));
+//            l.countDown();
+//            return "";});
+//        Future<Connection> connection = ws.start(address);
+//        l.await();
+//        connection.get().disconnect();
+//
+//    }
 
     @Test
     public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
