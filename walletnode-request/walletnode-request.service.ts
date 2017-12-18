@@ -1,4 +1,8 @@
 import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import {NgRedux, select} from '@angular-redux/store';
+
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {createWalletNodeSagaRequest} from '@setl/utils/common';
@@ -7,7 +11,8 @@ import {
     WalletIssuerRequestMessageBody,
     RequestWalletHoldingMessageBody,
     WalletInstrumentRequestMessageBody,
-    RequestContractByAddressBody
+    RequestContractByAddressBody,
+    RequestTransactionHistoryBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
 
@@ -36,8 +41,8 @@ interface RequestWalletInstrument {
 @Injectable()
 export class WalletNodeRequestService {
 
-    constructor(private walletNodeSocketService: WalletNodeSocketService) {
-    }
+    constructor(private walletNodeSocketService: WalletNodeSocketService,
+        private http: Http) { }
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
 
@@ -138,6 +143,34 @@ export class WalletNodeRequestService {
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+
+    /**
+     * request Transaction History
+     *
+     * @param {object} requestData {walletIds, chainid}
+     * @returns {any}
+     */
+    requestTransactionHistory(requestData: any): any {     
+        const messageBody: RequestTransactionHistoryBody = {
+            topic: 'txhist',
+            walletids: requestData.walletIds,
+            chainid: requestData.chainId,
+            pagesize: 20,
+            pagenum: 0
+        };
+
+        console.log(messageBody);
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'signreq', messageBody);
+    }
+
+    requestTransactionHistoryFromReportingNode(msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
+        const requestUrl = `http://10.0.1.174:8087/http://${nodePath}:13544/sapi`;
+        // const requestUrl = `http://${nodePath}:13544/sapi`;
+
+        return this.http.post(requestUrl, { request: msgId });
     }
 
 }
