@@ -12,6 +12,7 @@ import {
 } from '@setl/core-test-util';
 import {MyUserService} from '@setl/core-req-services';
 import {MemberSocketService} from '@setl/websocket-service';
+import {Subject} from 'rxjs/Subject';
 
 
 describe('LoginGuardService', () => {
@@ -42,29 +43,30 @@ describe('LoginGuardService', () => {
 
     it('when user is login, canActivate should return true',
         inject([LoginGuardService], (service: LoginGuardService) => {
-            const isLoginStub: Subject<number> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
+            const isLoginStub: Subject<boolean> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
             isLoginStub.next(true);
             expect(service.canActivate(<any>{}, <any>{})).toBeTruthy();
         }));
 
     it('when user is not login, canActivate should return false',
         inject([LoginGuardService], (service: LoginGuardService) => {
-            const isLoginStub: Subject<number> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
+            const isLoginStub: Subject<boolean> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
             isLoginStub.next(false);
             expect(service.canActivate(<any>{}, <any>{})).toBeFalsy();
         }));
 
     it('when user logged in, isLogin should set to true',
         inject([LoginGuardService], (service: LoginGuardService) => {
-            const isLoginStub: Subject<number> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
+            const isLoginStub: Subject<boolean> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
             isLoginStub.next(true);
             expect(service.isLogin).toBeTruthy();
         }));
 
     it('when user loged out, isLogin should set to false',
         inject([LoginGuardService], (service: LoginGuardService) => {
-            const isLoginStub: Subject<number> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
+            const isLoginStub: Subject<boolean> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication', 'isLogin']);
             isLoginStub.next(false);
             expect(service.isLogin).toBeFalsy();
         }));
+
 });

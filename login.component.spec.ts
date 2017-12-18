@@ -16,7 +16,8 @@ import {
     ChannelServiceMock,
     InitialisationServiceMock,
     MyWalletsServiceMock,
-    PermissionGroupServiceMock
+    PermissionGroupServiceMock,
+    RouterMock
 } from '@setl/core-test-util';
 import {
     MyUserService,
@@ -28,10 +29,14 @@ import {
     InitialisationService
 } from '@setl/core-req-services';
 import {MemberSocketService} from '@setl/websocket-service';
+import {Subject} from 'rxjs/Subject';
+import {Router} from '@angular/router';
+import _ from 'lodash';
 
 describe('SetlLoginComComponent', () => {
     let component: SetlLoginComponent;
     let fixture: ComponentFixture<SetlLoginComponent>;
+    let element: Element;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -39,7 +44,7 @@ describe('SetlLoginComComponent', () => {
                 ReactiveFormsModule,
                 NgReduxTestingModule,
                 ToasterModule,
-                CoreTestUtilModule
+                CoreTestUtilModule,
             ],
             declarations: [SetlLoginComponent],
             providers: [
@@ -54,6 +59,7 @@ describe('SetlLoginComComponent', () => {
                 {provide: MemberSocketService, useClass: MemberSocketServiceMock},
                 {provide: ToasterService, useClass: ToasterServiceMock},
                 {provide: AlertsService, useClass: AlertsServiceMock},
+                {provide: Router, useValue: RouterMock},
             ]
         })
             .compileComponents();
@@ -64,10 +70,111 @@ describe('SetlLoginComComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SetlLoginComponent);
         component = fixture.componentInstance;
+        element = fixture.nativeElement;
         fixture.detectChanges();
     });
 
     it('should be created', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should has the correct input fields', async(() => {
+            fixture.whenStable().then(() => {
+                expect(element.querySelector('#username-field')).toBeTruthy();
+                expect(element.querySelector('#password-field')).toBeTruthy();
+                expect(element.querySelector('#login-submit')).toBeTruthy();
+            });
+        })
+    );
+
+    it('update method should be called, when authentication changed', async(() => {
+        spyOn(component, 'updateState');
+        const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
+        authenticationStub.next({isLogin: true});
+        expect(component.updateState).toHaveBeenCalled();
+    }));
+
+    it('Initialisation memberInitialisation static method should be call, when updateState is call', async(() => {
+        component.isLogin = false;
+        const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
+        spyOn(InitialisationService, 'membernodeInitialisation');
+        authenticationStub.next({isLogin: true, token: 'token'});
+
+        expect(InitialisationService.membernodeInitialisation).toHaveBeenCalled();
+    }));
+
+    it('If Login button click, login method should be called', async(() => {
+        // Fill username and password
+        component.loginForm.controls.username.setValue('sample name');
+        component.loginForm.controls.password.setValue('sample password');
+        fixture.detectChanges();
+
+        // click on login button
+        spyOn(component, 'login');
+
+        const button = fixture.debugElement.nativeElement.querySelector('#login-submit');
+        button.click();
+
+        fixture.whenStable().then(() => {
+            expect(component.login).toHaveBeenCalled();
+        });
+
+        // Now login method should be called now.
+        expect(component.login).toHaveBeenCalled();
+
+    }));
+
+    it('If Login button click, login method should be called', async(() => {
+        // Fill username and password
+        component.loginForm.controls.username.setValue('sample name');
+        component.loginForm.controls.password.setValue('sample password');
+        fixture.detectChanges();
+
+        // click on login button
+        spyOn(component, 'login');
+
+        const button = fixture.debugElement.nativeElement.querySelector('#login-submit');
+        button.click();
+
+        fixture.whenStable().then(() => {
+            expect(component.login).toHaveBeenCalled();
+        });
+
+        // Now login method should be called now.
+        expect(component.login).toHaveBeenCalled();
+
+    }));
+
+    fit('handleLoginFailMessage should handle response correctly',
+        async(() => {
+
+            // status: fail
+            let response = [
+                '', {Data: [{Status: 'fail'}]}
+            ];
+
+            spyOn(component, 'showLoginErrorMessage');
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+                '<span mltag="txt_loginerror" class="text-warning">Sorry, login details incorrect, please try again.</span>');
+
+            // status: locked
+            response = [
+                '', {Data: [{Status: 'locked'}]}
+            ];
+
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                'Please contact Setl support.</span>');
+
+            // status:
+            response = [
+                '', {Data: [{Status: 'random'}]}
+            ];
+
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>');
+        }));
 });
