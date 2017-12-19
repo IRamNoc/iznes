@@ -63,25 +63,24 @@ public class loginTest {
 //        connection.get().disconnect();
 //
 //    }
-
-    @Test
-    public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
-        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
-        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-        CountDownLatch l  = new CountDownLatch(1);
-
-        socket.registerHandler(Type.Login.name(),message->{
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp =(JSONObject) data.get(0);
-            Object token = resp.get("Token");
-            assertTrue(token.toString().equalsIgnoreCase("fail"));
-            l.countDown();
-            return "";});
-        Future<Connection> connection = ws.start(address);
-        l.await();
-      connection.get().disconnect();
-
-    }
+//    @Test
+//    public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
+//        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
+//        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
+//        CountDownLatch l  = new CountDownLatch(1);
+//
+//        socket.registerHandler(Type.Login.name(),message->{
+//            JSONArray data = (JSONArray) message.get("Data");
+//            JSONObject resp =(JSONObject) data.get(0);
+//            Object token = resp.get("Token");
+//            assertTrue(token.toString().equalsIgnoreCase("fail"));
+//            l.countDown();
+//            return "";});
+//        Future<Connection> connection = ws.start(address);
+//        l.await();
+//      connection.get().disconnect();
+//
+//    }
 
     @Test
     public void loginFailureWithUnknownUser() throws InterruptedException, ExecutionException {
