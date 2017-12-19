@@ -8,7 +8,6 @@ import {
     FormControl
 } from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
 
 // Internals
@@ -25,7 +24,7 @@ import {
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    getAuthentication, SET_PRODUCTION
+    SET_PRODUCTION
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';

@@ -145,7 +145,7 @@ describe('SetlLoginComComponent', () => {
 
     }));
 
-    fit('handleLoginFailMessage should handle response correctly',
+    it('handleLoginFailMessage should handle response correctly',
         async(() => {
 
             // status: fail
@@ -177,4 +177,75 @@ describe('SetlLoginComComponent', () => {
             expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>');
         }));
+
+    it('AlertsService should called with error type', () => {
+        spyOn(component.alertsService, 'create');
+
+        const response = [
+            '', {Data: [{Status: 'fail'}]}
+        ];
+
+        component.showLoginErrorMessage(response);
+
+        expect(component.alertsService.create).toHaveBeenCalledWith(
+            'error',
+            response
+        );
+
+    });
+
+    it('login method: if form is valid, loginRequest should be called', () => {
+        spyOn(component.myUserService, 'loginRequest');
+
+        const formValue = {
+            username: 'user name',
+            password: 'user password'
+        };
+
+        component.loginForm.controls['username'].setValue(formValue.username);
+        component.loginForm.controls['password'].setValue(formValue.password);
+        component.login(formValue);
+        expect(component.myUserService.loginRequest).toHaveBeenCalledWith({
+            username: 'user name',
+            password: 'user password'
+        });
+    });
+
+    it('login method: if form is invalid, loginRequest should be not be called', () => {
+        spyOn(component.myUserService, 'loginRequest');
+
+        const formValue = {
+            username: 'user name',
+            password: ''
+        };
+
+        component.loginForm.controls['username'].setValue(formValue.username);
+        component.loginForm.controls['password'].setValue(formValue.password);
+        component.login(formValue);
+        expect(component.myUserService.loginRequest).not.toHaveBeenCalled();
+    });
+
+    it('login method: if there is alert popup present, the the popup should be remove, and login request should not be called', () => {
+        const errorElements = [{
+            parentNode: {
+                removeChild: (el) => {
+                }
+            }
+        }];
+
+        spyOn(document, 'getElementsByClassName').and.returnValue(errorElements);
+        spyOn(errorElements[0].parentNode, 'removeChild');
+        spyOn(component.myUserService, 'loginRequest');
+
+        const formValue = {
+            username: 'user name',
+            password: 'user password'
+        };
+
+        component.loginForm.controls['username'].setValue(formValue.username);
+        component.loginForm.controls['password'].setValue(formValue.password);
+        component.login(formValue);
+        expect(component.myUserService.loginRequest).not.toHaveBeenCalled();
+        expect(errorElements[0].parentNode.removeChild).toHaveBeenCalled();
+    });
 });
