@@ -152,23 +152,22 @@ export class WalletNodeRequestService {
      * @param {object} requestData {walletIds, chainid}
      * @returns {any}
      */
-    requestTransactionHistory(requestData: any): any {     
+    requestTransactionHistory(requestData: any, pageSize: number = 10, pageNum: number = 0): any {     
         const messageBody: RequestTransactionHistoryBody = {
             topic: 'txhist',
             walletids: requestData.walletIds,
             chainid: requestData.chainId,
-            pagesize: 20,
-            pagenum: 0
+            pagesize: pageSize,
+            pagenum: pageNum
         };
-
-        console.log(messageBody);
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'signreq', messageBody);
     }
 
     requestTransactionHistoryFromReportingNode(msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
-        const requestUrl = `http://10.0.1.174:8087/http://${nodePath}:13544/sapi`;
-        // const requestUrl = `http://${nodePath}:13544/sapi`;
+        // enter your own proxy below for local development
+        // const requestUrl = `http://10.0.1.174:8087/http://${nodePath}:13544/sapi`;
+        const requestUrl = `http://${nodePath}:13544/rn1/sapi`;
 
         return this.http.post(requestUrl, { request: msgId });
     }
