@@ -21,7 +21,7 @@ export {BlockchainContractService} from './services/blockchain-contract/service'
 export {ConditionType, ArrangementActionType} from './services/blockchain-contract/model';
 export {SetlServicesModule} from './services';
 
-export {walletHelper, immutableHelper, mDateHelper, commonHelper} from './helper';
+export {walletHelper, WalletTxHelper, immutableHelper, mDateHelper, commonHelper, WalletTxHelperModel} from './helper';
 
 export {APP_CONFIG} from './appConfig/appConfig';
 export {AppConfig, MenuSpec, MenuItem} from './appConfig/appConfig.model';

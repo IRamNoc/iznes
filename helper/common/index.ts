@@ -37,3 +37,13 @@ export function numberRoundUp(num: number, numDecimal: number = 2) {
     rVal = Math.ceil(rVal);
     return rVal / divider;
 }
+
+/**
+ * Comma Separate a number
+ * @param {number | string} val
+ * @return {string}
+ */
+export function commaSeparateNumber(val: number | string): string {
+    val = val.toString().replace(/,/g, '');
+    return (val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
