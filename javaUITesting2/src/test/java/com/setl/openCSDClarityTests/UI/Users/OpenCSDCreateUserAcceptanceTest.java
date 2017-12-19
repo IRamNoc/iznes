@@ -39,7 +39,7 @@ import static junit.framework.TestCase.assertTrue;
 public class OpenCSDCreateUserAcceptanceTest {
 
     private static final Logger logger = LogManager.getLogger(OpenCSDCreateUserAcceptanceTest.class);
-
+    int MAXTRIES=4;
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
     @Rule
@@ -99,7 +99,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         String password = userDetails[1];
         String email = userDetails[2];
 
-        int MAXTRIES=4;
+
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -129,19 +129,27 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void shouldEditUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
         String password = userDetails[1];
         String email = userDetails[2];
 
-
-        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-        User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
-
-        connection.disconnect();
-
+        User user = null;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+            Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+            user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+            connection.disconnect();
+            if (user!=null) break;
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
         navigateToAddUser();
         navigateToUserSearch();
         driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
