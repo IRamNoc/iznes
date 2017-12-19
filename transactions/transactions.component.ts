@@ -27,11 +27,6 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     transactions: any[] = [];
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
 
-    @ViewChild('pagination') pagination;
-    private currentGridPage: number;
-
-    @ViewChild('myDataGrid') transactionsGrid;
-
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: Observable<number>;
     @select(['user', 'connected', 'connectedChain']) connectedChainOb: Observable<number>;
     @select(['chain', 'myChainAccess', 'myChainAccess']) myChainAccessOb: Observable<number>;
@@ -190,7 +185,11 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         this.tabs[0].active = true;
     }
 
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+    }
 
 }
 
