@@ -183,7 +183,6 @@ export class WalletTxHelper {
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.sig = original[12];
         transaction.toAddr = original[10];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -200,7 +199,6 @@ export class WalletTxHelper {
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.sig = original[12];
         transaction.toAddr = original[10];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -214,14 +212,13 @@ export class WalletTxHelper {
     static createIssueAssetTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
         transaction.txType = "Issue Asset";
 
-        // transaction.amount = original[13]; // todo
+        transaction.amount = original[13];
         transaction.issuer = original[10];
         transaction.instrument = original[11];
-        transaction.height = common.commaSeparateNumber(original[13]);
+        transaction.height = common.commaSeparateNumber(original[17] || '');
         transaction.protocol = original[12];
         transaction.sig = original[16];
         transaction.toAddr = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -252,7 +249,7 @@ export class WalletTxHelper {
     static createAssetTransferTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
         transaction.txType = "Asset Transfer";
 
-        // transaction.amount = original[14]; // todo
+        transaction.amount = original[14];
         transaction.issuer = original[10];
         transaction.instrument = original[11];
         transaction.height = common.commaSeparateNumber(original[18] || '');
@@ -260,7 +257,6 @@ export class WalletTxHelper {
         transaction.sig = original[15];
         transaction.toAddr = original[13];
         transaction.toChain = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -300,7 +296,6 @@ export class WalletTxHelper {
         transaction.sig = original[17];
         transaction.subjectAddr = original[10];
         transaction.toChain = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -323,7 +318,6 @@ export class WalletTxHelper {
         transaction.sig = original[17];
         transaction.subjectAddr = original[10];
         transaction.toChain = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -345,7 +339,6 @@ export class WalletTxHelper {
         transaction.sig = original[18];
         transaction.subjectAddr = original[14];
         transaction.toChain = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }
@@ -366,7 +359,6 @@ export class WalletTxHelper {
         transaction.sig = original[15];
         transaction.subjectAddr = original[14];
         transaction.toChain = original[12];
-        // transaction.txJsonTree = original; // todo
 
         return transaction;
     }

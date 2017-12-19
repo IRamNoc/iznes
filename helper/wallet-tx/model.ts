@@ -152,7 +152,9 @@ export class WalletTransactionField {
     mltag: string;
 }
 
-/* Types of transaction */
+/**
+ *  Types of transaction
+ */
 export const TxRegisterIssuer = "registerIssuer";
 export const TxRegisterAsset = "registerAsset";
 export const TxIssueAsset = "issueAsset";
