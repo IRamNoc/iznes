@@ -15,7 +15,7 @@
             <!-- Transaction view tabs. -->
             <ng-container *ngIf="idx >= 1">
                 <ng-container
-                    *ngTemplateOutlet="dynamicViewTab; context: {'tabid': id, 'transaction': tabdata.transaction}"
+                    *ngTemplateOutlet="dynamicViewTab; context: {'tabid': idx, 'transaction': tabdata.transaction}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -62,7 +62,9 @@
             <div class="form-horizontal">            
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
-                    <label class="col-sm-4"><span class="ml" mltag="txt_transactiondetail">Transaction Detail</span></label>
+                    <label class="col-sm-4">
+                        <span class="ml" mltag="txt_transactiondetail">Transaction Detail</span>
+                    </label>
                 </div>
             
                 <ng-container *ngFor="let field of transactionFields">
@@ -75,6 +77,13 @@
                         </div>
                     </div>
                 </ng-container>
+
+                <div class="form-group tx-view-header">
+                    <div class="col-sm-3">&nbsp;</div>
+                    <label class="col-sm-4">
+                        <button type="button" class="btn btn-primary" (click)="closeTransaction(tabid)">Close</button>
+                    </label>
+                </div>
             </div>
         </form>
     </div>

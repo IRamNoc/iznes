@@ -166,6 +166,27 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
     }
 
+    /**
+     * Close Transaction
+     * --------------
+     * Closes the current transaction tab
+     *
+     * @param {index} number - the tab inded to close.
+     * @return {void}
+     */
+    closeTransaction(index: number): void {
+        this.tabs.map((i) => {
+            i.active = false;
+        });
+
+        this.changeDetectorRef.detectChanges();
+
+        this.tabs.splice(index,1);
+        this.tabs[0].active = true;
+
+        this.changeDetectorRef.detectChanges();
+    }
+
     ngOnDestroy() {
         
     }
