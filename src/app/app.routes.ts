@@ -65,7 +65,7 @@ import {
  */
 import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComponent} from '@setl/core-manage-member';
 import {SetlMessagesComponent} from '@setl/core-messages';
-import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
+import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
 import {ConnectionComponent} from '@setl/core-connections/connections/component';
 /**
@@ -183,7 +183,12 @@ export const ROUTES: Routes = [
                         path: 'issue',
                         component: SetlIssueComponent,
                         canActivate: [LoginGuardService]
-                    }
+                    },
+                    {
+                        path: 'transactions',
+                        component: SetlTransactionsComponent,
+                        canActivate: [LoginGuardService]
+                    },
                 ]
             },
             {
