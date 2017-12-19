@@ -11,6 +11,5 @@
     font-weight: 700;
 }
 
-input:read-only {
-    color: #747474;
-}
+form .form-group .control-label { line-height: 50px; }
+input:read-only { color: #747474; }
