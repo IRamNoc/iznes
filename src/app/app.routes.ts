@@ -79,7 +79,7 @@ import {OfiPnlReportComponent, OfiTaxReportComponent, OfiCollectiveArchiveCompon
  */
 import {LoginGuardService} from '@setl/core-login';
 import {SetlMessagesComponent} from '@setl/core-messages';
-import {SetlBalancesComponent, SetlIssueComponent} from '@setl/core-balances';
+import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -188,7 +188,12 @@ export const ROUTES: Routes = [
                         path: 'issue',
                         component: SetlIssueComponent,
                         canActivate: [LoginGuardService]
-                    }
+                    },
+                    {
+                        path: 'transactions',
+                        component: SetlTransactionsComponent,
+                        canActivate: [LoginGuardService]
+                    },
                 ]
             },
             {
