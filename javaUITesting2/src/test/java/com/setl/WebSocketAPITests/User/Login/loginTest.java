@@ -79,7 +79,6 @@ public class loginTest {
 //        Future<Connection> connection = ws.start(address);
 //        l.await();
 //      connection.get().disconnect();
-//
 //    }
 
     @Test
