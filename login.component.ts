@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // Internals
 import {SagaHelper} from '@setl/utils';
