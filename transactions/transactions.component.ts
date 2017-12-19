@@ -2,11 +2,12 @@ import {Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy, transition} 
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
+import {Unsubscribe} from 'redux';
+import * as _ from 'lodash';
 
 import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {setConnectedChain} from '@setl/core-store';
 import {WalletNodeRequestService} from '@setl/core-req-services';
-import {Unsubscribe} from 'redux';
 
 @Component({
     selector: 'setl-transactions',
@@ -25,6 +26,11 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     tabs: any[];
     transactions: any[] = [];
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
+
+    @ViewChild('pagination') pagination;
+    private currentGridPage: number;
+
+    @ViewChild('myDataGrid') transactionsGrid;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: Observable<number>;
     @select(['user', 'connected', 'connectedChain']) connectedChainOb: Observable<number>;
@@ -50,7 +56,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
             this.getTransactionsFromWalletNode();
 
             this.initSubscriptions();
-        });        
+        });
     }
 
     ngOnInit() { }
@@ -80,7 +86,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         const req = this.walletNodeRequestService.requestTransactionHistory({
             walletIds: [this.connectedWalletId],
             chainId: this.connectedChainId
-        });
+        }, 100, 0);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
@@ -105,7 +111,6 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
                 this.connectedChainId,
                 this.myChainAccess.nodeAddress
             ).subscribe((res) => {
-                console.log('transactions:', res);
                 this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
             }, (e) => {
                 console.log("reporting node error", e);
@@ -122,9 +127,9 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleView(index): void {
-        let i;
         const transaction = this.transactions[index];
-
+        
+        let i;
         for (i = 0; i < this.tabs.length; i++) {
             if (this.tabs[i].hash === transaction.hash) {
                 this.setTabActive(i);
@@ -180,16 +185,12 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         });
 
         this.changeDetectorRef.detectChanges();
-
+        
         this.tabs.splice(index,1);
         this.tabs[0].active = true;
-
-        this.changeDetectorRef.detectChanges();
     }
 
-    ngOnDestroy() {
-        
-    }
+    ngOnDestroy() { }
 
 }
 

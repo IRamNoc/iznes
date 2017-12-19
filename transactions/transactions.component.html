@@ -6,11 +6,11 @@
     <clr-tab *ngFor="let tabdata of tabs; let idx = index">
         <button clrTabLink id="testlink{{idx}}" [innerHTML]="tabdata.title"></button>
         <clr-tab-content *clrIfActive="tabdata.active">
-            <ng-container *ngIf="idx === 0">
+            <div [hidden]="idx !== 0">
                 <ng-container
                     *ngTemplateOutlet="staticTransactionsList"
                 ></ng-container>
-            </ng-container>
+            </div>
 
             <!-- Transaction view tabs. -->
             <ng-container *ngIf="idx >= 1">
@@ -63,7 +63,7 @@
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
                     <label class="col-sm-4">
-                        <span class="ml" mltag="txt_transactiondetail">Transaction Detail</span>
+                        <span class="ml" mltag="txt_transactiondetails">Transaction Details</span>
                     </label>
                 </div>
             
