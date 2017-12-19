@@ -33,3 +33,10 @@ export interface RequestContractByAddressBody extends WalletAddressRequestMessag
     walletid: number;
     address: string;
 }
+
+export interface RequestTransactionHistoryBody extends WalletNodeMessageBody {
+    walletids: number[];
+    chainid: number;
+    pagesize: number;
+    pagenum: number;
+}
