@@ -1,12 +1,9 @@
 package com.setl.RESTAPITests.Wallet.Creation;
 
-import SETLAPIHelpers.Wallet;
-
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
-import io.setl.restapi.client.message.MessageFactory;
-
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -14,15 +11,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static SETLAPIHelpers.WalletDetailsHelper.generateWalletDetails;
-
-import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(JUnit4.class)
@@ -43,7 +34,8 @@ public class createWalletAcceptanceTest {
 
 
 
-    @Test
+  @Test
+  @Ignore
   public void createNewCommercialWallet() throws ExecutionException, InterruptedException {
     String walletDetails[] = generateWalletDetails();
     String walletName = walletDetails[0];
@@ -86,6 +78,7 @@ public class createWalletAcceptanceTest {
   }
 
    @Test
+   @Ignore
   public void createNewResidentialWallet() throws ExecutionException, InterruptedException {
      String walletDetails[] = generateWalletDetails();
      String walletName = walletDetails[0];
@@ -127,6 +120,7 @@ public class createWalletAcceptanceTest {
    }
 
   @Test
+  @Ignore
   public void createNewOtherWallet() throws ExecutionException, InterruptedException {
     String walletDetails[] = generateWalletDetails();
     String walletName = walletDetails[0];

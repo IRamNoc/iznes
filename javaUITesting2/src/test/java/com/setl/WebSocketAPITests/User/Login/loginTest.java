@@ -1,11 +1,16 @@
 package com.setl.WebSocketAPITests.User.Login;
 
+import SETLAPIHelpers.AccountError;
+import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.*;
@@ -19,6 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
+import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
@@ -26,14 +33,16 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(JUnit4.class)
 public class loginTest {
 
+    private static final Logger logger = LogManager.getLogger(loginTest.class);
+
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-    String address = "ws://localhost:9788/db/";
+    String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);;
 
     @Before
     public void setUp() throws Exception
@@ -58,10 +67,21 @@ public class loginTest {
             assertTrue(!token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start(address);
-        l.await();
-        connexion.get().disconnect();
 
+
+        int MAXTRIES=2;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+                Future<Connection> connection = ws.start(address);
+                l.await();
+                connection.get().disconnect();
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
     }
 
     @Test
@@ -77,10 +97,20 @@ public class loginTest {
             assertTrue(token.toString().equalsIgnoreCase("fail"));
             l.countDown();
             return "";});
-        Future<Connection> connection = ws.start(address);
-        l.await();
-      connection.get().disconnect();
 
+        int MAXTRIES=2;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+                Future<Connection> connection = ws.start(address);
+                l.await();
+                connection.get().disconnect();
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
     }
 
     @Test
@@ -99,32 +129,22 @@ public class loginTest {
             assertTrue(accountName == "" || accountName.toString().isEmpty());
             l.countDown();
             return "";});
-        Future<Connection> connexion = ws.start(address);
-        l.await();
-        connexion.get().disconnect();
 
+        int MAXTRIES=2;
+        for(int i=0; i<MAXTRIES; i++) {
+            try {
+                Future<Connection> connection = ws.start(address);
+                l.await();
+                connection.get().disconnect();
+            } catch (Exception ex) {
+                logger.error("Login:", ex);
+                if(i>=MAXTRIES-1)
+                    throw(ex);
+            }
+            break;
+        }
     }
 
-    @Test
-    @Ignore
-    public void enumerationTest() throws InterruptedException, ExecutionException {
-        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
-        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-        CountDownLatch l  = new CountDownLatch(1);
-
-        socket.registerHandler(Type.Login.name(),message->{
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp =(JSONObject) data.get(0);
-            Object token = resp.get("Token");
-            assertNotNull(token);
-            assertTrue(token.toString().equalsIgnoreCase("fail"));
-            Object accountName = resp.get("accountName");
-            assertNull(accountName);
-            l.countDown();
-            return "";});
-        Future<Connection> connexion = ws.start(address);
-        l.await();
-        connexion.get().disconnect();
-
-    }
 }
+
+
