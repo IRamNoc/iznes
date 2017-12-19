@@ -58,6 +58,24 @@
 
 <ng-template #dynamicViewTab let-tabid="tabid" let-transaction="transaction">
     <div class="transaction-tab-panel-body panel-body">
-        {{transaction.utc}}
+        <form>
+            <div class="form-horizontal">            
+                <div class="form-group tx-view-header">
+                    <div class="col-sm-3">&nbsp;</div>
+                    <label class="col-sm-4"><span class="ml" mltag="txt_transactiondetail">Transaction Detail</span></label>
+                </div>
+            
+                <ng-container *ngFor="let field of transactionFields">
+                    <div class="form-group" *ngIf="transaction[field.field]">
+                        <label class="col-sm-3 control-label">
+                            <span class="ml" mltag="txt_">{{field.displayName}}</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" readonly="" value="{{transaction[field.field]}}">
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </form>
     </div>
 </ng-template>

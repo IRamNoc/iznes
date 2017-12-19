@@ -3,7 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 
-import {SagaHelper, WalletTxHelper} from '@setl/utils';
+import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {setConnectedChain} from '@setl/core-store';
 import {WalletNodeRequestService} from '@setl/core-req-services';
 import {Unsubscribe} from 'redux';
@@ -24,6 +24,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
 
     tabs: any[];
     transactions: any[] = [];
+    readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: Observable<number>;
     @select(['user', 'connected', 'connectedChain']) connectedChainOb: Observable<number>;
@@ -87,18 +88,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
             req,
             {},
             (data) => {
-                console.log('get transaction history success:', data);
-
-                this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
-                    data[1].data.msgsig,
-                    this.connectedChainId,
-                    this.myChainAccess.nodeAddress
-                ).subscribe((res) => {
-                    this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
-                    console.log(this.transactions);
-                }, (e) => {
-                    console.log("reporting node error", e);
-                });
+                this.getTransactionsFromReportingNode(data);
             },
             (data) => {
                 console.log('get transaction history error:', data);
@@ -106,41 +96,52 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         ));
     }
 
+    private getTransactionsFromReportingNode(data: any): void {
+        const msgsig: string = (data[1]) ? data[1].data.msgsig : null;
+
+        if(msgsig) {
+            this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
+                data[1].data.msgsig,
+                this.connectedChainId,
+                this.myChainAccess.nodeAddress
+            ).subscribe((res) => {
+                console.log('transactions:', res);
+                this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
+            }, (e) => {
+                console.log("reporting node error", e);
+            });
+        } else {
+            console.log("invalid signature request");
+        }
+    }
+
     /**
      * Handle View
      *
      * @param {index} number - The index of a wallet to be editted.
-     *
      * @return {void}
      */
-    public handleView(index): void {
-        /* Check if the tab is already open. */
+    handleView(index): void {
         let i;
+        const transaction = this.transactions[index];
+
         for (i = 0; i < this.tabs.length; i++) {
-            if (this.tabs[i].hash === this.transactions[index].hash) {
-                /* Found the index for that tab, lets activate it... */
+            if (this.tabs[i].hash === transaction.hash) {
                 this.setTabActive(i);
 
-                /* And return. */
                 return;
             }
         }
 
-        /* Push the edit tab into the array. */
-        let transaction = this.transactions[index];
-
-        /* And also prefill the form... let's sort some of the data out. */
         this.tabs.push({
-            "title": "<i class='fa fa-th-list'></i> " + this.transactions[index].shortHash,
-            "hash": this.transactions[index].hash,
+            "title": "<i class='fa fa-th-list'></i> " + transaction.shortHash,
+            "hash": transaction.hash,
             "transaction": transaction,
             "active": false
         });
 
-        /* Activate the new tab. */
         this.setTabActive(this.tabs.length - 1);
 
-        /* Return. */
         return;
     }
 
@@ -151,10 +152,9 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
      * view is switched to the wanted tab.
      *
      * @param {index} number - the tab inded to close.
-     *
      * @return {void}
      */
-    public setTabActive(index: number = 0) {
+    setTabActive(index: number = 0) {
         this.tabs.map((i) => {
             i.active = false;
         });
