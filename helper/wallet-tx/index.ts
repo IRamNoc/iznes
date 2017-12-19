@@ -3,8 +3,7 @@ import * as Model from './model';
 import * as moment from '../m-date-wrapper';
 import * as common from '../common';
 
-export class WalletTxHelper {
-    
+export class WalletTxHelper {    
     /**
      * Convert an array of array transactions
      * @param transactions any[]
@@ -14,8 +13,7 @@ export class WalletTxHelper {
         const rtnTransactions: Model.WalletTransaction[] = [];
 
         _.forEach(transactions, (transaction: any[]) => {
-            console.log("TRANSACTION", transaction);
-            const txType = Model.TransactionTypes[transaction[1]];
+            const txType = Model.TransactionTypes[transaction[2]];
 
             rtnTransactions.push(WalletTxHelper.convertTransactionArray(txType, transaction));
         });

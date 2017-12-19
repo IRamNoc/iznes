@@ -26,6 +26,133 @@ export class WalletTransaction {
     str_prop1?: string;
 }
 
+export class WalletTransactionFields {
+    fields: WalletTransactionField[] = [
+        {
+            field: "txType",
+            displayName: "Transaction Type",
+            mltag: "txt_transactiontype"
+        },
+        {
+            field: "hash",
+            displayName: "Transaction Hash",
+            mltag: "txt_transactionhash"
+        },
+        {
+            field: "baseChain",
+            displayName: "Base Chain",
+            mltag: "txt_basechain"
+        },
+        {
+            field: "fromPub",
+            displayName: "From Public Key",
+            mltag: "txt_frompublickey"
+        },
+        {
+            field: "fromAddr",
+            displayName: "From Address",
+            mltag: "txt_fromaddress"
+        },
+        {
+            field: "issuer",
+            displayName: "Issuer",
+            mltag: "txt_transactionissuer"
+        },
+        {
+            field: "issuer2",
+            displayName: "Issuer 2",
+            mltag: "txt_transactionissuer2"
+        },
+        {
+            field: "instrument",
+            displayName: "Instrument",
+            mltag: "txt_instrument"
+        },
+        {
+            field: "instrument2",
+            displayName: "Instrument 2",
+            mltag: "txt_instrument2"
+        },
+        {
+            field: "toPub",
+            displayName: "To Public Key",
+            mltag: "txt_topublickey"
+        },
+        {
+            field: "toAddr",
+            displayName: "To Address",
+            mltag: "txt_toaddress"
+        },
+        {
+            field: "toChain",
+            displayName: "To Chain",
+            mltag: "txt_tochain"
+        },
+        {
+            field: "ratio",
+            displayName: "Ratio",
+            mltag: "txt_ratio"
+        },
+        {
+            field: "utc",
+            displayName: "UTC",
+            mltag: "txt_utc"
+        },
+        {
+            field: "sig",
+            displayName: "Transaction Signature",
+            mltag: "txt_transactionsig"
+        },
+        {
+            field: "sig2",
+            displayName: "Transaction Signature 2",
+            mltag: "txt_transactionsig2"
+        },
+        {
+            field: "height",
+            displayName: "Block Height",
+            mltag: "txt_blockheight"
+        },
+        {
+            field: "protocol",
+            displayName: "Protocol",
+            mltag: "txt_protocol"
+        },
+        {
+            field: "amount",
+            displayName: "Amount",
+            mltag: "txt_amount"
+        },
+        {
+            field: "subjectAddr",
+            displayName: "Subject Address",
+            mltag: "txt_subjectaddress"
+        },
+        {
+            field: "metaData",
+            displayName: "Meta Data",
+            mltag: "txt_metadata"
+        },
+        {
+            field: "dictData",
+            displayName: "Dictionary Data",
+            mltag: "txt_dictdata"
+        },
+        {
+            field: "str_prop1",
+            displayName: "String",
+            mltag: "txt_stringprop1"
+        }
+    ]
+}
+
+export class WalletTransactionField {
+    field: string;
+    displayName: string;
+    mltag: string;
+}
+
+/* Types of transaction */
 export const TxRegisterIssuer = "registerIssuer";
 export const TxRegisterAsset = "registerAsset";
 export const TxIssueAsset = "issueAsset";
