@@ -18,6 +18,7 @@ import {ConfirmationService} from "@setl/utils";
 /* User Admin Service. */
 import {UserAdminService} from "../useradmin.service";
 import { Subscription } from "rxjs/Subscription";
+import { Observable } from "rxjs/Observable";
 
 /* Decorator. */
 @Component({
@@ -83,7 +84,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
             this.usersList = this.convertToArray(list);
-
+            
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
         });
@@ -207,6 +208,19 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+    /**
+     * Update User List
+     * -----------------
+     * Updates the user list grid
+     *
+     * @return {void}
+     */
+    public updateUserList(callback: () => void): void {
+        this.userAdminService.updateUsersStore();
+
+        callback();
     }
 
     /**
@@ -514,7 +528,11 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             this.clearNewUser(1, false);
 
             /* Handle success. */
-            this.showSuccess('Successfully updated this user.');
+            this.updateUserList(() => {
+                /* Handle success message & update users list */
+                console.log('Successfully created user.', response);
+                this.showSuccess('Successfully created user.');
+            });
         }).catch((error) => {
             /* Handle error. */
             this.showError('Failed to update this user.');
@@ -626,9 +644,11 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
-            /* Handle success message. */
-            console.log('Successfully edited user.', response);
-            this.showSuccess('Successfully updated user details.');
+            this.updateUserList(() => {
+                /* Handle success message & update users list */
+                console.log('Successfully edited user.', response);
+                this.showSuccess('Successfully updated user details.');
+            });
         }).catch((error) => {
             /* Handle error message. */
             console.log('Failed to edit user.', error);
@@ -834,7 +854,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     }
 
                     /* Handle success message. */
-                    this.showSuccess('Successfully deleted user.');
+                    this.updateUserList(() => {
+                        /* Handle success message & update users list */
+                        this.showSuccess('Successfully deleted user.');
+                    });
                 }).catch((error) => {
                     /* Handle error message. */
                     this.showError('Failed to delete user.');

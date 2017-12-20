@@ -329,6 +329,21 @@ export class UserAdminService {
      */
 
     /**
+     * Update Users Store
+     * ----------------
+     * Triggers an update of the users list in redux
+     *
+     * @return {void}
+     */
+    public updateUsersStore(): void {
+        this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestMyUsersList(),
+            successActions: [SET_ADMIN_USERLIST]
+        });
+    }
+
+    /**
      * Create New User
      * ----------------
      * Creates a new User.
