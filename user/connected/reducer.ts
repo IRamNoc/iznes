@@ -1,6 +1,7 @@
 import {Action} from 'redux';
 import {
     SET_CONNECTED_WALLET,
+    SET_CONNECTED_CHAIN,
     SET_MEMBERNODE_SESSION_MANAGER,
     RESET_MEMBERNODE_SESSION_MANAGER
 } from './actions';
@@ -25,6 +26,15 @@ export const ConnectedReducer = function (state: ConnectedState = initialState, 
 
             newState = Object.assign({}, state, {
                 connectedWallet
+            });
+
+            return newState;
+
+        case SET_CONNECTED_CHAIN:
+            const connectedChain = _.get(action, 'chainId', 0);
+
+            newState = Object.assign({}, state, {
+                connectedChain
             });
 
             return newState;

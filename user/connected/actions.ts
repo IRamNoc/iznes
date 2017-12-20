@@ -36,3 +36,17 @@ export const setMembernodeSessionManager: ActionCreator<SetMembernodeSessionMana
     }
 );
 
+/**
+ * Set connected chain id.
+ */
+interface SetConnectedChainAction extends Action {
+    chainId: number;
+}
+
+export const SET_CONNECTED_CHAIN = `${name}/SET_CONNECTED_CHAIN`;
+
+export const setConnectedChain: ActionCreator<SetConnectedChainAction> = (chainId) => ({
+    type: SET_CONNECTED_CHAIN,
+    chainId: chainId
+});
+
