@@ -6,7 +6,6 @@ import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
 
 import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
-import {setConnectedChain} from '@setl/core-store';
 import {WalletNodeRequestService} from '@setl/core-req-services';
 
 @Component({
