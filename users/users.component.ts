@@ -5,11 +5,13 @@ import {
     ChangeDetectorRef,
     Component,
     OnDestroy,
+    OnInit,
     ViewChild
 } from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-
 import {NgRedux, select} from "@angular-redux/store";
+import * as _ from "lodash";
+
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
 import {ConfirmationService} from "@setl/utils";
@@ -26,7 +28,7 @@ import {UserAdminService} from "../useradmin.service";
 })
 
 /* Class. */
-export class AdminUsersComponent implements AfterViewInit, OnDestroy {
+export class AdminUsersComponent implements AfterViewInit, OnDestroy, OnInit {
     /* Users data grid */
     @ViewChild('usersDataGrid') usersDataGrid;
 
@@ -802,17 +804,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleDelete(deleteUserIndex): void {
+    public handleDelete(userId: number): void {
+        const userIndex = _.findIndex(this.usersList, (user) => {
+            return user.userID == userId;
+        });
+
         /* Get the user's data. */
         let dataToSend = {};
-        dataToSend['userId'] = this.usersList[deleteUserIndex].userID;
-        dataToSend['account'] = this.usersList[deleteUserIndex].accountID;
+        dataToSend['userId'] = this.usersList[userIndex].userID;
+        dataToSend['account'] = this.usersList[userIndex].accountID;
 
         /* Send the request. */
         /* Let's now ask the user if they're sure... */
         this._confirmationService.create(
             '<span>Deleting a User</span>',
-            '<span>Are you sure you want to delete \'' + this.usersList[deleteUserIndex].userName + '\'?</span>'
+            '<span>Are you sure you want to delete \'' + this.usersList[userIndex].userName + '\'?</span>'
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -843,17 +849,21 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     /**
      * Handle Edit
      * -----------
-     * Handles the editting of a wallet.
+     * Handles the editting of a user.
      *
-     * @param {editUserIndex} number - The index of a wallet to be editted.
+     * @param {userId} number - The userId of a user to be editted.
      *
      * @return {void}
      */
-    public handleEdit(editUserIndex): void {
+    public handleEdit(userId: number): void {
+        const userIndex = _.findIndex(this.usersList, (user) => {
+            return user.userID == userId;
+        });
+
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].userId === this.usersList[editUserIndex].userID) {
+            if (this.tabsControl[i].userId === this.usersList[userIndex].userID) {
                 /* Found the index for that tab, lets activate it... */
                 this.setTabActive(i);
 
@@ -863,7 +873,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Let's fix some data. */
-        let user = this.usersList[editUserIndex];
+        let user = this.usersList[userIndex];
         let accountType = this.userAdminService.resolveAccountType({text: user.accountName});
         let userType = this.userAdminService.resolveUserType({id: user.userType});
 
@@ -871,7 +881,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         this.tabsControl.push({
             "title": {
                 "icon": "fa-user",
-                "text": this.usersList[editUserIndex].userName
+                "text": this.usersList[userIndex].userName
             },
             "userId": user.userID,
             "formControl": this.getNewUserFormGroup(),
