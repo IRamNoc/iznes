@@ -17,6 +17,7 @@ import {AlertsService} from "@setl/jaspero-ng2-alerts";
 import {ConfirmationService} from "@setl/utils";
 /* User Admin Service. */
 import {UserAdminService} from "../useradmin.service";
+import { Subscription } from "rxjs/Subscription";
 
 /* Decorator. */
 @Component({
@@ -28,7 +29,7 @@ import {UserAdminService} from "../useradmin.service";
 })
 
 /* Class. */
-export class AdminUsersComponent implements AfterViewInit, OnDestroy, OnInit {
+export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     /* Users data grid */
     @ViewChild('usersDataGrid') usersDataGrid;
 
@@ -49,7 +50,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy, OnInit {
     public userTypes: any;
 
     /* Subscriptions from service observables. */
-    private subscriptions: { [key: string]: any } = {};
+    private subscriptions: { [key: string]: Subscription } = {};
 
     /* Filtered groups list. */
     public filteredAdminGroupsList = [];
