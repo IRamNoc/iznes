@@ -77,7 +77,7 @@
                     <quill-editor
                             [formControl]="messageComposeForm.controls['body']"
                             [options]="editorOptions"
-                            (blur)="onEditorBlured($event)"
+                            (blur)="onEditorBlurred($event)"
                             (focus)="onEditorFocused($event)"
                             (ready)="onEditorCreated($event)"
                             (change)="onContentChanged($event)"></quill-editor>
@@ -121,7 +121,7 @@
                         <div class="message-highlight {{!message.isRead && 'message-unread'}}"
                              *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
-                                <img class="message-img-sender" gravatar [email]="message.senderImg" [size]="80" [fallback]="'identicon'">
+                                <img class="message-img-sender" [attr.email]="message.senderImg" [attr.size]="80" [attr.fallback]="'identicon'">
                                 {{message.senderWalletName}}
                             </h6>
 
@@ -160,7 +160,7 @@
 
                         </div>
                         <div class="message-text">
-                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && currentMessage.action.type !== 'formAction'">
+                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction'))">
                                 <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">

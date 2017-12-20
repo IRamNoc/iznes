@@ -1,26 +1,21 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, Pipe} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-
-import {Subscription} from 'rxjs/Subscription';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {immutableHelper} from '@setl/utils';
-
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Pipe } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import { SagaHelper, Common } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { immutableHelper } from '@setl/utils';
 import {
     SET_MESSAGE_LIST,
     getMyMessagesList,
-    DONE_RUN_DECRYPT,
-    getNeedRunDecryptState,
-    setDecryptedContent,
     getConnectedWallet,
     getWalletDirectoryList,
     setRequestedMailList
 } from '@setl/core-store';
-
-
-import {MyMessagesService} from '@setl/core-req-services';
-import {fromJS} from "immutable";
+import { MyMessagesService } from '@setl/core-req-services';
+import { MessagesService } from "../messages.service";
+import { MailHelper } from './mailHelper';
+import { fromJS } from 'immutable';
 
 @Component({
     selector: 'setl-messages',
@@ -28,7 +23,6 @@ import {fromJS} from "immutable";
     styleUrls: ['./messages.component.scss']
 })
 export class SetlMessagesComponent implements OnDestroy, OnInit {
-
     public messageComposeForm: FormGroup;
     public editor;
 
@@ -58,16 +52,47 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public items: Array<string> = [];
 
     private value: any = ['Athens'];
-    private _disabledV: string = '0';
-    private disabled: boolean = false;
+    private _disabledV = '0';
+    private disabled = false;
+    private mailHelper: MailHelper;
+    private messageService: MessagesService;
 
     subscriptionsArray: Array<Subscription> = [];
 
-    constructor(private ngRedux: NgRedux<any>,
-                private myMessageService: MyMessagesService,
-                private changeDetectorRef: ChangeDetectorRef,
-                private _alertsService: AlertsService) {
+    public toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote'],
 
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'direction': 'rtl'}],                         // text direction
+
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        [{'font': []}],
+        [{'align': []}],
+
+        ['clean']                                         // remove formatting button
+    ];
+
+
+    public editorOptions = {
+        modules: {
+            toolbar: this.toolbarOptions    // Snow includes toolbar by default
+        },
+        placeholder: '',
+        bold: false,
+    };
+
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private myMessageService: MyMessagesService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private _alertsService: AlertsService
+    ) {
+        this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
+        this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
     }
 
     ngOnInit() {
@@ -112,8 +137,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             },
         ];
 
-        this.resetMessages();
-
         this.subscriptionsArray.push(
             this.getWalletDirectoryList.subscribe(
                 (requestedState) => {
@@ -126,14 +149,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         this.subscriptionsArray.push(
             this.getConnectedWallet.subscribe(
-                (newWalletId) => {
+                (function (newWalletId) {
                     if (newWalletId !== this.currentWalletId) {
                         this.resetMessages();
                         this.currentWalletId = newWalletId;
-                        this.requestMessages();
+                        this.mailHelper.retrieveMessages(newWalletId);
                     }
                     this.connectedWallet = newWalletId;
-                }
+                }).bind(this)
             )
         );
 
@@ -156,14 +179,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.subscriptionsArray.push(
             this.getMessageList.subscribe(
                 (data) => {
-                    this.messagesList(data);
-                }
-            )
-        );
-
-        this.subscriptionsArray.push(
-            this.getMessageList.subscribe(
-                (data) => {
+                    console.log('get Message List');
                     this.messagesList(data);
                 }
             )
@@ -177,9 +193,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 }
             )
         );
-
-        // ngRedux.subscribe(() => this.updateState());
-        // this.updateState();
 
         this.messageComposeForm = new FormGroup({
             subject: new FormControl('', Validators.required),
@@ -195,69 +208,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     /**
-     * Requests Messages
-     *
-     * @param {boolean} isAction
-     * @param {boolean} isDeleted
-     * @param {boolean} isSent
-     * @returns {boolean}
-     */
-    requestMessages(page = 0, isAction = false, isDeleted = false, isSent = false) {
-
-        const requestIsAction = isAction === true ? 1 : 0;
-        const requestIsDeleted = isDeleted === true ? 1 : 0;
-
-        const fromWallet = isSent === true ? this.currentWalletId : 0;
-        const toWallet = isSent === true ? 0 : this.currentWalletId;
-
-        // Create a saga pipe.
-        const asyncTaskPipe = this.myMessageService.requestOwnMessages(
-            0,
-            fromWallet,
-            toWallet,
-            page,
-            8,
-            0,
-            0,
-            requestIsDeleted,
-            requestIsAction,
-            ''
-        );
-
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_MESSAGE_LIST],
-            [],
-            asyncTaskPipe, {}));
-
-        return false;
-    }
-
-    /**
-     * Decrypts a message
-     *
-     * @param mailId
-     * @param walletId
-     * @param bobPub
-     * @param encryptedMessage
-     */
-    decrypt(mailId, walletId, bobPub, encryptedMessage) {
-        const asyncTaskPipe = this.myMessageService.decryptMessage(
-            walletId, bobPub, encryptedMessage
-        );
-
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe, {}, (response) => {
-                this.ngRedux.dispatch(setDecryptedContent(mailId, response));
-                return true;
-            })
-        );
-    }
-
-    /**
      * Message List
      *
      * @param messages
@@ -265,18 +215,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     messagesList(messages) {
         this.messages = messages;
         this.messages = messages.map((message) => {
-            const senderId = message.senderId;
-            if (senderId) {
-                if (typeof this.walletDirectoryList[senderId] != "undefined") {
-                    const senderWallet = this.walletDirectoryList[senderId].walletName;
-                    message.senderWalletName = senderWallet;
+            if (message.senderId) {
+                if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
+                    message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
                 }
             }
-            const recipientId = message.recipientId;
-            if (recipientId) {
-                if (typeof this.walletDirectoryList[recipientId] != "undefined") {
-                    const recipientWallet = this.walletDirectoryList[recipientId].walletName;
-                    message.recipientWalletName = recipientWallet;
+            if (message.recipientId) {
+                if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
+                    message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                 }
             }
             return message;
@@ -287,20 +233,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         }
 
         if (this.mailCounts) {
-
-            // currentCategory
-
             const categoryType = this.categories[this.currentCategory].type;
-
             this.currentBoxName = this.categories[this.currentCategory].name;
-            this.currentBoxCount = this.mailCounts[categoryType]; // currentCategory
-
-            // using 8 per page
-            // get total pages
+            this.currentBoxCount = this.mailCounts[categoryType];
         }
-
-        // sort page counts
-        console.log(this.mailCounts);
     }
 
     /**
@@ -327,107 +263,69 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Delete Message
      */
     deleteMessage() {
-
-        // Create a saga pipe.
-        const asyncTaskPipe = this.myMessageService.deleteMessage(
-            this.connectedWallet,
-            [this.currentMessage.mailId],
-            1
-        );
-
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                console.log('success: ');
-                console.log(data);
-            },
-            (data) => {
-                console.log('error: ');
-            })
-        );
-
+        this.mailHelper.deleteMessage(this.connectedWallet, this.currentMessage);
         this.refreshMailbox(this.currentPage);
-
     }
 
     /**
      * Show message when clicked
      *
      * @param index
+     *
+     * @return {Promise}
      */
     showMessage(index) {
-        let messages = immutableHelper.copy(this.messages);
-
-        if (typeof messages[index] === 'undefined') index = 0;
-        if (!messages[index].isRead) this.markAsRead(messages[index]);
-
-        // set message to active to apply message-active css class
-        messages[index].active = true;
-        messages[index].isRead = true;
-
-        this.messages = messages;
-
-        // set the current message that appears on the right hand side
-        let currentMessage = this.messages[index];
-
-        // set the id so that message-active an be compared to index and set
-        currentMessage.id = index;
-
-        const message = currentMessage;
-
-        const categoryIndex = this.currentCategory;
-        const categoryType = this.categories[categoryIndex].type;
-
-        if (!message.isDecrypted) {
-
-            if (categoryType == "sent") {
-                this.decrypt(message.mailId, message.senderId, message.recipientPub, message.content);
-            } else {
-                this.decrypt(message.mailId, message.recipientId, message.senderPub, message.content);
+        return new Promise((resolve) => {
+            const messages = immutableHelper.copy(this.messages);
+            if (typeof messages[index] === 'undefined') {
+                index = 0;
             }
-            return;
-        }
+            // set the current message that appears on the right hand side
+            const currentMessage = this.messages[index];
+            // set the id so that message-active an be compared to index and set
+            currentMessage.id = index;
+            const categoryType = this.categories[this.currentCategory].type;
 
-        console.log('Current Message: ', this.currentMessage);
-
-        currentMessage.isRead = true;
-
-        if((currentMessage.action) &&
-            typeof currentMessage.action === "string" &&
-            currentMessage.action.length > 0) {
-                
-            currentMessage.action = JSON.parse(currentMessage.action);
-        }
-
-        this.currentMessage = currentMessage;
-        this.changeDetectorRef.detectChanges();
-    }
-
-    /**
-     * Mark message as read.
-     */
-    markAsRead(message) {
-
-        // Create a saga pipe.
-        const asyncTaskPipe = this.myMessageService.markRead(
-            this.connectedWallet,
-            [message.mailId],
-        );
-
-        // Send a saga action.
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                console.log('success: ');
-                console.log(data);
-
-            },
-            (data) => {
-                console.log('error: ');
-            })
-        );
-
+            // Decrypt message (if necessary)
+            if (!currentMessage.isDecrypted) {
+                this.mailHelper.decryptMessage(currentMessage, categoryType).then(
+                    (message) => {
+                        messages[index] = message;
+                        this.showMessage(index).then(
+                            () => {
+                                resolve();
+                            }
+                        );
+                        return;
+                    },
+                    () => {
+                    }
+                );
+                return;
+            }
+            // Mark message as read (if necessary)
+            if (!messages[index].isRead) {
+                this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
+            }
+            // set message to active to apply message-active css class
+            messages[index].active = true;
+            messages[index].isRead = true;
+            this.messages = messages;
+            currentMessage.isRead = true;
+            if ((currentMessage.action) &&
+                typeof currentMessage.action === 'string' &&
+                currentMessage.action.length > 0
+            ) {
+                currentMessage.action = JSON.parse(currentMessage.action);
+            } else {
+                currentMessage.action = {
+                    type: null
+                };
+            }
+            this.currentMessage = currentMessage;
+            this.changeDetectorRef.detectChanges();
+            resolve();
+        });
     }
 
     /**
@@ -437,7 +335,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {boolean} composeSelected
      */
     showCategory(index, composeSelected = false, page = 0) {
-
         this.resetMessages();
 
         if (composeSelected) {
@@ -452,50 +349,21 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             // set the current message that appears on the right hand side
             this.currentCategory = index;
 
-            this.requestMailboxByCategory(type, 0);
+            this.requestMailboxByCategory(type, page);
 
             this.currentMessage = {
                 id: 0,
-                mailid: 0,
+                mailid: 0
             };
         }
     }
 
     requestMailboxByCategory(type, page) {
-        if (type === 'inbox') {
-            this.requestMessages(
-                page
-            );
-        } else if (type === 'action') {
-            this.requestMessages(
-                page,
-                true
-            );
-        } else if (type === 'workflow') {
-            this.requestMessages(
-                page,
-                false,
-                false,
-                false,
-            );
-        } else if (type === 'sent') {
-            this.requestMessages(
-                page,
-                false,
-                false,
-                true
-            );
-        } else if (type === 'deleted') {
-            this.requestMessages(
-                page,
-                false,
-                true
-            );
-        }
+        console.log('Requesting MailBox By Category:', type, page);
+        this.mailHelper.retrieveMessages(this.currentWalletId, type, page);
     }
 
     closeAndResetComposed() {
-
         this.showCategory(this.currentCategory, false);
         this.messageComposeForm.reset();
     }
@@ -514,50 +382,37 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 };
             }
         );
-
         return walletsSelectItem.toArray();
     }
 
     resetMessages() {
         this.messages = [];
-
         // Default current category
         this.currentCategory = 0;
-
         this.currentPage = 0;
-
         // Default current message
         this.currentMessage = {
             id: 0
         };
     }
 
-
     public sendMessage() {
-        let formData = this.messageComposeForm.value;
-
-        let bodyObj = {
+        const formData = this.messageComposeForm.value;
+        const bodyObj = {
             general: btoa(formData.body),
             action: ''
         };
 
         const body = JSON.stringify(bodyObj);
-
-        let subject = btoa(formData.subject);
-        let recipients = {};
-        let currentWallet = this.myWalletList[this.connectedWallet];
-        let senderId = this.connectedWallet;
-        let senderPub = currentWallet.commuPub;
+        const subject = btoa(formData.subject);
+        const recipients = {};
 
         for (const i in formData.recipients) {
-            let obj = formData.recipients[i]['id'];
-            let recipentPub = obj.commPub;
-            let receipetId = obj.walletId;
-
-            recipients[receipetId] = recipentPub;
+            const obj = formData.recipients[i]['id'];
+            recipients[i] = obj.walletId;
         }
 
-        if (subject == '' || bodyObj.general == '' || formData.recipients == '') {
+        if (subject === '' || bodyObj.general === '' || formData.recipients === '') {
             console.log('error: incomplete fields');
 
             this._alertsService.create('error', `<table class="table grid">
@@ -572,43 +427,31 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             `);
 
         } else {
-            const asyncTaskPipe = this.myMessageService.sendMessage(
-                subject,
-                body,
-                senderId,
-                senderPub,
-                recipients
-            );
-
-            // Get response from set active wallet
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    console.log('success: ');
-
-                    this._alertsService.create('success', `<table class="table grid">
+            this.messageService.sendMessage(recipients, subject, body, null).then(
+                () => {
+                    this._alertsService.create('success', `
+                        <table class="table grid">
                             <tbody>
                                 <tr class="fadeIn">
                                     <td class="text-center" width="500px">
-                                    <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
-                                    &nbsp;Your message has been sent!</td>
+                                        <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
+                                        &nbsp;Your message has been sent!
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     `);
-
                     this.closeAndResetComposed();
                 },
-                (data) => {
-                    console.log('error: ');
-                })
+                (err) => {
+                    console.log('error: ', err);
+                }
             );
         }
 
     }
 
     reRequestMailList(requestedState: boolean): void {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             this.ngRedux.dispatch(setRequestedMailList());
@@ -620,7 +463,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
 
-    public onEditorBlured(quill) {
+    public onEditorBlurred(quill) {
     }
 
     public onEditorFocused(quill) {
@@ -658,30 +501,4 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 return item.text;
             }).join(',');
     }
-
-    public toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['blockquote'],
-
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'direction': 'rtl'}],                         // text direction
-
-        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
-
-        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
-        [{'font': []}],
-        [{'align': []}],
-
-        ['clean']                                         // remove formatting button
-    ];
-
-
-    public editorOptions = {
-        modules: {
-            toolbar: this.toolbarOptions    // Snow includes toolbar by default
-        },
-        placeholder: '',
-        bold: false,
-    };
 }

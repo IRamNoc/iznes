@@ -29,17 +29,17 @@ export class MessagesService {
 
         this.subscriptionsArray.push(
             this.getConnectedWallet.subscribe(
-                (newWalletId) => {
+                (function (newWalletId) {
                     this.connectedWallet = newWalletId;
-                }
+                }).bind(this)
             )
         );
 
         this.subscriptionsArray.push(
             this.getWalletDirectory.subscribe(
-                (data) => {
+                (function (data) {
                     this.walletDirectory = data;
-                }
+                }).bind(this)
             )
         );
     }
@@ -55,7 +55,6 @@ export class MessagesService {
      * @returns {Promise<any>}
      */
     public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig = null) {
-
         const bodyObj = {
             general: btoa(bodyStr),
             action: JSON.stringify(action)
@@ -72,7 +71,7 @@ export class MessagesService {
             const walletId = recipientsArr[i];
 
             const wallet = _.find(this.walletDirectory, (obj) => {
-                return obj.walletID === parseInt(walletId);
+                return obj.walletID === parseInt(walletId, 10);
             });
 
             recipients[walletId] = wallet.commuPub;
@@ -80,8 +79,9 @@ export class MessagesService {
 
         // get current wallet
         const currentWallet = _.find(this.walletDirectory, (obj) => {
-            return obj.walletID === parseInt(this.connectedWallet);
+            return obj.walletID === parseInt(this.connectedWallet, 10);
         });
+        console.log('Current Wallet contents: ', currentWallet);
         senderPub = currentWallet.commuPub;
 
         return this.sendMessageRequest(subject, body, this.connectedWallet, senderPub, recipients);
