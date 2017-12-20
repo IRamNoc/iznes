@@ -7,7 +7,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import {MyUserService} from '@setl/core-req-services';
 
 import {
-    setMenuShown
+    setMenuShown,
+    setLanguage
 } from '@setl/core-store';
 
 @Component({
@@ -76,6 +77,27 @@ export class AppComponent implements AfterViewInit {
         this.initialisationService.channelUpdateCallbacks.push((data) => {
             this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
         });
+
+        this.checkUserLanguage();
+    }
+
+    private checkUserLanguage(): void {
+        const validLanguages = [
+            "en",
+            "fr"
+        ];
+
+        if((navigator) && navigator.language) {
+            const lang = navigator.language.split("-")[0];
+
+            if(validLanguages.indexOf(lang) != -1) {
+                if(lang == "en") {
+                    this.ngRedux.dispatch(setLanguage("eng"));
+                } else if(lang == "fr") {
+                    this.ngRedux.dispatch(setLanguage("fra"));
+                }
+            }
+        }
     }
 
     /**
