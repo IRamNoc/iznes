@@ -12,7 +12,8 @@ import {
     setRequestedMailInitial,
     SET_MESSAGE_COUNTS,
     clearRequestedMailInitial,
-    clearRequestedWalletLabel
+    clearRequestedWalletLabel,
+    setConnectedChain
 } from '@setl/core-store';
 import {List, Map, fromJS} from 'immutable';
 import _ from 'lodash';
@@ -127,9 +128,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const port = _.get(chainAccess, 'nodePort', 0);
             const nodePath = _.get(chainAccess, 'nodePath', '');
 
-            this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey).then(() => {
+            this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey).then((res) => {
                 // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
-
                 if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
                     this.selectedWalletId.setValue([this.walletSelectItems[0]], {
                         onlySelf: true,
@@ -139,6 +139,10 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                     });
                     console.log(this.walletSelectItems[0]);
                     this.selected(this.walletSelectItems[0]);
+
+                    /* set the chain id as the connected one in redux store */
+                    const chainId = _.get(chainAccess, 'chainId', '');
+                    this.ngRedux.dispatch(setConnectedChain(chainId));
 
                     this.changeDetectorRef.markForCheck();
                 }
