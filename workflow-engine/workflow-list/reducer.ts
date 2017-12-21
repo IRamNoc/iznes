@@ -16,7 +16,7 @@ const initialState: WorkflowListState = {
 };
 
 /**
- *  Ofi manage nav list reducer
+ *  WFL manage list reducer
  * @param state
  * @param action
  * @return {any}
@@ -50,15 +50,12 @@ function handleSetWorkflowList(state: WorkflowListState, action: Action): Workfl
     let workflowList = [];
     try {
         workflowList = immutableHelper.reduce(basicData, (result, item) => {
-            result.push({
-                name: item.get('name', '')
-            });
+            result.push(JSON.parse(item.get('Information', '')));
             return result;
         }, []);
     } catch (e) {
         workflowList = [];
     }
-
     return Object.assign({}, state, {
         workflowList
     });
