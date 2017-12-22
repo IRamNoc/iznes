@@ -8,40 +8,11 @@ const initialState: MyConnectionState = {
 };
 
 /**
- * Create a new connection
- *
- * @param state
- * @param action
- * @returns {{} & any & {walletId: any; connectionId: *}}
- */
-function handleCreateConnection(state, action) {
-    const response = action.payload[1].Data[0];
-
-    const connection = {
-        walletId: response.leiId,
-        connectionId: response.leiSender,
-    };
-
-    return Object.assign({}, state, connection);
-}
-
-/**
- * Delete an existing connection
- * @param state
- * @param action
- */
-function handleDeleteConnection(state, action): void {
-    console.log('handleDeleteConnection: ', action);
-
-    const response = action;
-}
-
-/**
  * Get existing connections
  * @param state
  * @param action
  */
-function handleGetConnections(state, action) {
+function handleSetConnectionList(state, action) {
     let connectionList = [];
     const response = action.payload[1].Data;
 
@@ -57,7 +28,7 @@ function handleGetConnections(state, action) {
         connectionList.push(data);
     });
 
-    return Object.assign({}, state, { connectionList });
+    return Object.assign({}, state, {connectionList});
 }
 
 /**
@@ -68,22 +39,32 @@ function handleGetConnections(state, action) {
 function handleSetRequestedConnections(state) {
     const requestedConnections = true;
 
-    return Object.assign({}, state, { requestedConnections });
+    return Object.assign({}, state, {requestedConnections});
 }
 
+/**
+ * Set the "requestedConnections" flag to false
+ *
+ * @param state
+ * @returns {{} & any & {requestedConnections: boolean}}
+ */
+function handleClearRequestedConnections(state) {
+    const requestedConnections = false;
+
+    return Object.assign({}, state, {requestedConnections});
+}
+
+//
 export const MyConnectionReducer = (state: MyConnectionState = initialState, action: AsyncTaskResponseAction) => {
     switch (action.type) {
-        case ConnectionActions.CREATE_CONNECTION:
-            return handleCreateConnection(state, action);
-
-        case ConnectionActions.DELETE_CONNECTION:
-            return handleDeleteConnection(state, action);
-
-        case ConnectionActions.GET_CONNECTIONS:
-            return handleGetConnections(state, action);
+        case ConnectionActions.SET_CONNECTIONS_LIST:
+            return handleSetConnectionList(state, action);
 
         case ConnectionActions.SET_REQUESTED_CONNECTIONS:
             return handleSetRequestedConnections(state);
+
+        case ConnectionActions.CLEAR_REQUESTED_CONNECTIONS:
+            return handleClearRequestedConnections(state);
 
         default:
             return state;
