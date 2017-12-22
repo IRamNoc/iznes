@@ -1,46 +1,22 @@
-import { Injectable } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
+import {Injectable} from '@angular/core';
+import {NgRedux} from '@angular-redux/store';
 import {
-    AccountsService,
-    ChainService,
-    ChannelService,
-    ConnectionService,
-    MyUserService,
-    MyWalletsService,
-    PermissionGroupService,
+    AccountsService, ChainService, ChannelService, MyUserService, MyWalletsService, PermissionGroupService,
     WalletNodeRequestService
 } from '../index';
 import {
-    clearRequestedAllInstruments,
-    clearRequestedWalletAddresses,
-    clearRequestedWalletHolding,
-    clearRequestedWalletInstrument,
-    clearRequestedWalletIssuer,
-    clearRequestedWalletLabel,
-    SET_ACCOUNT_LIST,
-    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
-    SET_ALL_INSTRUMENTS_LIST,
-    SET_MANAGED_WALLETS,
-    SET_MY_CHAIN_ACCESS,
-    SET_MY_INSTRUMENTS_LIST,
-    SET_OWN_WALLETS,
-    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-    SET_USER_DETAILS,
-    SET_WALLET_ADDRESSES,
-    SET_WALLET_DIRECTORY,
-    SET_WALLET_HOLDING,
-    SET_WALLET_TO_RELATIONSHIP,
-    setRequesteAllInstruments,
-    setRequestedAccountList,
-    setRequestedMyChainAccess,
-    updateLastCreatedContractDetail,
+    clearRequestedAllInstruments, clearRequestedWalletAddresses, clearRequestedWalletHolding,
+    clearRequestedWalletInstrument, clearRequestedWalletIssuer, clearRequestedWalletLabel, SET_ACCOUNT_LIST,
+    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_ALL_INSTRUMENTS_LIST, SET_MANAGED_WALLETS, SET_MY_CHAIN_ACCESS,
+    SET_MY_INSTRUMENTS_LIST, SET_OWN_WALLETS, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST, SET_USER_DETAILS,
+    SET_WALLET_ADDRESSES, SET_WALLET_DIRECTORY, SET_WALLET_HOLDING, SET_WALLET_TO_RELATIONSHIP,
+    setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
     updateLastCreatedRegisterIssuerDetail
 } from '@setl/core-store';
 import _ from 'lodash';
 
-import { SagaHelper } from '@setl/utils';
-import { MemberSocketService } from '@setl/websocket-service';
-import { GET_CONNECTIONS } from '@setl/core-store/connection/my-connections';
+import {SagaHelper} from '@setl/utils';
+import {MemberSocketService} from '@setl/websocket-service';
 
 @Injectable()
 export class InitialisationService {
@@ -427,20 +403,4 @@ export class InitialisationService {
             {}
         ));
     }
-
-    static requestConnectionList(ngRedux: NgRedux<any>, connectionService: ConnectionService, walletId: number) {
-        // Get connections
-        const asyncTaskPipes = connectionService.getMyConnections(walletId.toString());
-
-        // Set the "requestedConnections" state (which is a flag) to true
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [GET_CONNECTIONS],
-            [],
-            asyncTaskPipes,
-            {}
-        ));
-
-        return true;
-    }
-
 }
