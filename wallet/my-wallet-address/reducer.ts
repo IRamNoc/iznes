@@ -1,20 +1,18 @@
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletAddressActions from './actions';
 import {
-    SET_REQUESTED_WALLET_ADDRESSES,
-    CLEAR_REQUESTED_WALLET_ADDRESSES,
-    SET_WALLET_LABEL,
-    SET_REQUESTED_WALLET_LABEL,
-    CLEAR_REQUESTED_WALLET_LABEL
+    CLEAR_REQUESTED_WALLET_ADDRESSES, CLEAR_REQUESTED_WALLET_LABEL, SET_REQUESTED_WALLET_ADDRESSES,
+    SET_REQUESTED_WALLET_LABEL, SET_WALLET_LABEL
 } from './actions';
-import {MyWalletAddressState, AddressDetail, AddressDetailList} from './model';
+import {AddressDetailList, MyWalletAddressState} from './model';
 import _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
+import {fromJS} from 'immutable';
 
 const initialState: MyWalletAddressState = {
     addressList: {},
     requestedAddressList: false,
     requestedLabel: false,
+    requestedCompleteAddresses: false
 };
 
 export const MyWalletAddressReducer = function (state: MyWalletAddressState = initialState,
@@ -81,6 +79,7 @@ function handleSetWalletAddresses(state, action) {
     const newAddressListImu = addressListDataImu.mergeDeep(currentAddressListImu);
 
     return Object.assign({}, state, {
+        requestedCompleteAddresses: true,
         addressList: newAddressListImu.toJS()
     });
 
@@ -99,7 +98,6 @@ function handleSetRequestedWalletAddresses(state) {
         requestedAddressList
     });
 }
-
 
 /**
  * Handle CLEAR_REQUESTED_WALLET_ADDRESS action.
@@ -165,7 +163,6 @@ function handleSetRequestedWalletLabel(state) {
         requestedLabel
     });
 }
-
 
 /**
  * Handle CLEAR_REQUESTED_WALLET_LABEL action.
