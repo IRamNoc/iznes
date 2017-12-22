@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {
-    CreateConnectionMessageBody, DeleteConnectionMessageBody,
-    GetConnectionsMessageBody
-} from './connection.service.model';
 import {NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils/index';
 import {clearRequestedConnections, SET_CONNECTIONS_LIST, setRequestedConnections} from '@setl/core-store/connection';
+import {
+    CreateConnectionMessageBody, DeleteConnectionMessageBody, GetConnectionsMessageBody,
+    UpdateConnectionMessageBody
+} from './connection.service.model';
 
 @Injectable()
 export class ConnectionService {
@@ -58,12 +58,20 @@ export class ConnectionService {
     }
 
     updateConnection(requestData): any {
-        // TODO: Need to be implemented
+        const messageBody: UpdateConnectionMessageBody = {
+            RequestName: 'updateconnection',
+            token: this.memberSocketService.token,
+            leiId: requestData.leiId,
+            senderLei: requestData.senderLei,
+            keyDetail: requestData.keyDetail
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     deleteConnection(requestData): any {
         const messageBody: DeleteConnectionMessageBody = {
-            RequestName: 'deleteConnection',
+            RequestName: 'deleteconnection',
             token: this.memberSocketService.token,
             leiId: requestData.leiId,
             senderLei: requestData.senderLei
