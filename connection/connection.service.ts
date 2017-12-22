@@ -2,17 +2,38 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
-    CreateConnectionMessageBody,
-    DeleteConnectionMessageBody,
+    CreateConnectionMessageBody, DeleteConnectionMessageBody,
     GetConnectionsMessageBody
 } from './connection.service.model';
+import {NgRedux} from '@angular-redux/store';
+import {SagaHelper} from '@setl/utils/index';
+import {clearRequestedConnections, SET_CONNECTIONS_LIST, setRequestedConnections} from '@setl/core-store/connection';
 
 @Injectable()
 export class ConnectionService {
     constructor(private memberSocketService: MemberSocketService) {
     }
 
-    getMyConnections(walletId: string): any {
+    static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(clearRequestedConnections());
+        } else {
+            ngRedux.dispatch(setRequestedConnections());
+        }
+    }
+
+    static defaultRequestConnectionsList(connectionService: ConnectionService, ngRedux: NgRedux<any>, walletId: string) {
+        const asyncTaskPipe = connectionService.requestConnectionsList(walletId);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CONNECTIONS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    requestConnectionsList(walletId: string): any {
         const messageBody: GetConnectionsMessageBody = {
             RequestName: 'glrfl',
             token: this.memberSocketService.token,
@@ -26,9 +47,9 @@ export class ConnectionService {
         const messageBody: CreateConnectionMessageBody = {
             RequestName: 'newconnection',
             token: this.memberSocketService.token,
-            leiId: requestData.leiId || '',
-            senderLeiId: requestData.senderLeiId || '',
-            address: requestData.address || '',
+            leiId: requestData.leiId,
+            senderLeiId: requestData.senderLeiId,
+            address: requestData.address,
             connectionId: requestData.connectionId || 0,
             status: requestData.status || 1
         };
@@ -41,8 +62,6 @@ export class ConnectionService {
     }
 
     deleteConnection(requestData): any {
-        console.log('deleteConnection: ', requestData);
-
         const messageBody: DeleteConnectionMessageBody = {
             RequestName: 'deleteConnection',
             token: this.memberSocketService.token,
