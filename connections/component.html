@@ -31,13 +31,15 @@
                 <clr-dg-column>Connection</clr-dg-column>
                 <clr-dg-column>My sub-portfolios</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let connection of connectionList;">
+                <clr-dg-row *clrDgItems="let connection of changedConnectionList;">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="btnEditConnection" class="btn" (click)="handleEdit(connection)"><i
-                                    class="fa fa-edit"></i></button>
-                            <button id="btnDeleteConnection" class="btn" (click)="handleDelete(connection)"><i
-                                    class="fa fa-trash"></i>
+                            <button id="btnEditConnection" class="btn" (click)="handleEdit(connection)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button id="btnDeleteConnection" class="btn"
+                                    (click)="connectionToDelete = connection; isModalDisplayed = true;">
+                                <i class="fa fa-trash"></i>
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -103,4 +105,21 @@
             </form>
         </div>
     </ng-template>
+
+    <clr-modal [(clrModalOpen)]="isModalDisplayed">
+        <h3 class="modal-title">Delete a connection</h3>
+        <div class="modal-body">
+            <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
+                <strong>{{connectionToDelete && connectionToDelete.connection}}</strong>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmationModal(false)"
+                    mltag="txt_no">No
+            </button>
+            <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmationModal(true)"
+                    mltag="txt_yes">Yes
+            </button>
+        </div>
+    </clr-modal>
 </div>
