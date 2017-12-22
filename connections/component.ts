@@ -21,7 +21,6 @@ import {SagaHelper} from '@setl/utils/index';
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
     formGroup: FormGroup;
-    tabsControl: any = [];
     requestedWalletAddress: boolean;
     connectedWalletId: number;
     walletList = [];
@@ -31,6 +30,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     connectionToDelete: any;
     isModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
+    isEditFormDisplayed: boolean;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -58,6 +58,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.requestedWalletAddress = false;
         this.isModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
+        this.isEditFormDisplayed = false;
 
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
@@ -70,19 +71,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.tabsControl = [
-            {
-                title: 'Manage your connections',
-                iconClass: 'fa fa-users',
-                isActive: true
-            },
-            {
-                title: 'Add a new connection',
-                iconClass: 'fa fa-plus',
-                isActive: false,
-                formControl: this.getNewConnectionForm()
-            }
-        ];
+        this.formGroup = new FormGroup({
+            'connection': new FormControl('', [Validators.required]),
+            'sub-portfolio': new FormControl('', [Validators.required])
+        });
     }
 
     ngOnDestroy() {
@@ -183,44 +175,73 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getNewConnectionForm() {
-        this.formGroup = new FormGroup({
-            'connection': new FormControl('', [Validators.required]),
-            'sub-portfolio': new FormControl('', [Validators.required])
-        });
+    handleSubmit() {
+        let data = null;
 
-        return this.formGroup;
-    }
+        if (!this.isEditFormDisplayed) {
+            data = {
+                leiId: this.connectedWalletId.toString(),
+                senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
+                address: this.formGroup.controls['sub-portfolio'].value[0].id,
+                connectionId: 0,
+                status: 1
+            };
 
-    handleCreate() {
-        const data = {
-            leiId: this.connectedWalletId.toString(),
-            senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
-            address: this.formGroup.controls['sub-portfolio'].value[0].id,
-            connectionId: 0,
-            status: 1
-        };
+            const asyncTaskPipe = this.connectionService.createConnection(data);
 
-        const asyncTaskPipe = this.connectionService.createConnection(data);
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                () => {
+                    ConnectionService.setRequested(false, this.ngRedux);
+                    this.resetForm();
+                    this.showSuccessResponse('The connection has successfully been created');
+                },
+                () => {
+                    this.resetForm();
+                    this.showErrorMessage('This connection has already been created');
+                })
+            );
+        } else {
+            data = {
+                leiId: this.connectedWalletId,
+                senderLeiId: this.formGroup.controls['connection'].value[0].id,
+                keyDetail: '' // TODO: need to know what is it
+            };
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                ConnectionService.setRequested(false, this.ngRedux);
-                this.resetForm();
-                this.showSuccessResponse('The connection has successfully been created');
-            },
-            () => {
-                this.resetForm();
-                this.showErrorMessage('This connection has already been created');
-            })
-        );
+            const asyncTaskPipe = this.connectionService.updateConnection(data);
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                () => {
+                    ConnectionService.setRequested(false, this.ngRedux);
+                    this.resetForm();
+                    this.showSuccessResponse('The connection has successfully been updated');
+                },
+                () => {
+                    this.resetForm();
+                    this.showErrorMessage('This connection has already been updated');
+                })
+            );
+        }
 
         this.changeDetectorRef.markForCheck();
     }
 
-    handleEdit() {
-        console.log('edit connection');
+    handleEdit(connection) {
+        let selectedSubPortfolio = null;
+
+        this.addressList.forEach((address) => {
+            if (address.text === connection.subPortfolio) {
+                selectedSubPortfolio = address;
+            }
+        });
+
+        const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
+
+        this.formGroup.controls['connection'].patchValue([selectedConnection]);
+        this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
+
+        this.isEditFormDisplayed = true;
     }
 
     handleDelete(connection: any) {
@@ -254,8 +275,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     resetForm(): void {
-        // this.editForm = false;
-        // this.modelForm = {};
+        this.isEditFormDisplayed = false;
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
         this.formGroup.reset();
