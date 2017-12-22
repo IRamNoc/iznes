@@ -23,7 +23,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     formGroup: FormGroup;
     tabsControl: any = [];
     requestedWalletAddress: boolean;
-    requestedAddressLabel: boolean;
     connectedWalletId: number;
     walletList = [];
     addressList = [];
@@ -31,6 +30,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     changedConnectionList = [];
     connectionToDelete: any;
     isModalDisplayed: boolean;
+    isCompleteAddressLoaded: boolean;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -41,6 +41,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
     @select(['wallet', 'myWalletAddress', 'addressList']) subPortfolioAddressObs;
+    @select(['wallet', 'myWalletAddress', 'requestedCompleteAddresses']) requestedCompleteAddressesObs;
     @select(['connection', 'myConnection', 'requestedConnections']) requestedConnectionsStateObs;
     @select(['connection', 'myConnection', 'connectionList']) connectionListObs;
 
@@ -55,17 +56,17 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
-        this.requestedAddressLabel = false;
         this.isModalDisplayed = false;
+        this.isCompleteAddressLoaded = false;
 
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
         this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressLabelState(requested)));
         this.subscriptionsArray.push(this.requestedConnectionsStateObs.subscribe((requested) => this.requestConnectionList(requested)));
         this.subscriptionsArray.push(this.connectionListObs.subscribe((connections) => this.getConnections(connections)));
+        this.subscriptionsArray.push(this.requestedCompleteAddressesObs.subscribe((requested) => this.requestCompleteAddresses(requested)));
     }
 
     ngOnInit() {
@@ -99,16 +100,20 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    requestAddressLabelState(requestedState: boolean) {
-        this.requestedAddressLabel = requestedState;
-    }
-
     requestWalletLabel(requestedState: boolean) {
         console.log('checking requested', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+        }
+    }
+
+    requestCompleteAddresses(requested: boolean) {
+        if (requested) {
+            this.isCompleteAddressLoaded = requested;
+            this.updateConnections();
+            this.changeDetectorRef.markForCheck();
         }
     }
 
@@ -144,17 +149,15 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         });
 
         this.addressList = data;
-        this.changedConnectionList = this.updateConnections();
         this.changeDetectorRef.markForCheck();
     }
 
     getConnections(connections: any) {
-        const hasChanged = this.connectionList !== connections;
+        const hasChanged = (this.connectionList !== connections && this.isCompleteAddressLoaded);
         this.connectionList = connections;
 
         if (hasChanged) {
-            this.changedConnectionList = this.updateConnections();
-            this.changeDetectorRef.markForCheck();
+            this.updateConnections();
         }
 
         this.changeDetectorRef.markForCheck();
@@ -176,7 +179,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             });
         });
 
-        return data;
+        this.changedConnectionList = data;
+        this.changeDetectorRef.markForCheck();
     }
 
     getNewConnectionForm() {
