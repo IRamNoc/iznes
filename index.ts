@@ -231,12 +231,14 @@ export {
 
 /* Connections */
 export {
-    GET_CONNECTIONS,
-    CREATE_CONNECTION,
+    SET_CONNECTIONS_LIST,
     SET_REQUESTED_CONNECTIONS,
+    CLEAR_REQUESTED_CONNECTIONS,
     ConnectionState,
     ConnectionReducer,
-    setRequestedConnections
+    setConnectionsList,
+    setRequestedConnections,
+    clearRequestedConnections,
 } from './connection';
 
 export {

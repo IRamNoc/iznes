@@ -1,14 +1,19 @@
-import { combineReducers, Reducer } from 'redux';
-import { MyConnectionState } from './my-connections/model';
-import { MyConnectionReducer } from './my-connections/reducer';
+import {combineReducers, Reducer} from 'redux';
+import {MyConnectionState} from './my-connections/model';
+import {MyConnectionReducer} from './my-connections/reducer';
 import {
-    CREATE_CONNECTION,
-    GET_CONNECTIONS,
-    SET_REQUESTED_CONNECTIONS,
+    CLEAR_REQUESTED_CONNECTIONS, clearRequestedConnections, SET_CONNECTIONS_LIST, SET_REQUESTED_CONNECTIONS, setConnectionsList,
     setRequestedConnections
 } from './my-connections/actions';
 
-export { GET_CONNECTIONS, CREATE_CONNECTION, SET_REQUESTED_CONNECTIONS, setRequestedConnections };
+export {
+    SET_CONNECTIONS_LIST,
+    SET_REQUESTED_CONNECTIONS,
+    CLEAR_REQUESTED_CONNECTIONS,
+    setConnectionsList,
+    setRequestedConnections,
+    clearRequestedConnections
+};
 
 export interface ConnectionState {
     myConnections: MyConnectionState;
