@@ -13,4 +13,5 @@ export interface MyWalletAddressState {
     addressList: AddressDetailList;
     requestedAddressList: boolean;
     requestedLabel: boolean;
+    requestedCompleteAddresses: boolean;
 }
