@@ -821,11 +821,11 @@ export const menuSpec: MenuSpec = {
             element_id: 'menu-workflow-engine',
             children: [
                 {
-                    label: 'Manager',
-                    label_txt: 'txt_manage',
+                    label: 'Dividends',
+                    label_txt: 'txt_dividends',
                     icon_class: 'fa fa-address-card',
                     element_id: 'workflow-manage',
-                    router_link: '/workflow-engine/manage'
+                    router_link: '/workflow-engine/dividend'
                 }
             ]
         },
