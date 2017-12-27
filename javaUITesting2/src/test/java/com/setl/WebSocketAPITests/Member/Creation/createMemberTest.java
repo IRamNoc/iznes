@@ -1,6 +1,7 @@
 package com.setl.WebSocketAPITests.Member.Creation;
 
 import SETLAPIHelpers.Member;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -8,6 +9,8 @@ import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Ignore;
@@ -32,25 +35,36 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(JUnit4.class)
 public class createMemberTest {
+  private static final Logger logger = LogManager.getLogger(createMemberTest.class);
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
-  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "trb2017");
+  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
   SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-  String localAddress = "ws://localhost:9788/db/";
+  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
-  @Ignore
   public void createNewMember() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createMember(factory, socket);
-    connection.disconnect();
+
+      int MAXTRIES=2;
+      for(int i=0; i<MAXTRIES; i++) {
+          try {
+              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+              createMember(factory, socket);
+
+              connection.disconnect();
+          } catch (Exception ex) {
+              logger.error("Login:", ex);
+              if(i>=MAXTRIES-1)
+                  throw(ex);
+          }
+          break;
+      }
   }
 
   @Test
-  @Ignore
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
     String memberDetails[] = generateMemberDetails();
@@ -69,15 +83,6 @@ public class createMemberTest {
   }
 
   @Test
-  @Ignore
-  public void createMultipleMember() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    createMember(factory, socket, 5);
-    connection.disconnect();
-  }
-
-  @Test
-  @Ignore
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
   final AtomicInteger atomicInt = new AtomicInteger(0);

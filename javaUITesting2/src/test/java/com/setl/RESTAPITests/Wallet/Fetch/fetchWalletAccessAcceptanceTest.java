@@ -20,7 +20,7 @@ import static junit.framework.TestCase.assertTrue;
 public class fetchWalletAccessAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(3000);
+  public Timeout globalTimeout = Timeout.millis(30000);;
 
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   int userId = 6;

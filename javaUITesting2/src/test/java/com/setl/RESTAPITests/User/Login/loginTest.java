@@ -30,7 +30,7 @@ public class loginTest {
     String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(3000);
+    public Timeout globalTimeout = Timeout.millis(30000);;
 
     @Before
     public void setUp() throws Exception
@@ -62,25 +62,25 @@ public class loginTest {
 
     }
 
-    @Test
-    @Ignore
-    public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
-        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
-        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-        CountDownLatch l  = new CountDownLatch(1);
-
-        socket.registerHandler(Type.Login.name(),message->{
-            JSONArray data = (JSONArray) message.get("Data");
-            JSONObject resp =(JSONObject) data.get(0);
-            Object token = resp.get("Token");
-            assertTrue(token.toString().equalsIgnoreCase("fail"));
-            l.countDown();
-            return "";});
-        Future<Connection> connection = ws.start(address);
-        l.await();
-      connection.get().disconnect();
-
-    }
+//    @Test
+//    @Ignore
+//    public void loginFailureWithInvalidCredentials() throws InterruptedException, ExecutionException {
+//        SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alx01");
+//        SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
+//        CountDownLatch l  = new CountDownLatch(1);
+//
+//        socket.registerHandler(Type.Login.name(),message->{
+//            JSONArray data = (JSONArray) message.get("Data");
+//            JSONObject resp =(JSONObject) data.get(0);
+//            Object token = resp.get("Token");
+//            assertTrue(token.toString().equalsIgnoreCase("fail"));
+//            l.countDown();
+//            return "";});
+//        Future<Connection> connection = ws.start(address);
+//        l.await();
+//      connection.get().disconnect();
+//
+//    }
 
     @Test
     @Ignore
