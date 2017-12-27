@@ -2,78 +2,74 @@
     <h1><i class="fa fa-users"></i> Connections</h1>
 </div>
 
-<div class="wrapper wrapper-content">
-    <clr-tabs *ngIf="tabsControl.length">
-        <clr-tab *ngFor="let t of tabsControl; let id = index">
-            <button clrTabLink id="connection-tab-{{id}}"><i class="{{t.iconClass}}"></i> {{t.title}}</button>
-            <clr-tab-content *clrIfActive="t.isActive">
-                <!-- Manage connections -->
-                <ng-container *ngIf="id === 0">
-                    <ng-container *ngTemplateOutlet="addressListTab"></ng-container>
-                </ng-container>
+<clr-tabs>
+    <clr-tab>
+        <button id="connection-tab-list" clrTabLink (click)="resetForm()">
+            <i class="fa fa-th-list"></i>
+            <span mltag="txt_list">List</span>
+        </button>
+        <clr-tab-content *clrIfActive="true">
+            <section class="form-block">
+                <clr-datagrid>
+                    <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'subportfolios'">Subportfolio</clr-dg-column>
 
-                <!-- Add connection -->
-                <ng-container *ngIf="id === 1">
-                    <ng-container
-                            *ngTemplateOutlet="addConnection; context: {'formControl': t.formControl, 'id': id}">
+                    <clr-dg-row *clrDgItems="let connection of changedConnectionList">
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button id="edit-button" class="btn" (click)="handleEdit(connection)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button id="delete-button" class="btn"
+                                        (click)="connectionToDelete = connection; isModalDisplayed = true;">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{connection.connection}}</clr-dg-cell>
+                        <clr-dg-cell>{{connection.subPortfolio}}</clr-dg-cell>
+                    </clr-dg-row>
 
-                    </ng-container>
-                </ng-container>
-            </clr-tab-content>
-        </clr-tab>
-    </clr-tabs>
+                    <clr-dg-footer>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
 
-    <!-- Address Data Table. -->
-    <ng-template #addressListTab>
-        <div class="panel-body">
-            <clr-datagrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
-                <clr-dg-column>Connection</clr-dg-column>
-                <clr-dg-column>My sub-portfolios</clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let connection of connectionList;">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button id="btnEditConnection" class="btn" (click)="handleEdit(connection)"><i
-                                    class="fa fa-edit"></i></button>
-                            <button id="btnDeleteConnection" class="btn" (click)="handleDelete(connection)"><i
-                                    class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>
-                        {{connection.connection}}
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>
-                        {{connection.subPortfolio}}
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+    <clr-tab>
+        <div *ngIf="!isEditFormDisplayed; else editConnectionForm">
+            <button id="add-connection-tab" clrTabLink (click)="resetForm()">
+                <i class="fa fa-plus"></i>
+                <span>Add a connection</span>
+            </button>
         </div>
-    </ng-template>
 
-    <ng-template #addConnection let-formControl="formControl" let-tabid="tabid">
-        <div class="user-tab-panel-body panel-body">
-            <form id="new-user-form" (ngSubmit)="handleCreate()" [formGroup]="formControl">
-                <div class="form-horizontal">
+        <ng-template #editConnectionForm>
+            <button id="edit-connection-tab" clrTabLink>
+                <i class="fa fa-pencil"></i>
+                <span>Edit a connection</span>
+            </button>
+        </ng-template>
+
+        <clr-tab-content *clrIfActive="isEditFormDisplayed">
+            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmit()">
+                <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
                                 <span>Connection's name</span>
                             </label>
                             <ng-select
-                                    id="connection-select"
+                                    id="add-connection-select"
+                                    placeholder="Select a connection"
                                     [items]="walletList"
                                     [allowClear]=true
-                                    placeholder="Select a connection"
-                                    [formControl]="formControl.controls['connection']">
+                                    [formControl]="formGroup.controls['connection']"
+                                    [disabled]="isEditFormDisplayed">
                             </ng-select>
                         </div>
                     </div>
@@ -84,23 +80,40 @@
                                 <span>Sub-portfolio's name</span>
                             </label>
                             <ng-select
-                                    id="sub-portfolio-select"
+                                    id="add-sub-portfolio-select"
                                     [items]="addressList"
                                     [allowClear]=true
                                     placeholder="Select a sub-portfolio"
-                                    [formControl]="formControl.controls['sub-portfolio']">
+                                    [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
                         </div>
                     </div>
 
                     <div class="row">
-                        <button id="new-connection-submit" class="btn btn-primary">
+                        <button id="connection-submit-btn" class="btn btn-primary">
                             <i class="fa fa-save"></i>
                             <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
                     </div>
-                </div>
+                </section>
             </form>
-        </div>
-    </ng-template>
-</div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<clr-modal [(clrModalOpen)]="isModalDisplayed">
+    <h3 class="modal-title">Delete a connection</h3>
+    <div class="modal-body">
+        <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
+            <strong>{{connectionToDelete && connectionToDelete.connection}}</strong>
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmationModal(false)"
+                mltag="txt_no">No
+        </button>
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmationModal(true)"
+                mltag="txt_yes">Yes
+        </button>
+    </div>
+</clr-modal>
