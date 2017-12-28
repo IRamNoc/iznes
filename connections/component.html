@@ -8,7 +8,7 @@
             <i class="fa fa-th-list"></i>
             <span mltag="txt_list">List</span>
         </button>
-        <clr-tab-content *clrIfActive="true">
+        <clr-tab-content *clrIfActive="isConnectionListDisplayed">
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
@@ -71,6 +71,10 @@
                                     [formControl]="formGroup.controls['connection']"
                                     [disabled]="isEditFormDisplayed">
                             </ng-select>
+                            <span class="mandatory-field">*</span>
+                            <div *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                 class="text-danger">This field is required
+                            </div>
                         </div>
                     </div>
 
@@ -86,11 +90,15 @@
                                     placeholder="Select a sub-portfolio"
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
+                            <span class="mandatory-field">*</span>
+                            <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                 class="text-danger">This field is required
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <button id="connection-submit-btn" class="btn btn-primary">
+                        <button id="connection-submit-btn" class="btn btn-primary" [disabled]="formGroup.invalid">
                             <i class="fa fa-save"></i>
                             <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
