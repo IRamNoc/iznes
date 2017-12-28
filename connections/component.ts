@@ -17,6 +17,14 @@ import {SagaHelper} from '@setl/utils/index';
 @Component({
     selector: 'app-my-connections',
     templateUrl: './component.html',
+    styles: [`
+        .mandatory-field {
+            color: #d9534f;
+            font-weight: bold;
+            font-size: x-large;
+            padding: 10px 5px;
+        }
+    `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
@@ -31,6 +39,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     isModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
     isEditFormDisplayed: boolean;
+    isConnectionListDisplayed: boolean;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -59,6 +68,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
         this.isEditFormDisplayed = false;
+        this.isConnectionListDisplayed = false;
 
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.connectedWalletId = connected));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
@@ -193,19 +203,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     ConnectionService.setRequested(false, this.ngRedux);
-                    this.resetForm();
                     this.showSuccessResponse('The connection has successfully been created');
+                    this.isConnectionListDisplayed = true;
                 },
                 () => {
-                    this.resetForm();
-                    this.showErrorMessage('This connection has already been created');
+                    this.showErrorMessage('This connection already exists');
                 })
             );
         } else {
             data = {
                 leiId: this.connectedWalletId,
-                senderLeiId: this.formGroup.controls['connection'].value[0].id,
-                keyDetail: '' // TODO: need to know what is it
+                senderLei: this.formGroup.controls['connection'].value[0].id,
+                keyDetail: this.formGroup.controls['sub-portfolio'].value[0].id
             };
 
             const asyncTaskPipe = this.connectionService.updateConnection(data);
@@ -214,16 +223,16 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     ConnectionService.setRequested(false, this.ngRedux);
-                    this.resetForm();
                     this.showSuccessResponse('The connection has successfully been updated');
+                    this.isConnectionListDisplayed = true;
                 },
                 () => {
-                    this.resetForm();
-                    this.showErrorMessage('This connection has already been updated');
+                    this.showErrorMessage('This connection already exists');
                 })
             );
         }
 
+        this.resetForm();
         this.changeDetectorRef.markForCheck();
     }
 
@@ -241,6 +250,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['connection'].patchValue([selectedConnection]);
         this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
 
+        this.isConnectionListDisplayed = false;
         this.isEditFormDisplayed = true;
     }
 
@@ -275,6 +285,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     resetForm(): void {
+        this.isConnectionListDisplayed = false;
         this.isEditFormDisplayed = false;
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
