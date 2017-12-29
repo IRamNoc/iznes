@@ -151,6 +151,7 @@ export class UserAdminService {
     public allGroupsList: {};
     @Output()
     public allGroupListSubject = new Subject<any>();
+
     /* Admin and TX group list observable. */
     public getGroupListSubject() {
         return this.allGroupListSubject.asObservable();
@@ -440,6 +441,41 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
+        });
+    }
+
+    /**
+     * Request Permissions
+     * ----------------
+     * Request user group wallet permissions.
+     *
+     * @param {entity} - the entity data.
+     *
+     * @return {any} - returns
+     */
+    requestUserGroupWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestUserAccountWalletPermissions(data),
+            successActions: []
+        });
+    }
+
+    /**
+     * Update User group Wallet Permissions
+     * ----------------
+     * Update user group wallet permissions.
+     *
+     * @param {entity} - the permissions data.
+     *
+     * @return {any} - returns
+     */
+    updateUserGroupWalletPermissions(data): Promise<any> {
+        /* Return the request. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateUserAccountWalletPermissions(data)
         });
     }
 
