@@ -44,7 +44,11 @@ import {
 
     /* Member chain access */
     RequestMemberChainAccessBody,
-    UpdateMemberChainAccessBody
+    UpdateMemberChainAccessBody,
+
+    /* Account wallet permission */
+    RequestUserAccountWalletPermission,
+    UpdateUserAccountWalletPermissions
 } from './useradmin.service.model';
 import {
     SET_WALLET_NODE_LIST,
@@ -190,7 +194,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public requestUserWalletPermissions (data):any {
+    public requestUserWalletPermissions(data): any {
 
         /* Setup the message body. */
         const messageBody: RequestUserWalletPermissions = {
@@ -203,7 +207,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public newUserWalletPermissions (data):any {
+    public newUserWalletPermissions(data): any {
         /* Setup the message body. */
         const messageBody: NewUserWalletPermissions = {
             RequestName: 'nuwa',
@@ -218,7 +222,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateUserWalletPermissions (data):any {
+    public updateUserWalletPermissions(data): any {
         /* Setup the message body. */
         const messageBody: UpdateUserWalletPermissions = {
             RequestName: 'uduwp',
@@ -235,7 +239,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public updateUserChainAccess (data): any {
+    public updateUserChainAccess(data): any {
         /* Setup the message body. */
         const messageBody: UpdateUserChainAccessBody = {
             RequestName: 'uduca',
@@ -251,7 +255,7 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public requestUserChainAccess (data): any {
+    public requestUserChainAccess(data): any {
         /* Setup the message body. */
         const messageBody: RequestUserChainAccessBody = {
             RequestName: 'guca',
@@ -507,39 +511,39 @@ export class AdminUsersService {
         /* Setup the message body. */
         let messageBody: CreateNewWalletBody;
 
-        if ( newWallet.walletType == "1" ) {
+        if (newWallet.walletType == "1") {
             /* Legal wallet body. */
             messageBody = {
                 RequestName: 'nw',
                 token: this.memberSocketService.token,
                 /* Core wallet stuff. */
-                walletName: _.get(newWallet, 'walletName',    ''),
-                account:    _.get(newWallet, 'walletAccount', ''),
-                walletType: _.get(newWallet, 'walletType',    ''),
+                walletName: _.get(newWallet, 'walletName', ''),
+                account: _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType', ''),
 
                 /* Legal basic. */
-                uid: _.get(newWallet, 'walletUid',    ''),
-                lei: _.get(newWallet, 'walletLei',    ''),
-                websiteUrl: _.get(newWallet, 'walletWebUrl',    ''),
-                incorporationdate: _.get(newWallet, 'walletIncDate',    ''),
+                uid: _.get(newWallet, 'walletUid', ''),
+                lei: _.get(newWallet, 'walletLei', ''),
+                websiteUrl: _.get(newWallet, 'walletWebUrl', ''),
+                incorporationdate: _.get(newWallet, 'walletIncDate', ''),
 
                 /* Legal corresondence. */
-                country: _.get(newWallet, 'walletAddrCountry', '' ),
-                addressPrefix: _.get(newWallet, 'walletAddrPrefix', '' ),
-                address1: _.get(newWallet, 'walletAddr1', '' ),
-                address2: _.get(newWallet, 'walletAddr2', '' ),
-                address3: _.get(newWallet, 'walletAddr3', '' ),
-                address4: _.get(newWallet, 'walletAddr4', '' ),
-                postalCode: _.get(newWallet, 'walletAddrPostcode', '' ),
+                country: _.get(newWallet, 'walletAddrCountry', ''),
+                addressPrefix: _.get(newWallet, 'walletAddrPrefix', ''),
+                address1: _.get(newWallet, 'walletAddr1', ''),
+                address2: _.get(newWallet, 'walletAddr2', ''),
+                address3: _.get(newWallet, 'walletAddr3', ''),
+                address4: _.get(newWallet, 'walletAddr4', ''),
+                postalCode: _.get(newWallet, 'walletAddrPostcode', ''),
             };
-        } else if ( newWallet.walletType == "2" ) {
+        } else if (newWallet.walletType == "2") {
             /* Inidivdual wallet body. */
             messageBody = {
                 RequestName: 'nw',
                 token: this.memberSocketService.token,
-                walletName: _.get(newWallet, 'walletName',    ''),
-                account:    _.get(newWallet, 'walletAccount', ''),
-                walletType: _.get(newWallet, 'walletType',    ''),
+                walletName: _.get(newWallet, 'walletName', ''),
+                account: _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType', ''),
 
                 /* Individual basic fields. */
                 aliases: _.get(newWallet, 'aliases', ''),
@@ -585,9 +589,9 @@ export class AdminUsersService {
             messageBody = {
                 RequestName: 'nw',
                 token: this.memberSocketService.token,
-                walletName: _.get(newWallet, 'walletName',    ''),
-                account:    _.get(newWallet, 'walletAccount', ''),
-                walletType: _.get(newWallet, 'walletType',    ''),
+                walletName: _.get(newWallet, 'walletName', ''),
+                account: _.get(newWallet, 'walletAccount', ''),
+                walletType: _.get(newWallet, 'walletType', ''),
             };
         }
 
@@ -601,43 +605,43 @@ export class AdminUsersService {
         /* Setup the message body. */
         let messageBody: UpdateWalletBody;
 
-        if ( editWallet.walletType == "1" ) {
+        if (editWallet.walletType == "1") {
             /* Legal wallet body. */
             messageBody = {
                 RequestName: 'udw',
                 token: this.memberSocketService.token,
                 /* Core wallet stuff. */
-                walletId: _.get(editWallet, 'walletId',    ''),
-                walletName: _.get(editWallet, 'walletName',    ''),
-                account:    _.get(editWallet, 'walletAccount', ''),
-                walletType: _.get(editWallet, 'walletType',    ''),
-                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+                walletId: _.get(editWallet, 'walletId', ''),
+                walletName: _.get(editWallet, 'walletName', ''),
+                account: _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType', ''),
+                walletLocked: _.get(editWallet, 'walletLocked', ''),
 
                 /* Legal basic. */
-                uid: _.get(editWallet, 'walletUid',    ''),
-                lei: _.get(editWallet, 'walletLei',    ''),
-                websiteUrl: _.get(editWallet, 'walletWebUrl',    ''),
-                incorporationdate: _.get(editWallet, 'walletIncDate',    ''),
+                uid: _.get(editWallet, 'walletUid', ''),
+                lei: _.get(editWallet, 'walletLei', ''),
+                websiteUrl: _.get(editWallet, 'walletWebUrl', ''),
+                incorporationdate: _.get(editWallet, 'walletIncDate', ''),
 
                 /* Legal corresondence. */
-                country: _.get(editWallet, 'walletAddrCountry', '' ),
-                addressPrefix: _.get(editWallet, 'walletAddrPrefix', '' ),
-                address1: _.get(editWallet, 'walletAddr1', '' ),
-                address2: _.get(editWallet, 'walletAddr2', '' ),
-                address3: _.get(editWallet, 'walletAddr3', '' ),
-                address4: _.get(editWallet, 'walletAddr4', '' ),
-                postalCode: _.get(editWallet, 'walletAddrPostcode', '' ),
+                country: _.get(editWallet, 'walletAddrCountry', ''),
+                addressPrefix: _.get(editWallet, 'walletAddrPrefix', ''),
+                address1: _.get(editWallet, 'walletAddr1', ''),
+                address2: _.get(editWallet, 'walletAddr2', ''),
+                address3: _.get(editWallet, 'walletAddr3', ''),
+                address4: _.get(editWallet, 'walletAddr4', ''),
+                postalCode: _.get(editWallet, 'walletAddrPostcode', ''),
             };
-        } else if ( editWallet.walletType == "2" ) {
+        } else if (editWallet.walletType == "2") {
             /* Inidivdual wallet body. */
             messageBody = {
                 RequestName: 'udw',
                 token: this.memberSocketService.token,
-                walletId: _.get(editWallet, 'walletId',    ''),
-                walletName: _.get(editWallet, 'walletName',    ''),
-                account:    _.get(editWallet, 'walletAccount', ''),
-                walletType: _.get(editWallet, 'walletType',    ''),
-                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+                walletId: _.get(editWallet, 'walletId', ''),
+                walletName: _.get(editWallet, 'walletName', ''),
+                account: _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType', ''),
+                walletLocked: _.get(editWallet, 'walletLocked', ''),
 
                 /* Individual basic fields. */
                 aliases: _.get(editWallet, 'aliases', ''),
@@ -683,11 +687,11 @@ export class AdminUsersService {
             messageBody = {
                 RequestName: 'udw',
                 token: this.memberSocketService.token,
-                walletId: _.get(editWallet, 'walletId',    ''),
-                walletName: _.get(editWallet, 'walletName',    ''),
-                account:    _.get(editWallet, 'walletAccount', ''),
-                walletType: _.get(editWallet, 'walletType',    ''),
-                walletLocked: _.get(editWallet, 'walletLocked',    ''),
+                walletId: _.get(editWallet, 'walletId', ''),
+                walletName: _.get(editWallet, 'walletName', ''),
+                account: _.get(editWallet, 'walletAccount', ''),
+                walletType: _.get(editWallet, 'walletType', ''),
+                walletLocked: _.get(editWallet, 'walletLocked', ''),
             };
         }
 
@@ -706,6 +710,33 @@ export class AdminUsersService {
         };
 
         console.log('SENDING DW: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserAccountWalletPermissions(data): any {
+        /* Setup the message body. */
+        const messageBody: RequestUserAccountWalletPermission = {
+            RequestName: 'getuseraccountwalletpermission',
+            token: this.memberSocketService.token,
+            userId: data.userId
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateUserAccountWalletPermissions(data): any {
+        /* Setup the message body. */
+        const messageBody: UpdateUserAccountWalletPermissions = {
+            RequestName: 'updateuseraccountwalletpermission',
+            token: this.memberSocketService.token,
+            userId: data.userId,
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete
+        };
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
