@@ -820,22 +820,22 @@ export const menuSpec: MenuSpec = {
                     router_link: '/chain-admin/chain-membership'
                 },
             ]
-        } /*,
+        },
         {
             label: 'Workflow Engine',
             label_txt: 'txt_wfe',
-            icon_class: 'fa fa-envelope',
+            icon_class: 'fa fa-gears',
             element_id: 'menu-workflow-engine',
             children: [
                 {
-                    label: 'Dividends',
-                    label_txt: 'txt_dividends',
-                    icon_class: 'fa fa-address-card',
-                    element_id: 'workflow-manage',
-                    router_link: '/workflow-engine/dividend'
+                    label: 'Editor',
+                    label_txt: 'txt_editor',
+                    icon_class: 'fa fa-edit',
+                    element_id: 'workflow-editor',
+                    router_link: '/workflow-engine/editor'
                 }
             ]
-        }, */
+        },
     ],
     member_user: [
         {

@@ -49,7 +49,9 @@ import {
     MergerAbsorptionComponent,
     SplitComponent
 } from '@setl/core-corp-actions';
-import { WorkflowEngineDividendComponent } from '@setl/core-wfe';
+import {
+    WorkflowEngineEditorComponent,
+    WorkflowEngineDividendComponent } from '@setl/core-wfe';
 /**
  * Asset serving module
  */
@@ -396,6 +398,11 @@ export const ROUTES: Routes = [
                         path: 'dividend',
                         canActivate: [LoginGuardService],
                         component: WorkflowEngineDividendComponent
+                    },
+                    {
+                        path: 'editor',
+                        canActivate: [LoginGuardService],
+                        component: WorkflowEngineEditorComponent
                     }
                 ]
             },
