@@ -332,7 +332,7 @@
                             <span mltag="txt_group_wallet_permission_full">Group Wallet Permission (Full Access)</span>
                             <ng-select
                                 [items]="accountTypes"
-                                (selected)="[]"
+                                (selected)="addedGroupWalletSelection(1, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
                                 mltag="txt_choose_accounts"
@@ -345,7 +345,7 @@
                             <span mltag="txt_group_wallet_permission_read">Group Wallet Permission (Read only)</span>
                             <ng-select
                                 [items]="accountTypes"
-                                (selected)="[]"
+                                (selected)="addedGroupWalletSelection(0, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
                                 mltag="txt_choose_accounts"

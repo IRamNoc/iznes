@@ -375,6 +375,57 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Added group Wallet Selection
+     * ------------------------
+     * Adds a group wallet selection form the opposite wallet dropdown.
+     *
+     * @param {fullAccess} number - A 1 is full access was changed, 0 not.
+     * @param {tabid} number - the tab id that the form is in.
+     * @param {data} object - the ng2 select object.
+     *
+     * @return {void}
+     */
+    public addedGroupWalletSelection(fullAccess, tabid, data): void {
+        /* Pointers. */
+        const
+            thisTab = this.tabsControl[tabid],
+            controls = thisTab.formControl.controls;
+
+        /* Varibales. */
+        let
+            i, j;
+
+        /* So let's figure out if they've added duplicate wallets... */
+        setTimeout(() => {
+            for (i in controls["groupWalletsFull"].value) {
+                for (j in controls["groupWalletsRead"].value) {
+                    /* If we have a duplicate wallet... */
+                    if (controls["groupWalletsRead"].value[j] != undefined && controls["groupWalletsFull"].value[i] != undefined) {
+                        if (controls["groupWalletsRead"].value[j].id == controls["groupWalletsFull"].value[i].id) {
+                            /* ...then we should remove it from the other select and tell the user. */
+                            if (fullAccess) {
+                                delete controls["groupWalletsRead"].value[j];
+                                controls["groupWalletsRead"].patchValue(
+                                    controls["groupWalletsRead"].value.filter(thing => !!thing)
+                                );
+                                this.showWarning('You changed access to \'' + controls["groupWalletsFull"].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
+                            } else {
+                                delete controls["groupWalletsFull"].value[i];
+                                controls["groupWalletsFull"].patchValue(
+                                    controls["groupWalletsFull"].value.filter(thing => !!thing)
+                                );
+
+                                this.showWarning('You changed access to \'' + controls["groupWalletsRead"].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
+                            }
+                        }
+                    }
+                }
+            }
+        }, 50);
+
+    }
+
+    /**
      * Convert To Array
      * ---------------
      * Converts an object that holds objects in keys into an array of those same
@@ -512,6 +563,19 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
+            /* Save wallet access. */
+            this.userAdminService.updateUserGroupWalletPermissions({
+                userId: userId,
+                toAdd: this.getGroupWalletAccessFromTab(newUser),
+                toUpdate: {},
+                toDelete: {}
+            }).then((response) => {
+                /* Stub. */
+            }).catch((error) => {
+                /* Handle Error. */
+                this.showError('Failed to update this user\'s group wallet permissions.');
+            });
+
             /* Save the chain access. */
             this.userAdminService.updateUserChainAccess({
                 userId: userId,
@@ -617,6 +681,27 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }).catch((error) => {
                 console.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
+            });
+
+            /* Save group wallet access, first diff, then set the new ones to the old ones. */
+            let
+                newGroupWalletAccess = this.getGroupWalletAccessFromTab(formData),
+                diffGroupWalletAccess = this.userAdminService.getWalletAccessDiff(
+                    thisTab['oldGroupWalletAccess'],
+                    newGroupWalletAccess
+                );
+            this.userAdminService.updateUserGroupWalletPermissions({
+                userId: thisTab.userId.toString(),
+                toAdd: diffGroupWalletAccess.toAdd,
+                toUpdate: diffGroupWalletAccess.toUpdate,
+                toDelete: diffGroupWalletAccess.toDelete,
+            }).then((response) => {
+                /* Overwrite the old permissions, to allow diffing. */
+                console.log('updated user group wallet permissions.', response);
+                thisTab['oldGroupWalletAccess'] = newWalletAccess;
+            }).catch((error) => {
+                console.log('error updating user group wallet permissions.', error);
+                this.showError('Failed to update this user\'s group wallet permissions.');
             });
 
             /* Now we'll save chain access, first get the diffs. */
@@ -740,6 +825,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Return. */
         return walletAccess;
+    }
+
+    private getGroupWalletAccessFromTab(formData): { [accountId: number]: number } {
+        /* Object of changes. */
+        let i, j, groupWalletAccess = {};
+
+        /* Get each wallet and push into wallet access. */
+        for (i in formData['groupWalletsRead']) {
+            groupWalletAccess[formData['groupWalletsRead'][i].id] = 1;
+        }
+
+        for (j in formData['groupWalletsFull']) {
+            groupWalletAccess[formData['groupWalletsFull'][j].id] = 3;
+        }
+
+        /* Return. */
+        return groupWalletAccess;
     }
 
     private getChainAccessFromTab(formData): any {
