@@ -162,7 +162,7 @@ export interface RequestMemberChainAccessBody extends MemberNodeMessageBody {
     chainId: number;
 }
 
-export interface UpdateMemberChainAccessBody extends MemberNodeMessageBody{
+export interface UpdateMemberChainAccessBody extends MemberNodeMessageBody {
     token: string;
     chainId: number;
     toUpdate: object;
@@ -300,3 +300,17 @@ export interface DeleteWalletBody extends MemberNodeMessageBody {
     token: string;
     walletId: string;
 }
+
+export interface RequestUserAccountWalletPermission extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+}
+
+export interface UpdateUserAccountWalletPermissions extends MemberNodeMessageBody {
+    token: string;
+    userId: string;
+    toAdd: { [accountId: number]: number };
+    toUpdate: { [accountId: number]: number };
+    toDelete: { [walletId: number]: number };
+}
+
