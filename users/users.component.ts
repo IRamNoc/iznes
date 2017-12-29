@@ -512,6 +512,19 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
+            /* Save wallet access. */
+            this.userAdminService.updateUserGroupWalletPermissions({
+                userId: userId,
+                toAdd: this.getGroupWalletAccessFromTab(newUser),
+                toUpdate: {},
+                toDelete: {}
+            }).then((response) => {
+                /* Stub. */
+            }).catch((error) => {
+                /* Handle Error. */
+                this.showError('Failed to update this user\'s group wallet permissions.');
+            });
+
             /* Save the chain access. */
             this.userAdminService.updateUserChainAccess({
                 userId: userId,
@@ -740,6 +753,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* Return. */
         return walletAccess;
+    }
+
+    private getGroupWalletAccessFromTab(formData): { [accountId: number]: number } {
+        /* Object of changes. */
+        let i, j, groupWalletAccess = {};
+
+        /* Get each wallet and push into wallet access. */
+        for (i in formData['groupWalletsRead']) {
+            groupWalletAccess[formData['groupWalletsRead'][i].id] = 1;
+        }
+
+        for (j in formData['groupWalletsFull']) {
+            groupWalletAccess[formData['groupWalletsFull'][j].id] = 3;
+        }
+
+        /* Return. */
+        return groupWalletAccess;
     }
 
     private getChainAccessFromTab(formData): any {
