@@ -674,6 +674,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
                     router_link: '/corporate-actions/coupon-payment'
+                },
+                {
+                    label: 'Dividend demo',
+                    label_txt: 'txt_Dividends',
+                    icon_class: 'fa fa-briefcase',
+                    element_id: 'menu-coupon',
+                    router_link: '/workflow-engine/dividend'
                 }
             ]
         },
@@ -813,7 +820,7 @@ export const menuSpec: MenuSpec = {
                     router_link: '/chain-admin/chain-membership'
                 },
             ]
-        },
+        } /*,
         {
             label: 'Workflow Engine',
             label_txt: 'txt_wfe',
@@ -828,7 +835,7 @@ export const menuSpec: MenuSpec = {
                     router_link: '/workflow-engine/dividend'
                 }
             ]
-        },
+        }, */
     ],
     member_user: [
         {
