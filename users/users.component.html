@@ -6,7 +6,8 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="user-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button clrTabLink id="user-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
@@ -46,16 +47,18 @@
                 <clr-dg-row *clrDgItems="let user of usersList; let i = index">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn"><i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn">
+                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
+                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn">
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
-                            <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
-                            <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="disabled">Disabled</span>
+                        <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
+                        <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="disabled">Disabled</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -299,36 +302,66 @@
                 <a clrTabLink><i class="fa fa-briefcase"></i> Wallets</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        Full Access Wallets
-                        <ng-select
-                            [items]="tabsControl[tabid].filteredWalletsByAccount"
-                            (selected)="addedWalletSelection(1, tabid, $event)"
-                            [multiple]="true"
-                            [allowClear]="true"
-                            mltag="txt_choosewallets"
-                            placeholder="Choose Wallets"
-                            [formControl]="formControl.controls['walletsFull']">
-                        </ng-select>
+                        <div class="m-b-10">
+                            <span mltag="txt_fullaccesswallets">Full access wallets</span>
+                            <ng-select
+                                [items]="tabsControl[tabid].filteredWalletsByAccount"
+                                (selected)="addedWalletSelection(1, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                mltag="txt_choosewallets"
+                                placeholder="Choose Wallets"
+                                [formControl]="formControl.controls['walletsFull']">
+                            </ng-select>
+                        </div>
 
-                        Read Only Wallets
-                        <ng-select
-                            [items]="tabsControl[tabid].filteredWalletsByAccount"
-                            (selected)="addedWalletSelection(0, tabid, $event)"
-                            [multiple]="true"
-                            [allowClear]="true"
-                            mltag="txt_choosewallets"
-                            placeholder="Choose Wallets"
-                            [formControl]="formControl.controls['walletsRead']">
-                        </ng-select>
+                        <div class="m-b-10">
+                            <span mltag="txt_readonlywallets">Read Only Wallets</span>
+                            <ng-select
+                                [items]="tabsControl[tabid].filteredWalletsByAccount"
+                                (selected)="addedWalletSelection(0, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                mltag="txt_choosewallets"
+                                placeholder="Choose Wallets"
+                                [formControl]="formControl.controls['walletsRead']">
+                            </ng-select>
+                        </div>
+
+                        <div class="m-b-10">
+                            <span mltag="txt_group_wallet_permission_full">Group Wallet Permission (Full Access)</span>
+                            <ng-select
+                                [items]="accountTypes"
+                                (selected)="[]"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                mltag="txt_choose_accounts"
+                                placeholder="Choose Accounts"
+                                [formControl]="formControl.controls['groupWalletsFull']">
+                            </ng-select>
+                        </div>
+
+                        <div>
+                            <span mltag="txt_group_wallet_permission_read">Group Wallet Permission (Read only)</span>
+                            <ng-select
+                                [items]="accountTypes"
+                                (selected)="[]"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                mltag="txt_choose_accounts"
+                                placeholder="Choose Accounts"
+                                [formControl]="formControl.controls['groupWalletsRead']">
+                            </ng-select>
+                        </div>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-              <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></a>
+                <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                      <span mltag="txt_chains">Chains</span>
+                        <span mltag="txt_chains">Chains</span>
                         <ng-select
                             [items]="filteredChainList"
                             [multiple]="true"

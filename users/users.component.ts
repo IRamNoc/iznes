@@ -17,8 +17,8 @@ import {AlertsService} from "@setl/jaspero-ng2-alerts";
 import {ConfirmationService} from "@setl/utils";
 /* User Admin Service. */
 import {UserAdminService} from "../useradmin.service";
-import { Subscription } from "rxjs/Subscription";
-import { Observable } from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
+import {Observable} from "rxjs/Observable";
 
 /* Decorator. */
 @Component({
@@ -84,7 +84,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
             this.usersList = this.convertToArray(list);
-            
+
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
         });
@@ -903,21 +903,23 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
 
         /* And push the tab into it's place. */
         this.tabsControl.push({
-            "title": {
-                "icon": "fa-user",
-                "text": this.usersList[userIndex].userName
+            'title': {
+                'icon': 'fa-user',
+                'text': this.usersList[userIndex].userName
             },
-            "userId": user.userID,
-            "formControl": this.getNewUserFormGroup(),
-            "oldAdminGroups": {},
-            "oldTxGroups": {},
-            "selectedChain": 0,
-            "filteredTxList": [], // filtered groups of this chainid.
-            "selectedTxList": [], // groups to show as selected.
-            "allocatedTxList": [], // all groups assigned to the user.
-            "filteredWalletsByAccount": [], // filtered wallets by account.
-            "oldChainAccess": {},
-            "active": false // this.editFormControls
+            'userId': user.userID,
+            'formControl': this.getNewUserFormGroup(),
+            'oldAdminGroups': {},
+            'oldTxGroups': {},
+            'selectedChain': 0,
+            'filteredTxList': [], // filtered groups of this chainid.
+            'selectedTxList': [], // groups to show as selected.
+            'allocatedTxList': [], // all groups assigned to the user.
+            'filteredWalletsByAccount': [], // filtered wallets by account.
+            'oldWalletAccess': {},
+            'oldGroupWalletAccess': {},
+            'oldChainAccess': {},
+            'active': false // this.editFormControls
         });
 
         /* Refence the new tab. */
@@ -1017,6 +1019,53 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Handle the error message */
             console.log("Editing user, wallet permission error: ", error);
             this.showError('Failed to fetch this user\'s wallet permissions.');
+        });
+
+        /* Get user's group wallet permission */
+        this.userAdminService.requestUserGroupWalletPermissions({
+            userId: user.userID
+        }).then((response) => {
+            const userGroupWalletPermission = _.get(response, '[1].Data', []);
+
+            thisTab['oldGroupWalletAccess'] = {};
+            console.log('Got user group wallet permission: ', userGroupWalletPermission);
+
+            /* If this user has no wallet permissions... bail. */
+            if (!Object.keys(userGroupWalletPermission).length) {
+                return;
+            }
+
+            /* Set the old wallet access, this'll be used to diff later. */
+            userGroupWalletPermission.map((group) => {
+                /* Build the structure in the old  */
+                thisTab['oldGroupWalletAccess'][group.accountID] = group.permission;
+            });
+
+            /* ...then filter and preset the read group wallets...  */
+            const readAccessGroupWallets = userGroupWalletPermission
+                .filter(group => group.permission == 1)
+                .map((group) => {
+                    const accountList = this.userAdminService.getAccountTypes();
+                    const matchedGroups = accountList.filter(item => item.id == group.accountID);
+                    // there should be only one match.
+                    return matchedGroups[0];
+                });
+            thisTab.formControl.controls['groupWalletsRead'].patchValue(readAccessGroupWallets);
+
+            /* ...and lastly the same for the full access group wallets. */
+            const fullAccessGroupWallets = userGroupWalletPermission
+                .filter(group => group.permission == 3)
+                .map((group) => {
+                    const accountList = this.userAdminService.getAccountTypes();
+                    const matchedGroups = accountList.filter(item => item.id == group.accountID);
+                    // there should be only one match.
+                    return matchedGroups[0];
+                });
+            thisTab.formControl.controls['groupWalletsFull'].patchValue(fullAccessGroupWallets);
+        }).catch((error) => {
+            /* Handle the error message */
+            console.log('Editing user, group wallet permission error: ', error);
+            this.showError('Failed to fetch this user\'s group wallet permissions.');
         });
 
         /* Now we need to get the user's wallet access. */
@@ -1191,6 +1240,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 "txGroups": new FormControl([]),
                 "walletsFull": new FormControl([]),
                 "walletsRead": new FormControl([]),
+                "groupWalletsFull": new FormControl([]),
+                "groupWalletsRead": new FormControl([]),
                 "chainAccess": new FormControl([]),
             }
         );
