@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -12,6 +12,7 @@ import {
     styleUrls: ['./basic.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class BasicLayoutComponent implements OnInit {
     public _opened: boolean = false;
     public _modeNum: number = 0;
@@ -39,7 +40,7 @@ export class BasicLayoutComponent implements OnInit {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>, public changeDetectorRef: ChangeDetectorRef) {
         this.menuShown = 1;
         console.log(this.menuShown);
 
@@ -76,6 +77,8 @@ export class BasicLayoutComponent implements OnInit {
         } else {
             this.menuShown = 0;
         }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     public isCurrentLanguage(lang: string): boolean {
