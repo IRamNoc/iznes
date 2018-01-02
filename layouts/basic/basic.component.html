@@ -45,19 +45,19 @@
                     <section class="form-block">
                         <div class="form-group">
                             <div class="radio" (click)="changeLanguage('fra')">
-                                <input type="radio" name="gridRadios1" id="lang_fra" checked>
+                                <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fra')">
                                 <label for="lang_fra">Français</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_eng">
+                                <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('eng')">
                                 <label for="lang_eng">English</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_tch">
+                                <input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">
                                 <label for="lang_tch">繁體中文</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_sch">
+                                <input type="radio" name="gridRadios1" id="lang_sch" [checked]="isCurrentLanguage('sch')">
                                 <label for="lang_sch">中文</label>
                             </div>
                         </div>

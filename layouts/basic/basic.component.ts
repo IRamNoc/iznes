@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -9,8 +9,10 @@ import {
 @Component({
     selector: 'app-basic-layout',
     templateUrl: './basic.component.html',
-    styleUrls: ['./basic.component.css']
+    styleUrls: ['./basic.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class BasicLayoutComponent implements OnInit {
     public _opened: boolean = false;
     public _modeNum: number = 0;
@@ -30,11 +32,30 @@ export class BasicLayoutComponent implements OnInit {
     public _POSITIONS: Array<string> = ['left', 'right', 'top', 'bottom'];
 
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+    @select(['user', 'siteSettings', 'language']) languageOb;
 
-    public menuShown;
+    public menuShown: number;
+    public currentLanguage: string;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
+
+    constructor(private ngRedux: NgRedux<any>, public changeDetectorRef: ChangeDetectorRef) {
+        this.menuShown = 1;
+        console.log(this.menuShown);
+
+        this.subscriptionsArray.push(this.menuShowOb.subscribe(
+            (menuState) => {
+                this.menuHasChanged(menuState);
+            }
+        ));
+
+        this.subscriptionsArray.push(this.languageOb.subscribe(
+            (language) => {
+                this.currentLanguage = language;
+            }
+        ));
+    }
 
     public _toggleSidebar() {
         this._opened = !this._opened;
@@ -50,18 +71,6 @@ export class BasicLayoutComponent implements OnInit {
         this.ngRedux.dispatch(setLanguage(lang));
     }
 
-    constructor(private ngRedux: NgRedux<any>,
-                public changeDetectorRef: ChangeDetectorRef) {
-        this.menuShown = 1;
-        console.log(this.menuShown);
-
-        this.subscriptionsArray.push(this.menuShowOb.subscribe(
-            (menuState) => {
-                this.menuHasChanged(menuState);
-            }
-        ));
-    }
-
     public menuHasChanged(menuState) {
         if (menuState) {
             this.menuShown = 1;
@@ -70,6 +79,10 @@ export class BasicLayoutComponent implements OnInit {
         }
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    public isCurrentLanguage(lang: string): boolean {
+        return lang === this.currentLanguage;
     }
 
     ngOnInit() {
