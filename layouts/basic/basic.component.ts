@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -50,7 +50,8 @@ export class BasicLayoutComponent implements OnInit {
         this.ngRedux.dispatch(setLanguage(lang));
     }
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>,
+                public changeDetectorRef: ChangeDetectorRef) {
         this.menuShown = 1;
         console.log(this.menuShown);
 
@@ -67,6 +68,8 @@ export class BasicLayoutComponent implements OnInit {
         } else {
             this.menuShown = 0;
         }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnInit() {
