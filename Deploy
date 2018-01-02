@@ -13,7 +13,7 @@ npm install
 docker build --no-cache -t setl/frontend .
 
 echo "${YELLOW}Launching Frontend...${NC}"
-docker run --name setl-frontend -p 4202:4200 --link setl-backend -d setl/frontend:latest
+docker run --name setl-frontend -p 4200:4200 --link setl-backend -d setl/frontend:latest
 
 echo "${GREEN}Complete. You can access the frontend via localhost:4200.${NC}"
 
