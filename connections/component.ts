@@ -37,12 +37,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     toConnectionList = [];
     acceptedConnectionList = [];
     pendingConnectionList = [];
-    // changedConnectionList = [];
     connectionToDelete: any;
+    isAcceptedConnectionDisplayed: boolean;
     isModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
     isEditFormDisplayed: boolean;
-    isAcceptedConnectionListDisplayed: boolean;
+    isAcceptModalDisplayed: boolean;
+    connectionToBind: any;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -73,7 +74,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
         this.isEditFormDisplayed = false;
-        this.isAcceptedConnectionListDisplayed = false;
+        this.isAcceptedConnectionDisplayed = false;
+        this.isAcceptModalDisplayed = false;
+
+        this.initFormGroup();
 
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
@@ -88,14 +92,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.formGroup = new FormGroup({
-            'connection': new FormControl('', [Validators.required]),
-            'sub-portfolio': new FormControl('', [Validators.required])
-        });
+        this.initFormGroup();
     }
 
     ngOnDestroy() {
         this.subscriptionsArray.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    initFormGroup() {
+        this.formGroup = new FormGroup({
+            'connection': new FormControl('', [Validators.required]),
+            'sub-portfolio': new FormControl('', [Validators.required])
+        });
     }
 
     getConnectedWallet(walletId: number) {
@@ -103,13 +111,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         ConnectionService.setRequestedFromConnections(false, this.ngRedux);
         ConnectionService.setRequestedToConnections(false, this.ngRedux);
 
+        this.resetForm();
         this.isCompleteAddressLoaded = false;
-        this.isEditFormDisplayed = false;
-        this.isAcceptedConnectionListDisplayed = true;
-
-        if (this.formGroup) {
-            this.resetForm();
-        }
+        this.isAcceptedConnectionDisplayed = true;
 
         this.changeDetectorRef.markForCheck();
     }
@@ -153,8 +157,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     requestCompleteAddresses(requested: boolean) {
         if (requested) {
             this.isCompleteAddressLoaded = requested;
-            this.acceptedConnectionList = this.updateFromConnections(this.fromConnectionList);
-            this.pendingConnectionList = this.updateToConnections(this.toConnectionList);
+            this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
+            this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
             this.changeDetectorRef.markForCheck();
         }
     }
@@ -193,7 +197,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.fromConnectionList = connections.filter((connection) => connection.status === '-1');
 
         if (hasChanged) {
-            this.acceptedConnectionList = this.updateFromConnections(this.fromConnectionList);
+            this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
             this.changeDetectorRef.markForCheck();
         }
 
@@ -205,21 +209,21 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.toConnectionList = connections.filter((connection) => connection.status === '1');
 
         if (hasChanged) {
-            this.pendingConnectionList = this.updateToConnections(this.toConnectionList);
+            this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
             this.changeDetectorRef.markForCheck();
         }
 
         this.changeDetectorRef.markForCheck();
     }
 
-    updateFromConnections(connections: Array<any>) {
+    formatFromConnections(connections: Array<any>) {
         const data = [];
 
         if (connections && connections.length > 0) {
             connections.map((connection) => {
                 const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
-                // const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
-                const subPortfolioName = connection.keyDetail;
+                const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
+                // const subPortfolioName = connection.keyDetail;
 
                 data.push({
                     id: connection.connectionId,
@@ -234,19 +238,16 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         return data;
     }
 
-    updateToConnections(connections: Array<any>) {
+    formatToConnections(connections: Array<any>) {
         const data = [];
 
         if (connections && connections.length > 0) {
             connections.map((connection) => {
                 const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiId)[0].text;
-                const subPortfolioName = connection.keyDetail;
-                // const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
 
                 data.push({
                     id: connection.connectionId,
                     connection: connectionName,
-                    subPortfolio: subPortfolioName,
                     leiSender: connection.leiSender
                 });
             });
@@ -276,7 +277,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                     this.showSuccessResponse('The connection has successfully been created');
-                    this.isAcceptedConnectionListDisplayed = true;
+                    this.isAcceptedConnectionDisplayed = true;
                 },
                 () => {
                     this.showErrorMessage('This connection already exists');
@@ -297,7 +298,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                     this.showSuccessResponse('The connection has successfully been updated');
-                    this.isAcceptedConnectionListDisplayed = true;
+                    this.isAcceptedConnectionDisplayed = true;
                 },
                 () => {
                     this.showErrorMessage('This connection already exists');
@@ -323,7 +324,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['connection'].patchValue([selectedConnection]);
         this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
 
-        this.isAcceptedConnectionListDisplayed = false;
+        this.isAcceptedConnectionDisplayed = false;
         this.isEditFormDisplayed = true;
     }
 
@@ -350,33 +351,41 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    handleAcceptConnection(connectionId: number) {
-        const myConnection = this.toConnectionList.filter((connection) => {
-            return (connection.connectionId === connectionId) ? connection : null;
-        })[0];
+    handleAcceptConnection(isOk: boolean) {
+        if (isOk) {
+            const selectedAddress = this.formGroup.controls['sub-portfolio'].value[0].id;
 
-        const data = {
-            leiId: this.connectedWalletId.toString(),
-            senderLeiId: myConnection.leiId,
-            address: myConnection.keyDetail,
-            connectionId: myConnection.connectionId,
-            status: '-1'
-        };
+            const myConnection = this.toConnectionList.filter((connection) => {
+                return (connection.connectionId === this.connectionToBind.id) ? connection : null;
+            })[0];
 
-        const asyncTaskPipe = this.connectionService.createConnection(data);
+            const data = {
+                leiId: this.connectedWalletId.toString(),
+                senderLeiId: myConnection.leiId,
+                address: selectedAddress,
+                connectionId: myConnection.connectionId,
+                status: '-1'
+            };
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-                ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.showSuccessResponse('The connection has successfully been accepted');
-                this.isAcceptedConnectionListDisplayed = true;
-            },
-            (error) => {
-                console.error('error on accept connection: ', error);
-            })
-        );
+            const asyncTaskPipe = this.connectionService.createConnection(data);
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                () => {
+                    ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+                    ConnectionService.setRequestedToConnections(false, this.ngRedux);
+                    this.showSuccessResponse('The connection has successfully been accepted');
+                    this.connectionToBind = null;
+                    this.isAcceptModalDisplayed = false;
+                },
+                (error) => {
+                    console.error('error on accept connection: ', error);
+                })
+            );
+        } else {
+            this.connectionToBind = null;
+            this.isAcceptModalDisplayed = false;
+        }
 
         this.resetForm();
         this.changeDetectorRef.markForCheck();
@@ -414,8 +423,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     resetForm(): void {
-        this.isAcceptedConnectionListDisplayed = false;
+        this.isAcceptedConnectionDisplayed = false;
         this.isEditFormDisplayed = false;
+        this.isAcceptModalDisplayed = false;
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
         this.formGroup.reset();
