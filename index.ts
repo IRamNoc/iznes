@@ -63,7 +63,7 @@ export {
     clearRequestedWalletHolding,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
-    clearContractNeedHandle
+    clearContractNeedHandle,
 } from './wallet';
 
 export {
@@ -231,14 +231,19 @@ export {
 
 /* Connections */
 export {
-    SET_CONNECTIONS_LIST,
-    SET_REQUESTED_CONNECTIONS,
-    CLEAR_REQUESTED_CONNECTIONS,
-    ConnectionState,
-    ConnectionReducer,
-    setConnectionsList,
-    setRequestedConnections,
-    clearRequestedConnections,
+    SET_FROM_CONNECTION_LIST,
+    SET_TO_CONNECTION_LIST,
+    SET_REQUESTED_FROM_CONNECTIONS,
+    SET_REQUESTED_TO_CONNECTIONS,
+    CLEAR_REQUESTED_FROM_CONNECTIONS,
+    CLEAR_REQUESTED_TO_CONNECTIONS,
+    setFromConnectionList,
+    setToConnectionList,
+    setRequestedFromConnections,
+    setRequestedToConnections,
+    clearRequestedFromConnections,
+    clearRequestedToConnections,
+    ConnectionReducer
 } from './connection';
 
 export {

@@ -1,9 +1,5 @@
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletAddressActions from './actions';
-import {
-    CLEAR_REQUESTED_WALLET_ADDRESSES, CLEAR_REQUESTED_WALLET_LABEL, SET_REQUESTED_WALLET_ADDRESSES,
-    SET_REQUESTED_WALLET_LABEL, SET_WALLET_LABEL
-} from './actions';
 import {AddressDetailList, MyWalletAddressState} from './model';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
@@ -19,22 +15,21 @@ export const MyWalletAddressReducer = function (state: MyWalletAddressState = in
                                                 action: AsyncTaskResponseAction) {
     switch (action.type) {
         case MyWalletAddressActions.SET_WALLET_ADDRESSES:
-
             return handleSetWalletAddresses(state, action);
 
-        case SET_REQUESTED_WALLET_ADDRESSES:
+        case MyWalletAddressActions.SET_REQUESTED_WALLET_ADDRESSES:
             return handleSetRequestedWalletAddresses(state);
 
-        case CLEAR_REQUESTED_WALLET_ADDRESSES:
+        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_ADDRESSES:
             return handleClearRequestedWalletAddresses(state);
 
-        case SET_WALLET_LABEL:
+        case MyWalletAddressActions.SET_WALLET_LABEL:
             return handleSetWalletLabel(state, action);
 
-        case SET_REQUESTED_WALLET_LABEL:
+        case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
             return handleSetRequestedWalletLabel(state);
 
-        case CLEAR_REQUESTED_WALLET_LABEL:
+        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_LABEL:
             return handleClearRequestedWalletLabel(state);
 
         default:
@@ -107,11 +102,13 @@ function handleSetRequestedWalletAddresses(state) {
  */
 function handleClearRequestedWalletAddresses(state) {
     const requestedAddressList = false;
+    const requestedCompleteAddresses = false;
     const addressList = [];
 
     return Object.assign({}, state, {
         addressList,
-        requestedAddressList
+        requestedAddressList,
+        requestedCompleteAddresses
     });
 }
 

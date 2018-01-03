@@ -4,6 +4,8 @@ export interface ConnectionDetail {
 }
 
 export interface MyConnectionState {
-    connectionList: Array<ConnectionDetail>;
-    requestedConnections: boolean;
+    fromConnectionList: Array<ConnectionDetail>;
+    toConnectionList: Array<ConnectionDetail>;
+    requestedFromConnectionList: boolean;
+    requestedToConnectionList: boolean;
 }
