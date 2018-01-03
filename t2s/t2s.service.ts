@@ -71,7 +71,7 @@ export class T2sService {
         const messageBody: NewMessageBody = {
             RequestName: 't2sNew',
             token: this.memberSocketService.token,
-            name: messageData.name,
+            message: messageData.message,
         };
 
         /* Return the new member node saga request. */
