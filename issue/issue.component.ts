@@ -27,31 +27,35 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
     subscriptionsArry: Array<Subscription> = [];
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
+    @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
+    @select(['asset', 'myIssuers', 'requestedWalletIssuer']) requestedWalletIssuerOb;
+    @select(['asset', 'myIssuers', 'walletIssuserDetails', 'walletIssuer']) walletIssuerDetailsOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
-    public issues;
+    public issuers;
     public singleAsset;
     public singleAssetHistory;
 
     public tabsControl: any;
 
-    public issuesList;
-    public currentWalletId;
+    public issuersList: Array;
+    public currentWalletId: Number;
 
     public currentTabIndex;
     public currentAsset;
+    private walletIssuerDetails: Object;
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
-        ngRedux.subscribe(() => this.updateState());
-        this.updateState();
+        this.issuersList = [];
+        this.currentWalletId = 0;
 
         /*
-
          function requestIssuedAssetBalance(issuer, instrument, callBack, userData, walletID) {
          var deferred = $.Deferred();
 
@@ -142,52 +146,63 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
             }
         ];
 
-
-        /* Default tabs. */
-        this.tabsControl = [
-            {
-                "title": "<i class='fa fa-money'></i> Issue Reports",
-                "active": true
-            },
-        ];
-
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
 
         // List of observable subscriptions.
+        this.subscriptionsArry.push(
+            this.connectedWalletOb
+                .distinctUntilChanged()
+                .subscribe(connected => {
+                        this.tabsControl = this.defaultTabControl();
+                        this.currentWalletId = connected;
+                        this.updateState();
+                    }
+                )
+        );
         this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
+        this.subscriptionsArry.push(
+            this.requestedWalletIssuerOb
+                .filter(requested => requested && this.currentWalletId !== 0)
+                .subscribe(() => this.requestWalletIssuer())
+        );
+        this.subscriptionsArry.push(
+            this.walletIssuerDetailsOb
+                .subscribe(details => this.walletIssuerDetails = details)
+        );
     }
 
     /**
      * Current Redux State
      */
     updateState() {
-        const newState = this.ngRedux.getState();
-        const newWalletId = getConnectedWallet(newState);
-
-        if (newWalletId !== this.currentWalletId) {
-            this.tabsControl = this.defaultTabControl();
-        }
-
-        this.currentWalletId = newWalletId;
+        //const newState = this.ngRedux.getState();
+        //const newWalletId = getConnectedWallet(newState);
 
         // If my issuer list is not yet requested,
         // Request wallet issuers
-        const RequestedIssuerState = getRequestedIssuerState(newState);
-        if (!RequestedIssuerState) {
-            this.requestWalletIssuer();
-        }
+        //const requestedIssuerState = getRequestedIssuerState(newState);
 
+        //if (!requestedIssuerState) {
+            //this.requestWalletIssuer();
+        //}
+
+        /*
         const walletIssuerDetails = getWalletIssuerDetail(newState);
 
-        this.issuesList = getWalletHoldingByAsset(newState);
+        this.issuersList = getWalletHoldingByAsset(newState);
+        */
 
-        this.issues = this.formatIssues(walletIssuerDetails);
-        this.issues = this.convertToArray(this.issues);
+        if (!this.issuersList.length || !this.walletIssuerDetails) {
+            return;
+        }
+
+        this.issuers = this.formatIssues(walletIssuerDetails);
+        this.issuers = this.convertToArray(this.issuers);
 
         if (this.currentTabIndex > 0) {
             const index = this.currentTabIndex;
-            const holders = this.issuesList[newWalletId][this.currentAsset].holders;
+            const holders = this.issuersList[newWalletId][this.currentAsset].holders;
             this.tabsControl[index].assetObject = this.formatHolders(holders);
         }
     }
@@ -204,7 +219,6 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         }
 
     }
-
 
     requestWalletIssuer() {
         const walletId = this.currentWalletId;
@@ -286,16 +300,16 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
 
 
     formatIssues(issueDetails) {
-        let issues = this.issuesList;
+        let issuers = this.issuersList;
         const walletId = this.currentWalletId;
-        issues = issues[walletId];
+        issuers = issuers[walletId];
 
-        if (_.isEmpty(issues)) {
+        if (_.isEmpty(issuers)) {
             return [];
         }
 
         const myIssuer = issueDetails.walletIssuer;
-        const listImu = fromJS(issues);
+        const listImu = fromJS(issuers);
         const list = listImu.reduce(
             (data, item, key) => {
                 if (key) {
@@ -371,7 +385,7 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].asset === this.issues[index].asset) {
+            if (this.tabsControl[i].asset === this.issuers[index].asset) {
                 /* Found the index for that tab, lets activate it... */
                 this.setTabActive(i);
                 /* And return. */
@@ -380,26 +394,26 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         }
 
         /* Push the edit tab into the array. */
-        const issues = this.issues[index];
+        const issuers = this.issuers[index];
 
-        if (!issues.asset) {
+        if (!issuers.asset) {
             return;
         }
 
-        let asset = issues.asset.split('|');
+        let asset = issuers.asset.split('|');
 
         let issuer = asset[0];
         let intruement = asset[1];
 
-        console.log('----- issues');
-        console.log(issues);
+        console.log('----- issuers');
+        console.log(issuers);
 
         this.requestWalletIssueHolding(issuer, intruement);
 
         /* And also prefill the form... let's sort some of the data out. */
         this.tabsControl.push({
-            "title": "<i class='fa fa-th-list'></i> " + this.issues[index].asset,
-            "asset": issues.asset,
+            "title": "<i class='fa fa-th-list'></i> " + this.issuers[index].asset,
+            "asset": issuers.asset,
             "assetObject": [],
             "active": false // this.editFormControls
         });
