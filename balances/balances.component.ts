@@ -11,8 +11,6 @@ import {
     setRequestedWalletHolding
 } from '@setl/core-store';
 import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
-import {Unsubscribe} from 'redux';
-
 
 @Component({
     selector: 'setl-balances',
@@ -25,7 +23,9 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     subscriptionsArry: Array<Subscription> = [];
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
+    @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
@@ -33,13 +33,10 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     public singleAsset;
     public singleAssetHistory;
 
-    public holdingByAsset;
-    public currentWalletId;
+    public currentWalletId: Number;
+    public holdingByAsset: Array;
 
     public tabsControl: any;
-
-    // Redux unsubscription
-    reduxUnsubscribe: Unsubscribe;
 
     // Flag to mark if first load.
     firstLoad = true;
@@ -48,8 +45,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private walletNodeRequestService: WalletNodeRequestService) {
 
-        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
-        this.updateState();
+        this.currentWalletId = 0;
 
         // this.singleAssetHistory = [
         //     {
@@ -82,27 +78,42 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tabsControl = this.defaultTabControl();
 
         // List of observable subscriptions.
-        this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
+        this.subscriptionsArry.push(
+            this.connectedWalletOb
+                .distinctUntilChanged()
+                .subscribe((connected) => {
+                    this.tabsControl = this.defaultTabControl();
+                    this.currentWalletId = connected;
+                    this.updateState();
+                }
+            )
+        );
+        this.subscriptionsArry.push(
+            this.walletHoldingByAssetOb
+                .filter(wallets => !_.isEmpty(wallets.holdingByAsset))
+                .subscribe((wallets) => {
+                    this.holdingByAsset = wallets.holdingByAsset;
+                    this.updateState();
+                }
+            )
+        );
+        this.subscriptionsArry.push(
+            this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested))
+        );
     }
 
     /**
      * Current Redux State
      */
     updateState() {
-        const newState = this.ngRedux.getState();
-
-        const newWalletId = getConnectedWallet(newState);
-
-        if (newWalletId !== this.currentWalletId) {
-            this.tabsControl = this.defaultTabControl();
+        if (this.currentWalletId === 0 || _.isEmpty(this.holdingByAsset)) {
+            return;
         }
-
-        this.currentWalletId = newWalletId;
-        this.holdingByAsset = getWalletHoldingByAsset(newState);
 
         const formatedHolding = this.formatHolding();
         const formatedHoldingArr = this.convertToArray(formatedHolding);
         this.assets = this.markUpdatedAssetBalanceData(formatedHoldingArr);
+        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -130,7 +141,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     requestWalletHolding(requestedState: boolean) {
 
         // If the state is false, that means we need to request the list.
-        if (!requestedState) {
+        if (!requestedState && this.currentWalletId !== 0) {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletHolding());
 
@@ -143,10 +154,6 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     formatHolding() {
         let walletId = this.currentWalletId;
         let holding = this.holdingByAsset;
-
-        console.log(holding);
-        console.log(walletId);
-
         let holdingForWallet = holding[walletId];
 
         if (_.isEmpty(holdingForWallet)) {
@@ -343,8 +350,6 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.reduxUnsubscribe();
-
         for (const subscription of this.subscriptionsArry) {
             subscription.unsubscribe();
         }
