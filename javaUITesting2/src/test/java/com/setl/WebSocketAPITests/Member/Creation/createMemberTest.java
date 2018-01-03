@@ -66,20 +66,24 @@ public class createMemberTest {
 
   @Test
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    String memberDetails[] = generateMemberDetails();
-    String memberName = memberDetails[0];
-    System.out.println("Member Name = " +  memberName);
-    String email = memberDetails[1];
-    System.out.println("Member Email = " +  email);
-
-    Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
-
-    System.out.println("JSON MemberName = " + member.getMemberName());
-    System.out.println("Member Name = " + memberName);
-    assertTrue(member.getMemberName().equals(memberName));
+      int MAXTRIES=2;
+      for(int i=0; i<MAXTRIES; i++) {
+          try {
+                Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+                String memberDetails[] = generateMemberDetails();
+                String memberName = memberDetails[0];
+                String email = memberDetails[1];
+                Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
+                assertTrue(member.getMemberName().equals(memberName));
 
     connection.disconnect();
+          } catch (Exception ex) {
+              logger.error("Login:", ex);
+              if(i>=MAXTRIES-1)
+                  throw(ex);
+          }
+          break;
+      }
   }
 
   @Test
