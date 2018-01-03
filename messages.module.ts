@@ -25,7 +25,6 @@ import {SetlMessageFormActionService} from "./messages/message-components/messag
 import {SetlMessageAttachmentComponent} from "./messages/message-components/message-attachment/message-attachment.component";
 import {SetlMessageBodyComponent} from "./messages/message-components/message-body/message-body.component";
 
-
 @NgModule({
     imports: [
         CommonModule,
