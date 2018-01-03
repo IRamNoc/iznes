@@ -106,14 +106,18 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Current Redux State
      */
     updateState() {
+        console.log('updateState');
         if (this.currentWalletId === 0 || _.isEmpty(this.holdingByAsset)) {
+            console.log('bail');
             return;
         }
+
+        console.log('render view');
 
         const formatedHolding = this.formatHolding();
         const formatedHoldingArr = this.convertToArray(formatedHolding);
         this.assets = this.markUpdatedAssetBalanceData(formatedHoldingArr);
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
