@@ -3,10 +3,14 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils/index';
-import {clearRequestedConnections, SET_CONNECTIONS_LIST, setRequestedConnections} from '@setl/core-store/connection';
+
 import {
-    CreateConnectionMessageBody, DeleteConnectionMessageBody, GetConnectionsMessageBody,
-    UpdateConnectionMessageBody
+    clearRequestedFromConnections, clearRequestedToConnections, SET_FROM_CONNECTION_LIST, SET_TO_CONNECTION_LIST,
+    setRequestedFromConnections, setRequestedToConnections
+} from '@setl/core-store/connection/my-connections';
+import {
+    CreateConnectionMessageBody, DeleteConnectionMessageBody, GetFromConnectionMessageBody,
+    GetToConnectionMessageBody, UpdateConnectionMessageBody
 } from './connection.service.model';
 
 @Injectable()
@@ -14,30 +18,59 @@ export class ConnectionService {
     constructor(private memberSocketService: MemberSocketService) {
     }
 
-    static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
+    static setRequestedFromConnections(boolValue: boolean, ngRedux: NgRedux<any>) {
         if (!boolValue) {
-            ngRedux.dispatch(clearRequestedConnections());
+            ngRedux.dispatch(clearRequestedFromConnections());
         } else {
-            ngRedux.dispatch(setRequestedConnections());
+            ngRedux.dispatch(setRequestedFromConnections());
         }
     }
 
-    static defaultRequestConnectionsList(connectionService: ConnectionService, ngRedux: NgRedux<any>, walletId: string) {
-        const asyncTaskPipe = connectionService.requestConnectionsList(walletId);
+    static setRequestedToConnections(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(clearRequestedToConnections());
+        } else {
+            ngRedux.dispatch(setRequestedToConnections());
+        }
+    }
+
+    static requestFromConnectionList(connectionService: ConnectionService, ngRedux: NgRedux<any>, walletId: string) {
+        const asyncTaskPipe = connectionService.getFromConnectionList(walletId);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_CONNECTIONS_LIST],
+            [SET_FROM_CONNECTION_LIST],
             [],
             asyncTaskPipe,
             {},
         ));
     }
 
-    requestConnectionsList(walletId: string): any {
-        const messageBody: GetConnectionsMessageBody = {
+    static requestToConnectionList(connectionService: ConnectionService, ngRedux: NgRedux<any>, walletId: string) {
+        const asyncTaskPipe = connectionService.getToConnectionList(walletId);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_TO_CONNECTION_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    getFromConnectionList(walletId: string): any {
+        const messageBody: GetFromConnectionMessageBody = {
             RequestName: 'glrfl',
             token: this.memberSocketService.token,
             leiId: walletId || ''
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getToConnectionList(walletId: string): any {
+        const messageBody: GetToConnectionMessageBody = {
+            RequestName: 'glrtl',
+            token: this.memberSocketService.token,
+            senderLei: walletId || ''
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
