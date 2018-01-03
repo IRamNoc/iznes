@@ -3,12 +3,13 @@
 </div>
 
 <clr-tabs>
+    <!-- Accepted connections tab -->
     <clr-tab>
         <button id="accepted-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-check"></i>
             <span>Accepted</span>
         </button>
-        <clr-tab-content *clrIfActive="isAcceptedConnectionListDisplayed">
+        <clr-tab-content *clrIfActive="isAcceptedConnectionDisplayed">
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
@@ -40,6 +41,7 @@
         </clr-tab-content>
     </clr-tab>
 
+    <!-- Pending connections tab -->
     <clr-tab>
         <button id="pending-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-ellipsis-h"></i>
@@ -49,17 +51,14 @@
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'subportfolios'">Subportfolio</clr-dg-column>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
-
 
                     <clr-dg-row *clrDgItems="let pendingConnection of pendingConnectionList">
                         <clr-dg-cell>{{pendingConnection.connection}}</clr-dg-cell>
-                        <!--<clr-dg-cell>{{pendingConnection.subPortfolio}}</clr-dg-cell>-->
                         <clr-dg-cell>
                             <div class="btn-group">
                                 <button id="accept-connection-button" class="btn btn-success"
-                                        (click)="handleAcceptConnection(pendingConnection.id)">
+                                        (click)="connectionToBind = pendingConnection; isAcceptModalDisplayed = true;">
                                     Accept
                                 </button>
                             </div>
@@ -81,6 +80,7 @@
         </clr-tab-content>
     </clr-tab>
 
+    <!-- Add or edit connection tab -->
     <clr-tab>
         <div *ngIf="!isEditFormDisplayed; else editConnectionForm">
             <button id="add-connection-tab" clrTabLink (click)="resetForm()">
@@ -150,6 +150,7 @@
     </clr-tab>
 </clr-tabs>
 
+<!-- Delete confirmation modal -->
 <clr-modal [(clrModalOpen)]="isModalDisplayed">
     <h3 class="modal-title">Delete a connection</h3>
     <div class="modal-body">
@@ -158,11 +159,44 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmationModal(false)"
+        <button type="button" class="btn btn-outline" id="del-confirm-modal-no-btn" (click)="confirmationModal(false)"
                 mltag="txt_no">No
         </button>
-        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmationModal(true)"
+        <button type="button" class="btn btn-primary" id="del-confirm-modal-yes-btn" (click)="confirmationModal(true)"
                 mltag="txt_yes">Yes
+        </button>
+    </div>
+</clr-modal>
+
+<!-- Accept connection modal -->
+<clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
+    <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
+    <div class="modal-body">
+        <ng-select
+                id="accept-subportfolio-addr-link"
+                [items]="addressList"
+                [allowClear]=true
+                placeholder="Select a sub-portfolio"
+                [formControl]="formGroup.controls['sub-portfolio']">
+        </ng-select>
+        <span class="mandatory-field">*</span>
+        <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+             class="text-danger">This field is required
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button"
+                id="accept-connection-cancel-btn"
+                class="btn btn-outline"
+                (click)="handleAcceptConnection(false)">
+            Cancel
+        </button>
+        <button type="button"
+                id="accept-connection-submit-btn"
+                class="btn btn-primary"
+                (click)="handleAcceptConnection(true)">
+            Submit
         </button>
     </div>
 </clr-modal>
