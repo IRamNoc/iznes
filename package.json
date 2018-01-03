@@ -85,7 +85,7 @@
         "@types/jasminewd2": "~2.0.2",
         "@types/node": "~6.0.60",
         "codelyzer": "~3.0.1",
-        "chromedriver": "~3.8.1",
+        "chromedriver": "~2.34",
         "gulp-nsp": "^2.4.2",
         "gulp-sonar": "^3.0.1",
         "jasmine-core": "~2.6.2",
