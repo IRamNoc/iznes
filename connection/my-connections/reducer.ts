@@ -42,10 +42,6 @@ function handleSetToConnectionList(state, action) {
     const response = action.payload[1].Data;
     let toConnectionList = [];
 
-    console.log('=========================================');
-    console.log('handle set to connection list: ', response);
-    console.log('=========================================');
-
     response.map((connection) => {
         const data = {
             leiId: connection.LeiID,
