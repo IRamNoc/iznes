@@ -31,7 +31,8 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
     @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
     @select(['asset', 'myIssuers', 'requestedWalletIssuer']) requestedWalletIssuerOb;
-    @select(['asset', 'myIssuers', 'walletIssuserDetails', 'walletIssuer']) walletIssuerDetailsOb;
+    @select(['asset', 'myIssuers', 'walletIssuerDetail']) walletIssuerDetailsOb;
+    @select(['asset', 'myIssuers', 'issuerList']) issuerListOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
@@ -41,7 +42,7 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
 
     public tabsControl: any;
 
-    public issuersList: Array;
+    public issuerList: Object;
     public currentWalletId: Number;
 
     public currentTabIndex;
@@ -52,7 +53,7 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
-        this.issuersList = [];
+        this.issuerList = {};
         this.currentWalletId = 0;
 
         /*
@@ -163,12 +164,25 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
         this.subscriptionsArry.push(
             this.requestedWalletIssuerOb
-                .filter(requested => requested && this.currentWalletId !== 0)
-                .subscribe(() => this.requestWalletIssuer())
+                .filter(requested => !requested && this.currentWalletId !== 0)
+                .subscribe(() => {
+                    console.log('request');
+                    this.requestWalletIssuer();
+                })
         );
         this.subscriptionsArry.push(
             this.walletIssuerDetailsOb
-                .subscribe(details => this.walletIssuerDetails = details)
+                .subscribe((details) => {
+                    console.log('walletIssuerDetails', details);
+                    this.walletIssuerDetails = details;
+                })
+        );
+        this.subscriptionsArry.push(
+            this.issuerListOb.subscribe((list) => {
+                console.log('set list', list);
+                this.issuerList = list;
+                this.updateState();
+            })
         );
     }
 
@@ -190,19 +204,24 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         /*
         const walletIssuerDetails = getWalletIssuerDetail(newState);
 
-        this.issuersList = getWalletHoldingByAsset(newState);
+        this.issuerList = getWalletHoldingByAsset(newState);
         */
 
-        if (!this.issuersList.length || !this.walletIssuerDetails) {
+        if (_.isEmpty(this.issuerList)) {
+            console.log("Bail out");
             return;
         }
 
-        this.issuers = this.formatIssues(walletIssuerDetails);
+        console.log('walletIssuerDetails', this.walletIssuerDetails);
+
+        this.issuers = this.formatIssuers(this.walletIssuerDetails);
         this.issuers = this.convertToArray(this.issuers);
+
+        console.log('issuers', this.issuers);
 
         if (this.currentTabIndex > 0) {
             const index = this.currentTabIndex;
-            const holders = this.issuersList[newWalletId][this.currentAsset].holders;
+            const holders = this.issuerList[this.currentWalletId][this.currentAsset].holders;
             this.tabsControl[index].assetObject = this.formatHolders(holders);
         }
     }
@@ -230,6 +249,8 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
         const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
             walletId
         });
+
+        console.log('caling ngRedux dispatch');
 
         // Send a saga action.
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -299,17 +320,19 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
     }
 
 
-    formatIssues(issueDetails) {
-        let issuers = this.issuersList;
+    formatIssuers(issuerDetails) {
+        let issuers = this.issuerList;
         const walletId = this.currentWalletId;
         issuers = issuers[walletId];
 
         if (_.isEmpty(issuers)) {
+            console.log('bail empty arr');
             return [];
         }
 
-        const myIssuer = issueDetails.walletIssuer;
+        const myIssuer = issuerDetails.walletIssuer;
         const listImu = fromJS(issuers);
+        console.log('issuers', issuers);
         const list = listImu.reduce(
             (data, item, key) => {
                 if (key) {
@@ -328,6 +351,7 @@ export class SetlIssueComponent implements OnInit, AfterViewInit {
             },
             []
         );
+        console.log('list--- ', list);
         return list;
     }
 
