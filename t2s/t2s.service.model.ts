@@ -9,11 +9,9 @@ export interface BasicRequestBody extends MemberNodeMessageBody {
 
 export interface NewMessageBody extends MemberNodeMessageBody {
     token: string;
-    name: string;
+    message: string;
 }
 
 export interface GetMessagesBody extends MemberNodeMessageBody {
     token: string;
-    userId: string;
-    account?: number;
 }
