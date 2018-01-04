@@ -20,14 +20,16 @@ export interface LastRegisterIssuerDetail {
     metaData: any;
 }
 
+export interface WalletIssuerDetail {
+    walletIssuer: string;
+    walletIssuerAddress: string;
+}
+
 export interface MyIssuersState {
     issuerList: Array<IssuerDetail>;
     requestedWalletIssuer: boolean;
     newIssuerRequest: NewIssuerRequest;
-    walletIssuerDetail: {
-        walletIssuer: string;
-        walletIssuerAddress: string;
-    };
+    walletIssuerDetail: WalletIssuerDetail;
     lastCreated: LastRegisterIssuerDetail;
 }
 
