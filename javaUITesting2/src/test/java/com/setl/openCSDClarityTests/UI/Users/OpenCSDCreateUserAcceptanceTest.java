@@ -92,6 +92,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
     }
 
+    @Ignore
     @Test
     public void shouldNotCreateDuplicateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
@@ -245,6 +246,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldEditUserWhenEditButtonIsClicked() throws IOException, InterruptedException {
         navigateToAddUser();
         navigateToUserSearch();
@@ -253,6 +255,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldEditEmail() throws IOException, InterruptedException {
         navigateToAddUser();
         navigateToUserSearch();
@@ -262,6 +265,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldResetEmail() throws IOException, InterruptedException {
         navigateToAddUser();
         navigateToUserSearch();
