@@ -1,15 +1,39 @@
-// import {TestBed, inject} from '@angular/core/testing';
-//
-// import {PdfService} from './pdf.service';
-//
-// describe('MyPdfService', () => {
-//     beforeEach(() => {
-//         TestBed.configureTestingModule({
-//             providers: [PdfService]
-//         });
-//     });
-//
-//     it('should be created', inject([PdfService], (service: PdfService) => {
-//         expect(service).toBeTruthy();
-//     }));
-// });
+import { TestBed, inject } from '@angular/core/testing';
+import { NgReduxTestingModule } from '@angular-redux/store/testing';
+import { PdfService } from './pdf.service';
+import { MemberSocketService } from '../../websocket-service/member-socket.service';
+import { CoreTestUtilModule, MemberSocketServiceMock } from '@setl/core-test-util';
+import * as utilsCommon from '@setl/utils/common';
+import * as _ from 'lodash';
+
+describe('MyPdfService', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NgReduxTestingModule,
+                CoreTestUtilModule
+            ],
+            providers: [
+                PdfService,
+                { provide: MemberSocketService, useClass: MemberSocketServiceMock }
+            ]
+        });
+    });
+
+
+    it('should be created', inject([PdfService], (service: PdfService) => {
+        expect(service).toBeTruthy();
+    }));
+
+    it('should call createMemberNodeSagaRequest when calling getPdfRequest', inject([PdfService], (service: PdfService) => {
+        spyOn(utilsCommon, 'createMemberNodeSagaRequest');
+        service.walletId = 1;
+        service.getPdfRequest({});
+        expect(utilsCommon.createMemberNodeSagaRequest).toHaveBeenCalled();
+    }));
+
+    it('should have a sensible base URL', inject([PdfService], (service: PdfService) => {
+        expect(service.baseUrl).toBe('http://localhost:9788');
+    }));
+
+});
