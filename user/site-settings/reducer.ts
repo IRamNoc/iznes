@@ -2,14 +2,26 @@ import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
 import {SiteSettingsState} from './model';
 import _ from 'lodash';
 
+let defaultLanguage;
+switch (window.navigator.language) {
+    case 'en-GB':
+        defaultLanguage = 'eng';
+        break;
+    case 'fr-FR':
+        defaultLanguage = 'fra';
+        break;
+    default:
+        defaultLanguage = 'fra';
+        break;
+}
+
 const initialState: SiteSettingsState = {
-    language: 'fra',
+    language: defaultLanguage,
     menuShown: true,
     production: true
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action) {
-
     switch (action.type) {
         case SET_LANGUAGE:
             return setLanguage(SET_LANGUAGE, action, state);
