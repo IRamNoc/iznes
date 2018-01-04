@@ -62,7 +62,7 @@ node {
 
                     sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
                 }
-
+            }
         } catch (e) {
             currentBuild.result = 'FAILURE'
             throw e
