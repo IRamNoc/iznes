@@ -55,6 +55,7 @@ public class OpenCSDFundsAcceptanceTest {
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
     }
+    @Ignore
     @Test
     public void shouldCreateFundAsAMViewAsInvestor() throws  IOException, InterruptedException {
         double value = Math.random() * 501;
