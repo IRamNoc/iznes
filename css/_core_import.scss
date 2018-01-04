@@ -3,17 +3,17 @@ $setlHover: #2c2f3c;
 $setlHoverDarker: #282b38;
 $setlSelected: #57a5e3;
 
-@import 'css/general';
-@import 'css/navbar';
-@import 'css/sidebar';
-@import 'css/forms';
-@import 'css/tabs';
-@import 'css/messages';
-@import 'css/utils/ngSelect';
-@import 'css/utils/datagrid';
-@import 'css/utils/_modal';
-@import 'css/utils/_icons';
-@import 'css/_jaspero-ng2-alerts';
+@import 'general';
+@import 'navbar';
+@import 'sidebar';
+@import 'forms';
+@import 'tabs';
+@import 'messages';
+@import 'utils/ngSelect';
+@import 'utils/datagrid';
+@import 'utils/_modal';
+@import 'utils/_icons';
+@import '_jaspero-ng2-alerts';
 
 .color-square {
     display: inline-block;
