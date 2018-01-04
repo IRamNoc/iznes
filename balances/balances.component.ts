@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
-import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
+import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
 
 import {
-    getWalletHoldingByAsset,
-    getConnectedWallet,
     setRequestedWalletHolding
 } from '@setl/core-store';
 import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
@@ -30,11 +28,8 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('myDataGrid') myDataGrid;
 
     public assets = [];
-    public singleAsset;
-    public singleAssetHistory;
-
-    public currentWalletId: Number;
-    public holdingByAsset: Array;
+    public currentWalletId: number;
+    public holdingByAsset: HoldingByAsset;
 
     public tabsControl: any;
 
@@ -46,33 +41,6 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService) {
 
         this.currentWalletId = 0;
-
-        // this.singleAssetHistory = [
-        //     {
-        //         id: '1',
-        //         txid: '037d8a00b9',
-        //         asset: 'Payment_Bank1|EUR',
-        //         amount: '987,654,321',
-        //         time: '2017-04-18 10:24:16 UTC',
-        //         type: 'Issue Asset'
-        //     },
-        //     {
-        //         id: '2',
-        //         txid: '16a91bd771',
-        //         asset: 'Contract',
-        //         amount: '987,654,321',
-        //         time: '2017-04-18 10:24:16 UTC',
-        //         type: 'Contract Commitment'
-        //     },
-        //     {
-        //         id: '3',
-        //         txid: '423336b76f',
-        //         asset: 'Contract',
-        //         amount: '987,654,321',
-        //         time: '2017-04-18 10:24:16 UTC',
-        //         type: 'Contract Commitment'
-        //     }
-        // ];
 
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
@@ -106,17 +74,12 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Current Redux State
      */
     updateState() {
-        console.log('updateState');
         if (this.currentWalletId === 0 || _.isEmpty(this.holdingByAsset)) {
-            console.log('bail');
             return;
         }
 
-        console.log('render view');
-
-        const formatedHolding = this.formatHolding();
-        const formatedHoldingArr = this.convertToArray(formatedHolding);
-        this.assets = this.markUpdatedAssetBalanceData(formatedHoldingArr);
+        const formattedHoldingArr = this.convertToArray(this.formatHolding());
+        this.assets = this.markUpdatedAssetBalanceData(formattedHoldingArr);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -128,14 +91,11 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     defaultTabControl() {
         return [
             {
-                'title': "<i class='fa fa-th-list'></i> Balances",
-                'asset': -1,
-                'active': true
+                title: '<i class="fa fa-th-list"></i> Balances',
+                asset: -1,
+                active: true
             },
         ];
-    }
-
-    ngOnInit() {
     }
 
     ngAfterViewInit() {
@@ -150,15 +110,11 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ngRedux.dispatch(setRequestedWalletHolding());
 
             InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
-
         }
-
     }
 
     formatHolding() {
-        let walletId = this.currentWalletId;
-        let holding = this.holdingByAsset;
-        let holdingForWallet = holding[walletId];
+        const holdingForWallet = this.holdingByAsset[this.currentWalletId];
 
         if (_.isEmpty(holdingForWallet)) {
             return [];
@@ -197,43 +153,37 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
         return breakDownList.toArray();
     }
 
-
     /**
      * Handle View
      *
-     * @param {index} number - The index of a wallet to be editted.
+     * @param {number} index - The index of a wallet to be edited.
      *
      * @return {void}
      */
-    public handleView(index): void {
+    public handleView(index: number): void {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].asset === this.assets[index].asset) {
                 /* Found the index for that tab, lets activate it... */
                 this.setTabActive(i);
-
-                /* And return. */
                 return;
             }
         }
 
         /* Push the edit tab into the array. */
-        let asset = this.assets[index];
+        const asset = this.assets[index];
 
         /* And also prefill the form... let's sort some of the data out. */
         this.tabsControl.push({
-            "title": "<i class='fa fa-th-list'></i> " + this.assets[index].identifier,
-            "asset": asset.asset,
-            "assetObject": asset,
-            "active": false // this.editFormControls
+            title: '<i class="fa fa-th-list"></i> ' + this.assets[index].identifier,
+            asset: asset.asset,
+            assetObject: asset,
+            active: false // this.editFormControls
         });
 
         /* Activate the new tab. */
         this.setTabActive(this.tabsControl.length - 1);
-
-        /* Return. */
-        return;
     }
 
     /**
@@ -242,12 +192,13 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Converts an object that holds objects in keys into an array of those same
      * objects.
      *
-     * @param {obj} object - the object to be converted.
+     * @param {object} obj - the object to be converted.
      *
      * @return {void}
      */
     public convertToArray(obj): Array<any> {
-        let i = 0, key, newArray = [];
+        let i = 0, key;
+        const newArray = [];
         for (key in obj) {
             newArray.push(obj[key]);
             newArray[newArray.length - 1].index = i++;
@@ -289,7 +240,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Sets all tabs to inactive other than the given index, this means the
      * view is switched to the wanted tab.
      *
-     * @param {index} number - the tab inded to close.
+     * @param {number} index - the tab inded to close.
      *
      * @return {void}
      */
