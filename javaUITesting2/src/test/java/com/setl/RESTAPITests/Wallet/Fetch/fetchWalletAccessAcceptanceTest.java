@@ -4,6 +4,7 @@ import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -33,6 +34,7 @@ public class fetchWalletAccessAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void fetchWalletAccessDetails() throws ExecutionException, InterruptedException {
 
 
