@@ -1,6 +1,5 @@
 node {
 
-}
 def notifySlack(String buildStatus = 'STARTED') {
   // Build status of null means success.
   buildStatus = buildStatus ?: 'SUCCESS'
@@ -63,7 +62,6 @@ node {
 
                     sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
                 }
-            }
         } catch (e) {
             currentBuild.result = 'FAILURE'
             throw e
