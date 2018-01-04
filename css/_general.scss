@@ -1,0 +1,498 @@
+.animate, .animate:hover, .animate:focus {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+body *, body *:before, body *:after {
+    /* Chrome 9-, Safari 5-, iOS 4.2-, Android 3-, Blackberry 7- */
+    -webkit-box-sizing: border-box;
+
+    /* Firefox (desktop or Android) 28- */
+    -moz-box-sizing: border-box;
+
+    /* Firefox 29+, IE 8+, Chrome 10+, Safari 5.1+, Opera 9.5+, iOS 5+, Opera Mini Anything, Blackberry 10+, Android 4+ */
+    box-sizing: border-box;
+
+    outline: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+.content-area {
+    background: #f9f9f9;
+}
+
+.header-breadcrumbs {
+    h1 {
+        margin-top: 0;
+        font-weight: bold;
+        font-size: 22px;
+        padding-left: 5px;
+        color: rgb(56, 61, 72);
+
+        i {
+            margin-right: 5px;
+        }
+    }
+
+    padding: 20px;
+    padding-bottom: 10px;
+}
+
+body {
+    background: #f9f9f9;
+}
+
+table {
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    tr:nth-child(odd) {
+        background: #FFF;
+    }
+}
+
+.btn-sm {
+    .btn {
+        font-weight: normal;
+        letter-spacing: 0.2px;
+        text-transform: none;
+    }
+}
+
+.btn {
+    font-weight: normal;
+    letter-spacing: 0.2px;
+    text-transform: none;
+    border-color: #57a5e3;
+    background-color: transparent;
+    color: #57a5e3;
+}
+
+.btn:focus, button:focus {
+    outline: none;
+}
+
+.btn.btn-primary:hover, .btn-primary .btn:hover {
+    background-color: #3c739c;
+    color: #fff;
+    border-color: #3c739c;
+}
+
+/* Style the list */
+ul.breadcrumb {
+    padding: 10px 16px;
+    list-style: none;
+    font-size: 12px;
+    margin: 10px 40px;
+    background-color: #f3f3f3;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+    display: inline;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li + li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    color: $setlSelected;
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    color: $setlSelected;
+    text-decoration: underline;
+}
+
+// contains text inside an area regardless if there isn't spaces
+.main-container {
+    .content-container {
+        display: block;
+        -webkit-box-flex: inherit;
+        -ms-flex: auto;
+        flex: auto;
+        min-height: inherit;
+        float: left;
+        width: 100%;
+        background: #373a49;
+        height: 100%;
+
+        .sidenav {
+            float: left;
+            width: 230px;
+            display: table;
+        }
+
+        .content-area {
+            width: calc(100% - 230px);
+            height: 100%;
+        }
+    }
+}
+
+.dont-break-out {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.pagination > * {
+    width: 30px;
+    text-align: center;
+}
+
+// Angular Froala WYSIWYG Editor toolbar
+.fr-toolbar {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    background: #f3f3f3;
+    margin: -1px;
+}
+
+// Angular Froala WYSIWYG Editor textarea
+.fr-wrapper {
+    margin-top: -1px;
+    box-shadow: none !important;
+    height: 400px;
+    border-bottom: 1px solid #ccc !important;
+
+    p {
+        margin-top: 0;
+    }
+}
+
+.fr-element {
+    padding: 15px;
+    min-height: 600px;
+    max-height: 600px;
+}
+
+// Angular Froala WYSIWYG Editor word counter
+span.fr-counter {
+    border-top: 1px solid #ccc !important;
+    border-left: 1px solid #ccc !important;
+    margin: 0 1px 1px 0px !important;
+    padding: 5px 10px !important;
+    font-family: inherit;
+}
+
+.login-inner-wrapper {
+    border: 1px solid #ccc;
+}
+
+// temp
+.login-container {
+    .m-t {
+        line-height: 15px;
+        padding-top: 15px;
+    }
+    button {
+
+        cursor: pointer;
+        display: inline-block;
+        -webkit-appearance: none !important;
+        border-radius: 3px;
+        border: 1px solid;
+        min-width: 72px;
+        max-width: 360px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        vertical-align: middle;
+        line-height: 36px;
+        letter-spacing: .12em;
+        font-size: 12px;
+        font-weight: 500;
+        height: 36px;
+        padding: 0 12px;
+        border-color: #007cbb;
+        background-color: transparent;
+        color: #007cbb;
+        width: 93%;
+    }
+}
+
+.asset-pipe {
+    color: #bfbfbf;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-weight: bold;
+}
+
+.flash {
+    animation: highlight 4s;
+}
+
+@keyframes highlight {
+    0% {
+        background: #EBFFEB
+    }
+    100% {
+        background: none;
+    }
+}
+
+.pagination button {
+    /* Fix clarity's pagination button being a tiny click area. */
+    width: 100%;
+}
+
+.ql-toolbar.ql-snow {
+    border: 0px !important;
+    border-top: 1px solid #ccc !important;
+    border-bottom: 1px solid #ccc !important;
+}
+
+.quill-editor.ql-container.ql-snow {
+    border: 0px;
+    border-bottom: 1px solid #ccc;
+}
+
+.hr-line-dashed {
+    border-top: 1px dashed #e7eaec;
+    color: #fff;
+    background-color: #fff;
+    height: 1px;
+    margin: 20px 0;
+}
+
+hr.dashed {
+    border: none;
+    border-top: 1px dashed #e8e8e8;
+}
+
+.icon-btn {
+    padding: 5px;
+    color: #57a5e3;
+    border: 1px solid #57a5e3;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.ngx-pagination {
+    li {
+        border-radius: 4px !important;
+    }
+
+    .current {
+        background: #57a5e3 !important;
+    }
+
+    a:hover {
+        border-radius: 4px !important;
+    }
+}
+
+.fadeIn {
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+    -ms-animation: fadein 2s; /* Internet Explorer */
+    -o-animation: fadein 2s; /* Opera < 12.1 */
+    animation: fadein 2s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fake-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.loader,
+.loader:before,
+.loader:after {
+    background: #5cb85c;
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 1em;
+    height: 4em;
+}
+
+.loader {
+    color: #5cb85c;
+    text-indent: -9999em;
+    margin: 5px auto;
+    position: relative;
+    font-size: 11px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+
+.loader:before,
+.loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+}
+
+.loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+
+.loader:after {
+    left: 1.5em;
+}
+
+@-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}
+
+@keyframes load1 {
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}
+
+.text_small {
+    font-size: 80%;
+}
+
+.btn {
+    min-width: auto !important;
+    max-width: auto !important;
+}
+
+#search-orders-form {
+    padding: 0px;
+}
+
+.menuHideNav {
+    display: none !important;
+}
+
+.menuHideContent {
+    width: 100% !important;
+}
+
+.branding button {
+    width: 45px;
+    background: transparent;
+    border: 0px solid white;
+    margin-right: 10px;
+}
+
+.branding button I {
+    font-size: 24px;
+    color: white;
+}
+
+.branding {
+    padding-left: 5px !important;
+}
+
+.manageOrderStatus {
+    text-align: center !important;
+}
+
+.manageOrderStatus span {
+    margin-bottom: 10px;
+}
+
+.fileviewer-contents {
+    height: 100% !important;
+}
+
+h2.statement {
+    color: #b7b7b7;
+    text-align: center;
+    margin: 30px auto;
+}
+
+.datagrid {
+    width: 100% !important;
+}
