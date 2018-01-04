@@ -61,6 +61,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -130,7 +131,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void shouldEditUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
