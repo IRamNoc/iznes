@@ -103,7 +103,6 @@ describe('FileViewerComponent', () => {
         component.openFileModal().then(() => {
             fixture.detectChanges();
             expect(pdfMockService.getPdf).toHaveBeenCalled();
-            console.log('File URL: ', component.fileUrl);
             expect(typeof component.fileUrl === 'undefined').toBeFalsy();
             expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
             expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
