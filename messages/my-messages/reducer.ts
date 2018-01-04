@@ -191,6 +191,9 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
             let subject, content;
             try {
                 subject = window.atob(thisMessageDetail.get('subject'));
+                if (window.btoa(window.atob(subject)) === subject) {
+                    subject = window.atob(subject);
+                }
             } catch (e) {
                 // something failed
                 subject = thisMessageDetail.get('subject');
@@ -215,8 +218,6 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 action: null,
                 isDecrypted: false
             };
-
-
         }
     );
 
@@ -232,10 +233,16 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
             const thisMailId = thisMessageDetail.mailId;
 
             if (thisMailId === mailId) {
-                const decryptedObject = JSON.parse(newContent);
-                const content = atob(decryptedObject.general);
-                const action = decryptedObject.action;
+                let decryptedObject = JSON.parse(newContent);
+                let content = atob(decryptedObject.general);
+                let action = decryptedObject.action;
                 const isDecrypted = true;
+
+                if (content.substring(0, 11) === '{"general":') {
+                    decryptedObject = JSON.parse(content);
+                    content = atob(decryptedObject.general);
+                    action = decryptedObject.action;
+                }
 
                 return Object.assign({}, thisMessageDetail, {
                     content, action, isDecrypted
@@ -243,35 +250,6 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
             } else {
                 return thisMessageDetail;
             }
-
-
-            // let subject, content;
-            // try {
-            //     subject = window.atob(thisMessageDetail.get('subject'));
-            // } catch (e) {
-            //     // something failed
-            //     subject = thisMessageDetail.get('subject');
-            // }
-            //
-            // content = thisMessageDetail.get('mailBody');
-            //
-            // return {
-            //     mailId: thisMessageDetail.get('mailID'),
-            //     senderId: thisMessageDetail.get('creatorID'),
-            //     senderPub: thisMessageDetail.get('creatorPub'),
-            //     senderImg: thisMessageDetail.get('creatorPub'),
-            //     recipientId: thisMessageDetail.get('receipientID'),
-            //     recipientPub: thisMessageDetail.get('recipientPub'),
-            //     recipientImg: thisMessageDetail.get('recipientPub'),
-            //     subject: subject,
-            //     date: thisMessageDetail.get('mailDate'),
-            //     isActive: thisMessageDetail.get('isActive'),
-            //     isRead: thisMessageDetail.get('isRead'),
-            //     content: content,
-            //     needDecrypt: true
-            // };
-
-
         }
     );
 
