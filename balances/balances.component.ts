@@ -1,14 +1,18 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
-import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
 
 import {
+    getWalletHoldingByAsset,
+    getConnectedWallet,
     setRequestedWalletHolding
 } from '@setl/core-store';
 import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
+import {Unsubscribe} from 'redux';
+
 
 @Component({
     selector: 'setl-balances',
@@ -21,17 +25,21 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     subscriptionsArry: Array<Subscription> = [];
 
     // List of redux observable.
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
-    @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
 
     @ViewChild('myDataGrid') myDataGrid;
 
     public assets = [];
-    public currentWalletId: number;
-    public holdingByAsset: HoldingByAsset;
+    public singleAsset;
+    public singleAssetHistory;
+
+    public holdingByAsset;
+    public currentWalletId;
 
     public tabsControl: any;
+
+    // Redux unsubscription
+    reduxUnsubscribe: Unsubscribe;
 
     // Flag to mark if first load.
     firstLoad = true;
@@ -40,47 +48,61 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private walletNodeRequestService: WalletNodeRequestService) {
 
-        this.currentWalletId = 0;
+        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
+        this.updateState();
+
+        // this.singleAssetHistory = [
+        //     {
+        //         id: '1',
+        //         txid: '037d8a00b9',
+        //         asset: 'Payment_Bank1|EUR',
+        //         amount: '987,654,321',
+        //         time: '2017-04-18 10:24:16 UTC',
+        //         type: 'Issue Asset'
+        //     },
+        //     {
+        //         id: '2',
+        //         txid: '16a91bd771',
+        //         asset: 'Contract',
+        //         amount: '987,654,321',
+        //         time: '2017-04-18 10:24:16 UTC',
+        //         type: 'Contract Commitment'
+        //     },
+        //     {
+        //         id: '3',
+        //         txid: '423336b76f',
+        //         asset: 'Contract',
+        //         amount: '987,654,321',
+        //         time: '2017-04-18 10:24:16 UTC',
+        //         type: 'Contract Commitment'
+        //     }
+        // ];
 
         /* Default tabs. */
         this.tabsControl = this.defaultTabControl();
 
         // List of observable subscriptions.
-        this.subscriptionsArry.push(
-            this.connectedWalletOb
-                .distinctUntilChanged()
-                .subscribe((connected) => {
-                    this.tabsControl = this.defaultTabControl();
-                    this.currentWalletId = connected;
-                    this.updateState();
-                }
-            )
-        );
-        this.subscriptionsArry.push(
-            this.walletHoldingByAssetOb
-                .filter(wallets => !_.isEmpty(wallets.holdingByAsset))
-                .subscribe((wallets) => {
-                    this.holdingByAsset = wallets.holdingByAsset;
-                    this.updateState();
-                }
-            )
-        );
-        this.subscriptionsArry.push(
-            this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested))
-        );
+        this.subscriptionsArry.push(this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)));
     }
 
     /**
      * Current Redux State
      */
     updateState() {
-        if (this.currentWalletId === 0 || _.isEmpty(this.holdingByAsset)) {
-            return;
+        const newState = this.ngRedux.getState();
+
+        const newWalletId = getConnectedWallet(newState);
+
+        if (newWalletId !== this.currentWalletId) {
+            this.tabsControl = this.defaultTabControl();
         }
 
-        const formattedHoldingArr = this.convertToArray(this.formatHolding());
-        this.assets = this.markUpdatedAssetBalanceData(formattedHoldingArr);
-        this.changeDetectorRef.markForCheck();
+        this.currentWalletId = newWalletId;
+        this.holdingByAsset = getWalletHoldingByAsset(newState);
+
+        const formatedHolding = this.formatHolding();
+        const formatedHoldingArr = this.convertToArray(formatedHolding);
+        this.assets = this.markUpdatedAssetBalanceData(formatedHoldingArr);
     }
 
     /**
@@ -91,11 +113,14 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     defaultTabControl() {
         return [
             {
-                title: '<i class="fa fa-th-list"></i> Balances',
-                asset: -1,
-                active: true
+                'title': "<i class='fa fa-th-list'></i> Balances",
+                'asset': -1,
+                'active': true
             },
         ];
+    }
+
+    ngOnInit() {
     }
 
     ngAfterViewInit() {
@@ -105,16 +130,24 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     requestWalletHolding(requestedState: boolean) {
 
         // If the state is false, that means we need to request the list.
-        if (!requestedState && this.currentWalletId !== 0) {
+        if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletHolding());
 
             InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.currentWalletId);
+
         }
+
     }
 
     formatHolding() {
-        const holdingForWallet = this.holdingByAsset[this.currentWalletId];
+        let walletId = this.currentWalletId;
+        let holding = this.holdingByAsset;
+
+        console.log(holding);
+        console.log(walletId);
+
+        let holdingForWallet = holding[walletId];
 
         if (_.isEmpty(holdingForWallet)) {
             return [];
@@ -153,37 +186,43 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
         return breakDownList.toArray();
     }
 
+
     /**
      * Handle View
      *
-     * @param {number} index - The index of a wallet to be edited.
+     * @param {index} number - The index of a wallet to be editted.
      *
      * @return {void}
      */
-    public handleView(index: number): void {
+    public handleView(index): void {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].asset === this.assets[index].asset) {
                 /* Found the index for that tab, lets activate it... */
                 this.setTabActive(i);
+
+                /* And return. */
                 return;
             }
         }
 
         /* Push the edit tab into the array. */
-        const asset = this.assets[index];
+        let asset = this.assets[index];
 
         /* And also prefill the form... let's sort some of the data out. */
         this.tabsControl.push({
-            title: '<i class="fa fa-th-list"></i> ' + this.assets[index].identifier,
-            asset: asset.asset,
-            assetObject: asset,
-            active: false // this.editFormControls
+            "title": "<i class='fa fa-th-list'></i> " + this.assets[index].identifier,
+            "asset": asset.asset,
+            "assetObject": asset,
+            "active": false // this.editFormControls
         });
 
         /* Activate the new tab. */
         this.setTabActive(this.tabsControl.length - 1);
+
+        /* Return. */
+        return;
     }
 
     /**
@@ -192,13 +231,12 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Converts an object that holds objects in keys into an array of those same
      * objects.
      *
-     * @param {object} obj - the object to be converted.
+     * @param {obj} object - the object to be converted.
      *
      * @return {void}
      */
     public convertToArray(obj): Array<any> {
-        let i = 0, key;
-        const newArray = [];
+        let i = 0, key, newArray = [];
         for (key in obj) {
             newArray.push(obj[key]);
             newArray[newArray.length - 1].index = i++;
@@ -240,7 +278,7 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
      * Sets all tabs to inactive other than the given index, this means the
      * view is switched to the wanted tab.
      *
-     * @param {number} index - the tab inded to close.
+     * @param {index} number - the tab inded to close.
      *
      * @return {void}
      */
@@ -305,6 +343,8 @@ export class SetlBalancesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.reduxUnsubscribe();
+
         for (const subscription of this.subscriptionsArry) {
             subscription.unsubscribe();
         }
