@@ -4,7 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,8 +55,9 @@ public class OpenCSDFundsAcceptanceTest {
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
     }
-    @Ignore
+
     @Test
+    @Ignore
     public void shouldCreateFundAsAMViewAsInvestor() throws  IOException, InterruptedException {
         double value = Math.random() * 501;
         int rounded = (int) Math.round(value);
