@@ -61,7 +61,6 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    @Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -88,13 +87,13 @@ public class OpenCSDCreateUserAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
 
         String userAmount1 = driver.findElement(By.className("datagrid-foot-description")).getText();
-        String userAmount = userAmount1.substring(userAmount1.length() - 3);
+        String userAmount = userAmount1.substring(userAmount1.length() - 3).trim();
         String usernameID = "username-" + userAmount;
         assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
     }
 
-    @Ignore
     @Test
+    @Ignore
     public void shouldNotCreateDuplicateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
@@ -124,10 +123,10 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPasswordRepeat(userDetails[1]);
         clickManageUserSubmit();
 
-        String userErrorTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
         String userErrorText = driver.findElement(By.className("jaspero__dialog-content")).getText();
-        assertTrue(userErrorTitle.contentEquals("Error!"));
-        assertTrue(userErrorText.contentEquals("Failed to update this user."));
+        System.out.println(userErrorText);
+        System.out.println("Failed to update this user.");
+        assertTrue(userErrorText.contains("Failed to update this user."));
     }
 
     @Test
