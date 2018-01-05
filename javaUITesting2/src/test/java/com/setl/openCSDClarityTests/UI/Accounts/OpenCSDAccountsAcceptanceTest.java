@@ -72,6 +72,8 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("DisplayName");
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
+    //query the database and assert that display name has been changed
+
   }
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException {
@@ -81,6 +83,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
+    //query the database and assert that first name has been changed
   }
 
   @Test
@@ -91,6 +94,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("LastName");
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that last name has been changed
   }
 
   @Test
@@ -101,6 +105,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MobilePhone");
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that mobile number has been changed
   }
 
   @Test
@@ -111,6 +116,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address1");
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that address has been changed
   }
 
   @Test
@@ -121,6 +127,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("AddressPrefix");
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that address prefix has been changed
   }
 
   @Test
@@ -131,6 +138,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address3");
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that city has been changed
   }
 
   @Test
@@ -141,6 +149,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address4");
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that state or area has been changed
   }
 
   @Test
@@ -151,9 +160,12 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("PostalCode");
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that postcode has been changed
   }
 
   @Test
+  @Ignore
+  //Ignored because country selection is broken, need to find a new way to select a country
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
@@ -162,6 +174,7 @@ public class OpenCSDAccountsAcceptanceTest {
     Thread.sleep(2);
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that country has been changed
   }
 
   @Test
@@ -172,6 +185,7 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MemorableQuestion");
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
+      //query the database and assert that display name has been changed
   }
 
   @Test
@@ -195,10 +209,18 @@ public class OpenCSDAccountsAcceptanceTest {
   }
 
   @Test
+  @Ignore
+  //Test I want to add soon which will check all required fields are entered and only then can the save button be clicked
+  public void shouldNotSaveAccountUnlessAllRequiredFieldsAreEntered() throws IOException, InterruptedException {
+  }
+
+  @Test
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
+    myAccountClearField("DisplayName");
+    myAccountSendKeys("DisplayName", "null");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "null");
     myAccountClearField("LastName");
@@ -220,5 +242,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
+      //query the database and assert that all fields have changed to null
   }
 }
