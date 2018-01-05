@@ -52,44 +52,6 @@ public class OpenCSDAccountsAcceptanceTest {
         screenshotRule.setDriver(driver);
 
     }
-
-
-
-
-    // remove this once running queries successfuly has been achieved.
-    @Test
-    // connect to the database
-
-    public void dbTestTest() throws IOException, InterruptedException, SQLException {
-        try {
-            Connection conn = DriverManager.getConnection(connectionString, username, password);
-            ResultSet rs;
-            Statement stmt = conn.createStatement();
-            conn.createStatement();
-
-            rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
-
-            int rows = 0;
-
-            // check there is only one result( there should be!! )
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-                rs.beforeFirst();
-            }
-            assertEquals("there should be exactly one record", 1, rows );
-
-
-            while (rs.next()) {
-                assertEquals("Expecting username to be null","null", rs.getString("firstName"));
-                // check each parameter meets the field in the database
-            }
-
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
