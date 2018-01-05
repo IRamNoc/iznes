@@ -77,11 +77,14 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private ofiNavService: OfiNavService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,) {
+                private _numberConverterService: NumberConverterService,
+                ) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
             'selectFund': new FormControl(0)
-        })
+        });
+
+        this.subscriptions['fundShareForm'] = this.fundShareForm.valueChanges.subscribe((form) => this.handleFundSelection(form));
 
         /* Subscribe to wallet holdings. */
         this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe(requested => this.requestWalletHolding(requested));
@@ -193,7 +196,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleFundSelection(): void {
+    public handleFundSelection(form): void {
         console.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
         let
@@ -239,7 +242,6 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             console.log(' | dashboardData Error:', error)
         });
-
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();

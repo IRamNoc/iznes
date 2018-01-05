@@ -1,8 +1,0 @@
-{
-  "name": "@ofi/ofi-main",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git",
-  "author": "SETL.io",
-  "license": "UNLICENCED"
-}
