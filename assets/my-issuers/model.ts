@@ -25,8 +25,12 @@ export interface WalletIssuerDetail {
     walletIssuerAddress: string;
 }
 
+export interface IssuerList {
+    [walletId: number]: IssuerDetail;
+}
+
 export interface MyIssuersState {
-    issuerList: Array<IssuerDetail>;
+    issuerList: IssuerList;
     requestedWalletIssuer: boolean;
     newIssuerRequest: NewIssuerRequest;
     walletIssuerDetail: WalletIssuerDetail;
