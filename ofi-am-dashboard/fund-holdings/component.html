@@ -21,10 +21,10 @@
                                     [allowClear]="true"
                                     [formControl]="fundShareForm.controls['selectFund']">
                                 </ng-select>
-                                <button
-                                    (click)="handleFundSelection()"
-                                    class="btn btn-primary btn-end" mltag="txt_go"> Go
-                                </button>
+                                <!--<button-->
+                                    <!--(click)="handleFundSelection()"-->
+                                    <!--class="btn btn-primary btn-end" mltag="txt_go"> Go-->
+                                <!--</button>-->
                             </div>
                         </div>
                     </form>
@@ -86,7 +86,7 @@
                                     <thead>
                                     <tr>
                                         <th class="text-left"><span mltag="txt_holder">Holder</span></th>
-                                        <th class="text-right"><span mltag="txt_amount">Amount</span></th>
+                                        <th class="text-right"><span mltag="txt_amount">Amount</span> (€)</th>
                                         <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
                                         <th class="text-right"><span mltag="txt_ratioamount">Ratio Amount</span></th>
                                     </tr>
@@ -95,7 +95,7 @@
                                     <tr *ngFor="let holder of fundStats.holders">
                                         <!--<td colspan="4">{{ holder | json }}</td>-->
                                         <td class="text-left">{{ holder.label }}</td>
-                                        <td class="text-right">{{ holder.amount | moneyValue }}</td>
+                                        <td class="text-right">€ {{ holder.amount | moneyValue }}</td>
                                         <td class="text-right">{{ holder.quantity | moneyValue }}</td>
                                         <td class="text-right">{{ holder.ratio }}%</td>
                                     </tr>
