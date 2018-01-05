@@ -121,7 +121,6 @@
                         <div class="message-highlight {{!message.isRead && 'message-unread'}}"
                              *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
-                                <img class="message-img-sender" [attr.email]="message.senderImg" [attr.size]="80" [attr.fallback]="'identicon'">
                                 {{message.senderWalletName}}
                             </h6>
 
@@ -148,11 +147,9 @@
                         <div class="message-title">
                             <span mltag="txt_from">From</span>
                             <b class="message-from">
-                                <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
                                 {{currentMessage.senderWalletName}}
                             </b> to
                             <b class="message-to">
-                                <img class="message-img-sender" src="http://localhost:4200/favicon.ico">
                                 {{currentMessage.recipientWalletName}}
                             </b>
 
