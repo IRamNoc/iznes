@@ -1,82 +1,82 @@
 <div class="header-breadcrumbs">
-  <h1><i class="fa fa-users"></i> <span mltag="txt_issueasset">Issue Asset</span></h1>
+    <h1><i class="fa fa-paper-plane"></i> <span mltag="txt_issueasset">Issue Asset</span></h1>
 </div>
 
 <clr-tabs>
-  <clr-tab>
-    <button clrTabLink mltag="txt_issueassetform">Issue Asset Form</button>
-    <clr-tab-content *clrIfActive>
-      <form [formGroup]="issueAssetForm" (ngSubmit)="issueAsset()">
-        <section class="form-block">
-          <div class="form-group col-sm-6">
-            <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
-            <ng-select id="asset"
-                       [items]="walletInstrumentsSelectItems"
-                       [allowClear]="true"
-                       placeholder="Select Issuer Address"
-                       [formControl]="issueAssetForm.controls['asset']"
-            >
-            </ng-select>
-          </div>
+    <clr-tab>
+        <button clrTabLink mltag="txt_issueassetform"><i class="fa fa-plus-circle"></i> New Issue</button>
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="issueAssetForm" (ngSubmit)="issueAsset()">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
+                        <ng-select id="asset"
+                                   [items]="walletInstrumentsSelectItems"
+                                   [allowClear]="true"
+                                   placeholder="Select Issuer Address"
+                                   [formControl]="issueAssetForm.controls['asset']"
+                        >
+                        </ng-select>
+                    </div>
 
-          <various-address-select [formControl]="issueAssetForm.controls['recipient']"
-                                  [relationshipArray]="toRelationshipSelectItems"
-                                  [ownWalletAddressArray]="walletAddressSelectItems"
-                                  [class.error]="!issueAssetForm.controls['recipient'].valid &&
+                    <various-address-select [formControl]="issueAssetForm.controls['recipient']"
+                                            [relationshipArray]="toRelationshipSelectItems"
+                                            [ownWalletAddressArray]="walletAddressSelectItems"
+                                            [class.error]="!issueAssetForm.controls['recipient'].valid &&
                    issueAssetForm.controls['recipient'].touched"></various-address-select>
 
-          <div class="form-group col-sm-6">
-            <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
-            <input type="text" id="amount" placeholder="Amount" size="45"
-                   [formControl]="issueAssetForm.controls['amount']"
-                   [class.error]="!issueAssetForm.controls['amount'].valid &&
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
+                        <input type="text" id="amount" placeholder="Amount" size="45"
+                               [formControl]="issueAssetForm.controls['amount']"
+                               [class.error]="!issueAssetForm.controls['amount'].valid &&
                    issueAssetForm.controls['amount'].touched" mltag="txt_amount"/>
-          </div>
+                    </div>
 
 
-          <button type="submit" class="btn btn-primary" mltag="txt_issueasset">Issue Asset</button>
+                    <button type="submit" class="btn btn-primary" mltag="txt_issueasset">Issue Asset</button>
 
-          <div *ngIf="!issueAssetForm.controls['asset'].valid &&
+                    <div *ngIf="!issueAssetForm.controls['asset'].valid &&
           issueAssetForm.controls['asset'].touched" class="alert-items col-sm-5">
 
-            <div class="alert alert-danger">
-              <div class="alert-items">
-                <div class="alert-item static">
-                  <span class="alert-text" mltag="txt_assetisrequired">Asset is required</span>
-                </div>
-              </div>
-            </div>
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_assetisrequired">Asset is required</span>
+                                </div>
+                            </div>
+                        </div>
 
-          </div>
+                    </div>
 
-          <div *ngIf="!issueAssetForm.controls['recipient'].valid &&
+                    <div *ngIf="!issueAssetForm.controls['recipient'].valid &&
            issueAssetForm.controls['recipient'].touched" class="alert-items col-sm-5">
 
-            <div class="alert alert-danger">
-              <div class="alert-items">
-                <div class="alert-item static">
-                  <span class="alert-text" mltag="txt_recipientisrequired">Recipient is required</span>
-                </div>
-              </div>
-            </div>
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_recipientisrequired">Recipient is required</span>
+                                </div>
+                            </div>
+                        </div>
 
-          </div>
+                    </div>
 
-          <div *ngIf="!issueAssetForm.controls['amount'].valid &&
+                    <div *ngIf="!issueAssetForm.controls['amount'].valid &&
            issueAssetForm.controls['amount'].touched" class="alert-items col-sm-5">
 
-            <div class="alert alert-danger">
-              <div class="alert-items">
-                <div class="alert-item static">
-                  <span class="alert-text" mltag="txt_amountisrequired">Amount is required</span>
-                </div>
-              </div>
-            </div>
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_amountisrequired">Amount is required</span>
+                                </div>
+                            </div>
+                        </div>
 
-          </div>
-        </section>
+                    </div>
+                </section>
 
-      </form>
-    </clr-tab-content>
-  </clr-tab>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
 </clr-tabs>
