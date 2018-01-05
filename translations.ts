@@ -2380,7 +2380,7 @@ export const Translations = {
             "txt_completed": "Terminé",
             "txt_completed_double": "Terminé",
             "txt_demon_completed": "Réglé / livré",
-            "txt_compose": "Composer",
+            "txt_compose": "Nouveau Message",
             "txt_conditiontype": "Type de condition",
             "txt_conditions": "Conditions",
             "txt_condition": "Condition",
