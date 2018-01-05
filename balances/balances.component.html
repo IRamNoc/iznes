@@ -63,7 +63,6 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
-
     </div>
 </ng-template>
 
@@ -89,6 +88,9 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
+        <div class="form-group tx-view-header">
+            <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>
+        </div>
     </div>
 </ng-template>
 
