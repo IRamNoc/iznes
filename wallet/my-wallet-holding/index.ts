@@ -1,6 +1,6 @@
 export {name} from './__init__';
 export {MyWalletHoldingReducer} from './reducer';
-export {MyWalletHoldingState} from './model';
+export {MyWalletHoldingState, HoldingByAsset} from './model';
 export {
     SET_WALLET_HOLDING,
     SET_ISSUE_HOLDING,
