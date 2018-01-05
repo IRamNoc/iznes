@@ -12,12 +12,15 @@ import org.junit.Rule;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
+import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -26,6 +29,13 @@ import static org.junit.Assert.fail;
 
 
 public class OpenCSDAccountsAcceptanceTest {
+
+    static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+
+    // Defines username and password to connect to database server.
+    static String username = "root";
+    static String password = "nahafusi61hucupoju78";
+
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -40,6 +50,45 @@ public class OpenCSDAccountsAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+
+    }
+
+
+
+
+    // remove this once running queries successfuly has been achieved.
+    @Test
+    // connect to the database
+
+    public void dbTestTest() throws IOException, InterruptedException, SQLException {
+        try {
+            Connection conn = DriverManager.getConnection(connectionString, username, password);
+            ResultSet rs;
+            Statement stmt = conn.createStatement();
+            conn.createStatement();
+
+            rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
+
+            int rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                rs.beforeFirst();
+            }
+            assertEquals("there should be exactly one record", 1, rows );
+
+
+            while (rs.next()) {
+                assertEquals("Expecting username to be null","null", rs.getString("firstName"));
+                // check each parameter meets the field in the database
+            }
+
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
@@ -72,18 +121,60 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("DisplayName");
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
-    //query the database and assert that display name has been changed
-
   }
   @Test
-  public void shouldEditFirstname() throws IOException, InterruptedException {
+  public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
+
+
+
+            Connection conn = DriverManager.getConnection(connectionString, username, password);
+            ResultSet rs;
+            Statement stmt = conn.createStatement();
+            conn.createStatement();
+
+            rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
+
+            int rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                rs.beforeFirst();
+            }
+            assertEquals("there should be exactly one record", 1, rows );
+
+            while (rs.next()) {
+                assertEquals("Expecting username to be null","null", rs.getString("firstName"));
+                // check each parameter meets the field in the database
+            }
+
+
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
-    //query the database and assert that first name has been changed
+
+
+    rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"Testing\" ");
+
+            rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                rs.beforeFirst();
+            }
+            assertEquals("there should be exactly one record", 1, rows );
+
+            while (rs.next()) {
+                assertEquals("Expecting username to be Testing","Testing", rs.getString("firstName"));
+                // check each parameter meets the field in the database
+            }
+
   }
 
   @Test
@@ -94,7 +185,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("LastName");
     myAccountSendKeys("LastName", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that last name has been changed
   }
 
   @Test
@@ -105,7 +195,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MobilePhone");
     myAccountSendKeys("MobilePhone", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that mobile number has been changed
   }
 
   @Test
@@ -116,7 +205,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address1");
     myAccountSendKeys("Address1", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that address has been changed
   }
 
   @Test
@@ -127,7 +215,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("AddressPrefix");
     myAccountSendKeys("AddressPrefix", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that address prefix has been changed
   }
 
   @Test
@@ -138,7 +225,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address3");
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that city has been changed
   }
 
   @Test
@@ -149,7 +235,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("Address4");
     myAccountSendKeys("Address4", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that state or area has been changed
   }
 
   @Test
@@ -160,12 +245,9 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("PostalCode");
     myAccountSendKeys("PostalCode", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that postcode has been changed
   }
 
   @Test
-  @Ignore
-  //Ignored because country selection is broken, need to find a new way to select a country
   public void shouldEditCountry() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
@@ -174,7 +256,6 @@ public class OpenCSDAccountsAcceptanceTest {
     Thread.sleep(2);
     myAccountSendKeys("Address3", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that country has been changed
   }
 
   @Test
@@ -185,7 +266,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MemorableQuestion");
     myAccountSendKeys("MemorableQuestion", "Testing");
     clickMyAccountSubmit();
-      //query the database and assert that display name has been changed
   }
 
   @Test
@@ -209,18 +289,10 @@ public class OpenCSDAccountsAcceptanceTest {
   }
 
   @Test
-  @Ignore
-  //Test I want to add soon which will check all required fields are entered and only then can the save button be clicked
-  public void shouldNotSaveAccountUnlessAllRequiredFieldsAreEntered() throws IOException, InterruptedException {
-  }
-
-  @Test
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
-    myAccountClearField("DisplayName");
-    myAccountSendKeys("DisplayName", "null");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "null");
     myAccountClearField("LastName");
@@ -242,6 +314,5 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountClearField("MemorableAnswer");
     myAccountSendKeys("MemorableAnswer", "null");
     clickMyAccountSubmit();
-      //query the database and assert that all fields have changed to null
   }
 }
