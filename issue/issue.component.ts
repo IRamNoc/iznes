@@ -28,7 +28,7 @@ export class SetlIssueComponent implements OnDestroy, AfterViewInit {
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
-    @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb: HoldingByAsset;
+    @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
     @select(['asset', 'myIssuers', 'requestedWalletIssuer']) requestedWalletIssuerOb;
     @select(['asset', 'myIssuers', 'walletIssuerDetail']) walletIssuerDetailOb;
     @select(['asset', 'myIssuers', 'issuerList']) issuerListOb;
