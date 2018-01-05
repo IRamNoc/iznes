@@ -102,7 +102,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         /* tab meta */
         this.tabDetail = {
             title: {
-                text: 'Historical CSV Data ',
+                text: 'Historical Orders',
                 icon: 'fa-history'
             }
         };

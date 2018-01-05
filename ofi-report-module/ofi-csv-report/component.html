@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-industrial"></i> <span mltag="txt_nav">Historical CSV Data</span></h1>
+    <h1><i class="fa fa-industrial"></i> <span mltag="txt_nav">Historical Orders</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -10,9 +10,7 @@
             <clr-tab-content *clrIfActive="true">
                 <!-- NAV list tab. -->
                 <ng-container>
-                    <ng-container
-                        *ngTemplateOutlet="navListTab"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="navListTab"></ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -30,7 +28,7 @@
                             </label>
                             <div>
                                 <button class="btn btn-primary" (click)="getCsvReport()">
-                                    Historical CSV Data
+                                    Historical Orders
                                 </button>
                             </div>
                         </div>
