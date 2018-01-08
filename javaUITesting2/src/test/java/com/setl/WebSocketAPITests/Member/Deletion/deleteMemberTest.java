@@ -46,7 +46,7 @@ public class deleteMemberTest {
 
       String memberName = memberDetails[0];
       String email = memberDetails[1];
-        int MAXTRIES=2;
+        int MAXTRIES=4;
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);

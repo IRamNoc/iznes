@@ -69,7 +69,7 @@ public class loginTest {
             return "";});
 
 
-        int MAXTRIES=2;
+        int MAXTRIES=4;
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Future<Connection> connection = ws.start(address);
@@ -98,7 +98,7 @@ public class loginTest {
             l.countDown();
             return "";});
 
-        int MAXTRIES=2;
+        int MAXTRIES=4;
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Future<Connection> connection = ws.start(address);
@@ -130,7 +130,7 @@ public class loginTest {
             l.countDown();
             return "";});
 
-        int MAXTRIES=2;
+        int MAXTRIES=4;
         for(int i=0; i<MAXTRIES; i++) {
             try {
                 Future<Connection> connection = ws.start(address);

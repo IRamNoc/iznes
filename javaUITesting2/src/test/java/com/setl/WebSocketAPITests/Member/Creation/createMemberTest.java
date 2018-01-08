@@ -48,7 +48,7 @@ public class createMemberTest {
   @Test
   public void createNewMember() throws ExecutionException, InterruptedException {
 
-      int MAXTRIES=2;
+      int MAXTRIES=4;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -66,7 +66,7 @@ public class createMemberTest {
 
   @Test
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
-      int MAXTRIES=2;
+      int MAXTRIES=4;
       for(int i=0; i<MAXTRIES; i++) {
           try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
