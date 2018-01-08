@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa fa-money"></i><span mltag="txt_issuereports">Issue Reports</span></h1>
+    <h1><i class="fa fa fa-money"></i><span mltag="txt_issuerreports">Issue Reports</span></h1>
 </div>
 
 <clr-tabs *ngIf="tabsControl.length">
@@ -32,16 +32,16 @@
             <clr-dg-column mltag="txt_total">Total</clr-dg-column>
 
 
-            <clr-dg-row *clrDgItems="let issue of issues">
+            <clr-dg-row *clrDgItems="let issuer of issuers">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
-                        <button (click)="handleView(issue.index)" class="btn">
+                        <button (click)="handleView(issuer.index)" class="btn">
                             <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
                     </div>
                 </clr-dg-cell>
                 <clr-dg-cell></clr-dg-cell>
-                <clr-dg-cell>{{issue.asset}}</clr-dg-cell>
-                <clr-dg-cell>{{issue.total | moneyValue}}</clr-dg-cell>
+                <clr-dg-cell>{{issuer.asset}}</clr-dg-cell>
+                <clr-dg-cell>{{issuer.total | moneyValue}}</clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
@@ -77,6 +77,9 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
+        <div class="form-group tx-view-header">
+            <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>
+        </div>
     </div>
 </ng-template>
 
