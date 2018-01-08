@@ -53,7 +53,7 @@ public class createUserTest {
         String password = userDetails[1];
         String email = userDetails[2];
 
-        int MAXTRIES = 2;
+        int MAXTRIES = 4;
         for (int i = 0; i < MAXTRIES; i++) {
             try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
