@@ -48,7 +48,7 @@ public class createAccountTest {
 
 
 
-      int MAXTRIES=4;
+      int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -66,7 +66,7 @@ public class createAccountTest {
   @Test
   public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
-      int MAXTRIES=4;
+      int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -85,7 +85,7 @@ public class createAccountTest {
   @Test
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
-      int MAXTRIES=4;
+      int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);

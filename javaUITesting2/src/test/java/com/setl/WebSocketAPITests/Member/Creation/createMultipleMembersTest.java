@@ -48,7 +48,7 @@ public class createMultipleMembersTest {
 
   @Test
   public void createMultipleMembers() throws ExecutionException, InterruptedException {
-      int MAXTRIES=4;
+      int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
