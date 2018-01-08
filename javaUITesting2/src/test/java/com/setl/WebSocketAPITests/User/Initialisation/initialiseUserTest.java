@@ -1,12 +1,13 @@
 package com.setl.WebSocketAPITests.User.Initialisation;
 
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.ResponseHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class initialiseUserTest {
 
     public static ResponseHandler print  = js -> js.toJSONString();

@@ -1,6 +1,7 @@
 package com.setl.WebSocketAPITests.Member.MemberManagement;
 
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -21,7 +22,7 @@ import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.MemberHelper.addAccountToMember;
 import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMember;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class addAccountToMemberTest {
 
   @Rule
