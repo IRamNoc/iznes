@@ -99,7 +99,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
             int rows = 0;
 
-            // check there is only one result( there should be!! )
+            // checek there is only one result( there should be!! )
             if (rs.last()) {
                 rows = rs.getRow();
                 // Move to back to the beginning
