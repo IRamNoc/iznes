@@ -17,7 +17,7 @@
             <!-- User edit tabs. -->
             <ng-container *ngIf="id >= 1">
                 <ng-container
-                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
+                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject, 'template': tabdata.template, 'transaction': tabdata.transaction}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -41,7 +41,7 @@
                     <div class="btn-group btn-sm">
                         <button (click)="handleView(asset.index)" class="btn">
                             <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
-                        <button class="btn"><i class="fa fa-history"></i><span mltag="txt_history">History</span>
+                        <button class="btn" (click)="handleViewHistory(asset.index)"><i class="fa fa-history"></i><span mltag="txt_history">History</span>
                         </button>
                     </div>
                 </clr-dg-cell>
@@ -67,27 +67,85 @@
 </ng-template>
 
 <!-- User Edit Form. -->
-<ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-asset="asset">
+<ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-asset="asset" let-template="template" let-transaction="transaction">
     <div class="user-tab-panel-body panel-body">
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column mltag="txt_address">Address</clr-dg-column>
-            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
-            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
-            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
+
+        <!-- Breakdown view -->
+        <div *ngIf="template === 'breakdown'">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column mltag="txt_address">Address</clr-dg-column>
+                <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+                <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+                <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
 
-            <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
-                <clr-dg-cell>{{breakdown.address}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.total | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.encumbered | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
-            </clr-dg-row>
+                <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
+                    <clr-dg-cell>{{breakdown.address}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.total | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.encumbered | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
+                </clr-dg-row>
 
-            <clr-dg-footer>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+
+        <!-- History view -->
+        <div *ngIf="template === 'history'">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column mltag="txt_action">Action</clr-dg-column>
+                <clr-dg-column mltag="txt_tx_id">Tx ID</clr-dg-column>
+                <clr-dg-column mltag="txt_asset">Assset</clr-dg-column>
+                <clr-dg-column mltag="txt_amount">Amount</clr-dg-column>
+                <clr-dg-column mltag="txt_time">Time (UTC)</clr-dg-column>
+                <clr-dg-column mltag="txt_type">Type</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let transaction of transactions">
+                    <clr-dg-cell><button (click)="handleViewTransaction(transaction.hash)" class="btn btn-sm"><i class="fa fa-search"></i>View</button></clr-dg-cell>
+                    <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.hash | slice:0:8}}</clr-dg-cell>
+                    <clr-dg-cell class="ellipsised" [title]="asset.asset">{{asset.asset | slice:0:8}}...</clr-dg-cell>
+                    <clr-dg-cell>{{transaction.amount | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{transaction.utc | date: 'dd/MM/yyyy hh:mm:ss'}}</clr-dg-cell>
+                    <clr-dg-cell><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+
+        <!-- Transaction view -->
+        <div *ngIf="template === 'transaction'">
+            <div class="transaction-tab-panel-body panel-body">
+                <form>
+                    <div class="form-horizontal">
+                        <div class="form-group tx-view-header">
+                            <div class="col-sm-3">&nbsp;</div>
+                            <label class="col-sm-4">
+                                <span class="ml" mltag="txt_transactiondetails">Transaction Details</span>
+                            </label>
+                        </div>
+
+                        <ng-container *ngFor="let field of transactionFields">
+                            <div class="form-group" *ngIf="transaction[field.field]">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml" mltag="txt_">{{field.displayName}}</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" readonly="" value="{{transaction[field.field]}}">
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="form-group tx-view-header">
             <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>
         </div>
