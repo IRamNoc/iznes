@@ -22,4 +22,5 @@ export interface AppConfig {
     MEMBER_NODE_CONNECTION: MemberNodeConntion;
     numberDivider: 1;
     menuSpec: MenuSpec;
+    reportingNodeUrl: string;
 }
