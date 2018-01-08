@@ -84,7 +84,6 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("DisplayName", "Testing");
     clickMyAccountSubmit();
   }
-  @Ignore
   @Test
   //Looks like theres a problem connecting to the database, ignored for now
   public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
@@ -100,7 +99,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
             int rows = 0;
 
-            // check there is only one result( there should be!! )
+            // checek there is only one result( there should be!! )
             if (rs.last()) {
                 rows = rs.getRow();
                 // Move to back to the beginning
