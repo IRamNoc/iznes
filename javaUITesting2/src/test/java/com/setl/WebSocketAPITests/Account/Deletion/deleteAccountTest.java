@@ -40,7 +40,7 @@ public class deleteAccountTest {
 
   @Test
   public void deleteAccountTest() throws InterruptedException, ExecutionException {
-     int MAXTRIES=4;
+     int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
