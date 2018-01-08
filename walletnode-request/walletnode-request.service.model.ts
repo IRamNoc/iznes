@@ -38,5 +38,6 @@ export interface RequestTransactionHistoryBody extends WalletNodeMessageBody {
     walletids: number[];
     chainid: number;
     pagesize: number;
+    classid: string;
     pagenum: number;
 }
