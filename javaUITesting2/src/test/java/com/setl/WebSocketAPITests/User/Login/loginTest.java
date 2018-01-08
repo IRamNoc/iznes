@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.User.Login;
 import SETLAPIHelpers.AccountError;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -30,7 +31,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class loginTest {
 
     private static final Logger logger = LogManager.getLogger(loginTest.class);

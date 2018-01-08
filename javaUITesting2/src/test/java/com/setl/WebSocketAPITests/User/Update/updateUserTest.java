@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.User.Update;
 
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.User;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -23,7 +24,7 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class updateUserTest {
 
   @Rule

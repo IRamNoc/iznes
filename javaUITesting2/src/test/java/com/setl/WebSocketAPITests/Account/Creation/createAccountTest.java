@@ -5,6 +5,7 @@ import SETLAPIHelpers.Account;
 import SETLAPIHelpers.AccountError;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import com.setl.openCSDClarityTests.UI.Users.OpenCSDCreateUserAcceptanceTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -29,7 +30,7 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails
 import static junit.framework.TestCase.assertTrue;
 
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class createAccountTest {
 
   private static final Logger logger = LogManager.getLogger(createAccountTest.class);

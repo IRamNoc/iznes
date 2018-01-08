@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.Member.Deletion;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import SETLAPIHelpers.Member;
 import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -27,7 +28,7 @@ import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMemberAndCaptureDet
 import static SETLAPIHelpers.WebSocketAPI.MemberHelper.deleteMember;
 
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class deleteMemberTest {
     private static final Logger logger = LogManager.getLogger(deleteMemberTest.class);
 
