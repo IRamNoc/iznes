@@ -10,18 +10,25 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.Rule;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.IOException;
 import java.sql.*;
 
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+//import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.clickMyAccountSubmit;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.myAccountClearField;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.myAccountSendKeys;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
+
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -76,6 +83,57 @@ public class OpenCSDAccountsAcceptanceTest {
   }
 
   @Test
+  @Ignore
+  public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException {
+      JavascriptExecutor jse = (JavascriptExecutor)driver;
+      navigateToAddUser();
+      enterManageUserUsername("TestUserNullInfo");
+      enterManageUserEmail("LoginNullInfo@setl.io");
+      selectManageUserAccountDropdown();
+      selectManageUserUserDropdown();
+      enterManageUserPassword("Testpass123");
+      enterManageUserPasswordRepeat("Testpass123");
+      clickManageUserSubmit();
+      driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+      logout();
+      try {
+          loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
+      }catch (Error e){
+          System.out.println("hello didnt work");
+      }
+      navigateToDropdown("menu-account-module");
+      navigateToPage("my-account");
+      myAccountClearField("FirstName");
+      myAccountSendKeys("FirstName", "null");
+      myAccountClearField("LastName");
+      myAccountSendKeys("LastName", "null");
+      myAccountClearField("MobilePhone");
+      myAccountSendKeys("MobilePhone", "null");
+      myAccountClearField("Address1");
+      myAccountSendKeys("Address1", "null");
+      myAccountClearField("AddressPrefix");
+      myAccountSendKeys("AddressPrefix", "null");
+      myAccountClearField("Address3");
+      myAccountSendKeys("Address3", "null");
+      myAccountClearField("Address4");
+      myAccountSendKeys("Address4", "null");
+      myAccountClearField("PostalCode");
+      myAccountSendKeys("PostalCode", "null");
+      myAccountClearField("MemorableQuestion");
+      myAccountSendKeys("MemorableQuestion", "null");
+      myAccountClearField("MemorableAnswer");
+      myAccountSendKeys("MemorableAnswer", "null");
+      jse.executeScript("scroll(0, 250);");
+      try {
+          clickMyAccountSubmit();
+      }catch (Error e){
+          System.out.println("hello didnt work");
+          fail();
+      }
+  }
+
+  @Test
+  @Ignore
   public void shouldEditDisplayname() throws IOException, InterruptedException {
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
