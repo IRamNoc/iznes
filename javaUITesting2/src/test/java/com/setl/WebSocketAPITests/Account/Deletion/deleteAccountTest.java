@@ -39,6 +39,7 @@ public class deleteAccountTest {
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
+  @Ignore
   public void deleteAccountTest() throws InterruptedException, ExecutionException {
      int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {

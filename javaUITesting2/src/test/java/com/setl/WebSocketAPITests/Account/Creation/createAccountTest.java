@@ -44,6 +44,7 @@ public class createAccountTest {
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
+  @Ignore
   public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
 
@@ -64,6 +65,7 @@ public class createAccountTest {
   }
 
   @Test
+  @Ignore
   public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
       int MAXTRIES=20;
@@ -83,6 +85,7 @@ public class createAccountTest {
   }
 
   @Test
+  @Ignore
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
 
       int MAXTRIES=20;

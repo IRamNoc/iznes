@@ -47,6 +47,7 @@ public class createMultipleMembersTest {
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
+  @Ignore
   public void createMultipleMembers() throws ExecutionException, InterruptedException {
       int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
