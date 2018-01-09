@@ -4,11 +4,14 @@ import _ from 'lodash';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
 import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
+import { WalletTransaction } from '@setl/utils/helper/wallet-tx/model';
+import { Observable } from 'rxjs/Observable';
 
 import {
     setRequestedWalletHolding
 } from '@setl/core-store';
 import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
+import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 
 @Component({
     selector: 'setl-balances',
@@ -24,14 +27,20 @@ export class SetlBalancesComponent implements AfterViewInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'requested']) walletHoldingRequestedStateOb;
     @select(['wallet', 'myWalletHolding']) walletHoldingByAssetOb;
+    @select(['chain', 'myChainAccess', 'myChainAccess']) myChainAccessOb: Observable<number>;
+    @select(['user', 'connected', 'connectedChain']) connectedChainOb: Observable<number>;
 
     @ViewChild('myDataGrid') myDataGrid;
 
     public assets = [];
     public currentWalletId: number;
     public holdingByAsset: HoldingByAsset;
+    public transactions: Array<WalletTransaction>;
+    public myChainAccess: any;
+    public connectedChainId: number;
 
     public tabsControl: any;
+    readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
 
     // Flag to mark if first load.
     firstLoad = true;
@@ -66,7 +75,9 @@ export class SetlBalancesComponent implements AfterViewInit, OnDestroy {
                 )
         );
         this.subscriptions.push(
-            this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested))
+            this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested)),
+            this.myChainAccessOb.subscribe(myChainAccess => this.myChainAccess = myChainAccess),
+            this.connectedChainOb.subscribe(connectedChainId => this.connectedChainId = connectedChainId)
         );
     }
 
@@ -164,7 +175,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnDestroy {
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].asset === this.assets[index].asset) {
+            if (this.tabsControl[i].asset === this.assets[index].asset && this.tabsControl[i].template === 'breakdown') {
                 /* Found the index for that tab, lets activate it... */
                 this.setTabActive(i);
                 return;
@@ -179,10 +190,50 @@ export class SetlBalancesComponent implements AfterViewInit, OnDestroy {
             title: '<i class="fa fa-th-list"></i> ' + this.assets[index].identifier,
             asset: asset.asset,
             assetObject: asset,
+            template: 'breakdown',
             active: false // this.editFormControls
         });
 
         /* Activate the new tab. */
+        this.setTabActive(this.tabsControl.length - 1);
+    }
+
+    handleViewHistory(index: number): void {
+        for (let i = 0; i < this.tabsControl.length; i++) {
+            if (this.tabsControl[i].asset === this.assets[index].asset && this.tabsControl[i].template === 'history') {
+                return this.setTabActive(i);
+            }
+        }
+
+        this.tabsControl.push({
+            title: `<i class="fa fa-history"></i> ${this.assets[index].asset} History`,
+            asset: this.assets[index].asset,
+            assetObject: this.assets[index],
+            template: 'history',
+            active: false
+        });
+
+        this.getTransactionsFromWalletNode(this.assets[index].asset);
+
+        this.setTabActive(this.tabsControl.length - 1);
+    }
+
+    handleViewTransaction(txId) {
+        for (let i = 0; i < this.tabsControl.length; i++) {
+            if (this.tabsControl[i].txId === txId && this.tabsControl[i].template === 'transaction') {
+                return this.setTabActive(i);
+            }
+        }
+
+        const transaction = this.transactions.find(tx => tx.hash === txId);
+
+        this.tabsControl.push({
+            title: `<i class="fa fa-th-list"></i> ${transaction.shortHash}`,
+            transaction: transaction,
+            template: 'transaction',
+            active: false
+        });
+
         this.setTabActive(this.tabsControl.length - 1);
     }
 
@@ -299,6 +350,46 @@ export class SetlBalancesComponent implements AfterViewInit, OnDestroy {
         }
 
         return markUpdatedNewAssetData;
+    }
+
+    private getTransactionsFromWalletNode(asset): void {
+        const req = this.walletNodeRequestService.requestTransactionHistory({
+            walletIds: [this.currentWalletId],
+            chainId: this.connectedChainId,
+            classid: asset
+        }, 100, 0);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            req,
+            {},
+            (data) => {
+                this.getTransactionsFromReportingNode(data);
+            },
+            (data) => {
+                console.log('get transaction history error:', data);
+            }
+        ));
+    }
+
+    private getTransactionsFromReportingNode(data: any): void {
+        const msgsig: string = (data[1]) ? data[1].data.msgsig : null;
+
+        if (msgsig) {
+            this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
+                data[1].data.msgsig,
+                this.connectedChainId,
+                this.myChainAccess.nodeAddress
+            ).subscribe((res) => {
+                this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
+                this.changeDetectorRef.markForCheck();
+            }, (e) => {
+                console.log("reporting node error", e);
+            });
+        } else {
+            console.log("invalid signature request");
+        }
     }
 
     ngOnDestroy() {
