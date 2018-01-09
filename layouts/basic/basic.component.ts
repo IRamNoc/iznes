@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import {FadeSlideRight} from '../../animations/fade-slide-right';
 
 import {
     setLanguage
@@ -10,21 +11,22 @@ import {
     selector: 'app-basic-layout',
     templateUrl: './basic.component.html',
     styleUrls: ['./basic.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [FadeSlideRight],
 })
 
 export class BasicLayoutComponent implements OnInit, OnDestroy {
-    public _opened: boolean = false;
-    public _modeNum: number = 0;
-    public _positionNum: number = 1;
-    public _dock: boolean = false;
-    public _closeOnClickOutside: boolean = false;
-    public _closeOnClickBackdrop: boolean = true;
-    public _showBackdrop: boolean = true;
-    public _animate: boolean = true;
-    public _trapFocus: boolean = true;
-    public _autoFocus: boolean = true;
-    public _keyClose: boolean = false;
+    public _opened = false;
+    public _modeNum = 0;
+    public _positionNum = 1;
+    public _dock = false;
+    public _closeOnClickOutside = false;
+    public _closeOnClickBackdrop = true;
+    public _showBackdrop = true;
+    public _animate = true;
+    public _trapFocus = true;
+    public _autoFocus = true;
+    public _keyClose = false;
     public _autoCollapseHeight: number = null;
     public _autoCollapseWidth: number = null;
 
@@ -137,6 +139,13 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
         return lang === this.currentLanguage;
     }
 
+    public getRouterOutletState(outlet) {
+        if (!outlet || !outlet.activatedRoute) {
+            return;
+        }
+        return outlet.activatedRoute.snapshot._routerState.url || null;
+    }
+
     /**
      * On Destroy.
      */
@@ -146,5 +155,4 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
     }
-
 }
