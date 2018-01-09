@@ -47,6 +47,7 @@ public class createMemberTest {
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
   @Test
+  @Ignore
   public void createNewMember() throws ExecutionException, InterruptedException {
 
       int MAXTRIES=20;
@@ -66,6 +67,7 @@ public class createMemberTest {
   }
 
   @Test
+  @Ignore
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
       int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
@@ -88,6 +90,7 @@ public class createMemberTest {
   }
 
   @Test
+  @Ignore
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {
 
   final AtomicInteger atomicInt = new AtomicInteger(0);
