@@ -1,6 +1,7 @@
 node {
 
 }
+
 def notifySlack(String buildStatus = 'STARTED') {
   // Build status of null means success.
   buildStatus = buildStatus ?: 'SUCCESS'
@@ -36,12 +37,13 @@ node {
 
             stage('Build & Unit Test') {
 
-                sh '''rm -f yarn.lock
-            yarn install &&
-            yarn test-single &&
-            cd src &&
-            sass styles.scss:styles.css &&
-            cd ../ '''
+                sh '''rm -f yarn.lock &&
+                        yarn install &&
+                        yarn test-single &&
+                        cd src &&
+                        sass styles.scss:styles.css &&
+                        cd ../ '''
+
                 junit allowEmptyResults: true, keepLongStdio: true,
                     testResults: '/TESTS-Headless**'
             }
@@ -63,7 +65,6 @@ node {
                     sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
                 }
             }
-
         } catch (e) {
             currentBuild.result = 'FAILURE'
             throw e

@@ -37,7 +37,7 @@ public class createUserAcceptanceTest {
 
 
     @Test
-    //@Ignore
+    @Ignore
     public void createNewUser() throws ExecutionException, InterruptedException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];

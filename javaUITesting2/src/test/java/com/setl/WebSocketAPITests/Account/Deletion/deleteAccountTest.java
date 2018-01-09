@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.Account.Deletion;
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -24,7 +25,7 @@ import static SETLAPIHelpers.WebSocketAPI.AccountHelper.deleteAccount;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class deleteAccountTest {
 
     private static final Logger logger = LogManager.getLogger(deleteAccountTest.class);
@@ -39,7 +40,7 @@ public class deleteAccountTest {
 
   @Test
   public void deleteAccountTest() throws InterruptedException, ExecutionException {
-     int MAXTRIES=2;
+     int MAXTRIES=20;
       for(int i=0; i<MAXTRIES; i++) {
           try {
               Connection connection = login(socket, localAddress, LoginHelper::loginResponse);

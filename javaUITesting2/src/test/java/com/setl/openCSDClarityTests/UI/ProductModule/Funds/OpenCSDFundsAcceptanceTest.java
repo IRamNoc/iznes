@@ -4,7 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,7 +55,9 @@ public class OpenCSDFundsAcceptanceTest {
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
     }
+
     @Test
+    @Ignore
     public void shouldCreateFundAsAMViewAsInvestor() throws  IOException, InterruptedException {
         double value = Math.random() * 501;
         int rounded = (int) Math.round(value);
@@ -366,15 +368,6 @@ public class OpenCSDFundsAcceptanceTest {
             System.out.println("lol");
             fail();
         }
-        driver.findElement(By.cssSelector("#country .ui-select-placeholder")).click();
-        try {
-            driver.findElement(By.cssSelector("#country .dropdown-item")).click();
-        }catch (Error e){
-            System.out.println("lol");
-            fail();
-        }
-        Thread.sleep(5000);
-
         /*
         Login as AM
         Edit a fund characteristic

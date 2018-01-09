@@ -4,7 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
@@ -12,12 +12,15 @@ import org.junit.Rule;
 import org.openqa.selenium.By;
 
 import java.io.IOException;
+import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -26,6 +29,13 @@ import static org.junit.Assert.fail;
 
 
 public class OpenCSDAccountsAcceptanceTest {
+
+    static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+
+    // Defines username and password to connect to database server.
+    static String username = "root";
+    static String password = "nahafusi61hucupoju78";
+
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -40,6 +50,7 @@ public class OpenCSDAccountsAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+
     }
   @Test
   public void shouldLandOnLoginPage() throws IOException, InterruptedException {
@@ -74,13 +85,59 @@ public class OpenCSDAccountsAcceptanceTest {
     clickMyAccountSubmit();
   }
   @Test
-  public void shouldEditFirstname() throws IOException, InterruptedException {
+  //Looks like theres a problem connecting to the database, ignored for now
+  public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
+
+
+
+            Connection conn = DriverManager.getConnection(connectionString, username, password);
+            ResultSet rs;
+            Statement stmt = conn.createStatement();
+            conn.createStatement();
+
+            rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
+
+            int rows = 0;
+
+            // checek there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                rs.beforeFirst();
+            }
+            assertEquals("there should be exactly one record", 1, rows );
+
+            while (rs.next()) {
+                assertEquals("Expecting username to be null","null", rs.getString("firstName"));
+                // check each parameter meets the field in the database
+            }
+
+
     loginAndVerifySuccess(adminuser, adminuserPassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
     myAccountClearField("FirstName");
     myAccountSendKeys("FirstName", "Testing");
     clickMyAccountSubmit();
+
+
+    rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"Testing\" ");
+
+            rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                rs.beforeFirst();
+            }
+            assertEquals("there should be exactly one record", 1, rows );
+
+            while (rs.next()) {
+                assertEquals("Expecting username to be Testing","Testing", rs.getString("firstName"));
+                // check each parameter meets the field in the database
+            }
+
   }
 
   @Test

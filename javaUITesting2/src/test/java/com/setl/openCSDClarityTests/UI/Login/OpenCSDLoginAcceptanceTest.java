@@ -71,8 +71,9 @@ public class OpenCSDLoginAcceptanceTest {
         enterLoginCredentialsPassword("jordan");
         driver.findElement(By.id("password-field")).clear();
     }
-    @Ignore
     @Test
+    @Ignore
+    //Test Ignored because there is no prompt for not entering a password, therefore this test cannot work yet
     public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
       navigateToLoginPage();
       enterLoginCredentialsUserName("Emmanuel");
