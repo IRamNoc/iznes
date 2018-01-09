@@ -43,6 +43,9 @@ public class OpenCSDAccountsAcceptanceTest {
     static String username = "root";
     static String password = "nahafusi61hucupoju78";
 
+    static String testusername = "TestUserNullInfo";
+    static String testpassword = "Testpass123";
+
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -59,91 +62,94 @@ public class OpenCSDAccountsAcceptanceTest {
         screenshotRule.setDriver(driver);
 
     }
-  @Test
-  public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-  }
+    @Test
+    public void shouldLandOnLoginPage() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+    }
 
-  @Test
-  public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-  }
+    @Test
+    public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+    }
 
-  @Test
-  public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    logout();
-  }
+    @Test
+    public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        logout();
+    }
 
-  @Test
-  public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
-    navigateToLoginPage();
-    enterLoginCredentialsUserName("Emmanuel");
-    driver.findElement(By.id("login-submit")).click();
-  }
+    @Test
+    public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        enterLoginCredentialsUserName("Emmanuel");
+        driver.findElement(By.id("login-submit")).click();
+    }
 
+    @Test
+    public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException {
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        navigateToAddUser();
+        enterManageUserUsername("TestUserNullInfo");
+        enterManageUserEmail("LoginNullInfo@setl.io");
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        enterManageUserPassword("Testpass123");
+        enterManageUserPasswordRepeat("Testpass123");
+        clickManageUserSubmit();
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        logout();
+        try {
+            loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
+        }catch (Error e){
+            System.out.println("hello didnt work");
+        }
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("FirstName");
+        myAccountSendKeys("FirstName", "null");
+        myAccountClearField("LastName");
+        myAccountSendKeys("LastName", "null");
+        myAccountClearField("MobilePhone");
+        myAccountSendKeys("MobilePhone", "null");
+        myAccountClearField("Address1");
+        myAccountSendKeys("Address1", "null");
+        myAccountClearField("AddressPrefix");
+        myAccountSendKeys("AddressPrefix", "null");
+        myAccountClearField("Address3");
+        myAccountSendKeys("Address3", "null");
+        myAccountClearField("Address4");
+        myAccountSendKeys("Address4", "null");
+        myAccountClearField("PostalCode");
+        myAccountSendKeys("PostalCode", "null");
+        myAccountClearField("MemorableQuestion");
+        myAccountSendKeys("MemorableQuestion", "null");
+        myAccountClearField("MemorableAnswer");
+        myAccountSendKeys("MemorableAnswer", "null");
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
+        try {
+            driver.findElement(By.cssSelector("#country .dropdown-item")).click();
+        }catch (Error e){
+            System.out.println("dropdown not visible");
+            fail();
+        }
+        jse.executeScript("window.scrollBy(0, 500);");
+        try {
+            clickMyAccountSubmit();
+        }catch (Error e){
+            System.out.println("hello didnt work");
+            fail();
+        }
+    }
+    @Test
+    public void shouldEditDisplayname() throws IOException, InterruptedException {
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("DisplayName");
+        myAccountSendKeys("DisplayName", "Testing");
+        clickMyAccountSubmit();
+    }
   @Test
-  @Ignore
-  public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException {
-      JavascriptExecutor jse = (JavascriptExecutor)driver;
-      navigateToAddUser();
-      enterManageUserUsername("TestUserNullInfo");
-      enterManageUserEmail("LoginNullInfo@setl.io");
-      selectManageUserAccountDropdown();
-      selectManageUserUserDropdown();
-      enterManageUserPassword("Testpass123");
-      enterManageUserPasswordRepeat("Testpass123");
-      clickManageUserSubmit();
-      driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-      logout();
-      try {
-          loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
-      }catch (Error e){
-          System.out.println("hello didnt work");
-      }
-      navigateToDropdown("menu-account-module");
-      navigateToPage("my-account");
-      myAccountClearField("FirstName");
-      myAccountSendKeys("FirstName", "null");
-      myAccountClearField("LastName");
-      myAccountSendKeys("LastName", "null");
-      myAccountClearField("MobilePhone");
-      myAccountSendKeys("MobilePhone", "null");
-      myAccountClearField("Address1");
-      myAccountSendKeys("Address1", "null");
-      myAccountClearField("AddressPrefix");
-      myAccountSendKeys("AddressPrefix", "null");
-      myAccountClearField("Address3");
-      myAccountSendKeys("Address3", "null");
-      myAccountClearField("Address4");
-      myAccountSendKeys("Address4", "null");
-      myAccountClearField("PostalCode");
-      myAccountSendKeys("PostalCode", "null");
-      myAccountClearField("MemorableQuestion");
-      myAccountSendKeys("MemorableQuestion", "null");
-      myAccountClearField("MemorableAnswer");
-      myAccountSendKeys("MemorableAnswer", "null");
-      jse.executeScript("scroll(0, 250);");
-      try {
-          clickMyAccountSubmit();
-      }catch (Error e){
-          System.out.println("hello didnt work");
-          fail();
-      }
-  }
-
-  @Test
-  @Ignore
-  public void shouldEditDisplayname() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("DisplayName");
-    myAccountSendKeys("DisplayName", "Testing");
-    clickMyAccountSubmit();
-  }
-  @Test
-  @Ignore("Assertion fails - need rework ")
   public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
 
 
@@ -171,7 +177,7 @@ public class OpenCSDAccountsAcceptanceTest {
             }
 
 
-    loginAndVerifySuccess(adminuser, adminuserPassword);
+    loginAndVerifySuccess(testusername, testpassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
     myAccountClearField("FirstName");
@@ -311,7 +317,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
+    loginAndVerifySuccess(testusername, testpassword);
     navigateToDropdown("menu-account-module");
     navigateToPage("my-account");
     myAccountClearField("FirstName");
