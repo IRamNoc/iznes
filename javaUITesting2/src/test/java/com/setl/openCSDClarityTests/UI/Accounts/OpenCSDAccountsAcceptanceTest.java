@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.junit.Rule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.*;
@@ -25,7 +27,7 @@ import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
-
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -99,6 +101,12 @@ public class OpenCSDAccountsAcceptanceTest {
         searchDatabaseFor("firstName", "null");
     }
 
+    public static void assureSubmitBtnIsInView() throws IOException, InterruptedException {
+        WebElement submitBtn = driver.findElement(By.id("udSubmit"));
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOf(submitBtn));
+    }
+
     @Test
     @Ignore
     public void shouldEditDisplayname() throws IOException, InterruptedException, SQLException {
@@ -108,8 +116,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("DisplayName");
         myAccountSendKeys("DisplayName", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("displayName", "Testing");
     }
@@ -121,8 +129,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("FirstName");
         myAccountSendKeys("FirstName", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("firstName", "Testing");
   }
@@ -135,8 +143,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("LastName");
         myAccountSendKeys("LastName", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("lastName", "Testing");
   }
@@ -149,8 +157,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("MobilePhone");
         myAccountSendKeys("MobilePhone", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("mobilePhone", "Testing");
   }
@@ -163,8 +171,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("Address1");
         myAccountSendKeys("Address1", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("address1", "Testing");
   }
@@ -177,8 +185,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("AddressPrefix");
         myAccountSendKeys("AddressPrefix", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("addressPrefix", "Testing");
   }
@@ -191,8 +199,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("Address3");
         myAccountSendKeys("Address3", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("address3", "Testing");
   }
@@ -205,8 +213,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("Address4");
         myAccountSendKeys("Address4", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("address4", "Testing");
   }
@@ -219,8 +227,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("PostalCode");
         myAccountSendKeys("PostalCode", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("postalCode", "Testing");
   }
@@ -234,8 +242,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("Address3");
         myAccountSendKeys("Address3", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("country", "Testing");
   }
@@ -248,8 +256,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("MemorableQuestion");
         myAccountSendKeys("MemorableQuestion", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("memorableQuestion", "Testing");
   }
@@ -262,8 +270,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("MemorableAnswer");
         myAccountSendKeys("MemorableAnswer", "Testing");
-        Thread.sleep(1000);
         scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
         clickMyAccountSubmit();
         searchDatabaseFor("memorableAnswer", "Testing");
   }
