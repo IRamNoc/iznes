@@ -426,7 +426,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void searchDatabaseFor(String tbl, String search) throws IOException, InterruptedException, SQLException {
-        Connection conn = DriverManager.getConnection(connectionString, usernameDB, passwordDB);
+        Connection conn = DriverManager.getConnection(connectionString, "root", "nahafusi61hucupoju78");
         ResultSet rs;
         Statement stmt = conn.createStatement();
         conn.createStatement();
