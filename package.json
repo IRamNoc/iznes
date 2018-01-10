@@ -1,0 +1,11 @@
+{
+  "name": "@setl/core-persist",
+  "version": "1.0.0",
+  "description": "A tool to persist form states",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SETL - Daniel Sarracayo",
+  "license": "ISC"
+}
