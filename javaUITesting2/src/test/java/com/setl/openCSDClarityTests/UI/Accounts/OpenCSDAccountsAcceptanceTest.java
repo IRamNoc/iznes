@@ -304,14 +304,4 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "Testing");
     clickMyAccountSubmit();
   }
-
-  @Test
-  public void shouldEditProfileText() throws IOException, InterruptedException {
-    loginAndVerifySuccess(testusername, testpassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    //myAccountClearField("ProfileText");
-    //myAccountSendKeys("ProfileText", "Testing");
-    clickMyAccountSubmit();
-  }
 }
