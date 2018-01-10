@@ -94,16 +94,21 @@ public class OpenCSDAccountsAcceptanceTest {
             fail();
         }
         Thread.sleep(2000);
+        searchDatabaseFor("firstName", "null");
+    }
+
+
+    public static void searchDatabaseFor(String tbl, String search) throws IOException, InterruptedException, SQLException {
         Connection conn = DriverManager.getConnection(connectionString, username, password);
         ResultSet rs;
         Statement stmt = conn.createStatement();
         conn.createStatement();
 
-        rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
+        rs = stmt.executeQuery("select * FROM tblUserDetails where " + tbl + " = \"" + search +"\" ");
 
         int rows = 0;
 
-        // checek there is only one result( there should be!! )
+        // check there is only one result( there should be!! )
         if (rs.last()) {
             rows = rs.getRow();
             // Move to back to the beginning
@@ -112,10 +117,11 @@ public class OpenCSDAccountsAcceptanceTest {
         assertEquals("there should be exactly one record", 1, rows );
 
         while (rs.next()) {
-            assertEquals("Expecting username to be null","null", rs.getString("firstName"));
+            assertEquals("Expecting username to be " + search,search, rs.getString(tbl));
             // check each parameter meets the field in the database
         }
     }
+
     @Test
     public void shouldEditDisplayname() throws IOException, InterruptedException {
         loginAndVerifySuccess(testusername, testpassword);
@@ -127,56 +133,14 @@ public class OpenCSDAccountsAcceptanceTest {
     }
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
-
-
-
-            Connection conn = DriverManager.getConnection(connectionString, username, password);
-            ResultSet rs;
-            Statement stmt = conn.createStatement();
-            conn.createStatement();
-
-            rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"null\" ");
-
-            int rows = 0;
-
-            // checek there is only one result( there should be!! )
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-                rs.beforeFirst();
-            }
-            assertEquals("there should be exactly one record", 1, rows );
-
-            while (rs.next()) {
-                assertEquals("Expecting username to be null","null", rs.getString("firstName"));
-                // check each parameter meets the field in the database
-            }
-
-
-    loginAndVerifySuccess(testusername, testpassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("FirstName");
-    myAccountSendKeys("FirstName", "Testing");
-    clickMyAccountSubmit();
-
-
-    rs = stmt.executeQuery("select * FROM tblUserDetails where firstName = \"Testing\" ");
-
-            rows = 0;
-
-            // check there is only one result( there should be!! )
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-                rs.beforeFirst();
-            }
-            assertEquals("there should be exactly one record", 1, rows );
-
-            while (rs.next()) {
-                assertEquals("Expecting username to be Testing","Testing", rs.getString("firstName"));
-                // check each parameter meets the field in the database
-            }
+        searchDatabaseFor("firstName", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("FirstName");
+        myAccountSendKeys("FirstName", "Testing");
+        clickMyAccountSubmit();
+        searchDatabaseFor("firstName", "Testing");
 
   }
 
