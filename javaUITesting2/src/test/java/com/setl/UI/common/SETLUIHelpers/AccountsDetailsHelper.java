@@ -7,10 +7,14 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
+
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToLegalEntitiesCreateSelection;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.selectNewPageToNavigateTo;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForLinkText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.clickManageUserSubmit;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -364,6 +368,57 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
     public static void scrollElementIntoViewByCss(String css){
         WebElement element = driver.findElement(By.cssSelector(css));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
+    public static void createHoldingUserAndLogin() throws IOException, InterruptedException {
+        navigateToAddUser();
+        enterManageUserUsername("TestUserNullInfo");
+        enterManageUserEmail("LoginNullInfo@setl.io");
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        enterManageUserPassword("Testpass123");
+        enterManageUserPasswordRepeat("Testpass123");
+        clickManageUserSubmit();
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        logout();
+        try {
+            loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
+        }catch (Error e){
+            System.out.println("login was not successful");
+            fail();
+        }
+    }
+
+    public static void setLoggedInUserAccountInfoToNull() throws IOException, InterruptedException {
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("FirstName");
+        myAccountSendKeys("FirstName", "null");
+        myAccountClearField("LastName");
+        myAccountSendKeys("LastName", "null");
+        myAccountClearField("MobilePhone");
+        myAccountSendKeys("MobilePhone", "null");
+        myAccountClearField("Address1");
+        myAccountSendKeys("Address1", "null");
+        myAccountClearField("AddressPrefix");
+        myAccountSendKeys("AddressPrefix", "null");
+        myAccountClearField("Address3");
+        myAccountSendKeys("Address3", "null");
+        myAccountClearField("Address4");
+        myAccountSendKeys("Address4", "null");
+        myAccountClearField("PostalCode");
+        myAccountSendKeys("PostalCode", "null");
+        myAccountClearField("MemorableQuestion");
+        myAccountSendKeys("MemorableQuestion", "null");
+        myAccountClearField("MemorableAnswer");
+        myAccountSendKeys("MemorableAnswer", "null");
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
+        try {
+            driver.findElement(By.cssSelector("#country .dropdown-item")).click();
+        }catch (Error e){
+            System.out.println("dropdown not visible");
+            fail();
+        }
     }
 
 }
