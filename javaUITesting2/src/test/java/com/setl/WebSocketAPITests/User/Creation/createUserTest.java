@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.User.Creation;
 import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.ResponseHandler;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -26,7 +27,7 @@ import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class createUserTest {
     private static final Logger logger = LogManager.getLogger(createUserTest.class);
 
@@ -53,7 +54,7 @@ public class createUserTest {
         String password = userDetails[1];
         String email = userDetails[2];
 
-        int MAXTRIES = 2;
+        int MAXTRIES = 20;
         for (int i = 0; i < MAXTRIES; i++) {
             try {
                 Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
