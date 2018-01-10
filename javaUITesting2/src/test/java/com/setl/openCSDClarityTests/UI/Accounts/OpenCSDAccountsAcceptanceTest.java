@@ -304,42 +304,4 @@ public class OpenCSDAccountsAcceptanceTest {
     myAccountSendKeys("MemorableAnswer", "Testing");
     clickMyAccountSubmit();
   }
-
-  @Test
-  public void shouldEditProfileText() throws IOException, InterruptedException {
-    loginAndVerifySuccess(testusername, testpassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    //myAccountClearField("ProfileText");
-    //myAccountSendKeys("ProfileText", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
-    loginAndVerifySuccess(testusername, testpassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("FirstName");
-    myAccountSendKeys("FirstName", "null");
-    myAccountClearField("LastName");
-    myAccountSendKeys("LastName", "null");
-    myAccountClearField("MobilePhone");
-    myAccountSendKeys("MobilePhone", "null");
-    myAccountClearField("Address1");
-    myAccountSendKeys("Address1", "null");
-    myAccountClearField("AddressPrefix");
-    myAccountSendKeys("AddressPrefix", "null");
-    myAccountClearField("Address3");
-    myAccountSendKeys("Address3", "null");
-    myAccountClearField("Address4");
-    myAccountSendKeys("Address4", "null");
-    myAccountClearField("PostalCode");
-    myAccountSendKeys("PostalCode", "null");
-    myAccountClearField("MemorableQuestion");
-    myAccountSendKeys("MemorableQuestion", "null");
-    myAccountClearField("MemorableAnswer");
-    myAccountSendKeys("MemorableAnswer", "null");
-    clickMyAccountSubmit();
-  }
 }
