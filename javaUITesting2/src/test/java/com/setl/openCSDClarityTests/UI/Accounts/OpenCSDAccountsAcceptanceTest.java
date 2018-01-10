@@ -92,7 +92,7 @@ public class OpenCSDAccountsAcceptanceTest {
         try {
             clickMyAccountSubmit();
         }catch (Error e){
-            System.out.println("updating account information was not succesful");
+            System.out.println("updating account information was not successful");
             fail();
         }
         Thread.sleep(2000);
@@ -108,12 +108,8 @@ public class OpenCSDAccountsAcceptanceTest {
         navigateToPage("my-account");
         myAccountClearField("DisplayName");
         myAccountSendKeys("DisplayName", "Testing");
-        try {
-            scrollElementIntoViewById("udSubmit");
-        }catch (Error e){
-            System.out.println("didnt work");
-            fail();
-        }
+        Thread.sleep(1000);
+        scrollElementIntoViewById("udSubmit");
         clickMyAccountSubmit();
         searchDatabaseFor("displayName", "Testing");
     }
