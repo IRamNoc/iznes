@@ -138,7 +138,6 @@ public class SetUp {
 /*
         //FirefoxDriver
         FirefoxOptions options = new FirefoxOptions();
-
         driver = new FirefoxDriver(options);
         //Resize the current window to the given dimension
         driver.manage().window().setSize(Screen);
