@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
 import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {NgRedux, select} from '@angular-redux/store';
 
 import {WalletNodeSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
+import {AppConfig, APP_CONFIG} from '@setl/utils';
 import {createWalletNodeSagaRequest} from '@setl/utils/common';
 import {
     WalletAddressRequestMessageBody,
@@ -42,7 +42,9 @@ interface RequestWalletInstrument {
 export class WalletNodeRequestService {
 
     constructor(private walletNodeSocketService: WalletNodeSocketService,
-        private http: Http) { }
+        private http: Http,
+        @Inject(APP_CONFIG) public appConfig: AppConfig
+    ) {}
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
 
@@ -152,12 +154,13 @@ export class WalletNodeRequestService {
      * @param {object} requestData {walletIds, chainid}
      * @returns {any}
      */
-    requestTransactionHistory(requestData: any, pageSize: number = 10, pageNum: number = 0): any {     
+    requestTransactionHistory(requestData: any, pageSize: number = 10, pageNum: number = 0): any {
         const messageBody: RequestTransactionHistoryBody = {
             topic: 'txhist',
             walletids: requestData.walletIds,
             chainid: requestData.chainId,
             pagesize: pageSize,
+            classid: requestData.asset || '',
             pagenum: pageNum
         };
 
@@ -165,11 +168,7 @@ export class WalletNodeRequestService {
     }
 
     requestTransactionHistoryFromReportingNode(msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
-        // enter your own proxy below for local development
-        // const requestUrl = `http://10.0.1.174:8087/http://${nodePath}:13544/sapi`;
-        const requestUrl = `http://${nodePath}:13544/rn1/sapi`;
-
-        return this.http.post(requestUrl, { request: msgId });
+        return this.http.post(this.appConfig.reportingNodeUrl, { request: msgId });
     }
 
 }
