@@ -138,14 +138,12 @@ public class SetUp {
 /*
         //FirefoxDriver
         FirefoxOptions options = new FirefoxOptions();
-
         driver = new FirefoxDriver(options);
         //Resize the current window to the given dimension
         driver.manage().window().setSize(Screen);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
         */
-
 
             //ChromeDriver
             ChromeOptions options = new ChromeOptions();
@@ -158,6 +156,11 @@ public class SetUp {
             options.addArguments("--test-type" );
             options.addArguments("window-size=1920,1200");
             options.addArguments("--no-sandbox");
+            options.addArguments("enable-automation");
+            options.addArguments("test-type=browser");
+            options.addArguments("disable-plugins");
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
             prefs.put("credentials_enable_service", false);
             prefs.put("profile.default_content_settings.popups", 0);
             prefs.put("password_manager_enabled", false);

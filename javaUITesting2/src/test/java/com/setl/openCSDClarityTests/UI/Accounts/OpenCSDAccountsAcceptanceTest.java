@@ -4,21 +4,30 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.Rule;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.PopupMessageHelper.verifyPopupMessageText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.workflows.LoginAndNavigateToPage.loginAndNavigateToPage;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -26,6 +35,18 @@ import static org.junit.Assert.fail;
 
 
 public class OpenCSDAccountsAcceptanceTest {
+
+    public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+
+    // Defines username and password to connect to database server.
+    static String username = "root";
+    static String password = "nahafusi61hucupoju78";
+
+    static String testusername = "TestUserNullInfo";
+    static String testpassword = "Testpass123";
+
+    JavascriptExecutor jse = (JavascriptExecutor)driver;
+
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -40,185 +61,218 @@ public class OpenCSDAccountsAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+
+    }
+    @Test
+    public void shouldLandOnLoginPage() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+    }
+
+    @Test
+    public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+    }
+
+    @Test
+    public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        logout();
+    }
+
+    @Test
+    public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        enterLoginCredentialsUserName("Emmanuel");
+        driver.findElement(By.id("login-submit")).click();
+    }
+
+    @Test
+    public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException, SQLException {
+        createHoldingUserAndLogin();
+        setLoggedInUserAccountInfoToNull();
+        scrollElementIntoViewById("udSubmit");
+        try {
+            clickMyAccountSubmit();
+        }catch (Error e){
+            System.out.println("updating account information was not successful");
+            fail();
+        }
+        Thread.sleep(2000);
+        searchDatabaseFor("firstName", "null");
+    }
+
+    public static void assureSubmitBtnIsInView() throws IOException, InterruptedException {
+        WebElement submitBtn = driver.findElement(By.id("udSubmit"));
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOf(submitBtn));
+    }
+
+    @Test
+    @Ignore
+    public void shouldEditDisplayname() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("displayName", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("DisplayName");
+        myAccountSendKeys("DisplayName", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("displayName", "Testing");
     }
   @Test
-  public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
+  public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("firstName", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("FirstName");
+        myAccountSendKeys("FirstName", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("firstName", "Testing");
   }
 
   @Test
-  public void shouldLoginAndVerifySuccess() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
+  public void shouldEditLastname() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("lastName", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("LastName");
+        myAccountSendKeys("LastName", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("lastName", "Testing");
   }
 
   @Test
-  public void shouldLogoutAndVerifySuccess() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    logout();
+  public void shouldEditMobilePhone() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("mobilePhone", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("MobilePhone");
+        myAccountSendKeys("MobilePhone", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("mobilePhone", "Testing");
   }
 
   @Test
-  public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
-    navigateToLoginPage();
-    enterLoginCredentialsUserName("Emmanuel");
-    driver.findElement(By.id("login-submit")).click();
+  public void shouldEditAddress() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("address1", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("Address1");
+        myAccountSendKeys("Address1", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("address1", "Testing");
   }
 
   @Test
-  public void shouldEditDisplayname() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("DisplayName");
-    myAccountSendKeys("DisplayName", "Testing");
-    clickMyAccountSubmit();
-  }
-  @Test
-  public void shouldEditFirstname() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("FirstName");
-    myAccountSendKeys("FirstName", "Testing");
-    clickMyAccountSubmit();
+  public void shouldEditAddressPrefix() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("addressPrefix", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("AddressPrefix");
+        myAccountSendKeys("AddressPrefix", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("addressPrefix", "Testing");
   }
 
   @Test
-  public void shouldEditLastname() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("LastName");
-    myAccountSendKeys("LastName", "Testing");
-    clickMyAccountSubmit();
+  public void shouldEditCity() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("address3", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("Address3");
+        myAccountSendKeys("Address3", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("address3", "Testing");
   }
 
   @Test
-  public void shouldEditMobilePhone() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("MobilePhone");
-    myAccountSendKeys("MobilePhone", "Testing");
-    clickMyAccountSubmit();
+  public void shouldEditState() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("address4", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("Address4");
+        myAccountSendKeys("Address4", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("address4", "Testing");
   }
 
   @Test
-  public void shouldEditAddress() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("Address1");
-    myAccountSendKeys("Address1", "Testing");
-    clickMyAccountSubmit();
+  public void shouldEditPostalCode() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("postalCode", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("PostalCode");
+        myAccountSendKeys("PostalCode", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("postalCode", "Testing");
   }
 
   @Test
-  public void shouldEditAddressPrefix() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("AddressPrefix");
-    myAccountSendKeys("AddressPrefix", "Testing");
-    clickMyAccountSubmit();
+  @Ignore
+  public void shouldEditCountry() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("country", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("Address3");
+        myAccountSendKeys("Address3", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("country", "Testing");
   }
 
   @Test
-  public void shouldEditCity() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("Address3");
-    myAccountSendKeys("Address3", "Testing");
-    clickMyAccountSubmit();
+  public void shouldEditMemorableQuestion() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("memorableQuestion", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("MemorableQuestion");
+        myAccountSendKeys("MemorableQuestion", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("memorableQuestion", "Testing");
   }
 
   @Test
-  public void shouldEditState() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("Address4");
-    myAccountSendKeys("Address4", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldEditPostalCode() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("PostalCode");
-    myAccountSendKeys("PostalCode", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldEditCountry() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("Address3");
-    Thread.sleep(2);
-    myAccountSendKeys("Address3", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldEditMemorableQuestion() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("MemorableQuestion");
-    myAccountSendKeys("MemorableQuestion", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldEditMemorableAnswer() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("MemorableAnswer");
-    myAccountSendKeys("MemorableAnswer", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldEditProfileText() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    //myAccountClearField("ProfileText");
-    //myAccountSendKeys("ProfileText", "Testing");
-    clickMyAccountSubmit();
-  }
-
-  @Test
-  public void shouldResetAllMyAccountDetails() throws IOException, InterruptedException {
-    loginAndVerifySuccess(adminuser, adminuserPassword);
-    navigateToDropdown("menu-account-module");
-    navigateToPage("my-account");
-    myAccountClearField("FirstName");
-    myAccountSendKeys("FirstName", "null");
-    myAccountClearField("LastName");
-    myAccountSendKeys("LastName", "null");
-    myAccountClearField("MobilePhone");
-    myAccountSendKeys("MobilePhone", "null");
-    myAccountClearField("Address1");
-    myAccountSendKeys("Address1", "null");
-    myAccountClearField("AddressPrefix");
-    myAccountSendKeys("AddressPrefix", "null");
-    myAccountClearField("Address3");
-    myAccountSendKeys("Address3", "null");
-    myAccountClearField("Address4");
-    myAccountSendKeys("Address4", "null");
-    myAccountClearField("PostalCode");
-    myAccountSendKeys("PostalCode", "null");
-    myAccountClearField("MemorableQuestion");
-    myAccountSendKeys("MemorableQuestion", "null");
-    myAccountClearField("MemorableAnswer");
-    myAccountSendKeys("MemorableAnswer", "null");
-    clickMyAccountSubmit();
+  public void shouldEditMemorableAnswer() throws IOException, InterruptedException, SQLException {
+        searchDatabaseFor("memorableAnswer", "null");
+        loginAndVerifySuccess(testusername, testpassword);
+        navigateToDropdown("menu-account-module");
+        navigateToPage("my-account");
+        myAccountClearField("MemorableAnswer");
+        myAccountSendKeys("MemorableAnswer", "Testing");
+        scrollElementIntoViewById("udSubmit");
+        assureSubmitBtnIsInView();
+        clickMyAccountSubmit();
+        searchDatabaseFor("memorableAnswer", "Testing");
   }
 }
