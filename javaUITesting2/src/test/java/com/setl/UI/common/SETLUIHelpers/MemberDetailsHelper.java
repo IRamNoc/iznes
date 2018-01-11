@@ -271,7 +271,7 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    static void scrollElementIntoViewById(String elementId){
+    public static void scrollElementIntoViewById(String elementId){
         WebElement element = driver.findElement(By.id(elementId));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
     }
