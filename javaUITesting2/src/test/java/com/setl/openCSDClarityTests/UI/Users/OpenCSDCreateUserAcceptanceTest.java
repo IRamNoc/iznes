@@ -24,15 +24,18 @@ import org.openqa.selenium.By;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.searchDatabaseFor;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -45,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = Timeout.millis(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -61,6 +64,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
 
         String userDetails[] = generateUserDetails();
@@ -87,13 +91,13 @@ public class OpenCSDCreateUserAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[4]/button")).click();
 
         String userAmount1 = driver.findElement(By.className("datagrid-foot-description")).getText();
-        String userAmount = userAmount1.substring(userAmount1.length() - 3);
+        String userAmount = userAmount1.substring(userAmount1.length() - 3).trim();
         String usernameID = "username-" + userAmount;
         assertTrue(driver.findElement(By.id(usernameID)).isDisplayed());
     }
 
-    @Ignore
     @Test
+    @Ignore
     public void shouldNotCreateDuplicateUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
@@ -123,14 +127,14 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPasswordRepeat(userDetails[1]);
         clickManageUserSubmit();
 
-        String userErrorTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
         String userErrorText = driver.findElement(By.className("jaspero__dialog-content")).getText();
-        assertTrue(userErrorTitle.contentEquals("Error!"));
-        assertTrue(userErrorText.contentEquals("Failed to update this user."));
+        System.out.println(userErrorText);
+        System.out.println("Failed to update this user.");
+        assertTrue(userErrorText.contains("Failed to update this user."));
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void shouldEditUserViaAPI() throws IOException, InterruptedException, ExecutionException {
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
@@ -159,10 +163,17 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateUser() throws IOException, InterruptedException {
+    public void shouldCreateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails();
-        clickManageUserSubmit();
+        Thread.sleep(2000);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail1@gmail.com");
     }
 
     @Test

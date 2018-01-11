@@ -3,6 +3,7 @@ package com.setl.WebSocketAPITests.User.Creation;
 import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.ResponseHandler;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -11,31 +12,33 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
+import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
+import static junit.framework.Assert.fail;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class createUserTest {
     private static final Logger logger = LogManager.getLogger(createUserTest.class);
 
     public static ResponseHandler print = js -> js.toJSONString();
 
-    @Before
-    public void setUp() throws Exception {
-    }
+    static ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    @AfterClass
+    public static void stop() {
+        executor.shutdown();
+        ;
+    }
 
     @Rule
     public Timeout globalTimeout = Timeout.millis(30000);
@@ -44,20 +47,33 @@ public class createUserTest {
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
     String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
+    private void runTest(Runnable r) {
+        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        for (int i = 0; i < 3; i++)
+            try {
+                executor.submit(r).get(30, TimeUnit.SECONDS);
+                break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        connection.disconnect();
+    }
+
 
     @Test
-    public void createUser() throws InterruptedException, ExecutionException {
+    public void createUser() {
 
         String userDetails[] = generateUserDetails();
         String userName = userDetails[0];
         String password = userDetails[1];
         String email = userDetails[2];
 
-        int MAXTRIES = 2;
-        for (int i = 0; i < MAXTRIES; i++) {
+        runTest(() -> {
             try {
-                Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
                 User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
                 System.out.println("userID " + user.getUserID());
@@ -65,13 +81,9 @@ public class createUserTest {
                 System.out.println("email " + user.getEmailAddress());
                 System.out.println("password " + password);
 
-                connection.disconnect();
-            } catch (Exception ex) {
-                logger.error("Login:", ex);
-                if (i >= MAXTRIES - 1)
-                    throw (ex);
+            } catch (InterruptedException | ExecutionException e) {
+                fail(e.getMessage());
             }
-            break;
-        }
+        });
     }
 }

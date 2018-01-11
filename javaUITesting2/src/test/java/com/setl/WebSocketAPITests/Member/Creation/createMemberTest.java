@@ -2,6 +2,7 @@ package com.setl.WebSocketAPITests.Member.Creation;
 
 import SETLAPIHelpers.Member;
 import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.Message;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,70 +23,81 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
 import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMember;
 import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMemberAndCaptureDetails;
+import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
-@RunWith(JUnit4.class)
+@RunWith(OrderedJUnit4ClassRunner.class)
 public class createMemberTest {
   private static final Logger logger = LogManager.getLogger(createMemberTest.class);
+  static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
-  @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);;
-  KeyHolder holder = new KeyHolder();
-  MessageFactory factory = new MessageFactory(holder);
-  SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-  SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
-  String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
+    @AfterClass
+    public static void stop(){
+        executor.shutdown();;
+    }
+
+
+    KeyHolder holder = new KeyHolder();
+    MessageFactory factory = new MessageFactory(holder);
+    SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
+    String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
+
+
+    private void runTest(Runnable r){
+        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        for (int i=0;i<3;i++)
+            try {
+                executor.submit(r).get(30, TimeUnit.SECONDS);
+                break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        connection.disconnect();
+    }
 
   @Test
+
   public void createNewMember() throws ExecutionException, InterruptedException {
 
-      int MAXTRIES=2;
-      for(int i=0; i<MAXTRIES; i++) {
+      runTest(()-> {
           try {
-              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-              createMember(factory, socket);
-
-              connection.disconnect();
-          } catch (Exception ex) {
-              logger.error("Login:", ex);
-              if(i>=MAXTRIES-1)
-                  throw(ex);
+              createMember(factory, socket, 1);
+          } catch (InterruptedException| ExecutionException e) {
+              fail(e.getMessage());
           }
-          break;
-      }
+      });
   }
+
 
   @Test
   public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
-      int MAXTRIES=2;
-      for(int i=0; i<MAXTRIES; i++) {
-          try {
-                Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+
+        runTest(()-> {
+            try {
                 String memberDetails[] = generateMemberDetails();
                 String memberName = memberDetails[0];
                 String email = memberDetails[1];
                 Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
                 assertTrue(member.getMemberName().equals(memberName));
-
-    connection.disconnect();
-          } catch (Exception ex) {
-              logger.error("Login:", ex);
-              if(i>=MAXTRIES-1)
-                  throw(ex);
-          }
-          break;
-      }
-  }
+            } catch (InterruptedException| ExecutionException e) {
+                fail(e.getMessage());
+            }
+        });
+    }
 
   @Test
   public void createMemberWithValidDataTest() throws InterruptedException, ExecutionException {

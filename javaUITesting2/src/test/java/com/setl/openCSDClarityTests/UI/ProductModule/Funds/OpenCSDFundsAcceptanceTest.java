@@ -368,15 +368,6 @@ public class OpenCSDFundsAcceptanceTest {
             System.out.println("lol");
             fail();
         }
-        driver.findElement(By.cssSelector("#country .ui-select-placeholder")).click();
-        try {
-            driver.findElement(By.cssSelector("#country .dropdown-item")).click();
-        }catch (Error e){
-            System.out.println("lol");
-            fail();
-        }
-        Thread.sleep(5000);
-
         /*
         Login as AM
         Edit a fund characteristic

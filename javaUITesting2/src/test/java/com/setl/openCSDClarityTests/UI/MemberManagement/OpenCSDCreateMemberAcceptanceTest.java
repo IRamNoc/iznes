@@ -53,11 +53,4 @@ public class OpenCSDCreateMemberAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         logout();
     }
-    @Ignore
-    @Test
-    public void shouldRequirePasswordToLogin() throws IOException, InterruptedException {
-      navigateToLoginPage();
-      enterLoginCredentialsUserName("Emmanuel");
-      driver.findElement(By.id("login-submit")).click();
-    }
 }
