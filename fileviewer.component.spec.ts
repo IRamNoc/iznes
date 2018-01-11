@@ -21,7 +21,6 @@ describe('FileViewerComponent', () => {
     const httpMock: HttpMock = new HttpMock();
 
     beforeEach(() => {
-
         TestBed.configureTestingModule({
             imports: [ ClarityModule ],
             declarations: [ FileViewerComponent ],
@@ -101,13 +100,13 @@ describe('FileViewerComponent', () => {
         );
         spyOn(pdfMockService, 'getPdf').and.callThrough();
         component.openFileModal().then(() => {
-            fixture.detectChanges();
-            expect(pdfMockService.getPdf).toHaveBeenCalled();
-            expect(typeof component.fileUrl === 'undefined').toBeFalsy();
-            expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-            expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
-            done();
-        },
+                fixture.detectChanges();
+                expect(pdfMockService.getPdf).toHaveBeenCalled();
+                expect(typeof component.fileUrl === 'undefined').toBeFalsy();
+                expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
+                expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
+                done();
+            },
             () => {
                 done();
             });
