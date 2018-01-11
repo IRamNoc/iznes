@@ -163,9 +163,10 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("2");
         Thread.sleep(2000);
         try {
             clickManageUserSubmit();
@@ -173,21 +174,37 @@ public class OpenCSDCreateUserAcceptanceTest {
             System.out.println("user was not created");
             fail();
         }
-        searchDatabaseFor("tblUsers","emailAddress", "TestEmail1@gmail.com");
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail2@gmail.com");
     }
 
     @Test
-    public void shouldCreateRandomUser() throws IOException, InterruptedException {
+    @Ignore
+    public void shouldCreateRandomUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
-        clickManageUserSubmit();
+        enterAllUserDetails("3");
+        Thread.sleep(2000);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail3@gmail.com");
     }
 
     @Test
-    public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException {
+    @Ignore
+    public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
-        clickManageUserSubmit();
+        enterAllUserDetails("4");
+        Thread.sleep(2000);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail4@gmail.com");
     }
 
     @Test
@@ -294,25 +311,25 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Test
     public void shouldCreateUserWithPermissionAdministrative() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("5");
     }
 
     @Test
     public void shouldCreateUserWithPermissionTransactional() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("6");
     }
 
     @Test
     public void shouldCreateUserWithPermissionWallets() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("7");
     }
 
     @Test
     public void shouldCreateUserWithPermissionChain() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("8");
     }
 
     @Ignore
