@@ -1,0 +1,120 @@
+<div class="header-breadcrumbs">
+    <h1 mltag="txt_chain">CHAINS</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="chainTabList" clrTabLink (click)="resetForm()"><i class="fa fa-th-list">&nbsp;</i><span mltag="txt_list">List</span>
+        </button>
+        <clr-tab-content *clrIfActive="showSearchTab">
+            <section class="form-block">
+
+                <clr-datagrid>
+                    <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainId'">Chain Identification</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainName'">Chain Name</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let chain of chainsList">
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button id="chainBtnEditChain" class="btn" (click)="editChain(chain)"><i class="fa fa-edit"></i></button>
+                                <button id="chainBtnDeleteChain" class="btn" (click)="chainToDelete = chain; showConfirmModal = true;">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{chain.chainId}}</clr-dg-cell>
+                        <clr-dg-cell>{{chain.chainName}}</clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <div *ngIf="!editForm; else editChainFTemplate">
+            <button id="chainTabAddNewChain" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
+                <span mltag="txt_newchain">Add New Chain</span></button>
+        </div>
+        <ng-template #editChainFTemplate>
+            <button id="chainTabEditChain" clrTabLink><i class="fa fa-pencil"></i> <span mltag="txt_editchain">Edit CHAIN</span></button>
+        </ng-template>
+        <clr-tab-content *clrIfActive="editForm">
+            <!-- CHAIN FORMS -->
+            <form [formGroup]="chainForm" novalidate (ngSubmit)="save(chainForm.value)">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-3">
+                                <label for="chainId" class="text-right pt-1" mltag="txt_chainidentification"> Chain Identification</label>
+                            </div>
+                            <div class="col-sm-9 text-left">
+                                <input *ngIf="modelForm.chainId > 0; else allowAddChainID" type="number" id="chainId" class="form-control" formControlName="chainId" [(ngModel)]="modelForm.chainId" placeholder="Chain Identification" disabled mltag="txt_chainidentification">
+                                <ng-template #allowAddChainID>
+                                    <input type="number" id="chainId" class="form-control" formControlName="chainId" placeholder="Chain Identification" mltag="txt_chainidentification">
+                                    <div class="mandatory text-danger"> *</div>
+                                </ng-template>
+                                <div *ngIf="chainForm.controls.chainId.hasError('required') && !chainForm.controls.chainId.hasError('invalid') && chainForm.controls.chainId.touched" class="text-danger"><span mltag="txt_thisfieldisrequired">This field is required</span></div>
+                                <div *ngIf="!chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.hasError('invalid')" class="text-danger">This field should be an integer</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-3">
+                                <label for="chainName" class="text-right pt-1" mltag="txt_chainname"> Chain Name</label>
+                            </div>
+                            <div class="col-sm-9 text-left">
+                                <input type="text" id="chainName" class="form-control" formControlName="chainName" [(ngModel)]="modelForm.chainName" placeholder="CHAIN Name" mltag="txt_chainname">
+                                <div class="mandatory text-danger"> *</div>
+                                <div *ngIf="chainForm.controls.chainName.hasError('required') && chainForm.controls.chainName.touched" class="text-danger">
+                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 text-center">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 text-left">
+                                <button id="chainBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!chainForm.valid">
+                                    <div *ngIf="!editForm; else editChainFBtSubmit">
+                                        <span mltag="txt_send">Send</span>
+                                    </div>
+                                    <ng-template #editChainFBtSubmit>
+                                        <span mltag="txt_update">Update</span>
+                                    </ng-template>
+                                </button>
+                                <button id="chainBtnResetForm" *ngIf="!editForm" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<clr-modal [(clrModalOpen)]="showModal">
+    <h3 class="modal-title text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{modalTitle}}</h3>
+    <div class="modal-body text-success text-center">
+        <p>{{modalText}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="showModal = false" mltag="txt_close">Close</button>
+    </div>
+</clr-modal>
+
+<!--CONFIRM MODALS-->
+<clr-modal [(clrModalOpen)]="showConfirmModal">
+    <h3 class="modal-title" mltag="txt_deletecurrentchain">Delete a CHAIN</h3>
+    <div class="modal-body">
+        <p><span mltag="txt_deleting">Deleting</span> <b>'{{ chainToDelete && chainToDelete.chainName }}'</b>,
+            <span mltag="txt_areyousure">are you sure</span>?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="chainConfirmModalBtnYes" (click)="confirmModal(0)" mltag="txt_no">No</button>
+        <button type="button" class="btn btn-primary" id="chainConfirmModalBtnYes" (click)="confirmModal(1)" mltag="txt_yes">Yes</button>
+    </div>
+</clr-modal>
