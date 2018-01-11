@@ -24,15 +24,18 @@ import org.openqa.selenium.By;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.searchDatabaseFor;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -45,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = Timeout.millis(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -160,10 +163,17 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateUser() throws IOException, InterruptedException {
+    public void shouldCreateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails();
-        clickManageUserSubmit();
+        Thread.sleep(2000);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail1@gmail.com");
     }
 
     @Test

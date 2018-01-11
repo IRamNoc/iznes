@@ -401,8 +401,8 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
     driver.findElement(By.id("delete-"+ delNo)).click();
   }
   public static void enterAllUserDetails(){
-    enterManageUserUsername("TestUser5");
-    enterManageUserEmail("TestEmail@gmail.com");
+    enterManageUserUsername("TestUser1");
+    enterManageUserEmail("TestEmail1@gmail.com");
     selectManageUserAccountDropdown();
     selectManageUserUserDropdown();
     enterManageUserPassword("Testpass123");
