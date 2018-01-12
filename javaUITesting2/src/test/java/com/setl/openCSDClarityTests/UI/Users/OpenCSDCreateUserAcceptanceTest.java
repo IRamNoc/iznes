@@ -48,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.millis(300000);
+    public Timeout globalTimeout = Timeout.millis(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -181,7 +181,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     public void shouldCreateRandomUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails("3");
-        Thread.sleep(2000);
+        Thread.sleep(750);
         try {
             clickManageUserSubmit();
         }catch (Error e){
@@ -195,7 +195,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails("4");
-        Thread.sleep(2000);
+        Thread.sleep(750);
         try {
             clickManageUserSubmit();
         }catch (Error e){
