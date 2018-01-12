@@ -33,7 +33,7 @@ export function substractYear(date: Date, offset: number): number {
  * @return {string}
  */
 export function unixTimestampToDateStr(unixTimeStamp: number, formatStr: string): string {
-    const dataM = moment.unix(unixTimeStamp);
+    const dataM = moment(unixTimeStamp);
     return dataM.format(formatStr);
 }
 
