@@ -14,19 +14,18 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
+import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertTrue;
 
 
@@ -35,70 +34,70 @@ public class createAccountTest {
 
   private static final Logger logger = LogManager.getLogger(createAccountTest.class);
 
-  @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);
+  static ExecutorService executor  = Executors.newSingleThreadExecutor();
+
+  @AfterClass
+  public static void stop(){
+      executor.shutdown();;
+  }
+
+
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
-  //SetlSocketClusterClient ws = new SetlSocketClusterClient(socket);
   String localAddress = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
-  @Test
-  public void createAccountWithValidDataTest() throws InterruptedException, ExecutionException {
 
-
-
-      int MAXTRIES=20;
-      for(int i=0; i<MAXTRIES; i++) {
-          try {
-              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-              createAccount(factory, socket, 1);
-              connection.disconnect();
-          } catch (Exception ex) {
-              logger.error("Login:", ex);
-              if(i>=MAXTRIES-1)
-                  throw(ex);
-          }
+  private void runTest(Runnable r){
+      Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+      for (int i=0;i<3;i++)
+      try {
+          executor.submit(r).get(30, TimeUnit.SECONDS);
           break;
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      } catch (ExecutionException e) {
+          e.printStackTrace();
+      } catch (TimeoutException e) {
+          e.printStackTrace();
       }
+      connection.disconnect();
   }
 
   @Test
-  public void failToCreateAccountWithIncorrectAccountID() throws InterruptedException, ExecutionException {
-
-      int MAXTRIES=20;
-      for(int i=0; i<MAXTRIES; i++) {
+  public void createAccountWithValidDataTest(){
+      runTest(()-> {
           try {
-              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+              createAccount(factory, socket, 1);
+          } catch (InterruptedException| ExecutionException e) {
+              fail(e.getMessage());
+          }
+      });
+  }
+
+  @Test
+  public void failToCreateAccountWithIncorrectAccountID() {
+      runTest(() -> {
+          try {
               AccountError accountError = (AccountError) createAccountError(factory, socket, 2);
               assertTrue("Permission Denied.".equals(accountError.getMessage()));
-              connection.disconnect();
-          } catch (Exception ex) {
-              logger.error("Login:", ex);
-              if(i>=MAXTRIES-1)
-                  throw(ex);
+          } catch (InterruptedException | ExecutionException e) {
+              fail(e.getMessage());
           }
-          break;
-      }
+      });
   }
 
   @Test
   public void failToCreateDuplicateAccount() throws InterruptedException, ExecutionException {
-
-      int MAXTRIES=20;
-      for(int i=0; i<MAXTRIES; i++) {
+      runTest(() -> {
           try {
-              Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+
               Account account = createAccount(factory, socket, 1);
               AccountError accountError = (AccountError) createAccountError(factory, socket, account.getAccountName(), account.getDescription(), 1);
               assertTrue("Account already exist under this member.".equals(accountError.getMessage()));
-              connection.disconnect();
-          } catch (Exception ex) {
-              logger.error("Login:", ex);
-              if(i>=MAXTRIES-1)
-                  throw(ex);
+          } catch (InterruptedException | ExecutionException e) {
+              fail(e.getMessage());
           }
-          break;
-      }
+      });
   }
 }
