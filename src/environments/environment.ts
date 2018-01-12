@@ -19,5 +19,6 @@ export const environment = {
         path: 'db'
     },
     numberDivider: 100000,
-    menuSpec
+    menuSpec,
+    reportingNodeUrl: "http://localhost:13544/sapi"
 };
