@@ -163,22 +163,21 @@ public class OpenCSDCreateUserAcceptanceTest {
     }
 
     @Test
-    @Ignore
     public void shouldCreateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails("2");
-        Thread.sleep(2000);
+        Thread.sleep(500);
         try {
             clickManageUserSubmit();
         }catch (Error e){
             System.out.println("user was not created");
             fail();
         }
-        searchDatabaseFor("tblUsers","emailAddress", "TestEmail2@gmail.com");
+        Thread.sleep(500);
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail2@setl.io");
     }
 
     @Test
-    @Ignore
     public void shouldCreateRandomUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails("3");
@@ -189,11 +188,10 @@ public class OpenCSDCreateUserAcceptanceTest {
             System.out.println("user was not created");
             fail();
         }
-        searchDatabaseFor("tblUsers","emailAddress", "TestEmail3@gmail.com");
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail3@setl.io");
     }
 
     @Test
-    @Ignore
     public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
         enterAllUserDetails("4");
@@ -204,7 +202,7 @@ public class OpenCSDCreateUserAcceptanceTest {
             System.out.println("user was not created");
             fail();
         }
-        searchDatabaseFor("tblUsers","emailAddress", "TestEmail4@gmail.com");
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail4@setl.io");
     }
 
     @Test

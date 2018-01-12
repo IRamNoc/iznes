@@ -344,6 +344,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
   public static void clickMyAccountSubmit() throws InterruptedException {
+        Thread.sleep(1000);
     try {
       driver.findElement(By.id("udSubmit")).click();
     }catch (Error e){
