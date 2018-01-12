@@ -1,0 +1,53 @@
+<div class="header-breadcrumbs">
+    <h1 mltag="txt_home">Home</h1>
+</div>
+
+<div class="p-1">
+    <h1><b>Welcome {{username}}</b></h1>
+    <div *ngIf="lastLogin">Last login: {{lastLogin | date: 'short'}}</div>
+    <div class="hSep"></div>
+    <h1><b>Dashboard</b></h1>
+
+    <app-dashboard [rows]="2" [columns]="4">
+        <app-counter-tile position="a1" icon="rocket" [count]="actionCount" color="red" route="messages">Actions</app-counter-tile>
+        <app-counter-tile position="b1" icon="random" [count]="connectionCount" color="green" route="connections">Connections</app-counter-tile>
+        <app-counter-tile position="c1" icon="envelope" [count]="unreadCount" color="orange" route="messages">New messages</app-counter-tile>
+        <app-counter-tile position="d1" icon="plug" count="0" color="blue">Contracts</app-counter-tile>
+        <app-basic-tile position="a2" color="green">
+            <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]} || {}"></ng-container>
+        </app-basic-tile>
+        <app-basic-tile position="b2" color="orange">
+            <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]} || {}"></ng-container>
+        </app-basic-tile>
+        <app-basic-tile position="c2:d2" color="blue">
+            <div class="col-xs-3">
+                <h1 style="margin-top:0">Search</h1>
+            </div>
+
+            <div class="input-group">
+                <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" placeholder="Search by Tx ID, Contract Address, Instruments or Address">
+                <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i class="fa fa-search"></i></button>
+            </div>
+
+        </app-basic-tile>
+
+    </app-dashboard>
+
+    <ng-template #assetTile let-asset="asset">
+        <div class="container-fluid" style="margin:0;" *ngIf="asset.identifier">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1 style="margin-top:0">{{ asset.total | moneyValue }}</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <span class="asset-id" title="asset.identifier" [innerHtml]="asset.identifier | truncate:10"></span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="hSep"></div>
+</div>
+
