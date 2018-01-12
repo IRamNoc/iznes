@@ -425,13 +425,13 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void searchDatabaseFor(String tbl, String search) throws IOException, InterruptedException, SQLException {
+    public static void searchDatabaseFor(String tblName, String columnName, String search) throws IOException, InterruptedException, SQLException {
         Connection conn = DriverManager.getConnection(connectionString, "root", "nahafusi61hucupoju78");
         ResultSet rs;
         Statement stmt = conn.createStatement();
         conn.createStatement();
 
-        rs = stmt.executeQuery("select * FROM tblUserDetails where " + tbl + " = \"" + search +"\" ");
+        rs = stmt.executeQuery("select * FROM " + tblName + " where " + columnName + " = \"" + search +"\" ");
 
         int rows = 0;
 
@@ -444,7 +444,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         Assert.assertEquals("there should be exactly one record", 1, rows );
 
         while (rs.next()) {
-            Assert.assertEquals("Expecting username to be " + search,search, rs.getString(tbl));
+            Assert.assertEquals("Expecting username to be " + search,search, rs.getString(columnName));
             // check each parameter meets the field in the database
         }
     }
