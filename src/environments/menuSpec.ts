@@ -623,6 +623,13 @@ export const menuSpec: MenuSpec = {
             element_id: 'menu-chain-administration',
             children: [
                 {
+                    label: 'Chains',
+                    label_txt: 'txt_chains',
+                    icon_class: 'fa fa-chain',
+                    element_id: 'chain-administration-chains',
+                    router_link: '/chain-admin/manage-chains'
+                },
+                {
                     label: 'Member',
                     label_txt: 'txt_member',
                     icon_class: 'fa fa-address-card',
@@ -791,6 +798,13 @@ export const menuSpec: MenuSpec = {
             icon_class: 'fa fa-chain',
             element_id: 'menu-chain-administration',
             children: [
+                {
+                    label: 'Chains',
+                    label_txt: 'txt_chains',
+                    icon_class: 'fa fa-chain',
+                    element_id: 'chain-administration-chains',
+                    router_link: '/chain-admin/manage-chains'
+                },
                 {
                     label: 'Member',
                     label_txt: 'txt_member',
