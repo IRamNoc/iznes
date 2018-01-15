@@ -630,6 +630,13 @@ export const menuSpec: MenuSpec = {
                     router_link: '/chain-admin/manage-chains'
                 },
                 {
+                    label: 'Wallet Nodes',
+                    label_txt: 'txt_walletnodes',
+                    icon_class: 'fa fa-code-fork',
+                    element_id: 'chain-administration-wallet-nodes',
+                    router_link: '/chain-admin/manage-wallet-nodes'
+                },
+                {
                     label: 'Member',
                     label_txt: 'txt_member',
                     icon_class: 'fa fa-address-card',
@@ -804,6 +811,13 @@ export const menuSpec: MenuSpec = {
                     icon_class: 'fa fa-chain',
                     element_id: 'chain-administration-chains',
                     router_link: '/chain-admin/manage-chains'
+                },
+                {
+                    label: 'Wallet Nodes',
+                    label_txt: 'txt_walletnodes',
+                    icon_class: 'fa fa-code-fork',
+                    element_id: 'chain-administration-wallet-nodes',
+                    router_link: '/chain-admin/manage-wallet-nodes'
                 },
                 {
                     label: 'Member',
