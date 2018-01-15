@@ -217,6 +217,9 @@ export {
     clearRequestedMyChainAccess,
     setRequestedMyChainAccess,
     SET_MY_CHAIN_ACCESS,
+    setRequestedChain,
+    clearRequestedChain,
+    SET_CHAINS_LIST,
 
     // Selectors
     getDefaultMyChainAccess,
