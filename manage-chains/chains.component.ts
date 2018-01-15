@@ -34,6 +34,7 @@ export class ManageChainsComponent implements OnInit, OnDestroy {
 
     language = 'en';
 
+    multiChainForm = [];
     chainForm: FormGroup;
     modelForm: any;
     editForm = false;
@@ -56,13 +57,13 @@ export class ManageChainsComponent implements OnInit, OnDestroy {
     @select(['chain', 'chainList', 'chainList']) chainListOb;
 
     constructor(
-            private _fb: FormBuilder,
-            private ngRedux: NgRedux<any>,
-            private _changeDetectorRef: ChangeDetectorRef,
-            private _alertsService: AlertsService,
-            private _chainService: ChainService,
-            private _confirmationService: ConfirmationService
-        ) {
+        private _fb: FormBuilder,
+        private ngRedux: NgRedux<any>,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _alertsService: AlertsService,
+        private _chainService: ChainService,
+        private _confirmationService: ConfirmationService
+    ) {
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
         this.subscriptionsArray.push(this.requestedChainOb.subscribe((requested) => this.getChainsListRequested(requested)));
         this.subscriptionsArray.push(this.chainListOb.subscribe((chainsList) => this.getChainsListFromRedux(chainsList)));

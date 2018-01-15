@@ -10,6 +10,7 @@ import {ManageChainMembershipComponent} from './manage-chain-membership/componen
 import {ManageAccountComponent} from './manage-account/component';
 import {ManageMemberComponent} from './manage-member/component';
 import {ManageChainsComponent} from './manage-chains/chains.component';
+import {ManageWalletNodesComponent} from './manage-wallet-nodes/component';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import {ManageChainsComponent} from './manage-chains/chains.component';
         ManageAccountComponent,
         ManageMemberComponent,
         ManageChainMembershipComponent,
-        ManageChainsComponent
+        ManageChainsComponent,
+        ManageWalletNodesComponent
     ],
     providers: [],
 })
