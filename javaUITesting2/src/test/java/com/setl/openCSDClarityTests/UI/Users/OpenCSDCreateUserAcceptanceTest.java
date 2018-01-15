@@ -48,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.millis(300000);
+    public Timeout globalTimeout = Timeout.millis(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -165,29 +165,44 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Test
     public void shouldCreateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
-        Thread.sleep(2000);
+        enterAllUserDetails("2");
+        Thread.sleep(500);
         try {
             clickManageUserSubmit();
         }catch (Error e){
             System.out.println("user was not created");
             fail();
         }
-        searchDatabaseFor("tblUsers","emailAddress", "TestEmail1@gmail.com");
+        Thread.sleep(500);
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail2@setl.io");
     }
 
     @Test
-    public void shouldCreateRandomUser() throws IOException, InterruptedException {
+    public void shouldCreateRandomUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
-        clickManageUserSubmit();
+        enterAllUserDetails("3");
+        Thread.sleep(750);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail3@setl.io");
     }
 
     @Test
-    public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException {
+    public void shouldNotCreateDuplicateUser() throws IOException, InterruptedException, SQLException {
         navigateToAddUser();
-        enterAllUserDetails();
-        clickManageUserSubmit();
+        enterAllUserDetails("4");
+        Thread.sleep(750);
+        try {
+            clickManageUserSubmit();
+        }catch (Error e){
+            System.out.println("user was not created");
+            fail();
+        }
+        searchDatabaseFor("tblUsers","emailAddress", "TestEmail4@setl.io");
     }
 
     @Test
@@ -294,25 +309,25 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Test
     public void shouldCreateUserWithPermissionAdministrative() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("5");
     }
 
     @Test
     public void shouldCreateUserWithPermissionTransactional() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("6");
     }
 
     @Test
     public void shouldCreateUserWithPermissionWallets() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("7");
     }
 
     @Test
     public void shouldCreateUserWithPermissionChain() throws IOException, InterruptedException {
         navigateToAddUser();
-        enterAllUserDetails();
+        enterAllUserDetails("8");
     }
 
     @Ignore
