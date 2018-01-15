@@ -153,6 +153,21 @@ export interface RequestWalletNodeListBody extends MemberNodeMessageBody {
     token: string;
 }
 
+export interface WalletNodeRequestBody extends MemberNodeMessageBody {
+    token: any;
+    nodeId: any;
+    nodeName: any;
+    nodeChain: any;
+    nodeAddr: any;
+    nodePath: any;
+    nodePort: any;
+}
+
+export interface DeleteWalletNodeRequestBody extends MemberNodeMessageBody {
+    token: any;
+    nodeId: any;
+}
+
 export interface RequestChainListBody extends MemberNodeMessageBody {
     token: string;
 }

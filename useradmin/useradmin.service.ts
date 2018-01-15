@@ -37,6 +37,8 @@ import {
 
     /* Wallet node list */
     RequestWalletNodeListBody,
+    WalletNodeRequestBody,
+    DeleteWalletNodeRequestBody,
 
     /* Chain list */
     RequestChainListBody,
@@ -53,11 +55,22 @@ import {
 import {
     SET_WALLET_NODE_LIST,
     setRequestedWalletNodeList,
+    clearRequestedWalletNodeList,
     setRequestedChainList,
     SET_CHAIN_LIST
 } from '@setl/core-store';
 import {NgRedux} from '@angular-redux/store';
 import _ from 'lodash';
+
+interface WalletNodeData {
+    walletNodeId?: any;
+    walletNodeName?: any;
+    chainId?: any;
+    chainName?: any;
+    nodeAddress?: any;
+    nodePath?: any;
+    nodePort?: any;
+}
 
 @Injectable()
 export class AdminUsersService {
@@ -73,21 +86,20 @@ export class AdminUsersService {
      * @param adminUserService
      * @param ngRedux
      */
-    static defaultRequestWalletNodeList(adminUserService: AdminUsersService, ngRedux: NgRedux<any>) {
+    static defaultRequestWalletNodeList(adminUsersService: AdminUsersService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedWalletNodeList());
 
         // Request the list.
-        const asyncTaskPipe = adminUserService.requestWalletNodeList();
+        const asyncTaskPipe = adminUsersService.requestWalletNodeList();
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_WALLET_NODE_LIST],
+            [SET_WALLET_NODE_LIST],  // SET est en fait un GETLIST
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
-
     /**
      * Default static call to get chain list.
      * @param adminUserService
@@ -424,6 +436,37 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    static setRequestedWalletNodes(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if (!boolValue) {
+            ngRedux.dispatch(clearRequestedWalletNodeList());
+        } else {
+            ngRedux.dispatch(setRequestedWalletNodeList());
+        }
+    }
+
+    /**
+     * Default static call to get wallet node list, and dispatch default actions, and other
+     * default task.
+     *
+     * @param adminUserService
+     * @param ngRedux
+     */
+    static defaultRequestWalletNodesList(adminUsersService: AdminUsersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedWalletNodeList());
+
+        // Request the list.
+        const asyncTaskPipe = adminUsersService.requestWalletNodeList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_WALLET_NODE_LIST],  // SET est en fait un GETLIST
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     public requestWalletNodeList(): any {
         /* Setup the message body. */
         const messageBody: RequestWalletNodeListBody = {
@@ -431,9 +474,53 @@ export class AdminUsersService {
             token: this.memberSocketService.token
         };
 
-        console.log('REQUESTING WALLET NODE LIST');
+        // console.log('REQUESTING WALLET NODE LIST');
 
         /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    saveWalletNode(wnData: WalletNodeData, ngRedux: NgRedux<any>): any {
+
+        const messageBody: WalletNodeRequestBody = {
+            RequestName: 'nwn',
+            token: this.memberSocketService.token,
+            nodeName: wnData.walletNodeName,
+            nodeChain: wnData.chainId,
+            chainName: wnData.chainName,
+            nodeAddr: wnData.nodeAddress,
+            nodePath: wnData.nodePath,
+            nodePort: wnData.nodePort,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    updateWalletNode(wnData: WalletNodeData, ngRedux: NgRedux<any>): any {
+
+        const messageBody: WalletNodeRequestBody = {
+            RequestName: 'udwn',
+            token: this.memberSocketService.token,
+            nodeId: wnData.walletNodeId,
+            nodeName: wnData.walletNodeName,
+            nodeChain: wnData.chainId,
+            chainName: wnData.chainName,
+            nodeAddr: wnData.nodeAddress,
+            nodePath: wnData.nodePath,
+            nodePort: wnData.nodePort,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    deleteWalletNode(wnData: DeleteWalletNodeRequestBody, ngRedux: NgRedux<any>): any {
+
+        const messageBody: WalletNodeRequestBody = {
+            RequestName: 'dwn',
+            token: this.memberSocketService.token,
+            nodeId: wnData.walletNodeId,
+        };
+
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
