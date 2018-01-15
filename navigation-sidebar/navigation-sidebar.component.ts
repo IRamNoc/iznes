@@ -5,7 +5,6 @@ import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
 import {immutableHelper} from '@setl/utils';
-import _ from 'lodash';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -17,21 +16,15 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     public unreadMessages;
     menuJson: any;
 
-    appConfig: AppConfig;
-
     private subscription: any;
 
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
 
     constructor(private router: Router,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private multilingualService: MultilingualService,
-                private ngRedux: NgRedux<any>) {
-        /* Stub. */
-        this.appConfig = appConfig;
-
-    }
+        @Inject(APP_CONFIG) public appConfig: AppConfig,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private multilingualService: MultilingualService,
+        private ngRedux: NgRedux<any>) { }
 
     ngOnInit() {
         /* Subscribe for language change. */

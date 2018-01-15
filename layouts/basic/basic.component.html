@@ -90,12 +90,14 @@
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
                     -->
-                    <router-outlet></router-outlet>
+                    <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
+                        <router-outlet #o="outlet"></router-outlet>
+                    </div>
 
                 </main>
-
             </div>
 
+            <!-- Setl Form Persist UI. -->
             <setl-persist></setl-persist>
 
         </div>
