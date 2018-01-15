@@ -155,7 +155,7 @@ export interface RequestWalletNodeListBody extends MemberNodeMessageBody {
 
 export interface WalletNodeRequestBody extends MemberNodeMessageBody {
     token: any;
-    nodeId: any;
+    nodeId?: any;
     nodeName: any;
     nodeChain: any;
     nodeAddr: any;
