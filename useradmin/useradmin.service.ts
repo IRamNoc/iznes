@@ -66,7 +66,6 @@ interface WalletNodeData {
     walletNodeId?: any;
     walletNodeName?: any;
     chainId?: any;
-    chainName?: any;
     nodeAddress?: any;
     nodePath?: any;
     nodePort?: any;
@@ -487,7 +486,6 @@ export class AdminUsersService {
             token: this.memberSocketService.token,
             nodeName: wnData.walletNodeName,
             nodeChain: wnData.chainId,
-            chainName: wnData.chainName,
             nodeAddr: wnData.nodeAddress,
             nodePath: wnData.nodePath,
             nodePort: wnData.nodePort,
@@ -504,7 +502,6 @@ export class AdminUsersService {
             nodeId: wnData.walletNodeId,
             nodeName: wnData.walletNodeName,
             nodeChain: wnData.chainId,
-            chainName: wnData.chainName,
             nodeAddr: wnData.nodeAddress,
             nodePath: wnData.nodePath,
             nodePort: wnData.nodePort,
@@ -513,9 +510,9 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    deleteWalletNode(wnData: DeleteWalletNodeRequestBody, ngRedux: NgRedux<any>): any {
+    deleteWalletNode(wnData: WalletNodeData, ngRedux: NgRedux<any>): any {
 
-        const messageBody: WalletNodeRequestBody = {
+        const messageBody: DeleteWalletNodeRequestBody = {
             RequestName: 'dwn',
             token: this.memberSocketService.token,
             nodeId: wnData.walletNodeId,
