@@ -28,6 +28,8 @@ import { SelectModule } from '@setl/utils';
 import { ClarityModule } from 'clarity-angular';
 import { SetlPipesModule } from '@setl/utils';
 
+import {PersistModule} from "@setl/core-persist";
+
 @NgModule({
     imports: [
         RouterModule,
@@ -37,7 +39,8 @@ import { SetlPipesModule } from '@setl/utils';
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
-        SetlPipesModule
+        SetlPipesModule,
+        PersistModule
     ],
     declarations: [
         /* Directives. */
