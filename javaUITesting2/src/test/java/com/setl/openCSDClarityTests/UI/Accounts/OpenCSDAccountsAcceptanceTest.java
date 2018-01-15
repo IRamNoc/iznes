@@ -97,7 +97,7 @@ public class OpenCSDAccountsAcceptanceTest {
             System.out.println("updating account information was not successful");
             fail();
         }
-        Thread.sleep(2000);
+        Thread.sleep(750);
         searchDatabaseFor("tblUserDetails","firstName", "null");
     }
 
