@@ -10,7 +10,7 @@ export const menuSpec: MenuSpec = {
             router_link: '/home'
         },
         {
-            label: 'My Dashboard',
+            label: 'My dashboard',
             label_txt: 'txt_mydashboard',
             icon_class: 'fa fa-bar-chart',
             element_id: 'menu-my-dashboard',

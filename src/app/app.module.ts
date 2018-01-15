@@ -1,11 +1,11 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
 import {RouterModule} from '@angular/router';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
+
 import {
     APP_CONFIG,
     SelectModule,
@@ -100,19 +100,14 @@ export function memberSocketServiceFactory() {
         BrowserModule,
         BrowserAnimationsModule,
         HttpModule,
-        FormsModule,
         ClarityModule.forRoot(),
         RouterModule.forRoot(ROUTES),
         SelectModule,
         ToasterModule,
         JasperoAlertsModule,
         NgReduxModule,
-        ReactiveFormsModule,
         NgxPaginationModule,
-
-        /* Internal modules. */
-        AppCoreModule,
-        AppViewsModule,
+        SidebarModule.forRoot(),
 
         /* External modules */
         SetlLoginModule,
@@ -132,7 +127,8 @@ export function memberSocketServiceFactory() {
         SetlServicesModule,
         ConnectionsModule,
         CoreWorkflowEngineModule,
-        T2sModule
+        T2sModule,
+        SetlLayoutModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
