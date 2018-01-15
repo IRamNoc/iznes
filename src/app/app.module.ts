@@ -5,6 +5,7 @@ import {ClarityModule} from 'clarity-angular';
 import {RouterModule} from '@angular/router';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
+import {SidebarModule} from 'ng-sidebar';
 
 import {
     APP_CONFIG,
@@ -49,14 +50,11 @@ import {CorpActionsModule} from '@setl/core-corp-actions';
 import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 import {CoreWorkflowEngineModule} from '@setl/core-wfe';
-import {SetlLayoutModule} from '@setl/core-layout';
+import {HomeComponent, SetlLayoutModule} from '@setl/core-layout';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
 import {OfiMainModule} from '@ofi/ofi-main';
-/* Internal App Modules. */
-import {AppCoreModule} from './core/app-core.module';
-import {AppViewsModule} from './app-views.module';
 /* Internal Components. */
 import {AppComponent} from './app.component';
 /**

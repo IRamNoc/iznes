@@ -2,13 +2,12 @@ import {Routes} from '@angular/router';
 /* Layouts. */
 import {BasicLayoutComponent, BlankLayoutComponent} from '@setl/core-layout';
 /* Components. */
-import {HomeComponent} from './home/home.component';
 import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
 import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
-import {FormElementsComponent} from '@setl/core-layout';
+import {HomeComponent, FormElementsComponent} from '@setl/core-layout';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
