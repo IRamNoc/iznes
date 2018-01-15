@@ -1,0 +1,150 @@
+<div class="header-breadcrumbs">
+    <h1 mltag="txt_funds">Wallet Nodes</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabNodeList" (click)="currentTab = null; showDashboard = true; showSameForm = false;">
+            <i class="fa fa-th-list"></i>&nbsp;<span mltag="txt_list">List</span>
+        </button>
+        <clr-tab-content *clrIfActive="showDashboard">
+            <section class="form-block">
+                <button id="btnAddNewNode" class="btn btn-success mb-2" type="button" (click)="newForm()">
+                    <i class="fa fa-plus"></i> <span mltag="txt_addnewwalletnode">Add New Wallet Node</span>
+                </button>
+                <clr-datagrid>
+                    <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'walletNodeName'"><span mltag="txt_nodename">Node Name</span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainName'"><span mltag="txt_chainname">Chain Name</span></clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let node of walletNodesList">
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button id="btnEditWalletNode" class="btn" (click)="editForm(node)"><i class="fa fa-edit"></i></button>
+                                <button id="btnDeleteWalletNode" class="btn" (click)="nodeToDelete = node; showConfirmModal = true;"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{node.walletNodeName}}</clr-dg-cell>
+                        <clr-dg-cell>{{node.chainName}}</clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab *ngFor="let currentForm of multiForm; let ix = index">
+        <div *ngIf="currentForm.modelForm.walletNodeId > 0; else newNode">
+            <button id="walletNodeTab_{{ix}}" clrTabLink (click)="showDashboard = false; currentTab = ix"><span>{{currentForm.modelForm.walletNodeName}}</span> <i class="fa fa-times-circle text-warning" id="walletNodeBtnCloseNodeRounded_{{ix}}" (click)="askToRemoveForm(ix)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
+        </div>
+        <ng-template #newNode>
+            <button id="walletNodeTab_{{ix}}" clrTabLink (click)="showDashboard = false; currentTab = ix"><span mltag="txt_newwalletnode">New Wallet Node</span> <i class="fa fa-times-circle text-warning" id="walletNodeBtnCloseNodeRounded_{{ix}}" (click)="askToRemoveForm(ix)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
+        </ng-template>
+        <clr-tab-content *clrIfActive="(!showDashboard && !showSameForm && currentTab === null && ix === (multiForm.length - 1)) || (!showDashboard && showSameForm && ix === currentTab) || (!showDashboard && !showSameForm && ix === currentTab)" [ngStyle]="{'padding-left': '0', 'padding-right': '0'}">
+            <form [formGroup]="currentForm.form" novalidate (ngSubmit)="save(currentForm.form.value, ix)">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-xl-12">
+                            <div *ngIf="currentForm.modelForm.walletNodeId > 0">
+                                <input type="hidden" id="walletNodeID_{{ix}}" class="form-control" formControlName="walletNodeId" [(ngModel)]="currentForm.modelForm.walletNodeId" placeholder="Node ID" mltag="txt_nodeId">
+                            </div>
+                            <div class="col-xl-2">
+                                <label for="walletNodeName_{{ix}}" class="text-right pt-1" mltag="txt_nodename"> Node Name</label>
+                            </div>
+                            <div class="col-xl-10 text-left">
+                                <input type="text" id="walletNodeName_{{ix}}" class="form-control" formControlName="walletNodeName" [(ngModel)]="currentForm.modelForm.walletNodeName" placeholder="Node Name" mltag="txt_nodename">
+                                <div class="mandatory text-danger"> *</div>
+                                <div *ngIf="currentForm.form.controls.walletNodeName.hasError('required') && currentForm.form.controls.walletNodeName.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12">
+                            <div class="col-xl-2">
+                                <label for="walletNodeAddress_{{ix}}" class="text-right pt-1" mltag="txt_nodeaddress"> Node Address</label>
+                            </div>
+                            <div class="col-xl-10 text-left">
+                                <input type="text" id="walletNodeAddress_{{ix}}" class="form-control" formControlName="nodeAddress" [(ngModel)]="currentForm.modelForm.nodeAddress" placeholder="Enter Node IP Address">
+                                <div class="mandatory text-danger"> *</div>
+                                <div *ngIf="currentForm.form.controls.nodeAddress.hasError('required') && currentForm.form.controls.nodeAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12">
+                            <div class="col-xl-2">
+                                <label for="walletNodePath_{{ix}}" class="text-right pt-1" mltag="txt_nodepath"> Node Path</label>
+                            </div>
+                            <div class="col-xl-10 text-left">
+                                <input type="text" id="walletNodePath_{{ix}}" class="form-control" formControlName="nodePath" [(ngModel)]="currentForm.modelForm.nodePath" placeholder="Enter Node Path" mltag="txt_enternodepath">
+                                <div class="mandatory text-danger"> *</div>
+                                <div *ngIf="currentForm.form.controls.nodePath.hasError('required') && currentForm.form.controls.nodePath.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12">
+                            <div class="col-xl-2">
+                                <label for="walletNodePort_{{ix}}" class="text-right pt-1" mltag="txt_nodeport"> Node Port</label>
+                            </div>
+                            <div class="col-xl-10 text-left">
+                                <input type="text" id="walletNodePort_{{ix}}" class="form-control" formControlName="nodePort" [(ngModel)]="currentForm.modelForm.nodePort" placeholder="Enter Node Port" mltag="txt_enternodeport">
+                                <div class="mandatory text-danger"> *</div>
+                                <div *ngIf="currentForm.form.controls.nodePort.hasError('required') && currentForm.form.controls.nodePort.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12">
+                            <div class="col-xl-2">
+                                <label for="walletNodeChain_{{ix}}" class="text-right pt-1" mltag="txt_chain"> Chain</label>
+                            </div>
+                            <div *ngIf="currentForm.modelForm.walletNodeId === 0; else showDisabledChainId" class="col-xl-10 text-left ngSelectFix" id="walletNodeChain_{{ix}}">
+                                <ng-select [items]="chainsListOptions" placeholder="Select" formControlName="chainId" mltag="txt_select"></ng-select>
+                                <div class="mandatory mandatorySelect text-danger"> *</div>
+                                <div *ngIf="currentForm.form.controls.chainId.hasError('required') && currentForm.form.controls.chainId.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
+                            <ng-template #showDisabledChainId>
+                                <div class="col-xl-10 text-left" id="walletNodeChain_{{ix}}">
+                                    <input type="text" id="walletNodeChain_{{ix}}" class="form-control" formControlName="chainId" [(ngModel)]="currentForm.modelForm.chainId" disabled placeholder="Chain Name" mltag="txt_chainname">
+                                    <div class="mandatory text-danger"> *</div>
+                                    <div *ngIf="currentForm.form.controls.chainId.hasError('required') && currentForm.form.controls.chainId.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <div class="col-xl-2"></div>
+                            <div class="col-xl-10 text-left">
+                                <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!currentForm.form.valid && !isDebug">
+                                    <div *ngIf="currentForm.modelForm.walletNodeId > 0; else editWalletNodeBtSubmit">
+                                        <span mltag="txt_update">Update</span>
+                                    </div>
+                                    <ng-template #editWalletNodeBtSubmit>
+                                        <span mltag="txt_send">Send</span>
+                                    </ng-template>
+                                </button>
+                                <button id="walletNodeBtnResetForm" *ngIf="currentForm.modelForm.walletNodeId === 0" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!--CONFIRM MODALS-->
+<clr-modal [(clrModalOpen)]="showConfirmModal">
+    <h3 *ngIf="nodeToClose !== null" class="modal-title" mltag="txt_closecurrentwalletnode">Close Wallet Node : {{multiForm[nodeToClose].form.controls.walletNodeName.value}}</h3>
+    <h3 *ngIf="nodeToDelete !== null" class="modal-title" mltag="txt_deletecurrentwalletnode">Delete Wallet Node : {{nodeToDelete.walletNodeName}}</h3>
+    <div class="modal-body">
+        <p mltag="txt_areyousure">Are you sure?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="fundConfirmModalBtnYes" (click)="confirmModal(0)" mltag="txt_no">No</button>
+        <button type="button" class="btn btn-primary" id="fundConfirmModalBtnNo" (click)="confirmModal(1)" mltag="txt_yes">Yes</button>
+    </div>
+</clr-modal>
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showTextModal">
+    <h3 class="modal-title">{{modalTitle}}</h3>
+    <div class="modal-body text-center">
+        {{modalText}}
+    </div>
+</clr-modal>
