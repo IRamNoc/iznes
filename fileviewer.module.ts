@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FileViewerComponent} from './fileviewer.component';
 import {ClarityModule} from 'clarity-angular';
+import {MemberNodeMessageBody} from '@setl/utils/common';
+
 @NgModule({
     declarations: [
         FileViewerComponent
@@ -19,4 +21,10 @@ import {ClarityModule} from 'clarity-angular';
     ]
 })
 export class FileViewerModule {
+}
+
+export interface ValidateFileMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: string;
+    fileHash: string;
 }

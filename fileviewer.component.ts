@@ -1,12 +1,16 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
+import {SagaHelper} from '@setl/utils';
 import {Http} from '@angular/http';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
+
+import {ValidateFileMessageBody} from "./fileviewer.module";
 
 @Component({
     selector: 'setl-file-viewer',
@@ -26,7 +30,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public fileType: string = null;
     public fileModal = false;
     public baseUrl = '';
-    public validateUrl = '';
+    public downloadId: string = null;
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
@@ -36,11 +40,11 @@ export class FileViewerComponent implements OnInit, OnChanges {
      */
     public constructor(
         private alertsService: AlertsService,
-        private http: Http,
         private memberSocketService: MemberSocketService,
         private sanitizer: DomSanitizer,
         private pdfService: PdfService,
         private changeDetectorRef: ChangeDetectorRef,
+        private ngRedux: NgRedux<any>,
         @Inject(APP_CONFIG) private appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
@@ -67,49 +71,49 @@ export class FileViewerComponent implements OnInit, OnChanges {
         }
     }
 
-    /**
-     * On Init
-     *
-     * @return {void}
-     */
     public ngOnInit() {
-        if (this.pdfId === null) {
-            this.setUrls();
-        }
+
     }
 
     public ngOnChanges() {
         this.fileUrl = null;
     }
 
-    public setUrls() {
-        return new Promise((resolve, reject) => {
+    public setFileHash() {
+        if (this.pdfId !== null && this.fileUrl == null) {
+            return new Promise((resolve) => {
+                this.pdfService.getPdf(this.pdfId).then(
+                    (fileHash) => {
+                        this.fileHash = fileHash;
+                        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+                            this.baseUrl +
+                            '/mn/file?' +
+                            'method=retrieve' +
+                            '&downloadId=' + this.downloadId
+                        );
+                        resolve();
+                    }
+                );
+            });
+        }
+        return new Promise((resolve) => {
             this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
                 this.baseUrl +
                 '/mn/file?' +
                 'method=retrieve' +
-                '&userId=' + this.userId +
-                '&walletId=' + this.walletId +
-                '&token=' + this.token +
-                '&fileHash=' + this.fileHash
+                '&downloadId=' + this.downloadId
             );
-            this.validateUrl = this.baseUrl +
-                '/mn/file?' +
-                'method=validate' +
-                '&userId=' + this.userId +
-                '&walletId=' + this.walletId +
-                '&token=' + this.token +
-                '&fileHash=' + this.fileHash;
             resolve();
         });
     }
 
     public openFileModal() {
         return new Promise((resolve, reject) => {
-            this.setUrls().then(() => {
+            this.setFileHash().then(() => {
                 this.validateFileExists().then(() => {
                     resolve();
-                },(error) => {
+                }, (error) => {
+                    console.log('Error occurred!' + error);
                     reject();
                 });
             });
@@ -117,26 +121,45 @@ export class FileViewerComponent implements OnInit, OnChanges {
     }
 
     public validateFileExists() {
+        const messageBody: ValidateFileMessageBody = {
+            RequestName: 'validateFile',
+            token: this.memberSocketService.token,
+            walletId: this.walletId,
+            fileHash: this.fileHash
+        };
+
         return new Promise((resolve, reject) => {
-            this.http.get(this.validateUrl).subscribe(
-                (response) => {
-                    const data = response.json();
+            const asyncTaskPipes = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipes,
+                {},
+                (result) => {
+                    const data = result[1].Data;
                     if (data.error) {
                         this.fileModal = false;
                         this.showAlert('Unable to view file', 'error');
                     } else {
                         this.fileModal = true;
-                        this.fileName = data.fileName;
+                        this.fileName = data.filename;
                         this.fileType = data.mimeType;
+                        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+                            this.baseUrl +
+                            '/mn/file?' +
+                            'method=retrieve' +
+                            '&downloadId=' + data.downloadId +
+                            '&walletId=' + this.walletId
+                        );
                     }
                     this.changeDetectorRef.markForCheck();
                     resolve();
                 },
-                err => {
+                (err) => {
                     this.showAlert(err, 'error');
                     reject();
                 }
-            );
+            ));
         });
     }
 
