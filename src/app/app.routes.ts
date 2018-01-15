@@ -63,7 +63,13 @@ import {
 /**
  * Manage member module.
  */
-import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComponent, ManageChainsComponent} from '@setl/core-manage-member';
+import {
+    ManageAccountComponent,
+    ManageChainMembershipComponent,
+    ManageMemberComponent,
+    ManageChainsComponent,
+    ManageWalletNodesComponent,
+} from '@setl/core-manage-member';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
@@ -285,6 +291,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'manage-chains',
                         component: ManageChainsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'manage-wallet-nodes',
+                        component: ManageWalletNodesComponent,
                         canActivate: [LoginGuardService]
                     }
                 ],
