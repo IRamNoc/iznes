@@ -341,7 +341,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             (data) => {
                 AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
                 this.showSuccess('Your Wallet Node has been deleted successfully!');
-                this.showSearchTab = true;
             },
             (data) => {
                 console.log('error: ', data);
