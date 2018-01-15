@@ -9,15 +9,25 @@ import {SelectModule} from '@setl/utils';
 import {ManageChainMembershipComponent} from './manage-chain-membership/component';
 import {ManageAccountComponent} from './manage-account/component';
 import {ManageMemberComponent} from './manage-member/component';
+import {ManageChainsComponent} from './manage-chains/chains.component';
 
 @NgModule({
     imports: [
         // Vendor modules
-        FormsModule, ReactiveFormsModule, ClarityModule, CommonModule, SelectModule],
+        FormsModule,
+        ReactiveFormsModule,
+        ClarityModule,
+        CommonModule,
+        SelectModule
+    ],
     exports: [],
     declarations: [
         // Local components
-        ManageAccountComponent, ManageMemberComponent, ManageChainMembershipComponent],
+        ManageAccountComponent,
+        ManageMemberComponent,
+        ManageChainMembershipComponent,
+        ManageChainsComponent
+    ],
     providers: [],
 })
 export class CoreManageMemberModule {
