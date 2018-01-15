@@ -20,7 +20,7 @@ import {ConfirmationService} from '@setl/utils';
 @Component({
     selector: 'setl-persist',
     templateUrl: 'component.html',
-    styleUrls: ['component.css'],
+    styleUrls: ['component.scss'],
     providers: [ToasterService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
