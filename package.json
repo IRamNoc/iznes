@@ -5,7 +5,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "docker": "npm rebuild node-sass --force && /usr/src/node_modules/node-sass/bin/node-sass /usr/src/src/styles.scss /usr/src/src/styles.css && ng serve",
+        "docker": "concurrently \"sass --watch src/styles.scss:src/styles.css -I node_modules/@setl/core-layout/css\" \"ng serve\"",
         "build": "ng build",
         "test": "ng test",
         "test-single": "ng test --single-run -sm=false",
@@ -57,6 +57,7 @@
         "clarity-angular": "0.10.16",
         "clarity-icons": "^0.10.20",
         "clarity-ui": "^0.10.20",
+        "concurrently": "^3.5.1",
         "core-js": "^2.5.3",
         "immutable": "^3.8.1",
         "karma-headless-chrome-launcher": "0.0.6",

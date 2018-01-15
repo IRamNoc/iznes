@@ -4,10 +4,10 @@ LABEL description="OpenCSD Frontend Docker Container"
 
 RUN mkdir -p /usr/src/
 WORKDIR /usr/src/
-COPY . /usr/src/
 
-RUN apt-get update \
-    && apt-get install -y lsof nmap vim
+RUN apt-get -q update \
+    && apt-get install -qy lsof nmap vim ruby-full rubygems \
+    && gem install sass
 
 EXPOSE 4200
 
