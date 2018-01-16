@@ -2,13 +2,12 @@ import {Routes} from '@angular/router';
 /* Layouts. */
 import {BasicLayoutComponent, BlankLayoutComponent} from '@setl/core-layout';
 /* Components. */
-import {HomeComponent} from './home/home.component';
 import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
 import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
-import {FormElementsComponent} from './ui-elements/form-elements.component';
+import {HomeComponent, FormElementsComponent} from '@setl/core-layout';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -65,7 +64,13 @@ import {
 /**
  * Manage member module.
  */
-import {ManageAccountComponent, ManageChainMembershipComponent, ManageMemberComponent} from '@setl/core-manage-member';
+import {
+    ManageAccountComponent,
+    ManageChainMembershipComponent,
+    ManageMemberComponent,
+    ManageChainsComponent,
+    ManageWalletNodesComponent,
+} from '@setl/core-manage-member';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
@@ -106,12 +111,14 @@ export const ROUTES: Routes = [
             {
                 path: 'core-home',
                 component: HomeComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
+                data: { state: 'home' }
             },
             {
                 path: 'messages',
                 component: SetlMessagesComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
+                data: { state: 'messages' }
             },
             {
                 path: 'account',
@@ -120,6 +127,7 @@ export const ROUTES: Routes = [
                         path: 'my-account',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
+                        data: { state: 'my-account' }
                     }
                 ]
             },
@@ -179,19 +187,23 @@ export const ROUTES: Routes = [
                     {
                         path: 'balances',
                         component: SetlBalancesComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
+                        data: { state: 'reports-my-account' }
                     },
                     {
                         path: 'issue',
                         component: SetlIssueComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
+                        data: { state: 'reports-issue' }
                     },
                     {
                         path: 'transactions',
                         component: SetlTransactionsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
+                        data: { state: 'reports-transactions' }
                     },
-                ]
+                ],
+                data: { state: 'reports' }
             },
             {
                 path: 'connections',
@@ -240,12 +252,14 @@ export const ROUTES: Routes = [
                     {
                         path: 'users',
                         component: AdminUsersComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
+                        data: { state: 'admin-users' }
                     },
                     {
                         path: 'wallets',
                         component: AdminWalletsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
+                        data: { state: 'admin-wallets' }
                     },
                     {
                         path: 'permissions',
@@ -282,6 +296,16 @@ export const ROUTES: Routes = [
                     {
                         path: 'chain-membership',
                         component: ManageChainMembershipComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'manage-chains',
+                        component: ManageChainsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'manage-wallet-nodes',
+                        component: ManageWalletNodesComponent,
                         canActivate: [LoginGuardService]
                     }
                 ],

@@ -10,7 +10,7 @@ export const menuSpec: MenuSpec = {
             router_link: '/home'
         },
         {
-            label: 'My Dashboard',
+            label: 'My dashboard',
             label_txt: 'txt_mydashboard',
             icon_class: 'fa fa-bar-chart',
             element_id: 'menu-my-dashboard',
@@ -623,6 +623,20 @@ export const menuSpec: MenuSpec = {
             element_id: 'menu-chain-administration',
             children: [
                 {
+                    label: 'Chains',
+                    label_txt: 'txt_chains',
+                    icon_class: 'fa fa-chain',
+                    element_id: 'chain-administration-chains',
+                    router_link: '/chain-admin/manage-chains'
+                },
+                {
+                    label: 'Wallet Nodes',
+                    label_txt: 'txt_walletnodes',
+                    icon_class: 'fa fa-code-fork',
+                    element_id: 'chain-administration-wallet-nodes',
+                    router_link: '/chain-admin/manage-wallet-nodes'
+                },
+                {
                     label: 'Member',
                     label_txt: 'txt_member',
                     icon_class: 'fa fa-address-card',
@@ -798,6 +812,20 @@ export const menuSpec: MenuSpec = {
             icon_class: 'fa fa-chain',
             element_id: 'menu-chain-administration',
             children: [
+                {
+                    label: 'Chains',
+                    label_txt: 'txt_chains',
+                    icon_class: 'fa fa-chain',
+                    element_id: 'chain-administration-chains',
+                    router_link: '/chain-admin/manage-chains'
+                },
+                {
+                    label: 'Wallet Nodes',
+                    label_txt: 'txt_walletnodes',
+                    icon_class: 'fa fa-code-fork',
+                    element_id: 'chain-administration-wallet-nodes',
+                    router_link: '/chain-admin/manage-wallet-nodes'
+                },
                 {
                     label: 'Member',
                     label_txt: 'txt_member',

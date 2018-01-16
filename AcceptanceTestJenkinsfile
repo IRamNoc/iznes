@@ -35,6 +35,10 @@ timestamps {
                 }
             }
 
+            stage('Clear down database') {
+                        sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd setl/db-backup/ && pwd && ls && ./cleanblockchain\''
+                    }
+
             stage('Check Out Tests') {
                 checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
                           doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
@@ -45,8 +49,8 @@ timestamps {
             stage('Run Acceptance Tests') {
                 try{
                     sh '''rm -f target/test-attachments/*.jpg &&
-                    cd ~/workspace/OpenCSDClarityUIAcceptanceTests/javaUITesting2 
-                    export DISPLAY=:10 
+                    cd ~/workspace/OpenCSDClarityUIAcceptanceTests/javaUITesting2
+                    export DISPLAY=:10
                     ./gradlew clean build --debug'''
 
 
@@ -69,10 +73,6 @@ timestamps {
             throw e
         } finally {
             notifySlack(currentBuild.result)
-        }
-
-        stage('Clear down database') {
-            sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd setl/db-backup/ && pwd && ls && ./cleanblockchain\''
         }
     }
 }
