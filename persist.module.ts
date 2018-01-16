@@ -19,7 +19,8 @@ import {PersistDirective} from './directive/directive';
 @NgModule({
     declarations: [
         /* Controls. */
-        PersistControlsComponent
+	    PersistControlsComponent,
+	    PersistDirective
     ],
     exports: [
         /* Controls. */
