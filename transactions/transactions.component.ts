@@ -31,9 +31,9 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     @select(['chain', 'myChainAccess', 'myChainAccess']) myChainAccessOb: Observable<number>;
 
     constructor(private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private walletNodeRequestService: WalletNodeRequestService) {
-        
+                private changeDetectorRef: ChangeDetectorRef,
+                private walletNodeRequestService: WalletNodeRequestService) {
+
         this.initTabs();
 
         this.onLoadSubscriptions.push(
@@ -53,7 +53,8 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     private initSubscriptions(): void {
         this.subscriptionsArray.push(
@@ -99,13 +100,14 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     private getTransactionsFromReportingNode(data: any): void {
         const msgsig: string = (data[1]) ? data[1].data.msgsig : null;
 
-        if(msgsig) {
+        if (msgsig) {
             this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
                 data[1].data.msgsig,
                 this.connectedChainId,
                 this.myChainAccess.nodeAddress
             ).subscribe((res) => {
                 this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
+                this.changeDetectorRef.markForCheck();
             }, (e) => {
                 console.log("reporting node error", e);
             });
@@ -122,7 +124,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
      */
     handleView(index): void {
         const transaction = this.transactions[index];
-        
+
         let i;
         for (i = 0; i < this.tabs.length; i++) {
             if (this.tabs[i].hash === transaction.hash) {
@@ -179,8 +181,8 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         });
 
         this.changeDetectorRef.detectChanges();
-        
-        this.tabs.splice(index,1);
+
+        this.tabs.splice(index, 1);
         this.tabs[0].active = true;
     }
 
