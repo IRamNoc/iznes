@@ -1,0 +1,55 @@
+<ng-container *ngIf="config">
+    <div class="message-body" *ngIf="config.messageBody">{{config.messageBody}}</div>
+
+    <div class="message-fields" *ngIf="config.content">
+        <div class="message-field" *ngFor="let field of config.content">
+            <div class="message-field--name" mltag="field.name_mltag">{{field.name}}</div>
+            <div class="message-field--content">{{field.content}}</div>
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+    
+    <div class="message-actions" *ngIf="config.actions && !isActed">
+        <div class="message-action" *ngFor="let action of config.actions">
+            <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)" mltag="action.text_tag">{{action.text}}</button>
+        </div>
+    </div>
+
+    <div class="message-state" *ngIf="isActed">
+        <i class="fa fa-check"></i>
+        <span>{{config.completeText}}</span>
+    </div>
+</ng-container>
+
+<!-- Accept connection modal -->
+<clr-modal [(clrModalOpen)]="isModalDisplayed">
+    <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
+    <div class="modal-body">
+        <ng-select
+                id="accept-subportfolio-addr-link"
+                [items]="addressList"
+                [allowClear]=true
+                placeholder="Select a sub-portfolio"
+                [formControl]="formGroup.controls['selectedAddress']">
+        </ng-select>
+        <span class="mandatory-field">*</span>
+        <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched"
+             class="text-danger">This field is required
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button"
+                id="accept-connection-cancel-btn"
+                class="btn btn-outline"
+                (click)="handleAcceptButtonClick(false)">
+            Cancel
+        </button>
+        <button type="button"
+                id="accept-connection-submit-btn"
+                class="btn btn-primary"
+                (click)="handleAcceptButtonClick(true)">
+            Submit
+        </button>
+    </div>
+</clr-modal>
