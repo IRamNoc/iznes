@@ -13,7 +13,7 @@ import {
 import {setRequestedFromConnections, setRequestedToConnections, setRequestedWalletAddresses} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils/index';
-import {MessageActionsConfig, MessagesService} from '@setl/core-messages';
+import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
 
 @Component({
     selector: 'app-my-connections',
@@ -276,7 +276,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (response) => {
-                    this.showSuccessResponse('The connection has successfully been created');
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                     this.isAcceptedConnectionDisplayed = true;
@@ -413,56 +412,46 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     handleSendMessage(response: any) {
         const acceptPayload = {
-            leiId: response.LeiID,
-            senderLeiId: response.LeiSender,
+            topic: 'newconnection',
+            leiId: response.LeiSender,
+            senderLeiId: response.LeiID,
             address: response.keyDetail,
             connectionId: response.connectionID,
             status: '-1'
         };
 
         const rejectPayload = {
+            topic: 'deleteconnection',
             leiId: response.LeiID,
             senderLei: response.LeiSender
         };
 
-        const actionConfig = new MessageActionsConfig();
+        const actionConfig = new MessageConnectionConfig();
         actionConfig.completeText = 'Connection request';
 
         actionConfig.actions.push({
             text: 'Accept',
             text_mltag: 'txt_accept',
-            styleClasses: 'btn btn-success',
-            messageType: 'tx',
+            styleClasses: 'btn-success',
             payload: acceptPayload,
-            successType: '',
-            failureType: ''
         });
 
         actionConfig.actions.push({
             text: 'Reject',
             text_mltag: 'txt_reject',
-            styleClasses: 'btn btn-danger',
-            messageType: 'tx',
+            styleClasses: 'btn-danger',
             payload: rejectPayload,
-            successType: '',
-            failureType: ''
         });
-
-        console.log('sender lei id: ', response.LeiSender);
 
         this.messagesService.sendMessage(
             [response.LeiSender],
             'Connection request',
-            null,
+            'You have an incoming connection',
             actionConfig
-        ).then((data) => {
-            console.log('----------------------------------------');
-            console.log('CONNECTION REQUEST EMAIL SUCCESS: ', data);
-            console.log('----------------------------------------');
+        ).then(() => {
+            this.showSuccessResponse('The connection has successfully been created and an e-mail has been sent to the recipient');
         }).catch((e) => {
-            console.log('----------------------------------------');
-            console.log('CONNECTION REQUEST EMAIL FAIL: ', e);
-            console.log('----------------------------------------');
+            console.log('connection request email fail: ', e);
         });
     }
 
