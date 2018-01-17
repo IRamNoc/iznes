@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {FormBuilder, FormGroup, AbstractControl, Validators} from '@angular/forms';
 import {List, Map, fromJS} from 'immutable';
@@ -48,6 +48,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private walletnodeTxService: WalletnodeTxService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
+                private _changeDetectorRef: ChangeDetectorRef,
                 private fb: FormBuilder) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
@@ -92,6 +93,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
             this.ngRedux.dispatch(finishRegisterIssuerNotification());
         }
+
+        this._changeDetectorRef.markForCheck();
     }
 
     requestWalletAddressList(requestedState: boolean) {
