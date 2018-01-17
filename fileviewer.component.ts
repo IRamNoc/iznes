@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, In
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
-import {Http} from '@angular/http';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -139,6 +138,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     const data = result[1].Data;
                     if (data.error) {
                         this.fileModal = false;
+                        this.fileName = null;
+                        this.fileType = null;
                         this.showAlert('Unable to view file', 'error');
                     } else {
                         this.fileModal = true;
