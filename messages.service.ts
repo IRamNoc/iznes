@@ -1,14 +1,13 @@
 /* Angular/vendor imports. */
 import {Injectable} from '@angular/core';
-
 /* Package Imports. */
 import {Observable} from 'rxjs';
 import {Subscription} from 'rxjs/Subscription';
 import _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
-import {SagaHelper} from "@setl/utils/index";
+import {SagaHelper} from '@setl/utils/index';
 import {MyMessagesService} from '@setl/core-req-services';
-import {MessageActionsConfig} from '@setl/core-messages';
+import {MessageActionsConfig, MessageConnectionConfig} from '@setl/core-messages';
 
 /* Service Class. */
 @Injectable()
@@ -44,7 +43,6 @@ export class MessagesService {
         );
     }
 
-
     /**
      * Send Message
      *
@@ -54,7 +52,7 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig = null) {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig|MessageConnectionConfig = null) {
         const bodyObj = {
             general: btoa(bodyStr),
             action: JSON.stringify(action)
