@@ -36,7 +36,7 @@ timestamps {
             }
 
             stage('Clear down database') {
-                        sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd setl/db-backup/ && pwd && ls && ./makeclean\''
+                        sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd setl/db-backup/ && pwd && ls && ./cleanblockchain\''
                     }
 
             stage('Check Out Tests') {
