@@ -67,7 +67,8 @@
                                 <label for="gForm_1" mltag="txt_subject">Subject</label>
                             </div>
                             <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
-                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" id="gForm_1" placeholder="" size="45">
+                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control"
+                                       type="text" id="gForm_1" placeholder="" size="45">
                             </div>
                         </div>
                     </section>
@@ -114,12 +115,13 @@
                             <!--</button>-->
                             <button class="btn btn-danger-outline btn-sm" (click)="deleteMessage()">
                                 <clr-icon shape="trash"></clr-icon>
-                               <span mltag="txt_delete">Delete</span>
+                                <span mltag="txt_delete">Delete</span>
                             </button>
                         </div>
 
                         <div class="message-highlight {{!message.isRead && 'message-unread'}}"
-                             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index" (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
+                             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
+                             (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
                             <h6>
                                 {{message.senderWalletName}}
                             </h6>
@@ -137,7 +139,8 @@
                         </div>
 
                         <div class="message-highlight-footer">
-                            <pagination-controls (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
+                            <pagination-controls
+                                    (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
                         </div>
 
                     </div>
@@ -161,15 +164,25 @@
                                 <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
-                                <setl-message-attachment [attachmentType]="'pdf'" [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
+                                <setl-message-attachment [attachmentType]="'pdf'"
+                                                         [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
                                 <setl-message-form-action
-                                    [config]="currentMessage.action"
-                                    [isActed]="currentMessage.isActed"
-                                    [walletId]="currentWalletId"
-                                    [mailId]="currentMessage.mailId">
+                                        [config]="currentMessage.action"
+                                        [isActed]="currentMessage.isActed"
+                                        [walletId]="currentWalletId"
+                                        [mailId]="currentMessage.mailId">
                                 </setl-message-form-action>
+                            </p>
+
+                            <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
+                                <setl-message-connection
+                                        [config]="currentMessage.action"
+                                        [isActed]="currentMessage.isActed"
+                                        [walletId]="currentWalletId"
+                                        [mailId]="currentMessage.mailId">
+                                </setl-message-connection>
                             </p>
                         </div>
                     </div>
