@@ -60,6 +60,10 @@ node {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
             }
 
+            stage('Check node server is running'){
+                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
+            }
+
             stage ('Delete old backups'){
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find /var/ofi_backups -type d -mtime +4 | xargs rm -rf\''
 
