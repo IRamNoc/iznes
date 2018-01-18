@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
@@ -54,6 +54,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
@@ -79,6 +80,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             }),
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+                this.changeDetectorRef.markForCheck();
             }),
             this.connectedWalletOb.subscribe(connected => {
                 this.connectedWalletId = connected;
