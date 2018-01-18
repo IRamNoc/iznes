@@ -169,7 +169,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         let data = [];
 
         Object.keys(wallets).map((key) => {
-            if (wallets[key].walletID !== this.connectedWalletId) {
+            if (wallets[key].walletId !== this.connectedWalletId) {
                 data.push({
                     id: wallets[key].walletId,
                     text: wallets[key].walletName,
