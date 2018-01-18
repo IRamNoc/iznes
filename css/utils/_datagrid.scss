@@ -25,11 +25,10 @@
     line-height: 24px;
 }
 
-.datagrid-cell.datagrid-expandable-caret button {
+app-wfe .datagrid-cell.datagrid-expandable-caret button {
     border: 0;
 }
-
-app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell { /* completely unable to style this within my component */
+app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
     line-height: 20px;
     padding-top: 2px;
     padding-bottom: 2px;
