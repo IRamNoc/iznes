@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {SagaHelper, walletHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
@@ -64,6 +64,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     @select(['asset', 'myInstruments', 'newIssueAssetRequest']) newIssuerAssetRequest;
 
     constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
@@ -81,16 +82,24 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
-        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList)));
+        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
+            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList)
+            this.changeDetectorRef.markForCheck();
+        }));
         this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
+            this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+            this.changeDetectorRef.markForCheck();
+        }));
         this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState)));
         this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
             this.toRelationshipList = toRelationshipList;
+            this.changeDetectorRef.markForCheck();
             // this.updateToRelationship();
         }));
         this.subscriptionsArray.push(this.directoryListOb.subscribe((directoryList) => {
             this.walletDirectoryList = directoryList;
+            this.changeDetectorRef.markForCheck();
             // this.updateToRelationship();
         }));
 
@@ -98,6 +107,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        
     }
 
     updateToRelationship() {

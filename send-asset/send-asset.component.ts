@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
@@ -55,6 +55,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
@@ -75,17 +76,20 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+            this.changeDetectorRef.markForCheck();
         }));
-
+        
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
-
+        
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList);
+            this.changeDetectorRef.markForCheck();
         }));
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
+            this.changeDetectorRef.markForCheck();
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
 
