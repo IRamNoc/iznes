@@ -43,10 +43,45 @@ interface SendAsset {
     amount: number;
 }
 
+interface Encumber {
+    txtype: string;
+    walletid: number;
+    reference: string;
+    address: string;
+    subjectaddress: string;
+    namespace: string;
+    instrument: string;
+    amount: number;
+    beneficiaries: any;
+    administrators: any;
+    protocol: string;
+    metadata: string;
+}
+
 @Injectable()
 export class WalletnodeTxService {
 
     constructor(private walletNodeSocketService: WalletNodeSocketService) {
+    }
+
+    encumber(requestData: Encumber): any {
+        const messageBody: RegisterIssuerMessageBody = {
+            topic: 'encum',
+            txtype: _.get(requestData, 'txtype', ''),
+            walletid: _.get(requestData, 'walletid', 0),
+            reference: _.get(requestData, 'reference', ''),
+            address: _.get(requestData, 'address', ''),
+            subjectaddress: _.get(requestData, 'subjectaddress', ''),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            amount: _.get(requestData, 'amount', 0),
+            beneficiaries: _.get(requestData, 'beneficiaries', []),
+            administrators: _.get(requestData, 'administrators', []),
+            protocol: _.get(requestData, 'protocol', ''),
+            metadata: _.get(requestData, 'metadata', {})
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
     registerIssuer(requestData: RegisterIssuer): any {
