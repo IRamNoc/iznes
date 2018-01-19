@@ -10,7 +10,12 @@ export function walletAddressListToSelectItem(walletAddressList: any, labelIdent
     const walletAddressListImu = fromJS(walletAddressList);
     const walletAddressSelectItem = walletAddressListImu.reduce(
         (result, thisWalletAddress, key) => {
-            const label = thisWalletAddress.get(labelIdentifier);
+            let label = thisWalletAddress.get(labelIdentifier);
+
+            if(labelIdentifier == 'label' && thisWalletAddress.get('addr')) {
+                // if using label add the wallet address to the end
+                label = `${label} (${key.substr(0,8)}...)`;
+            }
 
             result.push({
                 id: key,
