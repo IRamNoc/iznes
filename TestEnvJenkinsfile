@@ -65,7 +65,7 @@ node {
             }
 
             stage ('Delete old backups'){
-                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find /var/ofi_backups -type d -mtime +4 | xargs rm -rf\''
+                sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && find /var/ofi_backups -type d -atime +4 | xargs rm -rf\''
 
             }
 
