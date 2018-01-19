@@ -1,0 +1,7 @@
+{
+  "name": "@setl/core-contracts",
+  "version": "1.0.0",
+  "description": "Contracts Module.",
+  "main": "index.ts",
+  "license": "Private SETL"
+}
