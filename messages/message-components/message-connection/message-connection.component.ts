@@ -21,10 +21,10 @@ import {SetlMessageConnectionService} from './message-connection.service';
     styleUrls: ['./message-connection.component.css'],
 })
 export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
-    @Input() config: MessageConnectionConfig;
-    @Input() isActed: boolean;
-    @Input() walletId: number;
-    @Input() mailId: number;
+    @Input() config: MessageConnectionConfig = null;
+    @Input() isActed: boolean = false;
+    @Input() walletId: number = null;
+    @Input() mailId: number = null;
 
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
