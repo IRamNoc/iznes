@@ -45,7 +45,7 @@ export class Contract {
         let json = {};
         for (let prop in this) {
             if (typeof prop !== 'function') {
-                json[prop] = this[prop];
+                (json as any)[prop] = this[prop];
                 console.log(prop);
             }
         }
