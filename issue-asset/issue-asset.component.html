@@ -4,7 +4,7 @@
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink mltag="txt_issueassetform"><i class="fa fa-plus-circle"></i> New Issue</button>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newissue">New Issue</span></button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="issueAssetForm" (ngSubmit)="issueAsset()">
                 <section class="form-block">
@@ -15,7 +15,7 @@
                                    [allowClear]="true"
                                    placeholder="Select Issuer Address"
                                    [formControl]="issueAssetForm.controls['asset']"
-                        >
+                       mltag="txt_selectissueraddress">
                         </ng-select>
                     </div>
 

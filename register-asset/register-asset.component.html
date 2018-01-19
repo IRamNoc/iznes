@@ -4,7 +4,7 @@
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink mltag="txt_registerassetform"><i class="fa fa-plus-circle"></i> New Asset</button>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newasset">New Asset</span></button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="registerAssetForm" (ngSubmit)="registerAsset()">
                 <section class="form-block">
@@ -43,7 +43,7 @@
                         <div class="alert alert-danger">
                             <div class="alert-items">
                                 <div class="alert-item static">
-                                    <span class="alert-text" mltag="txt_instrumentidentifierisrequired">Instrument Identifier is required</span>
+                                    <span class="alert-text" mltag="txt_instrumentidentifierisrequiredebb6a967ef">Instrument Identifier is required</span>
                                 </div>
                             </div>
                         </div>

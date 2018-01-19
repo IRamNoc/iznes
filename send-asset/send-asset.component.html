@@ -4,7 +4,7 @@
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink mltag="txt_sendassetform"><i class="fa fa-plus-circle"></i>New Send Asset</button>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newsendasset">New Send Asset</span></button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
                 <section class="form-block">
@@ -15,7 +15,7 @@
                                    [allowClear]="true"
                                    placeholder="Select Issuer"
                                    [formControl]="sendAssetForm.controls['asset']"
-                        >
+                      mltag="txt_selectissuer">
                         </ng-select>
                     </div>
 
@@ -26,7 +26,7 @@
                                    [allowClear]="true"
                                    placeholder="Asset Address"
                                    [formControl]="sendAssetForm.controls['assetAddress']"
-                        >
+                      mltag="txt_assetaddress">
                         </ng-select>
                     </div>
 
@@ -44,7 +44,7 @@
                     sendAssetForm.controls['amount'].touched" mltag="txt_amount"/>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" mltag="txt_send_asset">Send Asset</button>
+                    <button type="submit" class="btn btn-primary" mltag="txt_sendasset">Send Asset</button>
 
                     <div *ngIf="getError()" class="alert-items col-sm-5">
                         <div class="alert alert-danger">
