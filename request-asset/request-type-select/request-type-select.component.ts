@@ -121,7 +121,7 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
                 }
             }),
             this.walletAddressListOb.subscribe((walletAddressList) => {
-                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, 'addr');
+                this.walletAddressList = walletHelper.walletAddressListToSelectItem(walletAddressList, 'label');
             })
         );
     }
