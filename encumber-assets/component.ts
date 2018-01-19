@@ -29,7 +29,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Unsubscribe} from 'redux';
 
 // Services
-import {WalletnodeTxService, WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import {WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
 import {MultilingualService} from '@setl/multilingual';
 
 // Store
@@ -75,7 +75,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     };
 
     connectedWalletId: number;
-    toRelationshipSelectItems: Array<any>;
+    toRelationshipSelectItems = [];
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -84,6 +84,8 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) addressListRequestedStateOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
+    @select(['wallet', 'myWalletAddress', 'addressList']) subPortfolioAddressObs;
     @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
     @select(['asset', 'myInstruments', 'instrumentList']) instrumentListOb;
 
@@ -93,7 +95,8 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     constructor(
         private _fb: FormBuilder,
         private ngRedux: NgRedux<any>,
-        private walletnodeTxService: WalletnodeTxService,
+        private _walletnodeTxService: WalletnodeTxService,
+        private _myWalletService: MyWalletsService,
         private walletNodeRequestService: WalletNodeRequestService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _alertsService: AlertsService,
@@ -109,6 +112,8 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
         this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
         this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
+        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
     }
 
     ngOnInit() {
@@ -177,14 +182,33 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     updateState() {
         const newState = this.ngRedux.getState();
 
-        // Get wallet addresses and update wallet address items list
-        const currentWalletAddressList = getWalletAddressList(newState);
-        this.fromAddressListOption = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
+        if (this.fromAddressListOption.length === 0) {
+            // Get wallet addresses and update wallet address items list
+            const currentWalletAddressList = getWalletAddressList(newState);
+            this.fromAddressListOption = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
+        }
 
-        const walletToRelationship = getWalletToRelationshipList(newState);
-        const walletDirectoryList = getWalletDirectoryList(newState);
+        if (this.toRelationshipSelectItems.length === 0) {
+            const walletToRelationship = getWalletToRelationshipList(newState);
+            const walletDirectoryList = getWalletDirectoryList(newState);
+            this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
+        }
 
-        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
+        this.markForCheck();
+    }
+
+    getAddressList(addresses: Array<any>) {
+
+        let data = [];
+
+        Object.keys(addresses).map((key) => {
+            data.push({
+                id: key,
+                text: addresses[key].label
+            });
+        });
+
+        this.fromAddressListOption = data;
 
         this.markForCheck();
     }
@@ -212,6 +236,14 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         }
     }
 
+    requestWalletLabel(requestedState: boolean) {
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+        }
+    }
+
     processFormChanges(isChecked) {
         if (isChecked) {
             this.encumberAssetsForm.get('toDateUTC').setValidators(Validators.required);
@@ -219,9 +251,9 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             this.isEncumberEnd = true;
         } else if (!isChecked) {
             // console.log('not checked');
-            this.encumberAssetsForm.get('toDateUTC').patchValue(null, {emitEvent: false});
+            this.encumberAssetsForm.get('toDateUTC').patchValue('', {emitEvent: false});
             this.encumberAssetsForm.get('toDateUTC').setValidators(null);
-            this.encumberAssetsForm.get('toTimeUTC').patchValue(null, {emitEvent: false});
+            this.encumberAssetsForm.get('toTimeUTC').patchValue('', {emitEvent: false});
             this.encumberAssetsForm.get('toTimeUTC').setValidators(null);
             this.isEncumberEnd = false;
         }
@@ -246,7 +278,41 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     save(formValues) {
-        console.log(formValues);
+
+        const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
+        const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
+
+        const asyncTaskPipe = this._walletnodeTxService.encumber(
+            {
+                txtype: 'encum',
+                walletid: this.connectedWalletId,
+                reference: formValues.reference,
+                address: formValues.fromAddress[0].id,
+                subjectaddress: formValues.fromAddress[0].id,
+                namespace: formValues.asset[0].id.split('|')[0],
+                instrument: formValues.asset[0].id.split('|')[1],
+                amount: formValues.amount,
+                beneficiaries: [
+                    [formValues.fromAddress[0].id, StartUTC_Secs, EndUTC_Secs]
+                ],
+                administrators: [],
+                protocol: '',
+                metadata: '',
+            },
+            this.ngRedux);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                this.showSuccess('Encumber has successfully been created');
+                this.resetForm();
+            },
+            (data) => {
+                // console.log('error: ', data);
+                this.showError(data);
+                this.resetForm();
+            })
+        );
     }
 
     resetForm(): void {
