@@ -21,7 +21,7 @@ import {SetlMessageConnectionService} from './message-connection.service';
     styleUrls: ['./message-connection.component.css'],
 })
 export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
-    @Input() config: MessageConnectionConfig = {};
+    @Input() config: MessageConnectionConfig = null;
     @Input() isActed: boolean = false;
     @Input() walletId: number = null;
     @Input() mailId: number = null;
