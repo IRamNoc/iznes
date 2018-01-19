@@ -4,26 +4,21 @@ import {SetlMessagesComponent} from './messages/messages.component';
 import {ClarityModule} from 'clarity-angular';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
-
-import {SagaHelper} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
-import {Pipe, PipeTransform} from '@angular/core';
+import {SelectModule, SetlPipesModule} from '@setl/utils';
 import {GravatarModule} from 'ng2-gravatar-directive';
-import {SelectModule} from '@setl/utils';
-import {SetlPipesModule} from '@setl/utils';
 
 import {QuillEditorModule} from 'ngx-quill-editor';
 import {MultilingualModule} from '@setl/multilingual';
 
-import { MessagesService } from './messages.service';
-import {
-    MyMessagesService,
-} from '@setl/core-req-services';
+import {MessagesService} from './messages.service';
+import {MyMessagesService,} from '@setl/core-req-services';
 import {FileViewerModule} from '@setl/core-fileviewer';
-import {SetlMessageFormActionComponent} from "./messages/message-components/message-form-action/message-form-action.component";
-import {SetlMessageFormActionService} from "./messages/message-components/message-form-action/message-form-action.service";
-import {SetlMessageAttachmentComponent} from "./messages/message-components/message-attachment/message-attachment.component";
-import {SetlMessageBodyComponent} from "./messages/message-components/message-body/message-body.component";
+import {SetlMessageFormActionComponent} from './messages/message-components/message-form-action/message-form-action.component';
+import {SetlMessageFormActionService} from './messages/message-components/message-form-action/message-form-action.service';
+import {SetlMessageAttachmentComponent} from './messages/message-components/message-attachment/message-attachment.component';
+import {SetlMessageBodyComponent} from './messages/message-components/message-body/message-body.component';
+import {SetlMessageConnectionComponent} from './messages/message-components/message-connection/message-connection.component';
+import {SetlMessageConnectionService} from './messages/message-components/message-connection/message-connection.service';
 
 @NgModule({
     imports: [
@@ -43,18 +38,21 @@ import {SetlMessageBodyComponent} from "./messages/message-components/message-bo
         SetlMessagesComponent,
         SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
-        SetlMessageAttachmentComponent
+        SetlMessageAttachmentComponent,
+        SetlMessageConnectionComponent,
     ],
     exports: [
         SetlMessagesComponent,
         SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
-        SetlMessageAttachmentComponent
+        SetlMessageAttachmentComponent,
+        SetlMessageConnectionComponent
     ],
     providers: [
         MyMessagesService,
         MessagesService,
-        SetlMessageFormActionService
+        SetlMessageFormActionService,
+        SetlMessageConnectionService
     ]
 })
 
