@@ -5,7 +5,8 @@ import {List, Map, fromJS} from 'immutable';
 import {
     WalletnodeTxService,
     WalletNodeRequestService,
-    InitialisationService
+    InitialisationService,
+    MyWalletsService
 } from '@setl/core-req-services';
 import {SagaHelper, walletHelper} from '@setl/utils';
 import {
@@ -29,17 +30,18 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class RegisterIssuerComponent implements OnInit, OnDestroy {
     // Observable subscription array.
-    subscriptionsArry: Array<Subscription> = [];
+    subscriptionsArray: Array<Subscription> = [];
 
     walletAddressSelectItems: any;
 
     registerIssuerForm: FormGroup;
     issuerIdentifier: AbstractControl;
     issuerAddress: AbstractControl;
-    private connectedWalleId: number;
+    private connectedWalletId: number;
 
     // List of redux observable
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
     // Redux Unsubscription
     reduxUnsubscribe: Unsubscribe;
@@ -49,7 +51,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
                 private _changeDetectorRef: ChangeDetectorRef,
-                private fb: FormBuilder) {
+                private fb: FormBuilder,
+                private myWalletService: MyWalletsService) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -66,7 +69,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
         this.issuerAddress = this.registerIssuerForm.controls['issuerAddress'];
 
         // List of observable subscriptions.
-        this.subscriptionsArry.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
     }
 
 
@@ -79,10 +83,10 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
         // Get wallet addresses and update wallet address items list
         const currentWalletAddressList = getWalletAddressList(newState);
-        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList);
+        this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(currentWalletAddressList, 'label');
 
         // Set connected walletId
-        this.connectedWalleId = getConnectedWallet(newState);
+        this.connectedWalletId = getConnectedWallet(newState);
 
         // Get register Issuer response
         const currentRegisterIssuerRequest = getNewIssuerRequest(newState);
@@ -104,7 +108,14 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalleId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    requestWalletLabel(requested: boolean): void {
+        // If the state is false, that means we need to request the list.
+        if (!requested && this.connectedWalletId !== 0) {
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
@@ -113,7 +124,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
             const issuerIdentifier = formValue.issueIdentifier;
             const issuerAddressSelectedArr = formValue.issuerAddress;
             const issuerAddress = issuerAddressSelectedArr[0].id;
-            const walletId = this.connectedWalleId;
+            const walletId = this.connectedWalletId;
 
             // Send register issuer request.
 
@@ -142,7 +153,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.reduxUnsubscribe();
 
-        for (const subscription of this.subscriptionsArry) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
@@ -172,23 +183,4 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
     }
 
-}
-
-/**
- * Convert wallet Address to an array the select2 can use to render a list a wallet address.
- * @param walletAddressList
- * @return {any}
- */
-function walletAddressListToSelectItem(walletAddressList: Array<any>): Array<any> {
-    const walletAddressListImu = fromJS(walletAddressList);
-    const walletAddressSelectItem = walletAddressListImu.map(
-        (thisWalletAddress) => {
-            return {
-                id: thisWalletAddress.get('addr'),
-                text: thisWalletAddress.get('addr')
-            };
-        }
-    );
-
-    return walletAddressSelectItem.toJS();
 }

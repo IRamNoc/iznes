@@ -19,7 +19,8 @@ import {
     ISSUE_ASSET_SUCCESS,
     ISSUE_ASSET_FAIL,
     finishIssueAssetNotification,
-    setRequestedWalletAddresses
+    setRequestedWalletAddresses,
+    setRequestedWalletLabel
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
@@ -56,6 +57,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedAddressListLabelOb;
     @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
     @select(['asset', 'myInstruments', 'instrumentList']) instrumentListOb;
     @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
@@ -68,7 +70,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsServie: MyWalletsService) {
+                private myWalletsService: MyWalletsService) {
 
         /**
          * Issuer Asset form
@@ -81,9 +83,10 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
 
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
+        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
-            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList)
+            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label')
             this.changeDetectorRef.markForCheck();
         }));
         this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
@@ -130,6 +133,13 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    requestWalletLabel(requestedState: boolean) {
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletsService, this.connectedWalletId);
+        }
+    }
+
     requestWalletInstruments(requestedInstrumentState) {
 
         if (!requestedInstrumentState) {
@@ -151,7 +161,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             // relationship.
             this.ngRedux.dispatch(setRequestedWalletToRelationship());
 
-            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsServie, walletId);
+            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsService, walletId);
         }
     }
 
