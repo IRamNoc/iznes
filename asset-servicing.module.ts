@@ -6,13 +6,14 @@ import {IssueAssetComponent} from './issue-asset/issue-asset.component';
 import {SendAssetComponent} from './send-asset/send-asset.component';
 import {RequestAssetComponent} from './request-asset/request-asset.component';
 import {RequestTypeSelectComponent} from './request-asset/request-type-select/request-type-select.component';
+import {EncumberAssetsComponent} from './encumber-assets/component';
 import {SelectModule} from '@setl/utils';
 import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
 import {ClarityModule} from 'clarity-angular';
-import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/utils';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
         ReactiveFormsModule,
         ClarityModule.forRoot(),
         SetlPipesModule,
+        DpDatePickerModule,
         SetlComponentsModule
     ],
     declarations: [
@@ -30,7 +32,8 @@ import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
         IssueAssetComponent,
         SendAssetComponent,
         RequestAssetComponent,
-        RequestTypeSelectComponent
+        RequestTypeSelectComponent,
+        EncumberAssetsComponent,
     ],
     exports: [
         RegisterIssuerComponent,
@@ -38,7 +41,8 @@ import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
         IssueAssetComponent,
         SendAssetComponent,
         RequestAssetComponent,
-        RequestTypeSelectComponent
+        RequestTypeSelectComponent,
+        EncumberAssetsComponent,
     ]
 })
 export class AssetServicingModule {

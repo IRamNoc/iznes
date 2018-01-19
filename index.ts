@@ -4,3 +4,4 @@ export {RegisterIssuerComponent} from './register-issuer/register-issuer.compone
 export {RegisterAssetComponent} from './register-asset/register-asset.component';
 export {SendAssetComponent} from './send-asset/send-asset.component';
 export {RequestAssetComponent} from './request-asset/request-asset.component';
+export {EncumberAssetsComponent} from './encumber-assets/component';
