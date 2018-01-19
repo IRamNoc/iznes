@@ -13,6 +13,7 @@ import {
 import {setRequestedFromConnections, setRequestedToConnections, setRequestedWalletAddresses} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils/index';
+import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
 
 @Component({
     selector: 'app-my-connections',
@@ -67,7 +68,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
-                private connectionService: ConnectionService) {
+                private connectionService: ConnectionService,
+                private messagesService: MessagesService) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
@@ -167,7 +169,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         let data = [];
 
         Object.keys(wallets).map((key) => {
-            if (wallets[key].walletID !== this.connectedWalletId) {
+            if (wallets[key].walletId !== this.connectedWalletId) {
                 data.push({
                     id: wallets[key].walletId,
                     text: wallets[key].walletName,
@@ -223,7 +225,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             connections.map((connection) => {
                 const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
                 const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
-                // const subPortfolioName = connection.keyDetail;
 
                 data.push({
                     id: connection.connectionId,
@@ -248,6 +249,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 data.push({
                     id: connection.connectionId,
                     connection: connectionName,
+                    leiId: connection.leiId,
                     leiSender: connection.leiSender
                 });
             });
@@ -273,11 +275,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
-                () => {
+                (response) => {
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.showSuccessResponse('The connection has successfully been created');
                     this.isAcceptedConnectionDisplayed = true;
+
+                    this.handleSendMessage(response[1].Data[0]);
                 },
                 () => {
                     this.showErrorMessage('This connection already exists');
@@ -295,9 +298,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
+                    this.showSuccessResponse('The connection has successfully been updated');
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.showSuccessResponse('The connection has successfully been updated');
                     this.isAcceptedConnectionDisplayed = true;
                 },
                 () => {
@@ -310,15 +313,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    handleEdit(connection) {
-        let selectedSubPortfolio = connection.subPortfolio;
-
-        // this.addressList.forEach((address) => {
-        //     if (address.text === connection.subPortfolio) {
-        //         selectedSubPortfolio = address;
-        //     }
-        // });
-
+    handleEditIconClick(connection) {
+        const selectedSubPortfolio = connection.subPortfolio;
         const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
 
         this.formGroup.controls['connection'].patchValue([selectedConnection]);
@@ -372,9 +368,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
+                    this.showSuccessResponse('The connection has successfully been accepted');
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.showSuccessResponse('The connection has successfully been accepted');
                     this.connectionToBind = null;
                     this.isAcceptModalDisplayed = false;
                 },
@@ -393,7 +389,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     handleRejectConnection(connection: any) {
         const data = {
-            leiId: this.connectedWalletId,
+            leiId: connection.leiId,
             senderLei: connection.leiSender
         };
 
@@ -412,6 +408,51 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         );
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    handleSendMessage(response: any) {
+        const acceptPayload = {
+            topic: 'newconnection',
+            leiId: response.LeiSender,
+            senderLeiId: response.LeiID,
+            address: response.keyDetail,
+            connectionId: response.connectionID,
+            status: '-1'
+        };
+
+        const rejectPayload = {
+            topic: 'deleteconnection',
+            leiId: response.LeiID,
+            senderLei: response.LeiSender
+        };
+
+        const actionConfig = new MessageConnectionConfig();
+        actionConfig.completeText = 'Connection request';
+
+        actionConfig.actions.push({
+            text: 'Accept',
+            text_mltag: 'txt_accept',
+            styleClasses: 'btn-success',
+            payload: acceptPayload,
+        });
+
+        actionConfig.actions.push({
+            text: 'Reject',
+            text_mltag: 'txt_reject',
+            styleClasses: 'btn-danger',
+            payload: rejectPayload,
+        });
+
+        this.messagesService.sendMessage(
+            [response.LeiSender],
+            'Connection request',
+            'You have an incoming connection',
+            actionConfig
+        ).then(() => {
+            this.showSuccessResponse('The connection has successfully been created and an e-mail has been sent to the recipient');
+        }).catch((e) => {
+            console.log('connection request email fail: ', e);
+        });
     }
 
     confirmationModal(isOk): void {
