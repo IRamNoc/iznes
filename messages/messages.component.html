@@ -76,12 +76,12 @@
 
                     <!-- composer body -->
                     <quill-editor
-                            [formControl]="messageComposeForm.controls['body']"
-                            [options]="editorOptions"
-                            (blur)="onEditorBlurred($event)"
-                            (focus)="onEditorFocused($event)"
-                            (ready)="onEditorCreated($event)"
-                            (change)="onContentChanged($event)"></quill-editor>
+                        [formControl]="messageComposeForm.controls['body']"
+                        [options]="editorOptions"
+                        (blur)="onEditorBlurred($event)"
+                        (focus)="onEditorFocused($event)"
+                        (ready)="onEditorCreated($event)"
+                        (change)="onContentChanged($event)"></quill-editor>
 
 
                     <div class="message-compose-buttons">
@@ -140,7 +140,7 @@
 
                         <div class="message-highlight-footer">
                             <pagination-controls
-                                    (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
+                                (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
                         </div>
 
                     </div>
@@ -169,20 +169,20 @@
                             </p>
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
                                 <setl-message-form-action
-                                        [config]="currentMessage.action"
-                                        [isActed]="currentMessage.isActed"
-                                        [walletId]="currentWalletId"
-                                        [mailId]="currentMessage.mailId">
+                                    [config]="currentMessage.action"
+                                    [isActed]="currentMessage.isActed"
+                                    [walletId]="currentWalletId"
+                                    [mailId]="currentMessage.mailId">
                                 </setl-message-form-action>
                             </p>
 
                             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
-                                <setl-message-connection
-                                        [config]="currentMessage.action"
-                                        [isActed]="currentMessage.isActed"
-                                        [walletId]="currentWalletId"
-                                        [mailId]="currentMessage.mailId">
-                                </setl-message-connection>
+                                <!--<setl-message-connection-->
+                                <!--[config]="currentMessage.action"-->
+                                <!--[isActed]="currentMessage.isActed"-->
+                                <!--[walletId]="currentWalletId"-->
+                                <!--[mailId]="currentMessage.mailId">-->
+                                <!--</setl-message-connection>-->
                             </p>
                         </div>
                     </div>
