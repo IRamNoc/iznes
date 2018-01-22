@@ -1,94 +1,96 @@
-<div class="header-breadcrumbs">
-    <h1><i class="fa fa fa-money"></i><span mltag="txt_issuerreports">Issue Reports</span></h1>
-</div>
-
-<clr-tabs *ngIf="tabsControl.length">
-    <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-        <button clrTabLink id="testlink{{id}}" [innerHTML]="tabdata.title"></button>
-        <clr-tab-content *clrIfActive="tabdata.active">
-            <!-- User list tab. -->
-            <ng-container *ngIf="id === 0">
-                <ng-container
-                        *ngTemplateOutlet="staticBalanceList"
-                ></ng-container>
-            </ng-container>
-
-            <!-- User edit tabs. -->
-            <ng-container *ngIf="id >= 1">
-                <ng-container
-                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'asset': tabdata.assetObject}"
-                ></ng-container>
-            </ng-container>
-        </clr-tab-content>
-    </clr-tab>
-</clr-tabs>
-
-<ng-template #staticBalanceList>
-    <div class="panel-body">
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
-            <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
-            <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
-            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
-
-
-            <clr-dg-row *clrDgItems="let issuer of issuers">
-                <clr-dg-cell>
-                    <div class="btn-group btn-sm">
-                        <button (click)="handleView(issuer.index)" class="btn">
-                            <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
-                    </div>
-                </clr-dg-cell>
-                <clr-dg-cell></clr-dg-cell>
-                <clr-dg-cell>{{issuer.asset}}</clr-dg-cell>
-                <clr-dg-cell>{{issuer.total | moneyValue}}</clr-dg-cell>
-            </clr-dg-row>
-
-            <clr-dg-footer>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+<div class="animated fadeInRight">
+    <div class="header-breadcrumbs">
+        <h1><i class="fa fa fa-money"></i><span mltag="txt_issuerreports">Issue Reports</span></h1>
     </div>
-</ng-template>
 
-<!-- User Edit Form. -->
-<ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-asset="asset">
-    <div class="user-tab-panel-body panel-body">
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column mltag="txt_wallet">Wallet</clr-dg-column>
-            <clr-dg-column mltag="txt_address">Address</clr-dg-column>
-            <clr-dg-column mltag="txt_percentageofholding">Percentage of Holding</clr-dg-column>
-            <clr-dg-column mltag="txt_total">Total</clr-dg-column>
-            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
-            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
+    <clr-tabs *ngIf="tabs.length">
+        <clr-tab *ngFor="let tab of tabs; let id = index">
+            <button clrTabLink id="testlink{{id}}" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
+            <clr-tab-content *clrIfActive="tab.active">
+                <!-- User list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container
+                            *ngTemplateOutlet="staticBalanceList"
+                    ></ng-container>
+                </ng-container>
 
-            <clr-dg-row *clrDgItems="let holder of asset">
-                <clr-dg-cell></clr-dg-cell>
-                <clr-dg-cell>{{holder.address}}</clr-dg-cell>
-                <clr-dg-cell></clr-dg-cell>
-                <clr-dg-cell>{{holder.total | moneyValue}}</clr-dg-cell>
-                <clr-dg-cell></clr-dg-cell>
-                <clr-dg-cell></clr-dg-cell>
-            </clr-dg-row>
+                <!-- User edit tabs. -->
+                <ng-container *ngIf="id >= 1">
+                    <ng-container
+                            *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.assetObject, 'holdings': tab.data.holdings}"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
 
-            <clr-dg-footer>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
-        <div class="form-group tx-view-header">
-            <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>
+    <ng-template #staticBalanceList>
+        <div class="panel-body">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
+                <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
+                <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+
+
+                <clr-dg-row *clrDgItems="let issuer of issuers$ | async">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button (click)="handleViewBreakdown(issuer)" class="btn">
+                                <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
+                        </div>
+                    </clr-dg-cell>
+                    <clr-dg-cell></clr-dg-cell>
+                    <clr-dg-cell>{{issuer.asset | truncate:10}}</clr-dg-cell>
+                    <clr-dg-cell>{{issuer.total | moneyValue}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
         </div>
-    </div>
-</ng-template>
+    </ng-template>
 
-<!--<clr-tabs>-->
-<!--<clr-tab>-->
-<!--<button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-money"></i> Issue Reports</button>-->
-<!--<clr-tab-content *clrIfActive>-->
-<!---->
+    <!-- User Edit Form. -->
+    <ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-holdings="holdings">
+        <div class="user-tab-panel-body panel-body">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column mltag="txt_wallet">Wallet</clr-dg-column>
+                <clr-dg-column mltag="txt_address">Address</clr-dg-column>
+                <clr-dg-column mltag="txt_percentageofholding">Percentage of Holding</clr-dg-column>
+                <clr-dg-column mltag="txt_total">Total</clr-dg-column>
+                <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+                <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
-<!--</clr-tab-content>-->
-<!--</clr-tab>-->
-<!--</clr-tabs>-->
+                <clr-dg-row *clrDgItems="let holder of holdings">
+                    <clr-dg-cell>{{holder.walletName}}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.addr}}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.percentage | number }}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.balance | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.encumbered | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.free | moneyValue}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+            <div class="form-group tx-view-header">
+                <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">Close</button>
+            </div>
+        </div>
+    </ng-template>
+
+    <!--<clr-tabs>-->
+    <!--<clr-tab>-->
+    <!--<button clrTabLink clrTabLinkId="reports-Issues"><i class="fa fa-money"></i> Issue Reports</button>-->
+    <!--<clr-tab-content *clrIfActive>-->
+    <!---->
+
+    <!--</clr-tab-content>-->
+    <!--</clr-tab>-->
+    <!--</clr-tabs>-->
+</div>
