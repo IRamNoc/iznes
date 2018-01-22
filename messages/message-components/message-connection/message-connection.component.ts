@@ -8,13 +8,6 @@ import {InitialisationService, MyWalletsService, WalletNodeRequestService} from 
 import {MessageConnection, MessageConnectionConfig} from './message-connection.model';
 import {SetlMessageConnectionService} from './message-connection.service';
 
-/**
- * SETL Message Connection Component
- *
- * Allows for the display and use of actions within mail messages
- *
- * @uses FileViewerComponent to download display the attachment
- */
 @Component({
     selector: 'setl-message-connection',
     templateUrl: './message-connection.component.html',
@@ -95,7 +88,7 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
                 this.currentAction = action;
                 break;
             case 'Reject':
-                this.service.doAction(action, 'The connection has successfully been rejected');
+                this.service.doAction(action, this.walletId, this.mailId);
                 break;
         }
     }
@@ -103,7 +96,7 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
     handleAcceptButtonClick(isAccepted: boolean) {
         if (isAccepted) {
             this.currentAction.payload.address = this.formGroup.controls['selectedAddress'].value[0].id;
-            this.service.doAction(this.currentAction, 'The connection has successfully been accepted');
+            this.service.doAction(this.currentAction, this.walletId, this.mailId);
         }
 
         this.resetForm();

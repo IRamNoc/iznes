@@ -4,6 +4,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Common, SagaHelper} from '@setl/utils';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 
+import {MessagesService} from '../../../messages.service';
 import {MessageConnection} from './message-connection.model';
 
 @Injectable()
@@ -11,10 +12,11 @@ export class SetlMessageConnectionService {
     constructor(private ngRedux: NgRedux<any>,
                 private memberSocketService: MemberSocketService,
                 private walletNodeSocketService: WalletNodeSocketService,
+                private messageService: MessagesService,
                 private alertsService: AlertsService) {
     }
 
-    doAction(action: MessageConnection, message: string) {
+    doAction(action: MessageConnection, walletId: number, mailId: number) {
         let messageBody = {
             RequestName: action.payload.topic,
             token: this.memberSocketService.token,
@@ -27,7 +29,7 @@ export class SetlMessageConnectionService {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.onActionSuccess(data, message);
+                this.onActionSuccess(data, walletId, mailId);
             },
             (data) => {
                 this.onActionError(data);
@@ -35,15 +37,15 @@ export class SetlMessageConnectionService {
         ));
     }
 
-    private onActionSuccess(data, message: string): void {
-        if (data[1].Status === 'OK') {
-            this.alertsService.create('success', message);
-        } else {
-            console.log('connection onActionSuccess error');
-        }
+    private onActionSuccess(data, walletId: number, mailId: number): void {
+        this.messageService.markMessageAsActed(walletId, mailId, '').then((res) => {
+            this.alertsService.create('success', 'The connection has successfully been accepted');
+        }).catch((e) => {
+            console.log('mark mail as acted error', e);
+        });
     }
 
     private onActionError(data): void {
-        this.alertsService.create('error', `${data[1].status}`);
+        this.alertsService.create('error', 'The connection has successfully been rejected');
     }
 }

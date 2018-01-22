@@ -8,10 +8,15 @@
             <div class="hr-line-dashed"></div>
         </div>
     </div>
-    
+
     <div class="message-actions" *ngIf="config.actions && !isActed">
         <div class="message-action" *ngFor="let action of config.actions">
-            <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)" mltag="action.text_tag">{{action.text}}</button>
+            <button class="btn {{action.styleClasses}}"
+                    type="button"
+                    mltag="action.text_tag"
+                    (click)="onActionClick(action)">
+                {{action.text}}
+            </button>
         </div>
     </div>
 
