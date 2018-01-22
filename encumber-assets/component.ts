@@ -298,8 +298,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 administrators: [],
                 protocol: '',
                 metadata: '',
-            },
-            this.ngRedux);
+            });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
