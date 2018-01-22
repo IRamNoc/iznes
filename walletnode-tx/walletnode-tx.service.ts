@@ -7,7 +7,8 @@ import {
     IssueAssetMessageBody,
     SendAssetMessageBody,
     NewAddressMessageBody,
-    NewContractMessageBody
+    NewContractMessageBody,
+    EncumberMessageBody
 } from './walletnode-request.service.model';
 import _ from 'lodash';
 
@@ -65,7 +66,7 @@ export class WalletnodeTxService {
     }
 
     encumber(requestData: Encumber): any {
-        const messageBody: RegisterIssuerMessageBody = {
+        const messageBody: EncumberMessageBody = {
             topic: 'encum',
             txtype: _.get(requestData, 'txtype', ''),
             walletid: _.get(requestData, 'walletid', 0),
