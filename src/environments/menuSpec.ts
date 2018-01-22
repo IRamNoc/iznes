@@ -545,6 +545,21 @@ export const menuSpec: MenuSpec = {
             router_link: '/user-administration/subportfolio'
         },
         {
+            label: 'Financing',
+            label_txt: 'txt_financing',
+            icon_class: 'fa fa-money',
+            element_id: 'menu-financing',
+            children: [
+                {
+                    label: 'Encumber Assets',
+                    label_txt: 'txt_encumberassets',
+                    icon_class: 'fa fa-money',
+                    element_id: 'financing-encumber-assets',
+                    router_link: '/financing/encumber-assets'
+                },
+            ]
+        },
+        {
             label: 'Asset Servicing',
             label_txt: 'txt_assetservicing',
             icon_class: 'fa fa-archive',
@@ -733,6 +748,21 @@ export const menuSpec: MenuSpec = {
             icon_class: 'fa fa-id-badge',
             element_id: 'menu-sub-portfolio',
             router_link: '/user-administration/subportfolio'
+        },
+        {
+            label: 'Financing',
+            label_txt: 'txt_financing',
+            icon_class: 'fa fa-money',
+            element_id: 'menu-financing',
+            children: [
+                {
+                    label: 'Encumber Assets',
+                    label_txt: 'txt_encumberassets',
+                    icon_class: 'fa fa-money',
+                    element_id: 'financing-encumber-assets',
+                    router_link: '/financing/encumber-assets'
+                },
+            ]
         },
         {
             label: 'Asset Servicing',
