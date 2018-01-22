@@ -4,6 +4,7 @@ import * as WalletTxHelperModel from './wallet-tx/model';
 import * as immutableHelper from './imu-wrapper';
 import * as mDateHelper from './m-date-wrapper';
 import * as commonHelper from './common';
+import * as ShortHash from './common/shorthash';
 
 export {
     walletHelper,
@@ -11,5 +12,6 @@ export {
     WalletTxHelperModel,
     immutableHelper,
     mDateHelper,
-    commonHelper
+    commonHelper,
+    ShortHash
 };
