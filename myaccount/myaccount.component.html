@@ -80,6 +80,7 @@
                             <div>
                                 <input type="text" id="udAddress2" [formControl]="address2" size="45">
                             </div>
+                            <div *ngIf="address1.hasError('required') && address1.touched"> </div>
                         </div>
                     </div>
                     <div class="row">
@@ -155,6 +156,7 @@
                         </div>
                     </div>
                     <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid" mltag="txt_update">Update</button>
+                    <button id="udReset" type="reset" class="btn btn-warning" mltag="txt_reset">Reset</button>
                 </form>
             </section>
         </clr-tab-content>
@@ -191,9 +193,7 @@
                     </div>
                     <div class="form-group">
                         <label for="cpPasswordConfirm">
-                            <span mltag="txt_passwordconfirm">Password confirmation</span>
-                            <div class="mandatory text-danger"> *</div>
-                        </label>
+                            <smltag="txt_passwordconfirm">Password confirmation</label>
                         <div>
                             <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
                             <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
