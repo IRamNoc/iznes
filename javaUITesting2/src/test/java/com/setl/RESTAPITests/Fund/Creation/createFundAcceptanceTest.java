@@ -17,7 +17,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createFundAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(300000);
+  public Timeout globalTimeout = new Timeout(300000);
   //String localAddress = "http://apidev.iznes.io:9788/api";
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";

@@ -1,8 +1,5 @@
 package com.setl.WebSocketAPITests.User.Login;
 
-import SETLAPIHelpers.AccountError;
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
@@ -25,10 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -43,7 +37,7 @@ public class loginAcceptanceTest {
     String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);;
+    public Timeout globalTimeout = new Timeout(30000);;
 
     @Before
     public void setUp() throws Exception
