@@ -35,7 +35,7 @@ public class OpenCSDFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(300);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 

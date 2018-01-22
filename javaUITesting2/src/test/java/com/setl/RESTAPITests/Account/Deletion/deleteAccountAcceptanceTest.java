@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertTrue;
 public class deleteAccountAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(10000);
+  public Timeout globalTimeout = new Timeout(130000);
 
   int userId = 17;
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
