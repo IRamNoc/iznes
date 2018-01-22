@@ -82,6 +82,13 @@ public class createManagementCompanyAcceptanceTest {
     });
   }
   @Test
+
+  public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
+
+
+  }
+ /*
+  @Test
   @Ignore
   public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
     String managementCompanyDetails[] = generateManagementCompanyDetails();
@@ -90,5 +97,5 @@ public class createManagementCompanyAcceptanceTest {
 
      // createManagementCompanyFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", managementCompanyDescription, managementCompanyName,1, "Permission Denied.");
 
-  }
+  }*/
 }
