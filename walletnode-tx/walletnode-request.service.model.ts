@@ -48,3 +48,18 @@ export interface NewContractMessageBody extends WalletNodeMessageBody {
     contractdata: string;
 }
 
+export interface EncumberMessageBody extends WalletNodeMessageBody {
+    txtype: number;
+    walletid: number;
+    reference: string;
+    address: string;
+    subjectaddress: string;
+    namespace: string;
+    instrument: string;
+    amount: number;
+    beneficiaries: any;
+    administrators: any;
+    protocol: number;
+    metadata: number;
+}
+
