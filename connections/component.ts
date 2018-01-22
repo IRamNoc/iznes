@@ -6,7 +6,10 @@ import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 // Internal
 import {
-    ConnectionService, InitialisationService, MyWalletsService, WalletNodeRequestService,
+    ConnectionService,
+    InitialisationService,
+    MyWalletsService,
+    WalletNodeRequestService,
     WalletnodeTxService
 } from '@setl/core-req-services';
 
@@ -32,6 +35,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     formGroup: FormGroup;
     requestedWalletAddress: boolean;
     connectedWalletId: number;
+    completeWalletList = [];
     walletList = [];
     addressList = [];
     fromConnectionList = [];
@@ -86,7 +90,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
         this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedFromConnectionStateObs.subscribe((requested) => this.requestFromConnectionList(requested)));
+        this.subscriptionsArray.push(
+            this.requestedFromConnectionStateObs.subscribe((requested) => this.requestFromConnectionList(requested))
+        );
         this.subscriptionsArray.push(this.requestedToConnectionStateObs.subscribe((requested) => this.requestToConnectionList(requested)));
         this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => this.getFromConnectionList(connections)));
         this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => this.getToConnectionList(connections)));
@@ -112,6 +118,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.connectedWalletId = walletId;
         ConnectionService.setRequestedFromConnections(false, this.ngRedux);
         ConnectionService.setRequestedToConnections(false, this.ngRedux);
+        this.getWalletList(this.completeWalletList);
 
         this.resetForm();
         this.isCompleteAddressLoaded = false;
@@ -132,8 +139,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     requestWalletLabel(requestedState: boolean) {
-        console.log('checking requested', this.requestedWalletAddress);
-
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
@@ -167,6 +172,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     getWalletList(wallets: Array<any>) {
         let data = [];
+
+        this.completeWalletList = wallets;
 
         Object.keys(wallets).map((key) => {
             if (wallets[key].walletId !== this.connectedWalletId) {
@@ -427,7 +434,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         };
 
         const actionConfig = new MessageConnectionConfig();
-        actionConfig.completeText = 'Connection request';
+        actionConfig.completeText = 'Connection accepted';
 
         actionConfig.actions.push({
             text: 'Accept',
@@ -446,7 +453,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.messagesService.sendMessage(
             [response.LeiSender],
             'Connection request',
-            'You have an incoming connection',
+            '',
             actionConfig
         ).then(() => {
             this.showSuccessResponse('The connection has successfully been created and an e-mail has been sent to the recipient');
