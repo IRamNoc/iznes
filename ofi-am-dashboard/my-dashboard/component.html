@@ -8,16 +8,14 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-bar-chart"></i> <span mltag="txt_fund_holdings">My Holdings</span>
+                <i class="fa fa-bar-chart"></i> <span mltag="txt_myholdings">My Holdings</span>
             </button>
             <clr-tab-content *clrIfActive="true">
                 <div class="panel-body">
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label mltag="txt_fund_share">
-                                    Fund Manager
-                                </label>
+                                <label mltag="txt_fundmanager">Fund Manager</label>
                                 <ng-select
                                         [items]="filteredFundAssetList"
                                         [allowClear]="true"
@@ -25,9 +23,7 @@
                                 </ng-select>
                                 <button
                                         (click)="handleCompanySelection()"
-                                        class="btn btn-primary btn-end">
-                                    Go
-                                </button>
+                                        class="btn btn-primary btn-end" mltag="txt_go">Go</button>
                             </div>
                         </div>
                     </form>
