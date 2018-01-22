@@ -3,6 +3,7 @@ package com.setl.RESTAPITests.Account.List;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class listAccountAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAccounts() throws ExecutionException, InterruptedException {
 
         api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
@@ -51,7 +52,7 @@ public class listAccountAcceptanceTest {
         });
     }
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void failToCreateArrangementWithIncorrectPermissions() throws ExecutionException, InterruptedException {
         String accountDetails[] = generateAccountDetails();
         String accountName = accountDetails[0];

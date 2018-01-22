@@ -131,7 +131,7 @@ public class SetUp {
 
             driver = new SafariDriver(options);
             driver.manage().window().setSize(Screen);
-            driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
+            driver.manage().timeouts().implicitlyWait(30000, TimeUnit.MILLISECONDS);
 
         } else {
 

@@ -35,7 +35,7 @@ public class createAccountAcceptanceTest {
   }
 
   @Test
-  @Ignore
+  @Ignore("Need to programatically determine Userid and API Key")
   public void createNewAccount() throws ExecutionException, InterruptedException {
     String accountDetails[] = generateAccountDetails();
     String accountName = accountDetails[0];
@@ -55,13 +55,13 @@ public class createAccountAcceptanceTest {
   }
 
   @Test
-  @Ignore
+  @Ignore("Need to programatically determine Userid and API Key")
   public void failToCreateAccountWithIncorrectPermissions() throws ExecutionException, InterruptedException {
     String accountDetails[] = generateAccountDetails();
     String accountName = accountDetails[0];
     String accountDescription = accountDetails[1];
 
-      createAccountFailure("http://localhost:9788.api", 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", accountDescription, accountName,1, "Permission Denied.");
+      createAccountFailure("http://uk-lon-li-006.opencsd.io:9788.api", 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", accountDescription, accountName,1, "Permission Denied.");
 
   }
 }

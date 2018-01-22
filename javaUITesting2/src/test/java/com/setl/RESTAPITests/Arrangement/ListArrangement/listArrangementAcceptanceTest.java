@@ -36,7 +36,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByAssetAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -51,7 +51,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByArrangementTypeAsAssetManager() throws ExecutionException, InterruptedException {
         api.start(userId, apiKey);
 
@@ -66,7 +66,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByStatusAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -81,7 +81,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -96,7 +96,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByAssetAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -111,7 +111,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByArrangementTypeAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -127,7 +127,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByStatusAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -142,7 +142,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -157,7 +157,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void insertArrangementAcceptanceTest() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -171,7 +171,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void failToCreateArrangementWithIncorrectPermissions() throws ExecutionException, InterruptedException {
         String accountDetails[] = generateAccountDetails();
         String accountName = accountDetails[0];

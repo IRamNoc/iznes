@@ -4,6 +4,7 @@ import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
 import org.junit.Before;
+
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createFundAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = new Timeout(300000);
+  public Timeout globalTimeout = new Timeout(30000);
   //String localAddress = "http://apidev.iznes.io:9788/api";
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
@@ -33,7 +34,7 @@ public class createFundAcceptanceTest {
 
 
   @Test
-  @Ignore
+  @Ignore("Need to programatically determine Userid and API Key")
   public void createFundWithValidDataTest(){
 
     String [] fundDetails = generateFundDetails();
