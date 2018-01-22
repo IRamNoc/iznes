@@ -127,7 +127,7 @@ ul.breadcrumb li a:hover {
         float: left;
         width: 100%;
         background: #373a49;
-        height: 100%;
+        height: calc(100% - 75px);
 
         .sidenav {
             float: left;
@@ -201,7 +201,7 @@ span.fr-counter {
 }
 
 .login-inner-wrapper {
-    border: 1px solid #ccc;
+    border: 1px solid rgb(223, 228, 233);
 }
 
 // temp
@@ -495,4 +495,8 @@ h2.statement {
 
 .datagrid {
     width: 100% !important;
+}
+
+form, .form {
+    padding: 0px !important;
 }
