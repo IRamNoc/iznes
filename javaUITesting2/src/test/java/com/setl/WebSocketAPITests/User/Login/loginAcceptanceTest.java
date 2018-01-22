@@ -32,9 +32,9 @@ import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class loginTest {
+public class loginAcceptanceTest {
 
-    private static final Logger logger = LogManager.getLogger(loginTest.class);
+    private static final Logger logger = LogManager.getLogger(loginAcceptanceTest.class);
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);

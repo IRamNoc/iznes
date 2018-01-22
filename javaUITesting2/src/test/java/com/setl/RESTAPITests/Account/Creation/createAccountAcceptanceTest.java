@@ -34,7 +34,6 @@ public class createAccountAcceptanceTest {
       api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
   }
 
-
   @Test
   @Ignore
   public void createNewAccount() throws ExecutionException, InterruptedException {
@@ -54,6 +53,7 @@ public class createAccountAcceptanceTest {
         assertTrue(accountDescription.equals(response.get("description").toString()));
     });
   }
+
   @Test
   @Ignore
   public void failToCreateAccountWithIncorrectPermissions() throws ExecutionException, InterruptedException {

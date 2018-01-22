@@ -2,7 +2,7 @@ package com.setl.WebSocketAPITests.Account.Deletion;
 
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -28,9 +28,9 @@ import static junit.framework.Assert.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class deleteAccountTest {
+public class deleteAccountAcceptanceTest {
 
-    private static final Logger logger = LogManager.getLogger(deleteAccountTest.class);
+    private static final Logger logger = LogManager.getLogger(deleteAccountAcceptanceTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass

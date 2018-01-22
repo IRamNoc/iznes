@@ -1,7 +1,7 @@
 package com.setl.WebSocketAPITests.Member.Creation;
 
 import SETLAPIHelpers.Member;
-import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
@@ -37,8 +37,8 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createMemberTest {
-  private static final Logger logger = LogManager.getLogger(createMemberTest.class);
+public class createMemberAcceptanceTest {
+  private static final Logger logger = LogManager.getLogger(createMemberAcceptanceTest.class);
   static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass

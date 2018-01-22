@@ -25,7 +25,7 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class updateUserTest {
+public class updateUserAcceptanceTest {
 
   @Rule
   public Timeout globalTimeout = Timeout.millis(30000);
