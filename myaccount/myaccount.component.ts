@@ -561,19 +561,4 @@ export class SetlMyAccountComponent implements OnDestroy {
         );
     }
 
-    // function toNg2SelectItems(arr: Array<string>):Array<object>{
-    //
-    //     const arrImu = fromJS(arr);
-    //
-    //     arrImu.map(function(resultArr, thisItem){
-    //         resultArr.push({
-    //             id: thisItem.name,
-    //             text: thisItem.fullName
-    //         })
-    //         return resultArr;
-    //     }, []);
-    //
-    //     return arrImu.toJS();
-    // }
-
 }
