@@ -183,9 +183,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             ],
             nodePath: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ])
             ],
             nodePort: [
                 '',

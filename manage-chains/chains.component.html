@@ -50,44 +50,37 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <div class="col-sm-3">
-                                <label for="chainId" class="text-right pt-1" mltag="txt_chainidentification"> Chain Identification</label>
-                            </div>
-                            <div class="col-sm-9 text-left">
-                                <input *ngIf="modelForm.chainId > 0; else allowAddChainID" type="number" id="chainId" class="form-control" formControlName="chainId" [(ngModel)]="modelForm.chainId" placeholder="Chain Identification" disabled mltag="txt_chainidentification">
-                                <ng-template #allowAddChainID>
-                                    <input type="number" id="chainId" class="form-control" formControlName="chainId" placeholder="Chain Identification" mltag="txt_chainidentification">
-                                    <div class="mandatory text-danger"> *</div>
-                                </ng-template>
-                                <div *ngIf="chainForm.controls.chainId.hasError('required') && !chainForm.controls.chainId.hasError('invalid') && chainForm.controls.chainId.touched" class="text-danger"><span mltag="txt_thisfieldisrequired">This field is required</span></div>
-                                <div *ngIf="!chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.hasError('invalid')" class="text-danger">This field should be an integer</div>
+                            <label for="chainId">
+                                <span mltag="txt_chainidentification">Chain Identification</span>
+                                <div class="mandatory text-danger">*</div>
+                            </label>
+                            <input *ngIf="modelForm.chainId > 0; else allowAddChainID" type="number" id="chainId" class="form-control" formControlName="chainId" [(ngModel)]="modelForm.chainId" placeholder="Chain Identification" disabled mltag="txt_chainidentification">
+                            <ng-template #allowAddChainID>
+                                <input type="number" id="chainId" class="form-control" formControlName="chainId">
+                            </ng-template>
+                            <div *ngIf="chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.touched" class="text-danger"><span mltag="txt_thisfieldisrequired">This field is required</span></div>
+                            <div *ngIf="!chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.hasError('invalid')" class="text-danger">This field should be an integer</div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="chainName">
+                                <span mltag="txt_chainname">Chain Name</span>
+                                <div class="mandatory text-danger">*</div>
+                            </label>
+                            <input type="text" id="chainName" class="form-control" formControlName="chainName" [(ngModel)]="modelForm.chainName">
+                            <div *ngIf="chainForm.controls.chainName.hasError('required') && chainForm.controls.chainName.touched" class="text-danger">
+                                <span mltag="txt_thisfieldisrequired">This field is required</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <div class="col-sm-3">
-                                <label for="chainName" class="text-right pt-1" mltag="txt_chainname"> Chain Name</label>
-                            </div>
-                            <div class="col-sm-9 text-left">
-                                <input type="text" id="chainName" class="form-control" formControlName="chainName" [(ngModel)]="modelForm.chainName" placeholder="CHAIN Name" mltag="txt_chainname">
-                                <div class="mandatory text-danger"> *</div>
-                                <div *ngIf="chainForm.controls.chainName.hasError('required') && chainForm.controls.chainName.touched" class="text-danger">
-                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
+                            <button id="chainBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!chainForm.valid">
+                                <div *ngIf="!editForm; else editChainFBtSubmit">
+                                    <span mltag="txt_send">Send</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12 text-center">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 text-left">
-                                <button id="chainBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!chainForm.valid">
-                                    <div *ngIf="!editForm; else editChainFBtSubmit">
-                                        <span mltag="txt_send">Send</span>
-                                    </div>
-                                    <ng-template #editChainFBtSubmit>
-                                        <span mltag="txt_update">Update</span>
-                                    </ng-template>
-                                </button>
-                                <button id="chainBtnResetForm" *ngIf="!editForm" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
-                            </div>
+                                <ng-template #editChainFBtSubmit>
+                                    <span mltag="txt_update">Update</span>
+                                </ng-template>
+                            </button>
+                            <button id="chainBtnResetForm" *ngIf="!editForm" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
                         </div>
                     </div>
                 </section>
