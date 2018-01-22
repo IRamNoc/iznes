@@ -35,9 +35,9 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createMultipleMembersTest {
+public class createMultipleMembersAcceptanceTest {
 
-  private static final Logger logger = LogManager.getLogger(createMultipleMembersTest.class);
+  private static final Logger logger = LogManager.getLogger(createMultipleMembersAcceptanceTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass

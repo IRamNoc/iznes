@@ -30,9 +30,9 @@ import static junit.framework.TestCase.assertTrue;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createAccountTest {
+public class createAccountAcceptanceTest {
 
-  private static final Logger logger = LogManager.getLogger(createAccountTest.class);
+  private static final Logger logger = LogManager.getLogger(createAccountAcceptanceTest.class);
 
   static ExecutorService executor  = Executors.newSingleThreadExecutor();
 

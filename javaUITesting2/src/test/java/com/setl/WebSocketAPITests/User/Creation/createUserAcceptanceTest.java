@@ -2,7 +2,7 @@ package com.setl.WebSocketAPITests.User.Creation;
 
 import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountTest;
+import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.ResponseHandler;
@@ -27,8 +27,8 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 import static junit.framework.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createUserTest {
-    private static final Logger logger = LogManager.getLogger(createUserTest.class);
+public class createUserAcceptanceTest {
+    private static final Logger logger = LogManager.getLogger(createUserAcceptanceTest.class);
 
     public static ResponseHandler print = js -> js.toJSONString();
 

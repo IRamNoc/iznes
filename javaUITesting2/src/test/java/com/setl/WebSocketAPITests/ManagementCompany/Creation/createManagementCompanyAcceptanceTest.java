@@ -22,7 +22,7 @@ import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 
 
 @RunWith(JUnit4.class)
-public class createManagementCompanyTest {
+public class createManagementCompanyAcceptanceTest {
 
   @Rule
   public Timeout globalTimeout = Timeout.millis(30000);;

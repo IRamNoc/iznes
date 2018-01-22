@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class initialiseUserTest {
+public class initialiseUserAcceptanceTest {
 
     public static ResponseHandler print  = js -> js.toJSONString();
 
