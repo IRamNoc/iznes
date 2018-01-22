@@ -167,8 +167,6 @@ public class listArrangementAcceptanceTest {
         api.sendMessage(msfFactory.insertArrangementContractMap(4,20," 'SELECT * FROM setlnet.tblUsers;' ",1508860449), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
             assertTrue("OK".equals(response.get("Status").toString()));
-
-
         });
     }
 
