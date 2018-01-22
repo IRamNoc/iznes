@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_funds">Wallet Nodes</h1>
+    <h1 mltag="txt_walletnodes">Wallet Nodes</h1>
 </div>
 
 <clr-tabs>
@@ -44,16 +44,13 @@
         <ng-template #newNode>
             <button id="walletNodeTab_{{ix}}" clrTabLink (click)="showDashboard = false; currentTab = ix"><span mltag="txt_newwalletnode">New Wallet Node</span> <i class="fa fa-times-circle text-warning" id="walletNodeBtnCloseNodeRounded_{{ix}}" (click)="askToRemoveForm(ix)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
         </ng-template>
-        <clr-tab-content *clrIfActive="(!showDashboard && !showSameForm && currentTab === null && ix === (multiForm.length - 1)) || (!showDashboard && showSameForm && ix === currentTab) || (!showDashboard && !showSameForm && ix === currentTab)" [ngStyle]="{'padding-left': '0', 'padding-right': '0'}">
-            <form [formGroup]="currentForm.form" novalidate (ngSubmit)="save(currentForm.form.value, ix)">
-                <section class="form-block">
+        <clr-tab-content *clrIfActive="(!showDashboard && !showSameForm && currentTab === null && ix === (multiForm.length - 1)) || (!showDashboard && showSameForm && ix === currentTab) || (!showDashboard && !showSameForm && ix === currentTab)" [ngStyle]="{'padding-left': '0', 'padding-right': '0'}">value, ix)" m<span>mltag="txt_nodeid"></span><section class="form-block">
                     <div class="row">
                         <div class="form-group col-xl-12">
-                            <div *ngIf="currentForm.modelForm.walletNodeId > 0">
-                                <input type="hidden" id="walletNodeID_{{ix}}" class="form-control" formControlName="walletNodeId" [(ngModel)]="currentForm.modelForm.walletNodeId" placeholder="Node ID" mltag="txt_nodeId">
+                            <div *ngIf="currentForm.modelForm.walletNodeId mltag="txt_nodeid">
                             </div>
                             <div class="col-xl-2">
-                                <label for="walletNodeName_{{ix}}" class="text-right pt-1" mltag="txt_nodename"> Node Name</label>
+                                <label for="walletNodeName_{{ix}}" class="text-right pt-1" mltag="txt_nodename">Node Name</label>
                             </div>
                             <div class="col-xl-10 text-left">
                                 <input type="text" id="walletNodeName_{{ix}}" class="form-control" formControlName="walletNodeName" [(ngModel)]="currentForm.modelForm.walletNodeName" placeholder="Node Name" mltag="txt_nodename">
@@ -63,17 +60,17 @@
                         </div>
                         <div class="form-group col-xl-12">
                             <div class="col-xl-2">
-                                <label for="walletNodeAddress_{{ix}}" class="text-right pt-1" mltag="txt_nodeaddress"> Node Address</label>
+                                <label for="walletNodeAddress_{{ix}}" class="text-right pt-1" mltag="txt_nodeaddress">Node Address</label>
                             </div>
                             <div class="col-xl-10 text-left">
-                                <input type="text" id="walletNodeAddress_{{ix}}" class="form-control" formControlName="nodeAddress" [(ngModel)]="currentForm.modelForm.nodeAddress" placeholder="Enter Node IP Address">
+                                <input type="text" id="walletNodeAddress_{{ix}}" class="form-control" formControlName="nodeAddress" [(ngModel)]="currentForm.modelForm.nodeAddress" placeholder="Enter Node IP Address" mltag="txt_enternodeipaddress">
                                 <div class="mandatory text-danger"> *</div>
                                 <div *ngIf="currentForm.form.controls.nodeAddress.hasError('required') && currentForm.form.controls.nodeAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                             </div>
                         </div>
                         <div class="form-group col-xl-12">
                             <div class="col-xl-2">
-                                <label for="walletNodePath_{{ix}}" class="text-right pt-1" mltag="txt_nodepath"> Node Path</label>
+                                <label for="walletNodePath_{{ix}}" class="text-right pt-1" mltag="txt_nodepath">Node Path</label>
                             </div>
                             <div class="col-xl-10 text-left">
                                 <input type="text" id="walletNodePath_{{ix}}" class="form-control" formControlName="nodePath" [(ngModel)]="currentForm.modelForm.nodePath" placeholder="Enter Node Path" mltag="txt_enternodepath">
@@ -83,7 +80,7 @@
                         </div>
                         <div class="form-group col-xl-12">
                             <div class="col-xl-2">
-                                <label for="walletNodePort_{{ix}}" class="text-right pt-1" mltag="txt_nodeport"> Node Port</label>
+                                <label for="walletNodePort_{{ix}}" class="text-right pt-1" mltag="txt_nodeport">Node Port</label>
                             </div>
                             <div class="col-xl-10 text-left">
                                 <input type="text" id="walletNodePort_{{ix}}" class="form-control" formControlName="nodePort" [(ngModel)]="currentForm.modelForm.nodePort" placeholder="Enter Node Port" mltag="txt_enternodeport">
@@ -93,7 +90,7 @@
                         </div>
                         <div class="form-group col-xl-12">
                             <div class="col-xl-2">
-                                <label for="walletNodeChain_{{ix}}" class="text-right pt-1" mltag="txt_chain"> Chain</label>
+                                <label for="walletNodeChain_{{ix}}" class="text-right pt-1" mltag="txt_chain">Chain</label>
                             </div>
                             <div *ngIf="currentForm.modelForm.walletNodeId === 0; else showDisabledChainId" class="col-xl-10 text-left ngSelectFix" id="walletNodeChain_{{ix}}">
                                 <ng-select [items]="chainsListOptions" placeholder="Select" formControlName="chainId" mltag="txt_select"></ng-select>

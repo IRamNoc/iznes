@@ -1,18 +1,18 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_chain">CHAINS</h1>
+    <h1 mltag="txt_chains">CHAINS</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button id="chainTabList" clrTabLink (click)="resetForm()"><i class="fa fa-th-list">&nbsp;</i><span mltag="txt_list">List</span>
+        <button id="chainTabList" clrTabLink (click)="resetForm()"><i class="fa fa-th-list" mltag="txt_nbsp">&nbsp;</i><span mltag="txt_list">List</span>
         </button>
         <clr-tab-content *clrIfActive="showSearchTab">
             <section class="form-block">
 
                 <clr-datagrid>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'chainId'">Chain Identification</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'chainName'">Chain Name</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainId'" mltag="txt_chainidentification">Chain Identification</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let chain of chainsList">
                         <clr-dg-cell>
@@ -39,7 +39,7 @@
     <clr-tab>
         <div *ngIf="!editForm; else editChainFTemplate">
             <button id="chainTabAddNewChain" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
-                <span mltag="txt_newchain">Add New Chain</span></button>
+                <span mltag="txt_addnewchain">Add New Chain</span></button>
         </div>
         <ng-template #editChainFTemplate>
             <button id="chainTabEditChain" clrTabLink><i class="fa fa-pencil"></i> <span mltag="txt_editchain">Edit CHAIN</span></button>
