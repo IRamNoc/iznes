@@ -1,20 +1,20 @@
 export class MessageConnectionConfig {
-    type: string = 'connection';
-    messageBody?: string = '';
+    type = 'connection';
+    messageBody? = '';
     actions: MessageConnection[] = [];
     content: MessageField[] = [];
-    completeText: string = 'Complete';
+    completeText = 'Complete';
 }
 
 export class MessageConnection {
-    text: string = '';
-    text_mltag: string = '';
+    text = '';
+    text_mltag = '';
     payload: any; // api payload,
-    styleClasses?: string = '';
+    styleClasses? = '';
 }
 
 export class MessageField {
-    name: string = '';
-    name_mltag: string = '';
-    content: string = '';
+    name = '';
+    name_mltag = '';
+    content = '';
 }
