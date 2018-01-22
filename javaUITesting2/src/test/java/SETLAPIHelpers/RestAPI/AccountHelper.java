@@ -26,7 +26,6 @@ public class AccountHelper {
         api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
     }
 
-
     public static Account createAccountAndCaptureDetails(String localAddress, String description, String name, String member, int userId, String apiKey) throws InterruptedException {
 
       Container<Account> container = new Container<>();
@@ -48,7 +47,6 @@ public class AccountHelper {
     }
 
   public static void createAccountSuccess(String localAddress, String description, String name, String member, int userId, String apiKey) throws InterruptedException {
-
 
     api.start(userId, apiKey);
 
@@ -87,7 +85,6 @@ public class AccountHelper {
     }
   }
 
-
   public static void deleteAccountSuccess(String localAddress, int userId, String apiKey, String memberId) throws InterruptedException {
 
     api.start(userId, apiKey);
@@ -110,5 +107,4 @@ public class AccountHelper {
       assertTrue("".equals(resp.get("Message")));
     });
   }
-
 }
