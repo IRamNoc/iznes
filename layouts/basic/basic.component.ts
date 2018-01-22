@@ -140,7 +140,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     }
 
     public getRouterOutletState(outlet) {
-        if (!outlet || !outlet.activatedRoute) {
+        if (!outlet || !outlet.activated) {
             return;
         }
         return outlet.activatedRoute.snapshot._routerState.url || null;
