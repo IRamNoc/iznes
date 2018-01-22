@@ -45,7 +45,8 @@ public class createMultipleMembersTest {
         executor.shutdown();;
     }
 
-
+    @Rule
+    public Timeout globalTimeout = Timeout.millis(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
