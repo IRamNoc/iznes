@@ -64,6 +64,9 @@ export {
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
     clearContractNeedHandle,
+    SET_ASSET_TRANSACTIONS,
+    SET_ALL_TRANSACTIONS,
+    TransactionsReducer
 } from './wallet';
 
 export {

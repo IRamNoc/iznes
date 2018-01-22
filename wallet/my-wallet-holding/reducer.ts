@@ -3,6 +3,7 @@ import * as MyWalletHoldingActions from './actions';
 import {CLEAR_REQUESTED_WALLET_HOLDING, SET_REQUESTED_WALLET_HOLDING} from './actions';
 import {MyWalletHoldingState} from './model';
 import _ from 'lodash';
+import {ShortHash} from '@setl/utils/helper/common/shorthash';
 
 const initialState: MyWalletHoldingState = {
     holdingByAddress: {},
@@ -52,8 +53,6 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
     }
 
     function setIssueHolding(action, state) {
-        console.log(action);
-
         let payload = _.get(action, 'payload[1]', []);
         let walletId = payload.request.walletid;
 
@@ -91,14 +90,18 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
                     continue;
                 }
 
-                const balance = assetsBalances[asset][0];
-                const encumbrance = assetsBalances[asset][1];
+                const balance: number = assetsBalances[asset][0];
+                const encumbrance: number = assetsBalances[asset][1];
+                const free: number = balance - encumbrance;
 
-                if (typeof holdingByAsset[asset] == 'undefined') {
+                if (typeof holdingByAsset[asset] === 'undefined') {
                     holdingByAsset[asset] = {
-                        'total': 0,
-                        'totalencumbered': 0,
-                        'breakdown': {}
+                        asset: asset,
+                        hash: ShortHash.unique(asset),
+                        total: 0,
+                        totalencumbered: 0,
+                        free: 0,
+                        breakdown: []
                     };
                 }
 
@@ -109,7 +112,12 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
                 if (encumbrance > 0) { // ignore those negative balance (normally is the master address of the asset.)
                     holdingByAsset[asset]['totalencumbered'] += encumbrance;
                 }
-                holdingByAsset[asset]['breakdown'][addr] = [balance, encumbrance];
+
+                if (free > 0) {
+                    holdingByAsset[asset]['free'] += free;
+                }
+
+                holdingByAsset[asset].breakdown.push({ addr, balance, encumbrance, free: balance - encumbrance });
             }
         }
 

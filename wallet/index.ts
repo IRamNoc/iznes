@@ -65,6 +65,13 @@ import {
     clearContractNeedHandle
 } from './my-wallet-contract';
 
+import {
+    SET_ASSET_TRANSACTIONS,
+    SET_ALL_TRANSACTIONS,
+    TransactionsReducer,
+    Transactions
+} from './transactions';
+
 import {combineReducers, Reducer} from 'redux';
 
 export {
@@ -75,6 +82,13 @@ export {
     SET_WALLET_LABEL,
     setRequestedWalletLabel,
     clearRequestedWalletLabel
+};
+
+// Transactions
+export {
+    SET_ALL_TRANSACTIONS,
+    SET_ASSET_TRANSACTIONS,
+    TransactionsReducer
 };
 
 export {
@@ -126,6 +140,7 @@ export interface WalletState {
     managedWallets: ManagedWalletsState;
     walletRelationship: WalletRelationshipState;
     myWalletContract: MyWalletContractState;
+    transactions: Transactions;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
@@ -135,6 +150,7 @@ export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
         walletDirectory: WalletDirectoryReducer,
         managedWallets: ManagedWalletsReducer,
         walletRelationship: WalletRelationshipReducer,
-        myWalletContract: MyWalletContractReducer
+        myWalletContract: MyWalletContractReducer,
+        transactions: TransactionsReducer,
     }
 );
