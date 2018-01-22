@@ -6,7 +6,7 @@
         placeholder="Select Type"
         [formControl]="requestTypeForm.controls['type']"
         (selected)="onRequestTypeSelect($event)"
-    >
+   mltag="txt_selecttype">
     </ng-select>
 </div>
 
@@ -19,31 +19,31 @@
             placeholder="Select Relationship"
             [formControl]="requestTypeForm.controls['fromRelationship']"
             (selected)="onRelationshipSelect($event)"
-        >
+       mltag="txt_selectrelationship">
         </ng-select>
     </div>
 
     <div *ngSwitchCase="2">
         <div class="form-group col-sm-6">
-            <label class="control-label" for="walletFrom" mltag="txt_walletfrom">Request from LEI in Directory</label>
+            <label class="control-label" for="walletFrom" mltag="txt_requestfromleiindirectory">Request from LEI in Directory</label>
             <ng-select id="walletFrom"
                 [items]="walletDirectoryList"
                 [allowClear]="true"
                 placeholder="Select Wallet"
                 [formControl]="requestTypeForm.controls['walletFrom']"
                 (selected)="onWalletSelect($event)"
-            >
+           mltag="txt_selectwallet">
             </ng-select>
         </div>
         <div class="form-group col-sm-6">
-            <label class="control-label" for="addressTo" mltag="txt_addressto">Receive to Address</label>
+            <label class="control-label" for="addressTo" mltag="txt_receivetoaddress">Receive to Address</label>
             <ng-select id="addressTo"
                 [items]="walletAddressList"
                 [allowClear]="true"
                 placeholder="Select Address"
                 [formControl]="requestTypeForm.controls['addressTo']"
                 (selected)="onAddressSelect($event)"
-            >
+           mltag="txt_selectaddress">
             </ng-select>
         </div>
     </div>

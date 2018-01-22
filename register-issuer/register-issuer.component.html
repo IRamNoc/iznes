@@ -1,12 +1,11 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-user-plus"></i> <span mltag="txt_registerissuer">XRegister Issuer</span></h1>
+    <h1><i class="fa fa-user-plus"></i> <span mltag="txt_xregisterissuer">XRegister Issuer</span></h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="testlinkreg" mltag="txt_registerissuerform">
-            <i class="fa fa-plus-circle"></i> New Issuer
-        </button>
+        <button clrTabLink id="testlinkreg">
+            <i class="fa fa-plus-circle"></i> <span mltag="txt_newissuer">New Issuer</span></button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer(registerIssuerForm.value)">
                 <section class="form-block">
@@ -22,8 +21,8 @@
                             [allowClear]="true"
                             placeholder="Select Issuer Address"
                             [formControl]="issuerAddress"
-                            mltag="txt_selectissueraddress"
-                        >
+                           
+                       mltag="txt_selectissueraddress">
                         </ng-select>
                     </div>
                     <button type="submit" class="btn btn-primary" mltag="txt_registerissuer">Register Issuer</button>
