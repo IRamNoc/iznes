@@ -19,6 +19,7 @@ import {SetlMessageAttachmentComponent} from './messages/message-components/mess
 import {SetlMessageBodyComponent} from './messages/message-components/message-body/message-body.component';
 import {SetlMessageConnectionComponent} from './messages/message-components/message-connection/message-connection.component';
 import {SetlMessageConnectionService} from './messages/message-components/message-connection/message-connection.service';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import {SetlMessageConnectionService} from './messages/message-components/messag
         ReactiveFormsModule,
         NgxPaginationModule,
         MultilingualModule,
-        FileViewerModule
+        FileViewerModule,
+        RouterModule
     ],
     declarations: [
         SetlMessagesComponent,

@@ -10,26 +10,26 @@
     <div class="row">
         <!-- categories -->
         <div class="col-sm-4 col-md-3 col-lg-2 col-categories">
-            <div class="tile row" (click)="showCategory(1337, true)" [ngClass]="{'active': 1337 === currentCategory}">
+            <a class="tile row" routerLink="/messages/compose" [ngClass]="{'active': 1337 === currentCategory}">
                 <div class="tile-icon">
                     <clr-icon shape="edit" size="24"></clr-icon>
                 </div>
                 <div class="tile-text">
                     <h4 mltag="txt_compose">Compose</h4>
                 </div>
-            </div>
+            </a>
 
             <hr class="message-hr">
 
             <div class="cat-tile" *ngFor="let category of categories; let i = index">
-                <div class="tile row" (click)="showCategory(i)" [ngClass]="{'active': i === currentCategory}">
+                <a class="tile row" routerLink="/messages/{{category.type}}" [ngClass]="{'active': i === currentCategory}">
                     <div class="tile-icon">
                         <clr-icon [attr.shape]="category.icon" size="18"></clr-icon>
                     </div>
                     <div class="tile-text">
                         <h4>{{category.name}}</h4> <!--<span _ngcontent-c8="" class="label label-warning">99</span>-->
                     </div>
-                </div>
+                </a>
             </div>
 
         </div>
