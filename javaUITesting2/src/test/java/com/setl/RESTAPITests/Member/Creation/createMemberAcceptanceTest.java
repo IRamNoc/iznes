@@ -39,14 +39,7 @@ public class createMemberAcceptanceTest {
       api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
   }
 
-
-
   @Test
-  public void createNewMember() throws ExecutionException, InterruptedException {
-
-  }
-
- /* @Test
   @Ignore
   public void createNewMember() throws ExecutionException, InterruptedException {
     String memberDetails[] = generateMemberDetails();
@@ -118,6 +111,6 @@ public class createMemberAcceptanceTest {
 
     createMemberSuccess(localAddress,userId, apiKey, memberName, email);
     createMemberFailure(localAddress,userId, apiKey, memberName, email, expectedError);
-    }*/
+    }
   }
 

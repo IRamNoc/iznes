@@ -35,14 +35,6 @@ public class listAccountAcceptanceTest {
         api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
     }
 
-
-
-    @Test
-
-    public void listAccounts() throws ExecutionException, InterruptedException {
-
-    }
-   /*
     @Test
     @Ignore("Need to programatically determine Userid and API Key")
     public void listAccounts() throws ExecutionException, InterruptedException {
@@ -66,5 +58,5 @@ public class listAccountAcceptanceTest {
 
         createAccountFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", accountDescription, accountName,1, "Permission Denied.");
 
-    }*/
+    }
 }
