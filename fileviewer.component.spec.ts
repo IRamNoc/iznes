@@ -11,24 +11,34 @@ import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {PdfMockService} from '@setl/core-req-services/pdf/pdf.mock.service';
 import {SecurityContext} from "@angular/core";
 import {SagaHelper} from '@setl/utils';
+
+let origRunAsync;
+
 describe('FileViewerComponent', () => {
+
+    beforeAll(() => {
+        origRunAsync = SagaHelper.runAsync;
+        SagaHelper.runAsync = function (a, b, c, d, e, f) {
+            e({
+                0: {
+
+                },
+                1: {
+                    Data: {
+                        downloadId: 'downloadId'
+                    }
+                }
+            });
+        };
+    });
+    afterAll(() => {
+        SagaHelper.runAsync = origRunAsync;
+    });
 
     let component: FileViewerComponent;
     let fixture: ComponentFixture<FileViewerComponent>;
     const pdfMockService = new PdfMockService('', '');
     const sanitizer: DomSanitizer = new DomSanitizer();
-    SagaHelper.runAsync = function (a, b, c, d, e, f) {
-        e({
-           0: {
-
-            },
-            1: {
-               Data: {
-                   downloadId: 'downloadId'
-               }
-            }
-        });
-    };
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ClarityModule],
