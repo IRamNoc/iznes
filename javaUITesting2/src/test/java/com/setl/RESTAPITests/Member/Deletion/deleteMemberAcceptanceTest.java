@@ -35,13 +35,6 @@ public class deleteMemberAcceptanceTest {
   }
 
   @Test
-
-  public void deleteMember() throws ExecutionException, InterruptedException {
-
-
-  }
-
- /* @Test
   @Ignore
   public void deleteMember() throws ExecutionException, InterruptedException {
 
@@ -89,5 +82,5 @@ public class deleteMemberAcceptanceTest {
       assertTrue("Permission denied.".equals(resp2.get("Message")));
     });
   });
-  }*/
+  }
 }

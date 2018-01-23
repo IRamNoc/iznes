@@ -39,14 +39,6 @@ public class NavListUpdateAcceptanceTest {
       api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
   }
 
-
-  @Test
-  @Ignore
-  public void failToUpdateNavPriceWhenNavIsFinalised(){
-
-
-  }
-  /*
   @Test
   @Ignore
   public void failToUpdateNavPriceWhenNavIsFinalised(){
@@ -178,5 +170,5 @@ public class NavListUpdateAcceptanceTest {
     MemberNodeMessageFactory msfFactory = api.getMessageFactory();
     api.sendMessage(msfFactory.updateNav("TEST1|OFI RS Dynamique C D ", "2017-07-05", 1200000, 0, 1), claim -> {
     });
-  }*/
+  }
 }

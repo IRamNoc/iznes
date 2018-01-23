@@ -2,7 +2,6 @@ package com.setl.WebSocketAPITests.User.Creation;
 
 import SETLAPIHelpers.User;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.ResponseHandler;

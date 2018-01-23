@@ -81,21 +81,14 @@ public class createManagementCompanyAcceptanceTest {
         assertTrue(managementCompanyName.equals(response.get("name").toString()));
     });
   }
-  @Test
 
-  public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
-
-
-  }
- /*
   @Test
   @Ignore
   public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
-    String managementCompanyDetails[] = generateManagementCompanyDetails();
-    String managementCompanyName = managementCompanyDetails[0];
-    String managementCompanyDescription = managementCompanyDetails[1];
+      String managementCompanyDetails[] = generateManagementCompanyDetails();
+      String managementCompanyName = managementCompanyDetails[0];
+      String managementCompanyDescription = managementCompanyDetails[1];
 
-     // createManagementCompanyFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", managementCompanyDescription, managementCompanyName,1, "Permission Denied.");
-
-  }*/
+      // createManagementCompanyFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", managementCompanyDescription, managementCompanyName,1, "Permission Denied.");
+  }
 }

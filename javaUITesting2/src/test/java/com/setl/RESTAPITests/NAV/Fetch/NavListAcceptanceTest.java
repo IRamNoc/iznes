@@ -32,11 +32,7 @@ public class NavListAcceptanceTest {
   }
 
 
-  @Test
-   public void getValidNavList(){
 
-  }
-/*
   @Test
   @Ignore
   public void getValidNavList(){
@@ -190,5 +186,5 @@ public class NavListAcceptanceTest {
       assertTrue("FR0000970097".equals(response6.get("isin")));
       assertEquals(expectedTotal, response6.get("total"));
    });
-  }*/
+  }
 }

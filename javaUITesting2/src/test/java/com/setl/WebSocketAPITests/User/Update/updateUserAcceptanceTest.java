@@ -36,13 +36,8 @@ public class updateUserAcceptanceTest {
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
 
-    @Test
 
-    public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
 
-    }
-
-/*
   @Test
   @Ignore
   public void updateUserEmailAddress() throws InterruptedException, ExecutionException {
@@ -89,5 +84,5 @@ public class updateUserAcceptanceTest {
     updateUser(factory, socket, user.getUserID(), user.getEmailAddress(), user.getAccountID(), "36", "36", "userType", 0);
 
     connection.disconnect();
-  }*/
+  }
 }
