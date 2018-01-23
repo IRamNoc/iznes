@@ -1,14 +1,16 @@
-package com.setl.WebSocketAPITests.Member.MemberManagement;
+package com.setl.WebSocketAPITests.Account.Deletion;
 
-import SETLAPIHelpers.Member;
+import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+import com.setl.WebSocketAPITests.Account.Creation.createAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -19,14 +21,16 @@ import org.junit.runners.JUnit4;
 
 import java.util.concurrent.*;
 
-import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
+import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
+import static SETLAPIHelpers.WebSocketAPI.AccountHelper.deleteAccount;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static SETLAPIHelpers.WebSocketAPI.MemberHelper.*;
 import static junit.framework.Assert.fail;
 
-@RunWith(OrderedJUnit4ClassRunner.class)
-public class addAccountToMemberTest {
 
+@RunWith(OrderedJUnit4ClassRunner.class)
+public class deleteAccountAcceptanceTest {
+
+    private static final Logger logger = LogManager.getLogger(deleteAccountAcceptanceTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass
@@ -34,7 +38,8 @@ public class addAccountToMemberTest {
         executor.shutdown();;
     }
 
-
+    @Rule
+    public Timeout globalTimeout = new Timeout(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -56,46 +61,17 @@ public class addAccountToMemberTest {
             }
         connection.disconnect();
     }
-;
 
   @Test
-  @Ignore("Failing - needs investigation WRT WS timeout" )
-  public void createNewMemberAndAddAccount() throws ExecutionException, InterruptedException {
-
+  public void deleteAccountTest() throws InterruptedException, ExecutionException {
       runTest(()-> {
           try {
-              String memberDetails[] = generateMemberDetails();
-              String memberName = memberDetails[0];
-              String email = memberDetails[1];
-              createMember(factory, socket);
-          SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, memberName, "PASSWORD");
+              Account account = createAccount(factory, socket, 1);
+              deleteAccount(factory, socket, account.getAccountID());
           } catch (InterruptedException| ExecutionException e) {
               fail(e.getMessage());
           }
-
-          try {
-              addAccountToMember(factory, socket, "SETL Private Admin");
-          } catch (ExecutionException e) {
-              e.printStackTrace();
-          } catch (InterruptedException e) {
-              e.printStackTrace();
-          }
       });
+
   }
-
-
-  @Test
-  @Ignore("Failing - needs investigation WRT WS timeout" )
-  public void addAccountToExistingMember() throws ExecutionException, InterruptedException {
-    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-
-    String memberDetails[] = generateMemberDetails();
-    String memberName = memberDetails[0];
-    String email = memberDetails[1];
-    createMember(factory, socket);
-
-    connection.disconnect();
-  }
-
-
 }

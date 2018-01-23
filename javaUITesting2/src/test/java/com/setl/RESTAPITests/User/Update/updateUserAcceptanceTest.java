@@ -24,10 +24,10 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
 
 @RunWith(JUnit4.class)
-public class updateUserTest {
+public class updateUserAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);;
+  public Timeout globalTimeout = new Timeout(30000);;
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");

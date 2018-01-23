@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertTrue;
 public class createManagementCompanyAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);;
+  public Timeout globalTimeout = new Timeout(30000);;
 
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   int userId = 4;
@@ -81,14 +81,14 @@ public class createManagementCompanyAcceptanceTest {
         assertTrue(managementCompanyName.equals(response.get("name").toString()));
     });
   }
+
   @Test
   @Ignore
   public void failToCreateManagementCompanyWithIncorrectPermissions() throws ExecutionException, InterruptedException {
-    String managementCompanyDetails[] = generateManagementCompanyDetails();
-    String managementCompanyName = managementCompanyDetails[0];
-    String managementCompanyDescription = managementCompanyDetails[1];
+      String managementCompanyDetails[] = generateManagementCompanyDetails();
+      String managementCompanyName = managementCompanyDetails[0];
+      String managementCompanyDescription = managementCompanyDetails[1];
 
-     // createManagementCompanyFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", managementCompanyDescription, managementCompanyName,1, "Permission Denied.");
-
+      // createManagementCompanyFailure(localAddress, 17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=", managementCompanyDescription, managementCompanyName,1, "Permission Denied.");
   }
 }

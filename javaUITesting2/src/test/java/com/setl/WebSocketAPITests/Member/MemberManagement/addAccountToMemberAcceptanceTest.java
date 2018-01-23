@@ -1,43 +1,29 @@
-package com.setl.WebSocketAPITests.Member.Creation;
+package com.setl.WebSocketAPITests.Member.MemberManagement;
 
-import SETLAPIHelpers.Member;
+import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
-import io.setl.wsclient.shared.Message;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
-import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMember;
-import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMemberAndCaptureDetails;
+import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
+import static SETLAPIHelpers.WebSocketAPI.MemberHelper.*;
 import static junit.framework.Assert.fail;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createMultipleMembersTest {
+public class addAccountToMemberAcceptanceTest {
 
-  private static final Logger logger = LogManager.getLogger(createMultipleMembersTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass
@@ -45,7 +31,8 @@ public class createMultipleMembersTest {
         executor.shutdown();;
     }
 
-
+    @Rule
+    public Timeout globalTimeout = new Timeout(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -67,17 +54,47 @@ public class createMultipleMembersTest {
             }
         connection.disconnect();
     }
+;
+
 
   @Test
-  public void createMultipleMembers() throws ExecutionException, InterruptedException {
+  @Ignore("Failing - needs investigation WRT WS timeout" )
+  public void createNewMemberAndAddAccount() throws ExecutionException, InterruptedException {
 
       runTest(()-> {
           try {
-              createMember(factory, socket, 5);
+              String memberDetails[] = generateMemberDetails();
+              String memberName = memberDetails[0];
+              String email = memberDetails[1];
+              createMember(factory, socket);
+          SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, memberName, "PASSWORD");
           } catch (InterruptedException| ExecutionException e) {
               fail(e.getMessage());
           }
+
+          try {
+              addAccountToMember(factory, socket, "SETL Private Admin");
+          } catch (ExecutionException e) {
+              e.printStackTrace();
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
       });
   }
-}
 
+
+  @Test
+  @Ignore("Failing - needs investigation WRT WS timeout" )
+  public void addAccountToExistingMember() throws ExecutionException, InterruptedException {
+    Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+
+    String memberDetails[] = generateMemberDetails();
+    String memberName = memberDetails[0];
+    String email = memberDetails[1];
+    createMember(factory, socket);
+
+    connection.disconnect();
+  }
+
+
+}

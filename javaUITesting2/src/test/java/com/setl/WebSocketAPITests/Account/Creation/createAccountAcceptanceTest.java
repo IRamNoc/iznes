@@ -30,9 +30,9 @@ import static junit.framework.TestCase.assertTrue;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createAccountTest {
+public class createAccountAcceptanceTest {
 
-  private static final Logger logger = LogManager.getLogger(createAccountTest.class);
+  private static final Logger logger = LogManager.getLogger(createAccountAcceptanceTest.class);
 
   static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
@@ -41,7 +41,8 @@ public class createAccountTest {
       executor.shutdown();;
   }
 
-
+  @Rule
+  public Timeout globalTimeout = new Timeout(30000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");

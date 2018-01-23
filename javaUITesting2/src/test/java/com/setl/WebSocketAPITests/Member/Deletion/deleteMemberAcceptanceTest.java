@@ -1,14 +1,15 @@
-package com.setl.WebSocketAPITests.Account.Deletion;
+package com.setl.WebSocketAPITests.Member.Deletion;
 
-import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Creation.createAccountTest;
+import SETLAPIHelpers.Member;
+import com.setl.WebSocketAPITests.Account.Deletion.deleteAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
 import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
@@ -21,16 +22,18 @@ import org.junit.runners.JUnit4;
 
 import java.util.concurrent.*;
 
-import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
-import static SETLAPIHelpers.WebSocketAPI.AccountHelper.deleteAccount;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
+import static SETLAPIHelpers.MemberDetailsHelper.generateMemberDetails;
+
+import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMember;
+import static SETLAPIHelpers.WebSocketAPI.MemberHelper.createMemberAndCaptureDetails;
+import static SETLAPIHelpers.WebSocketAPI.MemberHelper.deleteMember;
 import static junit.framework.Assert.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class deleteAccountTest {
-
-    private static final Logger logger = LogManager.getLogger(deleteAccountTest.class);
+public class deleteMemberAcceptanceTest {
+    private static final Logger logger = LogManager.getLogger(deleteMemberAcceptanceTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass
@@ -38,7 +41,8 @@ public class deleteAccountTest {
         executor.shutdown();;
     }
 
-
+    @Rule
+    public Timeout globalTimeout = new Timeout(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -61,16 +65,30 @@ public class deleteAccountTest {
         connection.disconnect();
     }
 
-  @Test
-  public void deleteAccountTest() throws InterruptedException, ExecutionException {
-      runTest(()-> {
-          try {
-              Account account = createAccount(factory, socket, 1);
-              deleteAccount(factory, socket, account.getAccountID());
-          } catch (InterruptedException| ExecutionException e) {
-              fail(e.getMessage());
-          }
-      });
 
-  }
+    @Test
+    public void deleteMemberTest() throws InterruptedException, ExecutionException {
+
+
+    }
+
+    /*
+    @Test
+    public void deleteMemberTest() throws InterruptedException, ExecutionException {
+
+      String memberDetails[] = generateMemberDetails();
+
+      String memberName = memberDetails[0];
+      String email = memberDetails[1];
+
+        runTest(()-> {
+            try {
+                Member member = createMemberAndCaptureDetails(factory, socket, memberName, email);
+                deleteMember(factory, socket, member.getMemberID());
+            } catch (InterruptedException| ExecutionException e) {
+                fail(e.getMessage());
+            }
+        });
+    }*/
+
 }

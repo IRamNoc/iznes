@@ -18,7 +18,7 @@ public class NavListAcceptanceTest {
 
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(120000);
+  public Timeout globalTimeout = new Timeout(30000);
   String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   //String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
   //String localAddress = "http://apidev.iznes.io:9788/api";
@@ -30,6 +30,7 @@ public class NavListAcceptanceTest {
   public void setup(){
       api = new RestApi<MemberNodeMessageFactory>(localAddress, new MemberNodeMessageFactory());
   }
+
 
 
   @Test

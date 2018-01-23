@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertTrue;
 public class listArrangementAcceptanceTest {
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(12000000);
+    public Timeout globalTimeout = new Timeout(30000);
 
     String localAddress = "http://uk-lon-li-006.opencsd.io:9788/api";
     int userId = 6;
@@ -36,7 +36,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByAssetAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -51,7 +51,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByArrangementTypeAsAssetManager() throws ExecutionException, InterruptedException {
         api.start(userId, apiKey);
 
@@ -66,7 +66,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listArrangementsByStatusAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -81,7 +81,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsAsAssetManager() throws ExecutionException, InterruptedException {
 
         api.start(userId, apiKey);
@@ -96,7 +96,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByAssetAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -111,7 +111,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByArrangementTypeAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -127,7 +127,7 @@ public class listArrangementAcceptanceTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsByStatusAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -142,7 +142,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAllArrangementsAsInvestor() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -157,7 +157,7 @@ public class listArrangementAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void insertArrangementAcceptanceTest() throws ExecutionException, InterruptedException {
 
         api.start(11, "34zzvRTMk8qE69IkTiBgLPza/jzKVTRzNE3KLVjeuoU=");
@@ -167,13 +167,11 @@ public class listArrangementAcceptanceTest {
         api.sendMessage(msfFactory.insertArrangementContractMap(4,20," 'SELECT * FROM setlnet.tblUsers;' ",1508860449), claim -> {
             Map response = claim.get("data").asList(Map.class).get(0);
             assertTrue("OK".equals(response.get("Status").toString()));
-
-
         });
     }
 
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void failToCreateArrangementWithIncorrectPermissions() throws ExecutionException, InterruptedException {
         String accountDetails[] = generateAccountDetails();
         String accountName = accountDetails[0];

@@ -22,7 +22,7 @@ import static junit.framework.TestCase.assertTrue;
 public class deleteMemberAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(10000);
+  public Timeout globalTimeout = new Timeout(130000);
 
   String localAddress = "http://localhost:9788/api";
   int userId = 4;
