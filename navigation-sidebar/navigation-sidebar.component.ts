@@ -45,8 +45,6 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '50': 'registrar',
             }[userType];
             this.menuJson = this.translateMenu(this.appConfig.menuSpec[userTypeStr]);
-
-            this._changeDetectorRef.detectChanges();
         });
 
     }
@@ -61,6 +59,8 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     }
 
     translateMenu(rawMenuData) {
+        if(!rawMenuData) return;
+
         return immutableHelper.reduce(rawMenuData, (result, item) => {
             const mltag = item.get('label_txt', '');
             const label = this.multilingualService.getTranslation(mltag) || item.get('label', '');
