@@ -18,6 +18,20 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MessagesService } from './messages.service';
 import { MessageAction, MessageActionsConfig } from './message-components/message-form-action/message-form-action.model';
 import { MockMailHelper } from './mockMailHelper';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { APP_BASE_HREF } from '@angular/common';
+
+const routes = [
+    {
+        path: 'messages/:category',
+        component: SetlMessagesComponent,
+    },
+    {
+        path: 'messages',
+        redirectTo: '/messages/inbox'
+    },
+];
 
 describe('SetlMessagesComponent', () => {
   let component: SetlMessagesComponent;
@@ -62,12 +76,15 @@ describe('SetlMessagesComponent', () => {
             QuillEditorModule,
             NgxPaginationModule,
             SetlPipesModule,
-            FileViewerModule
+            FileViewerModule,
+            RouterModule.forRoot(routes)
         ],
         providers: [
             MyMessagesService,
             MemberSocketService,
-            AlertsService
+            AlertsService,
+            { provide: ActivatedRoute, useValue: { params: Observable.of({category: 'inbox'}) } },
+            { provide: APP_BASE_HREF, useValue : '/' }
         ]
     })
     .compileComponents();
