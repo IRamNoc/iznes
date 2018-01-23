@@ -1,21 +1,18 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Pipe } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
-import { SagaHelper, Common } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { immutableHelper } from '@setl/utils';
 import {
-    SET_MESSAGE_LIST,
-    getMyMessagesList,
-    getConnectedWallet,
-    getWalletDirectoryList,
     setRequestedMailList
 } from '@setl/core-store';
 import { MyMessagesService } from '@setl/core-req-services';
 import { MessagesService } from "../messages.service";
 import { MailHelper } from './mailHelper';
 import { fromJS } from 'immutable';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'setl-messages',
@@ -89,7 +86,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         private ngRedux: NgRedux<any>,
         private myMessageService: MyMessagesService,
         private changeDetectorRef: ChangeDetectorRef,
-        private _alertsService: AlertsService
+        private _alertsService: AlertsService,
+        private route: ActivatedRoute
     ) {
         this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -176,28 +174,30 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             )
         );
 
-        this.subscriptionsArray.push(
-            this.getMessageList.subscribe(
-                (data) => {
-                    console.log('get Message List');
-                    this.messagesList(data);
-                }
-            )
-        );
-
-        this.subscriptionsArray.push(
-            this.getMailCounts.subscribe(
-                (data) => {
-                    console.log('mail counts', data);
-                    this.mailCounts = data;
-                }
-            )
-        );
+        Observable.combineLatest([
+            this.getMailCounts,
+            this.getMessageList
+        ]).subscribe((subs) => {
+            this.mailCounts = subs[0];
+            this.messagesList(subs[1]);
+        });
 
         this.messageComposeForm = new FormGroup({
             subject: new FormControl('', Validators.required),
             recipients: new FormControl('', Validators.required),
             body: new FormControl('', Validators.required)
+        });
+
+        this.route.params.subscribe((params) => {
+            if (params.category) {
+                if (params.category === 'compose') {
+                    return this.showCategory(1337, true);
+                }
+                const idx = this.categories.findIndex(cat => cat.type === params.category);
+                if (idx >= 0) {
+                    this.showCategory(idx);
+                }
+            }
         });
     }
 
@@ -237,6 +237,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.currentBoxName = this.categories[this.currentCategory].name;
             this.currentBoxCount = this.mailCounts[categoryType];
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -336,18 +337,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     showCategory(index, composeSelected = false, page = 0) {
         this.resetMessages();
+        this.composeSelected = composeSelected;
 
-        if (composeSelected) {
-            this.composeSelected = true;
-        } else {
+        const categories = [...this.categories];
+        categories.map((cat, idx) => cat.active = idx === index);
+        this.currentCategory = index;
+        if (!this.composeSelected) {
             // set message to active to apply active css class
-            this.categories[index].active = true;
-            this.composeSelected = false;
 
-            const type = this.categories[index].type;
-
-            // set the current message that appears on the right hand side
-            this.currentCategory = index;
+            const type = categories[index].type;
 
             this.requestMailboxByCategory(type, page);
 
@@ -356,6 +354,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 mailid: 0
             };
         }
+        this.categories = categories;
+        this.changeDetectorRef.markForCheck();
     }
 
     requestMailboxByCategory(type, page) {
