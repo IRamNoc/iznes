@@ -36,11 +36,6 @@ public class deleteAccountAcceptanceTest {
 
 
   @Test
-  public void deleteAccount() throws ExecutionException, InterruptedException {
-
-  }
-/*
-  @Test
   @Ignore("Need to programatically determine Userid and API Key")
   public void deleteAccount() throws ExecutionException, InterruptedException {
 
@@ -86,5 +81,5 @@ public class deleteAccountAcceptanceTest {
         assertTrue("FAIL".equals(resp2.get("Status")));
       });
     });
-  }*/
+  }
 }
