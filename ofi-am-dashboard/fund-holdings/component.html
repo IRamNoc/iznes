@@ -15,15 +15,18 @@
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label mltag="txt_pleaseselectafundshareinthislia3458b556c">Please select a fund share in this list</label>
-                                <ng-select
-                                    [items]="filteredUserAssetList"
-                                    [allowClear]="true"
-                                    [formControl]="fundShareForm.controls['selectFund']">
+                                <label mltag="txt_pleaseselectafundshareinthislia3458b556c">
+                                    Please select a fund share in this list
+                                </label>
+
+                                <ng-select [customWidth]="80"
+                                           [items]="filteredUserAssetList"
+                                           [allowClear]="true"
+                                           [formControl]="fundShareForm.controls['selectFund']">
                                 </ng-select>
                                 <!--<button-->
-                                    <!--(click)="handleFundSelection()"-->
-                                    <!--class="btn btn-primary btn-end" mltag="txt_go"> Go-->
+                                <!--(click)="handleFundSelection()"-->
+                                <!--class="btn btn-primary btn-end" mltag="txt_go"> Go-->
                                 <!--</button>-->
                             </div>
                         </div>
