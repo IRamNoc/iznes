@@ -1,9 +1,7 @@
 package com.setl.WebSocketAPITests.Member.MemberManagement;
 
-import SETLAPIHelpers.Member;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -15,7 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.concurrent.*;
 
@@ -25,7 +22,7 @@ import static SETLAPIHelpers.WebSocketAPI.MemberHelper.*;
 import static junit.framework.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class addAccountToMemberTest {
+public class addAccountToMemberAcceptanceTest {
 
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
@@ -35,7 +32,7 @@ public class addAccountToMemberTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = new Timeout(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -58,6 +55,7 @@ public class addAccountToMemberTest {
         connection.disconnect();
     }
 ;
+
 
   @Test
   @Ignore("Failing - needs investigation WRT WS timeout" )

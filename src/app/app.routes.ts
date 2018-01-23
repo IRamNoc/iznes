@@ -59,7 +59,8 @@ import {
     RegisterAssetComponent,
     RegisterIssuerComponent,
     RequestAssetComponent,
-    SendAssetComponent
+    SendAssetComponent,
+    EncumberAssetsComponent,
 } from '@setl/asset-servicing';
 /**
  * Manage member module.
@@ -243,6 +244,17 @@ export const ROUTES: Routes = [
                         component: RequestAssetComponent,
                         canActivate: [LoginGuardService]
                     }
+                ],
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'financing',
+                children: [
+                    {
+                        path: 'encumber-assets',
+                        component: EncumberAssetsComponent,
+                        canActivate: [LoginGuardService]
+                    },
                 ],
                 canActivate: [LoginGuardService]
             },

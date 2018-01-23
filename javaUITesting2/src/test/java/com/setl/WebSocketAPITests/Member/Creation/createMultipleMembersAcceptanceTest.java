@@ -35,9 +35,9 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class createMultipleMembersTest {
+public class createMultipleMembersAcceptanceTest {
 
-  private static final Logger logger = LogManager.getLogger(createMultipleMembersTest.class);
+  private static final Logger logger = LogManager.getLogger(createMultipleMembersAcceptanceTest.class);
     static ExecutorService executor  = Executors.newSingleThreadExecutor();
 
     @AfterClass
@@ -46,7 +46,7 @@ public class createMultipleMembersTest {
     }
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);
+    public Timeout globalTimeout = new Timeout(30000);
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
     SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -70,6 +70,7 @@ public class createMultipleMembersTest {
     }
 
   @Test
+  @Ignore
   public void createMultipleMembers() throws ExecutionException, InterruptedException {
 
       runTest(()-> {

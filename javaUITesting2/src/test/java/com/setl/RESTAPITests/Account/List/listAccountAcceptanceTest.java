@@ -3,6 +3,7 @@ package com.setl.RESTAPITests.Account.List;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static junit.framework.TestCase.assertTrue;
 public class listAccountAcceptanceTest {
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(120000);
+    public Timeout globalTimeout = new Timeout(30000);
 
     String localAddress = "http://localhost:9788/api";
     int userId = 4;
@@ -34,10 +35,8 @@ public class listAccountAcceptanceTest {
         api = new RestApi<>(localAddress, new MemberNodeMessageFactory());
     }
 
-
-
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void listAccounts() throws ExecutionException, InterruptedException {
 
         api.start(17, "pnd0EbzRPYZLhumbxAAhklbotvEqhWgk7gL0OdTHUgU=");
@@ -51,7 +50,7 @@ public class listAccountAcceptanceTest {
         });
     }
     @Test
-    @Ignore
+    @Ignore("Need to programatically determine Userid and API Key")
     public void failToCreateArrangementWithIncorrectPermissions() throws ExecutionException, InterruptedException {
         String accountDetails[] = generateAccountDetails();
         String accountName = accountDetails[0];

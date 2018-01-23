@@ -25,16 +25,18 @@ import static SETLAPIHelpers.WebSocketAPI.UserHelper.updateUser;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
-public class updateUserTest {
+public class updateUserAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = Timeout.millis(30000);
+  public Timeout globalTimeout = new Timeout(30000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "trb2017");
   String localAddress = "ws://localhost:9788/db/";
   //String jenkinsAddress = "ws://si-jenkins01.dev.setl.io:9788/db/";
   //String testAddress = "ws://uk-lon-li-006.opencsd.io:27017/db/";
+
+
 
   @Test
   @Ignore

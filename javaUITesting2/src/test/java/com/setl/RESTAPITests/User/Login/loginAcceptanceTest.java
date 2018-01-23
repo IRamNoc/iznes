@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import static junit.framework.TestCase.*;
 
 @RunWith(JUnit4.class)
-public class loginTest {
+public class loginAcceptanceTest {
 
     KeyHolder holder = new KeyHolder();
     MessageFactory factory = new MessageFactory(holder);
@@ -30,7 +30,7 @@ public class loginTest {
     String address = "ws://uk-lon-li-006.opencsd.io:9788/db/";
 
     @Rule
-    public Timeout globalTimeout = Timeout.millis(30000);;
+    public Timeout globalTimeout = new Timeout(30000);;
 
     @Before
     public void setUp() throws Exception
@@ -102,7 +102,6 @@ public class loginTest {
         Future<Connection> connexion = ws.start(address);
         l.await();
         connexion.get().disconnect();
-
     }
 
     @Test
