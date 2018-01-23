@@ -12,7 +12,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
 
 /* Utils. */
-import {MoneyValueOfiPipe} from '@setl/utils/pipes';
+import {MoneyValuePipe} from '@setl/utils/pipes';
 
 /* Ofi Corp Actions request service. */
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
