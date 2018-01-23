@@ -22,7 +22,7 @@
             <hr class="message-hr">
 
             <div class="cat-tile" *ngFor="let category of categories; let i = index">
-                <a class="tile row" routerLink="/messages/{{category.type}}" [ngClass]="{'active': i === currentCategory}">
+                <a class="tile row" routerLink=["/messgaes/" + category.type] [ngClass]="{'active': i === currentCategory}">
                     <div class="tile-icon">
                         <clr-icon [attr.shape]="category.icon" size="18"></clr-icon>
                     </div>
