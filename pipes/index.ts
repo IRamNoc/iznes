@@ -1,5 +1,4 @@
-import {NgModule} from '@angular/core';
-import {Pipe, PipeTransform} from '@angular/core';
+import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {pad} from '../helper/common';
 import * as moment from 'moment'
 
@@ -35,7 +34,7 @@ export class MoneyValuePipe implements PipeTransform {
     constructor() {
         // TODO comes from configuration settings
         this.DECIMAL_SEPARATOR = '.';
-        this.THOUSANDS_SEPARATOR = ',';
+        this.THOUSANDS_SEPARATOR = ' ';
         this.PADDING = '00000';
     }
 
@@ -72,21 +71,6 @@ export class MoneyValuePipe implements PipeTransform {
             : '';
 
         return Number(integer + fraction);
-    }
-}
-
-@Pipe({
-    name: 'moneyValueOfi'
-})
-export class MoneyValueOfiPipe implements PipeTransform {
-    transform(value: string, args: string[]): string {
-        const pieces = ( parseFloat(value) / 5 ).toFixed(2).split('')
-        let ii = pieces.length - 3
-        while ((ii -= 3) > 0) {
-            pieces.splice(ii, 0, ',');
-        }
-        return pieces.join('');
-
     }
 }
 
