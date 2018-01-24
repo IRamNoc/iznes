@@ -8,7 +8,7 @@ import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { isEmpty } from 'lodash';
-import { ReportingService } from '../../core-balances/reporting.service';
+import { ReportingService } from '@setl/core-balances';
 
 interface Asset {
     total: number;
