@@ -38,7 +38,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public inlineLabel = '';
     @Input() public inlineLabelMlTag = '';
     @Input() public captureKeys = true;
-    @Input() public contianerWidth = '360px';
+    @Input() public containerWidth = '360px';
 
     @Input()
     public set items(value: Array<any>) {

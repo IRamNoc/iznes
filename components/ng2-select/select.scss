@@ -1,6 +1,11 @@
 .ui-select-toggle {
     position: relative;
     margin: 0px;
+    width: 100% !important;
+}
+
+.btn {
+    max-width: unset;
 }
 
 /* Fix caret going into new line in Firefox */
@@ -232,16 +237,24 @@
     width: 100% !important;
 }
 
+.ui-select-match {
+    width: 100%;
+}
+
 .ui-select-container.ui-select-multiple .ui-select-match {
     padding: 5px;
     border: 1px solid #dadada;
     height: 40px;
     width: 100%;
+    border-radius: 0.125rem;
 }
 
 .ui-select-container.ui-select-multiple.open {
     .ui-select-match {
         border-bottom: none;
+        -webkit-border-radius: 0.125rem 0.125rem 0 0;
+        -moz-border-radius: 0.125rem 0.125rem 0 0;
+        border-radius: 0.125rem 0.125rem 0 0;
     }
 }
 
