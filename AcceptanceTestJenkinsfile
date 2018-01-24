@@ -49,7 +49,7 @@ timestamps {
             stage('Run Acceptance Tests') {
                 try{
                     sh '''rm -f target/test-attachments/*.jpg &&
-                    cd ~/workspace/OpenCSDClarityUIAcceptanceTests/javaUITesting2
+                    cd ~/workspace/IznesUIAcceptanceTests/javaUITesting2
                     export DISPLAY=:10
                     ./gradlew clean build --debug'''
 
