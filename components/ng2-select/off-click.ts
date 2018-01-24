@@ -1,22 +1,21 @@
-import { Directive, HostListener, Input, OnInit, OnDestroy } from '@angular/core';
+import {Directive, HostListener, Input, OnInit, OnDestroy, ElementRef, Output, EventEmitter} from '@angular/core';
 
 @Directive({
-  selector: '[offClick]'
+    selector: '[offClick]'
 })
 
-export class OffClickDirective implements OnInit, OnDestroy {
-  /* tslint:disable */
-  @Input('offClick') public offClickHandler: any;
-  /* tslint:enable */
-  @HostListener('click', ['$event']) public onClick($event: MouseEvent): void {
-    $event.stopPropagation();
-  }
+export class OffClickDirective {
+    constructor(private el: ElementRef) {
+    }
 
-  public ngOnInit(): any {
-    setTimeout(() => { if(typeof document !== 'undefined') { document.addEventListener('click', this.offClickHandler); } }, 0);
-  }
+    @Output()
+    public clickOutside = new EventEmitter();
 
-  public ngOnDestroy(): any {
-    if(typeof document !== 'undefined') { document.removeEventListener('click', this.offClickHandler); }
-  }
+    @HostListener('document:click', ['$event.target'])
+    public onClick(targetElement) {
+        const clickedInside = this.el.nativeElement.contains(targetElement);
+        if (!clickedInside) {
+            this.clickOutside.emit(null);
+        }
+    }
 }
