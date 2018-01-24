@@ -5,14 +5,14 @@ import { positionToGridAreaNotation } from '../helpers';
 @Component({
     selector: 'app-counter-tile',
     templateUrl: 'counter-tile.component.html',
-    styleUrls: ['counter-tile.component.scss']
+    styleUrls: ['counter-tile.component.scss'],
 })
 export class CounterTileComponent implements OnInit {
 
     @HostBinding('style') style: any = '';
     @HostBinding('class') class = '';
 
-    @Input() public position: string;
+    @Input() public name: string;
     @Input() public icon: string;
     @Input() public color: string;
     @Input() public count: number;
@@ -23,7 +23,7 @@ export class CounterTileComponent implements OnInit {
         red: '#CE553D',
         blue: '#2D71B4',
         green: '#49A45F',
-        orange: '#E8A02E'
+        orange: '#E8A02E',
     };
     public backgroundColor: string;
 
@@ -38,18 +38,18 @@ export class CounterTileComponent implements OnInit {
 
     getStyle(): string {
         const styles = {
-            'grid-area': positionToGridAreaNotation(this.position),
+            'grid-area': this.name,
             'background-color': this.colors[this.color],
             'padding-top': '10px',
-            'color': 'black',
         };
 
-        return Object.getOwnPropertyNames(styles).reduce((acc, key) => {
-            return `${acc} ${key}: ${styles[key]};`;
-        }, '');
+        return Object.keys(styles).reduce(
+            (acc, key) => `${acc} ${key}: ${styles[key]};`,
+            '',
+        );
     }
 
-    public getColor() {
-        return this.sanitizer.bypassSecurityTrustStyle(this.colors[this.color]);
-    }
+    // public getColor() {
+    //     return this.sanitizer.bypassSecurityTrustStyle(this.colors[this.color]);
+    // }
 }

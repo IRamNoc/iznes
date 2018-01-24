@@ -1,0 +1,23 @@
+h1 {
+    color: #383d48;
+    font-weight: bold;
+    margin-top: 0;
+    font-size: 22px;
+    padding-left: 5px;
+}
+
+h1.tile-heading {
+    color: white;
+}
+
+h3 small {
+    color: #ccc;
+}
+
+.balances-grid {
+    grid-area: balances;
+}
+
+.transactions-grid {
+    grid-area: transactions;
+}
