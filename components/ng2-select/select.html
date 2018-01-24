@@ -2,6 +2,7 @@
      *ngIf="multiple === false"
      offClick
      (clickOutside)="clickedOutside()"
+     [style.width]="containerWidth"
      class="ui-select-container">
     <div [ngClass]="{'ui-disabled': disabled}" #com3></div>
     <div class="ui-select-match dropdown" [ngClass]="{open: inputMode}"
@@ -26,7 +27,7 @@
       </span>
     </div>
     <!-- options template -->
-    <div class="option-wrapper ui-select-choices dropdown-menu" *ngIf="optionsOpened && inputMode" [style.width]="contianerWidth">
+    <div class="option-wrapper ui-select-choices dropdown-menu" *ngIf="optionsOpened && inputMode">
 
         <div class="select-search">
 
@@ -80,8 +81,9 @@
      *ngIf="multiple === true"
      offClick
      (clickOutside)="clickedOutside()"
+     [style.width]="containerWidth"
      class="ui-select-container ui-select-multiple dropdown form-control" [ngClass]="{open: inputMode}">
-    <div [ngClass]="{'ui-disabled': disabled}" [style.width]="contianerWidth"></div>
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
     <span class="ui-select-match"
           (click)="matchClick($event)"
     >
