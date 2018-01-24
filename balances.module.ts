@@ -1,8 +1,10 @@
-import {NgModule, Pipe, PipeTransform} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SetlBalancesComponent} from './balances/balances.component';
 import {SetlIssueComponent} from './issue/issue.component';
 import {SetlTransactionsComponent} from './transactions/transactions.component';
+import { ReportingService } from './reporting.service';
+import { RouterModule } from '@angular/router';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
@@ -26,6 +28,9 @@ import {MultilingualModule} from '@setl/multilingual';
         SetlBalancesComponent,
         SetlIssueComponent,
         SetlTransactionsComponent
+    ],
+    providers: [
+        ReportingService
     ]
 })
 export class SetlBalancesModule {
