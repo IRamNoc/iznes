@@ -30,12 +30,14 @@ export class MoneyValuePipe implements PipeTransform {
     private DECIMAL_SEPARATOR: string;
     private THOUSANDS_SEPARATOR: string;
     private PADDING: string;
+    private ROUND_UP_DECIMALS: object;
 
     constructor() {
         // TODO comes from configuration settings
         this.DECIMAL_SEPARATOR = '.';
         this.THOUSANDS_SEPARATOR = ' ';
         this.PADDING = '00000';
+        this.ROUND_UP_DECIMALS = [4, 5];
     }
 
     //   transform(value: string, args: string[]): string {
@@ -49,7 +51,13 @@ export class MoneyValuePipe implements PipeTransform {
     // }
 
     transform(value: number | string, fractionSize: number = 2): string {
-        let [integer, fraction = ''] = (value || '').toString()
+        // console.log('transform', value, fractionSize);
+        const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
+            ? this.roundUp(value, fractionSize)
+            : value;
+        const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
+
+        let [integer, fraction = ''] = (fixInteger || '').toString()
             .split(this.DECIMAL_SEPARATOR);
 
         fraction = fractionSize > 0
@@ -62,7 +70,13 @@ export class MoneyValuePipe implements PipeTransform {
     }
 
     parse(value: string, fractionSize: number = 2): number {
-        let [integer, fraction = ''] = (value || '').split(this.DECIMAL_SEPARATOR);
+        // console.log('parse', value, fractionSize);
+        const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
+            ? this.roundUp(value, fractionSize).toString()
+            : value.toString();
+        const fixInteger = (newValue.indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
+
+        let [integer, fraction = ''] = (fixInteger || '').split(this.DECIMAL_SEPARATOR);
 
         integer = integer.replace(new RegExp(this.THOUSANDS_SEPARATOR, 'g'), '');
 
@@ -71,6 +85,13 @@ export class MoneyValuePipe implements PipeTransform {
             : '';
 
         return Number(integer + fraction);
+    }
+
+    private roundUp(value, decimals) {
+        // if integer sup to 273 999 999 999 this function will not work properly with 5 decimals
+        // The Number.MAX_SAFE_INTEGER constant represents the maximum safe integer in JavaScript (2 53 - 1).
+        // Possible solution : https://www.npmjs.com/package/big-integer
+        return Number(Math.round(value.toString().replace(/ /g, '') + 'e' + decimals) + 'e-' + decimals);
     }
 }
 
