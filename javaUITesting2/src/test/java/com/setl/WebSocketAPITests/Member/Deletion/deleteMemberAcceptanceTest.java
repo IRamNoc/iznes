@@ -38,7 +38,7 @@ public class deleteMemberAcceptanceTest {
 
     @AfterClass
     public static void stop(){
-        executor.shutdown();;
+        executor.shutdown();
     }
 
     @Rule
@@ -69,13 +69,6 @@ public class deleteMemberAcceptanceTest {
     @Test
     public void deleteMemberTest() throws InterruptedException, ExecutionException {
 
-
-    }
-
-    /*
-    @Test
-    public void deleteMemberTest() throws InterruptedException, ExecutionException {
-
       String memberDetails[] = generateMemberDetails();
 
       String memberName = memberDetails[0];
@@ -89,6 +82,6 @@ public class deleteMemberAcceptanceTest {
                 fail(e.getMessage());
             }
         });
-    }*/
+    }
 
 }

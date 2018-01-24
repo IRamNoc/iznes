@@ -42,7 +42,7 @@ public class createMultipleMembersAcceptanceTest {
 
     @AfterClass
     public static void stop(){
-        executor.shutdown();;
+        executor.shutdown();
     }
 
     @Rule
@@ -70,7 +70,6 @@ public class createMultipleMembersAcceptanceTest {
     }
 
   @Test
-  @Ignore
   public void createMultipleMembers() throws ExecutionException, InterruptedException {
 
       runTest(()-> {
