@@ -87,7 +87,6 @@ export class ReportingService {
             });
         this.initialised$.filter(init => !!init).first().subscribe(() => {
             this.getTransactionsFromWalletNode();
-            console.log('INIT DONE!!');
             walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
             walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
             walletHoldingByAsset$
@@ -95,7 +94,6 @@ export class ReportingService {
                     return !!wallets && !isEmpty(wallets.holdingByAsset);
                 }).subscribe((wallets) => {
                     if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
-                        console.log('wallets', wallets, 'connectedWalletId', this.connectedWalletId);
                         this.holdingsByAssetSubject.next(
                             Object.getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
                                   .map(key => wallets.holdingByAsset[this.connectedWalletId][key])
@@ -149,12 +147,11 @@ export class ReportingService {
 
     public getHoldings(asset: string) {
         return new Promise((resolve, reject) => {
-            this.requestWalletIssueHolding(...asset.split('|'))
+            const assetPieces = asset.split('|');
+            this.requestWalletIssueHolding(assetPieces[0], assetPieces[1])
                 .then((holdings: Array<any>) => {
-                    console.log('holdings', holdings);
                     const total = holdings.reduce((a, h) => a + h.balance, 0);
                     return resolve(holdings.map(holding => {
-                        console.log('holding', holding, total);
                         return { ...holding, walletName: this.walletInfo.walletName, percentage: (holding.balance / total) * 100 };
                     }));
                 })
@@ -179,7 +176,6 @@ export class ReportingService {
     }
 
     public getTransactionsForAsset(asset) {
-        console.log('getTransactionsForAsset', asset);
         this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode(asset));
 
         return new Observable<Transaction[]>((observer) => {
@@ -201,7 +197,6 @@ export class ReportingService {
         if (asset) {
             payload['asset'] = asset.split('|')[1];
         }
-        console.log('GETTING TX FROM WALLET NODE', payload);
         const req = this.walletNodeRequestService.requestTransactionHistory(payload, 100, 0);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -245,7 +240,6 @@ export class ReportingService {
 
     private requestWalletHolding() {
         this.ngRedux.dispatch(setRequestedWalletHolding());
-        console.log('REQUEST WALLET HOLDING');
         InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
     }
 
