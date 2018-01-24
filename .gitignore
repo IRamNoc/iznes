@@ -109,3 +109,13 @@ javaUITesting2/out/test/classes/
 javaUITesting2/build/reports/
 javaUITesting2/build/test-results/
 javaUITesting2/build/tmp/
+/gradlew
+/gradlew.bat
+/.gradle/4.0/fileHashes/fileHashes.bin
+/.gradle/buildOutputCleanup/built.bin
+/.gradle/buildOutputCleanup/cache.properties
+/.gradle/buildOutputCleanup/cache.properties.lock
+/opencsd-frontend-clarity.iml
+/.gradle/4.0/taskHistory/taskHistory.bin
+/.gradle/4.0/taskHistory/taskHistory.lock
+/javaUITesting2/gradlew
