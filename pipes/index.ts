@@ -51,40 +51,48 @@ export class MoneyValuePipe implements PipeTransform {
     // }
 
     transform(value: number | string, fractionSize: number = 2): string {
-        // console.log('transform', value, fractionSize);
-        const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
-            ? this.roundUp(value, fractionSize)
-            : value;
-        const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
+        if (typeof value !== 'undefined') {
+            // console.log('transform', value, fractionSize);
+            const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
+                ? this.roundUp(value, fractionSize)
+                : value;
+            const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
 
-        let [integer, fraction = ''] = (fixInteger || '').toString()
-            .split(this.DECIMAL_SEPARATOR);
+            let [integer, fraction = ''] = (fixInteger || '').toString()
+                .split(this.DECIMAL_SEPARATOR);
 
-        fraction = fractionSize > 0
-            ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
-            : '';
+            fraction = fractionSize > 0
+                ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
+                : '';
 
-        integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, this.THOUSANDS_SEPARATOR) || '0';
+            integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, this.THOUSANDS_SEPARATOR) || '0';
 
-        return integer + fraction;
+            return integer + fraction;
+        } else {
+            return value;
+        }
     }
 
     parse(value: string, fractionSize: number = 2): number {
-        // console.log('parse', value, fractionSize);
-        const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
-            ? this.roundUp(value, fractionSize).toString()
-            : value.toString();
-        const fixInteger = (newValue.indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
+        if (typeof value !== 'undefined') {
+            // console.log('parse', value, fractionSize);
+            const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
+                ? this.roundUp(value, fractionSize).toString()
+                : value.toString();
+            const fixInteger = (newValue.indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
 
-        let [integer, fraction = ''] = (fixInteger || '').split(this.DECIMAL_SEPARATOR);
+            let [integer, fraction = ''] = (fixInteger || '').split(this.DECIMAL_SEPARATOR);
 
-        integer = integer.replace(new RegExp(this.THOUSANDS_SEPARATOR, 'g'), '');
+            integer = integer.replace(new RegExp(this.THOUSANDS_SEPARATOR, 'g'), '');
 
-        fraction = parseInt(fraction, 10) > 0 && fractionSize > 0
-            ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
-            : '';
+            fraction = parseInt(fraction, 10) > 0 && fractionSize > 0
+                ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
+                : '';
 
-        return Number(integer + fraction);
+            return Number(integer + fraction);
+        } else {
+            return value;
+        }
     }
 
     private roundUp(value, decimals) {
