@@ -30,7 +30,7 @@ export class MoneyValuePipe implements PipeTransform {
     private DECIMAL_SEPARATOR: string;
     private THOUSANDS_SEPARATOR: string;
     private PADDING: string;
-    private ROUND_UP_DECIMALS: object;
+    private ROUND_UP_DECIMALS: any;
 
     constructor() {
         // TODO comes from configuration settings
@@ -91,7 +91,7 @@ export class MoneyValuePipe implements PipeTransform {
         // if integer sup to 273 999 999 999 this function will not work properly with 5 decimals
         // The Number.MAX_SAFE_INTEGER constant represents the maximum safe integer in JavaScript (2 53 - 1).
         // Possible solution : https://www.npmjs.com/package/big-integer
-        return Number(Math.round(value.toString().replace(/ /g, '') + 'e' + decimals) + 'e-' + decimals);
+        return Math.round(Number(value.toString().replace(/ /g, '') + 'e' + decimals)) + 'e-' + decimals;
     }
 }
 
