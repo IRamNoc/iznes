@@ -1,6 +1,6 @@
 import {
     Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef,
-    ChangeDetectionStrategy, ChangeDetectorRef
+    ChangeDetectionStrategy, ChangeDetectorRef, ViewChild
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -10,114 +10,11 @@ import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {MultilingualService} from '@setl/multilingual';
 
-const styles = `
-  .ui-select-toggle {
-    position: relative;
-  }
-
-  /* Fix caret going into new line in Firefox */
-  .ui-select-placeholder {
-    float: left;
-  }
-
-  /* Fix Bootstrap dropdown position when inside a input-group */
-  .input-group > .dropdown {
-    /* Instead of relative */
-    position: static;
-  }
-
-  .ui-select-match > .btn {
-    /* Instead of center because of .btn */
-    text-align: left !important;
-  }
-
-  .ui-select-match > .caret {
-    position: absolute;
-    top: 45%;
-    right: 15px;
-  }
-
-  .ui-disabled {
-    background-color: #eceeef;
-    border-radius: 4px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    opacity: 0.6;
-    top: 0;
-    left: 0;
-    cursor: not-allowed;
-  }
-
-  .ui-select-choices {
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    overflow-x: hidden;
-    margin-top: 0;
-  }
-
-  .ui-select-multiple .ui-select-choices {
-    margin-top: 1px;
-  }
-  .ui-select-choices-row>a {
-      display: block;
-      padding: 3px 20px;
-      clear: both;
-      font-weight: 400;
-      line-height: 1.42857143;
-      color: #333;
-      white-space: nowrap;
-  }
-  .ui-select-choices-row.active>a {
-      color: #fff;
-      text-decoration: none;
-      outline: 0;
-      background-color: #428bca;
-  }
-
-  .ui-select-multiple {
-    height: auto;
-    padding:3px 3px 0 3px;
-  }
-
-  .ui-select-multiple input.ui-select-search {
-    background-color: transparent !important; /* To prevent double background when disabled */
-    border: none;
-    outline: none;
-    box-shadow: none;
-    height: 1.6666em;
-    padding: 0;
-    margin-bottom: 3px;
-
-  }
-  .ui-select-match .close {
-      font-size: 1.6em;
-      line-height: 0.75;
-  }
-
-  .ui-select-multiple .ui-select-match-item {
-    outline: 0;
-    margin: 0 3px 3px 0;
-  }
-
-  .ui-select-toggle > .caret {
-      position: absolute;
-      height: 10px;
-      top: 50%;
-      right: 10px;
-      margin-top: -2px;
-  }
-  
-  .dropdown-menu {
-    max-width:10000px !important
-  }
-`;
+const changeDetection = ChangeDetectionStrategy.OnPush;
 
 @Component({
-    selector: 'ng-select',
-    styles: [styles],
+    selector: "ng-select",
+    styleUrls: ['./select.scss'],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -127,146 +24,11 @@ const styles = `
             multi: true
         }
     ],
-    template: `
-        <div tabindex="0"
-             *ngIf="multiple === false"
-             (keyup)="mainClick($event)"
-             [offClick]="clickedOutside"
-             class="ui-select-container dropdown open">
-            <div [ngClass]="{'ui-disabled': disabled}"></div>
-            <div class="ui-select-match"
-                 *ngIf="!inputMode">
-                <span tabindex="-1"
-                    class="btn btn-default btn-secondary form-control ui-select-toggle"
-                    (click)="matchClick($event)"
-                    style="outline: 0;">
-                <span *ngIf="inlineLabel !== ''" class="pull-left">
-                    {{this.multilingualService.getTranslation(inlineLabelMlTag) || inlineLabel}}:
-                </span>
-        <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
-        <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
-              [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-              [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px !important"></span>
-        <i class="dropdown-toggle pull-right"></i>
-        <i class="caret pull-right"></i>
-        <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
-           style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
-           <i class="glyphicon glyphicon-remove"></i>
-        </a>
-      </span>
-            </div>
-            <input type="text" autocomplete="false" tabindex="-1"
-                   (keydown)="inputEvent($event)"
-                   (keyup)="inputEvent($event, true)"
-                   [disabled]="disabled"
-                   class="form-control ui-select-search"
-                   *ngIf="inputMode"
-                   placeholder="{{active.length <= 0 ? placeholder : ''}}">
-            <!-- options template -->
-            <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-                class="ui-select-choices dropdown-menu" role="menu">
-                <li *ngFor="let o of options" role="menuitem">
-                    <div class="ui-select-choices-row"
-                         [class.active]="isActive(o)"
-                         (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)">
-                        <a href="javascript:void(0)" class="dropdown-item">
-                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-
-            <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-                class="ui-select-choices dropdown-menu" role="menu">
-                <li *ngFor="let c of options; let index=index" role="menuitem">
-                    <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-                    <div class="dropdown-header">{{c.text}}</div>
-
-                    <div *ngFor="let o of c.children"
-                         class="ui-select-choices-row"
-                         [class.active]="isActive(o)"
-                         (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)"
-                         [ngClass]="{'active': isActive(o)}">
-                        <a href="javascript:void(0)" class="dropdown-item">
-                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div tabindex="0"
-             *ngIf="multiple === true"
-             (keyup)="mainClick($event)"
-             (focus)="focusToInput('')"
-             [offClick]="clickedOutside"
-             class="ui-select-container ui-select-multiple dropdown form-control open">
-            <div [ngClass]="{'ui-disabled': disabled}"></div>
-            <span class="ui-select-match">
-        <span *ngFor="let a of active">
-            <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
-                  tabindex="-1"
-                  type="button"
-                  [ngClass]="{'btn-default': true}">
-               <a class="close"
-                  style="margin-left: 5px; padding: 0;"
-                  (click)="removeClick(a, $event)">&times;</a>
-               <span [innerHtml]="sanitize(a.text)"></span>
-           </span>
-        </span>
-    </span>
-            <input type="text"
-                   (keydown)="inputEvent($event)"
-                   (keyup)="inputEvent($event, true)"
-                   (click)="matchClick($event)"
-                   [disabled]="disabled"
-                   autocomplete="false"
-                   autocorrect="off"
-                   autocapitalize="off"
-                   spellcheck="false"
-                   class="form-control ui-select-search"
-                   placeholder="{{active.length <= 0 ? placeholder : ''}}"
-                   role="combobox">
-            <!-- options template -->
-            <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
-                class="ui-select-choices dropdown-menu" role="menu">
-                <li *ngFor="let o of options" role="menuitem">
-                    <div class="ui-select-choices-row"
-                         [class.active]="isActive(o)"
-                         (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)">
-                        <a href="javascript:void(0)" class="dropdown-item">
-                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-
-            <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
-                class="ui-select-choices dropdown-menu" role="menu">
-                <li *ngFor="let c of options; let index=index" role="menuitem">
-                    <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-                    <div class="dropdown-header">{{c.text}}</div>
-
-                    <div *ngFor="let o of c.children"
-                         class="ui-select-choices-row"
-                         [class.active]="isActive(o)"
-                         (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)"
-                         [ngClass]="{'active': isActive(o)}">
-                        <a href="javascript:void(0)" class="dropdown-item">
-                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './select.html',
+    changeDetection: changeDetection,
 })
 export class SelectComponent implements OnInit, ControlValueAccessor {
+
     @Input() public allowClear = false;
     @Input() public placeholder = '';
     @Input() public idField = 'id';
@@ -276,6 +38,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public inlineLabel = '';
     @Input() public inlineLabelMlTag = '';
     @Input() public captureKeys = true;
+    @Input() public contianerWidth = '360px';
 
     @Input()
     public set items(value: Array<any>) {
@@ -292,6 +55,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                 text: item[this.textField],
                 children: item[this.childrenField]
             })));
+            console.log('item:', value);
+            console.log('item:', this.itemObjects);
         }
 
         // this.changeDetectorRef.markForCheck();
@@ -365,6 +130,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                        private changeDetectorRef: ChangeDetectorRef, private multilingualService: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
+
     }
 
     public sanitize(html: string): SafeHtml {
@@ -381,14 +147,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-            e.keyCode === 40 || e.keyCode === 13)) {
+                e.keyCode === 40 || e.keyCode === 13)) {
             e.preventDefault();
             return;
         }
         // backspace
         if (!isUpMode && e.keyCode === 8) {
             const el: any = this.element.nativeElement
-                .querySelector('div.ui-select-container > input');
+                .querySelector('div.ui-select-container .option-wrapper > .select-search >input');
             if (!el.value || el.value.length <= 0) {
                 if (this.active.length > 0) {
                     this.remove(this.active[this.active.length - 1]);
@@ -436,10 +202,10 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         }
         // enter
         if (!isUpMode && e.keyCode === 13) {
-            if (this.active.indexOf(this.activeOption) === -1) {
-                this.selectActiveMatch();
-                this.behavior.next();
-            }
+            // if (this.active.indexOf(this.activeOption) === -1) {
+            this.selectActiveMatch();
+            this.behavior.next();
+            // }
             e.preventDefault();
             return;
         }
@@ -487,9 +253,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     public clickedOutside(): void {
-        this.inputMode = false;
-        this.optionsOpened = false;
-        this.changeDetectorRef.markForCheck();
+        this.hideOptions();
     }
 
     public get firstItemHasChildren(): boolean {
@@ -510,6 +274,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     protected matchClick(e: any): void {
+        console.log('main click');
         if (this._disabled === true) {
             return;
         }
@@ -520,7 +285,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    protected  mainClick(event: any): void {
+    protected mainClick(event: any): void {
         if (this.inputMode === true || this._disabled === true) {
             return;
         }
@@ -550,11 +315,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         this.inputEvent(event);
     }
 
-    protected  selectActive(value: SelectItem): void {
+    protected selectActive(value: SelectItem): void {
         this.activeOption = value;
     }
 
-    protected  isActive(value: SelectItem): boolean {
+    protected isActive(value: SelectItem): boolean {
         return this.activeOption.id === value.id;
     }
 
@@ -565,7 +330,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     private focusToInput(value: string = ''): void {
         setTimeout(() => {
-            const el = this.element.nativeElement.querySelector('div.ui-select-container > input');
+            const el = this.element.nativeElement.querySelector('div.ui-select-container .option-wrapper > .select-search > input');
             if (el) {
                 el.focus();
                 el.value = value;
@@ -576,17 +341,22 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private open(): void {
         this.options = this.itemObjects
             .filter((option: SelectItem) => (this.multiple === false ||
-            this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
+                this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
 
         if (this.options.length > 0) {
             this.behavior.first();
         }
         this.optionsOpened = true;
+        console.log('option', this.options);
+        this.changeDetectorRef.markForCheck();
+
     }
 
     private hideOptions(): void {
         this.inputMode = false;
         this.optionsOpened = false;
+        this.inputValue = '';
+        this.changeDetectorRef.markForCheck();
     }
 
     private selectActiveMatch(): void {
@@ -707,7 +477,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
             .filter((option: SelectItem) => {
                 return stripTags(option.text).match(query) &&
                     (this.actor.multiple === false ||
-                    (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
+                        (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
             });
         this.actor.options = options;
         if (this.actor.options.length > 0) {
