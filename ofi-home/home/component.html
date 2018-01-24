@@ -101,17 +101,17 @@
 
                 <clr-dg-cell>
                     <!-- Quantity -->
-                    {{ order.metaData.units | moneyValue}}
+                    {{ order.metaData.units | moneyValue: 5}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
                     <!-- Amount -->
-                    {{ order.metaData.total | moneyValue}}
+                    {{ order.metaData.total | moneyValue: 4}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
                     <!-- Price -->
-                    {{ order.metaData.price | moneyValue}}
+                    {{ order.metaData.price | moneyValue: 4}}
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <!-- Cut-off date -->
@@ -161,3 +161,42 @@
         </clr-datagrid>
     </div>
 </div>
+
+<!--<div class="wrapper wrapper-content">-->
+    <!--<form [formGroup]="pipeForm" novalidate (ngSubmit)="savePipeForm(pipeForm.value)">-->
+        <!--<div class="form-block row">-->
+            <!--<div class="form-group col-sm-12">-->
+                <!--<label>-->
+                    <!--<h1>{{randomNum}}</h1>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<h3>Call Directives appNumberFormatter fractionSize="[2|4|5]"</h3>-->
+                    <!--<br>-->
+                <!--</div>-->
+                <!--<input type="text" class="form-control" formControlName="myField" appNumberFormatter fractionSize="5">-->
+                <!--<input type="text" class="form-control" formControlName="myField" appNumberFormatter fractionSize="4">-->
+                <!--<input type="text" class="form-control" formControlName="myField" appNumberFormatter fractionSize="2">-->
+                <!--<div *ngIf="pipeForm.controls.myField.hasError('required') && pipeForm.controls.myField.touched" class="text-danger">-->
+                    <!--<span mltag="txt_thisfieldisrequired">This field is required</span>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group col-sm-12">-->
+                <!--<div>-->
+                    <!--<h3>Call Pipe | moneyValue: [2|4|5]</h3>-->
+                    <!--<br>-->
+                <!--</div>-->
+                <!--{{randomNum}} devient {{randomNum | moneyValue: 5}} avec (5, round sup)<br>-->
+                <!--{{randomNum}} devient {{randomNum | moneyValue: 4}} avec (4, round sup)<br>-->
+                <!--{{randomNum}} devient {{randomNum | moneyValue: 2}} avec (2, truncated)-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-12">-->
+                <!--<button id="pipeFormBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!pipeForm.valid">-->
+                    <!--<span mltag="txt_send">Send</span>-->
+                <!--</button>-->
+                <!--<button id="pipeFormBtnResetForm" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>-->
+                <!--<button id="regenRandom" type="button" class="btn btn-warning" (click)="regenerateRandom()">Regenerate Random</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->

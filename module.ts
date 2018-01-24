@@ -10,7 +10,7 @@ import {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 import {OfiPostTxService} from './ofi-post-tx/service';
 import {OfiNavModule} from './ofi-nav/module';
 import {OfiReportModule} from './ofi-report-module';
-import {OfiAmDashboardModule} from './ofi-am-dashboard/module'
+import {OfiAmDashboardModule} from './ofi-am-dashboard/module';
 import {MultilingualModule} from '@setl/multilingual';
 
 /* Decorator. */
