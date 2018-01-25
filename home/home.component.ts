@@ -54,7 +54,7 @@ export class HomeComponent {
             this.unreadCount$.subscribe(count => this.unreadCount = count),
             this.connections$.map(list => list.length).subscribe(count => this.connectionCount = count),
             this.username$.subscribe(username => this.username = username),
-            this.lastLogin$.filter(lastLogin => !!lastLogin).subscribe(lastLogin => this.lastLogin = lastLogin)
+            this.lastLogin$.filter(lastLogin => !!lastLogin).subscribe(lastLogin => this.lastLogin = lastLogin),
         ];
 
         this.assetTiles = [
