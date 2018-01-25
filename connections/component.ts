@@ -49,10 +49,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     isEditTabDisplayed: boolean;
     isAcceptModalDisplayed: boolean;
     connectionToBind: any;
-
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
-
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
     @select(['wallet', 'managedWallets', 'walletList']) walletListObs;
@@ -70,7 +68,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private _myWalletService: MyWalletsService,
                 private _walletnodeTxService: WalletnodeTxService,
                 private _walletNodeRequestService: WalletNodeRequestService,
-                private changeDetectorRef: ChangeDetectorRef,
+                private cd: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
                 private connectionService: ConnectionService,
                 private messagesService: MessagesService) {
@@ -84,7 +82,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isAcceptModalDisplayed = false;
 
         this.initFormGroup();
+    }
 
+    ngOnInit() {
+        // Observables
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
@@ -97,9 +98,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => this.getFromConnectionList(connections)));
         this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => this.getToConnectionList(connections)));
         this.subscriptionsArray.push(this.requestedCompleteAddressesObs.subscribe((requested) => this.requestCompleteAddresses(requested)));
-    }
 
-    ngOnInit() {
         this.initFormGroup();
     }
 
@@ -124,7 +123,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isCompleteAddressLoaded = false;
         this.isAcceptedConnectionDisplayed = true;
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     requestAddressList(requested: boolean) {
@@ -166,39 +165,40 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.isCompleteAddressLoaded = requested;
             this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
             this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-            this.changeDetectorRef.markForCheck();
+            this.cd.markForCheck();
         }
     }
 
     getWalletList(wallets: Array<any>) {
-        let data = [];
+        let walletList = [];
 
         this.completeWalletList = wallets;
 
         Object.keys(wallets).map((key) => {
             if (wallets[key].walletId !== this.connectedWalletId) {
-                data.push({
+                walletList.push({
                     id: wallets[key].walletId,
                     text: wallets[key].walletName,
                 });
             }
         });
 
-        this.walletList = data;
+        this.walletList = [...walletList];
+        this.cd.markForCheck();
     }
 
     getAddressList(addresses: Array<any>) {
-        let data = [];
+        let addressList = [];
 
         Object.keys(addresses).map((key) => {
-            data.push({
+            addressList.push({
                 id: key,
                 text: addresses[key].label
             });
         });
 
-        this.addressList = data;
-        this.changeDetectorRef.markForCheck();
+        this.addressList = [...addressList];
+        this.cd.markForCheck();
     }
 
     getFromConnectionList(connections: any) {
@@ -207,10 +207,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         if (hasChanged) {
             this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
-            this.changeDetectorRef.markForCheck();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     getToConnectionList(connections: any) {
@@ -219,10 +218,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         if (hasChanged) {
             this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-            this.changeDetectorRef.markForCheck();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     formatFromConnections(connections: Array<any>) {
@@ -237,7 +235,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     id: connection.connectionId,
                     connection: connectionName,
                     subPortfolio: subPortfolioName,
-                    leiSender: connection.leiSender
+                    leiSender: connection.leiSender,
                 });
             });
 
@@ -317,7 +315,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
 
         this.resetForm();
-        this.changeDetectorRef.markForCheck();
     }
 
     handleEditButtonClick(connection) {
@@ -373,7 +370,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
 
         this.resetForm();
-        this.changeDetectorRef.markForCheck();
     }
 
     handleRejectConnection(connection: any) {
@@ -395,8 +391,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 console.error('error on reject connection: ', error);
             })
         );
-
-        this.changeDetectorRef.markForCheck();
     }
 
     onDeleteConnection(connection: any) {
@@ -418,8 +412,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 console.error('error: ', error);
             })
         );
-
-        this.changeDetectorRef.markForCheck();
     }
 
     onSendConnectionMessage(response: any) {
