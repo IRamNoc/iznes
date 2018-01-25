@@ -95,7 +95,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.currentCategory = 0;
 
         // these are the categories that appear along the left hand side as buttons
-        this.categories = _appConfig.messagesMenu;
+        this.categories = this._appConfig.messagesMenu;
 
         this.subscriptionsArray.push(
             this.getWalletDirectoryList.subscribe(
