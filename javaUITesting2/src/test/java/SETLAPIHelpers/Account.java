@@ -16,7 +16,7 @@ public class Account {
   int accountMember;
 
 
-   public String getStatus() {
+  public String getStatus() {
     return Status;
   }
 

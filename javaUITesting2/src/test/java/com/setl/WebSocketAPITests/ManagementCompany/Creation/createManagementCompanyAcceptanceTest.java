@@ -2,6 +2,7 @@ package com.setl.WebSocketAPITests.ManagementCompany.Creation;
 
 
 import SETLAPIHelpers.ManagementCompany;
+import SETLAPIHelpers.ManagementCompanyError;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
 import io.setl.wsclient.scluster.SetlSocketClusterClient;
 import io.setl.wsclient.shared.Connection;
@@ -19,13 +20,16 @@ import org.junit.runners.JUnit4;
 import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
+import static SETLAPIHelpers.WebSocketAPI.ManagementCompanyHelper.createManagementCompany;
+import static SETLAPIHelpers.WebSocketAPI.ManagementCompanyHelper.createManagementCompanyError;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(JUnit4.class)
 public class createManagementCompanyAcceptanceTest {
 
   @Rule
-  public Timeout globalTimeout = new Timeout(30000);;
+  public Timeout globalTimeout = new Timeout(30000);
   KeyHolder holder = new KeyHolder();
   MessageFactory factory = new MessageFactory(holder);
   SocketClientEndpoint socket = new SocketServerEndpoint(holder, factory, "emmanuel", "alex01");
@@ -43,20 +47,18 @@ public class createManagementCompanyAcceptanceTest {
     connection.disconnect();
   }
 
-    private ManagementCompany createManagementCompany(MessageFactory factory, SocketClientEndpoint socket, int i) {
-        return null;
-    }
-/*
   @Test
+  @Ignore
   public void failToCreateManagementCompanyWithIncorrectAccountID() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-    ManagementCompanyError managementCompanyError = (ManagementCompanyError) createManagementCompanyError((factory, socket, 2);
+    ManagementCompanyError managementCompanyError = (ManagementCompanyError) createManagementCompanyError(factory, socket, 2);
     assertTrue("Permission Denied.".equals(managementCompanyError.getMessage()));
     connection.disconnect();
   }
 
   @Test
+  @Ignore
   public void failToCreateDuplicateManagementCompany() throws InterruptedException, ExecutionException {
 
     Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
@@ -64,5 +66,5 @@ public class createManagementCompanyAcceptanceTest {
     ManagementCompanyError managementCompanyError = (ManagementCompanyError) createManagementCompanyError(factory, socket, managementCompany.getMCName(), managementCompany.getDescription(), 1);
     assertTrue("Management Company already exists.".equals(managementCompanyError.getMessage()));
     connection.disconnect();
-  }*/
+  }
 }
