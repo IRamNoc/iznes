@@ -353,12 +353,12 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
   }
   public static void selectManageUserAccountDropdown(){
     driver.findElement(By.id("new-user-account-select")).click();
-    driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/ul/li[1]")).click();
+    driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]")).click();
     driver.findElement(By.id("new-user-account-select")).click();
   }
   public static void selectManageUserUserDropdown(){
     driver.findElement(By.id("new-user-usertype-select")).click();
-    driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/ul/li[1]")).click();
+    driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[2]")).click();
     driver.findElement(By.id("new-user-usertype-select")).click();
   }
   public static void enterManageUserPassword(String password){
