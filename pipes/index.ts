@@ -50,13 +50,15 @@ export class MoneyValuePipe implements PipeTransform {
     //
     // }
 
-    transform(value: number | string, fractionSize: number = 2): string {
+    transform(value: number | string, fractionSize: number = 2): number | string {
         if (typeof value !== 'undefined') {
             // console.log('transform', value, fractionSize);
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
                 ? this.roundUp(value, fractionSize)
                 : value;
-            const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue; // fix if round up give only an integer
+
+            // fix if round up give only an integer
+            const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue;
 
             let [integer, fraction = ''] = (fixInteger || '').toString()
                 .split(this.DECIMAL_SEPARATOR);
