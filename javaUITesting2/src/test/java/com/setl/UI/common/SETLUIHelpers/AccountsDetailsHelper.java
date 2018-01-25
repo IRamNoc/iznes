@@ -442,7 +442,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             // Move to back to the beginning
             rs.beforeFirst();
         }
-        Assert.assertEquals("there should be exactly one record", 1, rows );
+        assertTrue("there should be exactly one record",  rows < 2 );
 
         while (rs.next()) {
             Assert.assertEquals("Expecting username to be " + search,search, rs.getString(columnName));
