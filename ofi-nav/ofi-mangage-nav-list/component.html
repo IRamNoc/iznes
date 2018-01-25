@@ -106,10 +106,10 @@
                         <span>
                             <span [ngSwitch]="nav.status">
                                 <span *ngSwitchCase="-1">
-                                    <span class="text-success">€ {{nav.nav | moneyValue}}</span>
+                                    <span class="text-success">€ {{nav.nav | moneyValue: 2}}</span>
                                 </span>
                                 <span *ngSwitchCase="1">
-                                    <span class="text-warning">€ {{nav.nav | moneyValue}}</span>
+                                    <span class="text-warning">€ {{nav.nav | moneyValue: 2}}</span>
                                 </span>
 
                                 <span *ngSwitchCase="2">
@@ -173,7 +173,7 @@
                     <div class="form-group col-sm-12">
                         <label class="control-label"><span class="ml_translated" mltag="txt_nav">NAV</span> (€)</label>
                         <div>
-                            <input formControlName="nav" type="text" class="form-control" value="" appNumberFormatter="2">
+                            <input formControlName="nav" type="text" class="form-control" value="" appNumberFormatter fractionSize="2">
                         </div>
                     </div>
                 </div>

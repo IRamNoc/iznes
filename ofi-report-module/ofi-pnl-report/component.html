@@ -71,11 +71,11 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.realisePnl | moneyValue}}
+                        {{tx.realisePnl | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.unRealisePnl | moneyValue}}
+                        {{tx.unRealisePnl | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -125,7 +125,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionPrice | moneyValue}}
+                    {{tx.transactionPrice | moneyValue: 4}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
@@ -133,7 +133,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionSettlement | moneyValue}}
+                    {{tx.transactionSettlement | moneyValue: 4}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
