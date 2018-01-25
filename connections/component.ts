@@ -43,7 +43,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     acceptedConnectionList = [];
     pendingConnectionList = [];
     connectionToDelete: any;
-    isAcceptedConnectionDisplayed: boolean;
+    isAcceptedTabDisplayed: boolean;
     isDeleteModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
     isEditTabDisplayed: boolean;
@@ -78,7 +78,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isDeleteModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
         this.isEditTabDisplayed = false;
-        this.isAcceptedConnectionDisplayed = false;
+        this.isAcceptedTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
 
         this.initFormGroup();
@@ -121,7 +121,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.resetForm();
         this.isCompleteAddressLoaded = false;
-        this.isAcceptedConnectionDisplayed = true;
+        this.isAcceptedTabDisplayed = true;
 
         this.cd.markForCheck();
     }
@@ -262,6 +262,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     handleSubmitButtonClick() {
         let data = null;
+        let asyncTaskPipe = null;
 
         if (!this.isEditTabDisplayed) {
             data = {
@@ -272,21 +273,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 status: 1
             };
 
-            const asyncTaskPipe = this.connectionService.createConnection(data);
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (response) => {
-                    ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-                    ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.isAcceptedConnectionDisplayed = true;
-
-                    this.onSendConnectionMessage(response[1].Data[0]);
-                },
-                () => {
-                    this.showErrorMessage('This connection already exists');
-                })
-            );
+            asyncTaskPipe = this.connectionService.createConnection(data);
         } else {
             data = {
                 leiId: this.connectedWalletId,
@@ -294,24 +281,30 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 keyDetail: this.formGroup.controls['sub-portfolio'].value[0].id
             };
 
-            const asyncTaskPipe = this.connectionService.updateConnection(data);
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                () => {
-                    this.showSuccessResponse('The connection has successfully been updated');
-                    ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-                    ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.isAcceptedConnectionDisplayed = true;
-                },
-                () => {
-                    this.showErrorMessage('This connection already exists');
-                })
-            );
+            asyncTaskPipe = this.connectionService.updateConnection(data);
         }
 
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (response) => {
+                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+                ConnectionService.setRequestedToConnections(false, this.ngRedux);
+
+                if (!this.isEditTabDisplayed) {
+                    this.onSendConnectionMessage(response[1].Data[0]);
+                } else {
+                    this.showSuccessResponse('The connection has successfully been updated');
+                }
+            },
+            () => {
+                this.showErrorMessage('This connection already exists');
+            })
+        );
+
+        console.log('resetting');
+
         this.resetForm();
-        this.isAcceptedConnectionDisplayed = true;
+        this.isAcceptedTabDisplayed = true;
     }
 
     handleEditButtonClick(connection) {
@@ -321,7 +314,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['connection'].patchValue([selectedConnection]);
         this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
 
-        this.isAcceptedConnectionDisplayed = false;
+        this.isAcceptedTabDisplayed = false;
         this.isEditTabDisplayed = true;
     }
 
@@ -387,9 +380,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     console.error('error on accept connection: ', error);
                 })
             );
-        } else {
-            this.connectionToBind = null;
-            this.isAcceptModalDisplayed = false;
         }
 
         this.resetForm();
@@ -460,18 +450,19 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     console.error('error: ', error);
                 })
             );
-        } else {
-            this.connectionToDelete = null;
-            this.isDeleteModalDisplayed = false;
         }
 
         this.resetForm();
     }
 
     resetForm(): void {
-        this.isAcceptedConnectionDisplayed = false;
+        this.connectionToDelete = null;
+        this.connectionToBind = null;
+
+        this.isAcceptedTabDisplayed = false;
         this.isEditTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
+        this.isDeleteModalDisplayed = false;
 
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
