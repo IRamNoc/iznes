@@ -1,6 +1,5 @@
 /* Angular/vendor imports. */
-import {Directive, ElementRef, Input, AfterViewInit} from '@angular/core';
-
+import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
 /* Package imports. */
 import {PersistService} from '../service/service';
 
@@ -12,15 +11,18 @@ import {PersistService} from '../service/service';
 /* Export directive class. */
 export class PersistDirective implements AfterViewInit {
     /* Constructor. */
-    constructor (
-        private _el: ElementRef,
-        private _persistService: PersistService
-    ) {
+    constructor(private _el: ElementRef,
+                private _persistService: PersistService) {
         /* Stub. */
     }
 
     /* After View Init. */
-    public ngAfterViewInit () {
+    public ngAfterViewInit() {
         /* Stub. */
+        console.log('Persis init.');
+        let name = this._el.nativeElement.getAttribute('persist');
+        if (name) {
+            this._persistService.registerForm(name);
+        }
     }
 }

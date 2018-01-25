@@ -2,36 +2,36 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
-
-/* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
-
-/* Service. */
-import {PersistService} from './service/service';
-
-/* Component. */
+/* Local imports. */
 import {PersistControlsComponent} from './controls/component';
-
-/* Directive. */
 import {PersistDirective} from './directive/directive';
+import {PersistService} from './service/service';
 
 /* Persist Module. */
 @NgModule({
     declarations: [
         /* Controls. */
-	    PersistControlsComponent,
-	    PersistDirective
+        PersistControlsComponent,
+        /* Directive. */
+        PersistDirective
     ],
     exports: [
         /* Controls. */
-        PersistControlsComponent
+        PersistControlsComponent,
+        /* Directive. */
+        PersistDirective
     ],
     imports: [
         CommonModule,
         BrowserModule,
         ClarityModule
     ],
-    providers: []
+    providers: [
+        /* Service. */
+        PersistService
+    ]
 })
 
-export class PersistModule {}
+export class PersistModule {
+}
