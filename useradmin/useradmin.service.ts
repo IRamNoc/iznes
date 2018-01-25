@@ -227,7 +227,7 @@ export class AdminUsersService {
             walletAccess: data.walletAccess
         };
 
-        console.log("SENDING nuwa: ", messageBody);
+        console.log('SENDING nuwa: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -244,7 +244,7 @@ export class AdminUsersService {
             toDelete: data.toDelete,
         };
 
-        console.log("SENDING uduwp: ", messageBody);
+        console.log('SENDING uduwp: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -260,7 +260,7 @@ export class AdminUsersService {
             toDelete: data.toDelete
         };
 
-        console.log("SENDING uduca: ", messageBody);
+        console.log('SENDING uduca: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -274,7 +274,7 @@ export class AdminUsersService {
             userId: data.userId
         };
 
-        console.log("SENDING guca: ", messageBody);
+        console.log('SENDING guca: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -595,7 +595,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         let messageBody: CreateNewWalletBody;
 
-        if (newWallet.walletType == "1") {
+        if (newWallet.walletType === '1') {
             /* Legal wallet body. */
             messageBody = {
                 RequestName: 'nw',
@@ -620,7 +620,7 @@ export class AdminUsersService {
                 address4: _.get(newWallet, 'walletAddr4', ''),
                 postalCode: _.get(newWallet, 'walletAddrPostcode', ''),
             };
-        } else if (newWallet.walletType == "2") {
+        } else if (newWallet.walletType === '2') {
             /* Inidivdual wallet body. */
             messageBody = {
                 RequestName: 'nw',
@@ -632,7 +632,7 @@ export class AdminUsersService {
                 /* Individual basic fields. */
                 aliases: _.get(newWallet, 'aliases', ''),
                 formerName: _.get(newWallet, 'formerName', ''),
-                idcardnum: _.get(newWallet, 'idCardNum', ''),
+                idCardNum: _.get(newWallet, 'idCardNum', ''),
 
                 /* Individual residential address. */
                 rdaCountry: _.get(newWallet, 'rdaAddrCountry', ''),
@@ -657,8 +657,8 @@ export class AdminUsersService {
                 bankName: _.get(newWallet, 'bankName', ''),
                 bankIBAN: _.get(newWallet, 'bankIBAN', ''),
                 bankBICcode: _.get(newWallet, 'bankBICcode', ''),
-                bankaccountname: _.get(newWallet, 'bankAccountName', ''),
-                bankaccountnum: _.get(newWallet, 'bankAccountNum', ''),
+                bankAccountName: _.get(newWallet, 'bankAccountName', ''),
+                bankAccountNum: _.get(newWallet, 'bankAccountNum', ''),
                 /* settlement address */
                 bdCountry: _.get(newWallet, 'bdAddrCountry', ''),
                 bdAddressPrefix: _.get(newWallet, 'bdAddrPrefix', ''),
@@ -689,7 +689,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         let messageBody: UpdateWalletBody;
 
-        if (editWallet.walletType == "1") {
+        if (editWallet.walletType === '1') {
             /* Legal wallet body. */
             messageBody = {
                 RequestName: 'udw',
@@ -716,7 +716,7 @@ export class AdminUsersService {
                 address4: _.get(editWallet, 'walletAddr4', ''),
                 postalCode: _.get(editWallet, 'walletAddrPostcode', ''),
             };
-        } else if (editWallet.walletType == "2") {
+        } else if (editWallet.walletType === '2') {
             /* Inidivdual wallet body. */
             messageBody = {
                 RequestName: 'udw',
