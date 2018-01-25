@@ -138,7 +138,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
-            this.router.navigateByUrl('/contracts');
+            this.router.navigateByUrl('/home');
 
             this.isLogin = true;
 
