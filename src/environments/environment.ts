@@ -37,13 +37,6 @@ export const environment = {
             active: false
         },
         {
-            name: 'Workflow Messages',
-            desc: 'Messages with multiple actions',
-            icon: 'organization',
-            type: 'workflow',
-            active: false
-        },
-        {
             name: 'Sent Messages',
             desc: 'Messages sent by your account',
             icon: 'pop-out',
