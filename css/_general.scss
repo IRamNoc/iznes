@@ -503,3 +503,14 @@ h2.statement {
 form, .form {
     padding: 0px !important;
 }
+
+.datagrid-placeholder-image:before {
+    content: "No Results Found";
+}
+
+.datagrid-placeholder-image {
+    background-image: none !important;
+    width: 100% !important;
+    line-height: 2.5rem !important;
+    text-align: center !important;
+}
