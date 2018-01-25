@@ -315,6 +315,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
 
         this.resetForm();
+        this.isAcceptedConnectionDisplayed = true;
     }
 
     handleEditButtonClick(connection) {
