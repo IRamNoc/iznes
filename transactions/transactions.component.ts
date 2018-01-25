@@ -1,12 +1,14 @@
-import {Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy, transition} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {Unsubscribe} from 'redux';
-import * as _ from 'lodash';
 
-import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
-import {WalletNodeRequestService} from '@setl/core-req-services';
+import { WalletTxHelperModel } from '@setl/utils';
+import { ActivatedRoute } from '@angular/router';
+import { ReportingService } from '../reporting.service';
+import { Location } from '@angular/common';
+import { Transaction } from '../../core-store/wallet/transactions/model';
+
+import { TabControl, Tab } from '../tabs';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'setl-transactions',
@@ -15,182 +17,74 @@ import {WalletNodeRequestService} from '@setl/core-req-services';
 })
 export class SetlTransactionsComponent implements OnInit, OnDestroy {
 
-    subscriptionsArray: Array<any> = [];
-    onLoadSubscriptions: Observable<number>[] = [];
-
-    connectedWalletId: number;
-    connectedChainId: number;
-    myChainAccess: any;
-
-    tabs: any[];
-    transactions: any[] = [];
+    subscriptions: Array<Subscription> = [];
+    tabs: Tab[];
+    tabControl: TabControl;
+    transactions$: Observable<Transaction[]>;
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
 
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: Observable<number>;
-    @select(['user', 'connected', 'connectedChain']) connectedChainOb: Observable<number>;
-    @select(['chain', 'myChainAccess', 'myChainAccess']) myChainAccessOb: Observable<number>;
-
-    constructor(private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private walletNodeRequestService: WalletNodeRequestService) {
-
-        this.initTabs();
-
-        this.onLoadSubscriptions.push(
-            this.connectedWalletOb.first(),
-            this.connectedChainOb.first(),
-            this.myChainAccessOb.first()
-        );
-
-        Observable.forkJoin(this.onLoadSubscriptions).subscribe((results: number[]) => {
-            this.connectedWalletId = results[0];
-            this.connectedChainId = results[1];
-            this.myChainAccess = results[2][this.connectedChainId];
-
-            this.getTransactionsFromWalletNode();
-
-            this.initSubscriptions();
-        });
-    }
+    constructor(private reportingService: ReportingService,
+                private changeDetector: ChangeDetectorRef,
+                private location: Location,
+                private route: ActivatedRoute) { }
 
     ngOnInit() {
-    }
+        this.tabControl = new TabControl({
+            title: 'Transactions',
+            icon: 'th-list',
+            active: true,
+            data: {}
+        });
 
-    private initSubscriptions(): void {
-        this.subscriptionsArray.push(
-            this.connectedWalletOb.subscribe((walletId) => {
-                this.connectedWalletId = walletId;
-            }),
-            this.connectedChainOb.subscribe((connectedChainId) => {
-                this.connectedChainId = connectedChainId;
-            }),
-            this.myChainAccessOb.subscribe((myChainAccess) => {
-                this.myChainAccess = myChainAccess[this.connectedChainId];
+        this.subscriptions.push(
+            this.tabControl.getTabs().subscribe((tabs) => {
+                this.tabs = tabs;
+                this.changeDetector.markForCheck();
             })
         );
-    }
 
-    private initTabs(): void {
-        this.tabs = [{
-            title: "<i class='fa fa-th-list'></i> Transactions",
-            active: true
-        }];
-    }
-
-    private getTransactionsFromWalletNode(): void {
-        const req = this.walletNodeRequestService.requestTransactionHistory({
-            walletIds: [this.connectedWalletId],
-            chainId: this.connectedChainId
-        }, 100, 0);
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            req,
-            {},
-            (data) => {
-                this.getTransactionsFromReportingNode(data);
-            },
-            (data) => {
-                console.log('get transaction history error:', data);
-            }
-        ));
-    }
-
-    private getTransactionsFromReportingNode(data: any): void {
-        const msgsig: string = (data[1]) ? data[1].data.msgsig : null;
-
-        if (msgsig) {
-            this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
-                data[1].data.msgsig,
-                this.connectedChainId,
-                this.myChainAccess.nodeAddress
-            ).subscribe((res) => {
-                this.transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
-                this.changeDetectorRef.markForCheck();
-            }, (e) => {
-                console.log("reporting node error", e);
-            });
-        } else {
-            console.log("invalid signature request");
+        const hash = this.route.snapshot.paramMap.get('hash');
+        if (hash) {
+            this.handleViewTransaction(hash);
         }
+
+        this.transactions$ = this.reportingService.getTransactions();
     }
 
     /**
      * Handle View
      *
-     * @param {index} number - The index of a wallet to be editted.
+     * @param hash string Transaction hash
+     *
      * @return {void}
      */
-    handleView(index): void {
-        const transaction = this.transactions[index];
-
-        let i;
-        for (i = 0; i < this.tabs.length; i++) {
-            if (this.tabs[i].hash === transaction.hash) {
-                this.setTabActive(i);
-
-                return;
-            }
+    handleViewTransaction(hash: string): void {
+        if (this.tabControl.activate(tab => tab.data.hash === hash)) {
+            return;
         }
 
-        this.tabs.push({
-            "title": "<i class='fa fa-th-list'></i> " + transaction.shortHash,
-            "hash": transaction.hash,
-            "transaction": transaction,
-            "active": false
+        this.reportingService.getTransaction(hash).first().subscribe((tx) => {
+            this.tabControl.new({
+                title: tx.shortHash,
+                icon: 'th-list',
+                active: false,
+                data: {
+                    hash: tx.hash,
+                    transaction: tx,
+                }
+            });
         });
-
-        this.setTabActive(this.tabs.length - 1);
-
-        return;
     }
 
-    /**
-     * Set Tab Active
-     * --------------
-     * Sets all tabs to inactive other than the given index, this means the
-     * view is switched to the wanted tab.
-     *
-     * @param {index} number - the tab inded to close.
-     * @return {void}
-     */
-    setTabActive(index: number = 0) {
-        this.tabs.map((i) => {
-            i.active = false;
-        });
-
-        this.changeDetectorRef.detectChanges();
-
-        this.tabs[index].active = true;
-
-        this.changeDetectorRef.detectChanges();
-    }
-
-    /**
-     * Close Transaction
-     * --------------
-     * Closes the current transaction tab
-     *
-     * @param {index} number - the tab inded to close.
-     * @return {void}
-     */
-    closeTransaction(index: number): void {
-        this.tabs.map((i) => {
-            i.active = false;
-        });
-
-        this.changeDetectorRef.detectChanges();
-
-        this.tabs.splice(index, 1);
-        this.tabs[0].active = true;
+    closeTab(id) {
+        this.location.go('/reports/transactions');
+        this.tabControl.close(id);
     }
 
     ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
     }
-
 }
 

@@ -3,19 +3,19 @@
 </div>
 
 <clr-tabs *ngIf="tabs.length > 0">
-    <clr-tab *ngFor="let tabdata of tabs; let idx = index">
-        <button clrTabLink id="testlink{{idx}}" [innerHTML]="tabdata.title"></button>
-        <clr-tab-content *clrIfActive="tabdata.active">
-            <div [hidden]="idx !== 0">
+    <clr-tab *ngFor="let tab of tabs; let id = index">
+        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id)" [innerHTML]="tab.title"></button>
+        <clr-tab-content *clrIfActive="tab.active">
+            <div [hidden]="id !== 0">
                 <ng-container
                     *ngTemplateOutlet="staticTransactionsList"
                 ></ng-container>
             </div>
 
             <!-- Transaction view tabs. -->
-            <ng-container *ngIf="idx >= 1">
+            <ng-container *ngIf="id >= 1">
                 <ng-container
-                    *ngTemplateOutlet="dynamicViewTab; context: {'tabid': idx, 'transaction': tabdata.transaction}"
+                    *ngTemplateOutlet="dynamicViewTab; context: {'id': id, 'transaction': tab.data.transaction}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -33,19 +33,19 @@
             <clr-dg-column class="col-type" mltag="txt_type">Type</clr-dg-column>
             
             <!-- <clr-dg-row *clrDgItems="let transaction of transactions"> -->
-            <clr-dg-row *clrDgItems="let transaction of transactions; let idx = index;">
+            <clr-dg-row *clrDgItems="let transaction of transactions$ | async">
                 <clr-dg-cell class="col-actions">
                     <div class="btn-group btn-sm">
-                        <button (click)="handleView(idx)" class="btn">
+                        <button (click)="handleViewTransaction(transaction.hash)" class="btn">
                             <i class="fa fa-search"></i><span mltag="txt_view">View</span>
                         </button>
                     </div>
                 </clr-dg-cell>
                 <clr-dg-cell class="col-txid">{{transaction.hash | truncate:8}}</clr-dg-cell>
                 <clr-dg-cell class="col-identifier"></clr-dg-cell>
-                <clr-dg-cell class="col-asset">{{transaction.issuer}}|{{transaction.instrument}}</clr-dg-cell>
+                <clr-dg-cell class="col-asset">{{transaction.issuer}}<span class="asset"> | </span>{{transaction.instrument}}</clr-dg-cell>
                 <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
-                <clr-dg-cell class="col-type"><span class="label label-primary">{{transaction.txType}}</span></clr-dg-cell>
+                <clr-dg-cell class="col-type"><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
@@ -56,7 +56,7 @@
     </div>
 </ng-template>
 
-<ng-template #dynamicViewTab let-tabid="tabid" let-transaction="transaction">
+<ng-template #dynamicViewTab let-id="id" let-transaction="transaction">
     <div class="transaction-tab-panel-body panel-body">
         <form>
             <div class="form-horizontal">            
@@ -81,7 +81,7 @@
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
                     <label class="col-sm-4">
-                        <button type="button" class="btn btn-primary" (click)="closeTransaction(tabid)">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="closeTab(id)">Close</button>
                     </label>
                 </div>
             </div>
