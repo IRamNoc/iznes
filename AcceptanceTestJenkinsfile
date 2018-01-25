@@ -49,9 +49,9 @@ timestamps {
             stage('Run Acceptance Tests') {
                 try{
                     sh '''rm -f target/test-attachments/*.jpg &&
-                    cd ~/workspace/OpenCSDClarityUIAcceptanceTests/javaUITesting2
+                    cd ~/workspace/IznesUIAcceptanceTests/javaUITesting2
                     export DISPLAY=:10
-                    ./gradlew clean build --debug'''
+                    ./gradlew clean build'''
 
 
                 } catch (err) {
@@ -61,9 +61,8 @@ timestamps {
                 } finally {
                     archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/test-attachments/*.jpg'
 
-                    testResults: '**/javaUITesting2/build/test-results/test/TEST-com**'
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'javaUITesting2/build/reports/tests/test',
-                                 reportFiles : 'index.html', reportName: 'SETL New OpenCSD Clarity UI Test Report', reportTitles: ''])
+                    junit allowEmptyResults: true, keepLongStdio: true,
+                        testResults: '**/build/test-results/test/TEST-io**'
                 }
             }
 
