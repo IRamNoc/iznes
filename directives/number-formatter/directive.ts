@@ -1,4 +1,4 @@
-import {Directive, HostListener, ElementRef, OnInit, Input} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 import {MoneyValuePipe} from '../../pipes';
 
 @Directive({selector: '[appNumberFormatter]'})
@@ -14,7 +14,7 @@ export class NumberFormatterDirective implements OnInit {
     }
 
     ngOnInit() {
-        this.el.value = this._moneyValuePipe.transform(this.el.value, this.fractionSize);
+        this.el.value = this._moneyValuePipe.transform(this.el.value, this.fractionSize).toString();
     }
 
     @HostListener('focus', ['$event.target.value'])
@@ -24,7 +24,7 @@ export class NumberFormatterDirective implements OnInit {
 
     @HostListener('blur', ['$event.target.value'])
     onBlur(value) {
-        this.el.value = this._moneyValuePipe.transform(value.toString(), this.fractionSize);
+        this.el.value = this._moneyValuePipe.transform(value.toString(), this.fractionSize).toString();
     }
 
 }
