@@ -1,18 +1,16 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
-import { NgRedux, select } from '@angular-redux/store';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { immutableHelper } from '@setl/utils';
-import {
-    setRequestedMailList
-} from '@setl/core-store';
-import { MyMessagesService } from '@setl/core-req-services';
-import { MessagesService } from "../messages.service";
-import { MailHelper } from './mailHelper';
-import { fromJS } from 'immutable';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs/Subscription';
+import {NgRedux, select} from '@angular-redux/store';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
+import {setRequestedMailList} from '@setl/core-store';
+import {MyMessagesService} from '@setl/core-req-services';
+import {MessagesService} from "../messages.service";
+import {MailHelper} from './mailHelper';
+import {fromJS} from 'immutable';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'setl-messages',
@@ -22,6 +20,7 @@ import { Observable } from 'rxjs/Observable';
 export class SetlMessagesComponent implements OnDestroy, OnInit {
     public messageComposeForm: FormGroup;
     public editor;
+    private _appConfig: AppConfig;
 
     @select(['message', 'myMessages', 'messageList']) getMessageList;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
@@ -82,13 +81,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         bold: false,
     };
 
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private myMessageService: MyMessagesService,
-        private changeDetectorRef: ChangeDetectorRef,
-        private _alertsService: AlertsService,
-        private route: ActivatedRoute
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private myMessageService: MyMessagesService,
+                private changeDetectorRef: ChangeDetectorRef,
+                private _alertsService: AlertsService,
+                private route: ActivatedRoute,
+                @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
     }
@@ -97,43 +95,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.currentCategory = 0;
 
         // these are the categories that appear along the left hand side as buttons
-        this.categories = [
-            {
-                name: 'All Messages',
-                desc: 'View your global inbox',
-                icon: 'inbox',
-                type: 'inbox',
-                active: true
-            },
-            {
-                name: 'Action Messages',
-                desc: 'Messages that require actions',
-                icon: 'balance',
-                type: 'action',
-                active: false
-            },
-            {
-                name: 'Workflow Messages',
-                desc: 'Messages with multiple actions',
-                icon: 'organization',
-                type: 'workflow',
-                active: false
-            },
-            {
-                name: 'Sent Messages',
-                desc: 'Messages sent by your account',
-                icon: 'pop-out',
-                type: 'sent',
-                active: false
-            },
-            {
-                name: 'Deleted Messages',
-                desc: 'View messages that you deleted',
-                icon: 'trash',
-                type: 'deleted',
-                active: false
-            },
-        ];
+        this.categories = _appConfig.messagesMenu;
 
         this.subscriptionsArray.push(
             this.getWalletDirectoryList.subscribe(
