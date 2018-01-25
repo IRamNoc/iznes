@@ -21,6 +21,7 @@ import { MockMailHelper } from './mockMailHelper';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { APP_BASE_HREF } from '@angular/common';
+import { APP_CONFIG } from '@setl/utils';
 
 const routes = [
     {
@@ -84,16 +85,80 @@ describe('SetlMessagesComponent', () => {
             MemberSocketService,
             AlertsService,
             { provide: ActivatedRoute, useValue: { params: Observable.of({category: 'inbox'}) } },
-            { provide: APP_BASE_HREF, useValue : '/' }
+            { provide: APP_BASE_HREF, useValue : '/' },
+            {
+                provide: APP_CONFIG,
+                useValue: {
+                    messagesMenu: [
+                        {
+                            name: 'All Messages',
+                            desc: 'View your global inbox',
+                            icon: 'inbox',
+                            type: 'inbox',
+                            active: true
+                        },
+                        {
+                            name: 'Action Messages',
+                            desc: 'Messages that require actions',
+                            icon: 'balance',
+                            type: 'action',
+                            active: false
+                        },
+                        {
+                            name: 'Sent Messages',
+                            desc: 'Messages sent by your account',
+                            icon: 'pop-out',
+                            type: 'sent',
+                            active: false
+                        },
+                        {
+                            name: 'Deleted Messages',
+                            desc: 'View messages that you deleted',
+                            icon: 'trash',
+                            type: 'deleted',
+                            active: false
+                        },
+                    ]
+                }
+            }
         ]
-    })
-    .compileComponents();
+    }).compileComponents();
     MockNgRedux.reset();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SetlMessagesComponent);
     component = fixture.componentInstance;
+    component._appConfig = {messagesMenu: [
+        {
+            name: 'All Messages',
+            desc: 'View your global inbox',
+            icon: 'inbox',
+            type: 'inbox',
+            active: true
+        },
+        {
+            name: 'Action Messages',
+            desc: 'Messages that require actions',
+            icon: 'balance',
+            type: 'action',
+            active: false
+        },
+        {
+            name: 'Sent Messages',
+            desc: 'Messages sent by your account',
+            icon: 'pop-out',
+            type: 'sent',
+            active: false
+        },
+        {
+            name: 'Deleted Messages',
+            desc: 'View messages that you deleted',
+            icon: 'trash',
+            type: 'deleted',
+            active: false
+        },
+    ]};
     mockMailHelper = new MockMailHelper();
     encryptedMessage = exampleMessage;
     fixture.detectChanges();
@@ -107,7 +172,6 @@ describe('SetlMessagesComponent', () => {
       const index = 0;
       component.messages = messageList;
       component.showMessage(index).then(() => {
-          console.log(component.messages);
           expect(component.messages[index].content).toBe('Decrypted Message');
       });
   });
