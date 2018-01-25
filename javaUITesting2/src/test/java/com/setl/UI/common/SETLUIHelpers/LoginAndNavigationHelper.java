@@ -191,7 +191,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-      Thread.sleep(750);
+      Thread.sleep(1500);
       try {
         driver.findElement(By.id("ofi-homepage")).isDisplayed();
       }catch (Error e){
@@ -219,7 +219,7 @@ public class LoginAndNavigationHelper {
     }
 
   public static void navigateToDropdown(String dropdownID) throws InterruptedException {
-    Thread.sleep(750);
+    Thread.sleep(1500);
     try {
       driver.findElement(By.id(dropdownID)).click();
     }catch (Error e){
