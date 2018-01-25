@@ -12,6 +12,11 @@ export class BlankLayoutComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
+        window.onbeforeunload = function (e) {
+            const leaveMessage = 'Changes that you made may not be saved if you leave this page.';
+            e.returnValue = leaveMessage;
+            return leaveMessage;
+        };
     }
 
     public getRouterOutletState(outlet) {

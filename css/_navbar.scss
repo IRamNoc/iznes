@@ -106,9 +106,6 @@ header {
             .ui-select-container {
                 @extend .animate;
 
-                .dropdown-menu {
-                    margin-top: 20px !important;
-                }
                 .dropdown {
                     .open input {
                         margin-top: 6px;
@@ -117,7 +114,7 @@ header {
                     .ui-select-toggle {
                         @extend .animate;
                         background: white;
-                        border: 1px solid white !important;
+                        //border: 1px solid white !important;
                         width: 200px;
                         .ui-select-match-text, .ui-select-placeholder {
                             margin-left: 25px !important;
@@ -139,7 +136,7 @@ header {
                 @extend .animate;
                 min-height: 40px;
                 margin-top: 6px;
-                padding: 10px 55px !important;
+                //padding: 10px 55px !important;
                 font-size: 12.5px;
                 font-weight: none;
                 border-radius: 3px;
