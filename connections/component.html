@@ -9,6 +9,7 @@
             <i class="fa fa-check"></i>
             <span>Accepted</span>
         </button>
+
         <clr-tab-content *clrIfActive="isAcceptedConnectionDisplayed">
             <section class="form-block">
                 <clr-datagrid>
@@ -19,11 +20,12 @@
                     <clr-dg-row *clrDgItems="let acceptedConnection of acceptedConnectionList">
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
-                                <button id="edit-button" class="btn" (click)="handleEditIconClick(acceptedConnection)">
+                                <button id="edit-button" class="btn"
+                                        (click)="handleEditButtonClick(acceptedConnection)">
                                     <i class="fa fa-edit"></i>
                                 </button>
                                 <button id="delete-button" class="btn"
-                                        (click)="connectionToDelete = acceptedConnection; isModalDisplayed = true;">
+                                        (click)="handleDeleteButtonClick(acceptedConnection)">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </div>
@@ -47,6 +49,7 @@
             <i class="fa fa-ellipsis-h"></i>
             <span>Pending</span>
         </button>
+
         <clr-tab-content>
             <section class="form-block">
                 <clr-datagrid>
@@ -81,23 +84,14 @@
         </clr-tab-content>
     </clr-tab>
 
-    <!-- Add or edit connection tab -->
+    <!-- Add connection tab -->
     <clr-tab>
-        <div *ngIf="!isEditFormDisplayed; else editConnectionForm">
-            <button id="add-connection-tab" clrTabLink (click)="resetForm()">
-                <i class="fa fa-plus"></i>
-                <span>Add a connection</span>
-            </button>
-        </div>
+        <button id="add-connection-tab" clrTabLink (click)="resetForm()">
+            <i class="fa fa-plus"></i>
+            <span>Add a connection</span>
+        </button>
 
-        <ng-template #editConnectionForm>
-            <button id="edit-connection-tab" clrTabLink>
-                <i class="fa fa-pencil"></i>
-                <span>Edit a connection</span>
-            </button>
-        </ng-template>
-
-        <clr-tab-content *clrIfActive="isEditFormDisplayed">
+        <clr-tab-content>
             <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmit()">
                 <section class="form-block">
                     <div class="row">
@@ -105,14 +99,15 @@
                             <label class="control-label">
                                 <span>Connection's name</span>
                             </label>
+
                             <ng-select
                                     id="add-connection-select"
                                     placeholder="Select a connection"
                                     [items]="walletList"
                                     [allowClear]=true
-                                    [formControl]="formGroup.controls['connection']"
-                                    [disabled]="isEditFormDisplayed">
+                                    [formControl]="formGroup.controls['connection']">
                             </ng-select>
+
                             <span class="mandatory-field">*</span>
                             <div *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
                                  class="text-danger">This field is required
@@ -125,13 +120,15 @@
                             <label class="control-label">
                                 <span>Sub-portfolio's name</span>
                             </label>
+
                             <ng-select
-                                    id="add-sub-portfolio-select"
+                                    id="add-subportfolio-select"
                                     [items]="addressList"
                                     [allowClear]=true
                                     placeholder="Select a sub-portfolio"
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
+
                             <span class="mandatory-field">*</span>
                             <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
                                  class="text-danger">This field is required
@@ -140,9 +137,73 @@
                     </div>
 
                     <div class="row">
-                        <button id="connection-submit-btn" class="btn btn-primary" [disabled]="formGroup.invalid">
+                        <button id="add-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
                             <i class="fa fa-plus"></i>
                             <span class="ml_translated">Add</span>
+                        </button>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+
+    <!-- Edit connection tab -->
+    <clr-tab *ngIf="isEditTabDisplayed">
+        <button id="edit-connection-tab" clrTabLink (click)="resetForm()">
+            <i class="fa fa-pencil"></i>
+            <span>Edit a connection</span>
+        </button>
+
+        <clr-tab-content *clrIfActive="isEditTabDisplayed">
+            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmit()">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span>Connection's name</span>
+                            </label>
+
+                            <ng-select
+                                    id="edit-connection-select"
+                                    placeholder="Select a connection"
+                                    [items]="walletList"
+                                    [allowClear]=true
+                                    [formControl]="formGroup.controls['connection']"
+                                    [disabled]="isEditTabDisplayed">
+                            </ng-select>
+
+                            <span class="mandatory-field">*</span>
+                            <div *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                 class="text-danger">This field is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                <span>Sub-portfolio's name</span>
+                            </label>
+
+                            <ng-select
+                                    id="edit-subportfolio-select"
+                                    [items]="addressList"
+                                    [allowClear]=true
+                                    placeholder="Select a sub-portfolio"
+                                    [formControl]="formGroup.controls['sub-portfolio']">
+                            </ng-select>
+
+                            <span class="mandatory-field">*</span>
+                            <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                 class="text-danger">This field is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button id="edit-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
+                            <i class="fa fa-pencil"></i>
+                            <span class="ml_translated">Edit</span>
                         </button>
                     </div>
                 </section>
@@ -152,7 +213,7 @@
 </clr-tabs>
 
 <!-- Delete confirmation modal -->
-<clr-modal [(clrModalOpen)]="isModalDisplayed">
+<clr-modal [(clrModalOpen)]="isDeleteModalDisplayed">
     <h3 class="modal-title">Delete a connection</h3>
     <div class="modal-body">
         <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
@@ -160,10 +221,12 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="del-confirm-modal-no-btn" (click)="confirmationModal(false)"
+        <button type="button" class="btn btn-outline" id="del-confirm-modal-no-btn"
+                (click)="onDisplayConfirmationModal(false)"
                 mltag="txt_no">No
         </button>
-        <button type="button" class="btn btn-primary" id="del-confirm-modal-yes-btn" (click)="confirmationModal(true)"
+        <button type="button" class="btn btn-primary" id="del-confirm-modal-yes-btn"
+                (click)="onDisplayConfirmationModal(true)"
                 mltag="txt_yes">Yes
         </button>
     </div>
