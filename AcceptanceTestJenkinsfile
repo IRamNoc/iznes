@@ -62,7 +62,7 @@ timestamps {
                     archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/test-attachments/*.jpg'
 
                     junit allowEmptyResults: true, keepLongStdio: true,
-                        testResults: '**/build/test-results/test/TEST-io**'
+                        testResults: '**/build/test-results/test/TEST-com**'
                 }
             }
 
