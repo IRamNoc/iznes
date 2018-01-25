@@ -11,7 +11,7 @@ export interface MenuSpec {
     [userType: string]: Array<MenuItem>;
 }
 
-interface MemberNodeConntion {
+interface MemberNodeConnection {
     host: string;
     port: number;
     path: string;
@@ -19,8 +19,17 @@ interface MemberNodeConntion {
 
 export interface AppConfig {
     production: boolean;
-    MEMBER_NODE_CONNECTION: MemberNodeConntion;
+    MEMBER_NODE_CONNECTION: MemberNodeConnection;
     numberDivider: 1;
     menuSpec: MenuSpec;
     reportingNodeUrl: string;
+    messagesMenu: Array<MessagesMenuItem>;
+}
+
+export interface MessagesMenuItem {
+    name: string;
+    desc: string;
+    icon: string;
+    type: string;
+    active: boolean;
 }
