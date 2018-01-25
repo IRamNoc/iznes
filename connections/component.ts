@@ -44,9 +44,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     pendingConnectionList = [];
     connectionToDelete: any;
     isAcceptedConnectionDisplayed: boolean;
-    isModalDisplayed: boolean;
+    isDeleteModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
-    isEditFormDisplayed: boolean;
+    isEditTabDisplayed: boolean;
     isAcceptModalDisplayed: boolean;
     connectionToBind: any;
 
@@ -77,9 +77,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
-        this.isModalDisplayed = false;
+        this.isDeleteModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
-        this.isEditFormDisplayed = false;
+        this.isEditTabDisplayed = false;
         this.isAcceptedConnectionDisplayed = false;
         this.isAcceptModalDisplayed = false;
 
@@ -269,7 +269,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     handleSubmit() {
         let data = null;
 
-        if (!this.isEditFormDisplayed) {
+        if (!this.isEditTabDisplayed) {
             data = {
                 leiId: this.connectedWalletId.toString(),
                 senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
@@ -287,7 +287,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                     this.isAcceptedConnectionDisplayed = true;
 
-                    this.handleSendMessage(response[1].Data[0]);
+                    this.onSendConnectionMessage(response[1].Data[0]);
                 },
                 () => {
                     this.showErrorMessage('This connection already exists');
@@ -320,7 +320,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    handleEditIconClick(connection) {
+    handleEditButtonClick(connection) {
         const selectedSubPortfolio = connection.subPortfolio;
         const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
 
@@ -328,30 +328,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
 
         this.isAcceptedConnectionDisplayed = false;
-        this.isEditFormDisplayed = true;
+        this.isEditTabDisplayed = true;
     }
 
-    handleDelete(connection: any) {
-        const data = {
-            leiId: this.connectedWalletId,
-            senderLei: connection.leiSender
-        };
-
-        const asyncTaskPipe = this.connectionService.deleteConnection(data);
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-                ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.showSuccessResponse('The connection has successfully been deleted');
-            },
-            (error) => {
-                console.error('error: ', error);
-            })
-        );
-
-        this.changeDetectorRef.markForCheck();
+    handleDeleteButtonClick(connection) {
+        this.connectionToDelete = connection;
+        this.isDeleteModalDisplayed = true;
     }
 
     handleAcceptConnection(isOk: boolean) {
@@ -417,7 +399,30 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    handleSendMessage(response: any) {
+    onDeleteConnection(connection: any) {
+        const data = {
+            leiId: this.connectedWalletId,
+            senderLei: connection.leiSender
+        };
+
+        const asyncTaskPipe = this.connectionService.deleteConnection(data);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+                ConnectionService.setRequestedToConnections(false, this.ngRedux);
+                this.showSuccessResponse('The connection has successfully been deleted');
+            },
+            (error) => {
+                console.error('error: ', error);
+            })
+        );
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    onSendConnectionMessage(response: any) {
         const acceptPayload = {
             topic: 'newconnection',
             leiId: response.LeiSender,
@@ -462,18 +467,19 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         });
     }
 
-    confirmationModal(isOk): void {
-        this.isModalDisplayed = false;
+    onDisplayConfirmationModal(isOk): void {
+        this.isDeleteModalDisplayed = false;
 
         if (isOk) {
-            this.handleDelete(this.connectionToDelete);
+            this.onDeleteConnection(this.connectionToDelete);
         }
     }
 
     resetForm(): void {
         this.isAcceptedConnectionDisplayed = false;
-        this.isEditFormDisplayed = false;
+        this.isEditTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
+
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
         this.formGroup.reset();
