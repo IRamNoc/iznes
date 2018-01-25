@@ -75,4 +75,33 @@ export class CoreWorkflowEngineService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    requestTemplateList(): any {
+        const messageBody = {
+            RequestName: 'wfe-edit-list',
+            token: this.memberSocketService.token,
+            data: {}
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestTemplateLoad(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-edit-load',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestTemplateSave(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-edit-save',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
 }

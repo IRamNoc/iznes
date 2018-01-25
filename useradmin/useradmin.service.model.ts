@@ -210,7 +210,7 @@ export interface CreateNewWalletBody extends MemberNodeMessageBody {
     /* Individual basic fields. */
     aliases?: string;
     formerName?: string;
-    idcardnum?: string;
+    idCardNum?: string;
 
     /* Individual residential address. */
     rdaCountry?: string;
@@ -235,8 +235,8 @@ export interface CreateNewWalletBody extends MemberNodeMessageBody {
     bankName?: string;
     bankIBAN?: string;
     bankBICcode?: string;
-    bankaccountname?: string;
-    bankaccountnum?: string;
+    bankAccountName?: string;
+    bankAccountNum?: string;
     /* settlement address */
     bdCountry?: string;
     bdAddressPrefix?: string;
