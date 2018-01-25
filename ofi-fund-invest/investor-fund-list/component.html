@@ -59,7 +59,7 @@
                         <span class="text_small">{{ fund.isin }}</span><br/>
                         <a class="text-primary fake-link" (click)="handleView(i)">{{fund.fundName}}</a>
                     </clr-dg-cell>
-                    <clr-dg-cell>€ {{fund.nav | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>€ {{fund.nav | moneyValue: 2}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.currency}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.mainClass}}</clr-dg-cell>
                     <clr-dg-cell>{{fund.subClass}}</clr-dg-cell>

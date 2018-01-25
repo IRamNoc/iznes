@@ -50,8 +50,8 @@
                                         <td class="text-left">{{ holding.walletName }}</td>
                                         <td class="text-left">{{ holding.asset }}</td>
                                         <td class="text-left">{{ holding.assetManager }}</td>
-                                        <td class="text-right">{{ holding.quantity }}</td>
-                                        <td class="text-right">&euro; {{ holding.estimatedAmount }}</td>
+                                        <td class="text-right">{{ holding.quantity | moneyValue: 5 }}</td>
+                                        <td class="text-right">&euro; {{ holding.estimatedAmount | moneyValue: 4 }}</td>
                                         <td class="text-right">{{ holding.ratio }}%</td>
                                     </tr>
                                     </tbody>

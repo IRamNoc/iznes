@@ -55,7 +55,7 @@
                                         <span mltag="txt_nav">NAV</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.navPrice | moneyValue}}  <small>Last updated: {{fundStats.navDate}}</small></span>
+                                        <span class="readonly-field">{{fundStats.navPrice | moneyValue: 2}}  <small>Last updated: {{fundStats.navDate}}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -63,7 +63,7 @@
                                         <span mltag="txt_numberofunits">Number of Units</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.units | moneyValue}}</span>
+                                        <span class="readonly-field">{{fundStats.units | moneyValue: 5}}</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -71,7 +71,7 @@
                                         <span mltag="txt_netasset">Net Asset</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.netAsset | moneyValue}}</span>
+                                        <span class="readonly-field">{{fundStats.netAsset | moneyValue: 4}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -95,8 +95,8 @@
                                     <tr *ngFor="let holder of fundStats.holders">
                                         <!--<td colspan="4">{{ holder | json }}</td>-->
                                         <td class="text-left">{{ holder.label }}</td>
-                                        <td class="text-right">€ {{ holder.amount | moneyValue }}</td>
-                                        <td class="text-right">{{ holder.quantity | moneyValue }}</td>
+                                        <td class="text-right">€ {{ holder.amount | moneyValue: 4 }}</td>
+                                        <td class="text-right">{{ holder.quantity | moneyValue: 5 }}</td>
                                         <td class="text-right">{{ holder.ratio }}%</td>
                                     </tr>
                                     </tbody>

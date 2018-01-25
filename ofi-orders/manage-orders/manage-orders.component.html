@@ -126,17 +126,17 @@
 
                         <clr-dg-cell>
                             <!-- Quantity -->
-                            {{ order.metaData.units | moneyValue}}
+                            {{ order.metaData.units | moneyValue: 5}}
                         </clr-dg-cell>
 
                         <clr-dg-cell>
                             <!-- Amount -->
-                            {{ order.metaData.total | moneyValue}}
+                            {{ order.metaData.total | moneyValue: 4}}
                         </clr-dg-cell>
 
                         <clr-dg-cell>
                             <!-- Price -->
-                            {{ order.price | moneyValue}}
+                            {{ order.price | moneyValue: 2}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Cut-off date -->
@@ -248,7 +248,7 @@
                             <span mltag="txt_quantity">Quantity</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.units | moneyValue}}</span>
+                            <span class="readonly-field">{{orderData.metaData.units | moneyValue: 5}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -256,7 +256,7 @@
                             <span mltag="txt_netassetvalue">Net Asset Value</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.price | moneyValue}}</span>
+                            <span class="readonly-field">{{orderData.price | moneyValue: 2}}</span>
                         </div>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
                             <span mltag="txt_grossamount">Gross Amount</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{orderData.metaData.total | moneyValue}}</span>
+                            <span class="readonly-field">{{orderData.metaData.total | moneyValue: 4}}</span>
                         </div>
                     </div>
                 </div>
@@ -326,7 +326,7 @@
                             <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
                         </label>
                         <div>
-                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue }}</span>
+                            <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue: 5 }}</span>
                         </div>
                     </div>
 

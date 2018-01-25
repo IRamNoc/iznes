@@ -86,7 +86,7 @@
                                 <span class="ml_translated" mltag="txt_totalamounttobedeclared">Total Amount to be declared</span>
                             </label>
                             <div>
-                                € <span class="text-primary">{{totalAmountToDeclared | moneyValue}}</span>
+                                € <span class="text-primary">{{totalAmountToDeclared | moneyValue: 4}}</span>
                             </div>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.grossAmount | moneyValue}}
+                        {{tx.grossAmount | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -135,11 +135,11 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.taxCredit | moneyValue}}
+                        {{tx.taxCredit | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        {{tx.amountToDeclared | moneyValue}}
+                        {{tx.amountToDeclared | moneyValue: 5}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -189,7 +189,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionPrice | moneyValue}}
+                    {{tx.transactionPrice | moneyValue: 4}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>
@@ -197,7 +197,7 @@
                 </clr-dg-cell>
 
                 <clr-dg-cell>
-                    {{tx.transactionSettlement | moneyValue}}
+                    {{tx.transactionSettlement | moneyValue: 4}}
                 </clr-dg-cell>
 
                 <clr-dg-cell>

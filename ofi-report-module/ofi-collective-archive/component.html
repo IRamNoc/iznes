@@ -95,7 +95,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        € {{archive.subscriptionTotal | moneyValue}}
+                        € {{archive.subscriptionTotal | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -103,11 +103,11 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        € 0.00
+                        € {{0.00 | moneyValue : 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        € {{archive.redemptionTotal | moneyValue}}
+                        € {{archive.redemptionTotal | moneyValue: 4}}
                     </clr-dg-cell>
 
                     <clr-dg-cell>
@@ -115,7 +115,7 @@
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-                        € 0.00
+                        € {{0.00 | moneyValue : 4}}
                     </clr-dg-cell>
 
                 </clr-dg-row>
