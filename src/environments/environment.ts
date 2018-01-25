@@ -20,5 +20,42 @@ export const environment = {
     },
     numberDivider: 100000,
     menuSpec,
-    reportingNodeUrl: 'http://10.0.1.106:13544/sapi'
+    reportingNodeUrl: 'http://10.0.1.106:13544/sapi',
+    messagesMenu: [
+        {
+            name: 'All Messages',
+            desc: 'View your global inbox',
+            icon: 'inbox',
+            type: 'inbox',
+            active: true
+        },
+        {
+            name: 'Action Messages',
+            desc: 'Messages that require actions',
+            icon: 'balance',
+            type: 'action',
+            active: false
+        },
+        {
+            name: 'Workflow Messages',
+            desc: 'Messages with multiple actions',
+            icon: 'organization',
+            type: 'workflow',
+            active: false
+        },
+        {
+            name: 'Sent Messages',
+            desc: 'Messages sent by your account',
+            icon: 'pop-out',
+            type: 'sent',
+            active: false
+        },
+        {
+            name: 'Deleted Messages',
+            desc: 'View messages that you deleted',
+            icon: 'trash',
+            type: 'deleted',
+            active: false
+        },
+    ]
 };
