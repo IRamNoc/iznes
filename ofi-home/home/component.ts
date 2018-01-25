@@ -10,6 +10,9 @@ import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 import {ofiSetRequestedHomeOrder} from "../../ofi-store";
 import * as math from 'mathjs';
 
+import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MoneyValuePipe} from '@setl/utils';
+
 @Component({
     styleUrls: ['./component.css'],
     templateUrl: './component.html',
@@ -28,6 +31,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     private myWallets: any = [];
     private connectedWalletId: any = 0;
 
+    // pipeForm: FormGroup;
+    // randomNum = 0;
+
     /* Observables. */
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -40,9 +46,38 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 private ofiOrdersService: OfiOrdersService,
                 private _numberConverterService: NumberConverterService,
                 private _ngRedux: NgRedux<any>,
+                private _moneyValuePipe: MoneyValuePipe,
+                private _fb: FormBuilder,
                 private _router: Router) {
         /* Stub. */
+
+        // this.generateRandom();
+        // this.pipeForm = this._fb.group({
+        //     myField: [
+        //         this.randomNum,
+        //     ],
+        // });
     }
+
+    // generateRandom() {
+    //     this.randomNum = ((Math.random() * 1000000 + 1) * (Math.random() * 10)).toFixed(Math.random() * 10 + 1);
+    // }
+    //
+    // regenerateRandom() {
+    //     this.generateRandom();
+    //     this.pipeForm.get('myField').patchValue(this.randomNum, {emitEvent: false});
+    //     this.pipeForm.get('myField').updateValueAndValidity();
+    // }
+    //
+    // savePipeForm(formValues) {
+    //     console.log('formValues', formValues);
+    //     console.log('parse quantity', this._moneyValuePipe.parse(this.randomNum, 5));
+    //     console.log('parse amount/currency', this._moneyValuePipe.parse(this.randomNum, 4));
+    //     console.log('parse NAV', this._moneyValuePipe.parse(this.randomNum, 2));
+    //     console.log('transform quantity', this._moneyValuePipe.transform(this.randomNum, 5));
+    //     console.log('transform amount/currency', this._moneyValuePipe.transform(this.randomNum, 4));
+    //     console.log('transform NAV', this._moneyValuePipe.transform(this.randomNum, 2));
+    // }
 
     ngAfterViewInit() {
         /* Do observable subscriptions here. */
