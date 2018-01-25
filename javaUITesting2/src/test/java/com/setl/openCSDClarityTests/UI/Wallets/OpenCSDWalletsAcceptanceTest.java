@@ -56,7 +56,7 @@ public class OpenCSDWalletsAcceptanceTest {
     }
     public static void selectAccountType() throws IOException, InterruptedException {
         driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/div[3]/ul/li[1]")).click();
     }
     public static void selectWalletType() throws IOException, InterruptedException {
         driver.findElement(By.id("new-wallet-usertype-select")).click();

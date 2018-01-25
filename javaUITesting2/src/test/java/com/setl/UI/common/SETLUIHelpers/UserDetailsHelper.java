@@ -357,7 +357,13 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
     driver.findElement(By.id("new-user-account-select")).click();
   }
   public static void selectManageUserUserDropdown(){
-    driver.findElement(By.id("new-user-usertype-select")).click();
+      driver.findElement(By.id("new-user-username")).click();
+      try {
+          driver.findElement(By.id("new-user-usertype-select")).click();
+      }catch (Error e){
+          System.out.println("fail");
+          fail();
+      }
     driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[2]")).click();
     driver.findElement(By.id("new-user-usertype-select")).click();
   }
