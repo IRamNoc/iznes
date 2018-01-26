@@ -90,16 +90,18 @@ public class OpenCSDAccountsAcceptanceTest {
     //@Ignore("not sure why this is failing, look into it")
     public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException, SQLException {
         createHoldingUserAndLogin();
-        //setLoggedInUserAccountInfoToNull();
-        //scrollElementIntoViewById("udSubmit");
-        /*try {
+        logout();
+        loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
+        setLoggedInUserAccountInfoToNull();
+        scrollElementIntoViewById("udSubmit");
+        try {
             clickMyAccountSubmit();
         }catch (Error e){
             System.out.println("updating account information was not successful");
             fail();
         }
-        Thread.sleep(750);*/
-        searchDatabaseFor("tblUserDetails","firstName", "null");
+        Thread.sleep(750);
+        searchDatabaseFor("tblUserDetails","firstName", "blanketyblank");
     }
 
     public static void assureSubmitBtnIsInView() throws IOException, InterruptedException {
@@ -110,7 +112,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
     @Test
     public void shouldEditDisplayname() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","displayName", "null");
+        searchDatabaseFor("tblUserDetails","displayName", "TestUserNullInfo");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -118,12 +120,13 @@ public class OpenCSDAccountsAcceptanceTest {
         myAccountSendKeys("DisplayName", "Testing");
         scrollElementIntoViewById("udSubmit");
         assureSubmitBtnIsInView();
+
         clickMyAccountSubmit();
         searchDatabaseFor("tblUserDetails","displayName", "Testing");
     }
   @Test
   public void shouldEditFirstname() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","firstName", "null");
+        searchDatabaseFor("tblUserDetails","firstName", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -137,7 +140,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditLastname() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","lastName", "null");
+        searchDatabaseFor("tblUserDetails","lastName", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -151,7 +154,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditMobilePhone() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","mobilePhone", "null");
+        searchDatabaseFor("tblUserDetails","mobilePhone", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -165,7 +168,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditAddress() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","address1", "null");
+        searchDatabaseFor("tblUserDetails","address1", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -179,7 +182,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditAddressPrefix() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","addressPrefix", "null");
+        searchDatabaseFor("tblUserDetails","addressPrefix", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -193,7 +196,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditCity() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","address3", "null");
+        searchDatabaseFor("tblUserDetails","address3", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -207,7 +210,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditState() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","address4", "null");
+        searchDatabaseFor("tblUserDetails","address4", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -221,7 +224,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditPostalCode() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","postalCode", "null");
+        searchDatabaseFor("tblUserDetails","postalCode", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -236,7 +239,7 @@ public class OpenCSDAccountsAcceptanceTest {
   @Test
   @Ignore
   public void shouldEditCountry() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","country", "null");
+        searchDatabaseFor("tblUserDetails","country", "Afghanistan");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -250,7 +253,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditMemorableQuestion() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","memorableQuestion", "null");
+        searchDatabaseFor("tblUserDetails","memorableQuestion", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
@@ -264,7 +267,7 @@ public class OpenCSDAccountsAcceptanceTest {
 
   @Test
   public void shouldEditMemorableAnswer() throws IOException, InterruptedException, SQLException {
-        searchDatabaseFor("tblUserDetails","memorableAnswer", "null");
+        searchDatabaseFor("tblUserDetails","memorableAnswer", "blanketyblank");
         loginAndVerifySuccess(testusername, testpassword);
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");

@@ -54,7 +54,7 @@ public class LoginAndNavigationHelper {
             wait.until(visibilityOf(usernameInput));
             wait.until(elementToBeClickable(usernameInput));
         }catch(Exception e){
-            System.out.println("Login page not ready - Username " + e.getMessage());
+            fail("Login page not ready - Username " + e.getMessage());
         }
 
         try {
@@ -62,7 +62,7 @@ public class LoginAndNavigationHelper {
             wait.until(visibilityOf(passwordInput));
             wait.until(elementToBeClickable(passwordInput));
         } catch (Exception i) {
-            System.out.println("Login page not ready - Password " + i.getMessage());
+            fail("Login page not ready - Password " + i.getMessage());
         }
 
         try {
@@ -70,7 +70,7 @@ public class LoginAndNavigationHelper {
             wait.until(visibilityOf(loginButton));
             wait.until(elementToBeClickable(loginButton));
         } catch (Exception o) {
-            System.out.println("Login page not ready - Button " + o.getMessage());
+            fail("Login page not ready - Button " + o.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ public class LoginAndNavigationHelper {
             name.clear();
             name.sendKeys(username);
         } catch (Exception e) {
-            System.out.println("User name field is not ready");
+            fail("User name field is not ready");
         }
     }
     public static void enterLoginCredentialsPassword(String password) {
@@ -95,7 +95,7 @@ public class LoginAndNavigationHelper {
             login_password.clear();
             login_password.sendKeys(password);
         } catch (Exception e) {
-            System.out.println("User password field is not ready");
+            fail("User password field is not ready");
         }
     }
 
@@ -108,7 +108,7 @@ public class LoginAndNavigationHelper {
             login.click();
         }catch(Exception e)
             {
-                System.out.println("Login button not ready " + e.getMessage());
+                fail("Login button not ready " + e.getMessage());
             }
     }
 

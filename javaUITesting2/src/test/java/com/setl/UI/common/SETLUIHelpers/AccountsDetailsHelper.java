@@ -84,6 +84,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             if (second >= 60) fail("timeout");
             try {
                 if ("Search".equals(driver.findElement
+                    //to do what
                     (By.xpath("//a[contains(@href, '#account-tab-1')]")).getText()))
                     break;
             } catch (Exception e) {
@@ -343,7 +344,9 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void clickMyAccountSubmit() throws InterruptedException {
-        Thread.sleep(1000);
+         scrollElementIntoViewById("udSubmit");
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        //Wait for element to be clickable
         try {
             driver.findElement(By.id("udSubmit")).click();
         } catch (Error e) {
@@ -386,14 +389,18 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
         try {
+            // click ok success
             driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
             System.out.println("clicked OK successfully");
+            //todo naughty sleep
+            Thread.sleep(4000);
         } catch (Exception e) {
             System.out.println("couldn't click the OK");
         }
 
         try {
-            searchDatabaseFor("tblUserDetails", "firstName", "TestUserNullInfo");
+            //todo this should have failed
+            searchDatabaseFor("tblUserDetails", "displayName", "TestUserNullInfo");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -404,25 +411,25 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
         myAccountClearField("FirstName");
-        myAccountSendKeys("FirstName", "null");
+        myAccountSendKeys("FirstName", "blanketyblank");
         myAccountClearField("LastName");
-        myAccountSendKeys("LastName", "null");
+        myAccountSendKeys("LastName", "blanketyblank");
         myAccountClearField("MobilePhone");
-        myAccountSendKeys("MobilePhone", "null");
+        myAccountSendKeys("MobilePhone", "blanketyblank");
         myAccountClearField("Address1");
-        myAccountSendKeys("Address1", "null");
+        myAccountSendKeys("Address1", "blanketyblank");
         myAccountClearField("AddressPrefix");
-        myAccountSendKeys("AddressPrefix", "null");
+        myAccountSendKeys("AddressPrefix", "blanketyblank");
         myAccountClearField("Address3");
-        myAccountSendKeys("Address3", "null");
+        myAccountSendKeys("Address3", "blanketyblank");
         myAccountClearField("Address4");
-        myAccountSendKeys("Address4", "null");
+        myAccountSendKeys("Address4", "blanketyblank");
         myAccountClearField("PostalCode");
-        myAccountSendKeys("PostalCode", "null");
+        myAccountSendKeys("PostalCode", "blanketyblank");
         myAccountClearField("MemorableQuestion");
-        myAccountSendKeys("MemorableQuestion", "null");
+        myAccountSendKeys("MemorableQuestion", "blanketyblank");
         myAccountClearField("MemorableAnswer");
-        myAccountSendKeys("MemorableAnswer", "null");
+        myAccountSendKeys("MemorableAnswer", "blanketyblank");
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
         try {
             driver.findElement(By.cssSelector("#country .dropdown-item")).click();
@@ -448,7 +455,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             // Move to back to the beginning
             rs.beforeFirst();
         }
-        assertTrue("there should be exactly one record", rows < 2);
+        assertTrue("there should be exactly one record expected: "  +columnName + " " +  search, rows == 1);
 
         while (rs.next()) {
             Assert.assertEquals("Expecting username to be " + search, search, rs.getString(columnName));

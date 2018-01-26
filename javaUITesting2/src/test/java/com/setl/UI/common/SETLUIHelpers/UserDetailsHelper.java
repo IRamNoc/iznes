@@ -365,7 +365,6 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
           fail();
       }
     driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[2]")).click();
-    driver.findElement(By.id("new-user-usertype-select")).click();
   }
   public static void enterManageUserPassword(String password){
     driver.findElement(By.id("new-user-password")).sendKeys(password);
