@@ -6,7 +6,8 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="user-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            <button clrTabLink id="user-tab-{{id}}">
+                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
@@ -73,7 +74,7 @@
     <!-- User Add Form. -->
     <ng-template #staticUserAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form id="new-user-form" (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl">
+            <form id="new-user-form" (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl" autocomplete="off">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -82,6 +83,9 @@
                             </label>
                             <div>
                                 <input id="new-user-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
+                                <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched" class="text-danger">
+                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
+                                </div>
                             </div>
                         </div>
 
@@ -91,6 +95,9 @@
                             </label>
                             <div>
                                 <input id="new-user-email" type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                                <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="text-danger">
+                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -134,6 +141,7 @@
                             </label>
                             <div>
                                 <input id="new-user-password" type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
+                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
                             </div>
                         </div>
 
@@ -142,7 +150,8 @@
                                 <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
                             </label>
                             <div>
-                                <input id="new-user-password-repeat" type="password" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
                             </div>
                         </div>
                     </div>
