@@ -70,7 +70,7 @@ export class MultilingualService {
             if (mlcode.length > 34) {
                 const sha256 = require('sha256');
                 const hash = sha256(mlcode);
-                mlcode = mlcode.substring(0, 33) + hash.substring(10, 20);
+                mlcode = mlcode.substring(0, 34) + hash.substring(10, 20);
             }
             /* Look for translation... */
             // console.log('multilingual service to found', this.language, mlcode, Translations['core'][this.language][mlcode]);
