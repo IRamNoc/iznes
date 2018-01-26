@@ -44,15 +44,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     pendingConnectionList = [];
     connectionToDelete: any;
     isAcceptedConnectionDisplayed: boolean;
-    isModalDisplayed: boolean;
+    isDeleteModalDisplayed: boolean;
     isCompleteAddressLoaded: boolean;
-    isEditFormDisplayed: boolean;
+    isEditTabDisplayed: boolean;
     isAcceptModalDisplayed: boolean;
     connectionToBind: any;
-
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
-
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
     @select(['wallet', 'managedWallets', 'walletList']) walletListObs;
@@ -70,21 +68,24 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private _myWalletService: MyWalletsService,
                 private _walletnodeTxService: WalletnodeTxService,
                 private _walletNodeRequestService: WalletNodeRequestService,
-                private changeDetectorRef: ChangeDetectorRef,
+                private cd: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
                 private connectionService: ConnectionService,
                 private messagesService: MessagesService) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
-        this.isModalDisplayed = false;
+        this.isDeleteModalDisplayed = false;
         this.isCompleteAddressLoaded = false;
-        this.isEditFormDisplayed = false;
+        this.isEditTabDisplayed = false;
         this.isAcceptedConnectionDisplayed = false;
         this.isAcceptModalDisplayed = false;
 
         this.initFormGroup();
+    }
 
+    ngOnInit() {
+        // Observables
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
@@ -97,9 +98,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => this.getFromConnectionList(connections)));
         this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => this.getToConnectionList(connections)));
         this.subscriptionsArray.push(this.requestedCompleteAddressesObs.subscribe((requested) => this.requestCompleteAddresses(requested)));
-    }
 
-    ngOnInit() {
         this.initFormGroup();
     }
 
@@ -124,7 +123,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isCompleteAddressLoaded = false;
         this.isAcceptedConnectionDisplayed = true;
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     requestAddressList(requested: boolean) {
@@ -166,39 +165,40 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.isCompleteAddressLoaded = requested;
             this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
             this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-            this.changeDetectorRef.markForCheck();
+            this.cd.markForCheck();
         }
     }
 
     getWalletList(wallets: Array<any>) {
-        let data = [];
+        let walletList = [];
 
         this.completeWalletList = wallets;
 
         Object.keys(wallets).map((key) => {
             if (wallets[key].walletId !== this.connectedWalletId) {
-                data.push({
+                walletList.push({
                     id: wallets[key].walletId,
                     text: wallets[key].walletName,
                 });
             }
         });
 
-        this.walletList = data;
+        this.walletList = [...walletList];
+        this.cd.markForCheck();
     }
 
     getAddressList(addresses: Array<any>) {
-        let data = [];
+        let addressList = [];
 
         Object.keys(addresses).map((key) => {
-            data.push({
+            addressList.push({
                 id: key,
                 text: addresses[key].label
             });
         });
 
-        this.addressList = data;
-        this.changeDetectorRef.markForCheck();
+        this.addressList = [...addressList];
+        this.cd.markForCheck();
     }
 
     getFromConnectionList(connections: any) {
@@ -207,10 +207,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         if (hasChanged) {
             this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
-            this.changeDetectorRef.markForCheck();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     getToConnectionList(connections: any) {
@@ -219,10 +218,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         if (hasChanged) {
             this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-            this.changeDetectorRef.markForCheck();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.cd.markForCheck();
     }
 
     formatFromConnections(connections: Array<any>) {
@@ -237,7 +235,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     id: connection.connectionId,
                     connection: connectionName,
                     subPortfolio: subPortfolioName,
-                    leiSender: connection.leiSender
+                    leiSender: connection.leiSender,
                 });
             });
 
@@ -269,7 +267,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     handleSubmit() {
         let data = null;
 
-        if (!this.isEditFormDisplayed) {
+        if (!this.isEditTabDisplayed) {
             data = {
                 leiId: this.connectedWalletId.toString(),
                 senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
@@ -287,7 +285,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                     this.isAcceptedConnectionDisplayed = true;
 
-                    this.handleSendMessage(response[1].Data[0]);
+                    this.onSendConnectionMessage(response[1].Data[0]);
                 },
                 () => {
                     this.showErrorMessage('This connection already exists');
@@ -317,10 +315,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
 
         this.resetForm();
-        this.changeDetectorRef.markForCheck();
+        this.isAcceptedConnectionDisplayed = true;
     }
 
-    handleEditIconClick(connection) {
+    handleEditButtonClick(connection) {
         const selectedSubPortfolio = connection.subPortfolio;
         const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
 
@@ -328,30 +326,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
 
         this.isAcceptedConnectionDisplayed = false;
-        this.isEditFormDisplayed = true;
+        this.isEditTabDisplayed = true;
     }
 
-    handleDelete(connection: any) {
-        const data = {
-            leiId: this.connectedWalletId,
-            senderLei: connection.leiSender
-        };
-
-        const asyncTaskPipe = this.connectionService.deleteConnection(data);
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-                ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.showSuccessResponse('The connection has successfully been deleted');
-            },
-            (error) => {
-                console.error('error: ', error);
-            })
-        );
-
-        this.changeDetectorRef.markForCheck();
+    handleDeleteButtonClick(connection) {
+        this.connectionToDelete = connection;
+        this.isDeleteModalDisplayed = true;
     }
 
     handleAcceptConnection(isOk: boolean) {
@@ -391,7 +371,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
 
         this.resetForm();
-        this.changeDetectorRef.markForCheck();
     }
 
     handleRejectConnection(connection: any) {
@@ -413,11 +392,30 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 console.error('error on reject connection: ', error);
             })
         );
-
-        this.changeDetectorRef.markForCheck();
     }
 
-    handleSendMessage(response: any) {
+    onDeleteConnection(connection: any) {
+        const data = {
+            leiId: this.connectedWalletId,
+            senderLei: connection.leiSender
+        };
+
+        const asyncTaskPipe = this.connectionService.deleteConnection(data);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+                ConnectionService.setRequestedToConnections(false, this.ngRedux);
+                this.showSuccessResponse('The connection has successfully been deleted');
+            },
+            (error) => {
+                console.error('error: ', error);
+            })
+        );
+    }
+
+    onSendConnectionMessage(response: any) {
         const acceptPayload = {
             topic: 'newconnection',
             leiId: response.LeiSender,
@@ -462,18 +460,19 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         });
     }
 
-    confirmationModal(isOk): void {
-        this.isModalDisplayed = false;
+    onDisplayConfirmationModal(isOk): void {
+        this.isDeleteModalDisplayed = false;
 
         if (isOk) {
-            this.handleDelete(this.connectionToDelete);
+            this.onDeleteConnection(this.connectionToDelete);
         }
     }
 
     resetForm(): void {
         this.isAcceptedConnectionDisplayed = false;
-        this.isEditFormDisplayed = false;
+        this.isEditTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
+
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
         this.formGroup.reset();
