@@ -17,6 +17,7 @@ import {setRequestedFromConnections, setRequestedToConnections, setRequestedWall
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils/index';
 import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
+import {clearRequestedWalletAddresses} from '../../core-redux-store';
 
 @Component({
     selector: 'app-my-connections',
@@ -45,7 +46,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     connectionToDelete: any;
     isAcceptedTabDisplayed: boolean;
     isDeleteModalDisplayed: boolean;
-    isCompleteAddressLoaded: boolean;
     isEditTabDisplayed: boolean;
     isAcceptModalDisplayed: boolean;
     connectionToBind: any;
@@ -76,7 +76,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
         this.isDeleteModalDisplayed = false;
-        this.isCompleteAddressLoaded = false;
         this.isEditTabDisplayed = false;
         this.isAcceptedTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
@@ -85,21 +84,23 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.clear();
+
+        this.initFormGroup();
+
         // Observables
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
-        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
-        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
         this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
+        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(
             this.requestedFromConnectionStateObs.subscribe((requested) => this.requestFromConnectionList(requested))
         );
         this.subscriptionsArray.push(this.requestedToConnectionStateObs.subscribe((requested) => this.requestToConnectionList(requested)));
+
+        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
         this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => this.getFromConnectionList(connections)));
         this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => this.getToConnectionList(connections)));
-        this.subscriptionsArray.push(this.requestedCompleteAddressesObs.subscribe((requested) => this.requestCompleteAddresses(requested)));
-
-        this.initFormGroup();
+        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
     }
 
     ngOnDestroy() {
@@ -115,15 +116,20 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     getConnectedWallet(walletId: number) {
         this.connectedWalletId = walletId;
+        this.resetForm();
+        this.isAcceptedTabDisplayed = true;
+
         ConnectionService.setRequestedFromConnections(false, this.ngRedux);
         ConnectionService.setRequestedToConnections(false, this.ngRedux);
         this.getWalletList(this.completeWalletList);
 
-        this.resetForm();
-        this.isCompleteAddressLoaded = false;
-        this.isAcceptedTabDisplayed = true;
-
         this.cd.markForCheck();
+    }
+
+    requestWalletLabel(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId !== 0) {
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+        }
     }
 
     requestAddressList(requested: boolean) {
@@ -131,12 +137,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
             InitialisationService.requestWalletAddresses(this.ngRedux, this._walletNodeRequestService, this.connectedWalletId);
-        }
-    }
-
-    requestWalletLabel(requestedState: boolean) {
-        if (!requestedState && this.connectedWalletId !== 0) {
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
         }
     }
 
@@ -156,15 +156,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    requestCompleteAddresses(requested: boolean) {
-        if (requested) {
-            this.isCompleteAddressLoaded = requested;
-            this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
-            this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-            this.cd.markForCheck();
-        }
-    }
-
     getWalletList(wallets: Array<any>) {
         let walletList = [];
 
@@ -179,7 +170,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.walletList = [...walletList];
+        this.walletList = walletList;
         this.cd.markForCheck();
     }
 
@@ -187,34 +178,33 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         let addressList = [];
 
         Object.keys(addresses).map((key) => {
-            addressList.push({
-                id: key,
-                text: addresses[key].label
-            });
+            if (typeof addresses[key].label !== 'undefined') {
+                addressList.push({
+                    id: key,
+                    text: addresses[key].label
+                });
+            }
         });
 
-        this.addressList = [...addressList];
-        this.cd.markForCheck();
-    }
+        this.addressList = addressList;
 
-    getFromConnectionList(connections: any) {
-        const hasChanged = (this.fromConnectionList !== connections && this.isCompleteAddressLoaded);
-        this.fromConnectionList = connections.filter((connection) => connection.status === '-1');
-
-        if (hasChanged) {
-            this.acceptedConnectionList = this.formatFromConnections(this.fromConnectionList);
+        if (this.addressList.length > 0 && this.addressList[0].text !== 'undefined') {
+            this.refreshConnectionList();
         }
 
         this.cd.markForCheck();
     }
 
-    getToConnectionList(connections: any) {
-        const hasChanged = (this.toConnectionList !== connections && this.isCompleteAddressLoaded);
-        this.toConnectionList = connections.filter((connection) => connection.status === '1');
+    getFromConnectionList(fromConnections: Array<any>) {
+        this.fromConnectionList = fromConnections;
+        this.refreshConnectionList();
 
-        if (hasChanged) {
-            this.pendingConnectionList = this.formatToConnections(this.toConnectionList);
-        }
+        this.cd.markForCheck();
+    }
+
+    getToConnectionList(toConnections: Array<any>) {
+        this.toConnectionList = toConnections;
+        this.refreshConnectionList();
 
         this.cd.markForCheck();
     }
@@ -245,19 +235,45 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         if (connections && connections.length > 0) {
             connections.map((connection) => {
-                const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiId)[0].text;
+                const connectionName = this.walletList.filter(
+                    (wallet) => wallet.id === connection.leiId || wallet.id === connection.leiSender
+                )[0].text;
 
                 data.push({
                     id: connection.connectionId,
                     connection: connectionName,
                     leiId: connection.leiId,
-                    leiSender: connection.leiSender
+                    leiSender: connection.leiSender,
+                    info: (connection.leiId === this.connectedWalletId) ? 'Outgoing' : 'Incoming'
                 });
             });
 
         }
 
         return data;
+    }
+
+    refreshConnectionList() {
+        console.log('REFRESH');
+        console.log('from: ', this.fromConnectionList);
+        console.log('to: ', this.toConnectionList);
+
+        const combinedList = this.fromConnectionList.concat(this.toConnectionList);
+        const pendingList = combinedList.filter((connection) => connection.status === '1');
+        const acceptedList = combinedList.filter((connection, pos, arr) => {
+            const count = arr.reduce((value, c) => {
+                return value + (c.connectionId === connection.connectionId && connection.status === '-1');
+            }, 0);
+
+            if (count > 0 && connection.leiId === this.connectedWalletId) {
+                return connection;
+            }
+        });
+
+        this.pendingConnectionList = this.formatToConnections(pendingList);
+        this.acceptedConnectionList = this.formatFromConnections(acceptedList);
+
+        this.cd.markForCheck();
     }
 
     handleSubmitButtonClick() {
@@ -294,14 +310,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     this.onSendConnectionMessage(response[1].Data[0]);
                 } else {
                     this.showSuccessResponse('The connection has successfully been updated');
+                    this.isEditTabDisplayed = false;
                 }
             },
             () => {
                 this.showErrorMessage('This connection already exists');
             })
         );
-
-        console.log('resetting');
 
         this.resetForm();
         this.isAcceptedTabDisplayed = true;
@@ -373,8 +388,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     this.showSuccessResponse('The connection has successfully been accepted');
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                    this.connectionToBind = null;
-                    this.isAcceptModalDisplayed = false;
                 },
                 (error) => {
                     console.error('error on accept connection: ', error);
@@ -460,7 +473,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.connectionToBind = null;
 
         this.isAcceptedTabDisplayed = false;
-        this.isEditTabDisplayed = false;
+        // this.isEditTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
         this.isDeleteModalDisplayed = false;
 
