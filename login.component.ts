@@ -78,10 +78,14 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.isLogin = false;
 
+
         // Reduce observable subscription
         this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
             this.updateState(authentication);
         }));
+
+        window.onbeforeunload = null;
+
     }
 
     login(value) {
@@ -154,6 +158,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 this.chainService,
                 this.initialisationService
             );
+            window.onbeforeunload = function (e) {
+                const leaveMessage = 'Changes that you made may not be saved if you leave this page.';
+                e.returnValue = leaveMessage;
+                return leaveMessage;
+            };
         }
 
     }
