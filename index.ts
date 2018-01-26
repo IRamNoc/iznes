@@ -1,9 +1,6 @@
 /* Service. */
 export {PersistService} from './service/service';
 
-/* Component. */
-export {PersistControlsComponent} from './controls/component';
-
 /* Directive. */
 export {PersistDirective} from './directive/directive';
 
