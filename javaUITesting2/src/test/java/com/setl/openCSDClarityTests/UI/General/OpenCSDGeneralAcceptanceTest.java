@@ -10,10 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -77,20 +74,20 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #137 : Awaiting code completion")
+    //("TG #137")
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        //String reloadPopup = "";
+        String reloadPopup = "";
         loginAndVerifySuccess(adminuser, adminuserPassword);
         driver.navigate().refresh();
         checkAlert();
-        //assertTrue(driver.findElement(By.id(reloadPopup)).isDisplayed());
+        assertTrue(driver.findElement(By.id(reloadPopup)).isDisplayed());
     }
 
     @Test
-    @Ignore("TG #138 : Awaiting code completion")
+    //("TG138")
     public void shouldDisplayNavMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        assertTrue(driver.findElement(By.id("menu-home")).isDisplayed());
+        assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
     }
 
     @Test
@@ -111,19 +108,19 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #141 : Awaiting code completion")
-    public void shouldCheckWorkflowMessagesIsRemoved() throws IOException, InterruptedException {
+    //@Ignore("TG #141 : Awaiting code completion")
+    public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
-        assertFalseIdDisplayed("css",  "workflow-message-btn");
+        assertButtonIsNotPresent("workflow-message-btn");
     }
 
     @Test
     @Ignore("TG #147 : Awaiting code completion")
     public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-asset-managment");
-        navigateToPage2("asset-managment/fund-holdings");
+        navigateToDropdown("menu-asset-management");
+        navigateToPage2("asset-management/fund-holdings");
         WebElement FundTitle = driver.findElement(By.id("fund-title"));
         assertTrue(FundTitle.equals("Please select a fund share in this list"));
     }
@@ -188,8 +185,17 @@ public class OpenCSDGeneralAcceptanceTest {
 
 
     public static void assertFalseIdDisplayed(String element, String value){
-        WebElement displayedElement = driver.findElement(By.id(element));
+        WebElement displayedElement = driver.findElement(By.id(value));
         assertFalse(displayedElement.isDisplayed());
+    }
+
+    public static void assertButtonIsNotPresent(String text) {
+        try {
+            driver.findElement(By.id(text));
+            fail("Button with ID <" + text + "> is present");
+        } catch (NoSuchElementException ex) {
+            /* do nothing, button is not present, assert is passed */
+        }
     }
 
     public void checkAlert() {
