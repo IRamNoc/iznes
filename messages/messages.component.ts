@@ -89,6 +89,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
+
+        this._appConfig = _appConfig;
     }
 
     ngOnInit() {
