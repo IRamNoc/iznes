@@ -54,11 +54,24 @@
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'info'">Status</clr-dg-column>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let pendingConnection of pendingConnectionList">
                         <clr-dg-cell>{{pendingConnection.connection}}</clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell>{{pendingConnection.info}}</clr-dg-cell>
+
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'">
+                            <div class="btn-group btn-sm">
+                                <button id="reject-connection-button" class="btn"
+                                        (click)="handleRejectButtonClick(pendingConnection)">
+                                    <i class="fa fa-times"></i>
+                                    Cancel
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Incoming'">
                             <div class="btn-group btn-sm">
                                 <button id="accept-connection-button" class="btn"
                                         (click)="handleAcceptButtonClick(pendingConnection)">
