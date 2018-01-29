@@ -9,8 +9,12 @@ export {UsersState} from './model';
 
 /* Actions. */
 export {
-    SET_ADMIN_USERLIST
+    SET_ADMIN_USERLIST,
 } from './actions';
+
+import * as userAdminActions from './actions';
+
+export {userAdminActions};
 
 /* Selectors. */
 export {getUsersList} from './selectors';
