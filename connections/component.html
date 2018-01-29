@@ -10,7 +10,7 @@
             <span>Accepted</span>
         </button>
 
-        <clr-tab-content *clrIfActive="isAcceptedConnectionDisplayed">
+        <clr-tab-content *clrIfActive="isAcceptedTabDisplayed">
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
@@ -54,20 +54,33 @@
             <section class="form-block">
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'info'">Status</clr-dg-column>
                     <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let pendingConnection of pendingConnectionList">
                         <clr-dg-cell>{{pendingConnection.connection}}</clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell>{{pendingConnection.info}}</clr-dg-cell>
+
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'">
+                            <div class="btn-group btn-sm">
+                                <button id="reject-connection-button" class="btn"
+                                        (click)="handleRejectButtonClick(pendingConnection, 'This connection has successfully been cancelled')">
+                                    <i class="fa fa-times"></i>
+                                    Cancel
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Incoming'">
                             <div class="btn-group btn-sm">
                                 <button id="accept-connection-button" class="btn"
-                                        (click)="connectionToBind = pendingConnection; isAcceptModalDisplayed = true;">
+                                        (click)="handleAcceptButtonClick(pendingConnection)">
                                     <i class="fa fa-check"></i>
                                     Accept
                                 </button>
 
                                 <button id="reject-connection-button" class="btn"
-                                        (click)="handleRejectConnection(pendingConnection)">
+                                        (click)="handleRejectButtonClick(pendingConnection)">
                                     <i class="fa fa-ban"></i>
                                     Reject
                                 </button>
@@ -92,7 +105,7 @@
         </button>
 
         <clr-tab-content>
-            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmit()">
+            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmitButtonClick()">
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -155,7 +168,7 @@
         </button>
 
         <clr-tab-content *clrIfActive="isEditTabDisplayed">
-            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmit()">
+            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmitButtonClick()">
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -222,11 +235,11 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline" id="del-confirm-modal-no-btn"
-                (click)="onDisplayConfirmationModal(false)"
+                (click)="onDeleteConnection(false)"
                 mltag="txt_no">No
         </button>
         <button type="button" class="btn btn-primary" id="del-confirm-modal-yes-btn"
-                (click)="onDisplayConfirmationModal(true)"
+                (click)="onDeleteConnection(true)"
                 mltag="txt_yes">Yes
         </button>
     </div>
@@ -253,13 +266,13 @@
         <button type="button"
                 id="accept-connection-cancel-btn"
                 class="btn btn-outline"
-                (click)="handleAcceptConnection(false)">
+                (click)="onAcceptConnection(false)">
             Cancel
         </button>
         <button type="button"
                 id="accept-connection-submit-btn"
                 class="btn btn-primary"
-                (click)="handleAcceptConnection(true)">
+                (click)="onAcceptConnection(true)">
             Submit
         </button>
     </div>
