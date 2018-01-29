@@ -4,19 +4,12 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {ClarityModule} from 'clarity-angular';
 /* Local imports. */
-import {PersistDirective} from './directive/directive';
 import {PersistService} from './service/service';
 
 /* Persist Module. */
 @NgModule({
-    declarations: [
-        /* Directive. */
-        PersistDirective
-    ],
-    exports: [
-        /* Directive. */
-        PersistDirective
-    ],
+    declarations: [],
+    exports: [],
     imports: [
         CommonModule,
         BrowserModule,
