@@ -6,7 +6,8 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="user-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            <button clrTabLink id="user-tab-{{id}}" [routerLink]="['/user-administration/users', id]">
+                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
