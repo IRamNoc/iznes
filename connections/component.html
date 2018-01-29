@@ -64,7 +64,7 @@
                         <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'">
                             <div class="btn-group btn-sm">
                                 <button id="reject-connection-button" class="btn"
-                                        (click)="handleRejectButtonClick(pendingConnection)">
+                                        (click)="handleRejectButtonClick(pendingConnection, 'This connection has successfully been cancelled')">
                                     <i class="fa fa-times"></i>
                                     Cancel
                                 </button>
