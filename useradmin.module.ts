@@ -4,6 +4,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
@@ -75,7 +76,8 @@ import {MultilingualModule} from '@setl/multilingual';
         ClarityModule,
         SelectModule,
         PermissionGridModule,
-        MultilingualModule
+        MultilingualModule,
+        RouterModule
     ],
     providers: [AdminUsersService]
 })

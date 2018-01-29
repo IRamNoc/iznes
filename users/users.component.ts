@@ -11,6 +11,9 @@ import {
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NgRedux, select} from "@angular-redux/store";
 import * as _ from "lodash";
+import {ActivatedRoute, Params} from '@angular/router';
+import 'rxjs/add/operator/map';
+
 
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
@@ -19,6 +22,8 @@ import {ConfirmationService} from "@setl/utils";
 import {UserAdminService} from "../useradmin.service";
 import {Subscription} from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
+import {immutableHelper} from '@setl/utils';
+import {userAdminActions} from '@setl/core-store';
 
 /* Decorator. */
 @Component({
@@ -67,6 +72,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     public myDetail: any;
 
     @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
+
+    @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
+
     private manageWalletList: any;
 
     /* Constructor. */
@@ -74,6 +82,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
+                private route: ActivatedRoute,
                 private _confirmationService: ConfirmationService,) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
@@ -128,32 +137,52 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         });
 
-        /* Default tabs. */
-        this.tabsControl = [
-            {
-                "title": {
-                    "icon": "fa-search",
-                    "text": "Search"
+        this.setInitialTabs();
+
+        this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'tabid', 0);
+            this.setTabActive(tabId);
+        });
+
+
+    }
+
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['userAdmin', 'users', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    "title": {
+                        "icon": "fa-search",
+                        "text": "Search"
+                    },
+                    "userId": -1,
+                    "active": true
                 },
-                "userId": -1,
-                "active": true
-            },
-            {
-                "title": {
-                    "icon": "fa-user",
-                    "text": "Add User"
-                },
-                "userId": -1,
-                "formControl": this.getNewUserFormGroup(),
-                "selectedChain": 0,
-                "filteredTxList": [], // filtered groups of this chainid.
-                "selectedTxList": [], // groups to show as selected.
-                "allocatedTxList": [], // all groups assigned to the user.
-                "filteredWalletsByAccount": [], // filtered wallets by account.
-                "oldChainAccess": {},
-                "active": false
-            }
-        ];
+                {
+                    "title": {
+                        "icon": "fa-user",
+                        "text": "Add User"
+                    },
+                    "userId": -1,
+                    "formControl": this.getNewUserFormGroup(),
+                    "selectedChain": 0,
+                    "filteredTxList": [], // filtered groups of this chainid.
+                    "selectedTxList": [], // groups to show as selected.
+                    "allocatedTxList": [], // all groups assigned to the user.
+                    "filteredWalletsByAccount": [], // filtered wallets by account.
+                    "oldChainAccess": {},
+                    "active": false
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
     }
 
     ngAfterViewInit(): void {
@@ -1280,19 +1309,11 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public setTabActive(index: number = 0) {
-        /* Lets loop over all current tabs and switch them to not active. */
-        this.tabsControl.map((i) => {
-            i.active = false;
+
+
+        this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
+            return item.set('active', thisIndex === Number(index));
         });
-
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Set the list active. */
-        this.tabsControl[index].active = true;
-
-        /* Yes, we have to call this again to get it to work, trust me... */
-        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -1426,5 +1447,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         for (var key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
+
+        this.ngRedux.dispatch(userAdminActions.setAllTabs(this.tabsControl));
     }
 }
