@@ -1,5 +1,6 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
+import {FormGroup} from "@angular/forms";
 
 /* Types. */
 interface Control {
@@ -14,6 +15,7 @@ export class PersistService {
     /* Private properties. */
     private _controls: Array<Control> = [];
     private _forms: any = {};
+    private _subscriptions: Array<any> = [];
 
     /* Constructor. */
     constructor() {
@@ -22,40 +24,34 @@ export class PersistService {
     }
 
     /**
-     * Register Form
-     * -------------
-     * Tells the service that a form now exists.
+     * Watch Form
+     * ----------
+     * Allows a form group value changes observable to be monitored and for the value to be restored.
      *
-     * @param {string} name - the name of the form.
-     * @return {void}
+     * @param {string} name
+     * @param {FormGroup} group
      */
-    public registerForm(name: string): any {
-        /* Check if the form is recovered. */
+    public watchForm(name: string, group: FormGroup): FormGroup {
+        /* Check if we have a state for this form. */
         if (this._forms[name]) {
-            return this._forms[name];
+            group.setValue(this._forms[name]);
         }
 
-        /* Return. */
-        return false;
-    }
+        /* Unsubscribe if already subscribed. */
+        if (this._subscriptions[name]) {
+            this._subscriptions[name].unsubscribe();
+        }
 
-    /**
-     * Update Form Data
-     * ----------------
-     * Sets the form data, and sends the data to the server for storage.
-     *
-     * @param {string} id
-     * @param data
-     */
-    public updateFormData(id: string, data: any): void {
-        /* Set the data. */
-        this._forms[id] = data;
+        /* Subscribe to the value changes. */
+        this._subscriptions[name] = group.valueChanges.subscribe((data) => {
+            /* Set the form. */
+            this._forms[name] = data;
 
-        /* TODO - send the form data to the server. */
-        localStorage.setItem('persist', JSON.stringify(this._forms));
-        console.log(' | FORMS: ', this._forms);
+            /* Save to localStorage. */
+            localStorage.setItem('persist', JSON.stringify(this._forms));
+        });
 
         /* Return. */
-        return;
+        return group;
     }
 }
