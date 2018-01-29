@@ -1,4 +1,4 @@
-import {fromJS, Map, Seq} from 'immutable';
+import {fromJS, Map, Seq, List} from 'immutable';
 
 /**
  * Immutable get wrapper.
@@ -78,6 +78,51 @@ export function map(data: any, mapFun: any): any {
 
     return maped.toJS();
 }
+
+/**
+ * Push item to a list and return new list.
+ *
+ * @param {Array<any>} listJs
+ * @param item
+ * @return {Array<any>}
+ */
+export function pushToList(listJs: Array<any>, item: any): Array<any> {
+    const list = List(listJs);
+    const newList = list.push(item);
+
+    return newList.toJS();
+}
+
+/**
+ * Remove item with given index.
+ *
+ * @param {Array<any>} listJs
+ * @param {number} index
+ * @return {Array<any>}
+ */
+export function removeFromList(listJs: Array<any>, index: number): Array<any> {
+    const list = List(listJs);
+    const newList = list.delete(index);
+
+    return newList.toJS();
+}
+
+/**
+ * Update in list for the give pass, and update callback
+ * the callback is used to update the value.
+ *
+ * @param {Array<any>} listJs
+ * @param {Array<string>} keyPath
+ * @param updater
+ * @return {Array<any>}
+ */
+export function updateInList(listJs: Array<any>, keyPath: Array<string>, updater: any): Array<any> {
+    const list = List(listJs);
+    const newList = list.updateIn(keyPath, updater);
+
+    return newList.toJS();
+}
+
 
 /**
  * Deep from js to immutable.
