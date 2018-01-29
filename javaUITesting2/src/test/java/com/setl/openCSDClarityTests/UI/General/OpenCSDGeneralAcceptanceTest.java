@@ -180,7 +180,6 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
     }
 
-
     public static void assertFalseIdDisplayed(String element, String value){
         WebElement displayedElement = driver.findElement(By.id(value));
         assertFalse(displayedElement.isDisplayed());
