@@ -83,11 +83,6 @@
                     <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
                     <clr-dg-cell class="col-type"><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
                 </clr-dg-row>
-
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                </clr-dg-footer>
             </clr-datagrid>
         </div>
     </app-dashboard>
@@ -102,7 +97,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-primary"><i class="fa fa-history"></i></a>
+                    <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-transparent"><i class="fa fa-history"></i></a>
                 </div>
             </div>
         </div>

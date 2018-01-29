@@ -21,3 +21,13 @@ h3 small {
 .transactions-grid {
     grid-area: transactions;
 }
+
+.btn-transparent {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: transparent;
+    color: white;
+    &:hover {
+        border: transparent;
+        transform: scale(1.1);
+    }
+}
