@@ -56,7 +56,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #135 : Awaiting code completion")
+    //@Ignore("TG #135 : Awaiting code completion")
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -65,7 +65,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #136 : Awaiting code completion")
+    //@Ignore("TG #136 : Awaiting code completion")
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -76,11 +76,9 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     //("TG #137")
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        String reloadPopup = "";
         loginAndVerifySuccess(adminuser, adminuserPassword);
         driver.navigate().refresh();
         checkAlert();
-        assertTrue(driver.findElement(By.id(reloadPopup)).isDisplayed());
     }
 
     @Test
@@ -205,8 +203,7 @@ public class OpenCSDGeneralAcceptanceTest {
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (Exception e) {
-            System.out.println("Alert not present");
-            fail();
+            fail("Alert not present");
         }
     }
 
