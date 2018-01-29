@@ -13,13 +13,11 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -213,6 +211,8 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        WebElement errorText = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]"));
+        assertTrue(errorText.getText().equals("Failed to update this uservvvvvv."));
     }
 
     @Test

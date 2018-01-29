@@ -39,6 +39,7 @@ public class OpenCSDNavigationAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
+
     @Test
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
@@ -47,13 +48,14 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToAddressesTab();
         verifyHomePageIsDisplayed();
     }
+
     @Test
     public void shouldNavigateToHome() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
         navigateToPage2("home");
-
     }
+
     @Ignore // test fails becuse it can't find the xpath
     @Test
     public void shouldNavigateToWallets() throws IOException, InterruptedException {
@@ -61,6 +63,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPage2("wallets");
 
     }
+
     @Ignore
     @Test
     public void shouldNavigateToKYCAdmin() throws IOException, InterruptedException {
@@ -68,30 +71,35 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPage2("kyc-admin");
 
     }
+
     @Ignore
     @Test
     public void shouldNavigateToManageOrders() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage2("manage-orders");
     }
+
     @Test
     public void shouldNavigateToUsers() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage2("user-administration/users");
     }
+
     @Test
     public void shouldNavigateToUserWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage2("user-administration/wallets");
     }
+
     @Test
     public void shouldNavigateToPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage2("user-administration/permissions");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToWizard() throws IOException, InterruptedException {
@@ -99,24 +107,28 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPage2("user-administration/wizard");
     }
+
     @Test
     public void shouldNavigateToRegisterIssuer() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
         navigateToPage2("asset-servicing/register-issuer");
     }
+
     @Test
     public void shouldNavigateToRegisterAsset() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
         navigateToPage2("asset-servicing/register-asset");
     }
+
     @Test
     public void shouldNavigateToIssueAsset() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-asset-servicing");
         navigateToPage2("asset-servicing/issue-asset");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToBalancesReports() throws IOException, InterruptedException {
@@ -124,6 +136,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-reports");
         navigateToPage2("reports/balances");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToIssueReports() throws IOException, InterruptedException {
@@ -131,6 +144,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-reports");
         navigateToPage2("reports/issue");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToTransactionReports() throws IOException, InterruptedException {
@@ -138,6 +152,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-reports");
         navigateToPage2("reports/transactions");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToMember() throws IOException, InterruptedException {
@@ -145,6 +160,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-chain-administration");
         navigateToPage2("chain-admin/manage-member");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToChainMember() throws IOException, InterruptedException {
@@ -152,6 +168,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-chain-administration");
         navigateToPage2("chain-admin/chain-membership");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
@@ -159,6 +176,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-asset-managment");
         navigateToPage2("asset-managment/fund-holdings");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
@@ -166,6 +184,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-account-module");
         navigateToPage("account/my-account");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
@@ -173,6 +192,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-account-module");
         navigateToPage("account/relationships");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToDocuments() throws IOException, InterruptedException {
@@ -180,6 +200,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-account-module");
         navigateToPage2("account/documents");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
@@ -187,6 +208,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/management-company");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
@@ -194,6 +216,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/sicav");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
@@ -201,6 +224,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
@@ -208,6 +232,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/net-asset-value");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToCreateResolution() throws IOException, InterruptedException {
@@ -215,6 +240,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/create-resolution");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToIssueResolution() throws IOException, InterruptedException {
@@ -222,6 +248,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/issue-resolution");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToDistribution() throws IOException, InterruptedException {
@@ -229,6 +256,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/distribution");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToMergerAbsorption() throws IOException, InterruptedException {
@@ -236,6 +264,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/merger-absorption");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
@@ -243,6 +272,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/coupon-payment");
     }
+
     @Ignore
     @Test
     public void shouldNavigateToSplit() throws IOException, InterruptedException {
@@ -250,6 +280,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-corporate-actions");
         navigateToPage("corporate-actions/split");
     }
+
     @Test
     public void shouldNavigateToMessagesFromTopButtons() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
