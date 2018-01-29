@@ -212,7 +212,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
         WebElement errorText = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]"));
-        assertTrue(errorText.getText().equals("Failed to update this uservvvvvv."));
+        assertTrue(errorText.getText().equals("Failed to update this user."));
     }
 
     @Test
