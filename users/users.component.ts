@@ -1348,26 +1348,32 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
     getNewUserFormGroup(): FormGroup {
         return new FormGroup(
             {
-                "username": new FormControl('', [
+                'username': new FormControl('', [
                     Validators.required
                 ]),
-                "email": new FormControl('', [
+                'email': new FormControl('', [
                     Validators.required
                 ]),
-                "accountType": new FormControl([]),
-                "userType": new FormControl([]),
-                "password": new FormControl('', [
-                    Validators.required
-                ]),
-                "adminGroups": new FormControl([]),
-                "txGroups": new FormControl([]),
-                "walletsFull": new FormControl([]),
-                "walletsRead": new FormControl([]),
-                "groupWalletsFull": new FormControl([]),
-                "groupWalletsRead": new FormControl([]),
-                "chainAccess": new FormControl([]),
-            }
-        );
+                'accountType': new FormControl([]),
+                'userType': new FormControl([]),
+                'password': new FormControl(''),
+                'passwordConfirm': new FormControl(''),
+                'adminGroups': new FormControl([]),
+                'txGroups': new FormControl([]),
+                'walletsFull': new FormControl([]),
+                'walletsRead': new FormControl([]),
+                'groupWalletsFull': new FormControl([]),
+                'groupWalletsRead': new FormControl([]),
+                'chainAccess': new FormControl([]),
+            }, this.passwordValidator);
+    }
+
+    passwordValidator(g: FormGroup) {
+        if (g.get('passwordConfirm').value !== '' && g.get('passwordConfirm').value !== '') {
+            return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
+        } else {
+            return null;
+        }
     }
 
     /**
