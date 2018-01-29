@@ -114,13 +114,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #147 : Awaiting code completion")
+    //@Ignore("TG #147 : Awaiting code completion")
     public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-asset-management");
-        navigateToPage2("asset-management/fund-holdings");
-        WebElement FundTitle = driver.findElement(By.id("fund-title"));
-        assertTrue(FundTitle.equals("Please select a fund share in this list"));
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToPage("asset-manager-dashboard");
+        WebElement FundTitle = driver.findElement(By.id("fund-share-label"));
+        assertTrue(FundTitle.getText().equals("Please select a fund share in this list"));
     }
 
     @Test
@@ -180,7 +179,6 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
     }
-
 
     public static void assertFalseIdDisplayed(String element, String value){
         WebElement displayedElement = driver.findElement(By.id(value));
