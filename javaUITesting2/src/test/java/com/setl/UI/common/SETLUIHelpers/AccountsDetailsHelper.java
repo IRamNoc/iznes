@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -347,6 +348,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
          scrollElementIntoViewById("udSubmit");
         WebDriverWait wait = new WebDriverWait(driver, 15);
         //Wait for element to be clickable
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("udSubmit")));
         try {
             driver.findElement(By.id("udSubmit")).click();
         } catch (Error e) {

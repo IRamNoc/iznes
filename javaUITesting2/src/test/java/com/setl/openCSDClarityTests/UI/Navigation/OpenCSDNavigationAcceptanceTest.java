@@ -52,14 +52,14 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
         navigateToPage2("home");
-        clickLoginButton();
+
     }
-    @Ignore
+    @Ignore // test fails becuse it can't find the xpath
     @Test
     public void shouldNavigateToWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage2("wallets");
-        clickLoginButton();
+
     }
     @Ignore
     @Test

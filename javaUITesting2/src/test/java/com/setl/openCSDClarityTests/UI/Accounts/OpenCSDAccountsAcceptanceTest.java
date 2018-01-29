@@ -87,7 +87,6 @@ public class OpenCSDAccountsAcceptanceTest {
     }
 
     @Test
-    //@Ignore("not sure why this is failing, look into it")
     public void shouldCreateUserWithNullInfo() throws IOException, InterruptedException, SQLException {
         createHoldingUserAndLogin();
         logout();
