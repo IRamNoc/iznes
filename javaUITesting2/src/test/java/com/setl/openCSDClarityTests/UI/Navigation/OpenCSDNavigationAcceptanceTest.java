@@ -83,21 +83,21 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToUsers() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/users");
+        navigateToPageByID("menu-user-admin-users");
     }
 
     @Test
     public void shouldNavigateToUserWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/wallets");
+        navigateToPageByID("menu-user-admin-wallets");
     }
 
     @Test
     public void shouldNavigateToPermissions() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/permissions");
+        navigateToPageByID("menu-user-admin-permissions");
     }
 
     @Ignore
@@ -105,7 +105,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToWizard() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/wizard");
+        navigateToPageByID("menu-user-admin-wizard");
     }
 
     @Test
