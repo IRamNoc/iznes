@@ -26,8 +26,16 @@ public class LoginAndNavigationHelper {
       try {
         driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']")).click();
       }catch (Error e){
-        System.out.println(pageHref + "page not present");
-        fail("goodjob");
+         fail(pageHref + "page not present");
+      }
+    }
+
+    public static void navigateToPageByID(String pageID) throws InterruptedException {
+      Thread.sleep(750);
+      try {
+        driver.findElement(By.id(pageID)).click();
+      }catch (Error e){
+         fail(pageID + "page not present");
       }
     }
 
@@ -36,8 +44,7 @@ public class LoginAndNavigationHelper {
         try {
             driver.findElement(By.id("menu-" + pageHref)).click();
         }catch (Error e){
-            System.out.println(pageHref + "page not present");
-            fail("goodjob");
+            fail(pageHref + "page not present");
         }
     }
 
