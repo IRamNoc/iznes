@@ -17,7 +17,6 @@ import {setRequestedFromConnections, setRequestedToConnections, setRequestedWall
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils/index';
 import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
-import {clearRequestedWalletAddresses} from '../../core-redux-store';
 
 @Component({
     selector: 'app-my-connections',
@@ -84,14 +83,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.clear();
-
         this.initFormGroup();
 
         // Observables
         this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
-        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
+        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
         this.subscriptionsArray.push(
             this.requestedFromConnectionStateObs.subscribe((requested) => this.requestFromConnectionList(requested))
         );
@@ -254,10 +251,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     refreshConnectionList() {
-        console.log('REFRESH');
-        console.log('from: ', this.fromConnectionList);
-        console.log('to: ', this.toConnectionList);
-
         const combinedList = this.fromConnectionList.concat(this.toConnectionList);
         const pendingList = combinedList.filter((connection) => connection.status === '1');
         const acceptedList = combinedList.filter((connection, pos, arr) => {
@@ -270,8 +263,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.pendingConnectionList = this.formatToConnections(pendingList);
-        this.acceptedConnectionList = this.formatFromConnections(acceptedList);
+        if (this.addressList.length > 0 && this.addressList[0].text !== 'undefined') {
+            this.pendingConnectionList = this.formatToConnections(pendingList);
+            this.acceptedConnectionList = this.formatFromConnections(acceptedList);
+        }
 
         this.cd.markForCheck();
     }
@@ -343,7 +338,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.isAcceptModalDisplayed = true;
     }
 
-    handleRejectButtonClick(connection: any) {
+    handleRejectButtonClick(connection: any, message = 'This connection has successfully been rejected') {
         const data = {
             leiId: connection.leiId,
             senderLei: connection.leiSender
@@ -356,7 +351,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             () => {
                 ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                 ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.showSuccessResponse('The connection has successfully been rejected');
+                this.showSuccessResponse(message);
             },
             (error) => {
                 console.error('error on reject connection: ', error);
