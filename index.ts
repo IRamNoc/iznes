@@ -139,6 +139,8 @@ export {
     SET_ADMIN_USERLIST,
     getUsersList,
 
+    userAdminActions,
+
     /* Permission groups. */
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,

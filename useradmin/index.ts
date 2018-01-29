@@ -5,7 +5,8 @@ import {
 } from './users';
 export {
     SET_ADMIN_USERLIST,
-    getUsersList
+    getUsersList,
+    userAdminActions
 } from './users';
 
 /* Permission groups. */
