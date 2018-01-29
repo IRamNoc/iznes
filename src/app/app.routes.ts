@@ -260,7 +260,7 @@ export const ROUTES: Routes = [
                 path: 'user-administration',
                 children: [
                     {
-                        path: 'users',
+                        path: 'users/:tabid',
                         component: AdminUsersComponent,
                         canActivate: [LoginGuardService],
                         data: {state: 'admin-users'}
