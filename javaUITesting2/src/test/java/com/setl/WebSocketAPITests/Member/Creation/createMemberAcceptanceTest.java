@@ -72,7 +72,7 @@ public class createMemberAcceptanceTest {
 
   @Test
 
-  public void createNewMember() throws ExecutionException, InterruptedException {
+  public void createNewMember() {
 
       runTest(()-> {
           try {
@@ -85,7 +85,7 @@ public class createMemberAcceptanceTest {
 
 
   @Test
-  public void createNewMemberAndVerifySuccess() throws ExecutionException, InterruptedException {
+  public void createNewMemberAndVerifySuccess() {
 
         runTest(()-> {
             try {
