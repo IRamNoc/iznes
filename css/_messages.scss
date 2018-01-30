@@ -410,6 +410,10 @@ pagination-controls {
     cursor: pointer;
 }
 
+.message_menu ul li span {
+    float: right;
+}
+
 .message_menu ul li i {
     width: 20px;
 }
@@ -634,6 +638,7 @@ pagination-controls {
     float: left;
     width: 100%;
     border-top: 1px solid #ececec;
+    margin-bottom: 10px;
 }
 
 .message_compose_input_field {
@@ -644,30 +649,48 @@ pagination-controls {
     padding-bottom: 0px;
 }
 
-.message_compose_input_field span {
-    float: left;
-    width: 100px;
-    font-size: 12px;
-    line-height: 40px;
-}
-
 .message_compose_input_body {
     float: left;
     width: 100%;
 }
 
-.message_compose_input_field input {
-    border: 1px solid grey;
-    height: 40px;
-    line-height: 40px;
+.message_compose_input_field_label {
+    float: left;
+    width: 100px;
     font-size: 12px;
-    border-bottom: 0px solid #0094d2 !important;
+    line-height: 40px;
+    padding-right: 10px;
+    text-align: right;
 }
 
-.message_compose_input_field input:focus {
+.message_compose_input_field_value {
+    float: left;
+    width: calc(100% - 110px);
+}
+
+.message_compose_input_field_value input {
     border: 1px solid grey;
     height: 40px;
     line-height: 40px;
     font-size: 12px;
-    border-bottom: 0px solid #0094d2 !important;
+    border: 1px solid #dadada !important;
+    height: 40px !important;
+    border-radius: 0.125rem;
+    width: 100% !important;
+}
+
+.message_compose_input_field_value input:focus {
+    //border-bottom: 0px solid #0094d2 !important;
+    background-size: 0% 0% !important;
+    background: linear-gradient(180deg, transparent 0%, #fffdfd 0) no-repeat;
+}
+
+.message_view_menu button.blue {
+    background-color: #56a4df;
+    color: #fff;
+    border-color: #56a4df;
+}
+
+.message_list_menu button.blue:hover {
+    background-color: #4093e3;
 }
