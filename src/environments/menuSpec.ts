@@ -526,7 +526,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_permissions',
                     icon_class: 'fa fa-key',
                     element_id: 'menu-user-admin-permissions',
-                    router_link: '/user-administration/permissions'
+                    router_link: '/user-administration/permissions/0'
                 }
             ]
         },
