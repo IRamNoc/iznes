@@ -23,11 +23,15 @@ export class ContractsDvpComponent implements OnInit {
     createContractForm: FormGroup;
     parties: any[] = [];
 
+    allInstrumentList: Array<any>;
     connectedWalletId: number;
     subscriptionsArray: Array<Subscription> = [];
     addressList: any;
     toRelationshipSelectItems: Array<any>;
     walletDirectoryList = {};
+
+    @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
+    @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
 
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
@@ -45,18 +49,28 @@ export class ContractsDvpComponent implements OnInit {
         private walletNodeRequestService: WalletNodeRequestService,
         private myWalletService: MyWalletsService) {
 
+    }
+        
+    ngOnInit() {
         this.initSubscriptions();
         this.initParties();
         this.initCreateContractForm();
     }
 
-    ngOnInit() {
-    }
-
     /**
      * Redux
      */
-    private initSubscriptions(): void {        
+    private initSubscriptions(): void { 
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+        }));
+
+        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
+        this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
+            this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+            this.changeDetectorRef.markForCheck();
+        }));
+
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
@@ -78,10 +92,12 @@ export class ContractsDvpComponent implements OnInit {
             this.walletDirectoryList = directoryList;
             this.changeDetectorRef.markForCheck();
         }));
+    }
 
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
-        }));
+    private requestAllInstrument(requested: boolean): void {
+        if (!requested) {
+            InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
+        }
     }
 
     private requestAddressList(requested: boolean): void {
