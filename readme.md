@@ -1,15 +1,10 @@
 # Introduction
 Core Persist is a module that contains the form state saving tool.
 
-Architecture:
-* A module that declares the directive and provides the service to allow easy importing into other modules.
-* The self contained service deals with storing the form data and recovering it.
-* A directive that initialises and registers with the service, automatically recovering the form state.
-
 # Usage:
 ## 1. Import the `Persist Module`.
 
-Import the `Persist Module` into your module. The component that contains the form that you wish to use the directive with must be declared in that module.
+Import the `Persist Module` into the module your component is declared in. 
 
 ```typescript
 import {PersistModule} from "@setl/core-persist";
@@ -21,12 +16,42 @@ import {PersistModule} from "@setl/core-persist";
 })
 ```
 
-## 2. Using the `PersistDirective`.
+## 2. Using the `PersistService`.
 
-Now we can use the directive on a form.
+You can now import and define the service as a property on your component, then use the watchForm function to tell persist to do it's work.
 
-```html
-<form persist="user-details">
-    <input name="example-input" />
-</form>
+```typescript
+/* Import the service definition. */
+import {PersistService} from "@setl/core-persist";
+
+/* Your class. */
+export class MyComponent {
+    /* Properties. */
+    public myForm: FormGroup;
+    
+    /* Constructor. */
+    constructor (private persistService: PersistService) {
+        /* Your formgroup. */
+        const group = new FormGroup({
+            "example": new FormControl(""),
+        });
+        
+        /* Attaching the persist to the group,
+           simple pass your group into the watchForm,
+           and it'll be returned. */
+        this.myForm = this.persistService.watchForm('myForm', group);
+    }
+}
 ```
+
+# Functions
+
+## `watchForm`
+
+Params:
+* `name`  - The form's unique name.
+* `group` - The FormGroup that is to be watched and recovered.
+
+This function returns the FormGroup passed to it.
+
+In addition, this function handles being called with the same name, so it's possible to recall it when instantiating a new FormGroup to visually clear the form.
