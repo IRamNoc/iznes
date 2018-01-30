@@ -10,6 +10,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {FormGroup, FormControl, Validators, AbstractControl} from '@angular/forms';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {immutableHelper} from '@setl/utils';
 
 // Internal
 import {Subscription} from 'rxjs/Subscription';
@@ -27,7 +29,7 @@ import {
     templateUrl: './myaccount.component.html',
 })
 
-export class SetlMyAccountComponent implements OnDestroy {
+export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
     language = 'en';
 
@@ -301,6 +303,8 @@ export class SetlMyAccountComponent implements OnDestroy {
     password: AbstractControl;
     passwordConfirm: AbstractControl;
 
+    tabStates: object;
+
     public showPasswords = false;
 
     @select(['user', 'myDetail']) getUserDetails;
@@ -310,6 +314,8 @@ export class SetlMyAccountComponent implements OnDestroy {
     subscriptionsArray: Array<Subscription> = [];
 
     constructor(private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myUserService: MyUserService) {
@@ -422,6 +428,24 @@ export class SetlMyAccountComponent implements OnDestroy {
 
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.getUserDetails.subscribe((getUserDetails) => this.myUserDetails(getUserDetails));
+    }
+
+    ngOnInit() {
+        this.tabStates = {
+            detail: true,
+            password: false
+        };
+
+        this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'tabname', 'detail');
+            this.setTabActive(tabId);
+        }));
+    }
+
+    setTabActive(tabId: string) {
+        this.tabStates = immutableHelper.map(this.tabStates, (value, key) => {
+            return key === tabId;
+        });
     }
 
     ngOnDestroy() {

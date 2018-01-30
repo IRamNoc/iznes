@@ -2,7 +2,8 @@ import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SetlMyAccountComponent} from './myaccount/myaccount.component';
-import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import {MultilingualModule} from '@setl/multilingual/multilingual.module';
+import {RouterModule} from '@angular/router';
 
 /* Clarity module. */
 import {ClarityModule} from 'clarity-angular';
@@ -17,7 +18,8 @@ import {SelectModule} from '@setl/utils';
         FormsModule,
         ReactiveFormsModule,
         SelectModule,
-        MultilingualModule
+        MultilingualModule,
+        RouterModule
     ],
     declarations: [
         SetlMyAccountComponent,
