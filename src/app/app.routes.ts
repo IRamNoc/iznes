@@ -123,7 +123,7 @@ export const ROUTES: Routes = [
                 path: 'account',
                 children: [
                     {
-                        path: 'my-account',
+                        path: 'my-account/:tabname',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
                         data: {state: 'my-account'}

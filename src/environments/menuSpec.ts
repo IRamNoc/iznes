@@ -41,7 +41,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -115,7 +115,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -211,7 +211,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -287,7 +287,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -332,7 +332,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -378,7 +378,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -482,7 +482,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -687,7 +687,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -907,7 +907,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -1048,7 +1048,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
