@@ -13,13 +13,14 @@ import io.setl.wsclient.socketsrv.MessageFactory;
 import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -47,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -213,6 +214,12 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
+    }
+
+    public void popupMessageEquals(String message) {
+        WebElement errorText = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]"));
+        assertTrue(errorText.getText().equals(message));
     }
 
     @Test
@@ -224,6 +231,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
     }
 
     @Test
@@ -235,6 +243,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
     }
 
     @Test
@@ -246,6 +255,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
     }
 
     @Test
@@ -257,6 +267,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         selectManageUserUserDropdown();
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
     }
 
     @Test
@@ -268,6 +279,7 @@ public class OpenCSDCreateUserAcceptanceTest {
         selectManageUserUserDropdown();
         enterManageUserPassword("Testpass123");
         clickManageUserSubmit();
+        popupMessageEquals("Failed to update this user.");
     }
 
     @Test

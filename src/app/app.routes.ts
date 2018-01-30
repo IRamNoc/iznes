@@ -1,13 +1,12 @@
 import {Routes} from '@angular/router';
 /* Layouts. */
-import {BasicLayoutComponent, BlankLayoutComponent} from '@setl/core-layout';
+import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
 /* Components. */
 import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
 import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
-import {HomeComponent, FormElementsComponent} from '@setl/core-layout';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -48,19 +47,17 @@ import {
     MergerAbsorptionComponent,
     SplitComponent
 } from '@setl/core-corp-actions';
-import {
-    WorkflowEngineEditorComponent,
-    WorkflowEngineDividendComponent } from '@setl/core-wfe';
+import {WorkflowEngineDividendComponent, WorkflowEngineEditorComponent} from '@setl/core-wfe';
 /**
  * Asset serving module
  */
 import {
+    EncumberAssetsComponent,
     IssueAssetComponent,
     RegisterAssetComponent,
     RegisterIssuerComponent,
     RequestAssetComponent,
     SendAssetComponent,
-    EncumberAssetsComponent,
 } from '@setl/asset-servicing';
 /**
  * Manage member module.
@@ -68,8 +65,8 @@ import {
 import {
     ManageAccountComponent,
     ManageChainMembershipComponent,
-    ManageMemberComponent,
     ManageChainsComponent,
+    ManageMemberComponent,
     ManageWalletNodesComponent,
 } from '@setl/core-manage-member';
 import {SetlMessagesComponent} from '@setl/core-messages';
@@ -79,15 +76,13 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
 /**
  * T2S Module.
  */
-import {
-    T2sMessagesComponent
-} from '@setl/core-t2s';
+import {T2sMessagesComponent} from '@setl/core-t2s';
 
 export const ROUTES: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
-    { path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full' },
-    { path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full' },
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
+    {path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full'},
+    {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
 
     /* Blank layout connections */
     {
@@ -113,13 +108,16 @@ export const ROUTES: Routes = [
                 path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
-                data: { state: 'home' }
+                data: {state: 'home'}
+            },
+            {
+                path: 'messages/:category',
+                component: SetlMessagesComponent,
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'messages',
-                component: SetlMessagesComponent,
-                canActivate: [LoginGuardService],
-                data: { state: 'messages' }
+                redirectTo: '/messages/inbox'
             },
             {
                 path: 'account',
@@ -128,7 +126,7 @@ export const ROUTES: Routes = [
                         path: 'my-account',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'my-account' }
+                        data: {state: 'my-account'}
                     }
                 ]
             },
@@ -189,22 +187,22 @@ export const ROUTES: Routes = [
                         path: 'balances',
                         component: SetlBalancesComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-my-account' }
+                        data: {state: 'reports-my-account'}
                     },
                     {
                         path: 'issue',
                         component: SetlIssueComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-issue' }
+                        data: {state: 'reports-issue'}
                     },
                     {
                         path: 'transactions',
                         component: SetlTransactionsComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-transactions' }
+                        data: {state: 'reports-transactions'}
                     },
                 ],
-                data: { state: 'reports' }
+                data: {state: 'reports'}
             },
             {
                 path: 'connections',
@@ -262,16 +260,16 @@ export const ROUTES: Routes = [
                 path: 'user-administration',
                 children: [
                     {
-                        path: 'users',
+                        path: 'users/:tabid',
                         component: AdminUsersComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'admin-users' }
+                        data: {state: 'admin-users'}
                     },
                     {
-                        path: 'wallets',
+                        path: 'wallets/:walletid',
                         component: AdminWalletsComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'admin-wallets' }
+                        // data: {state: 'admin-wallets'}
                     },
                     {
                         path: 'permissions',

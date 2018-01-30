@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -60,19 +61,18 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void clickCreateAccount() {
 
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement submit = driver.findElement(By.xpath("(//button[@type='submit'])[6]"));
             wait.until(visibilityOf(submit));
             wait.until(elementToBeClickable(submit));
             submit.click();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Submit button not ready " + e.getMessage());
         }
     }
 
-    public static void navigateToAddAccountTab() throws InterruptedException
-    {
+    public static void navigateToAddAccountTab() throws InterruptedException {
         String text = "Add Account Name";
         WebElement link = driver.findElement(By.linkText(text));
         Thread.sleep(1000);
@@ -85,7 +85,8 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             if (second >= 60) fail("timeout");
             try {
                 if ("Search".equals(driver.findElement
-                        (By.xpath("//a[contains(@href, '#account-tab-1')]")).getText()))
+                    //to do what
+                    (By.xpath("//a[contains(@href, '#account-tab-1')]")).getText()))
                     break;
             } catch (Exception e) {
                 System.out.println("timed out " + e);
@@ -96,20 +97,20 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     private static void enterAccountName(String nodeName) throws InterruptedException {
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement accName = driver.findElement(By.cssSelector("input.form-control.accountname"));
             wait.until(visibilityOf(accName));
             wait.until(elementToBeClickable(accName));
             accName.clear();
             accName.sendKeys(nodeName);
-        }catch(Exception e){
-            System.out.println("Account Name field is not ready " +e.getMessage());
-            }
+        } catch (Exception e) {
+            System.out.println("Account Name field is not ready " + e.getMessage());
+        }
     }
 
     private static void enterAccountDescription(String nodeIpAddress) throws InterruptedException {
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement accDes = driver.findElement(By.cssSelector("input.form-control.accountdes"));
             wait.until(visibilityOf(accDes));
@@ -117,8 +118,8 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             accDes.clear();
             accDes.sendKeys(nodeIpAddress);
 
-        }catch(Exception e){
-            System.out.println("Account description field not ready " +e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Account description field not ready " + e.getMessage());
         }
     }
 
@@ -136,56 +137,55 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement link = driver.findElement(By.linkText("choose member..."));
             wait.until(visibilityOf(link));
             wait.until(elementToBeClickable(link));
             link.click();
-        }catch(Exception e){
-            System.out.println("Link not available " +e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Link not available " + e.getMessage());
         }
-        try{
+        try {
             String xpathToMember = ".//*[@id='account-tab-2']/div/form/div/div[5]/div/div/div/ul/li[" + memberIndex + "]";
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement member = driver.findElement(By.xpath(xpathToMember));
             wait.until(visibilityOf(member));
             wait.until(elementToBeClickable(member));
             member.click();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Member not present " + e.getMessage());
         }
     }
 
-    public static String[] generateRandomAccountDetails()
-    {
+    public static String[] generateRandomAccountDetails() {
         String str = RandomStringUtils.randomAlphanumeric(10);
         String accountName = "Test_Account_" + str;
         String description = accountName + "_Desc";
-        return new String[] {accountName, description};
+        return new String[]{accountName, description};
     }
 
     private static void submitAccountDetails() throws InterruptedException {
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement accDet = driver.findElement(By.xpath("(//button[@type='submit'])[9]"));
             wait.until(visibilityOf(accDet));
             wait.until(elementToBeClickable(accDet));
             accDet.click();
-        }catch(Exception e){
-            System.out.println("Submit button not ready" +e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Submit button not ready" + e.getMessage());
         }
     }
 
     private static void submitLEIAccountDetails() throws InterruptedException {
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement accDet = driver.findElement(By.xpath("(//button[@type='submit'])[12]"));
             wait.until(visibilityOf(accDet));
             wait.until(elementToBeClickable(accDet));
             accDet.click();
-        }catch(Exception e){
-            System.out.println("Submit button not ready" +e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Submit button not ready" + e.getMessage());
         }
     }
 
@@ -211,7 +211,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void searchForAccount(String account) throws InterruptedException {
         selectNewPageToNavigateTo("menu_accounts");
-        try{
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement accSearch = driver.findElement(By.cssSelector("#account-search > a"));
             wait.until(visibilityOf(accSearch));
@@ -219,7 +219,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             driver.findElement(By.cssSelector("#account-table_filter > label > input.form-control.input-sm")).clear();
             driver.findElement(By.cssSelector("#account-table_filter > label > input.form-control.input-sm")).sendKeys(account);
             accSearch.click();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -227,14 +227,14 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
     public static void actionAccountDeletion(String button) throws InterruptedException {
         WebElement deleteButton = driver.findElement(By.xpath("//table[@id='account-table']/tbody/tr/td/div/button[" + button + "]"));
 
-            try {
-                WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-                wait.until(visibilityOf(deleteButton));
-                wait.until(elementToBeClickable(deleteButton));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            wait.until(visibilityOf(deleteButton));
+            wait.until(elementToBeClickable(deleteButton));
 
-            } catch (Exception e) {
-                System.out.println("Timed out " + e);
-            }
+        } catch (Exception e) {
+            System.out.println("Timed out " + e);
+        }
         driver.findElement(By.xpath("//table[@id='account-table']/tbody/tr/td/div/button[" + button + "]")).click();
     }
 
@@ -343,36 +343,42 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             return false;
         }
     }
-  public static void clickMyAccountSubmit() throws InterruptedException {
-        Thread.sleep(1000);
-    try {
-      driver.findElement(By.id("udSubmit")).click();
-    }catch (Error e){
-      System.out.println("udSubmit was not found");
-      fail();
-    }
-    Thread.sleep(2000);
-  }
-  public static void myAccountSendKeys(String field, String text){
-    driver.findElement(By.id("ud" + field)).sendKeys(text);
-  }
-  public static void myAccountClearField(String field){
-    driver.findElement(By.id("ud" + field)).clear();
-  }
 
-    static void scrollElementIntoViewById(String elementId){
+    public static void clickMyAccountSubmit() throws InterruptedException {
+         scrollElementIntoViewById("udSubmit");
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        //Wait for element to be clickable
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("udSubmit")));
+        try {
+            driver.findElement(By.id("udSubmit")).click();
+        } catch (Error e) {
+            System.out.println("udSubmit was not found");
+            fail();
+        }
+        Thread.sleep(2000);
+    }
+
+    public static void myAccountSendKeys(String field, String text) {
+        driver.findElement(By.id("ud" + field)).sendKeys(text);
+    }
+
+    public static void myAccountClearField(String field) {
+        driver.findElement(By.id("ud" + field)).clear();
+    }
+
+    static void scrollElementIntoViewById(String elementId) {
         WebElement element = driver.findElement(By.id(elementId));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
-    public static void scrollElementIntoViewByXpath(String xpath){
+    public static void scrollElementIntoViewByXpath(String xpath) {
         WebElement element = driver.findElement(By.xpath(xpath));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
-    public static void scrollElementIntoViewByCss(String css){
+    public static void scrollElementIntoViewByCss(String css) {
         WebElement element = driver.findElement(By.cssSelector(css));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
     public static void createHoldingUserAndLogin() throws IOException, InterruptedException {
@@ -384,43 +390,52 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         enterManageUserPassword("Testpass123");
         enterManageUserPasswordRepeat("Testpass123");
         clickManageUserSubmit();
-        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-        logout();
         try {
-            loginAndVerifySuccess("TestUserNullInfo", "Testpass123");
-        }catch (Error e){
-            System.out.println("login was not successful");
-            fail();
+            // click ok success
+            driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+            System.out.println("clicked OK successfully");
+            //todo naughty sleep
+            Thread.sleep(4000);
+        } catch (Exception e) {
+            System.out.println("couldn't click the OK");
+        }
+
+        try {
+            //todo this should have failed
+            searchDatabaseFor("tblUserDetails", "displayName", "TestUserNullInfo");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
 
     public static void setLoggedInUserAccountInfoToNull() throws IOException, InterruptedException {
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
         myAccountClearField("FirstName");
-        myAccountSendKeys("FirstName", "null");
+        myAccountSendKeys("FirstName", "blanketyblank");
         myAccountClearField("LastName");
-        myAccountSendKeys("LastName", "null");
+        myAccountSendKeys("LastName", "blanketyblank");
         myAccountClearField("MobilePhone");
-        myAccountSendKeys("MobilePhone", "null");
+        myAccountSendKeys("MobilePhone", "blanketyblank");
         myAccountClearField("Address1");
-        myAccountSendKeys("Address1", "null");
+        myAccountSendKeys("Address1", "blanketyblank");
         myAccountClearField("AddressPrefix");
-        myAccountSendKeys("AddressPrefix", "null");
+        myAccountSendKeys("AddressPrefix", "blanketyblank");
         myAccountClearField("Address3");
-        myAccountSendKeys("Address3", "null");
+        myAccountSendKeys("Address3", "blanketyblank");
         myAccountClearField("Address4");
-        myAccountSendKeys("Address4", "null");
+        myAccountSendKeys("Address4", "blanketyblank");
         myAccountClearField("PostalCode");
-        myAccountSendKeys("PostalCode", "null");
+        myAccountSendKeys("PostalCode", "blanketyblank");
         myAccountClearField("MemorableQuestion");
-        myAccountSendKeys("MemorableQuestion", "null");
+        myAccountSendKeys("MemorableQuestion", "blanketyblank");
         myAccountClearField("MemorableAnswer");
-        myAccountSendKeys("MemorableAnswer", "null");
+        myAccountSendKeys("MemorableAnswer", "blanketyblank");
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
         try {
             driver.findElement(By.cssSelector("#country .dropdown-item")).click();
-        }catch (Error e){
+        } catch (Error e) {
             System.out.println("dropdown not visible");
             fail();
         }
@@ -432,7 +447,7 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
         Statement stmt = conn.createStatement();
         conn.createStatement();
 
-        rs = stmt.executeQuery("select * FROM " + tblName + " where " + columnName + " = \"" + search +"\" ");
+        rs = stmt.executeQuery("select * FROM " + tblName + " where " + columnName + " = \"" + search + "\" ");
 
         int rows = 0;
 
@@ -442,10 +457,10 @@ public class AccountsDetailsHelper extends LoginAndNavigationHelper {
             // Move to back to the beginning
             rs.beforeFirst();
         }
-        Assert.assertEquals("there should be exactly one record", 1, rows );
+        assertTrue("there should be exactly one record expected: "  +columnName + " " +  search, rows == 1);
 
         while (rs.next()) {
-            Assert.assertEquals("Expecting username to be " + search,search, rs.getString(columnName));
+            Assert.assertEquals("Expecting username to be " + search, search, rs.getString(columnName));
             // check each parameter meets the field in the database
         }
     }

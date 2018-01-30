@@ -43,7 +43,7 @@ public class OpenCSDWalletsAcceptanceTest {
         screenshotRule.setDriver(driver);
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/wallets");
+        navigateToPage2("menu-user-admin-wallets");
 
     }
 
@@ -56,11 +56,11 @@ public class OpenCSDWalletsAcceptanceTest {
     }
     public static void selectAccountType() throws IOException, InterruptedException {
         driver.findElement(By.id("new-wallet-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/ul/li[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-wallet-account-select\"]/div/div[3]/ul/li[1]")).click();
     }
     public static void selectWalletType() throws IOException, InterruptedException {
         driver.findElement(By.id("new-wallet-usertype-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/ul/li[3]")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/div[3]/ul/li[1]")).click();
     }
     public static void toggleLockWallet() throws IOException, InterruptedException {
         driver.findElement(By.className("toggle-switch")).click();
@@ -88,8 +88,8 @@ public class OpenCSDWalletsAcceptanceTest {
         navigateToAddWallet();
         Random rand = new Random();
         int guess = rand.nextInt(998) + 1;
-        enterWalletName("Testing_Wallet" + guess);
         selectAccountType();
+        enterWalletName("Testing_Wallet" + guess);
         selectWalletType();
         clickWalletSubmit();
         verifyPopupMessageText("Success", "");
