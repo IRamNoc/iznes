@@ -1,7 +1,7 @@
 # Introduction
 Core Persist is a module that contains the form state saving tool.
 
-# Usage:
+# Getting started
 ## 1. Import the `Persist Module`.
 
 Import the `Persist Module` into the module your component is declared in. 
@@ -46,12 +46,22 @@ export class MyComponent {
 
 # Functions
 
-## `watchForm`
+## `PersistService.watchForm()`
 
-Params:
-* `name`  - The form's unique name.
-* `group` - The FormGroup that is to be watched and recovered.
+The `watchForm` method accepts a form's name and a FormGroup object that it subscribes for changes to. Once changes are triggered, it saves the changes and on initialisation it checks if there is a form state to recover.
 
-This function returns the FormGroup passed to it.
+### Syntax
 
-In addition, this function handles being called with the same name, so it's possible to recall it when instantiating a new FormGroup to visually clear the form.
+```typescript
+const returnedGroup = new PersistService().watchForm(formName, formGroup);
+```
+
+#### Parameters
+
+`formName` - a string identifier of the form whose FormGroup is being watched.
+
+`formGroup` - a FormGroup object that is to be watched for changes and recovered on init.
+
+#### Returns
+
+`FormGroup` - the original FormGroup passed in as the second parameter.
