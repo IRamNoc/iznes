@@ -1,0 +1,67 @@
+<div class="header-breadcrumbs">
+    <h1 mltag="txt_contracts_dvp">DVP</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="link1">
+            <i class="fa fa-contracts"></i>
+            <span mltag="txt_contracts_create_dvp">DVP</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="createContractForm">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_creator" mltag="txt_contract_creator">Contract Creator Address</label>
+                        <ng-select id="contract_creator"
+                            [items]="addressList"
+                            [allowClear]="false"
+                            placeholder="Select Creator Address"
+                            [formControl]="createContractForm.controls['creator']"
+                        >
+                        </ng-select>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_expiry_date" mltag="txt_contract_expiry_date">Expiry Date</label>
+                        <input type="date" name="contract_expiry_date" id="contract_expiry_date" placeholder="YYYY-MM-DD" />
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_expiry_time" mltag="txt_contract_expiry_time">Expiry Time</label>
+                        <input type="time" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" />
+                    </div>
+                </section>
+
+                <hr />
+
+                <section class="form-block contract-party" *ngFor="let party of parties; let idx = index;">
+                    <span class="party-title">{{party.title}}</span>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_asset" mltag="txt_contract_asset">Asset</label>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <various-address-select [formControl]="createContractForm.controls[party.id].controls['address']"
+                            [relationshipArray]="toRelationshipSelectItems"
+                            [ownWalletAddressArray]="addressList"
+                            [class.error]="!createContractForm.controls[party.id].controls['address'].valid &&
+                                createContractForm.controls[party.id].controls['address'].touched">
+                        </various-address-select>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="{{party.id}}_amount" mltag="txt_contract_amount">Amount</label>
+                        <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" placeholder="amount" />
+                    </div>
+                </section>
+
+                <section class="form-block">
+                    <button type="submit" class="btn btn-primary" mltag="txt_requestasset">Create Contract</button>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
