@@ -66,7 +66,8 @@ export {
     clearContractNeedHandle,
     SET_ASSET_TRANSACTIONS,
     SET_ALL_TRANSACTIONS,
-    TransactionsReducer
+    TransactionsReducer,
+    managedWalletsActions
 } from './wallet';
 
 export {
@@ -146,6 +147,7 @@ export {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     getTranPermissionGroup,
     getAdminPermissionGroup,
+    permissionGroupActions,
 
     /* Group area lists. */
     SET_ADMIN_PERM_AREAS_LIST,

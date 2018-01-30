@@ -13,5 +13,8 @@ export {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST
 } from './actions';
 
+import * as permissionGroupActions from './actions';
+export {permissionGroupActions};
+
 /* Selectors. */
 export {getAdminPermissionGroup, getTranPermissionGroup} from './selectors';

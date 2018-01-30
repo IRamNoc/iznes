@@ -1,3 +1,5 @@
+import {FormControl} from '@angular/forms';
+
 export interface AdminPermGroupDetail {
     groupId: number;
     groupName: string;
@@ -15,6 +17,16 @@ export interface TranPermGroupDetail {
     canDelegate: boolean;
 }
 
+export interface PermissionGroupTab {
+    title: {
+        icon: string;
+        text: string;
+    };
+    groupId: number;
+    active: boolean;
+    formControl?: FormControl;
+}
+
 export interface PermissionGroupState {
     adminPermList: {
         [key: number]: AdminPermGroupDetail
@@ -22,4 +34,5 @@ export interface PermissionGroupState {
     tranPermList: {
         [key: number]: TranPermGroupDetail
     };
+    openedTabs: Array<PermissionGroupTab>;
 }

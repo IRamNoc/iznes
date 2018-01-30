@@ -41,7 +41,8 @@ import {
     ManagedWalletsReducer,
     SET_MANAGED_WALLETS,
     getManagedWallets,
-    getManageWalletList
+    getManageWalletList,
+    managedWalletsActions
 } from './managed-wallets';
 
 import {
@@ -114,7 +115,8 @@ export {
 export {
     SET_MANAGED_WALLETS,
     getManagedWallets,
-    getManageWalletList
+    getManageWalletList,
+    managedWalletsActions
 };
 
 export {

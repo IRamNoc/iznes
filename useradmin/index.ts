@@ -18,7 +18,8 @@ export {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     getAdminPermissionGroup,
-    getTranPermissionGroup
+    getTranPermissionGroup,
+    permissionGroupActions
 } from './permission-group';
 
 /* Permission areas. */

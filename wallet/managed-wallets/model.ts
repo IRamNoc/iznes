@@ -1,3 +1,5 @@
+import {FormControl} from '@angular/forms';
+
 export interface WalletDetail {
     walletId: number;
     walletName: string;
@@ -50,8 +52,19 @@ export interface WalletDetail {
     websiteUrl: string;
 }
 
+export interface WalletTab {
+    title: {
+        icon: string;
+        text: string;
+    };
+    walletId: number;
+    active: boolean;
+    formControl?: FormControl;
+}
+
 export interface ManagedWalletsState {
     walletList: {
         [key: number]: WalletDetail
     };
+    openedTabs: Array<WalletTab>;
 }
