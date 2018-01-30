@@ -1,42 +1,48 @@
 import {
-    Component, OnInit, Output, EventEmitter, Inject, ChangeDetectionStrategy,
-    ChangeDetectorRef, AfterViewInit, OnDestroy
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Inject,
+    OnDestroy,
+    OnInit,
+    Output
 } from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {
-    getMyWalletList,
-    setConnectedWallet,
-    getMyDetail,
-    getDefaultMyChainAccess,
-    getAuthentication,
-    setRequestedMailInitial,
-    SET_MESSAGE_COUNTS,
     clearRequestedMailInitial,
     clearRequestedWalletLabel,
-    setConnectedChain
+    getAuthentication,
+    getDefaultMyChainAccess,
+    getMyDetail,
+    getMyWalletList,
+    SET_MESSAGE_COUNTS,
+    setConnectedChain,
+    setConnectedWallet,
+    setMenuShown,
+    setRequestedMailInitial
 } from '@setl/core-store';
-import {List, Map, fromJS} from 'immutable';
+import {fromJS} from 'immutable';
 import _ from 'lodash';
 
 import {
-    MyWalletsService,
-    WalletNodeRequestService,
     InitialisationService,
     MyMessagesService,
-    MyUserService
+    MyUserService,
+    MyWalletsService,
+    WalletNodeRequestService
 } from '@setl/core-req-services';
-import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
-import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
+import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
-import {setMenuShown} from '@setl/core-store';
-
 @Component({
     selector: 'app-navigation-topbar',
     templateUrl: './navigation-topbar.component.html',
-    styleUrls: ['./navigation-topbar.component.css'],
+    styleUrls: ['./navigation-topbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
