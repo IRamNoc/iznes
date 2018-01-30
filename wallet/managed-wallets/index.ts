@@ -3,3 +3,6 @@ export {ManagedWalletsReducer} from './reducer';
 export {ManagedWalletsState} from './model';
 export {SET_MANAGED_WALLETS} from './actions';
 export {getManagedWallets, getManageWalletList} from './selectors';
+import * as managedWalletsActions from './actions';
+
+export {managedWalletsActions};

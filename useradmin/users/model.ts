@@ -4,7 +4,7 @@ export interface UsersDetail {
     userId: number;
 }
 
-export interface Select2Item {
+export interface Select2Item{
     id: string | number;
     text: string;
 }
@@ -16,7 +16,7 @@ export interface UserTab {
     };
     userId: number;
     active: boolean;
-    forControl?: FormControl;
+    formControl?: FormControl;
     selectedChain?: number;
     filteredTxList?: Array<Select2Item>;
     selectedTxList?: Array<Select2Item>;

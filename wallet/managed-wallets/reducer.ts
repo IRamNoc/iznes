@@ -3,9 +3,12 @@ import * as ManageWalletActions from './actions';
 import {ManagedWalletsState, WalletDetail} from './model';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
+import {SET_ALL_TABS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 const initialState: ManagedWalletsState = {
-    walletList: {}
+    walletList: {},
+    openedTabs: []
 };
 
 export const ManagedWalletsReducer = function (state: ManagedWalletsState = initialState,
@@ -27,6 +30,9 @@ export const ManagedWalletsReducer = function (state: ManagedWalletsState = init
             });
 
             return newState;
+
+        case SET_ALL_TABS:
+            return handleSetAllTabs(action, state);
 
         default:
             return state;
@@ -96,4 +102,17 @@ function formatToWalletList(rawWalletList: Array<any>): {
         {}));
 
     return walletsObject.toJS();
+}
+
+/**
+ * Set all tabs
+ *
+ * @param {Action} action
+ * @param {ManagedWalletsState} state
+ * @return {ManagedWalletsState}
+ */
+function handleSetAllTabs(action: Action, state: ManagedWalletsState): ManagedWalletsState {
+    const tabs = immutableHelper.get(action, 'tabs', []);
+
+    return Object.assign({}, state, {openedTabs: tabs});
 }

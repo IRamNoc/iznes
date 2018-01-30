@@ -3,10 +3,13 @@ import * as PermissionGroupActions from './actions';
 import {PermissionGroupState, AdminPermGroupDetail, TranPermGroupDetail} from './model';
 import _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
+import {SET_ALL_TABS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 const initialState: PermissionGroupState = {
     adminPermList: {},
-    tranPermList: {}
+    tranPermList: {},
+    openedTabs: []
 };
 
 export const PermissionGroupReducer = function (state: PermissionGroupState = initialState,
@@ -45,6 +48,9 @@ export const PermissionGroupReducer = function (state: PermissionGroupState = in
             });
 
             return newState;
+
+        case SET_ALL_TABS:
+            return handleSetAllTabs(action, state);
 
         default:
             return state;
@@ -101,4 +107,17 @@ function formatToTranPermGroupList(rawPermissionGroupList) {
     }, {}));
 
     return adminPermObject.toJS();
+}
+
+/**
+ * Set all tabs
+ *
+ * @param {Action} action
+ * @param {PermissionGroupState} state
+ * @return {PermissionGroupState}
+ */
+function handleSetAllTabs(action: Action, state: PermissionGroupState): PermissionGroupState {
+    const tabs = immutableHelper.get(action, 'tabs', []);
+
+    return Object.assign({}, state, {openedTabs: tabs});
 }
