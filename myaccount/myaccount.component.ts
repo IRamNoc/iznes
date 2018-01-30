@@ -432,8 +432,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.tabStates = {
-            detail: false,
-            password: true
+            detail: true,
+            password: false
         };
 
         this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
