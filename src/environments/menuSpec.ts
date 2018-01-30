@@ -512,14 +512,14 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: 'user-administration/users/0'
+                    router_link: '/user-administration/users/0'
                 },
                 {
                     label: 'Wallets',
                     label_txt: 'txt_wallets',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-user-admin-wallets',
-                    router_link: '/user-administration/wallets'
+                    router_link: '/user-administration/wallets/0'
                 },
                 {
                     label: 'Permissions',
@@ -724,14 +724,14 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: 'user-administration/users/0'
+                    router_link: '/user-administration/users/0'
                 },
                 {
                     label: 'Wallets',
                     label_txt: 'txt_wallets',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-user-admin-wallets',
-                    router_link: '/user-administration/wallets'
+                    router_link: '/user-administration/wallets/0'
                 }
             ]
         },
@@ -937,15 +937,119 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: 'user-administration/users/0'
+                    router_link: '/user-administration/users/0'
                 },
                 {
                     label: 'Wallets',
                     label_txt: 'txt_wallets',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-user-admin-wallets',
-                    router_link: '/user-administration/wallets'
+                    router_link: '/user-administration/wallets/0'
                 },
+            ]
+        },
+        {
+            label: 'Messages',
+            label_txt: 'txt_messages',
+            icon_class: 'fa fa-envelope',
+            element_id: 'menu-messages',
+            router_link: '/messages'
+        },
+        {
+            label: 'Sub-portfolio',
+            label_txt: 'txt_subportfolio',
+            icon_class: 'fa fa-id-badge',
+            element_id: 'menu-sub-portfolio',
+            router_link: '/user-administration/subportfolio'
+        },
+        {
+            label: 'Asset Servicing',
+            label_txt: 'txt_assetservicing',
+            icon_class: 'fa fa-archive',
+            element_id: 'menu-asset-servicing',
+            children: [
+                {
+                    label: 'Register Issuer',
+                    label_txt: 'txt_registerissuer',
+                    icon_class: 'fa fa-user-plus',
+                    element_id: 'menu-asset-servicing-register-issuer',
+                    router_link: '/asset-servicing/register-issuer'
+                },
+                {
+                    label: 'Register Asset',
+                    label_txt: 'txt_registerasset',
+                    icon_class: 'fa fa-plus-circle',
+                    element_id: 'menu-asset-servicing-register-asset',
+                    router_link: '/asset-servicing/register-asset'
+                },
+                {
+                    label: 'Issue Asset',
+                    label_txt: 'txt_issueasset',
+                    icon_class: 'fa fa-paper-plane',
+                    element_id: 'menu-asset-servicing-issue-asset',
+                    router_link: '/asset-servicing/issue-asset'
+                },
+                {
+                    label: 'Send Asset',
+                    label_txt: 'txt_sendasset',
+                    icon_class: 'fa fa-share-square-o',
+                    element_id: 'menu-asset-servicing-send-asset',
+                    router_link: '/asset-servicing/send-asset'
+                },
+                {
+                    label: 'Request Asset',
+                    label_txt: 'txt_requestasset',
+                    icon_class: 'fa fa-exchange',
+                    element_id: 'menu-asset-servicing-request-asset',
+                    router_link: '/asset-servicing/request-asset'
+                }
+            ]
+        },
+        {
+            label: 'Report',
+            label_txt: 'txt_reports',
+            icon_class: 'fa fa-flag',
+            element_id: 'menu-asset-servicing',
+            children: [
+                {
+                    label: 'Balances Reports',
+                    label_txt: 'txt_balancesreports',
+                    icon_class: 'fa fa-th-list',
+                    element_id: 'menu-report-balance-report',
+                    router_link: '/reports/balances'
+                },
+                {
+                    label: 'Issue Reports',
+                    label_txt: 'txt_issuereports',
+                    icon_class: 'fa fa-money',
+                    element_id: 'menu-report-issue',
+                    router_link: '/reports/issue'
+                },
+                {
+                    label: 'Transactions Reports',
+                    label_txt: 'txt_transactionsreports',
+                    icon_class: 'fa fa-key',
+                    element_id: 'menu-report-transaction',
+                    router_link: '/reports/transactions'
+                }
+            ]
+        }
+    ],
+
+    standard_user: [
+        {
+            label: 'Account Module',
+            label_txt: 'txt_accountmodule',
+            icon_class: 'fa fa-user',
+            element_id: 'menu-account-module',
+            children: [
+                {
+                    label: 'My Account',
+                    label_txt: 'txt_myaccount',
+                    icon_class: 'fa fa-user',
+                    element_id: 'menu-my-account',
+                    router_link: '/account/my-account'
+                }
             ]
         },
         {
