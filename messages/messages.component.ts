@@ -95,10 +95,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
 
         this._appConfig = _appConfig;
-
-        this.router.routeReuseStrategy.shouldAttach = function () {
-            return false;
-        };
     }
 
     ngOnInit() {
@@ -168,7 +164,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     return;
                 }
                 if (params.category === 'compose') {
-                    return this.showCategory(1337, true);
+                    return this.showCategory(999, true);
                 }
                 const idx = this.categories.findIndex(cat => cat.type === params.category);
                 if (idx >= 0) {
@@ -204,10 +200,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
             return message;
         });
-
-        // if (this.messages.length > 0) {
-        //     this.showMessage(this.currentMessage.id);
-        // }
 
         if (this.mailCounts) {
 
@@ -375,7 +367,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         if (!this.composeSelected) {
             // set message to active to apply active css class
 
-            if (index === 1337) {
+            if (index === 999) {
                 return;
             }
 

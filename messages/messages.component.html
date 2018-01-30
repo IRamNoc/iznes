@@ -165,7 +165,7 @@
 
 <ng-template #messageMenu>
     <div class="message_menu">
-        <button routerLink="/messages/compose" [ngClass]="{'active': 1337 === currentCategory}" id="messagescompose">Compose Message</button>
+        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose">Compose Message</button>
 
         <h3>Folders</h3>
 
@@ -178,101 +178,3 @@
         </ul>
     </div>
 </ng-template>
-
-<!--<div class="messages">-->
-
-<!--<div class="row">-->
-<!--&lt;!&ndash; categories &ndash;&gt;-->
-<!--<div class="col-sm-4 col-md-3 col-lg-2 col-categories">-->
-<!--<a class="tile row" routerLink="/messages/compose" [ngClass]="{'active': 1337 === currentCategory}">-->
-<!--<div class="tile-icon">-->
-<!--<clr-icon shape="edit" size="24"></clr-icon>-->
-<!--</div>-->
-<!--<div class="tile-text">-->
-<!--<h4 mltag="txt_compose">Compose</h4>-->
-<!--</div>-->
-<!--</a>-->
-
-<!--<hr class="message-hr">-->
-
-
-<!--</div>-->
-
-<!--&lt;!&ndash; message highlights with message area &ndash;&gt;-->
-<!--<div class="col-sm-8 col-md-9 col-lg-10 col-message-grid">-->
-
-<!--<div class="message-compose">-->
-
-
-<!--</div>-->
-<!--<div class="message-grid">-->
-<!--<div class="row">-->
-
-<!--&lt;!&ndash; message highlights (previews &ndash;&gt;-->
-<!--<div class="col-sm-5 message-highlights">-->
-<!--<div class="message-options">-->
-<!--<h2>{{currentBoxName}} ({{currentBoxCount || 0}})</h2>-->
-<!--<button class="btn btn-outline btn-sm" (click)="refreshMailbox()">-->
-<!--<clr-icon shape="refresh"></clr-icon>-->
-<!--<span mltag="txt_refresh">Refresh</span>-->
-<!--</button>-->
-<!--&lt;!&ndash;<button class="btn btn-success-outline btn-sm">&ndash;&gt;-->
-<!--&lt;!&ndash;<clr-icon shape="eye"></clr-icon>&ndash;&gt;-->
-<!--&lt;!&ndash;Mark as read&ndash;&gt;-->
-<!--&lt;!&ndash;</button>&ndash;&gt;-->
-<!--<button class="btn btn-danger-outline btn-sm" (click)="deleteMessage()">-->
-<!--<clr-icon shape="trash"></clr-icon>-->
-<!--<span mltag="txt_delete">Delete</span>-->
-<!--</button>-->
-<!--</div>-->
-
-<!--<div class="message-highlight {{!message.isRead && 'message-unread'}}"-->
-<!--*ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"-->
-<!--(click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">-->
-<!--<h6>-->
-<!--{{message.senderWalletName}}-->
-<!--</h6>-->
-
-<!--<h4>-->
-<!--<span class="message-unread-icon" *ngIf="!message.isRead"></span>-->
-<!--<span [innerHtml]="message.subject | truncate: [100]"></span>-->
-<!--</h4>-->
-<!--<span class="message-date">-->
-<!--<clr-icon shape="balance" *ngIf="message.action"></clr-icon>-->
-<!--<clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>-->
-<!--{{message.date | datex: "MMM D, YYYY"}}-->
-<!--</span>-->
-<!--&lt;!&ndash;<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>&ndash;&gt;-->
-<!--</div>-->
-
-<!--<div class="message-highlight-footer">-->
-
-<!--</div>-->
-
-<!--</div>-->
-
-<!--&lt;!&ndash; actual individual message area &ndash;&gt;-->
-<!--<div class="col-sm-7 message-body" *ngIf="currentMessage">-->
-<!--<div class="message-title">-->
-<!--<span mltag="txt_from">From</span>-->
-<!--<b class="message-from">-->
-<!--{{currentMessage.senderWalletName}}-->
-<!--</b> to-->
-<!--<b class="message-to">-->
-<!--{{currentMessage.recipientWalletName}}-->
-<!--</b>-->
-
-<!--<h1 [innerHtml]="currentMessage.subject"></h1>-->
-
-<!--</div>-->
-<!--<div class="message-text">-->
-
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</div>-->
-
-<!--</div>-->
-<!--</div>-->
