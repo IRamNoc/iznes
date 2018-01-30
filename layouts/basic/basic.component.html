@@ -88,7 +88,9 @@
                         This layout wraps the navbar and the top bar around content.
                     -->
                     <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
-                        <router-outlet #o="outlet"></router-outlet>
+                        <div>
+                            <router-outlet #o="outlet"></router-outlet>
+                        </div>
                     </div>
 
                 </main>

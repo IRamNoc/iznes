@@ -6,7 +6,7 @@ const slideDuration = 1500;
 export const FadeSlideRight =
     trigger('routerTransition', [
         transition('* <=> *', [
-            query(':enter', [
+            query('.fade-slide-right', [
                 style({
                     position: 'fixed',
                     width: 'calc(100% - 230px)',
