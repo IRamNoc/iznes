@@ -1365,7 +1365,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }, this.passwordValidator);
 
         /* Return the form group and watch it using the persistService. */
-        return this._persistService.watchForm('useradmin/newUser', group);
+        // return this._persistService.watchForm('useradmin/newUser', group);
+        return group;
     }
 
     passwordValidator(g: FormGroup) {
