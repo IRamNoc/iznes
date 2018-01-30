@@ -266,10 +266,10 @@ export const ROUTES: Routes = [
                         data: {state: 'admin-users'}
                     },
                     {
-                        path: 'wallets',
+                        path: 'wallets/:walletid',
                         component: AdminWalletsComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'admin-wallets'}
+                        // data: {state: 'admin-wallets'}
                     },
                     {
                         path: 'permissions',
