@@ -1,24 +1,18 @@
 /* Core imports. */
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
     ViewChild
 } from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NgRedux, select} from "@angular-redux/store";
 import * as _ from "lodash";
-
 /* Alerts and confirms. */
 import {AlertsService} from "@setl/jaspero-ng2-alerts";
 import {ConfirmationService} from "@setl/utils";
 /* User Admin Service. */
 import {UserAdminService} from "../useradmin.service";
 import {Subscription} from "rxjs/Subscription";
-import {Observable} from "rxjs/Observable";
+import {PersistService} from "@setl/core-persist";
 
 /* Decorator. */
 @Component({
@@ -74,7 +68,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                private _persistService: PersistService) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
 
@@ -1325,7 +1320,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @return {FormGroup}
      */
     getNewUserFormGroup(): FormGroup {
-        return new FormGroup(
+        /* Declare the group. */
+        const group = new FormGroup(
             {
                 'username': new FormControl('', [
                     Validators.required
@@ -1345,6 +1341,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 'groupWalletsRead': new FormControl([]),
                 'chainAccess': new FormControl([]),
             }, this.passwordValidator);
+
+        /* Return the form group and watch it using the persistService. */
+        return this._persistService.watchForm('useradmin/newUser', group);
     }
 
     passwordValidator(g: FormGroup) {
