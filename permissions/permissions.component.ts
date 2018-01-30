@@ -8,9 +8,14 @@ import {
     EventEmitter,
     ChangeDetectionStrategy
 } from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
 import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
 import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
 import {StringFilter} from "clarity-angular";
+import {Router, ActivatedRoute, Params} from '@angular/router';
+import {immutableHelper} from '@setl/utils';
+import _ from 'lodash';
+import {permissionGroupActions} from '@setl/core-store';
 
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -90,6 +95,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
     constructor(private userAdminService: UserAdminService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private ngRedux: NgRedux<any>,
                 private _confirmationService: ConfirmationService,) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
@@ -134,33 +142,50 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         });
 
-        /* Default tabs. */
-        this.tabsControl = [
-            {
-                "title": {
-                    "icon": "fa-search",
-                    "text": "Search"
+        this.setInitialTabs();
+
+        this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'permissionid', 0);
+            this.setTabActive(tabId);
+        });
+    }
+
+    setInitialTabs() {
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['userAdmin', 'permissionGroup', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    "title": {
+                        "icon": "fa-search",
+                        "text": "Search"
+                    },
+                    "groupId": -1,
+                    "active": true
                 },
-                "userId": -1,
-                "active": true
-            },
-            {
-                "title": {
-                    "icon": "fa-plus",
-                    "text": "Add New Group"
-                },
-                "userId": -1,
-                "formControl": new FormGroup(
-                    {
-                        "name": new FormControl(''),
-                        "description": new FormControl(''),
-                        "type": new FormControl([]),
-                        "permissions": new FormControl([])
-                    }
-                ),
-                "active": false
-            }
-        ]
+                {
+                    "title": {
+                        "icon": "fa-plus",
+                        "text": "Add New Group"
+                    },
+                    "groupId": -1,
+                    "formControl": new FormGroup(
+                        {
+                            "name": new FormControl(''),
+                            "description": new FormControl(''),
+                            "type": new FormControl([]),
+                            "permissions": new FormControl([])
+                        }
+                    ),
+                    "active": false
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
     }
 
     ngAfterViewInit(): void {
@@ -292,7 +317,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].groupId === this.allGroupList[index].groupId) {
                 /* Found the index for that tab, lets activate it... */
-                this.setTabActive(i);
+                this.router.navigateByUrl('/user-administration/' + i);
 
                 /* And return. */
                 return;
@@ -361,7 +386,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         });
 
         /* Activate the new tab. */
-        this.setTabActive(this.tabsControl.length - 1);
+        const newTabId = this.tabsControl.length - 1;
+        this.router.navigateByUrl('/user-administration/permissions/' + newTabId);
 
         /* Return. */
         return;
@@ -605,7 +631,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.setTabActive(0);
+        this.router.navigateByUrl('/user-administration/0');
 
         /* Return */
         return;
@@ -622,19 +648,9 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public setTabActive(index: number = 0) {
-        /* Lets loop over all current tabs and switch them to not active. */
-        this.tabsControl.map((i) => {
-            i.active = false;
+        this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
+            return item.set('active', thisIndex === Number(index));
         });
-
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Set the list active. */
-        this.tabsControl[index].active = true;
-
-        /* Yes, we have to call this again to get it to work, trust me... */
-        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -711,5 +727,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                 this.subscriptions[key].unsubscribe();
             }
         }
+
+        this.ngRedux.dispatch(permissionGroupActions.setAllTabs(this.tabsControl));
     }
 }

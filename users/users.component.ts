@@ -2,11 +2,11 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
     ViewChild
-} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import * as _ from 'lodash';
-import {ActivatedRoute, Params} from '@angular/router';
+} from "@angular/core";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {NgRedux, select} from "@angular-redux/store";
+import * as _ from "lodash";
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/map';
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -74,9 +74,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private _confirmationService: ConfirmationService,
+                private route: ActivatedRoute,
+                private router: Router,
                 private _persistService: PersistService,
-                private route: ActivatedRoute) {
+                private _confirmationService: ConfirmationService,) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
 
@@ -1013,7 +1014,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].userId === this.usersList[userIndex].userID) {
                 /* Found the index for that tab, lets activate it... */
-                this.setTabActive(i);
+                // this.setTabActive(i);
+                this.router.navigateByUrl('/user-administration/users/' + i);
 
                 /* And return. */
                 return;
@@ -1222,7 +1224,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         });
 
         /* Activate the new tab. */
-        this.setTabActive(this.tabsControl.length - 1);
+        // this.setTabActive(this.tabsControl.length - 1);
+        this.router.navigateByUrl('/user-administration/users/' + newTabId);
 
         /* Return. */
         return;
