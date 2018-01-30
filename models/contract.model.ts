@@ -15,20 +15,21 @@ export class ContractModel {
     public toaddr: string = null;
     public tochain: number = null;
     public blockheight: number = null;
-    public contractdata: object = null;
-    public authorisations: Array<AuthorisationModel> = null;
-    public parameters: Array<ParameterItemModel> = null;
+    public contractdata = null;
+    public authorisations: Array<AuthorisationModel> = new Array();
+    public parameters: Array<ParameterItemModel> = new Array();
     public startdate: string = null;
     public protocol: string = null;
     public expiry: string = null;
-    public parties: Array<PartyModel> = null;
-    public encumbrance: Array<EncumbranceModel> = null;
+    public parties: Array<PartyModel> = new Array();
+    public addencumbrances: Array<EncumbranceModel> = new Array();
     public issuingaddress: string = null;
-    public events: Array<any> = null;
+    public events: Array<any> = new Array();
     public metadata: object = null;
     public poa: string = null;
     // Additional Fields
     public name: string = null;
+    public function: string = null;
     public complete: boolean = false;
 }
 

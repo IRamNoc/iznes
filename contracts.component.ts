@@ -59,6 +59,7 @@ export class ContractsComponent implements OnInit, OnChanges {
         this.tabsControl = this.defaultTabControl();
 
         let contract = this.loadContract();
+        console.log(contract);
         this.exportContract(contract);
         this.contracts = [
             contract
