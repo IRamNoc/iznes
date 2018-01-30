@@ -43,7 +43,8 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/users");
+        navigateToPageByID("menu-user-administration");
+        Thread.sleep(500);
         headingIsPresent("manage-users");
         Thread.sleep(500);
         clickLink("user-tab-1");
@@ -52,7 +53,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddWallets() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/wallets");
+        navigateToPageByID("menu-user-admin-wallets");
         headingIsPresent("manage-wallets");
         Thread.sleep(500);
         driver.findElement(By.id("wallet-tab-1")).click();
