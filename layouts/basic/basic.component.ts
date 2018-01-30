@@ -1,16 +1,14 @@
-import {Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {FadeSlideRight} from '../../animations/fade-slide-right';
 
-import {
-    setLanguage
-} from '@setl/core-store';
+import {setLanguage} from '@setl/core-store';
 
 @Component({
     selector: 'app-basic-layout',
     templateUrl: './basic.component.html',
-    styleUrls: ['./basic.component.css'],
+    styleUrls: ['./basic.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [FadeSlideRight],
 })
@@ -44,10 +42,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     /* Observable subscription array. */
     subscriptionsArray: Array<Subscription> = [];
 
-    constructor(
-        private ngRedux: NgRedux<any>,
-        public changeDetectorRef: ChangeDetectorRef
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
         // console.log(this.menuShown);

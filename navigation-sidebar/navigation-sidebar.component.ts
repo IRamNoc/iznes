@@ -1,15 +1,14 @@
-import {Component, OnInit, AfterViewInit, Inject, ChangeDetectorRef} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
-import {immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-navigation-sidebar',
     templateUrl: './navigation-sidebar.component.html',
-    styleUrls: ['./navigation-sidebar.component.css']
+    styleUrls: ['./navigation-sidebar.component.scss']
 })
 export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
@@ -21,10 +20,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
 
     constructor(private router: Router,
-        @Inject(APP_CONFIG) public appConfig: AppConfig,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private multilingualService: MultilingualService,
-        private ngRedux: NgRedux<any>) { }
+                @Inject(APP_CONFIG) public appConfig: AppConfig,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private multilingualService: MultilingualService,
+                private ngRedux: NgRedux<any>) {
+    }
 
     ngOnInit() {
         /* Subscribe for language change. */
@@ -59,7 +59,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     }
 
     translateMenu(rawMenuData) {
-        if(!rawMenuData) return;
+        if (!rawMenuData) return;
 
         return immutableHelper.reduce(rawMenuData, (result, item) => {
             const mltag = item.get('label_txt', '');
