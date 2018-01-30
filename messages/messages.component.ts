@@ -9,7 +9,7 @@ import {MyMessagesService} from '@setl/core-req-services';
 import {MessagesService} from "../messages.service";
 import {MailHelper} from './mailHelper';
 import {fromJS} from 'immutable';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
@@ -34,6 +34,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentMessage;
     public currentCategory;
     public composeSelected;
+    public messageView;
     public currentWalletId;
     public walletDirectoryList;
     public walletWithCommuPub;
@@ -44,6 +45,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentBoxCount;
     public currentPage;
     public currentBoxName;
+
+    public unreadMessages;
 
     public items: Array<string> = [];
 
@@ -86,15 +89,22 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private changeDetectorRef: ChangeDetectorRef,
                 private _alertsService: AlertsService,
                 private route: ActivatedRoute,
+                private router: Router,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
 
         this._appConfig = _appConfig;
+
+        this.router.routeReuseStrategy.shouldAttach = function () {
+            return false;
+        };
     }
 
     ngOnInit() {
+        this.messageView = false;
         this.currentCategory = 0;
+        this.unreadMessages = 0;
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = this._appConfig.messagesMenu;
@@ -154,6 +164,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         this.route.params.subscribe((params) => {
             if (params.category) {
+                if (params.category === 'view') {
+                    return;
+                }
                 if (params.category === 'compose') {
                     return this.showCategory(1337, true);
                 }
@@ -192,14 +205,22 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             return message;
         });
 
-        if (this.messages.length > 0) {
-            this.showMessage(this.currentMessage.id);
-        }
+        // if (this.messages.length > 0) {
+        //     this.showMessage(this.currentMessage.id);
+        // }
 
         if (this.mailCounts) {
+
+            // error here
             const categoryType = this.categories[this.currentCategory].type;
-            this.currentBoxName = this.categories[this.currentCategory].name;
+
             this.currentBoxCount = this.mailCounts[categoryType];
+            if (categoryType === "inbox") {
+                this.currentBoxCount = this.mailCounts['inboxUnread'];
+                this.unreadMessages = this.mailCounts['inboxUnread'];
+            }
+            this.currentBoxName = this.categories[this.currentCategory].name;
+
         }
         this.changeDetectorRef.markForCheck();
     }
@@ -225,11 +246,54 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     /**
-     * Delete Message
+     * Delete Single Messaged - Called from Single Message View
      */
     deleteMessage() {
+        this.closeMessage();
         this.mailHelper.deleteMessage(this.connectedWallet, this.currentMessage);
         this.refreshMailbox(this.currentPage);
+    }
+
+    /**
+     * Checked Mark as Read - Multiselect
+     */
+    checkedMarkAsRead() {
+        for (let i in this.messages) {
+            const message = this.messages[i];
+            if (!message.isChecked) {
+                continue;
+            }
+            this.mailHelper.markMessageAsRead(message.recipientId, message.mailId);
+        }
+        this.refreshMailbox();
+    }
+
+    /**
+     * Checked Deleted - Multiselect
+     */
+    checkedDeleted() {
+        for (let i in this.messages) {
+            const message = this.messages[i];
+            if (!message.isChecked) {
+                continue;
+            }
+            this.mailHelper.deleteMessage(this.connectedWallet, message);
+        }
+        this.refreshMailbox();
+    }
+
+
+    /**
+     * Checks Single Message
+     *
+     * @param index
+     */
+    messageChecked(index) {
+        if (this.messages[index].isChecked === true) {
+            this.messages[index].isChecked = false;
+            return;
+        }
+        this.messages[index].isChecked = true;
     }
 
     /**
@@ -287,6 +351,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     type: null
                 };
             }
+            this.messageView = true;
             this.currentMessage = currentMessage;
             this.changeDetectorRef.detectChanges();
             resolve();
@@ -300,6 +365,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {boolean} composeSelected
      */
     showCategory(index, composeSelected = false, page = 0) {
+        this.messageView = false;
         this.resetMessages();
         this.composeSelected = composeSelected;
 
@@ -308,6 +374,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.currentCategory = index;
         if (!this.composeSelected) {
             // set message to active to apply active css class
+
+            if (index === 1337) {
+                return;
+            }
 
             const type = categories[index].type;
 
@@ -322,13 +392,21 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Closes Single Message from View
+     */
+    closeMessage() {
+        this.messageView = false;
+    }
+
     requestMailboxByCategory(type, page) {
         console.log('Requesting MailBox By Category:', type, page);
         this.mailHelper.retrieveMessages(this.currentWalletId, type, page);
     }
 
     closeAndResetComposed() {
-        this.showCategory(this.currentCategory, false);
+        this.showCategory(0, false);
+        this.router.navigate(["messages/inbox"]);
         this.messageComposeForm.reset();
     }
 
