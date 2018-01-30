@@ -1,28 +1,20 @@
 /* Core imports. */
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
     ViewChild
-} from "@angular/core";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {NgRedux, select} from "@angular-redux/store";
-import * as _ from "lodash";
+} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgRedux, select} from '@angular-redux/store';
+import * as _ from 'lodash';
 import {ActivatedRoute, Params} from '@angular/router';
 import 'rxjs/add/operator/map';
-
-
 /* Alerts and confirms. */
-import {AlertsService} from "@setl/jaspero-ng2-alerts";
-import {ConfirmationService} from "@setl/utils";
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService, immutableHelper} from '@setl/utils';
 /* User Admin Service. */
-import {UserAdminService} from "../useradmin.service";
-import {Subscription} from "rxjs/Subscription";
-import {Observable} from "rxjs/Observable";
-import {immutableHelper} from '@setl/utils';
+import {UserAdminService} from '../useradmin.service';
+import {Subscription} from 'rxjs/Subscription';
+import {PersistService} from '@setl/core-persist';
 import {userAdminActions} from '@setl/core-store';
 
 /* Decorator. */
@@ -82,8 +74,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private route: ActivatedRoute,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                private _persistService: PersistService,
+                private route: ActivatedRoute) {
         /* Get Account Types. */
         this.accountTypes = userAdminService.getAccountTypes();
 
@@ -156,27 +149,27 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    "title": {
-                        "icon": "fa-search",
-                        "text": "Search"
+                    'title': {
+                        'icon': 'fa-search',
+                        'text': 'Search'
                     },
-                    "userId": -1,
-                    "active": true
+                    'userId': -1,
+                    'active': true
                 },
                 {
-                    "title": {
-                        "icon": "fa-user",
-                        "text": "Add User"
+                    'title': {
+                        'icon': 'fa-user',
+                        'text': 'Add User'
                     },
-                    "userId": -1,
-                    "formControl": this.getNewUserFormGroup(),
-                    "selectedChain": 0,
-                    "filteredTxList": [], // filtered groups of this chainid.
-                    "selectedTxList": [], // groups to show as selected.
-                    "allocatedTxList": [], // all groups assigned to the user.
-                    "filteredWalletsByAccount": [], // filtered wallets by account.
-                    "oldChainAccess": {},
-                    "active": false
+                    'userId': -1,
+                    'formControl': this.getNewUserFormGroup(),
+                    'selectedChain': 0,
+                    'filteredTxList': [], // filtered groups of this chainid.
+                    'selectedTxList': [], // groups to show as selected.
+                    'allocatedTxList': [], // all groups assigned to the user.
+                    'filteredWalletsByAccount': [], // filtered wallets by account.
+                    'oldChainAccess': {},
+                    'active': false
                 }
             ];
             return true;
@@ -1346,7 +1339,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
      * @return {FormGroup}
      */
     getNewUserFormGroup(): FormGroup {
-        return new FormGroup(
+        /* Declare the group. */
+        const group = new FormGroup(
             {
                 'username': new FormControl('', [
                     Validators.required
@@ -1366,6 +1360,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 'groupWalletsRead': new FormControl([]),
                 'chainAccess': new FormControl([]),
             }, this.passwordValidator);
+
+        /* Return the form group and watch it using the persistService. */
+        return this._persistService.watchForm('useradmin/newUser', group);
     }
 
     passwordValidator(g: FormGroup) {
