@@ -66,13 +66,13 @@ public class createUserAcceptanceTest {
     @Test
     public void createUser() {
 
-        String userDetails[] = generateUserDetails();
-        String userName = userDetails[0];
-        String password = userDetails[1];
-        String email = userDetails[2];
-
         runTest(() -> {
             try {
+
+                String userDetails[] = generateUserDetails();
+                String userName = userDetails[0];
+                String password = userDetails[1];
+                String email = userDetails[2];
                 User user = createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
 
                 System.out.println("userID " + user.getUserID());

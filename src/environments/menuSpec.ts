@@ -512,7 +512,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: '/user-administration/users'
+                    router_link: 'user-administration/users/0'
                 },
                 {
                     label: 'Wallets',
@@ -724,7 +724,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: '/user-administration/users'
+                    router_link: 'user-administration/users/0'
                 },
                 {
                     label: 'Wallets',
@@ -937,7 +937,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_users',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-user-admin-users',
-                    router_link: '/user-administration/users'
+                    router_link: 'user-administration/users/0'
                 },
                 {
                     label: 'Wallets',

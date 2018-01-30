@@ -43,7 +43,7 @@ public class OpenCSDWalletsAcceptanceTest {
         screenshotRule.setDriver(driver);
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage2("user-administration/wallets");
+        navigateToPage2("menu-user-admin-wallets");
 
     }
 
