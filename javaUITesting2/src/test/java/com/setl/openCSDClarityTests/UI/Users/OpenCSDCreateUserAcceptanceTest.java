@@ -48,7 +48,7 @@ public class OpenCSDCreateUserAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -217,7 +217,8 @@ public class OpenCSDCreateUserAcceptanceTest {
         popupMessageEquals("Failed to update this user.");
     }
 
-    public void popupMessageEquals(String message) {
+    public void popupMessageEquals(String message) throws InterruptedException {
+        Thread.sleep(1000);
         WebElement errorText = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]"));
         assertTrue(errorText.getText().equals(message));
     }

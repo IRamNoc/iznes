@@ -43,7 +43,7 @@ public class OpenCSDTabNavigationAcceptanceTest {
     public void shouldNavigateToUserAdminTabAddUser() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPageByID("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
         Thread.sleep(500);
         headingIsPresent("manage-users");
         Thread.sleep(500);
