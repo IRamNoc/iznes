@@ -24,6 +24,11 @@ import {
     SET_NEW_PASSWORD
 } from '@setl/core-store';
 
+interface TabState {
+    detail: boolean;
+    password: boolean;
+}
+
 @Component({
     styleUrls: ['./myaccount.component.scss'],
     templateUrl: './myaccount.component.html',
@@ -303,7 +308,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     password: AbstractControl;
     passwordConfirm: AbstractControl;
 
-    tabStates: object;
+    tabStates: TabState;
 
     public showPasswords = false;
 
