@@ -128,6 +128,8 @@ ul.breadcrumb li a:hover {
         width: 100%;
         background: #373a49;
         height: calc(100% - 75px);
+        transform: translateX(-0px);
+        transition: width 100ms linear, transform 100ms linear;
 
         .sidenav {
             float: left;
@@ -452,11 +454,8 @@ hr.dashed {
 }
 
 .menuHideNav {
-    display: none !important;
-}
-
-.menuHideContent {
-    width: 100% !important;
+    width: calc(100% + 230px) !important;
+    transform: translateX(-230px) !important;
 }
 
 .branding button {
@@ -464,6 +463,7 @@ hr.dashed {
     background: transparent;
     border: 0px solid white;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .branding button I {

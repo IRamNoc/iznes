@@ -25,7 +25,7 @@
                 </div>
                 <div class="ng-sidebar-header-middle title_text">
                     <i class="fa fa-cogs"></i>
-<span mltag="txt_settings">Settings</span></div>
+                    <span mltag="txt_settings">Settings</span></div>
                 <div class="ng-sidebar-header-right">
 
                 </div>
@@ -35,8 +35,8 @@
                 <div class="ng-sidebar-section-header">
                     <div class="title_text">
                         <i class="fa fa-language"></i>
-<span mltag="txt_language">Language</span></div>
-<span mltag="txt_chooseyourlanguage">Choose your language.</span></div>
+                        <span mltag="txt_language">Language</span></div>
+                    <span mltag="txt_chooseyourlanguage">Choose your language.</span></div>
                 <div class="ng-sidebar-section-body">
 
                     <section class="form-block">
@@ -75,10 +75,10 @@
             <!-- Navigation Topbar. -->
             <app-navigation-topbar (toggleSidebar)="_toggleSidebar()"></app-navigation-topbar>
 
-            <div class="content-container">
+            <div class="content-container" [ngClass]="{'menuHideNav': menuShown === 0}">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav" [ngClass]="{'menuHideNav': menuShown === 0}">
+                <nav class="sidenav">
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
@@ -93,6 +93,7 @@
 
                 </main>
             </div>
+
         </div>
     </ng-sidebar-container>
 </div>
