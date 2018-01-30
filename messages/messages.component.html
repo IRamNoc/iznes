@@ -3,7 +3,7 @@
     <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
     <div class="message_list">
-        <h2>{{currentBoxName}} ({{currentBoxCount || 0}})</h2>
+        <h2>{{currentBoxName}} <span *ngIf="currentBoxCount > 0">({{currentBoxCount || 0}})</span></h2>
 
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
@@ -30,8 +30,8 @@
             <div [routerLink]="['/messages/view']" class="message_list_item" [ngClass]="{'message-unread': message.isRead === false}">
                 <div class="message_list_item_check">
                     <i class="fa" [ngClass]="{'fa-check': message.isChecked === true}" (click)="messageChecked(i)"></i>
-                    <clr-icon shape="balance" *ngIf="message.action"></clr-icon>
-                    <clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>
+                    <!--<clr-icon shape="balance" *ngIf="message.action"></clr-icon>-->
+                    <!--<clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>-->
                 </div>
                 <div class="message_list_item_sender" (click)="showMessage(i)">{{message.senderWalletName}}</div>
                 <div class="message_list_item_subject" (click)="showMessage(i)">
@@ -106,7 +106,8 @@
         <div class="message_view_header">
             <h2>Compose Message</h2>
             <div class="message_view_header_buttons">
-                <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i> Close</button>
+                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i> Discard
+                </button>
             </div>
         </div>
 
@@ -115,39 +116,47 @@
             <div class="message_compose_input">
 
                 <div class="message_compose_input_field">
-                    <span>To</span>
-                    <ng-select [multiple]="true"
-                               [items]="items"
-                               [disabled]="disabled"
-                               [formControl]="messageComposeForm.controls['recipients']"
-                               (data)="refreshValue($event)"
-                               (selected)="selected($event)"
-                               (removed)="removed($event)"
-                               [captureKeys]="false"
-                               mltag="txt_selectrecipients"
-                               placeholder="Select Recipients"></ng-select>
+                    <div class="message_compose_input_field_label">
+                        To
+                    </div>
+                    <div class="message_compose_input_field_value">
+                        <ng-select [multiple]="true"
+                                   [items]="items"
+                                   [disabled]="disabled"
+                                   [formControl]="messageComposeForm.controls['recipients']"
+                                   (data)="refreshValue($event)"
+                                   (selected)="selected($event)"
+                                   (removed)="removed($event)"
+                                   [captureKeys]="false"
+                                   [containerWidth]=""
+                                   mltag="txt_selectrecipients"
+                                   placeholder="Select Recipients"></ng-select>
+                    </div>
                 </div>
 
                 <div class="message_compose_input_field">
-                    <span>From</span>
-                    <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" placeholder="" size="45">
+                    <div class="message_compose_input_field_label">
+                        Subject
+                    </div>
+                    <div class="message_compose_input_field_value">
+                        <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" placeholder="" size="45">
+                    </div>
                 </div>
+            </div>
 
-                <div class="message_compose_input_body">
-                    <quill-editor
-                        [formControl]="messageComposeForm.controls['body']"
-                        [options]="editorOptions"
-                        (blur)="onEditorBlurred($event)"
-                        (focus)="onEditorFocused($event)"
-                        (ready)="onEditorCreated($event)"
-                        (change)="onContentChanged($event)"></quill-editor>
-                </div>
+            <div class="message_compose_input_body">
+                <quill-editor
+                    [formControl]="messageComposeForm.controls['body']"
+                    [options]="editorOptions"
+                    (blur)="onEditorBlurred($event)"
+                    (focus)="onEditorFocused($event)"
+                    (ready)="onEditorCreated($event)"
+                    (change)="onContentChanged($event)"></quill-editor>
             </div>
 
             <div class="message_view_menu">
                 <!--<button><i class="fa fa-reply"></i> Reply</button>-->
-                <button><i class="fa fa-times"></i> Discard</button>
-                <button class="btn btn-primary"><i class="fa fa-paper-plane"></i> Send</button>
+                <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i> Send</button>
             </div>
         </form>
 
@@ -163,6 +172,8 @@
         <ul *ngFor="let category of categories; let i = index">
             <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory}" id="messages{{category.type}}">
                 <i class="fa {{category.icon}}"></i> {{category.name}}
+
+                <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
             </li>
         </ul>
     </div>

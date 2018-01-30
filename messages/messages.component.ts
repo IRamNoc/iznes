@@ -46,6 +46,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentPage;
     public currentBoxName;
 
+    public unreadMessages;
+
     public items: Array<string> = [];
 
     private value: any = ['Athens'];
@@ -99,13 +101,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         };
     }
 
-    randomNum() {
-        return Math.random();
-    }
-
     ngOnInit() {
         this.messageView = false;
         this.currentCategory = 0;
+        this.unreadMessages = 0;
 
         // these are the categories that appear along the left hand side as buttons
         this.categories = this._appConfig.messagesMenu;
@@ -211,9 +210,17 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         // }
 
         if (this.mailCounts) {
+
+            // error here
             const categoryType = this.categories[this.currentCategory].type;
-            this.currentBoxName = this.categories[this.currentCategory].name;
+
             this.currentBoxCount = this.mailCounts[categoryType];
+            if (categoryType === "inbox") {
+                this.currentBoxCount = this.mailCounts['inboxUnread'];
+                this.unreadMessages = this.mailCounts['inboxUnread'];
+            }
+            this.currentBoxName = this.categories[this.currentCategory].name;
+
         }
         this.changeDetectorRef.markForCheck();
     }
@@ -398,7 +405,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     closeAndResetComposed() {
-        this.showCategory(this.currentCategory, false);
+        this.showCategory(0, false);
+        this.router.navigate(["messages/inbox"]);
         this.messageComposeForm.reset();
     }
 
