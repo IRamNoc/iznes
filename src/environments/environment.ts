@@ -23,30 +23,30 @@ export const environment = {
     reportingNodeUrl: 'http://10.0.1.106:13544/sapi',
     messagesMenu: [
         {
-            name: 'All Messages',
+            name: 'Inbox',
             desc: 'View your global inbox',
-            icon: 'inbox',
+            icon: 'fa-inbox',
             type: 'inbox',
             active: true
         },
         {
-            name: 'Action Messages',
+            name: 'Actions',
             desc: 'Messages that require actions',
-            icon: 'balance',
+            icon: 'fa-rocket',
             type: 'action',
             active: false
         },
         {
             name: 'Sent Messages',
             desc: 'Messages sent by your account',
-            icon: 'pop-out',
+            icon: 'fa-envelope-o',
             type: 'sent',
             active: false
         },
         {
             name: 'Deleted Messages',
             desc: 'View messages that you deleted',
-            icon: 'trash',
+            icon: 'fa-trash-o',
             type: 'deleted',
             active: false
         },
