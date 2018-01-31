@@ -4,9 +4,8 @@ package com.setl.WebSocketAPITests.Account.Creation;
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.AccountError;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.openCSDClarityTests.UI.Users.OpenCSDCreateUserAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import io.setl.wsclient.scluster.SetlSocketClusterClient;
+
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -17,14 +16,12 @@ import org.apache.logging.log4j.Logger;
 import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.concurrent.*;
 
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccount;
 import static SETLAPIHelpers.WebSocketAPI.AccountHelper.createAccountError;
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertTrue;
 
