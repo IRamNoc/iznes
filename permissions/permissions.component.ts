@@ -1,12 +1,7 @@
 /* Core imports. */
 import {
-    Component,
-    OnInit,
-    ChangeDetectorRef,
-    AfterViewInit,
-    OnDestroy,
-    EventEmitter,
-    ChangeDetectionStrategy
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    OnDestroy
 } from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
@@ -15,17 +10,13 @@ import {StringFilter} from "clarity-angular";
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {immutableHelper} from '@setl/utils';
 import _ from 'lodash';
-import {permissionGroupActions} from '@setl/core-store';
-
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
-
-/* Use the permissions grid. */
-import {PermissionGridComponent} from '@setl/permission-grid';
-
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
+/* Persist service. */
+import {PersistService} from "@setl/core-persist";
 
 class TypeFilter implements StringFilter<any> {
     accepts(group: any, search: string): boolean {
@@ -98,7 +89,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private ngRedux: NgRedux<any>,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                private _persistService: PersistService) {
         /* Get User Types. */
         this.groupTypes = userAdminService.getGroupTypes();
 
@@ -171,14 +163,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                         "text": "Add New Group"
                     },
                     "groupId": -1,
-                    "formControl": new FormGroup(
-                        {
-                            "name": new FormControl(''),
-                            "description": new FormControl(''),
-                            "type": new FormControl([]),
-                            "permissions": new FormControl([])
-                        }
-                    ),
+                    "formControl": this.newAddGroupFormgroup(), 
                     "active": false
                 }
             ];
@@ -194,6 +179,21 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+    public newAddGroupFormgroup() {
+        /* Create the group. */
+        const group = new FormGroup(
+            {
+                "name": new FormControl(''),
+                "description": new FormControl(''),
+                "type": new FormControl([]),
+                "permissions": new FormControl([])
+            }
+        );
+
+        /* Allow the persist middleware to save and recover state, then return the form group. */
+        return this._persistService.watchForm('useradmin/addGroup', group);
     }
 
     /**
@@ -553,14 +553,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = new FormGroup(
-            {
-                "name": new FormControl(''),
-                "description": new FormControl(''),
-                "type": new FormControl([]),
-                "permissions": new FormControl([])
-            }
-        );
+        this.tabsControl[tabid].formControl = this.newAddGroupFormgroup();
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
