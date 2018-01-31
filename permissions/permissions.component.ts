@@ -10,8 +10,14 @@ import {StringFilter} from "clarity-angular";
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {immutableHelper} from '@setl/utils';
 import _ from 'lodash';
+import {permissionGroupActions} from '@setl/core-store';
+
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
+
+/* Use the permissions grid. */
+import {PermissionGridComponent} from '@setl/permission-grid';
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
