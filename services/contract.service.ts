@@ -4,7 +4,7 @@ import { PartyService } from '@setl/core-contracts/services/party.service';
 import { PartyModel } from '@setl/core-contracts/models/party.model';
 import { AuthorisationService } from '@setl/core-contracts/services/authorisation.service';
 import { AuthorisationModel } from '@setl/core-contracts/models/authorisation.model';
-import { ParameterItemService } from '@setl/core-contracts/services/parameteritem.service';
+import { ParameterItemService } from '@setl/core-contracts/services/parameterItem.service';
 import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.model';
 import { EncumbranceService } from '@setl/core-contracts/services/encumbrance.service';
 import { EncumbranceModel } from '@setl/core-contracts/models/encumbrance.model';
@@ -118,7 +118,7 @@ export class ContractService {
             'addencumbrances',
         ];
 
-        let contractJsonObject = {
+        let contractJsonObject: any = {
             contractdata: {}
         };
 
