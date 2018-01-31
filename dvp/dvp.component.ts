@@ -2,6 +2,7 @@ import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import * as moment from 'moment';
 
 import {walletHelper} from '@setl/utils';
 import {
@@ -13,6 +14,9 @@ import {
     InitialisationService,
     MyWalletsService
 } from '@setl/core-req-services';
+
+import {ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '../models';
+import {PartyService, PayListItemService} from '../services';
 
 @Component({
     selector: 'setl-contracts-dvp',
@@ -28,7 +32,7 @@ export class ContractsDvpComponent implements OnInit {
     connectedWalletId: number;
     subscriptionsArray: Subscription[] = [];
     addressList: any[];
-    toRelationshipSelectItems: Array<any>;
+    toRelationshipSelectItems: any[];
     walletDirectoryList: {} = {};
 
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
@@ -48,7 +52,9 @@ export class ContractsDvpComponent implements OnInit {
     constructor(private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private walletNodeRequestService: WalletNodeRequestService,
-        private myWalletService: MyWalletsService) {
+        private myWalletService: MyWalletsService,
+        private partyService: PartyService,
+        private payListItemService: PayListItemService) {
 
     }
         
@@ -57,6 +63,7 @@ export class ContractsDvpComponent implements OnInit {
         this.initParties();
         this.initCreateContractForm();
     }
+
 
     /**
      * Redux
@@ -123,6 +130,7 @@ export class ContractsDvpComponent implements OnInit {
         }
     }
     
+
     /**
      * UI
      */
@@ -139,10 +147,20 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     private initCreateContractForm(): void {
+        const currentDate = moment();
+
         this.createContractForm = new FormGroup({
             "creator": new FormControl('', Validators.required),
-            "partyA": this.generatePartyFormGroup(),
-            "partyB": this.generatePartyFormGroup()
+            "expireDate": new FormControl(currentDate.format('YYYY-MM-DD'), Validators.required),
+            "expireTime": new FormControl(currentDate.format('HH:mm'), Validators.required)
+        });
+
+        this.addPartiesToForm();
+    }
+
+    private addPartiesToForm(): void {
+        this.parties.forEach((party: any) => {
+            this.createContractForm.addControl(party.id, this.generatePartyFormGroup());
         });
     }
 
@@ -152,6 +170,52 @@ export class ContractsDvpComponent implements OnInit {
             "address": new FormControl('', Validators.required),
             "amount": new FormControl('', Validators.required),
         });
+    }
+
+
+    /**
+     * Create Contract
+     */
+    createContract(): void {
+        console.log(this.createContractForm.value);
+
+        const values = this.createContractForm.value;
+        const model: ContractModel = new ContractModel();
+
+        model.issuingaddress = values.creator;
+
+        // model.parties[0].payList[0].
+    }
+
+    private addPartiesToContract(model: ContractModel): void {
+        /**
+         * NOTE: At this point the component becomes tightly coupled to a 2 party contract.
+         *      this is because we need to set party A in the paylist and party B in the
+         *      receive list.
+         */
+        if(!model.parties) model.parties = [];
+
+        const partyModel = new PartyModel();
+
+        // configure Party A as the payee
+        const partyAId = this.parties[0].id;
+        partyModel.partyIdentifier = partyAId;
+        partyModel.signature = this.createContractForm.value[partyAId].address;
+        partyModel.mustSign = false;
+
+        // configure paylist
+        const payListItem = new PayListItemModel();
+        const splitAsset = this.createContractForm.value[partyAId].asset.split('|');
+        payListItem.address = this.createContractForm.value[partyAId].address;
+        payListItem.namespace = splitAsset[0];
+        payListItem.assetId = splitAsset[1];
+        payListItem.quantity = this.createContractForm.value[partyAId].amount;
+        payListItem.issuance = true;
+
+        partyModel.payList.push(payListItem);
+
+        // add party
+        model.parties.push(partyModel);
     }
 
 }

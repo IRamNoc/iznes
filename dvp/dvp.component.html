@@ -10,7 +10,7 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <form [formGroup]="createContractForm">
+            <form [formGroup]="createContractForm" (ngSubmit)="createContract()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
                         <label class="control-label" for="contract_creator" mltag="txt_contract_creator">Contract Creator Address</label>
@@ -25,16 +25,16 @@
                     
                     <div class="form-group col-sm-6">
                         <label class="control-label" for="contract_expiry_date" mltag="txt_contract_expiry_date">Expiry Date</label>
-                        <input type="date" name="contract_expiry_date" id="contract_expiry_date" placeholder="YYYY-MM-DD" />
+                        <input type="date" formControlName="expireDate" name="contract_expiry_date" id="contract_expiry_date" placeholder="YYYY-MM-DD" />
                     </div>
                     
                     <div class="form-group col-sm-6">
                         <label class="control-label" for="contract_expiry_time" mltag="txt_contract_expiry_time">Expiry Time</label>
-                        <input type="time" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" />
+                        <input type="time" formControlName="expireTime" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" />
                     </div>
                 </section>
 
-                <section class="form-block contract-party" *ngFor="let party of parties; let idx = index;">
+                <section formGroupName="{{party.id}}" class="form-block contract-party" *ngFor="let party of parties; let idx = index;">
                     <span class="party-title">{{party.title}}</span>
 
                     <div class="form-group col-sm-6">
@@ -58,7 +58,7 @@
                     
                     <div class="form-group col-sm-6">
                         <label class="control-label" for="{{party.id}}_amount" mltag="txt_contract_amount">Amount</label>
-                        <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" />
+                        <input type="number" name="{{party.id}}_amount" formControlName="amount" id="{{party.id}}_amount" />
                     </div>
                 </section>
 
