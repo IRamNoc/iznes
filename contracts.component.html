@@ -1,45 +1,52 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_contracts">Contracts</h1>
+    <h1 mltag="txt_contracts"><i class="fa fa-th-list"></i>Contracts</h1>
 </div>
 
-<clr-tabs>
-    <clr-tab>
-        <button clrTabLink clrTabLinkId="link1"><i class="fa fa-contracts"></i>
-            <span mltag="txt_contracts">Contracts</span></button>
+
+<clr-tabs *ngIf="tabsControl.length">
+    <clr-tab *ngFor="let tabdata of tabsControl; let tabid = index">
+        <button clrTabLink id="testlink{{id}}" [innerHTML]="tabdata.title"></button>
         <clr-tab-content *clrIfActive>
             <section>
+                <ng-container *ngIf="tabid === 0">
+                    <ng-container
+                            *ngTemplateOutlet="contractsListTab"
+                    ></ng-container>
+                </ng-container>
+                <ng-container *ngIf="tabid >= 1">
+                    <ng-container
+                            *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tabdata.formControl, 'tabid': tabid, 'contractFields': contractFields, 'contract': tabdata.contract, 'template': tabdata.template}"
+                    ></ng-container>
+                </ng-container>
             </section>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
 
-
 <!-- User Data Table. -->
-<ng-template #staticUserListTab>
+<ng-template #contractsListTab>
     <div class="panel-body">
 
-        <clr-datagrid #usersDataGrid>
-            <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
-            <clr-dg-column mltag="txt_username">Username</clr-dg-column>
-            <clr-dg-column mltag="txt_email">Email</clr-dg-column>
-            <clr-dg-column mltag="txt_account">Account</clr-dg-column>
+        <clr-datagrid #contractsDataGrid>
+            <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
+            <clr-dg-column mltag="txt_contract_name">Contract Name</clr-dg-column>
+            <clr-dg-column mltag="txt_creator">Creator</clr-dg-column>
+            <clr-dg-column mltag="txt_expiry">Expiry</clr-dg-column>
             <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
-            <clr-dg-row *clrDgItems="let user of usersList; let i = index">
+            <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
-                        <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn">
-                            <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                        <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn">
-                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                        <button id="edit-{{contract.hash}}" (click)="handleView(i)" class="btn">
+                            <i class="fa fa-search"></i> <span mltag="txt_view">View</span></button>
                     </div>
                 </clr-dg-cell>
-                <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
-                <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
-                <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
+                <clr-dg-cell><span id="username-{{contract.index}}">{{contract.name}}</span></clr-dg-cell>
+                <clr-dg-cell>{{contract.fromaddr}}</clr-dg-cell>
+                <clr-dg-cell>{{contract.expiry}}</clr-dg-cell>
                 <clr-dg-cell>
-                    <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
-                    <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="disabled">Disabled</span>
+                    <span *ngIf="contract.complete == true" class="label label-success" mltag="txt_enabled">Complete</span>
+                    <span *ngIf="contract.complete != true" class="label label-warning" mltag="disabled">Incomplete</span>
                 </clr-dg-cell>
             </clr-dg-row>
 
@@ -48,5 +55,42 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
+    </div>
+</ng-template>
+
+<ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-contract="contract" let-template="template" let-transaction="transaction">
+    <div class="user-tab-panel-body panel-body">
+
+        <!-- Contract view -->
+        <div *ngIf="template === 'contractDetails'">
+            <div class="contractDetails-tab-panel-body panel-body">
+                <form>
+                    <div class="form-horizontal">
+                        <div class="form-group tx-view-header">
+                            <div class="col-sm-3">&nbsp;</div>
+                            <label class="col-sm-4">
+                                <span class="ml" mltag="txt_contractdetails">Contract Details</span>
+                            </label>
+                        </div>
+
+                        <ng-container *ngFor="let contractField of contractFields">
+                            {{contractField}}
+                            <div class="form-group" *ngIf="contract[contractField]">
+                                <label class="col-sm-3 control-label">
+                                    <span class="ml" mltag="txt_">{{contractField}}</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" readonly="" value="{{contract[contractField]}}">
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-group tx-view-header">
+            <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>
+        </div>
     </div>
 </ng-template>
