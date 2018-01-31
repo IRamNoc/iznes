@@ -2,7 +2,6 @@ package com.setl.WebSocketAPITests.Account.Deletion;
 
 import SETLAPIHelpers.Account;
 import SETLAPIHelpers.WebSocketAPI.LoginHelper;
-import com.setl.WebSocketAPITests.Account.Creation.createAccountAcceptanceTest;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
@@ -12,12 +11,11 @@ import io.setl.wsclient.socketsrv.SocketServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+
 
 import java.util.concurrent.*;
 
