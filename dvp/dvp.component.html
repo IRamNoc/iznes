@@ -34,13 +34,17 @@
                     </div>
                 </section>
 
-                <hr />
-
                 <section class="form-block contract-party" *ngFor="let party of parties; let idx = index;">
                     <span class="party-title">{{party.title}}</span>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="contract_asset" mltag="txt_contract_asset">Asset</label>
+                        <label class="control-label" for="{{party.id}}_asset" mltag="txt_contract_asset">Asset</label>
+                        <ng-select id="{{party.id}}_asset"
+                            [items]="allInstrumentList"
+                            [allowClear]="false"
+                            placeholder="Select Issuer"
+                            [formControl]="createContractForm.controls[party.id].controls['asset']">
+                        </ng-select>
                     </div>
                     
                     <div class="form-group col-sm-6">
@@ -54,13 +58,11 @@
                     
                     <div class="form-group col-sm-6">
                         <label class="control-label" for="{{party.id}}_amount" mltag="txt_contract_amount">Amount</label>
-                        <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" placeholder="amount" />
+                        <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" />
                     </div>
                 </section>
 
-                <section class="form-block">
-                    <button type="submit" class="btn btn-primary" mltag="txt_requestasset">Create Contract</button>
-                </section>
+                <button type="submit" class="btn btn-primary" mltag="txt_createcontract">Create Contract</button>
             </form>
         </clr-tab-content>
     </clr-tab>

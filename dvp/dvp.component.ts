@@ -16,19 +16,20 @@ import {
 
 @Component({
     selector: 'setl-contracts-dvp',
-    templateUrl: 'dvp.component.html'
+    templateUrl: 'dvp.component.html',
+    styleUrls: ['dvp.component.css']
 })
 export class ContractsDvpComponent implements OnInit {
 
     createContractForm: FormGroup;
     parties: any[] = [];
 
-    allInstrumentList: Array<any>;
+    allInstrumentList: any[];
     connectedWalletId: number;
-    subscriptionsArray: Array<Subscription> = [];
-    addressList: any;
+    subscriptionsArray: Subscription[] = [];
+    addressList: any[];
     toRelationshipSelectItems: Array<any>;
-    walletDirectoryList = {};
+    walletDirectoryList: {} = {};
 
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;

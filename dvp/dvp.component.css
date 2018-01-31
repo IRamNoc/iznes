@@ -1,0 +1,19 @@
+:host form .form-group input {
+    margin-bottom: 0;
+    margin-top: 0;
+    width: 360px;
+}
+
+.contract-party {
+    border-top: 1px dotted #CCC;
+    padding-top: 20px;
+}
+
+.contract-party .party-title {
+    background: rgb(45, 113, 180);
+    border-radius: 2px;
+    color: #FFF;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    padding: 0 7px;
+}
