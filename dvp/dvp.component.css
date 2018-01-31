@@ -4,6 +4,8 @@
     width: 360px;
 }
 
+:host form .form-group input[type=checkbox] { width: auto; }
+
 .contract-party {
     border-top: 1px dotted #CCC;
     padding-top: 20px;

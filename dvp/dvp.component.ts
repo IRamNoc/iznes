@@ -15,8 +15,9 @@ import {
     MyWalletsService
 } from '@setl/core-req-services';
 
-import {ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '../models';
-import {PartyService, PayListItemService} from '../services';
+import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
+import {DVPContractService} from './dvp.service';
+import {ContractService} from '@setl/core-contracts/services';
 
 @Component({
     selector: 'setl-contracts-dvp',
@@ -26,7 +27,7 @@ import {PartyService, PayListItemService} from '../services';
 export class ContractsDvpComponent implements OnInit {
 
     createContractForm: FormGroup;
-    parties: any[] = [];
+    parties: [DvpParty, DvpParty];
 
     allInstrumentList: any[];
     connectedWalletId: number;
@@ -53,8 +54,8 @@ export class ContractsDvpComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private walletNodeRequestService: WalletNodeRequestService,
         private myWalletService: MyWalletsService,
-        private partyService: PartyService,
-        private payListItemService: PayListItemService) {
+        private dvpService: DVPContractService,
+        private contractService: ContractService) {
 
     }
         
@@ -135,15 +136,14 @@ export class ContractsDvpComponent implements OnInit {
      * UI
      */
     private initParties(): void {
-        this.parties.push({
-            id: "partyA",
+        this.parties = [{
+            id: partyA,
             title: "Party A"
-        });
-        
-        this.parties.push({
-            id: "partyB",
-            title: "Party B"
-        });
+        }, {
+            id: partyB,
+            title: "Party B",
+            toggleAssetReturn: true
+        }];
     }
 
     private initCreateContractForm(): void {
@@ -159,7 +159,7 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     private addPartiesToForm(): void {
-        this.parties.forEach((party: any) => {
+        this.parties.forEach((party: DvpParty) => {
             this.createContractForm.addControl(party.id, this.generatePartyFormGroup());
         });
     }
@@ -169,7 +169,13 @@ export class ContractsDvpComponent implements OnInit {
             "asset": new FormControl('', Validators.required),
             "address": new FormControl('', Validators.required),
             "amount": new FormControl('', Validators.required),
+            "return_asset": new FormControl(false, Validators.required)
         });
+    }
+
+    isReturnAssetEnabled(party): boolean {
+        return (party.toggleAssetReturn && this.createContractForm.value[party.id].return_asset) ||
+            !party.toggleAssetReturn;
     }
 
 
@@ -177,45 +183,9 @@ export class ContractsDvpComponent implements OnInit {
      * Create Contract
      */
     createContract(): void {
-        console.log(this.createContractForm.value);
-
         const values = this.createContractForm.value;
-        const model: ContractModel = new ContractModel();
 
-        model.issuingaddress = values.creator;
-
-        // model.parties[0].payList[0].
-    }
-
-    private addPartiesToContract(model: ContractModel): void {
-        /**
-         * NOTE: At this point the component becomes tightly coupled to a 2 party contract.
-         *      this is because we need to set party A in the paylist and party B in the
-         *      receive list.
-         */
-        if(!model.parties) model.parties = [];
-
-        const partyModel = new PartyModel();
-
-        // configure Party A as the payee
-        const partyAId = this.parties[0].id;
-        partyModel.partyIdentifier = partyAId;
-        partyModel.signature = this.createContractForm.value[partyAId].address;
-        partyModel.mustSign = false;
-
-        // configure paylist
-        const payListItem = new PayListItemModel();
-        const splitAsset = this.createContractForm.value[partyAId].asset.split('|');
-        payListItem.address = this.createContractForm.value[partyAId].address;
-        payListItem.namespace = splitAsset[0];
-        payListItem.assetId = splitAsset[1];
-        payListItem.quantity = this.createContractForm.value[partyAId].amount;
-        payListItem.issuance = true;
-
-        partyModel.payList.push(payListItem);
-
-        // add party
-        model.parties.push(partyModel);
-    }
+        this.dvpService.create(this.parties, values);
+    }    
 
 }

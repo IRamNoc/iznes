@@ -10,6 +10,7 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import {ContractService} from "@setl/core-contracts/services/contract.service";
+import {DVPContractService} from "@setl/core-contracts/dvp/dvp.service";
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import {ContractService} from "@setl/core-contracts/services/contract.service";
         ContractsDvpComponent
     ],
     providers: [
-        ContractService
+        ContractService,
+        DVPContractService
     ]
 })
 
