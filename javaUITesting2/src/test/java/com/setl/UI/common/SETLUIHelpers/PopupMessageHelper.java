@@ -36,22 +36,6 @@ public class PopupMessageHelper extends LoginAndNavigationHelper {
             closePopup();
     }
 
-    public static void verifyChainNotSelectedPopUp() throws InterruptedException {
-
-        for (int second = 0; ; second++) {
-            //do not fail on non appearance - just return
-            if (second >= 10) return;
-            try {
-                if (driver.findElement(By.cssSelector(SweetAlert)).getText().equalsIgnoreCase("Please Select a Chain First"))
-                    break;
-            } catch (Exception e) {
-                System.out.println();
-            }
-            Thread.sleep(100);
-        }
-        driver.findElement(By.cssSelector("button.confirm")).click();
-    }
-
     public static void verifyPermissionDeniedPopUp() throws InterruptedException {
 
         for (int second = 0; ; second++) {
@@ -66,37 +50,6 @@ public class PopupMessageHelper extends LoginAndNavigationHelper {
             Thread.sleep(100);
         }
         driver.findElement(By.cssSelector("button.confirm")).click();
-    }
-
-    public static void verifyWalletNotSelectedPopUp() throws InterruptedException {
-
-        for (int second = 0; ; second++) {
-        //do not fail on non appearance - just return
-            if (second >= 10) return;
-            try {
-                if (driver.findElement(By.cssSelector(SweetAlert)).getText().contains("Select a Wallet"))
-                    break;
-            } catch (Exception e) {
-                System.out.println();
-            }
-            Thread.sleep(100);
-        }
-        driver.findElement(By.cssSelector("button.confirm")).click();
-    }
-
-    public static void verifyDeletionPopUp() throws InterruptedException {
-
-        for (int second = 0; ; second++) {
-        //do not fail on non appearance - just return
-            if (second >= 10) return;
-            try {
-                if (driver.findElement(By.cssSelector(SweetAlert)).getText().contains("You will not be able to recover this entry! Deleting this entry may cause deletion of other related entries"))
-                    break;
-            } catch (Exception e) {
-                System.out.println();
-            }
-            Thread.sleep(100);
-        }
     }
 
     public static void closePopup() throws InterruptedException {
