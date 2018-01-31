@@ -193,7 +193,8 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         );
 
         /* Allow the persist middleware to save and recover state, then return the form group. */
-        return this._persistService.watchForm('useradmin/addGroup', group);
+        // TODO - waiting for a fix for persist.    
+	return group; // this._persistService.watchForm('useradmin/addGroup', group);
     }
 
     /**
