@@ -50,7 +50,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'My Orders',
@@ -235,7 +235,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'Reports',
@@ -296,7 +296,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
     ],
     cac: [
@@ -341,7 +341,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
 
     ],
@@ -416,7 +416,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'Manage Orders',

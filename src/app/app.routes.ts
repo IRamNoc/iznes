@@ -368,7 +368,7 @@ export const ROUTES: Routes = [
              * OFI
              */
             {
-                path: 'list-of-funds',
+                path: 'list-of-funds/:tabid',
                 component: OfiInvestorFundListComponent,
                 canActivate: [LoginGuardService]
             },
