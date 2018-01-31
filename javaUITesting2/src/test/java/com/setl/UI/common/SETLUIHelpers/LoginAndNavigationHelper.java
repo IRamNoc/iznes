@@ -48,12 +48,6 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToIncorrectUrl(String restOfURL, String headerText) throws InterruptedException {
-        driver.get(baseUrl + restOfURL);
-        assertEquals(headerText, driver.findElement(By.cssSelector("h1")).getText());
-        assertEquals("You don't have permission to access /.git/ on this server.", driver.findElement(By.cssSelector("p")).getText());
-    }
-
     public static void waitForLoginPageToLoad() throws InterruptedException {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
@@ -117,39 +111,6 @@ public class LoginAndNavigationHelper {
             {
                 fail("Login button not ready " + e.getMessage());
             }
-    }
-
-    public static boolean verifyHomePageIsDisplayed() throws InterruptedException {
-            try {
-                WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-                WebElement LogoffButton = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/a[3]"));
-                wait.until(visibilityOf(LogoffButton));
-            } catch (Exception e) {
-                return false;
-        }
-            return true;
-    }
-
-    public static boolean verifyUserNameIsDisplayedInTitle(String username) throws InterruptedException {
-
-        if (username.equals("Bank1_User1")) {
-            username = "FX_Bank1_User1";
-        }
-
-        if (username.equals("Bank2_User1")) {
-            username = "FX_Bank2_User1";
-        }
-
-        if (username.equals("Bank3_User1")) {
-            username = "FX_Bank3_User1";
-        }
-
-        try {
-            driver.getTitle().contains(username.toUpperCase());
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
     public static void selectNewTabToNavigateTo(String newTabId) throws InterruptedException {
@@ -233,11 +194,5 @@ public class LoginAndNavigationHelper {
       System.out.println(dropdownID + "not present");
       fail();
     }
-  }
-  public static void clickLink(String element){
-    driver.findElement(By.id(element)).click();
-  }
-  public static void headingIsPresent(String headingID){
-    driver.findElement(By.id(headingID)).isDisplayed();
   }
 }
