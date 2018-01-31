@@ -28,14 +28,6 @@ public class CaptureMemberCredentials {
         return String.valueOf(driver.findElement(cssSelector("p.form-control-static")).getText());
     }
 
-    public static String getAccountName() {
-        return String.valueOf(driver.findElement(xpath("//div[@id='myModal']/div/div/div[2]/div/div[3]/div/p")).getText());
-    }
-
-    public static String getMemberEmail() {
-        return String.valueOf(driver.findElement(xpath("//div[@id='myModal']/div/div/div[2]/div/div[4]/div/p")).getText());
-    }
-
     public static String getNewMemberAdminUserName() throws InterruptedException {
         WebElement adminUserName = null;
         try {
@@ -57,16 +49,4 @@ public class CaptureMemberCredentials {
         }
         return String.valueOf(adminUserPassword.getAttribute("value"));
     }
-
-    public static String getNewMemberAdminUsername() throws InterruptedException {
-        WebElement adminUsername = null;
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            adminUsername = wait.until(visibilityOfElementLocated(By.cssSelector("input.auth-token.form-control-static")));
-        } catch (Exception e) {
-            System.out.println("Admin User Password not present " + e.getMessage());
-        }
-        return String.valueOf(adminUsername.getAttribute("value"));
-    }
-
 }
