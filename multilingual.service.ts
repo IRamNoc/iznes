@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 
-import {Translations} from '../../translations';
+import {Translations} from './translations';
 
 /* Service Class. */
 @Injectable()
