@@ -24,6 +24,8 @@ export interface AppConfig {
     menuSpec: MenuSpec;
     reportingNodeUrl: string;
     messagesMenu: Array<MessagesMenuItem>;
+    logoUrl: 'assets/images/logo-iznes.png';
+    logoID: 'logo-iznes';
 }
 
 export interface MessagesMenuItem {
