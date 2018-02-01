@@ -151,7 +151,7 @@ export class ContractsDvpComponent implements OnInit {
 
         this.createContractForm = new FormGroup({
             "creator": new FormControl('', Validators.required),
-            "expireDate": new FormControl(currentDate.format('YYYY-MM-DD'), Validators.required),
+            "expireDate": new FormControl(currentDate.add(1 ,'days').format('YYYY-MM-DD'), Validators.required),
             "expireTime": new FormControl(currentDate.format('HH:mm'), Validators.required)
         });
 
@@ -185,7 +185,7 @@ export class ContractsDvpComponent implements OnInit {
     createContract(): void {
         const values = this.createContractForm.value;
 
-        this.dvpService.create(this.parties, values);
+        this.dvpService.create(this.parties, values, this.connectedWalletId);
     }    
 
 }
