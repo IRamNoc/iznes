@@ -34,13 +34,15 @@ export class DVPContractService {
 
         const contractData = JSON.parse(this.contractService.toJSON(model));
 
-        console.log('contractdata: ', JSON.stringify(contractData));
+        this.submitContract(walletId, values.creator[0].id, contractData.contractdata);
+    }
 
+    private submitContract(walletId: number, address: string, contractData: any): void {
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId: walletId,
-            address: values.creator[0].id,
+            address: address,
             function: 'dvp_uk',
-            contractData: contractData.contractdata
+            contractData: contractData
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -49,7 +51,7 @@ export class DVPContractService {
             asyncTaskPipe,
             {},
             function (data) {
-                console.log('create contract:', data);
+                console.log('created contract:', data);
             },
             function (data) {
                 console.log('failed to create contract', data);

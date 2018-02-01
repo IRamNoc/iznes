@@ -6,12 +6,15 @@
 
 :host form .form-group input[type=checkbox] { width: auto; }
 
-.contract-party {
+:host various-address-select { margin-bottom: -10px; }
+:host .form-block { margin-bottom: 1.5em; }
+
+:host .contract-party {
     border-top: 1px dotted #CCC;
     padding-top: 20px;
 }
 
-.contract-party .party-title {
+:host .contract-party .party-title {
     background: rgb(45, 113, 180);
     border-radius: 2px;
     color: #FFF;
