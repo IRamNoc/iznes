@@ -197,14 +197,24 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #146 : Awaiting code completion")
+    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateThousandsWithSpaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
     @Test
-    @Ignore("TG #146 : Awaiting code completion")
+    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
     }
 
     public static void assertFalseIdDisplayed(String element, String value){
