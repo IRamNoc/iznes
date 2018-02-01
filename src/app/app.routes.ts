@@ -357,7 +357,7 @@ export const ROUTES: Routes = [
                      * OFI corporate actions.
                      */
                     {
-                        path: 'coupon-payment',
+                        path: 'coupon-payment/:tabid',
                         component: CouponPaymentComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -373,7 +373,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'manage-orders',
+                path: 'manage-orders/:tabid',
                 component: ManageOrdersComponent,
                 canActivate: [LoginGuardService]
             },
@@ -382,7 +382,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
                 children: [
                     {
-                        path: 'my-orders',
+                        path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
                         component: MyOrdersComponent,
                     }

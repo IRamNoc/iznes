@@ -57,7 +57,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders'
+            router_link: '/order-book/my-orders/0'
         },
         {
             label: 'Reports',
@@ -160,7 +160,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_manageorders',
             icon_class: 'fa fa-pencil',
             element_id: 'menu-manage-orders',
-            router_link: '/manage-orders'
+            router_link: '/manage-orders/0'
         },
         {
             label: 'Reports',
@@ -423,14 +423,14 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_manageorders',
             icon_class: 'fa fa-pencil',
             element_id: 'menu-manage-orders',
-            router_link: '/manage-orders'
+            router_link: '/manage-orders/0'
         },
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders'
+            router_link: '/order-book/my-orders/0'
         },
         {
             label: 'Reports',
@@ -497,7 +497,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 }
             ]
         },
@@ -702,7 +702,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 },
                 {
                     label: 'Dividend demo',
@@ -922,7 +922,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 }
             ]
         },
