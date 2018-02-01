@@ -42,3 +42,18 @@ export interface RefreshTokenRequestBody extends MemberNodeMessageBody {
     token: string;
 }
 
+export interface ForgotPasswordRequestBody extends MemberNodeMessageBody {
+    username: string;
+    lang: string;
+}
+
+export interface ValidTokenRequestBody extends MemberNodeMessageBody {
+    resetToken: string;
+}
+
+export interface SetNewPasswordFromTokenRequestBody extends MemberNodeMessageBody {
+    resetToken: string;
+    newPassword: string;
+    lang: string;
+}
+
