@@ -1,15 +1,23 @@
 <div class="login-container">
     <div>
         <div class="logo-wrap">
-            <img id="logo-image" src="assets/images/Setl_Logo_Clean.png"/>
+            <img id="{{appConfig.logoID}}" src="{{appConfig.logoUrl}}"/>
         </div>
 
+        <div *ngIf="changedPassword" class="changedPasswordSuccess mt-2">
+            <h3>Success!</h3>
+            <br>
+            <i class="fa fa-check fa-5x text-success" aria-hidden="true"></i>
+            <br><br>
+            <b>Your password has been changed.</b>
+            <br><br>
+        </div>
 
         <div class="login-inner-wrapper">
-            <span class="login-subheading" mltag="txt_opencsd">OpenCSD</span>
-            <p class="login-subpara" mltag="txt_pleaseenteryourusernameandpasswordtologintosetlopencsd">Please enter your
-                username and password to log into SETL OpenCSD</p>
-
+            <span class="login-subheading">Log in to IZNES</span>
+            <br>
+            <p class="login-subpara">Please enter your email and password<br>to log in to the IZNES platform:</p>
+            <br>
             <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)"
                   [class.error]="!loginForm.valid && loginForm.touched">
 
@@ -22,7 +30,7 @@
                 <div class="form-group">
                     <input id="password-field" name="password" type="password" class="form-control" placeholder="Password"
                            formControlName="password"
-                           [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+                            [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
                            mltag="txt_password">
                 </div>
 
@@ -59,11 +67,95 @@
 
             </form>
 
+            <p class="mt-1">
+                <span class="ml"><a id="forgotten-password-link" [ngStyle]="{'cursor':'pointer'}" (click)="showFPModal()">Forgot your password? Click here</a></span>
+            </p>
+
         </div>
-        <p class="m-t">
+        <p>
             <small>
                 <span class="ml" mltag="txt_setlopencsdisaprivateenvironmentsubjecttoauthorisedaccessonly">SETL OpenCSD is a private environment subject to authorised access only.</span>
             </small>
         </p>
     </div>
 </div>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showForgottenPasswordModal" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="(!emailSent || isTokenExpired) && !changePassword">Forgotten password ?</h3>
+    <h3 class="modal-title" *ngIf="emailSent && !changePassword">Email sent</h3>
+    <h3 class="modal-title" *ngIf="changePassword">Change your password</h3>
+    <div class="modal-body text-center" *ngIf="!emailSent && !changePassword">
+        <div *ngIf="isTokenExpired; else notExpired" class="text-center">
+            <span class="text-danger">This link as expired!</span>
+            <p><i class="fa fa-exclamation fa-5x text-danger" aria-hidden="true"></i></p>
+            <p>Please retype your email address to change your password.</p>
+        </div>
+        <ng-template #notExpired>
+            <p>Please enter your email address.</p>
+            <i class="fa fa-envelope-o fa-5x text-muted" aria-hidden="true"></i>
+        </ng-template>
+        <form [formGroup]="forgottenPasswordForm" novalidate (ngSubmit)="sendEmail(forgottenPasswordForm.value)">
+            <section class="form-block">
+                <div class="form-group text-center">
+                    <input id="fp-email-field" type="text" class="form-control" formControlName="email" placeholder="Email address">
+                    <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                    <div *ngIf="!forgottenPasswordForm.controls.email.valid && forgottenPasswordForm.controls.email.touched" class="text-danger">Email not valid!</div>
+                </div>
+                <div class="text-center">
+                    <small>If you click Send, an email will be sent to this address.</small>
+                </div>
+                <div class="text-center mt-1">
+                    <button id="fp-cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeFPModal()">
+                        <span mltag="txt_cancel">Cancel</span>
+                    </button>
+                    <button id="fp-submit-sendemail-button" type="submit" class="btn btn-success" [disabled]="!forgottenPasswordForm.valid">
+                        <span mltag="txt_sendtoform">Send</span>
+                    </button>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-body text-center" *ngIf="emailSent && !changePassword">
+        <p>An email has been sent to the email address:<br><b class="text-success">{{emailUser}}</b></p>
+        <br>
+        <i class="fa fa-paper-plane-o fa-5x" aria-hidden="true"></i>
+        <br><br>
+        This pop-up will automatically close in {{countdown}} seconds.
+    </div>
+    <div class="modal-body text-center" *ngIf="changePassword">
+        <p>Please type a password<br>(you can use an old password if you wish)</p>
+        <br>
+        <i class="fa fa-key fa-5x text-success" aria-hidden="true"></i>
+        <br><br>
+        <form [formGroup]="changePasswordForm" novalidate (ngSubmit)="saveNewPassword(changePasswordForm.value)">
+            <section class="form-block">
+                <div class="form-group">
+                    <div>
+                        <input id="fp-password-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="password" size="45" placeholder="New password">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                    </div>
+                    <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="alert alert-danger" mltag="txt_passwordrequired">Password is required</div>
+                    <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                </div>
+                <div class="form-group text-center">
+                    <div>
+                        <input id="fp-passwordconfirm-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="passwordConfirm" placeholder="Password confirmation">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                    </div>
+                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.touched" class="alert alert-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
+                    <div *ngIf="!changePasswordForm.controls.passwordConfirm.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                    <div *ngIf="changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.pristine" class="alert alert-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                </div>
+                <div class="text-center mt-1">
+                    <button id="fp-newpassword-cancel-button" class="btn btn-info" type="button" (click)="closeFPModal()">
+                        <span mltag="txt_cancel">Cancel</span>
+                    </button>
+                    <button id="fp-newpassword-submit-button" type="submit" class="btn btn-success" [disabled]="!changePasswordForm.valid">
+                        <span mltag="txt_sendtoform">Send</span>
+                    </button>
+                </div>
+            </section>
+        </form>
+    </div>
+</clr-modal>
