@@ -8,13 +8,19 @@
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
                 <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i> Refresh</button>
-                <button id="messagesMarkAsRead" (click)="checkedMarkAsRead()"><i class="fa fa-eye"></i> Mark as Read
+                <button *ngIf="currentBoxName == 'Inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
+                    <i class="fa fa-eye"></i> Mark as Read
                 </button>
-                <button id="messagesDelete" (click)="checkedDeleted()"><i class="fa fa-trash-o"></i> Delete</button>
+                <button *ngIf="currentBoxName == 'Inbox'" id="messagesDelete" (click)="checkedDeleted()">
+                    <i class="fa fa-trash-o"></i> Delete
+                </button>
+                <button *ngIf="currentBoxName == 'Deleted Messages'" id="messagesPutBack" (click)="checkedPutBack()">
+                    <i class="fa fa-inbox"></i> Restore Message
+                </button>
             </div>
             <div class="message_list_menu_pages">
                 <pagination-controls
-                    (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
+                    (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
             </div>
         </div>
 

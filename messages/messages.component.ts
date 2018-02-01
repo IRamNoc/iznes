@@ -274,6 +274,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.refreshMailbox();
     }
 
+    checkedPutBack() {
+        console.log('put back');
+    }
+
 
     /**
      * Checks Single Message
