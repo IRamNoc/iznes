@@ -169,7 +169,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     'selectedTxList': [], // groups to show as selected.
                     'allocatedTxList': [], // all groups assigned to the user.
                     'filteredWalletsByAccount': [], // filtered wallets by account.
-                    'oldChainAccess': {},
+                    'oldChainAccess': [],
                     'active': false
                 }
             ];
@@ -1044,19 +1044,18 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             'filteredWalletsByAccount': [], // filtered wallets by account.
             'oldWalletAccess': {},
             'oldGroupWalletAccess': {},
-            'oldChainAccess': {},
+            'oldChainAccess': [],
             'active': false // this.editFormControls
         });
 
         /* Refence the new tab. */
-        const thisTab = this.tabsControl[this.tabsControl.length - 1];
         const newTabId = this.tabsControl.length - 1;
 
         /* Now let's prefill the user's meta data. */
-        thisTab.formControl.controls['username'].patchValue(user.userName);
-        thisTab.formControl.controls['email'].patchValue(user.emailAddress);
-        thisTab.formControl.controls['accountType'].patchValue(accountType);
-        thisTab.formControl.controls['userType'].patchValue(userType);
+        this.tabsControl[newTabId].formControl.controls['username'].patchValue(user.userName);
+        this.tabsControl[newTabId].formControl.controls['email'].patchValue(user.emailAddress);
+        this.tabsControl[newTabId].formControl.controls['accountType'].patchValue(accountType);
+        this.tabsControl[newTabId].formControl.controls['userType'].patchValue(userType);
 
         /* Get Admin permissions. */
         this.userAdminService.requestUserPermissions({
@@ -1067,8 +1066,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             const userAdminPermissions = this.usersPermissionsList['usersAdminPermissions'][user.userID] || {};
 
             /* Next we can set it to the old and current groups. */
-            thisTab['oldAdminGroups'] = userAdminPermissions; // used to diff later.
-            thisTab.formControl.controls['adminGroups'].patchValue(this.groupsToArray(userAdminPermissions));
+            this.tabsControl[newTabId].formControl.controls['adminGroups'].patchValue(this.groupsToArray(userAdminPermissions));
+            this.tabsControl[newTabId]['oldAdminGroups'] = userAdminPermissions;
         }).catch((error) => {
             /* handle the error message */
             console.log("Editing user, admin permissions error: ", error);
@@ -1084,8 +1083,8 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             const userTxPermissions = this.usersPermissionsList['usersTxPermissions'][user.userID] || {};
 
             /* Next we can set it to the old and allocatedTxList, which will be used on chain change. */
-            thisTab['oldTxGroups'] = userTxPermissions; // used to diff later.
-            thisTab['allocatedTxList'] = this.groupsToArray(userTxPermissions);
+            this.tabsControl[newTabId]['oldTxGroups'] = userTxPermissions; // used to diff later.
+            this.tabsControl[newTabId]['allocatedTxList'] = this.groupsToArray(userTxPermissions);
 
             /* Update the chain ID. */
             this.setFormChainId(newTabId, 0);
@@ -1100,7 +1099,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }).then((response) => {
             /* So now, we have access to the data in redux. */
             const userWalletPermissions = this.usersWalletPermissions[user.userID] || {};
-            thisTab['oldWalletAccess'] = {};
+            this.tabsControl[newTabId]['oldWalletAccess'] = {};
             console.log('Got user wallet permission: ', userWalletPermissions);
 
             /* So first let's set the account ID on the tab... */
@@ -1114,7 +1113,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Set the old wallet access, this'll be used to diff later. */
             userWalletPermissions.map((wallet) => {
                 /* Build the structure in the old  */
-                thisTab['oldWalletAccess'][wallet.walletID] = wallet.permission;
+                this.tabsControl[newTabId]['oldWalletAccess'][wallet.walletID] = wallet.permission;
             });
 
             /* ...then filter and preset the read wallets...  */
@@ -1127,7 +1126,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                         text: wallet.walletName
                     }
                 });
-            thisTab.formControl.controls['walletsRead'].patchValue(readAccessWallets);
+            this.tabsControl[newTabId].formControl.controls['walletsRead'].patchValue(readAccessWallets);
 
             /* ...and lastly the same for the full access wallets. */
             let fullAccessWallets = userWalletPermissions
@@ -1139,7 +1138,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                         text: wallet.walletName
                     }
                 });
-            thisTab.formControl.controls['walletsFull'].patchValue(fullAccessWallets);
+            this.tabsControl[newTabId].formControl.controls['walletsFull'].patchValue(fullAccessWallets);
 
         }).catch((error) => {
             /* Handle the error message */
@@ -1153,7 +1152,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         }).then((response) => {
             const userGroupWalletPermission = _.get(response, '[1].Data', []);
 
-            thisTab['oldGroupWalletAccess'] = {};
+            this.tabsControl[newTabId]['oldGroupWalletAccess'] = {};
             console.log('Got user group wallet permission: ', userGroupWalletPermission);
 
             /* If this user has no wallet permissions... bail. */
@@ -1164,7 +1163,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             /* Set the old wallet access, this'll be used to diff later. */
             userGroupWalletPermission.map((group) => {
                 /* Build the structure in the old  */
-                thisTab['oldGroupWalletAccess'][group.accountID] = group.permission;
+                this.tabsControl[newTabId]['oldGroupWalletAccess'][group.accountID] = group.permission;
             });
 
             /* ...then filter and preset the read group wallets...  */
@@ -1176,7 +1175,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     // there should be only one match.
                     return matchedGroups[0];
                 });
-            thisTab.formControl.controls['groupWalletsRead'].patchValue(readAccessGroupWallets);
+            this.tabsControl[newTabId].formControl.controls['groupWalletsRead'].patchValue(readAccessGroupWallets);
 
             /* ...and lastly the same for the full access group wallets. */
             const fullAccessGroupWallets = userGroupWalletPermission
@@ -1187,7 +1186,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                     // there should be only one match.
                     return matchedGroups[0];
                 });
-            thisTab.formControl.controls['groupWalletsFull'].patchValue(fullAccessGroupWallets);
+            this.tabsControl[newTabId].formControl.controls['groupWalletsFull'].patchValue(fullAccessGroupWallets);
         }).catch((error) => {
             /* Handle the error message */
             console.log('Editing user, group wallet permission error: ', error);
@@ -1215,8 +1214,9 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 .filter(chain => !!chain.id);
 
             /* Set the past access and the form control value. */
-            thisTab['oldChainAccess'] = userChainAccess;
-            thisTab.formControl.controls['chainAccess'].patchValue(userChainAccess);
+            this.tabsControl[newTabId]['oldChainAccess'] = userChainAccess;
+            this.tabsControl[newTabId].formControl.controls['chainAccess'].patchValue(userChainAccess);
+            console.log('update value', this.tabsControl);
         }).catch((error) => {
             /* Handle the error message */
             console.log("Failed to fetch user's chain access: ", error);
@@ -1288,7 +1288,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.setTabActive(0);
+        this.router.navigateByUrl('/user-administration/users/0');
 
         /* Return */
         return;
