@@ -3,10 +3,15 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 import {NgRedux, select} from "@angular-redux/store";
 import {Unsubscribe} from "redux";
 import {FormControl, FormGroup} from "@angular/forms";
-import {_} from "lodash";
 /* Services. */
 import {WalletNodeRequestService} from "@setl/core-req-services";
-import {BlockchainContractService, ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
+import {
+    BlockchainContractService,
+    ConfirmationService,
+    immutableHelper,
+    NumberConverterService,
+    commonHelper
+} from "@setl/utils";
 /* Ofi Corp Actions request service. */
 import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 /* Ofi Corp Actions request service. */
@@ -16,6 +21,9 @@ import {AlertsService} from "@setl/jaspero-ng2-alerts";
 /* Ofi Store stuff. */
 import {getOfiManageOrderList, getOfiUserIssuedAssets, ofiSetRequestedManageOrder} from "../../ofi-store";
 import * as math from 'mathjs';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import _ from 'lodash';
+import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */
 interface SelectedItem {
@@ -84,15 +92,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _confirmationService: ConfirmationService,
+                private route: ActivatedRoute,
+                private router: Router,
                 private _blockchainContractService: BlockchainContractService,
                 public _numberConverterService: NumberConverterService) {
-        /* Default tabs. */
-        this.tabsControl = this.defaultTabControl();
     }
 
     ngOnInit() {
         /* State. */
         let state = this.ngRedux.getState();
+
+        this.setInitialTabs();
 
         /* Ok, let's check that we have the orders list, if not... */
         if (!getOfiManageOrderList(state).length) {
@@ -108,6 +118,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Detect changes. */
             this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'tabid', 0);
+            this.setTabActive(tabId);
         });
     }
 
@@ -210,6 +225,30 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    "title": {
+                        "icon": "fa fa-th-list",
+                        "text": "List"
+                    },
+                    "orderId": -1,
+                    "searchForm": this.newSearchFormGroup(),
+                    "active": true
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
+    }
+
     /**
      * Handle Preset Filter
      * @param filter
@@ -271,26 +310,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     public handleViewOrder(orderId: number): void {
         /* Find the order. */
         let
-            i = 0,
             foundActive = false,
             order = this.getOrderById(orderId);
         if (!order) return;
 
         /* Check if the tab is already open. */
-        this.tabsControl.map((tab) => {
+        this.tabsControl.map((tab, i) => {
             if (tab.orderId == orderId) {
                 /* Set flag... */
                 foundActive = true;
 
                 /* ...set tab active... */
-                this.setTabActive(i);
+                this.router.navigateByUrl(`/manage-orders/${i}`);
 
                 /* ...and gotta call this again. */
                 this.changeDetectorRef.detectChanges();
             }
 
-            /* Inc. */
-            i++;
         })
 
         /* If we found an active tab, no need to do anymore... */
@@ -311,14 +347,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         );
 
-        /* Detect the changes. */
-        this.changeDetectorRef.detectChanges();
-
         /* ...then set it active. */
-        this.setTabActive(this.tabsControl.length - 1);
-
-        /* Detect the changes. */
-        this.changeDetectorRef.detectChanges();
+        this.router.navigateByUrl(`/manage-orders/${this.tabsControl.length - 1}`);
 
         /* Return. */
         return;
@@ -812,31 +842,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
 
     /**
-     * Default Tab Controls.
-     * ---------------------
-     * Returns a default tab control object.
-     *
-     * @return {array} - tabsControl object.
-     */
-    private defaultTabControl(): Array<any> {
-        /* Define the array. */
-        let tabsArray = [
-            {
-                "title": {
-                    "icon": "fa fa-th-list",
-                    "text": "List"
-                },
-                "orderId": -1,
-                "searchForm": this.newSearchFormGroup(),
-                "active": true
-            }
-        ];
-
-        /* Return. */
-        return tabsArray;
-    }
-
-    /**
      * Close Tab
      * ---------
      * Removes a tab from the tabs control array, in effect, closing it.
@@ -858,7 +863,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.setTabActive(0);
+        this.router.navigateByUrl('/manage-orders/0');
 
         /* Return */
         return;
@@ -875,19 +880,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public setTabActive(index: number = 0) {
-        /* Lets loop over all current tabs and switch them to not active. */
-        this.tabsControl.map((i) => {
-            i.active = false;
+        this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
+            return item.set('active', thisIndex === Number(index));
         });
-
-        /* Detect the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Set the list active. */
-        this.tabsControl[index].active = true;
-
-        /* Yes, we have to call this again to get it to work, trust me... */
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -967,6 +963,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         for (var key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
+
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
     }
 
 }

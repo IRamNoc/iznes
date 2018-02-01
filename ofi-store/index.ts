@@ -35,7 +35,8 @@ import {OfiOrdersReducer, OfiOrdersState} from "./ofi-orders";
 export {
     SET_FUND_ACCESS_MY,
     clearRequestedFundAccessMy,
-    setRequestedFundAccessMy
+    setRequestedFundAccessMy,
+    ofiListOfFundsComponentActions
 } from './ofi-fund-invest';
 
 
@@ -50,6 +51,7 @@ export {
     /* Coupons */
     getOfiCouponList,
     OFI_SET_COUPON_LIST,
+    ofiCouponActions,
 
     /* User issued assets */
     getOfiUserIssuedAssets,
@@ -63,6 +65,7 @@ export {
     /* Manage orders */
     getOfiManageOrderList,
     OFI_SET_MANAGE_ORDER_LIST,
+    ofiManageOrderActions,
 
     /* Home orders */
     getOfiHomeOrderList,
@@ -85,6 +88,7 @@ export {
     OFI_SET_MY_ORDER_LIST,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
+    ofiMyOrderActions,
 
     // Collective report
     setRequestedCollectiveArchive,

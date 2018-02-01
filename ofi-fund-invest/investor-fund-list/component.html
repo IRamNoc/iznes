@@ -5,7 +5,7 @@
 <div class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="link{{id}}">
+            <button clrTabLink id="link{{id}}" [routerLink]="['/list-of-funds', id]">
                 <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
             </button>
 
@@ -15,11 +15,11 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'view'">

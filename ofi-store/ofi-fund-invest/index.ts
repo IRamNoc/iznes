@@ -20,10 +20,21 @@ export {
     clearRequestedFundAccessMy
 };
 
+import {
+    OfiListOfFundsComponentState,
+    OfiListOfFundComponentReducer,
+    ofiListOfFundsComponentActions
+} from './ofi-list-of-funds-component';
+
+export {ofiListOfFundsComponentActions};
+
+
 export interface OfiFundInvestState {
     ofiInvestorFundList: OfiFundAccessMyState;
+    ofiListOfFundsComponent: OfiListOfFundsComponentState;
 }
 
 export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers<OfiFundInvestState>({
     ofiInvestorFundList: OfiFundAccessMyReducer,
+    ofiListOfFundsComponent: OfiListOfFundComponentReducer
 });

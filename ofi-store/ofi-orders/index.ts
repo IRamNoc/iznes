@@ -12,7 +12,8 @@ export {
     OFI_SET_MANAGE_ORDER_LIST,
     getOfiManageOrderList,
     ofiClearRequestedManageOrder,
-    ofiSetRequestedManageOrder
+    ofiSetRequestedManageOrder,
+    ofiManageOrderActions
 } from './manage-orders';
 
 
@@ -20,7 +21,8 @@ export {
     OFI_SET_MY_ORDER_LIST,
     getOfiMyOrderList,
     ofiClearRequestedMyOrder,
-    ofiSetRequestedMyOrder
+    ofiSetRequestedMyOrder,
+    ofiMyOrderActions
 } from './my-orders';
 
 
