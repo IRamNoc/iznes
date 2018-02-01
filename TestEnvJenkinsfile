@@ -37,7 +37,6 @@ node {
                 node {
                     sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats --exclude \'node_modules\' /var/phpapps/backend/ /var/ofi_backups/backend &&
-                            ssh root@139.162.213.130 rm -rf /var/ofi_backups/backend/node_modules/ &&
                             scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
                 }
             }
