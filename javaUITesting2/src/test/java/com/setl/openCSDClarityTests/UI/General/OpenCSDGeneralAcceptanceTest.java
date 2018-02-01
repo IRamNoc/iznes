@@ -83,7 +83,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     //("TG138")
-    public void shouldDisplayNavMenuOnLogin() throws IOException, InterruptedException {
+    public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
     }
@@ -110,7 +110,7 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
-        assertButtonIsNotPresent("workflow-message-btn");
+        assertButtonIsNotPresent("messagesworkflow");
     }
 
     @Test
@@ -123,61 +123,98 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #143 : Awaiting code completion")
+    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
     }
+
+    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
+        driver.findElement(By.id(enteringField)).clear();
+        driver.findElement(By.id(enteringField)).sendKeys(value);
+        driver.findElement(By.id("fundName_0")).sendKeys("");
+        String unitsField = driver.findElement(By.id(enteringField)).getAttribute("value");
+        assertTrue(unitsField.equals(expected));
+    }
+
     @Test
-    @Ignore("TG #143 : Awaiting code completion")
+    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.255555", "1.25556");
     }
 
     @Test
-    @Ignore("TG #144 : Awaiting code completion")
+    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.2", "1.2000");
     }
 
     @Test
-    @Ignore("TG #144 : Awaiting code completion")
+    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.25555", "1.2556");
     }
 
     @Test
-    @Ignore("TG #145 : Awaiting code completion")
+    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.2", "1.20");
     }
 
     @Test
-    @Ignore("TG #145 : Awaiting code completion")
+    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.255", "1.25");
     }
 
     @Test
-    @Ignore("TG #146 : Awaiting code completion")
+    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateThousandsWithSpaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
     @Test
-    @Ignore("TG #146 : Awaiting code completion")
+    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("btnAddNewFund");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
     }
 
     public static void assertFalseIdDisplayed(String element, String value){
@@ -202,6 +239,14 @@ public class OpenCSDGeneralAcceptanceTest {
             alert.accept();
         } catch (Exception e) {
             fail("Alert not present");
+        }
+    }
+
+    public void clickID(String id) {
+        try {
+            driver.findElement(By.id(id)).click();
+        } catch (Exception e) {
+            fail(id + "not present");
         }
     }
 
