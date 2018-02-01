@@ -1,31 +1,26 @@
 /* Angular/vendor imports. */
 import {Injectable} from '@angular/core';
-
-/* Package Imports. */
-import {Translations} from './translations';
-
 import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import {select} from '@angular-redux/store';
+import {TranslationService} from '@setl/utils';
 
 /* Service Class. */
 @Injectable()
 export class MultilingualService {
+    language;
+    subscriptionsArray: Array<Subscription> = [];
+    Translations: any;
 
     @select(['user', 'siteSettings', 'language']) getLanguage;
 
-    language;
-    subscriptionsArray: Array<Subscription> = [];
-
     /* Constructor. */
+
     constructor() {
+        const translationService = TranslationService.Instance;
+        this.Translations = translationService.getTranslationList();
+
         /* Stub. */
-        this.subscriptionsArray.push(
-            this.getLanguage.subscribe(
-                (language) => {
-                    this.language = language;
-                }
-            )
-        );
+        this.subscriptionsArray.push(this.getLanguage.subscribe((language) => this.language = language));
     }
 
     /**
@@ -40,14 +35,14 @@ export class MultilingualService {
     public getTranslation(mlcode: string): string | boolean {
         /* Look for translation... */
         if (
-            Translations &&
-            Translations['core'] &&
-            Translations['core'][this.language] &&
-            Translations['core'][this.language][mlcode] &&
-            Translations['core'][this.language][mlcode] !== ''
+            this.Translations &&
+            this.Translations['core'] &&
+            this.Translations['core'][this.language] &&
+            this.Translations['core'][this.language][mlcode] &&
+            this.Translations['core'][this.language][mlcode] !== ''
         ) {
             /* ...and return it, if we have it. */
-            return Translations['core'][this.language][mlcode];
+            return this.Translations['core'][this.language][mlcode];
         }
 
         /* ...otherwise return origin string. */
@@ -75,15 +70,15 @@ export class MultilingualService {
             /* Look for translation... */
             // console.log('multilingual service to found', this.language, mlcode, Translations['core'][this.language][mlcode]);
             if (
-                Translations &&
-                Translations['core'] &&
-                Translations['core'][this.language] &&
-                Translations['core'][this.language][mlcode] &&
-                Translations['core'][this.language][mlcode] !== ''
+                this.Translations &&
+                this.Translations['core'] &&
+                this.Translations['core'][this.language] &&
+                this.Translations['core'][this.language][mlcode] &&
+                this.Translations['core'][this.language][mlcode] !== ''
             ) {
                 /* ...and return it, if we have it. */
-                // console.log('multilingual service found', this.language, mlcode, Translations['core'][this.language][mlcode]);
-                return Translations['core'][this.language][mlcode];
+                // console.log('multilingual service found', this.language, mlcode, this.Translations['core'][this.language][mlcode]);
+                return this.Translations['core'][this.language][mlcode];
             } else {
                 console.log('*******************************************');
                 console.log('TranslationByString NOT FOUND : ');
