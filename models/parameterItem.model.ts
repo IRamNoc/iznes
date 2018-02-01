@@ -1,9 +1,9 @@
 export class ParameterItemModel {
-    public key: string = null;
-    public address: string = null;
-    public value: string = null;
-    public calculatedIndex: string = null;
-    public contractSpecific: number = null;
-    public calculationOnly: number = null;
-    public signature: string = null;
+    public key: string = '';
+    public address: string = '';
+    public value: string = '';
+    public calculatedIndex: string = '';
+    public contractSpecific: number = 0;
+    public calculationOnly: number = 0;
+    public signature: string = '';
 }
