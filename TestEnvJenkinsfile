@@ -1,7 +1,7 @@
-
 node {
 
 }
+
 def notifySlack(String buildStatus = 'STARTED') {
     // Build status of null means success.
     buildStatus = buildStatus ?: 'SUCCESS'
@@ -18,7 +18,7 @@ def notifySlack(String buildStatus = 'STARTED') {
         color = '#FF0000'
     }
     def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    slackSend(channel : "opencsdfrontenddev", color: color, message: msg)
+    slackSend(channel: "opencsdfrontenddev", color: color, message: msg)
 }
 
 node {
@@ -26,19 +26,18 @@ node {
         try {
             notifySlack()
 
-            stage('Deploy Frontend to Test Environment'){
-                node{
+            stage('Deploy Frontend to Test Environment') {
+                node {
                     sh '''
-              ssh root@139.162.213.130 mv /var/www_setltestnet/ /var/ofi_backups/www_setltestnet_$(date +%F-%H:%M) &&
-              ssh root@139.162.213.130 mkdir /var/www_setltestnet && 
-              scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
+                            ssh root@139.162.213.130 rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
+                            scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
                 }
             }
             stage('Deploy Backend to Test Environment') {
                 node {
                     sh '''
-                            ssh root@139.162.213.130 mv /var/phpapps/backend /var/ofi_backups/backend_$(date +%F-%H:%M) &&
-                            ssh root@139.162.213.130 mkdir /var/phpapps/backend && 
+                            ssh root@139.162.213.130 rsync -avzhm --stats --exclude \'node_modules\' /var/phpapps/backend/ /var/ofi_backups/backend &&
+                            ssh root@139.162.213.130 rm -rf /var/ofi_backups/backend/node_modules/ &&
                             scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
                 }
             }
@@ -46,27 +45,21 @@ node {
             stage('Deploy French Fund Daemon to Test Environment') {
                 node {
                     sh '''
-                            ssh root@139.162.213.130 mv /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh root@139.162.213.130 mkdir /var/phpapps/frenchfunddaemon && 
+                            ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
                             scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
-            stage ('Update Dependencies'){
+            stage('Update Dependencies') {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
             }
 
-            stage ('Restart Node Server'){
+            stage('Restart Node Server') {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
             }
 
-            stage('Check node server is running'){
+            stage('Check node server is running') {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
-            }
-
-            stage ('Delete old backups'){
-                sh 'ssh -t root@139.162.213.130 \'cd /var/ofi_backups ; bash && find ./* -type d -atime +4 -exec rm -rf {} + \''
-
             }
 
         } catch (e) {
