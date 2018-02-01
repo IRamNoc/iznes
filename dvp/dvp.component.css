@@ -22,3 +22,33 @@
     margin-bottom: 10px;
     padding: 0 7px;
 }
+
+/* side by side display */
+:host .contract-party-container {
+    background: #f9fbff;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    min-height: 445px;
+    margin-bottom: 1em;
+    position: relative;
+}
+:host .contract-party-container .contract-party {
+    border-top: none;
+    padding: 1em 3em 0;
+}
+:host .contract-party-container .fa {
+    font-size: 3em;
+    left: 50%;
+    margin-top: 0.75em;
+    position: absolute;
+    top: 360px;
+}
+:host /deep/ .contract-party-container .ui-select-container.dropdown { background: #FFF; }
+
+@media (min-width: 768px) {
+    :host .contract-party-container .fa {
+        margin-left: -1.5em;
+        margin-top: -0.75em;
+        top: 50%;
+    }
+}
