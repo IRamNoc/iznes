@@ -1,15 +1,11 @@
-import {Component, HostListener, AfterViewInit} from '@angular/core';
+import {AfterViewInit, Component, HostListener} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {WalletnodeChannelService, InitialisationService} from '@setl/core-req-services';
+import {InitialisationService, MyUserService, WalletnodeChannelService} from '@setl/core-req-services';
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
-import {NgRedux, select} from '@angular-redux/store';
-import {MyUserService} from '@setl/core-req-services';
+import {NgRedux} from '@angular-redux/store';
 
-import {
-    setMenuShown,
-    setLanguage
-} from '@setl/core-store';
+import {setLanguage, setMenuShown} from '@setl/core-store';
 
 @Component({
     selector: 'app-root',
@@ -81,25 +77,6 @@ export class AppComponent implements AfterViewInit {
         this.checkUserLanguage();
     }
 
-    private checkUserLanguage(): void {
-        const validLanguages = [
-            "en",
-            "fr"
-        ];
-
-        if((navigator) && navigator.language) {
-            const lang = navigator.language.split("-")[0];
-
-            if(validLanguages.indexOf(lang) != -1) {
-                if(lang == "en") {
-                    this.ngRedux.dispatch(setLanguage("eng"));
-                } else if(lang == "fr") {
-                    this.ngRedux.dispatch(setLanguage("fra"));
-                }
-            }
-        }
-    }
-
     /**
      * Handle Menu hiding on Smaller Screens less than 1400
      * @param event
@@ -115,6 +92,25 @@ export class AppComponent implements AfterViewInit {
 
     ngAfterViewInit() {
 
+    }
+
+    private checkUserLanguage(): void {
+        const validLanguages = [
+            'en',
+            'fr'
+        ];
+
+        if ((navigator) && navigator.language) {
+            const lang = navigator.language.split('-')[0];
+
+            if (validLanguages.indexOf(lang) !== -1) {
+                if (lang === 'en') {
+                    this.ngRedux.dispatch(setLanguage('en-Latn'));
+                } else if (lang === 'fr') {
+                    this.ngRedux.dispatch(setLanguage('fr-Latn'));
+                }
+            }
+        }
     }
 }
 
