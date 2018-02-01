@@ -25,10 +25,6 @@ export class DVPContractService {
         model.issuingaddress = values.creator[0].id;
         model.protocol = 'dvp';
         model.startdate = moment().add(1, 'hour').unix();
-        model.encumbrance = [
-            true,
-            "use_encumbrance"
-        ]
 
         const isExchangeContract = parties[1].toggleAssetReturn &&
             values[parties[1].id].return_asset;
