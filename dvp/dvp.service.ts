@@ -79,8 +79,7 @@ export class DVPContractService {
         party.payList.push(this.createPayListItem(
             values[partyA].address,
             values[partyA].asset[0].id,
-            // values[partyA].amount
-            1
+            values[partyA].amount
         ));
 
         if(isExchange) {
