@@ -156,6 +156,12 @@ export class ContractsDvpComponent implements OnInit {
         });
 
         this.addPartiesToForm();
+        this.toggleReturnAsset(false);
+
+        this.createContractForm.controls[partyB].get('return_asset').valueChanges
+            .subscribe((value: boolean) => {
+                this.toggleReturnAsset(value);
+            });
     }
 
     private addPartiesToForm(): void {
@@ -173,9 +179,26 @@ export class ContractsDvpComponent implements OnInit {
         });
     }
 
-    isReturnAssetEnabled(party): boolean {
+    isReturnAssetEnabled(party: DvpParty): boolean {
         return (party.toggleAssetReturn && this.createContractForm.value[party.id].return_asset) ||
             !party.toggleAssetReturn;
+    }
+
+    private toggleReturnAsset(value: boolean): void {
+        if(value) {
+            this.createContractForm.controls[partyB].get('asset').setValidators(Validators.required);
+            this.createContractForm.controls[partyB].get('amount').setValidators(Validators.required);
+        } else {
+            this.createContractForm.controls[partyB].get('asset').clearValidators();
+            this.createContractForm.controls[partyB].get('amount').clearValidators();
+        }
+
+        this.createContractForm.controls[partyB].get('asset').updateValueAndValidity();
+        this.createContractForm.controls[partyB].get('amount').updateValueAndValidity();
+    }
+
+    isFormValid(): boolean {
+        return this.createContractForm.valid;
     }
 
 
@@ -183,9 +206,7 @@ export class ContractsDvpComponent implements OnInit {
      * Create Contract
      */
     createContract(): void {
-        const values = this.createContractForm.value;
-
-        this.dvpService.create(this.parties, values, this.connectedWalletId);
+        this.dvpService.create(this.parties, this.createContractForm.value, this.connectedWalletId);
     }    
 
 }

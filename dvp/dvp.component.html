@@ -47,7 +47,7 @@
                             </various-address-select>
                         </div>
 
-                        <div class="form-group col-sm-6" *ngIf="party.toggleAssetReturn">
+                        <div class="form-group col-sm-6 toggle-asset" *ngIf="party.toggleAssetReturn">
                             <label>
                                 <input type="checkbox" name="{{party.id}}_return_asset" id="{{party.id}}_return_asset" formControlName="return_asset"> Send Asset in Return?
                             </label>
@@ -75,7 +75,7 @@
                     <i class="fa fa-long-arrow-right" [hidden]="isReturnAssetEnabled(parties[1])"></i>
                 </div>
 
-                <button type="submit" class="btn btn-primary" mltag="txt_createcontract">Create Contract</button>
+                <button type="submit" class="btn btn-primary" mltag="txt_createcontract" [disabled]="!isFormValid()">Create Contract</button>
             </form>
         </clr-tab-content>
     </clr-tab>

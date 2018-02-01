@@ -28,13 +28,14 @@
     background: #f9fbff;
     border: 1px solid #DDD;
     border-radius: 3px;
-    min-height: 445px;
+    min-height: 440px;
     margin-bottom: 1em;
     position: relative;
 }
+:host .contract-party-container .toggle-asset { margin-bottom: 0; }
 :host .contract-party-container .contract-party {
     border-top: none;
-    padding: 1em 3em 0;
+    padding: 1em 1.5em 0;
 }
 :host .contract-party-container .fa {
     font-size: 3em;
