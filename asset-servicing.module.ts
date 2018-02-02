@@ -12,7 +12,7 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/utils';
 
 @NgModule({
