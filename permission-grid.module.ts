@@ -6,7 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 
 /* Components. */
 import {PermissionGridComponent} from './permission-grid/permission-grid.component';
