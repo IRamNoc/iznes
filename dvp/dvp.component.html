@@ -1,0 +1,92 @@
+<div class="header-breadcrumbs">
+    <h1 mltag="txt_contracts_dvp">DVP</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="link1">
+            <i class="fa fa-contracts"></i>
+            <span mltag="txt_contracts_create_dvp">DVP</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="createContractForm" (ngSubmit)="createContract()">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_creator" mltag="txt_contract_creator">Contract Creator Address</label>
+                        <ng-select id="contract_creator"
+                            [items]="addressList"
+                            [allowClear]="false"
+                            placeholder="Select Creator Address"
+                            [formControl]="createContractForm.controls['creator']"
+                        >
+                        </ng-select>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_expiry_date" mltag="txt_contract_expiry_date">Expiry Date</label>
+                        <input type="date" formControlName="expireDate" name="contract_expiry_date" id="contract_expiry_date" placeholder="DD-MM-YYYY" required />
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="contract_expiry_time" mltag="txt_contract_expiry_time">Expiry Time</label>
+                        <input type="time" formControlName="expireTime" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" required />
+                    </div>
+                </section>
+
+                <div class="contract-party-container row">
+                    <section formGroupName="{{party.id}}" class="form-block contract-party col-md-6" *ngFor="let party of parties; let idx = index;">
+                        <span class="party-title">{{party.title}}</span>
+
+                        <div class="form-group col-sm-6">
+                            <various-address-select [formControl]="createContractForm.controls[party.id].controls['address']"
+                                [relationshipArray]="toRelationshipSelectItems"
+                                [ownWalletAddressArray]="addressList"
+                                [class.error]="!createContractForm.controls[party.id].controls['address'].valid &&
+                                    createContractForm.controls[party.id].controls['address'].touched">
+                            </various-address-select>
+                        </div>
+
+                        <div class="form-group col-sm-6 toggle-asset" *ngIf="party.toggleAssetReturn">
+                            <label>
+                                <input type="checkbox" name="{{party.id}}_return_asset" id="{{party.id}}_return_asset" formControlName="return_asset"> Send Asset in Return?
+                            </label>
+                        </div>
+                        
+                        <div *ngIf="isReturnAssetEnabled(party)">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="{{party.id}}_asset" mltag="txt_contract_asset">Asset</label>
+                                <ng-select id="{{party.id}}_asset"
+                                    [items]="allInstrumentList"
+                                    [allowClear]="false"
+                                    placeholder="Select Issuer"
+                                    [formControl]="createContractForm.controls[party.id].controls['asset']">
+                                </ng-select>
+                            </div>                    
+                            
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="{{party.id}}_amount" mltag="txt_contract_amount">Amount</label>
+                                <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" formControlName="amount" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <i class="fa fa-exchange" [hidden]="!isReturnAssetEnabled(parties[1])"></i>
+                    <i class="fa fa-long-arrow-right" [hidden]="isReturnAssetEnabled(parties[1])"></i>
+                </div>
+
+                <button type="submit" class="btn btn-primary" mltag="txt_createdvpcontract">Create DVP Contract</button>
+
+                <div *ngIf="getError()" class="alert-items col-sm-5">
+                    <div class="alert alert-danger">
+                        <div class="alert-items">
+                            <div class="alert-item static">
+                                <span class="alert-text" mltag="getError().mltag">{{getError().text}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

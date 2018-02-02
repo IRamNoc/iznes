@@ -1,6 +1,6 @@
 export class ReceiveListItemModel {
-    public address: string = null;
-    public namespace: string = null;
-    public assetId: string = null;
-    public quantity: number = null;
+    public address: string = '';
+    public namespace: string = '';
+    public assetId: string = '';
+    public quantity: number = 0;
 }

@@ -1,0 +1,55 @@
+:host form .form-group input {
+    margin-bottom: 0;
+    margin-top: 0;
+    width: 360px;
+}
+
+:host form .form-group input[type=checkbox] { width: auto; }
+
+:host various-address-select { margin-bottom: -10px; }
+:host .form-block { margin-bottom: 1.5em; }
+
+:host .contract-party {
+    border-top: 1px dotted #CCC;
+    padding-top: 20px;
+}
+
+:host .contract-party .party-title {
+    background: rgb(45, 113, 180);
+    border-radius: 2px;
+    color: #FFF;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    padding: 0 7px;
+}
+
+/* side by side display */
+:host .contract-party-container {
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    min-height: 440px;
+    margin-bottom: 1em;
+    position: relative;
+}
+:host .contract-party-container .toggle-asset { margin-bottom: 0; }
+:host .contract-party-container .toggle-asset input { margin-right: 4px; }
+:host .contract-party-container .contract-party {
+    border-top: none;
+    padding: 1em 1.5em 0;
+}
+:host .contract-party-container .fa {
+    font-size: 3em;
+    left: 50%;
+    margin-top: 0.75em;
+    position: absolute;
+    top: 360px;
+}
+:host /deep/ .contract-party-container .ui-select-container.dropdown { background: #FFF; }
+
+@media (min-width: 768px) {
+    :host .contract-party-container .fa {
+        margin-left: -2em;
+        margin-top: -0.75em;
+        top: 50%;
+    }
+}

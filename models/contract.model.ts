@@ -5,31 +5,31 @@ import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.mo
 
 export class ContractModel {
     public updated: boolean = false;
-    public creation: number = null;
-    public hash: string = null;
-    public fromaddr: string = null;
-    public txtype: number = null;
-    public basechain: number = null;
-    public type_name: string = null;
-    public amount: number = null;
-    public toaddr: string = null;
-    public tochain: number = null;
-    public blockheight: number = null;
+    public creation: number = 0;
+    public hash: string = '';
+    public fromaddr: string = '';
+    public txtype: number = 0;
+    public basechain: number = 0;
+    public type_name: string = '';
+    public amount: number = 0;
+    public toaddr: string = '';
+    public tochain: number = 0;
+    public blockheight: number = 0;
     public contractdata = null;
     public authorisations: Array<AuthorisationModel> = new Array();
-    public parameters: Array<ParameterItemModel> = new Array();
-    public startdate: string = null;
-    public protocol: string = null;
-    public expiry: string = null;
+    public parameters: ParameterItemModel[] = [];
+    public startdate: number = 0;
+    public protocol: string = '';
+    public expiry: number = 0;
     public parties: Array<PartyModel> = new Array();
     public addencumbrances: Array<EncumbranceModel> = new Array();
-    public issuingaddress: string = null;
+    public issuingaddress: string = '';
     public events: Array<any> = new Array();
-    public metadata: object = null;
-    public poa: string = null;
+    public metadata: object = {};
+    public poa: string = '';
     // Additional Fields
-    public name: string = null;
-    public function: string = null;
+    public name: string = '';
+    public function: string = '';
     public complete: boolean = false;
 }
 

@@ -4,7 +4,7 @@ import { PartyService } from '@setl/core-contracts/services/party.service';
 import { PartyModel } from '@setl/core-contracts/models/party.model';
 import { AuthorisationService } from '@setl/core-contracts/services/authorisation.service';
 import { AuthorisationModel } from '@setl/core-contracts/models/authorisation.model';
-import { ParameterItemService } from '@setl/core-contracts/services/parameteritem.service';
+import { ParameterItemService } from '@setl/core-contracts/services/parameterItem.service';
 import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.model';
 import { EncumbranceService } from '@setl/core-contracts/services/encumbrance.service';
 import { EncumbranceModel } from '@setl/core-contracts/models/encumbrance.model';
@@ -118,7 +118,7 @@ export class ContractService {
             'addencumbrances',
         ];
 
-        let contractJsonObject = {
+        let contractJsonObject: any = {
             contractdata: {}
         };
 
@@ -133,11 +133,11 @@ export class ContractService {
             }
         }
 
-        for (let contractField in contract) {
-            if (contractDataFields.indexOf(contractField) === -1) {
-                contractJsonObject[contractField] = contract[contractField];
-            }
-        }
+        // for (let contractField in contract) {
+        //     if (contractDataFields.indexOf(contractField) === -1) {
+        //         contractJsonObject[contractField] = contract[contractField];
+        //     }
+        // }
         if (typeof contract.function !== 'undefined') {
             contractJsonObject.contractdata.__function = contract.function;
             delete contractJsonObject.contractdata.function;
@@ -157,7 +157,14 @@ export class ContractService {
     }
 
     public addParameter(contract: ContractModel, parameter: ParameterItemModel): void {
-        contract.parameters.push(parameter);
+        contract.parameters[parameter.key] = [
+            parameter.address,
+            parameter.value,
+            parameter.calculatedIndex,
+            parameter.contractSpecific,
+            parameter.calculationOnly,
+            parameter.signature
+        ];
     }
 
     public addEncumbrance(contract: ContractModel, encumbrance: EncumbranceModel): void {
@@ -168,13 +175,14 @@ export class ContractService {
         if (typeof subModels === 'undefined') {
             return;
         }
-        let jsonArray = [];
+        let jsonArray: any = [];
         _.each(subModels, (subModel) => {
             switch (subModel.constructor.name) {
                 case 'AuthorisationModel':
                     jsonArray.push(this.authorisationService.toJSON(subModel));
                     break;
                 case 'ParameterItemModel':
+                    jsonArray = {}
                     jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
                     break;
                 case 'PartyModel':

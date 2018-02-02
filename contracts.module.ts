@@ -2,23 +2,37 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {ContractsComponent} from '@setl/core-contracts/contracts.component';
+import {ContractsDvpComponent} from '@setl/core-contracts/dvp/dvp.component';
 import {ClarityModule} from 'clarity-angular';
+import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import {ContractService} from "@setl/core-contracts/services/contract.service";
+import {DVPContractService} from "@setl/core-contracts/dvp/dvp.service";
 
 @NgModule({
-    declarations: [
-        ContractsComponent
-    ],
-    exports: [
-        ContractsComponent
-    ],
     imports: [
         CommonModule,
-        BrowserModule,
-        ClarityModule
+        SelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ClarityModule.forRoot(),
+        SetlPipesModule,
+        SetlComponentsModule
+    ],
+    declarations: [
+        ContractsComponent,
+        ContractsDvpComponent
+    ],
+    exports: [
+        ContractsComponent,
+        ContractsDvpComponent
     ],
     providers: [
-        ContractService
+        ContractService,
+        DVPContractService
     ]
 })
 
