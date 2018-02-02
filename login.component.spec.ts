@@ -19,6 +19,7 @@ import {
     PermissionGroupServiceMock,
     RouterMock
 } from '@setl/core-test-util';
+import {APP_CONFIG} from '@setl/utils';
 import {
     MyUserService,
     MyWalletsService,
@@ -30,8 +31,16 @@ import {
 } from '@setl/core-req-services';
 import {MemberSocketService} from '@setl/websocket-service';
 import {Subject} from 'rxjs/Subject';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import _ from 'lodash';
+import {ClarityModule} from 'clarity-angular';
+import { Observable } from 'rxjs/Observable';
+
+const environment = {
+    logoID: '',
+    logoUrl: '',
+    platform: ''
+};
 
 describe('SetlLoginComComponent', () => {
     let component: SetlLoginComponent;
@@ -45,6 +54,7 @@ describe('SetlLoginComComponent', () => {
                 NgReduxTestingModule,
                 ToasterModule,
                 CoreTestUtilModule,
+                ClarityModule
             ],
             declarations: [SetlLoginComponent],
             providers: [
@@ -60,6 +70,11 @@ describe('SetlLoginComComponent', () => {
                 {provide: ToasterService, useClass: ToasterServiceMock},
                 {provide: AlertsService, useClass: AlertsServiceMock},
                 {provide: Router, useValue: RouterMock},
+                { provide: ActivatedRoute, useValue: { params: Observable.of({token: ''}) } },
+                {
+                    provide: APP_CONFIG,
+                    useValue: environment,
+                }
             ]
         })
             .compileComponents();
