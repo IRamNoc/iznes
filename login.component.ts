@@ -154,12 +154,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.isLogin = false;
 
-        this.sub = this._activatedRoute.params.subscribe(params => {
+        this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
             this.token = params['token'];
             if (typeof this.token !== 'undefined' && this.token !== '') {
                 this.verifyToken(this.token);
             }
-        });
+        }));
 
         // Reduce observable subscription
         this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
