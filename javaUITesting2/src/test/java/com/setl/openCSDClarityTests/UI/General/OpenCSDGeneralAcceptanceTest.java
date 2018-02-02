@@ -56,7 +56,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #135 : Awaiting code completion")
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -65,7 +64,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #136 : Awaiting code completion")
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -74,7 +72,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //("TG #137")
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         driver.navigate().refresh();
@@ -82,31 +79,28 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //("TG138")
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
     }
 
     @Test
-    @Ignore("TG #140 : Awaiting code completion")
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
         try {
-            navigateToPage("chain-admin/manage-member");
+            navigateToPageByID("menu-user-admin-users");
         }catch (Error e){
             System.out.println("Could not navigate back to manage member");
             fail();
         }
-        WebElement tab = driver.findElement(By.id("link0"));
+        WebElement tab = driver.findElement(By.id("user-tab-0"));
         assertTrue(elementHasClass(tab, "active"));
     }
 
     @Test
-    //@Ignore("TG #141 : Awaiting code completion")
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
@@ -114,7 +108,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #147 : Awaiting code completion")
     public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToPage("asset-manager-dashboard");
@@ -123,7 +116,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -133,16 +125,7 @@ public class OpenCSDGeneralAcceptanceTest {
         fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
     }
 
-    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
-        driver.findElement(By.id(enteringField)).clear();
-        driver.findElement(By.id(enteringField)).sendKeys(value);
-        driver.findElement(By.id("fundName_0")).sendKeys("");
-        String unitsField = driver.findElement(By.id(enteringField)).getAttribute("value");
-        assertTrue(unitsField.equals(expected));
-    }
-
     @Test
-    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -153,7 +136,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -164,7 +146,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -175,7 +156,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -186,7 +166,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -197,7 +176,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateThousandsWithSpaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -207,7 +185,6 @@ public class OpenCSDGeneralAcceptanceTest {
         fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
     @Test
-    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -215,6 +192,14 @@ public class OpenCSDGeneralAcceptanceTest {
         clickID("btnAddNewFund");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
+    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
+        driver.findElement(By.id(enteringField)).clear();
+        driver.findElement(By.id(enteringField)).sendKeys(value);
+        driver.findElement(By.id("fundName_0")).sendKeys("");
+        String unitsField = driver.findElement(By.id(enteringField)).getAttribute("value");
+        assertTrue(unitsField.equals(expected));
     }
 
     public static void assertFalseIdDisplayed(String element, String value){
