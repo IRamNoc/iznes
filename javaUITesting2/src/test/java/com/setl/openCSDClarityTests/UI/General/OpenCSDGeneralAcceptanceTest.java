@@ -56,7 +56,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #135 : Awaiting code completion")
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -65,7 +64,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #136 : Awaiting code completion")
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-account-module");
@@ -74,7 +72,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //("TG #137")
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         driver.navigate().refresh();
@@ -82,14 +79,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //("TG138")
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
     }
 
     @Test
-    //@Ignore("TG #140 : Awaiting code completion")
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
@@ -106,7 +101,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #141 : Awaiting code completion")
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToPage("messages");
@@ -114,7 +108,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #147 : Awaiting code completion")
     public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToPage("asset-manager-dashboard");
@@ -123,7 +116,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -152,7 +144,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -163,7 +154,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #144 : Awaiting code completion")
     public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -174,7 +164,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -185,7 +174,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #145 : Awaiting code completion")
     public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -196,7 +184,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateThousandsWithSpaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
@@ -206,7 +193,6 @@ public class OpenCSDGeneralAcceptanceTest {
         fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
     @Test
-    //@Ignore("TG #146 : Awaiting code completion")
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
