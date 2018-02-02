@@ -1,6 +1,6 @@
 /* Core imports. */
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit,
     ViewChild
 } from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -27,7 +27,7 @@ import {userAdminActions} from '@setl/core-store';
 })
 
 /* Class. */
-export class AdminUsersComponent implements AfterViewInit, OnDestroy {
+export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Users data grid */
     @ViewChild('usersDataGrid') usersDataGrid;
 
@@ -77,12 +77,56 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private _persistService: PersistService,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService) {
+
+    }
+
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['userAdmin', 'users', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    'title': {
+                        'icon': 'fa-search',
+                        'text': 'Search'
+                    },
+                    'userId': -1,
+                    'active': true
+                },
+                {
+                    'title': {
+                        'icon': 'fa-user',
+                        'text': 'Add User'
+                    },
+                    'userId': -1,
+                    'formControl': this.getNewUserFormGroup(),
+                    'selectedChain': 0,
+                    'filteredTxList': [], // filtered groups of this chainid.
+                    'selectedTxList': [], // groups to show as selected.
+                    'allocatedTxList': [], // all groups assigned to the user.
+                    'filteredWalletsByAccount': [], // filtered wallets by account.
+                    'oldChainAccess': {},
+                    'active': false
+                }
+            ];
+            return true;
+        }
+
+        /* Recover tabs, and then re-init persist. */
+        this.tabsControl = openedTabs;
+        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newUser', this.tabsControl[1].formControl);
+    }
+
+    ngOnInit() {
         /* Get Account Types. */
-        this.accountTypes = userAdminService.getAccountTypes();
+        this.accountTypes = this.userAdminService.getAccountTypes();
 
         /* Get User Types. */
-        this.userTypes = userAdminService.getUserTypes();
+        this.userTypes = this.userAdminService.getUserTypes();
 
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.userAdminService.getUserListSubject().subscribe((list) => {
@@ -137,49 +181,10 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         });
-
-
-    }
-
-    setInitialTabs() {
-
-        // Get opened tabs from redux store.
-        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['userAdmin', 'users', 'openedTabs']);
-
-        if (_.isEmpty(openedTabs)) {
-            /* Default tabs. */
-            this.tabsControl = [
-                {
-                    'title': {
-                        'icon': 'fa-search',
-                        'text': 'Search'
-                    },
-                    'userId': -1,
-                    'active': true
-                },
-                {
-                    'title': {
-                        'icon': 'fa-user',
-                        'text': 'Add User'
-                    },
-                    'userId': -1,
-                    'formControl': this.getNewUserFormGroup(),
-                    'selectedChain': 0,
-                    'filteredTxList': [], // filtered groups of this chainid.
-                    'selectedTxList': [], // groups to show as selected.
-                    'allocatedTxList': [], // all groups assigned to the user.
-                    'filteredWalletsByAccount': [], // filtered wallets by account.
-                    'oldChainAccess': [],
-                    'active': false
-                }
-            ];
-            return true;
-        }
-
-        this.tabsControl = openedTabs;
     }
 
     ngAfterViewInit(): void {
+
         this.subscriptions['chainList'] = this.chainListObservable.subscribe((chainList) => {
             /* Varibales. */
             let chainId;
@@ -1365,8 +1370,7 @@ export class AdminUsersComponent implements AfterViewInit, OnDestroy {
             }, this.passwordValidator);
 
         /* Return the form group and watch it using the persistService. */
-        // return this._persistService.watchForm('useradmin/newUser', group);
-        return group;
+        return this._persistService.watchForm('useradmin/newUser', group);
     }
 
     passwordValidator(g: FormGroup) {

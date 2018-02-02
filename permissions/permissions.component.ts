@@ -3,24 +3,19 @@ import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     OnDestroy
 } from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {FormsModule, FormGroup, FormControl, NgModel} from '@angular/forms';
-import {ToasterService, ToasterContainerComponent} from 'angular2-toaster';
+import {NgRedux} from '@angular-redux/store';
+import {FormControl, FormGroup} from '@angular/forms';
+import {ToasterService} from 'angular2-toaster';
 import {StringFilter} from "clarity-angular";
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {immutableHelper} from '@setl/utils';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ConfirmationService, immutableHelper} from '@setl/utils';
 import _ from 'lodash';
 import {permissionGroupActions} from '@setl/core-store';
-
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
-
 /* Use the permissions grid. */
-import {PermissionGridComponent} from '@setl/permission-grid';
-
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
 /* Persist service. */
 import {PersistService} from "@setl/core-persist";
 
@@ -169,7 +164,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                         "text": "Add New Group"
                     },
                     "groupId": -1,
-                    "formControl": this.newAddGroupFormgroup(), 
+                    "formControl": this.newAddGroupFormgroup(),
                     "active": false
                 }
             ];
@@ -177,6 +172,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         }
 
         this.tabsControl = openedTabs;
+        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newGroup', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -199,8 +195,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         );
 
         /* Allow the persist middleware to save and recover state, then return the form group. */
-        // TODO - waiting for a fix for persist.    
-	return group; // this._persistService.watchForm('useradmin/addGroup', group);
+        return this._persistService.watchForm('useradmin/addGroup', group);
     }
 
     /**
