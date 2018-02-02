@@ -32,6 +32,7 @@
     position: relative;
 }
 :host .contract-party-container .toggle-asset { margin-bottom: 0; }
+:host .contract-party-container .toggle-asset input { margin-right: 4px; }
 :host .contract-party-container .contract-party {
     border-top: none;
     padding: 1em 1.5em 0;
@@ -47,7 +48,7 @@
 
 @media (min-width: 768px) {
     :host .contract-party-container .fa {
-        margin-left: -1.5em;
+        margin-left: -2em;
         margin-top: -0.75em;
         top: 50%;
     }

@@ -76,6 +76,16 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" mltag="txt_createdvpcontract">Create DVP Contract</button>
+
+                <div *ngIf="getError()" class="alert-items col-sm-5">
+                    <div class="alert alert-danger">
+                        <div class="alert-items">
+                            <div class="alert-item static">
+                                <span class="alert-text" mltag="getError().mltag">{{getError().text}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </clr-tab-content>
     </clr-tab>

@@ -2,9 +2,10 @@ import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
 
-import {walletHelper} from '@setl/utils';
+import {walletHelper, mDateHelper} from '@setl/utils';
 import {
     setRequestedWalletAddresses,
     setRequestedWalletToRelationship
@@ -54,6 +55,7 @@ export class ContractsDvpComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private walletNodeRequestService: WalletNodeRequestService,
         private myWalletService: MyWalletsService,
+        private alertsService: AlertsService,
         private dvpService: DVPContractService,
         private contractService: ContractService) {
 
@@ -147,7 +149,7 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     private initCreateContractForm(): void {
-        const currentDate = moment();
+        const currentDate = moment(mDateHelper.getCurrentUnixTimestamp());
 
         this.createContractForm = new FormGroup({
             "creator": new FormControl('', Validators.required),
@@ -201,14 +203,92 @@ export class ContractsDvpComponent implements OnInit {
         return this.createContractForm.valid;
     }
 
+    getError(): any {
+        if(this.fieldHasError('creator')) {
+            return {
+                mltag: 'txt_contracterror_creator',
+                text: 'Creator Address is Required'
+            }
+        } else if(this.fieldHasError('expireDate')) {
+            return {
+                mltag: 'txt_contracterror_expiredate',
+                text: 'Expire Date is Required'
+            }
+        } else if(this.fieldHasError('expireTime')) {
+            return {
+                mltag: 'txt_contracterror_expiretime',
+                text: 'Expire Time is Required'
+            }
+        } else if(this.fieldHasError(partyA)) {
+            return {
+                mltag: 'txt_contracterror_partya',
+                text: 'Party A is invalid'
+            }
+        } else if(this.fieldHasError(partyB)) {
+            return {
+                mltag: 'txt_contracterror_partyb',
+                text: 'Party B is invalid'
+            }
+        } else {
+            return false;
+        }
+    }
+
+    fieldHasError(field: string): boolean {
+        return !this.createContractForm.controls[field].valid &&
+            this.createContractForm.controls[field].touched;
+    }
+
 
     /**
      * Create Contract
      */
     createContract(): void {
         if(!this.isFormValid()) return;
-        
-        this.dvpService.create(this.parties, this.createContractForm.value, this.connectedWalletId);
-    }    
+
+        this.dvpService.create(
+            this.parties,
+            this.createContractForm.value,
+            this.connectedWalletId,
+            (res) => this.showResponseModal(res),
+            (res) => this.showErrorModal(res)
+        );
+    }
+
+    showResponseModal(createContractResponse) {
+        const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
+
+        this.alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="left"><b>Creator Address:</b></td>
+                        <td>${createContractResponse.contractdata.issuingaddress}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Contract Expires:</b></td>
+                        <td>${expiryDate}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Tx hash:</b></td>
+                        <td>${createContractResponse.hash.substring(0, 10)}...</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        // this.ngRedux.dispatch(finishCreateContractNotification());   
+    }
+
+    showErrorModal(data): void {
+        this.alertsService.create('error',
+            `${data[1].status}`);
+    }
+
+    ngOnDestroy() {
+        for(const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+    }
 
 }

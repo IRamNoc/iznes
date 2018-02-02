@@ -3,11 +3,12 @@ import {NgRedux} from '@angular-redux/store';
 
 import {ContractService} from '@setl/core-contracts/services';
 import {WalletnodeTxService} from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, mDateHelper} from '@setl/utils';
 
 import {ContractModel, ParameterItemModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '@setl/core-contracts/models';
 import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
 import * as moment from 'moment';
+import { error } from 'selenium-webdriver';
 
 @Injectable()
 export class DVPContractService {
@@ -16,11 +17,16 @@ export class DVPContractService {
         private walletnodeTxService: WalletnodeTxService,
         private ngRedux: NgRedux<any>) {}
 
-    create(parties: [DvpParty, DvpParty], values: DvpForm, walletId: number): void {
+    create(parties: [DvpParty, DvpParty],
+        values: DvpForm,
+        walletId: number,
+        successCallback: (res) => void,
+        errorCallback: (res) => void): void {
+
         const model: ContractModel = new ContractModel();
 
         model.events = ['commit', 'expiry'];
-        model.expiry = moment(`${values.expireDate} ${values.expireTime}`).unix();
+        model.expiry = moment(`${values.expireDate}T${values.expireTime}:00`).unix();
         model.function = 'dvp_uk';
         model.issuingaddress = values.creator[0].id;
         model.protocol = 'dvp';
@@ -34,10 +40,15 @@ export class DVPContractService {
 
         const contractData = JSON.parse(this.contractService.toJSON(model));
 
-        this.submitContract(walletId, values.creator[0].id, contractData.contractdata);
+        this.submitContract(walletId, values.creator[0].id, contractData.contractdata, successCallback, errorCallback);
     }
 
-    private submitContract(walletId: number, address: string, contractData: any): void {
+    private submitContract(walletId: number,
+        address: string,
+        contractData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void): void {
+            
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId: walletId,
             address: address,
@@ -50,11 +61,13 @@ export class DVPContractService {
             [],
             asyncTaskPipe,
             {},
-            function (data) {
+            (data) => {
                 console.log('created contract:', data);
+                successCallback(data[1].data);
             },
-            function (data) {
+            (data) => {
                 console.log('failed to create contract', data);
+                errorCallback(data);
             }
         ));
     }
