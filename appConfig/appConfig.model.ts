@@ -24,6 +24,9 @@ export interface AppConfig {
     menuSpec: MenuSpec;
     reportingNodeUrl: string;
     messagesMenu: Array<MessagesMenuItem>;
+    logoUrl: string;
+    logoID: string;
+    platform: string;
 }
 
 export interface MessagesMenuItem {
