@@ -89,19 +89,19 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #140 : Awaiting code completion")
+    //@Ignore("TG #140 : Awaiting code completion")
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
         try {
-            navigateToPage("chain-admin/manage-member");
+            navigateToPageByID("menu-user-admin-users");
         }catch (Error e){
             System.out.println("Could not navigate back to manage member");
             fail();
         }
-        WebElement tab = driver.findElement(By.id("link0"));
+        WebElement tab = driver.findElement(By.id("user-tab-0"));
         assertTrue(elementHasClass(tab, "active"));
     }
 
