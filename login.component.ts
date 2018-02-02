@@ -1,5 +1,5 @@
 // Vendors
-import {Component, OnDestroy, Inject, OnInit} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, Component, OnDestroy, Inject, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {
     FormGroup,
@@ -35,7 +35,8 @@ import {Subscription} from 'rxjs/Subscription';
 @Component({
     selector: 'app-login',
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css']
+    styleUrls: ['login.component.css'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 /* Class. */
@@ -348,7 +349,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
             },
             (data) => {
                 // console.log('error: ', data);
-                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wront.<br>Please try again later!</span>');
+                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
                 this.closeFPModal();
             })
         );

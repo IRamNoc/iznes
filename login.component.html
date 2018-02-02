@@ -14,9 +14,9 @@
         </div>
 
         <div class="login-inner-wrapper">
-            <span class="login-subheading">Log in to IZNES</span>
+            <span class="login-subheading">Log in to {{appConfig.platform}}</span>
             <br>
-            <p class="login-subpara">Please enter your email and password<br>to log in to the IZNES platform:</p>
+            <p class="login-subpara">Please enter your email and password<br>to log in to the {{appConfig.platform}} platform:</p>
             <br>
             <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)"
                   [class.error]="!loginForm.valid && loginForm.touched">
@@ -68,7 +68,7 @@
             </form>
 
             <p class="mt-1">
-                <span class="ml"><a id="forgotten-password-link" [ngStyle]="{'cursor':'pointer'}" (click)="showFPModal()">Forgot your password? Click here</a></span>
+                <span class="ml"><a id="forgotten-password-link" [ngStyle]="{'cursor':'pointer'}" (click)="showFPModal()">Forgot your password?</a></span>
             </p>
 
         </div>
@@ -124,7 +124,7 @@
         This pop-up will automatically close in {{countdown}} seconds.
     </div>
     <div class="modal-body text-center" *ngIf="changePassword">
-        <p>Please type a password<br>(you can use an old password if you wish)</p>
+        <p>Please type a password</p>
         <br>
         <i class="fa fa-key fa-5x text-success" aria-hidden="true"></i>
         <br><br>

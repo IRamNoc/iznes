@@ -1,5 +1,5 @@
 /* Core imports. */
-import {NgModule} from "@angular/core";
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
@@ -37,7 +37,10 @@ import {LoginGuardService} from './login-guard.service';
     ],
     providers: [
         ToasterService
-    ]
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ],
 })
 
 export class SetlLoginModule {
