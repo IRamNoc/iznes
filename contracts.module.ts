@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {ContractsComponent} from '@setl/core-contracts/contracts.component';
 import {ContractsDvpComponent} from '@setl/core-contracts/dvp/dvp.component';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
 import {
     FormsModule,
