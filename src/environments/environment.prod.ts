@@ -41,5 +41,6 @@ export const environment = {
     ],
     logoUrl: 'assets/images/logo-iznes.png',
     logoID: 'logo-iznes',
+    platform: 'IZNES',
     menuSpec
 };
