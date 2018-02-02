@@ -99,8 +99,8 @@
             <section class="form-block">
                 <div class="form-group text-center">
                     <input id="fp-email-field" type="text" class="form-control" formControlName="email" placeholder="Email address">
-                    <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                    <div *ngIf="!forgottenPasswordForm.controls.email.valid && forgottenPasswordForm.controls.email.touched" class="text-danger">Email not valid!</div>
+                    <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                    <div *ngIf="!forgottenPasswordForm.controls.email.valid && !forgottenPasswordForm.controls.email.hasError('required')" class="text-danger">Email not valid!</div>
                 </div>
                 <div class="text-center">
                     <small>If you click Send, an email will be sent to this address.</small>
@@ -135,17 +135,17 @@
                         <input id="fp-password-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="password" size="45" placeholder="New password">
                         <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
-                    <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="alert alert-danger" mltag="txt_passwordrequired">Password is required</div>
-                    <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                    <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
+                    <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
                 </div>
                 <div class="form-group text-center">
                     <div>
                         <input id="fp-passwordconfirm-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="passwordConfirm" placeholder="Password confirmation">
                         <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
-                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.touched" class="alert alert-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
-                    <div *ngIf="!changePasswordForm.controls.passwordConfirm.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
-                    <div *ngIf="changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.pristine" class="alert alert-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
+                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                    <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
                 </div>
                 <div class="text-center mt-1">
                     <button id="fp-newpassword-cancel-button" class="btn btn-info" type="button" (click)="closeFPModal()">
