@@ -7,7 +7,10 @@ import {
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
     SaveNewPasswordRequestBody,
-    RefreshTokenRequestBody
+    RefreshTokenRequestBody,
+    ForgotPasswordRequestBody,
+    ValidTokenRequestBody,
+    SetNewPasswordFromTokenRequestBody
 } from './my-user.service.model';
 import {NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
@@ -43,6 +46,21 @@ interface UserDetailsData {
 interface NewPasswordData {
     oldPassword: string;
     newPassword: string;
+}
+
+interface ForgotPasswordData {
+    username: string;
+    lang: string;
+}
+
+interface ValidTokenData {
+    token: string;
+}
+
+interface SetNewPasswordFromTokenData {
+    token: string;
+    password: string;
+    lang: string;
 }
 
 const TIMEOUT = 14 * 60 * 1000;
@@ -149,6 +167,36 @@ export class MyUserService implements OnDestroy {
         const messageBody: RefreshTokenRequestBody = {
             RequestName: 'extendsession',
             token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    forgotPassword(data: ForgotPasswordData): any {
+        const messageBody: ForgotPasswordRequestBody = {
+            RequestName: 'forgotpassword',
+            username: data.username,
+            lang: data.lang
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    validToken(data: ValidTokenData): any {
+        const messageBody: ValidTokenRequestBody = {
+            RequestName: 'validresettoken',
+            resetToken: data.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    setNewPasswordFromToken(data: SetNewPasswordFromTokenData): any {
+        const messageBody: SetNewPasswordFromTokenRequestBody = {
+            RequestName: 'setnewpasswordfromtoken',
+            resetToken: data.token,
+            newPassword: data.password,
+            lang: data.lang
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
