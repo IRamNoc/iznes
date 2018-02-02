@@ -1,5 +1,5 @@
 // Vendors
-import {CUSTOM_ELEMENTS_SCHEMA, Component, OnDestroy, Inject, OnInit} from '@angular/core';
+import {Component, OnDestroy, Inject, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {
     FormGroup,
@@ -36,7 +36,6 @@ import {Subscription} from 'rxjs/Subscription';
     selector: 'app-login',
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.css'],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 /* Class. */

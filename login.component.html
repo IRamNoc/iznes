@@ -16,7 +16,7 @@
         <div class="login-inner-wrapper">
             <span class="login-subheading">Log in to {{appConfig.platform}}</span>
             <br>
-            <p class="login-subpara">Please enter your email and password<br>to log in to the {{appConfig.platform}} platform:</p>
+            <p class="login-subpara">Please enter your email and password<br>to log in to the {{appConfig.platform}} platform</p>
             <br>
             <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)"
                   [class.error]="!loginForm.valid && loginForm.touched">
