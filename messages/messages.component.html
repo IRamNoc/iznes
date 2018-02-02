@@ -87,12 +87,12 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
-                <!--<setl-message-connection-->
-                <!--[config]="currentMessage.action"-->
-                <!--[isActed]="currentMessage.isActed"-->
-                <!--[walletId]="currentWalletId"-->
-                <!--[mailId]="currentMessage.mailId">-->
-                <!--</setl-message-connection>-->
+                <setl-message-connection
+                        [config]="currentMessage.action"
+                        [isActed]="currentMessage.isActed"
+                        [walletId]="currentWalletId"
+                        [mailId]="currentMessage.mailId">
+                </setl-message-connection>
             </p>
         </div>
 
