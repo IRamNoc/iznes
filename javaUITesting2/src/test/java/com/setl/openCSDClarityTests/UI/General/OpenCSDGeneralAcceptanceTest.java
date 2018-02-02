@@ -142,7 +142,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #143 : Awaiting code completion")
     public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
