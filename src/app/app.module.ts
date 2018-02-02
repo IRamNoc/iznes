@@ -15,8 +15,7 @@ import {
     SetlComponentsModule,
     SetlDirectivesModule,
     SetlPipesModule,
-    SetlServicesModule,
-    TranslationService
+    SetlServicesModule
 } from '@setl/utils';
 
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -77,8 +76,6 @@ import {AppState} from './store/app.reducer';
  */
 import {environment} from '../environments/environment';
 
-import {Translations} from '../../translations';
-
 /**
  * Membersocket service factory
  */
@@ -92,10 +89,6 @@ export function memberSocketServiceFactory() {
 
     return memberSocketService;
 }
-
-// Retrieve translations from translations.ts file
-const translationService = TranslationService.Instance;
-translationService.setTranslationList(Translations);
 
 @NgModule({
     declarations: [
