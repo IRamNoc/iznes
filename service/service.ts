@@ -1,11 +1,9 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-
-/* Types. */
-interface Control {
-    name: string;
-}
+import _ from 'lodash';
+/* Request service. */
+import {PersistRequestService} from "@setl/core-req-services";
 
 /* Decorator. */
 @Injectable()
@@ -13,14 +11,13 @@ interface Control {
 /* Class. */
 export class PersistService {
     /* Private properties. */
-    private _controls: Array<Control> = [];
     private _forms: any = {};
     private _subscriptions: Array<any> = [];
+    private _wait: any;
 
     /* Constructor. */
-    constructor() {
+    constructor(private _persistRequestService: PersistRequestService) {
         /* Stub. */
-        this._forms = JSON.parse(localStorage.getItem('persist') || '{}');
     }
 
     /**
@@ -32,10 +29,29 @@ export class PersistService {
      * @param {FormGroup} group
      */
     public watchForm(name: string, group: FormGroup): FormGroup {
+        console.log(' |-- Persist');
         /* Check if we have a state for this form. */
-        if (this._forms[name]) {
-            group.setValue(this._forms[name]);
-        }
+        this._persistRequestService.loadFormState(name).then((data) => {
+            /* Get recovered data. */
+            const recoveredData = JSON.parse(_.get(data, '[1].Data[0].data', false));
+
+            /* If we couldn't then we'll just return. */
+            if (!recoveredData) {
+                console.warn(' | Failed to get recovery data: ', data);
+                return false;
+            }
+
+            /* If it was ok, we'll try set the value. */
+            try {
+                /* Call set value. */
+                group.setValue(recoveredData);
+            } catch (e) {
+                /* Else, we'll catch the error. */
+                console.warn('Failed to set Persisted form value: ', e);
+            }
+        }).catch((error) => {
+            console.warn(' | Failed to fetch this form\'s saved state.');
+        });
 
         /* Unsubscribe if already subscribed. */
         if (this._subscriptions[name]) {
@@ -47,8 +63,21 @@ export class PersistService {
             /* Set the form. */
             this._forms[name] = data;
 
-            /* Save to localStorage. */
-            localStorage.setItem('persist', JSON.stringify(this._forms));
+            /* Check if we're already waiting for another change, remove the old timeout. */
+            if (this._wait) {
+                clearTimeout(this._wait);
+            }
+
+            /* Set the timeout to then send an update up the socket, but wait N seconds in case the user types again.. */
+            const secondsToWait = .5; // Seconds.
+            this._wait = setTimeout(() => {
+                /* Send the request. */
+                this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
+                    /* Stub. */
+                }).catch((error) => {
+                    console.warn(' | Failed to save this form\'s state: ', error);
+                });
+            }, 1000 * secondsToWait);
         });
 
         /* Return. */

@@ -5,6 +5,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {ClarityModule} from '@clr/angular';
 /* Local imports. */
 import {PersistService} from './service/service';
+import {PersistRequestService} from "@setl/core-req-services";
 
 /* Persist Module. */
 @NgModule({
@@ -17,6 +18,7 @@ import {PersistService} from './service/service';
     ],
     providers: [
         /* Service. */
+        PersistRequestService,
         PersistService
     ]
 })
