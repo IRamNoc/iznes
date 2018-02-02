@@ -7,7 +7,7 @@
         <div *ngIf="changedPassword" class="changedPasswordSuccess mt-2">
             <h3>Success!</h3>
             <br>
-            <i class="fa fa-check fa-5x text-success" aria-hidden="true"></i>
+            <i class="fa fa-check fa-5x" [ngStyle]="{'color':'#62a420'}" aria-hidden="true"></i>
             <br><br>
             <b>Your password has been changed.</b>
             <br><br>
@@ -117,7 +117,7 @@
         </form>
     </div>
     <div class="modal-body text-center" *ngIf="emailSent && !changePassword">
-        <p>An email has been sent to the email address:<br><b class="text-success">{{emailUser}}</b></p>
+        <p>An email has been sent to the email address:<br><b [ngStyle]="{'color':'#62a420'}">{{emailUser}}</b></p>
         <br>
         <i class="fa fa-paper-plane-o fa-5x" aria-hidden="true"></i>
         <br><br>
@@ -126,7 +126,7 @@
     <div class="modal-body text-center" *ngIf="changePassword">
         <p>Please type a password</p>
         <br>
-        <i class="fa fa-key fa-5x text-success" aria-hidden="true"></i>
+        <i class="fa fa-key fa-5x" [ngStyle]="{'color':'#62a420'}" aria-hidden="true"></i>
         <br><br>
         <form [formGroup]="changePasswordForm" novalidate (ngSubmit)="saveNewPassword(changePasswordForm.value)">
             <section class="form-block">
