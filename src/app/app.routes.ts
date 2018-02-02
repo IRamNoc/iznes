@@ -90,7 +90,10 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'login', component: SetlLoginComponent,
-            }
+            },
+            {
+                path: 'reset/:token', component: SetlLoginComponent,
+            },
         ]
     },
 
