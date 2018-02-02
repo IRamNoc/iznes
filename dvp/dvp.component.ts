@@ -197,7 +197,7 @@ export class ContractsDvpComponent implements OnInit {
         this.createContractForm.controls[partyB].get('amount').updateValueAndValidity();
     }
 
-    isFormValid(): boolean {
+    private isFormValid(): boolean {
         return this.createContractForm.valid;
     }
 
@@ -206,6 +206,8 @@ export class ContractsDvpComponent implements OnInit {
      * Create Contract
      */
     createContract(): void {
+        if(!this.isFormValid()) return;
+        
         this.dvpService.create(this.parties, this.createContractForm.value, this.connectedWalletId);
     }    
 

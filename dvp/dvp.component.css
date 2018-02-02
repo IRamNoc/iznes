@@ -25,7 +25,6 @@
 
 /* side by side display */
 :host .contract-party-container {
-    background: #f9fbff;
     border: 1px solid #DDD;
     border-radius: 3px;
     min-height: 440px;
