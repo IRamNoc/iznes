@@ -276,8 +276,6 @@ export class ContractsDvpComponent implements OnInit {
                 </tbody>
             </table>
         `);
-
-        // this.ngRedux.dispatch(finishCreateContractNotification());   
     }
 
     showErrorModal(data): void {

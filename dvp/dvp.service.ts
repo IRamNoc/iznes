@@ -62,11 +62,9 @@ export class DVPContractService {
             asyncTaskPipe,
             {},
             (data) => {
-                console.log('created contract:', data);
                 successCallback(data[1].data);
             },
             (data) => {
-                console.log('failed to create contract', data);
                 errorCallback(data);
             }
         ));
