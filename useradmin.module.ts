@@ -5,7 +5,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 
 import {AdminUsersService} from '@setl/core-req-services';
 /* 3rd party modules. */
