@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import {Component, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
@@ -30,6 +30,11 @@ import {
     getOfiUserIssuedAssets
 } from '../../ofi-store';
 
+import {immutableHelper} from '@setl/utils';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import _ from 'lodash';
+import {ofiCouponActions} from '@ofi/ofi-main/ofi-store';
+
 /* Decorator. */
 @Component({
     styleUrls: ['./coupon-payment.component.css'],
@@ -38,27 +43,27 @@ import {
 })
 
 /* Class. */
-export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
+export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Select the coupon list. */
     @select(['ofi', 'ofiCorpActions', 'ofiCoupon', 'ofiCouponList'])
-    couponListOb:any;
+    couponListOb: any;
     public couponList: Array<any> = [];
 
     /* Select the user issued assets list. */
     @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList'])
-    userAssetListOb:any;
+    userAssetListOb: any;
     public userAssetList: Array<any> = [];
-    public filteredUserAssetList: Array<{id: string, text:string}> = [];
+    public filteredUserAssetList: Array<{ id: string, text: string }> = [];
 
     /* Wallet holdings by address. */
     @select(['wallet', 'myWalletHolding', 'holdingByAddress'])
-    walletHoldingsByAddressOb:any;
+    walletHoldingsByAddressOb: any;
     public walletHoldingsByAddress: Array<any> = [];
 
     /* Select the user's details. */
     @select(['user', 'myDetail'])
-    myDetailOb:any;
+    myDetailOb: any;
     public myDetails: any = {};
 
     /* Tabs Control array */
@@ -66,18 +71,21 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
-    private reduxUnsubscribe:Unsubscribe;
+    private reduxUnsubscribe: Unsubscribe;
 
-    constructor (
-        private ofiCorpActionService: OfiCorpActionService,
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private walletNodeRequestService: WalletNodeRequestService,
-        private _confirmationService: ConfirmationService,
-    ) {
-        /* Default tabs. */
-        this.tabsControl = this.defaultTabControl();
+    constructor(private ofiCorpActionService: OfiCorpActionService,
+                private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private _confirmationService: ConfirmationService,) {
+    }
+
+    ngOnInit() {
+
+        this.setInitialTabs();
 
         /* Subscribe for the coupon payments list. */
         this.subscriptions['coupon-payments'] = this.couponListOb.subscribe((list) => {
@@ -115,15 +123,52 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             this.clearNewCouponForm();
         });
 
+        this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'tabid', 0);
+            this.setTabActive(tabId);
+        });
+
     }
 
-    ngAfterViewInit () {
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiCorpActions', 'ofiCoupon', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    "title": {
+                        "icon": "fa fa-th-list",
+                        "text": "List"
+                    },
+                    "couponId": -1,
+                    "active": true
+                },
+                {
+                    "title": {
+                        "icon": "fa-user",
+                        "text": "Create New Coupon"
+                    },
+                    "couponId": -1,
+                    "formControl": this.newCouponFormGroup(),
+                    "active": false
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
+    }
+
+    ngAfterViewInit() {
         /* State. */
         let state = this.ngRedux.getState();
 
         /* Check if we need to request the coupon list. */
         let couponList = getOfiCouponList(state);
-        if ( ! couponList.length ) {
+        if (!couponList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getCouponList().then(() => {
                 /* Redux subscription handles setting the property. */
@@ -137,7 +182,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Check if we need to request the user issued assets. */
         let userIssuedAssetsList = getOfiUserIssuedAssets(state);
-        if ( ! userIssuedAssetsList.length ) {
+        if (!userIssuedAssetsList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
@@ -157,16 +202,16 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleNewCoupon ():void {
+    public handleNewCoupon(): void {
         /* Varibales. */
         let
-        thisTab = this.tabsControl[1],
-        formData = thisTab.formControl.value,
-        setFundShare:any = false,
-        newCoupon = {};
+            thisTab = this.tabsControl[1],
+            formData = thisTab.formControl.value,
+            setFundShare: any = false,
+            newCoupon = {};
 
         /* Let's check if the form is valid first... */
-        if ( ! thisTab.formControl.valid || ! formData.couponFundShareName.length ) {
+        if (!thisTab.formControl.valid || !formData.couponFundShareName.length) {
             /* ...tell the user if it isn't valid. */
             this.showError('Please ensure this form is complete.');
 
@@ -175,7 +220,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Get other data. */
-        setFundShare = this.getFundById( formData.couponFundShareName[0].id )
+        setFundShare = this.getFundById(formData.couponFundShareName[0].id)
 
         /* Ok, let's now start building the new coupon request. */
         newCoupon['userCreated'] = this.myDetails.username;
@@ -192,13 +237,13 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         newCoupon['comment'] = formData.couponComments;
 
         /* Date validation. */
-        if ( new Date(formData.couponSettlementDate +" "+ formData.couponSettlementTime) <= new Date() ) {
+        if (new Date(formData.couponSettlementDate + " " + formData.couponSettlementTime) <= new Date()) {
             /* ...let the user know. */
             this.showError('Please ensure all dates are set to a point in the future.');
             return;
         }
 
-        if ( new Date(formData.couponValuationDate +" "+ formData.couponValuationTime) <= new Date() ) {
+        if (new Date(formData.couponValuationDate + " " + formData.couponValuationTime) <= new Date()) {
             /* ...let the user know. */
             this.showError('Please ensure all dates are set to a point in the future.');
             return;
@@ -208,11 +253,11 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         newCoupon['dateLastUpdated'] = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date());
         newCoupon['dateSettlement'] = this.formatDate(
             "YYYY-MM-DD hh:mm:ss",
-            new Date(formData.couponSettlementDate +" "+ formData.couponSettlementTime)
+            new Date(formData.couponSettlementDate + " " + formData.couponSettlementTime)
         );
         newCoupon['dateValuation'] = this.formatDate(
             "YYYY-MM-DD hh:mm:ss",
-            new Date(formData.couponValuationDate +" "+ formData.couponValuationTime)
+            new Date(formData.couponValuationDate + " " + formData.couponValuationTime)
         );
 
         /* Now send the request. */
@@ -221,7 +266,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl = this.newCouponFormGroup();
 
             /* ...and move the user back to the table... */
-            this.setTabActive(0);
+            this.router.navigateByUrl('/corporate-actions/coupon-payment/0');
 
             /* ...and then let the user know it went well. */
             this.showSuccess('Successfully created the new coupon payment.');
@@ -242,9 +287,9 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleViewCoupon (couponId: number):void {
+    public handleViewCoupon(couponId: number): void {
         /* Let's firstly find the coupon in the list. */
-        let coupon, i = 0, foundActive = false;
+        let coupon, foundActive = false;
         for (coupon of this.couponList) {
             if (coupon.couponID == couponId) {
                 /* Breaking here leaves coupon set
@@ -255,26 +300,25 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Check if we found the coupon. */
-        if ( ! coupon ) {
+        if (!coupon) {
             this.showError('Could not show that coupon.');
             return;
         }
 
         /* Now, let's check if we already have a tab open for this coupon. */
-        this.tabsControl.map((tab) => {
+        this.tabsControl.map((tab, i) => {
             if (tab.couponId == coupon.couponID) {
                 /* Set flag... */
                 foundActive = true;
 
                 /* ...set tab active... */
-                this.setTabActive(i);
+                this.router.navigateByUrl(`/corporate-actions/coupon-payment/${i}`);
+
 
                 /* ...and gotta call this again. */
                 this.changeDetectorRef.detectChanges();
             }
 
-            /* Inc. */
-            i++;
         })
 
         /* If we found an active tab, no need to do anymore... */
@@ -284,19 +328,19 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
 
         /* Workout some data before setting it. */
         let
-            fixedValudation = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation) ),
-            fixedSettlement = this.formatDate( "YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement) ),
+            fixedValudation = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation)),
+            fixedSettlement = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement)),
             couponValuationDate = '',
             couponValuationTime = '',
             couponSettlementDate = '',
             couponSettlementTime = '';
 
         /* If the dates are valid, set them. */
-        if ( fixedValudation ) {
+        if (fixedValudation) {
             couponValuationDate = fixedValudation.split(' ')[0]
             couponValuationTime = fixedValudation.split(' ')[1]
         }
-        if ( fixedSettlement ) {
+        if (fixedSettlement) {
             couponSettlementDate = fixedSettlement.split(' ')[0]
             couponSettlementTime = fixedSettlement.split(' ')[1]
         }
@@ -327,7 +371,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         });
 
         /* Now make this tab active. */
-        this.setTabActive(this.tabsControl.length - 1);
+        this.router.navigateByUrl(`/corporate-actions/coupon-payment${this.tabsControl.length - 1}`);
 
         /* Gotta call this again... */
         this.changeDetectorRef.detectChanges();
@@ -346,20 +390,20 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleUpdateCoupon (tabid: number, action : string) {
+    public handleUpdateCoupon(tabid: number, action: string) {
         /* Validation. */
-        if ( ! tabid || ! action ) {
+        if (!tabid || !action) {
             this.showError('Something went wrong, please try again.');
             return;
         }
 
         /* Pointers. */
         const
-            thisTab = this.tabsControl[ tabid ];
+            thisTab = this.tabsControl[tabid];
 
         /* Let's start building the request. */
         let
-            thisCoupon = this.getCouponById( thisTab.couponId ),
+            thisCoupon = this.getCouponById(thisTab.couponId),
             successMessage = "",
             errorMessage = "",
             updateCoupon = {
@@ -392,7 +436,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Ok, let's send the request now. */
-        this.ofiCorpActionService.updateCoupon( updateCoupon ).then((response) => {
+        this.ofiCorpActionService.updateCoupon(updateCoupon).then((response) => {
             /* Ok, so things went well, let's change the status on this tab to hide or show buttons... */
             thisTab.couponStatus = updateCoupon.status;
 
@@ -415,14 +459,14 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @param {object} selected - an array of the selected fund.
      * @return {void}
      */
-    public selectedFundShare (selected): void {
+    public selectedFundShare(selected): void {
         /* Variables. */
         let
-            userAsset = this.getFundById( selected.id ),
+            userAsset = this.getFundById(selected.id),
             newCouponControls = this.tabsControl[1].formControl;
 
         /* Check if we found it. */
-        if (! userAsset) {
+        if (!userAsset) {
             /* Set other fields to empty. */
             newCouponControls.controls['couponIsin'].patchValue('');
         } else {
@@ -431,20 +475,20 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         }
 
         /* Now find the fund in the wallets list, then set it's value in the form. */
-        var issuedUnit:number = 0;
+        var issuedUnit: number = 0;
         /* Try access the value and invert it. */
-        this.getFundShareHoldings( userAsset ).then((holdings) => {
+        this.getFundShareHoldings(userAsset).then((holdings) => {
             /* Get the issued amount, and invert it's polarity. */
             issuedUnit = -holdings[0];
 
             /* Set the value. */
-            newCouponControls.controls['couponFundShareUnits'].patchValue( issuedUnit );
+            newCouponControls.controls['couponFundShareUnits'].patchValue(issuedUnit);
 
             /* Calc the gross amount. */
             this.calculateGrossAmount();
         }).catch((e) => {
             /* Set the value. */
-            newCouponControls.controls['couponFundShareUnits'].patchValue( 0 );
+            newCouponControls.controls['couponFundShareUnits'].patchValue(0);
 
             /* Calc the gross amount. */
             this.calculateGrossAmount();
@@ -466,7 +510,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {object} - the fund wanted.
      */
-    public getFundById(id):any {
+    public getFundById(id): any {
         /* Varibales. */
         let userAsset;
 
@@ -491,7 +535,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @param {number} id - the id of the coupon being requested.
      * @return {object|false} - the coupon object if it's found, else false.
      */
-    private getCouponById (id: number):boolean|any {
+    private getCouponById(id: number): boolean | any {
         /* Variabes. */
         let coupon;
 
@@ -519,7 +563,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public calculateGrossAmount ():void {
+    public calculateGrossAmount(): void {
         /* Ok, so let's get the variables. */
         let
             newCouponControls = this.tabsControl[1].formControl,
@@ -527,12 +571,12 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             price = Number(newCouponControls.controls['couponFundShareUnits']._value);
 
         /* Now let's check that the user has entered something usable. */
-        if ( amount && amount >= 0 && ! isNaN( amount ) ) {
+        if (amount && amount >= 0 && !isNaN(amount)) {
             /* Patch the value. */
-            newCouponControls.controls['couponGrossAmount'].patchValue( amount * price );
+            newCouponControls.controls['couponGrossAmount'].patchValue(amount * price);
             this.tabsControl[1]['couponGrossAmount'] = amount * price;
         } else {
-            newCouponControls.controls['couponGrossAmount'].patchValue( 0 );
+            newCouponControls.controls['couponGrossAmount'].patchValue(0);
             this.tabsControl[1]['couponGrossAmount'] = 0;
         }
     }
@@ -544,7 +588,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public clearNewCouponForm (): void {
+    public clearNewCouponForm(): void {
         /* Set the form control to a new form group. */
         this.tabsControl[1].formControl = this.newCouponFormGroup();
     }
@@ -557,20 +601,20 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @param  {string} dateString  - the date in a string.
      * @return {string}
      */
-    public formatCouponDate (dateString) {
+    public formatCouponDate(dateString) {
         /* Validation. */
-        if ( ! dateString ) return "";
+        if (!dateString) return "";
 
         /* Variables. */
         let
-        date = new Date(dateString),
-        returnString = "";
+            date = new Date(dateString),
+            returnString = "";
 
         /* Build the date. */
-        returnString += date.getFullYear() +"-"+ this.padNumberLeft( date.getMonth() ) +"-"+ this.padNumberLeft( date.getDate() ) +" ";
+        returnString += date.getFullYear() + "-" + this.padNumberLeft(date.getMonth()) + "-" + this.padNumberLeft(date.getDate()) + " ";
 
         /* Build the time. */
-        returnString += this.padNumberLeft( date.getHours() ) +":"+ this.padNumberLeft( date.getMinutes() ) +":"+ this.padNumberLeft( date.getSeconds() );
+        returnString += this.padNumberLeft(date.getHours()) + ":" + this.padNumberLeft(date.getMinutes()) + ":" + this.padNumberLeft(date.getSeconds());
 
         return returnString;
     }
@@ -591,23 +635,24 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {[type]}              [description]
      */
-    private formatDate (formatString:string, dateObj:Date) {
+    private formatDate(formatString: string, dateObj: Date) {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return false;
+        if (!formatString || !dateObj) return false;
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
-        .replace('DD', this.numPad( dateObj.getDate().toString() ))
-        .replace('hh', this.numPad( dateObj.getHours() ))
-        .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
-        .replace('mm', this.numPad( dateObj.getMinutes() ))
-        .replace('ss', this.numPad( dateObj.getSeconds() ))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
-    private numPad (num) {
-        return num < 10 ? "0"+num : num;
+
+    private numPad(num) {
+        return num < 10 ? "0" + num : num;
     }
 
     /**
@@ -619,17 +664,17 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    getFundShareHoldings (userIssuedAsset):Promise<any> {
+    getFundShareHoldings(userIssuedAsset): Promise<any> {
         return new Promise((resolve, reject) => {
             /* If we don't have a walletID... */
-            if ( ! userIssuedAsset.walletID ) {
+            if (!userIssuedAsset.walletID) {
                 /* ...then giveup. */
                 reject();
                 return;
             }
 
             /* Ok, let's check if we have it. */
-            if (! this.walletHoldingsByAddress[ userIssuedAsset.walletID ]) {
+            if (!this.walletHoldingsByAddress[userIssuedAsset.walletID]) {
                 /* If we don't, let's get it. */
                 InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, userIssuedAsset.walletID);
             }
@@ -637,23 +682,23 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
             /* Now let's wait for it, and resolve with it. */
             let timesToTry = 10;
             const waitInterval = setInterval(() => {
-                if (this.walletHoldingsByAddress[ userIssuedAsset.walletID ] &&
-                    this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ] &&
-                    this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ][ userIssuedAsset.asset ]) {
-                        /* Clear the interval. */
-                        clearInterval( waitInterval );
-                        /* Resolve. */
-                        resolve( this.walletHoldingsByAddress[ userIssuedAsset.walletID ][ userIssuedAsset.addr ][ userIssuedAsset.asset ] );
-                    } else if ( ! timesToTry ) {
-                        /* If we've tried too many times, we probably don't have access... so clear the interval. */
-                        clearInterval( waitInterval );
+                if (this.walletHoldingsByAddress[userIssuedAsset.walletID] &&
+                    this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr] &&
+                    this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]) {
+                    /* Clear the interval. */
+                    clearInterval(waitInterval);
+                    /* Resolve. */
+                    resolve(this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]);
+                } else if (!timesToTry) {
+                    /* If we've tried too many times, we probably don't have access... so clear the interval. */
+                    clearInterval(waitInterval);
 
-                        /* then reject. */
-                        reject();
-                    } else {
-                        /* Decrement if we're still looping. */
-                        timesToTry--;
-                    }
+                    /* then reject. */
+                    reject();
+                } else {
+                    /* Decrement if we're still looping. */
+                    timesToTry--;
+                }
             }, 100);
         });
     }
@@ -666,16 +711,16 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @param  {number} num - the couponId.
      * @return {string}
      */
-    public padNumberLeft (num: number|string, zeros?: number):string {
+    public padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if ( ! num && num != 0) return "";
+        if (!num && num != 0) return "";
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
-        requiredZeros = zeros - num.length,
-        returnString = "";
+            requiredZeros = zeros - num.length,
+            returnString = "";
 
         /* Now add the zeros. */
         while (requiredZeros--) {
@@ -692,7 +737,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      *
      * @return {FormGroup}
      */
-    private newCouponFormGroup ():FormGroup {
+    private newCouponFormGroup(): FormGroup {
         return new FormGroup({
             'couponNature': new FormControl(
                 {value: 'Coupon Payment', disabled: true}
@@ -744,41 +789,6 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * =============
-     * Tab Functions
-     * =============
-     */
-
-    /**
-     * Default Tab Controls.
-     * ---------------------
-     * Returns a default tab control object.
-     *
-     * @return {array} - tabsControl object.
-     */
-    private defaultTabControl():Array<any> {
-        return [
-            {
-                "title": {
-                    "icon": "fa fa-th-list",
-                    "text": "List"
-                },
-                "couponId": -1,
-                "active": true
-            },
-            {
-                "title": {
-                    "icon": "fa-user",
-                    "text": "Create New Coupon"
-                },
-                "couponId": -1,
-                "formControl": this.newCouponFormGroup(),
-                "active": false
-            }
-        ];
-    }
-
-    /**
      * Close Tab
      * ---------
      * Removes a tab from the tabs control array, in effect, closing it.
@@ -800,7 +810,7 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.setTabActive(0);
+        this.router.navigateByUrl('/corporate-actions/coupon-payment/0');
 
         /* Return */
         return;
@@ -817,19 +827,10 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
      * @return {void}
      */
     public setTabActive(index: number = 0) {
-        /* Lets loop over all current tabs and switch them to not active. */
-        this.tabsControl.map((i) => {
-            i.active = false;
+        this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
+            return item.set('active', thisIndex === Number(index));
         });
-
-        /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Set the list active. */
-        this.tabsControl[index].active = true;
-
-        /* Yes, we have to call this again to get it to work, trust me... */
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -909,6 +910,8 @@ export class CouponPaymentComponent implements AfterViewInit, OnDestroy {
         for (var key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
+
+        this.ngRedux.dispatch(ofiCouponActions.setAllTabs(this.tabsControl));
     }
 
 }

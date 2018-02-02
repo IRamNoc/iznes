@@ -37,8 +37,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @Input() shareId: number;
     @Input() type: string;
     @Input() doValidate: boolean;
+    @Input() initialFormData: { [p: string]: any };
 
     @Output() close: EventEmitter<any> = new EventEmitter();
+    @Output() formDataChange: EventEmitter<any> = new EventEmitter();
 
     // List of observable subscription.
     subscriptionsArray: Array<Subscription> = [];
@@ -145,6 +147,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+
+        const formValue = Object.assign({}, this.form.value, {'actionBy': this.actionBy});
+        this.formDataChange.emit(formValue);
     }
 
     ngOnInit() {
@@ -167,6 +172,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             valuationDate: this.valuationDate,
             settlementDate: this.settlementDate
         });
+
+        this.setInitialFormValue();
 
         this.formConfig = {
             subscribe: {
@@ -234,7 +241,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
         this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
         this.subscriptionsArray.push(this.userIdOb.subscribe(userId => this.userId = userId));
+    }
 
+    setInitialFormValue() {
+        if (!_.isEmpty(this.initialFormData)) {
+            this.form.patchValue(this.initialFormData);
+            this.addressSelected = this.initialFormData.address[0];
+            this.actionBy = this.initialFormData.actionBy;
+        }
     }
 
     updateShareMetaData(shareData) {

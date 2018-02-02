@@ -5,11 +5,14 @@ import _ from 'lodash';
 /* Local types. */
 import {MyOrders} from './';
 import * as ofiMyOrdersActions from './actions';
+import {SET_ALL_TABS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 /* Initial state. */
 const initialState: MyOrders = {
     orderList: [],
-    requested: false
+    requested: false,
+    openedTabs: []
 };
 
 /* Reducer. */
@@ -25,6 +28,9 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
 
         case ofiMyOrdersActions.OFI_CLEAR_REQUESTED_MY_ORDER:
             return toggleRequestState(state, false);
+
+        case SET_ALL_TABS:
+            return handleSetAllTabs(action, state);
 
         /* Default. */
         default:
@@ -73,3 +79,17 @@ function ofiSetMyOrderList(state: MyOrders, action: Action) {
 function toggleRequestState(state: MyOrders, requested: boolean): MyOrders {
     return Object.assign({}, state, {requested});
 }
+
+/**
+ * Set all tabs
+ *
+ * @param {Action} action
+ * @param {MyOrders} state
+ * @return {MyOrders}
+ */
+function handleSetAllTabs(action: Action, state: MyOrders): MyOrders {
+    const tabs = immutableHelper.get(action, 'tabs', []);
+
+    return Object.assign({}, state, {openedTabs: tabs});
+}
+

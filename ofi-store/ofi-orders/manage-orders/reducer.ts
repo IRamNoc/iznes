@@ -5,11 +5,14 @@ import _ from 'lodash';
 /* Local types. */
 import {ManageOrders} from './';
 import * as ofiManageOrdersActions from './actions';
+import {SET_ALL_TABS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 /* Initial state. */
 const initialState: ManageOrders = {
     orderList: [],
-    requested: false
+    requested: false,
+    openedTabs: []
 };
 
 /* Reducer. */
@@ -25,6 +28,9 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
 
         case ofiManageOrdersActions.OFI_CLEAR_REQUESTED_MANAGE_ORDER:
             return toggleRequestState(state, false);
+
+        case SET_ALL_TABS:
+            return handleSetAllTabs(action, state);
 
         /* Default. */
         default:
@@ -72,4 +78,17 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
  */
 function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
     return Object.assign({}, state, {requested});
+}
+
+/**
+ * Set all tabs
+ *
+ * @param {Action} action
+ * @param {ManageOrders} state
+ * @return {ManageOrders}
+ */
+function handleSetAllTabs(action: Action, state: ManageOrders): ManageOrders {
+    const tabs = immutableHelper.get(action, 'tabs', []);
+
+    return Object.assign({}, state, {openedTabs: tabs});
 }

@@ -24,13 +24,14 @@ import {MultilingualModule} from '@setl/multilingual';
         OfiNavModule,
         OfiReportModule,
         OfiAmDashboardModule,
-        MultilingualModule
+        MultilingualModule,
     ],
     exports: [
         OfiFundInvestModule,
         OfiCorpActionsModule
     ],
-    declarations: [],
+    declarations: [
+    ],
     providers: [OfiPostTxService]
 })
 

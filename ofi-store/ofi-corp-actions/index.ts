@@ -7,7 +7,8 @@ import {
 } from './coupons';
 export {
     OFI_SET_COUPON_LIST,
-    getOfiCouponList
+    getOfiCouponList,
+    ofiCouponActions
 } from './coupons';
 
 /* Asset List */

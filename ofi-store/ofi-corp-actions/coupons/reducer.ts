@@ -5,10 +5,13 @@ import _ from 'lodash';
 /* Local types. */
 import {OfiCouponState} from './';
 import * as ofiCouponActions from './actions';
+import {SET_ALL_TABS} from './actions';
+import {immutableHelper} from '@setl/utils';
 
 /* Initial state. */
 const initialState: OfiCouponState = {
-    ofiCouponList: []
+    ofiCouponList: [],
+    openedTabs: []
 };
 
 /* Reducer. */
@@ -20,6 +23,9 @@ export const OfiCouponListReducer = function (
         /* Set Coupon List. */
         case ofiCouponActions.OFI_SET_COUPON_LIST:
             return ofiSetCouponList(state, action);
+
+        case SET_ALL_TABS:
+            return handleSetAllTabs(action, state);
 
         /* Default. */
         default:
@@ -48,8 +54,21 @@ function ofiSetCouponList ( state: OfiCouponState, action: Action ) {
     /* Set the new state. */
     newState = {
         ofiCouponList: newCouponList
-    };
+};
 
     /* Return. */
     return newState;
+}
+
+/**
+ * Set all tabs
+ *
+ * @param {Action} action
+ * @param {OfiCouponState} state
+ * @return {OfiCouponState}
+ */
+function handleSetAllTabs(action: Action, state: OfiCouponState): OfiCouponState {
+    const tabs = immutableHelper.get(action, 'tabs', []);
+
+    return Object.assign({}, state, {openedTabs: tabs});
 }

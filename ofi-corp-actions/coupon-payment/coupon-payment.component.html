@@ -6,7 +6,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="coupon-tab-{{id}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button clrTabLink id="coupon-tab-{{id}}" [routerLink]="['/corporate-actions/coupon-payment', id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon Payment list tab. -->

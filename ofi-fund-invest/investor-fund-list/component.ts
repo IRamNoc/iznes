@@ -11,6 +11,8 @@ import {
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
+import {ActivatedRoute, Router, Params} from '@angular/router';
+import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
 
 
 @Component({
@@ -43,22 +45,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 private _memberService: MemberService,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _numberConverterService: NumberConverterService,
+                private _route: ActivatedRoute,
+                private _router: Router,
                 private _ofiFundInvestService: OfiFundInvestService) {
-        /**
-         * Default tabs.
-         */
-        this.tabsControl = [
-            {
-                title: {
-                    icon: 'fa fa-th-list',
-                    text: 'List'
-                },
-                fundShareId: -1,
-                fundShareData: {},
-                actionType: '',
-                active: true
-            }
-        ];
+    }
+
+    ngOnInit() {
+
+        this.setInitialTabs();
 
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
 
@@ -67,9 +61,37 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
             (fundShareAccessList) => this.updateFundList(fundShareAccessList)));
 
+        this.subscriptionsArray.push(this._route.params.subscribe((params: Params) => {
+            const tabId = _.get(params, 'tabid', 0);
+            this.setTabActive(tabId);
+        }));
     }
 
-    ngOnInit() {
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this._ngRedux.getState(), ['ofi', 'ofiFundInvest', 'ofiListOfFundsComponent', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /**
+             * Default tabs.
+             */
+            this.tabsControl = [
+                {
+                    title: {
+                        icon: 'fa fa-th-list',
+                        text: 'List'
+                    },
+                    fundShareId: -1,
+                    fundShareData: {},
+                    actionType: '',
+                    active: true
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
     }
 
     ngOnDestroy() {
@@ -77,6 +99,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+
+        this._ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(this.tabsControl));
     }
 
     /**
@@ -127,7 +151,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         const tabControlImu = fromJS(this.tabsControl);
 
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
-            return item.set('active', thisIndex === index);
+            return item.set('active', thisIndex === Number(index));
         });
 
         this.tabsControl = newTabControlImu.toJS();
@@ -143,7 +167,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
-                this.setTabActive(i);
+                this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -163,11 +187,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             fundShareId: fundShareId,
             fundShareData: fundShareData,
             actionType: 'subscribe',
-            active: false
+            active: false,
+            formData: {}
         });
 
         // Activate the new tab.
-        this.setTabActive(this.tabsControl.length - 1);
+        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -179,7 +204,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'redeem')) {
-                this.setTabActive(i);
+                this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -199,12 +224,13 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             fundShareId: fundShareId,
             fundShareData: fundShareData,
             actionType: 'redeem',
-            active: false
+            active: false,
+            formData: {}
         })
         ;
 
         // Activate the new tab.
-        this.setTabActive(this.tabsControl.length - 1);
+        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -216,7 +242,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'view')) {
-                this.setTabActive(i);
+                this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -237,11 +263,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             fundShareData: fundShareData,
             actionType: 'view',
             active: false
-        })
-        ;
+        });
 
         // Activate the new tab.
-        this.setTabActive(this.tabsControl.length - 1);
+        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -262,8 +287,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         ];
 
         // Reset Tabs.
-        this.setTabActive(0);
+        this._router.navigateByUrl('/list-of-funds/0');
 
         return;
+    }
+
+    updateFormData(tabId: number, formValue: any): void {
+        this.tabsControl[tabId].formData = formValue;
     }
 }

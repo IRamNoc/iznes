@@ -4,6 +4,7 @@ import {ClarityModule} from 'clarity-angular';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule} from '@setl/utils';
+import {RouterModule} from '@angular/router';
 
 // Local components
 import {OfiInvestorFundListComponent} from './investor-fund-list/component';
@@ -25,7 +26,8 @@ import {FileViewerModule} from '@setl/core-fileviewer';
         DpDatePickerModule,
         SetlComponentsModule,
         SetlDirectivesModule,
-        FileViewerModule
+        FileViewerModule,
+        RouterModule
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [

@@ -1,5 +1,7 @@
 import {name} from './__init__';
 import {kAction} from '@setl/utils/common';
+import {Action, ActionCreator} from 'redux';
+import {OrderTab} from './model';
 
 /**
  * Set the order list.
@@ -20,3 +22,17 @@ export const ofiSetRequestedMyOrder = kAction(OFI_SET_REQUESTED_MY_ORDER);
  */
 export const OFI_CLEAR_REQUESTED_MY_ORDER = `${name}/OFI_CLEAR_REQUESTED_MY_ORDER`;
 export const ofiClearRequestedMyOrder = kAction(OFI_CLEAR_REQUESTED_MY_ORDER);
+
+// update tabs
+export const SET_ALL_TABS = `${name}/SET_ALL_TABS`;
+
+export interface SetAllTab extends Action {
+    tabs: Array<OrderTab>;
+}
+
+export const setAllTabs: ActionCreator<SetAllTab> = (tabs: Array<OrderTab>) => (
+    {
+        type: SET_ALL_TABS,
+        tabs
+    }
+);

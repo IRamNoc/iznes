@@ -5,6 +5,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from '@setl/utils';
+import {RouterModule} from '@angular/router';
 
 /* Pipes. */
 import {SetlPipesModule} from '@setl/utils';
@@ -33,7 +34,8 @@ import {OfiCorpActionService} from '../ofi-req-services/ofi-corp-actions/service
         FormsModule,
         ClarityModule,
         SelectModule,
-        SetlPipesModule
+        SetlPipesModule,
+        RouterModule
     ],
     providers: [
         OfiCorpActionService
