@@ -11,7 +11,7 @@ import {RouterModule} from '@angular/router';
 import {SetlPipesModule} from '@setl/utils';
 
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 
 /* Components. */
 import {ManageOrdersComponent} from './manage-orders/manage-orders.component';

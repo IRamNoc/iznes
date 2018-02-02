@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 /* Pipes. */
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 
 import {MultilingualModule} from '@setl/multilingual';
 
