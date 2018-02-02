@@ -125,14 +125,6 @@ public class OpenCSDGeneralAcceptanceTest {
         fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
     }
 
-    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
-        driver.findElement(By.id(enteringField)).clear();
-        driver.findElement(By.id(enteringField)).sendKeys(value);
-        driver.findElement(By.id("fundName_0")).sendKeys("");
-        String unitsField = driver.findElement(By.id(enteringField)).getAttribute("value");
-        assertTrue(unitsField.equals(expected));
-    }
-
     @Test
     public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
@@ -200,6 +192,14 @@ public class OpenCSDGeneralAcceptanceTest {
         clickID("btnAddNewFund");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
+    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
+        driver.findElement(By.id(enteringField)).clear();
+        driver.findElement(By.id(enteringField)).sendKeys(value);
+        driver.findElement(By.id("fundName_0")).sendKeys("");
+        String unitsField = driver.findElement(By.id(enteringField)).getAttribute("value");
+        assertTrue(unitsField.equals(expected));
     }
 
     public static void assertFalseIdDisplayed(String element, String value){
