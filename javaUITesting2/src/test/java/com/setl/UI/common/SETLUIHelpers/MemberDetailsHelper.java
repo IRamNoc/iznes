@@ -22,7 +22,7 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
 
     public static void navigateToAddNewMemberTab() throws InterruptedException {
 
-        driver.findElement(By.xpath("html/body/div[5]/div[1]/div[3]/div[10]/div/div/ul/li[2]/a")).click();
+        driver.findElement(By.id("user-tab-1")).click();
 
     }
 

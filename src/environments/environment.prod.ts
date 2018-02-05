@@ -8,7 +8,6 @@ export const environment = {
         path: 'db'
     },
     numberDivider: 100000,
-    menuSpec,
     reportingNodeUrl: 'http://10.0.1.106:13544/sapi',
     messagesMenu: [
         {
@@ -39,5 +38,10 @@ export const environment = {
             type: 'deleted',
             active: false
         },
-    ]
+    ],
+    logoUrl: 'assets/images/logo-iznes.png',
+    logoID: 'logo-iznes',
+    platform: 'IZNES',
+    topbarLogoUrl: 'assets/images/logo-iznes.png',
+    menuSpec
 };

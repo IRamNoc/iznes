@@ -2,7 +2,7 @@
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
-import {menuSpec} from "./menuSpec";
+import {menuSpec} from './menuSpec';
 
 export const environment = {
     production: false,
@@ -50,5 +50,9 @@ export const environment = {
             type: 'deleted',
             active: false
         },
-    ]
+    ],
+    logoUrl: 'assets/images/logo-iznes.png',
+    logoID: 'logo-iznes',
+    platform: 'IZNES',
+    topbarLogoUrl: 'assets/images/logo-iznes.png',
 };
