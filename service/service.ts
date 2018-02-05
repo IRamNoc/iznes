@@ -1,9 +1,10 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import _ from 'lodash';
 /* Request service. */
 import {PersistRequestService} from "@setl/core-req-services";
+/* Low dash */
+import _ from 'lodash';
 
 /* Decorator. */
 @Injectable()
@@ -38,27 +39,28 @@ export class PersistService {
             /* If we couldn't then we'll just return. */
             if (!recoveredData) {
                 console.warn(' | Failed to read a previous state: ', data);
-                return false;
-            }
-
-            /* If it was ok, we'll try set the value. */
-            try {
-                /* Call set value. */
-                group.setValue(recoveredData);
-            } catch (e) {
-                /* Else, we'll catch the error. */
-                console.warn(' | Failed to use a previous state: ', e);
+            } else {
+                /* If it was ok, we'll try set the value. */
+                try {
+                    /* Call set value. */
+                    group.setValue(recoveredData);
+                } catch (e) {
+                    /* Else, we'll catch the error. */
+                    console.warn(' | Failed to use a previous state: ');
+                }
             }
         }).catch((error) => {
-            console.warn(' | Failed to fetch a previous state for \'' + name + '\', maybe there isn\'t one?');
+            console.warn(' | Failed to fetch a previous state for \'' + name + '\', maybe there isn\'t one?: ', error);
         });
 
         /* Unsubscribe if already subscribed. */
         if (this._subscriptions[name]) {
+            console.log(' | P: unsubscribing from group.');
             this._subscriptions[name].unsubscribe();
         }
 
         /* Subscribe to the value changes. */
+        console.log(' | P: subscribing to group.');
         this._subscriptions[name] = group.valueChanges.subscribe((data) => {
             /* Set the form. */
             this._forms[name] = data;
@@ -75,12 +77,13 @@ export class PersistService {
                 this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
                     /* Stub. */
                 }).catch((error) => {
-                    console.warn(' | Failed to save this form\'s state: ', error);
+                    console.warn(' | P: Failed to save this form\'s state: ', error);
                 });
             }, 1000 * secondsToWait);
         });
 
         /* Return. */
+        console.log(' | returning group.');
         return group;
     }
 }
