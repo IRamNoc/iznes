@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2016 VMware, Inc. All Rights Reserved.
- * This software is released under MIT license.
- * The full license information can be found in LICENSE in the root directory of this project.
- */
-
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {
     AbstractControl, // less code
@@ -160,6 +154,9 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                     Validators.required,
                 ])
             ],
+            includeToDate: [
+                false
+            ],
             toDateUTC: [
                 '',
             ],
@@ -168,7 +165,24 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             ],
         });
 
-        // this.subscriptionsArray.push(this.encumberAssetsForm.valueChanges.subscribe((form) => this.processFormChanges(form)));
+        this.encumberAssetsForm.controls.includeToDate.valueChanges
+            .subscribe((value: boolean) => {
+                this.toggleToDateRequired(value);
+                this.isEncumberEnd = value;
+            });
+    }
+
+    private toggleToDateRequired(value: boolean): void {
+        if(value) {
+            this.encumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
+            this.encumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
+        } else {
+            this.encumberAssetsForm.controls.toDateUTC.clearValidators();
+            this.encumberAssetsForm.controls.toTimeUTC.clearValidators();
+        }
+
+        this.encumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
+        this.encumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
     }
 
     ngOnDestroy() {
@@ -244,23 +258,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         }
     }
 
-    processFormChanges(isChecked) {
-        if (isChecked) {
-            this.encumberAssetsForm.get('toDateUTC').setValidators(Validators.required);
-            this.encumberAssetsForm.get('toTimeUTC').setValidators(Validators.required);
-            this.isEncumberEnd = true;
-        } else if (!isChecked) {
-            // console.log('not checked');
-            this.encumberAssetsForm.get('toDateUTC').patchValue('', {emitEvent: false});
-            this.encumberAssetsForm.get('toDateUTC').setValidators(null);
-            this.encumberAssetsForm.get('toTimeUTC').patchValue('', {emitEvent: false});
-            this.encumberAssetsForm.get('toTimeUTC').setValidators(null);
-            this.isEncumberEnd = false;
-        }
-        this.encumberAssetsForm.get('toDateUTC').updateValueAndValidity();
-        this.encumberAssetsForm.get('toTimeUTC').updateValueAndValidity();
-    }
-
     getLanguage(locale): void {
         if (locale) {
             switch (locale) {
@@ -278,6 +275,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     save(formValues) {
+        if(!this.encumberAssetsForm.valid) return;
 
         const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
         const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
@@ -307,9 +305,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 this.resetForm();
             },
             (data) => {
-                // console.log('error: ', data);
-                this.showError(data);
-                this.resetForm();
+                this.showError(data[1].data.status);
             })
         );
     }
