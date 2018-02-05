@@ -3,18 +3,23 @@
     <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
     <div class="message_list">
-        <h2>{{currentBoxName}} <span *ngIf="currentBoxCount > 0">({{currentBoxCount || 0}})</span></h2>
+        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="messages.length > 0">{{messages.length || 0}}</span></h2>
+        <div class="search">
+            <span *ngIf="search" class="search-filter"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>
+            <input type="form-control" placeholder="Search {{currentBox.name}}" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '' " type="text">
+            <button (click)="handleSearch(searchBox.value)" class=""><i class="fa fa-search"></i></button>
+        </div>
 
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
                 <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i> Refresh</button>
-                <button *ngIf="currentBoxName == 'Inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
+                <button [class.disabled]="getChecked().length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
                     <i class="fa fa-eye"></i> Mark as Read
                 </button>
-                <button *ngIf="currentBoxName == 'Inbox'" id="messagesDelete" (click)="checkedDeleted()">
+                <button [class.disabled]="getChecked().length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete" (click)="checkedDeleted()">
                     <i class="fa fa-trash-o"></i> Delete
                 </button>
-                <button *ngIf="currentBoxName == 'Deleted Messages'" id="messagesPutBack" (click)="checkedPutBack()">
+                <button [class.disabled]="getChecked().length === 0" *ngIf="currentBox.type == 'deleted'" id="messagesPutBack" (click)="checkedPutBack()">
                     <i class="fa fa-inbox"></i> Restore Message
                 </button>
             </div>
@@ -26,6 +31,16 @@
 
         <div class="message_list_none" [hidden]="messages.length != 0">
             <h3>No Messages</h3>
+        </div>
+
+        <!-- Header row -->
+        <div *ngIf="messages.length">
+            <div class="message_list_item">
+                <div class="message_list_item_check"></div>
+                <div class="message_list_item_sender">From</div>
+                <div class="message_list_item_subject">Subject</div>
+                <div class="message_list_item_date">Date</div>
+            </div>
         </div>
 
         <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
@@ -98,7 +113,7 @@
 
         <div class="message_view_menu">
             <!--<button><i class="fa fa-reply"></i> Reply</button>-->
-            <button (click)="deleteMessage()"><i class="fa fa-trash-o"></i> Delete</button>
+            <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type" (click)="deleteMessage()"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
 
     </div>
@@ -177,7 +192,8 @@
 
         <ul *ngFor="let category of categories; let i = index">
             <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory}" id="messages{{category.type}}">
-                <i class="fa {{category.icon}}"></i> {{category.name}}
+                <ng-container *ngIf="i === currentCategory"><i class="fa fa-chevron-right"></i></ng-container>
+                <div *ngFor="let padding of getPadding(category)" class="padding"></div><i class="fa {{category.icon}}"></i> {{category.name}}
 
                 <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
             </li>

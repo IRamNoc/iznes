@@ -15,7 +15,7 @@ export class MailHelper {
     ) {
     }
 
-    public retrieveMessages(walletId, type = 'inbox', page = 0, pageSize = 8) {
+    public retrieveMessages(walletId, type = 'inbox', page = 0, pageSize = 15, search = null) {
         let isAction: boolean;
         let isDeleted: boolean;
         let isSent: boolean;
@@ -60,7 +60,7 @@ export class MailHelper {
             0,
             requestIsDeleted,
             requestIsAction,
-            ''
+            search
         );
         this.ngRedux.dispatch(
             SagaHelper.runAsync(
