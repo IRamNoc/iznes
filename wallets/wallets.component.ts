@@ -89,7 +89,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }
 
         this.tabsControl = openedTabs;
-        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newGroup', this.tabsControl[1].formControl);
+        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -765,7 +765,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             }
         );
 
-        return this._persistService.watchForm('useradmin/newGroup', group);
+        return this._persistService.watchForm('useradmin/newWallet', group);
     }
 
     /**
