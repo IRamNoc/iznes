@@ -59,7 +59,7 @@ node {
             }
 
             stage('Check node server is running') {
-                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
+                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && sudo node checkServer.js\''
             }
 
 
