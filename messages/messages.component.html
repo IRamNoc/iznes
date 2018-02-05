@@ -1,195 +1,186 @@
-<!--<div class="header-breadcrumbs">-->
+<div class="message" *ngIf="!composeSelected && !messageView">
+    <!--<div class="message_menu" *ngIf="messageMenu"></div>-->
+    <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
-<!--<ul class="breadcrumb">-->
-<!--<li><a href="#">Home</a></li>-->
-<!--<li class="active">Messages</li>-->
-<!--</ul>-->
-<!--</div>-->
-<div class="messages">
+    <div class="message_list">
+        <h2>{{currentBoxName}} <span *ngIf="currentBoxCount > 0">({{currentBoxCount || 0}})</span></h2>
 
-    <div class="row">
-        <!-- categories -->
-        <div class="col-sm-4 col-md-3 col-lg-2 col-categories">
-            <a class="tile row" routerLink="/messages/compose" [ngClass]="{'active': 1337 === currentCategory}">
-                <div class="tile-icon">
-                    <clr-icon shape="edit" size="24"></clr-icon>
-                </div>
-                <div class="tile-text">
-                    <h4 mltag="txt_compose">Compose</h4>
-                </div>
-            </a>
-
-            <hr class="message-hr">
-
-            <div class="cat-tile" *ngFor="let category of categories; let i = index">
-                <a class="tile row" [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory}">
-                    <div class="tile-icon">
-                        <clr-icon [attr.shape]="category.icon" size="18"></clr-icon>
-                    </div>
-                    <div class="tile-text">
-                        <h4>{{category.name}}</h4> <!--<span _ngcontent-c8="" class="label label-warning">99</span>-->
-                    </div>
-                </a>
+        <div class="message_list_menu">
+            <div class="message_list_menu_buttons">
+                <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i> Refresh</button>
+                <button *ngIf="currentBoxName == 'Inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
+                    <i class="fa fa-eye"></i> Mark as Read
+                </button>
+                <button *ngIf="currentBoxName == 'Inbox'" id="messagesDelete" (click)="checkedDeleted()">
+                    <i class="fa fa-trash-o"></i> Delete
+                </button>
+                <button *ngIf="currentBoxName == 'Deleted Messages'" id="messagesPutBack" (click)="checkedPutBack()">
+                    <i class="fa fa-inbox"></i> Restore Message
+                </button>
             </div>
-
+            <div class="message_list_menu_pages">
+                <pagination-controls
+                    (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
+            </div>
         </div>
 
-        <!-- message highlights with message area -->
-        <div class="col-sm-8 col-md-9 col-lg-10 col-message-grid">
+        <div class="message_list_none" [hidden]="messages.length != 0">
+            <h3>No Messages</h3>
+        </div>
 
-            <div *ngIf="composeSelected" class="message-compose">
-                <div class="message-options">
-                    <h2 mltag="txt_composemessage">Compose Message</h2>
+        <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
+             [ngClass]="{'message-active': i === currentMessage.id}">
+
+            <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
+
+            <div [routerLink]="['/messages/view']" class="message_list_item" [ngClass]="{'message-unread': message.isRead === false}">
+                <div class="message_list_item_check">
+                    <i class="fa" [ngClass]="{'fa-check': message.isChecked === true}" (click)="messageChecked(i)"></i>
+                    <!--<clr-icon shape="balance" *ngIf="message.action"></clr-icon>-->
+                    <!--<clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>-->
                 </div>
-                <form [formGroup]="messageComposeForm" (ngSubmit)="sendMessage()">
-                    <section class="">
-                        <div class="row">
-                            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
-                                <label><b mltag="txt_to">To</b></label>
-                            </div>
-                            <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12">
-                                <div class="select form-control">
-                                    <ng-select [multiple]="true"
-                                               [items]="items"
-                                               [disabled]="disabled"
-                                               [formControl]="messageComposeForm.controls['recipients']"
-                                               (data)="refreshValue($event)"
-                                               (selected)="selected($event)"
-                                               (removed)="removed($event)"
-                                               [captureKeys]="false"
-                                               mltag="txt_selectrecipients"
-                                               placeholder="Select Recipients"></ng-select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12" align="right">
-                                <label for="gForm_1" mltag="txt_subject">Subject</label>
-                            </div>
-                            <div class="col-lg-11 col-md-4 col-sm-12 col-xs-12">
-                                <input [formControl]="messageComposeForm.controls['subject']" class="form-control"
-                                       type="text" id="gForm_1" placeholder="" size="45">
-                            </div>
-                        </div>
-                    </section>
-
-
-                    <!-- composer body -->
-                    <quill-editor
-                        [formControl]="messageComposeForm.controls['body']"
-                        [options]="editorOptions"
-                        (blur)="onEditorBlurred($event)"
-                        (focus)="onEditorFocused($event)"
-                        (ready)="onEditorCreated($event)"
-                        (change)="onContentChanged($event)"></quill-editor>
-
-
-                    <div class="message-compose-buttons">
-                        <button class="btn btn-danger-outline" (click)="closeAndResetComposed()">
-                            <clr-icon shape="times"></clr-icon>
-                            <span mltag="txt_cancel">Cancel</span>
-                        </button>
-                        <button class="btn btn-primary">
-                            <clr-icon shape="plane"></clr-icon>
-                            <span mltag="txt_send">Send</span>
-                        </button>
-
-                    </div>
-                </form>
-
-            </div>
-            <div *ngIf="!composeSelected" class="message-grid">
-                <div class="row">
-
-                    <!-- message highlights (previews -->
-                    <div class="col-sm-5 message-highlights">
-                        <div class="message-options">
-                            <h2>{{currentBoxName}} ({{currentBoxCount || 0}})</h2>
-                            <button class="btn btn-outline btn-sm" (click)="refreshMailbox()">
-                                <clr-icon shape="refresh"></clr-icon>
-                                <span mltag="txt_refresh">Refresh</span>
-                            </button>
-                            <!--<button class="btn btn-success-outline btn-sm">-->
-                            <!--<clr-icon shape="eye"></clr-icon>-->
-                            <!--Mark as read-->
-                            <!--</button>-->
-                            <button class="btn btn-danger-outline btn-sm" (click)="deleteMessage()">
-                                <clr-icon shape="trash"></clr-icon>
-                                <span mltag="txt_delete">Delete</span>
-                            </button>
-                        </div>
-
-                        <div class="message-highlight {{!message.isRead && 'message-unread'}}"
-                             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
-                             (click)="showMessage(i)" [ngClass]="{'message-active': i === currentMessage.id}">
-                            <h6>
-                                {{message.senderWalletName}}
-                            </h6>
-
-                            <h4>
-                                <span class="message-unread-icon" *ngIf="!message.isRead"></span>
-                                <span [innerHtml]="message.subject | truncate: [100]"></span>
-                            </h4>
-                            <span class="message-date">
-                                <clr-icon shape="balance" *ngIf="message.action"></clr-icon>
-                                <clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>
-                                {{message.date | datex: "MMM D, YYYY"}}
-                            </span>
-                            <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
-                        </div>
-
-                        <div class="message-highlight-footer">
-                            <pagination-controls
-                                (pageChange)="currentPage = $event; onPageChange($event)"></pagination-controls>
-                        </div>
-
-                    </div>
-
-                    <!-- actual individual message area -->
-                    <div class="col-sm-7 message-body" *ngIf="currentMessage">
-                        <div class="message-title">
-                            <span mltag="txt_from">From</span>
-                            <b class="message-from">
-                                {{currentMessage.senderWalletName}}
-                            </b> to
-                            <b class="message-to">
-                                {{currentMessage.recipientWalletName}}
-                            </b>
-
-                            <h1 [innerHtml]="currentMessage.subject"></h1>
-
-                        </div>
-                        <div class="message-text">
-                            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction'))">
-                                <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
-                            </p>
-                            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
-                                <setl-message-attachment [attachmentType]="'pdf'"
-                                                         [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
-                            </p>
-                            <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
-                                <setl-message-form-action
-                                    [config]="currentMessage.action"
-                                    [isActed]="currentMessage.isActed"
-                                    [walletId]="currentWalletId"
-                                    [mailId]="currentMessage.mailId">
-                                </setl-message-form-action>
-                            </p>
-
-                            <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
-                                <!--<setl-message-connection-->
-                                <!--[config]="currentMessage.action"-->
-                                <!--[isActed]="currentMessage.isActed"-->
-                                <!--[walletId]="currentWalletId"-->
-                                <!--[mailId]="currentMessage.mailId">-->
-                                <!--</setl-message-connection>-->
-                            </p>
-                        </div>
-                    </div>
+                <div class="message_list_item_sender" (click)="showMessage(i)">{{message.senderWalletName}}</div>
+                <div class="message_list_item_subject" (click)="showMessage(i)">
+                    <span [innerHtml]="message.subject | truncate: [200]"></span>
                 </div>
+                <div class="message_list_item_date" (click)="showMessage(i)">{{message.date | datex: "MMM D, YYYY"}}</div>
             </div>
+        </div>
 
+
+    </div>
+</div>
+
+<div class="message" *ngIf="messageView">
+    <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
+    <div class="message_view">
+
+        <div class="message_view_header">
+            <h4>Subject: <b [innerHtml]="currentMessage.subject"></b></h4>
+            <div class="message_view_header_buttons">
+                <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i> Close</button>
+            </div>
+            <div class="message_view_header_title">
+                <p>From: {{currentMessage.senderWalletName}}</p>
+                <p>To: {{currentMessage.recipientWalletName}}</p>
+            </div>
+            <div class="message_view_header_date">
+                {{currentMessage.date | date:'MMM d y HH:mm:ss'}}
+            </div>
+        </div>
+
+        <div class="message_view_body">
+            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction'))">
+                <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
+            </p>
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
+                <setl-message-attachment [attachmentType]="'pdf'"
+                                         [attachmentId]="currentMessage.action.data.pdfID"></setl-message-attachment>
+            </p>
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
+                <setl-message-form-action
+                    [config]="currentMessage.action"
+                    [isActed]="currentMessage.isActed"
+                    [walletId]="currentWalletId"
+                    [mailId]="currentMessage.mailId">
+                </setl-message-form-action>
+            </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
+                <setl-message-connection
+                        [config]="currentMessage.action"
+                        [isActed]="currentMessage.isActed"
+                        [walletId]="currentWalletId"
+                        [mailId]="currentMessage.mailId">
+                </setl-message-connection>
+            </p>
+        </div>
+
+        <div class="message_view_menu">
+            <!--<button><i class="fa fa-reply"></i> Reply</button>-->
+            <button (click)="deleteMessage()"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
 
     </div>
 </div>
+
+<div class="message" *ngIf="composeSelected">
+    <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
+
+    <div class="message_compose">
+
+        <div class="message_view_header">
+            <h2>Compose Message</h2>
+            <div class="message_view_header_buttons">
+                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i> Discard
+                </button>
+            </div>
+        </div>
+
+        <form [formGroup]="messageComposeForm" (ngSubmit)="sendMessage()">
+
+            <div class="message_compose_input">
+
+                <div class="message_compose_input_field">
+                    <div class="message_compose_input_field_label">
+                        To
+                    </div>
+                    <div class="message_compose_input_field_value">
+                        <ng-select [multiple]="true"
+                                   [items]="items"
+                                   [disabled]="disabled"
+                                   [formControl]="messageComposeForm.controls['recipients']"
+                                   (data)="refreshValue($event)"
+                                   (selected)="selected($event)"
+                                   (removed)="removed($event)"
+                                   [captureKeys]="false"
+                                   [containerWidth]=""
+                                   mltag="txt_selectrecipients"
+                                   placeholder="Select Recipients"></ng-select>
+                    </div>
+                </div>
+
+                <div class="message_compose_input_field">
+                    <div class="message_compose_input_field_label">
+                        Subject
+                    </div>
+                    <div class="message_compose_input_field_value">
+                        <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" placeholder="" size="45">
+                    </div>
+                </div>
+            </div>
+
+            <div class="message_compose_input_body">
+                <quill-editor
+                    [formControl]="messageComposeForm.controls['body']"
+                    [options]="editorOptions"
+                    (blur)="onEditorBlurred($event)"
+                    (focus)="onEditorFocused($event)"
+                    (ready)="onEditorCreated($event)"
+                    (change)="onContentChanged($event)"></quill-editor>
+            </div>
+
+            <div class="message_view_menu">
+                <!--<button><i class="fa fa-reply"></i> Reply</button>-->
+                <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i> Send</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<ng-template #messageMenu>
+    <div class="message_menu">
+        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose">Compose Message</button>
+
+        <h3>Folders</h3>
+
+        <ul *ngFor="let category of categories; let i = index">
+            <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory}" id="messages{{category.type}}">
+                <i class="fa {{category.icon}}"></i> {{category.name}}
+
+                <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
+            </li>
+        </ul>
+    </div>
+</ng-template>
