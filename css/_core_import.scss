@@ -1,7 +1,7 @@
 $setl: #373a49;
-$setlHover: #2c2f3c;
 $setlHoverDarker: #282b38;
-$setlSelected: #57a5e3;
+$setlSelected: darken($setl, 5%);
+$setlHover: darken($setl, 2%);
 
 @import 'general';
 @import 'navbar';

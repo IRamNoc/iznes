@@ -21,12 +21,11 @@
         >
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()">Close</button>
+                    <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()" mltag="txt_close">Close</button>
                 </div>
                 <div class="ng-sidebar-header-middle title_text">
                     <i class="fa fa-cogs"></i>
-                    Settings
-                </div>
+                    <span mltag="txt_settings">Settings</span></div>
                 <div class="ng-sidebar-header-right">
 
                 </div>
@@ -36,21 +35,19 @@
                 <div class="ng-sidebar-section-header">
                     <div class="title_text">
                         <i class="fa fa-language"></i>
-                        Language
-                    </div>
-                    Choose your language.
-                </div>
+                        <span mltag="txt_language">Language</span></div>
+                    <span mltag="txt_chooseyourlanguage">Choose your language.</span></div>
                 <div class="ng-sidebar-section-body">
 
                     <section class="form-block">
                         <div class="form-group">
-                            <div class="radio" (click)="changeLanguage('fra')">
-                                <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fra')">
-                                <label for="lang_fra">Français</label>
+                            <div class="radio" (click)="changeLanguage('fr-Latn')">
+                                <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
+                                <label for="lang_fra" mltag="txt_franais">Français</label>
                             </div>
-                            <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('eng')">
-                                <label for="lang_eng">English</label>
+                            <div class="radio" (click)="changeLanguage('en-Latn')">
+                                <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
+                                <label for="lang_eng" mltag="txt_english">English</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('eng')">
                                 <input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">
@@ -78,10 +75,10 @@
             <!-- Navigation Topbar. -->
             <app-navigation-topbar (toggleSidebar)="_toggleSidebar()"></app-navigation-topbar>
 
-            <div class="content-container">
+            <div class="content-container" [ngClass]="{'menuHideNav': menuShown === 0}">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav" [ngClass]="{'menuHideNav': menuShown === 0}">
+                <nav class="sidenav">
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
@@ -91,11 +88,14 @@
                         This layout wraps the navbar and the top bar around content.
                     -->
                     <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
-                        <router-outlet #o="outlet"></router-outlet>
+                        <div>
+                            <router-outlet #o="outlet"></router-outlet>
+                        </div>
                     </div>
 
                 </main>
             </div>
+
         </div>
     </ng-sidebar-container>
 </div>
