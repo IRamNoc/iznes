@@ -32,6 +32,7 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
         {id: 2, text: 'Owned Address'},
         {id: 3, text: 'Other Address'},
     ];
+    @Input() required: boolean = false;
     addressTypes = [
         {id: 1, text: 'Relationship'},
         {id: 2, text: 'Owned Address'},
