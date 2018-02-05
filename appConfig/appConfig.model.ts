@@ -27,6 +27,7 @@ export interface AppConfig {
     logoUrl: string;
     logoID: string;
     platform: string;
+    topbarLogoUrl: string;
 }
 
 export interface MessagesMenuItem {
