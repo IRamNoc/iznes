@@ -28,19 +28,16 @@ node {
             stage('Deploy Frontend to Staging Environment'){
                 node{
                     sh '''
-              ssh jenkins@172.104.147.135 sudo mv /var/www_setltestnet/ /var/ofi_backups/www_setltestnet_$(date +%F-%H:%M) &&
-              ssh jenkins@172.104.147.135 sudo mkdir /var/www_setltestnet &&
-              ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/www_setltestnet &&
-              scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
+                        ssh root@172.104.147.135 rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
+                        scp -pr /var/lib/jenkins/Deploy/dist/*  root@172.104.147.135:/var/www_setltestnet'''
+
                 }
             }
             stage('Deploy Backend to Staging Environment') {
                 node {
                     sh '''
-                            ssh -t jenkins@172.104.147.135 sudo mv /var/phpapps/backend /var/ofi_backups/backend_$(date +%F-%H:%M) &&
-                            ssh -t jenkins@172.104.147.135 sudo mkdir /var/phpapps/backend &&
-                            ssh jenkins@172.104.147.135 sudo chown -R jenkins:jenkins /var/phpapps &&
-                            scp -pr /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
+                        ssh root@172.104.147.135 rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
+                        scp -pr /var/lib/jenkins/Deploy/backend/*  root@172.104.147.135:/var/phpapps/backend'''
                 }
             }
 
@@ -48,9 +45,8 @@ node {
             stage('Deploy French Fund Daemon to Staging Environment') {
                 node {
                     sh '''
-                            ssh jenkins@172.104.147.135 sudo mv /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh jenkins@172.104.147.135 mkdir /var/phpapps/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
+                            ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
@@ -62,10 +58,10 @@ node {
                 sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo supervisorctl restart node-server\''
             }
 
-            stage ('Delete old backups'){
-                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo find /var/ofi_backups -type d -mtime +4 | xargs rm -rf\''
-
+            stage('Check node server is running') {
+                sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
             }
+
 
         } catch (e) {
             currentBuild.result = 'FAILURE'
