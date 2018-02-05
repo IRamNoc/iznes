@@ -29,7 +29,7 @@ export class PersistService {
      * @param {FormGroup} group
      */
     public watchForm(name: string, group: FormGroup): FormGroup {
-        console.log(' |-- Persist');
+        console.log(' |-- Persist: ', name);
         /* Check if we have a state for this form. */
         this._persistRequestService.loadFormState(name).then((data) => {
             /* Get recovered data. */
@@ -37,7 +37,7 @@ export class PersistService {
 
             /* If we couldn't then we'll just return. */
             if (!recoveredData) {
-                console.warn(' | Failed to get recovery data: ', data);
+                console.warn(' | Failed to read a previous state: ', data);
                 return false;
             }
 
@@ -47,10 +47,10 @@ export class PersistService {
                 group.setValue(recoveredData);
             } catch (e) {
                 /* Else, we'll catch the error. */
-                console.warn('Failed to set Persisted form value: ', e);
+                console.warn(' | Failed to use a previous state: ', e);
             }
         }).catch((error) => {
-            console.warn(' | Failed to fetch this form\'s saved state.');
+            console.warn(' | Failed to fetch a previous state for \'' + name + '\', maybe there isn\'t one?');
         });
 
         /* Unsubscribe if already subscribed. */
