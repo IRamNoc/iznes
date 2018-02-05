@@ -1,16 +1,16 @@
 /* Core / Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 /* Redux. */
 import {NgRedux, select} from '@angular-redux/store';
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
+import {ConfirmationService, immutableHelper} from '@setl/utils';
 /* User Admin Service. */
+import {PersistService} from "@setl/core-persist/";
 import {UserAdminService} from '../useradmin.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import _ from 'lodash';
-import {immutableHelper} from '@setl/utils';
 import {managedWalletsActions} from '@setl/core-store';
 
 /* Decorator. */
@@ -23,7 +23,7 @@ import {managedWalletsActions} from '@setl/core-store';
 })
 
 /* Class. */
-export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
+export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Wallet List. */
     @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
@@ -44,9 +44,12 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private alertsService: AlertsService,
-                private _confirmationService: ConfirmationService,) {
+                private _confirmationService: ConfirmationService,
+                private _persistService: PersistService) {
+        /* Stub. */
+    }
 
-
+    public ngOnInit() {
         /* Get Countries list. */
         this.countriesList = this.userAdminService.countries;
 
@@ -88,6 +91,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         }
 
         this.tabsControl = openedTabs;
+        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -447,7 +451,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 'text': this.walletList[index].walletName
             },
             'walletId': wallet.walletId,
-            'formControl': this.newWalletFormGroup(),
+            'formControl': this.newWalletFormGroup('edit'),
             'active': false // this.editFormControls
         });
 
@@ -692,8 +696,8 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(managedWalletsActions.setAllTabs(this.tabsControl));
     }
 
-    private newWalletFormGroup(): FormGroup {
-        return new FormGroup(
+    private newWalletFormGroup(type: string = 'new'): FormGroup {
+        const group = new FormGroup(
             {
                 /* Core wallet fields. */
                 'walletName': new FormControl('', [
@@ -762,6 +766,13 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 'bdAddrPostcode': new FormControl(''),
             }
         );
+
+        /* Return the form group and watch it using the persistService. */
+        if (type === 'new') {
+            return group; // this._persistService.watchForm('useradmin/newWallet', group);
+        } else {
+            return group;
+        }
     }
 
     /**
