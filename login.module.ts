@@ -37,7 +37,7 @@ import {LoginGuardService} from './login-guard.service';
     ],
     providers: [
         ToasterService
-    ]
+    ],
 })
 
 export class SetlLoginModule {

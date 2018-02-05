@@ -1,6 +1,6 @@
 // Vendors
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnDestroy, Inject, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import {
     FormGroup,
     Validators,
@@ -11,7 +11,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 // Internals
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import {
     MyUserService,
     InitialisationService,
@@ -35,20 +35,43 @@ import {Subscription} from 'rxjs/Subscription';
 @Component({
     selector: 'app-login',
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css']
+    styleUrls: ['login.component.css'],
 })
 
 /* Class. */
 export class SetlLoginComponent implements OnDestroy, OnInit {
+    appConfig: AppConfig;
+
+    // Locale
+    language = 'fr';
+
     isLogin: boolean;
 
     loginForm: FormGroup;
     username: AbstractControl;
     password: AbstractControl;
 
+    forgottenPasswordForm: FormGroup;
+    email: AbstractControl;
+
+    changePasswordForm: FormGroup;
+    showPasswords = false;
+
+    changedPassword = false;
+
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
+    showForgottenPasswordModal = false;
+    emailUser = '';
+    emailSent = false;
+    countdown= 3;
+    token = '';
+    isTokenExpired = false;
+    changePassword = false;
+
+    // List of redux observable.
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
 
     /* Constructor. */
@@ -60,9 +83,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
+                private _activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
-                private initialisationService: InitialisationService) {
+                private initialisationService: InitialisationService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+
+        // language
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+
+        this.appConfig = appConfig;
 
         /**
          * Form control setup
@@ -71,13 +101,65 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
             username: new FormControl('', Validators.required),
             password: new FormControl('', Validators.required)
         });
+        /**
+         * Form control setup
+         */
+        this.forgottenPasswordForm = new FormGroup({
+            email: new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+                ])),
+        });
+        /**
+         * Form control setup
+         */
+        this.changePasswordForm = new FormGroup({
+            password: new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            ),
+            passwordConfirm: new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            )
+        }, this.passwordValidator);
 
+    }
 
+    getLanguage(requested): void {
+        // console.log('Language changed from ' + this.language + ' to ' + requested);
+        if (requested) {
+            switch (requested) {
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
+            }
+        }
     }
 
     ngOnInit() {
         this.isLogin = false;
 
+        this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
+            this.token = params['token'];
+            if (typeof this.token !== 'undefined' && this.token !== '') {
+                this.verifyToken(this.token);
+            }
+        }));
 
         // Reduce observable subscription
         this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
@@ -165,6 +247,120 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
             };
         }
 
+    }
+
+    passwordValidator(g: FormGroup) {
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
+    }
+
+    toggleShowPasswords() {
+        this.showPasswords = (this.showPasswords === false) ? true : false;
+    }
+
+    showFPModal() {
+        this.isTokenExpired = false;
+        this.showForgottenPasswordModal = true;
+    }
+
+    sendEmail(formValues) {
+        this.emailUser = formValues.email;
+
+        const asyncTaskPipe = this.myUserService.forgotPassword(
+            {
+                username: this.emailUser,
+                lang: this.language,
+            });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                    this.emailSent = true;
+                    let intervalCountdown = setInterval(() => {
+                        this.countdown--;
+                    }, 1000);
+
+                    setTimeout(() => {
+                        clearInterval(intervalCountdown);
+                        this.closeFPModal();
+                    }, 3000);
+                } else {
+                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                    this.closeFPModal();
+                }
+            },
+            (data) => {
+                // console.log('error: ', data);
+                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+                this.closeFPModal();
+            })
+        );
+    }
+
+    verifyToken(token) {
+        const asyncTaskPipe = this.myUserService.validToken(
+            {
+                token: token
+            });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                    this.changePassword = true;
+                    this.showForgottenPasswordModal = true;
+                } else {
+                    // this.isTokenExpired = true;
+                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                }
+                this.changePassword = true;
+                this.showForgottenPasswordModal = true;
+            },
+            (data) => {
+                // console.log('error: ', data);
+                this.isTokenExpired = true;
+                this.showForgottenPasswordModal = true;
+            })
+        );
+        // // just to test
+        // this.changePassword = true;
+        // this.showForgottenPasswordModal = true;
+    }
+
+    saveNewPassword(formValues) {
+        const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
+            {
+                token: this.token,
+                password: formValues.password,
+                lang: this.language
+            });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                    this.changedPassword = true;
+                    this.closeFPModal();
+                } else {
+                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                    this.closeFPModal();
+                }
+            },
+            (data) => {
+                // console.log('error: ', data);
+                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+                this.closeFPModal();
+            })
+        );
+    }
+
+    closeFPModal() {
+        this.forgottenPasswordForm.reset();
+        this.emailUser = '';
+        this.countdown = 3;
+        this.showForgottenPasswordModal = false;
+        this.emailSent = false;
+        this.changePassword = false;
     }
 
     ngOnDestroy() {
