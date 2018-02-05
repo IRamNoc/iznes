@@ -99,6 +99,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Get User Types. */
         this.groupTypes = this.userAdminService.getGroupTypes();
 
+        this.setInitialTabs();
+
         /* Subscribe to the admin group list observable. */
         this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
             /* Get the tx group list too and merge it with the admin list. */
@@ -138,8 +140,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
         });
-
-        this.setInitialTabs();
 
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'permissionid', 0);
@@ -200,7 +200,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
         /* Return the form group and watch it using the persistService. */
         if (type === 'new') {
-            return group; // this._persistService.watchForm('useradmin/newGroup', group);
+            return this._persistService.watchForm('useradmin/newGroup', group);
         } else {
             return group;
         }
@@ -239,7 +239,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         return {
             'id': area.permissionID,
             'text': area.permissionName
-        }
+        };
     }
 
     /**
@@ -263,7 +263,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
             /* Make these all admin type groups. */
             newArray[newArray.length - 1].category = this.userAdminService.resolveGroupType({id: obj[key].groupIsTx});
-            if (!newArray[newArray.length - 1].category.length) newArray[newArray.length - 1].category = [{text: 'No group.'}];
+            if (!newArray[newArray.length - 1].category.length) {
+                newArray[newArray.length - 1].category = [{text: 'No group.'}];
+            }
         }
         return newArray;
     }

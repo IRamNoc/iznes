@@ -769,7 +769,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the form group and watch it using the persistService. */
         if (type === 'new') {
-            return group; // this._persistService.watchForm('useradmin/newWallet', group);
+            return this._persistService.watchForm('useradmin/newWallet', group);
         } else {
             return group;
         }
