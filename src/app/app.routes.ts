@@ -126,7 +126,7 @@ export const ROUTES: Routes = [
                 path: 'account',
                 children: [
                     {
-                        path: 'my-account',
+                        path: 'my-account/:tabname',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
                         data: {state: 'my-account'}
@@ -272,10 +272,10 @@ export const ROUTES: Routes = [
                         path: 'wallets/:walletid',
                         component: AdminWalletsComponent,
                         canActivate: [LoginGuardService],
-                        // data: {state: 'admin-wallets'}
+                        data: {state: 'admin-wallets'}
                     },
                     {
-                        path: 'permissions',
+                        path: 'permissions/:permissionid',
                         component: AdminPermissionsComponent,
                         canActivate: [LoginGuardService]
                     },
@@ -360,7 +360,7 @@ export const ROUTES: Routes = [
                      * OFI corporate actions.
                      */
                     {
-                        path: 'coupon-payment',
+                        path: 'coupon-payment/:tabid',
                         component: CouponPaymentComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -371,12 +371,12 @@ export const ROUTES: Routes = [
              * OFI
              */
             {
-                path: 'list-of-funds',
+                path: 'list-of-funds/:tabid',
                 component: OfiInvestorFundListComponent,
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'manage-orders',
+                path: 'manage-orders/:tabid',
                 component: ManageOrdersComponent,
                 canActivate: [LoginGuardService]
             },
@@ -385,7 +385,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
                 children: [
                     {
-                        path: 'my-orders',
+                        path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
                         component: MyOrdersComponent,
                     }
