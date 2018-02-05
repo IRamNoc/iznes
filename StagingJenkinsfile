@@ -28,16 +28,16 @@ node {
             stage('Deploy Frontend to Staging Environment'){
                 node{
                     sh '''
-                        ssh root@172.104.147.135 rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
-                        scp -pr /var/lib/jenkins/Deploy/dist/*  root@172.104.147.135:/var/www_setltestnet'''
+                        ssh jenkins@172.104.147.135 sudo rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
+                        scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
 
                 }
             }
             stage('Deploy Backend to Staging Environment') {
                 node {
                     sh '''
-                        ssh root@172.104.147.135 rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
-                        scp -pr /var/lib/jenkins/Deploy/backend/*  root@172.104.147.135:/var/phpapps/backend'''
+                        ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
+                        scp -pr /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
                 }
             }
 
@@ -45,8 +45,8 @@ node {
             stage('Deploy French Fund Daemon to Staging Environment') {
                 node {
                     sh '''
-                            ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
+                            ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
+                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
@@ -55,11 +55,11 @@ node {
             }
 
             stage ('Restart Node Server'){
-                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo supervisorctl restart node-server\''
+                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
             }
 
             stage('Check node server is running') {
-                sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
+                sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
             }
 
 
@@ -71,4 +71,3 @@ node {
         }
     }
 }
-
