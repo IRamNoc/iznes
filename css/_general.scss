@@ -496,3 +496,22 @@ h2.statement {
 .datagrid {
     width: 100% !important;
 }
+
+.text-badge {
+    background: rgb(45, 113, 180);
+    border-radius: 3px;
+    color: #FFF;
+    display: inline-block;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    padding: 0 7px;
+    width: auto !important;
+}
+.text-badge:before,
+.text-badge:after {
+    content: " ";
+    display: table;
+}
+.text-badge:after {
+    clear: both;
+}
