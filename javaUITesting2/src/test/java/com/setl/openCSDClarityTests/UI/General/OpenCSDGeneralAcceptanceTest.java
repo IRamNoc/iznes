@@ -14,6 +14,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
@@ -192,6 +193,27 @@ public class OpenCSDGeneralAcceptanceTest {
         clickID("btnAddNewFund");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
+    @Test
+    public void shouldHaveIZNESlogoOnLoginPage() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        try {
+            driver.findElement(By.id("logo-iznes")).isDisplayed();
+        }catch (Error e){
+            fail("logo was not present");
+        }
+    }
+
+    @Test
+    public void shouldHaveIZNESinSubHeadingOnLoginPage() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        try {
+            String subHeadingText = driver.findElement(By.className("login-subheading")).getText();
+            assertTrue(subHeadingText.equals("Log in to IZNES"));
+        }catch (Error e){
+            fail("IZNES was not present in sub-heading");
+        }
     }
 
     public static void fundCheckRoundingUp(String enteringField, String value, String expected){
