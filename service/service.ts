@@ -29,7 +29,7 @@ export class PersistService {
      * @param {FormGroup} group
      */
     public watchForm(name: string, group: FormGroup): FormGroup {
-        console.log(' |-- Persist');
+        console.log(' |-- Persist: ', name);
         /* Check if we have a state for this form. */
         this._persistRequestService.loadFormState(name).then((data) => {
             /* Get recovered data. */
