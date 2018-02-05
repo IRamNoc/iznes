@@ -140,8 +140,9 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/coupon-payment");
     }
