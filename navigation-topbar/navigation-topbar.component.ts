@@ -45,8 +45,8 @@ import {Subscription} from 'rxjs/Subscription';
     styleUrls: ['./navigation-topbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
+export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
     walletSelectItems: Array<any>;
     searchForm: FormGroup;
     selectedWalletId = new FormControl();
@@ -57,6 +57,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     showCountdownModal: boolean;
 
     appConfig: AppConfig;
+    topbarLogoUrl: string;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -93,12 +94,12 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.connectedToWalletNode = false;
 
         this.appConfig = appConfig;
+        this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
         this.showCountdownModal = false;
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
     }
-
 
     updateState() {
         const newState = this.ngRedux.getState();
@@ -127,32 +128,33 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
             const myAuthenData = getAuthentication(newState);
             const myDetail = getMyDetail(newState);
-            const {userId} = myDetail;
-            const {apiKey} = myAuthenData;
+            const { userId } = myDetail;
+            const { apiKey } = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
             const nodePath = _.get(chainAccess, 'nodePath', '');
 
-            this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey).then((res) => {
-                // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
-                if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
-                        onlySelf: true,
-                        emitEvent: true,
-                        emitModelToViewChange: true,
-                        emitViewToModelChange: true
-                    });
-                    console.log(this.walletSelectItems[0]);
-                    this.selected(this.walletSelectItems[0]);
+            this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
+                .then((res) => {
+                    // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
+                    if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+                        this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                            onlySelf: true,
+                            emitEvent: true,
+                            emitModelToViewChange: true,
+                            emitViewToModelChange: true
+                        });
+                        console.log(this.walletSelectItems[0]);
+                        this.selected(this.walletSelectItems[0]);
 
-                    /* set the chain id as the connected one in redux store */
-                    const chainId = _.get(chainAccess, 'chainId', '');
-                    this.ngRedux.dispatch(setConnectedChain(chainId));
+                        /* set the chain id as the connected one in redux store */
+                        const chainId = _.get(chainAccess, 'chainId', '');
+                        this.ngRedux.dispatch(setConnectedChain(chainId));
 
-                    this.changeDetectorRef.markForCheck();
-                }
-            });
+                        this.changeDetectorRef.markForCheck();
+                    }
+                });
 
         }
 
@@ -198,9 +200,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             }
         ));
 
-
         console.log(window.innerWidth);
-
 
         this.ngRedux.dispatch(setMenuShown(true));
     }
@@ -237,7 +237,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         // Set connected wallet in redux state.
         this.ngRedux.dispatch(setConnectedWallet(value.id));
 
-
         // Create a saga pipe.
         const asyncTaskPipe = this.myWalletsService.setActiveWallet(
             value.id
@@ -261,7 +260,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
     }
 
     controlMenu() {
