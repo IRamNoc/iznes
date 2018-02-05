@@ -15,6 +15,7 @@ export const environment = {
             desc: 'View your global inbox',
             icon: 'fa-inbox',
             type: 'inbox',
+            level: 1,
             active: true
         },
         {
@@ -22,6 +23,7 @@ export const environment = {
             desc: 'Messages that require actions',
             icon: 'fa-rocket',
             type: 'action',
+            level: 2,
             active: false
         },
         {
@@ -29,6 +31,7 @@ export const environment = {
             desc: 'Messages sent by your account',
             icon: 'fa-envelope-o',
             type: 'sent',
+            level: 1,
             active: false
         },
         {
@@ -36,6 +39,7 @@ export const environment = {
             desc: 'View messages that you deleted',
             icon: 'fa-trash-o',
             type: 'deleted',
+            level: 1,
             active: false
         },
     ],
