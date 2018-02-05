@@ -1,5 +1,5 @@
 /* Core / Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 /* Redux. */
 import {NgRedux, select} from '@angular-redux/store';
@@ -23,7 +23,7 @@ import {managedWalletsActions} from '@setl/core-store';
 })
 
 /* Class. */
-export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
+export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Wallet List. */
     @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
@@ -46,8 +46,10 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _confirmationService: ConfirmationService,
                 private _persistService: PersistService) {
+        /* Stub. */
+    }
 
-
+    public ngOnInit() {
         /* Get Countries list. */
         this.countriesList = this.userAdminService.countries;
 
@@ -449,7 +451,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 'text': this.walletList[index].walletName
             },
             'walletId': wallet.walletId,
-            'formControl': this.newWalletFormGroup(),
+            'formControl': this.newWalletFormGroup('edit'),
             'active': false // this.editFormControls
         });
 
@@ -694,7 +696,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(managedWalletsActions.setAllTabs(this.tabsControl));
     }
 
-    private newWalletFormGroup(): FormGroup {
+    private newWalletFormGroup(type: string = 'new'): FormGroup {
         const group = new FormGroup(
             {
                 /* Core wallet fields. */
@@ -765,7 +767,12 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             }
         );
 
-        return this._persistService.watchForm('useradmin/newWallet', group);
+        /* Return the form group and watch it using the persistService. */
+        if (type === 'new') {
+            return group; // this._persistService.watchForm('useradmin/newWallet', group);
+        } else {
+            return group;
+        }
     }
 
     /**
