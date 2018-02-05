@@ -1039,7 +1039,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 'text': this.usersList[userIndex].userName
             },
             'userId': user.userID,
-            'formControl': this.getNewUserFormGroup(),
+            'formControl': this.getNewUserFormGroup('edit'),
             'oldAdminGroups': {},
             'oldTxGroups': {},
             'selectedChain': 0,
@@ -1346,7 +1346,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Returns a new user form group.
      * @return {FormGroup}
      */
-    getNewUserFormGroup(): FormGroup {
+    getNewUserFormGroup(type: string = 'new'): FormGroup {
         /* Declare the group. */
         const group = new FormGroup(
             {
@@ -1370,7 +1370,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }, this.passwordValidator);
 
         /* Return the form group and watch it using the persistService. */
-        return this._persistService.watchForm('useradmin/newUser', group);
+        if (type === 'new') {
+            return group; // this._persistService.watchForm('useradmin/newUser', group);
+        } else {
+            return group;
+        }
     }
 
     passwordValidator(g: FormGroup) {

@@ -1,7 +1,7 @@
 /* Core imports. */
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    OnDestroy
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy,
+    OnInit
 } from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -35,7 +35,7 @@ class TypeFilter implements StringFilter<any> {
 })
 
 /* Class. */
-export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
+export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Tabs control */
     public tabsControl: any;
     public typeFilter = new TypeFilter();
@@ -92,8 +92,12 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private _confirmationService: ConfirmationService,
                 private _persistService: PersistService) {
+        /* Stub. */
+    }
+
+    public ngOnInit() {
         /* Get User Types. */
-        this.groupTypes = userAdminService.getGroupTypes();
+        this.groupTypes = this.userAdminService.getGroupTypes();
 
         /* Subscribe to the admin group list observable. */
         this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
@@ -183,7 +187,7 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
         this.userAdminService.updateState();
     }
 
-    public newAddGroupFormgroup() {
+    public newAddGroupFormgroup(type: string = 'new') {
         /* Create the group. */
         const group = new FormGroup(
             {
@@ -194,8 +198,12 @@ export class AdminPermissionsComponent implements AfterViewInit, OnDestroy {
             }
         );
 
-        /* Allow the persist middleware to save and recover state, then return the form group. */
-        return this._persistService.watchForm('useradmin/newGroup', group);
+        /* Return the form group and watch it using the persistService. */
+        if (type === 'new') {
+            return group; // this._persistService.watchForm('useradmin/newGroup', group);
+        } else {
+            return group;
+        }
     }
 
     /**
