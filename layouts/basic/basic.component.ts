@@ -96,6 +96,18 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
      * @param lang
      */
     public changeLanguage(lang) {
+        const validLocales = [
+            'en-Latn',
+            'fr-Latn'
+        ];
+
+        /* Save last language selected by user in localStorage */
+        if (validLocales.indexOf(lang) !== -1) {
+            if (typeof(Storage) !== 'undefined') {
+                localStorage.setItem('lang', lang);
+            }
+        }
+
         /* Set the language in redux. */
         this.ngRedux.dispatch(setLanguage(lang));
 
