@@ -41,7 +41,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -50,14 +50,14 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders'
+            router_link: '/order-book/my-orders/0'
         },
         {
             label: 'Reports',
@@ -115,7 +115,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -160,7 +160,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_manageorders',
             icon_class: 'fa fa-pencil',
             element_id: 'menu-manage-orders',
-            router_link: '/manage-orders'
+            router_link: '/manage-orders/0'
         },
         {
             label: 'Reports',
@@ -211,7 +211,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -235,7 +235,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'Reports',
@@ -287,7 +287,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -296,7 +296,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
     ],
     cac: [
@@ -332,7 +332,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -341,7 +341,7 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
 
     ],
@@ -378,7 +378,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -416,21 +416,21 @@ export const menuSpec: MenuSpec = {
             label_txt: 'txt_listoffunds',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'Manage Orders',
             label_txt: 'txt_manageorders',
             icon_class: 'fa fa-pencil',
             element_id: 'menu-manage-orders',
-            router_link: '/manage-orders'
+            router_link: '/manage-orders/0'
         },
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders'
+            router_link: '/order-book/my-orders/0'
         },
         {
             label: 'Reports',
@@ -482,7 +482,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -497,7 +497,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 }
             ]
         },
@@ -526,7 +526,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_permissions',
                     icon_class: 'fa fa-key',
                     element_id: 'menu-user-admin-permissions',
-                    router_link: '/user-administration/permissions'
+                    router_link: '/user-administration/permissions/0'
                 }
             ]
         },
@@ -687,7 +687,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -702,7 +702,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 },
                 {
                     label: 'Dividend demo',
@@ -907,7 +907,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
@@ -922,7 +922,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_couponpayment',
                     icon_class: 'fa fa-briefcase',
                     element_id: 'menu-coupon',
-                    router_link: '/corporate-actions/coupon-payment'
+                    router_link: '/corporate-actions/coupon-payment/0'
                 }
             ]
         },
@@ -1048,7 +1048,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_myaccount',
                     icon_class: 'fa fa-user',
                     element_id: 'menu-my-account',
-                    router_link: '/account/my-account'
+                    router_link: '/account/my-account/detail'
                 }
             ]
         },
