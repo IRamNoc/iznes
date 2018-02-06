@@ -11,6 +11,8 @@ import {NavigationTopbarComponent} from './navigation-topbar/navigation-topbar.c
 
 import {HomeComponent} from './home/home.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
+import {UiFormComponent} from './layouts/ui-form/ui-form.component';
+import {UiInfoPaneComponent} from './layouts/ui-form/info-pane/info-pane.component';
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -20,7 +22,7 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlPipesModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from 'clarity-angular';
 
 @NgModule({
@@ -32,7 +34,8 @@ import {ClarityModule} from 'clarity-angular';
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
-        SetlPipesModule
+        SetlPipesModule,
+        SetlComponentsModule
     ],
     declarations: [
         /* Directives. */
@@ -47,7 +50,9 @@ import {ClarityModule} from 'clarity-angular';
         CounterTileComponent,
         BasicTileComponent,
         HomeComponent,
-        FormElementsComponent
+        FormElementsComponent,
+        UiFormComponent,
+        UiInfoPaneComponent
     ],
     exports: [
         /* Directives. */
@@ -61,7 +66,9 @@ import {ClarityModule} from 'clarity-angular';
         DashboardComponent,
         CounterTileComponent,
         HomeComponent,
-        FormElementsComponent
+        FormElementsComponent,
+        UiFormComponent,
+        UiInfoPaneComponent
     ],
     providers: [
         /* Services. */
