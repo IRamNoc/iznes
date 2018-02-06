@@ -1,5 +1,13 @@
 /* Core / Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+    AfterViewChecked,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 /* Redux. */
 import {NgRedux, select} from '@angular-redux/store';
@@ -23,19 +31,20 @@ import {managedWalletsActions} from '@setl/core-store';
 })
 
 /* Class. */
-export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /* Wallet List. */
     @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
     public filteredWalletList: any;
+
     /* Tabs control */
     public tabsControl: any = [];
-    /* Wallet List. */
-    @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
+
     /* Types lists. */
     private accountTypes: any;
     private walletTypes: any;
     private countriesList: any;
+
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: any } = {};
 
@@ -48,7 +57,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _confirmationService: ConfirmationService,
                 private _persistService: PersistService) {
-        /* Stub. */
     }
 
     public ngOnInit() {
@@ -86,8 +94,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.walletList.push(list[i]);
             }
 
-            console.log('wallet list: ', this.walletList);
-
             /* Also filter a new list for ui elements. */
             this.filteredWalletList = this.walletList.map((wallet) => {
                 return {
@@ -105,6 +111,21 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+    ngAfterViewChecked() {
+        let activeTabIndex = 0;
+
+        this.tabsControl.map((tab, index) => {
+            if (tab.active) {
+                activeTabIndex = index;
+                return;
+            }
+        });
+
+        if (activeTabIndex === 0) {
+            this.clearNewWallet(1, false);
+        }
     }
 
     ngOnDestroy(): void {
@@ -144,8 +165,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     'active': false
                 }
             ];
-
-            this.resetAddNewWalletForm();
 
             return true;
         }
@@ -254,7 +273,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showError('Failed to create the new wallet.');
             });
 
-        /* Clear the new wallet form. */
+        /* Clear new wallet form. */
         this.clearNewWallet(1, false);
     }
 
@@ -414,7 +433,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.userAdminService.deleteWallet(dataToSend).then((response) => {
                     /* Close a edit tab for this wallet if it's open. */
                     for (let i in this.tabsControl) {
-                        if (this.tabsControl[i].walletId == dataToSend['walletId']) {
+                        if (this.tabsControl[i].walletId === dataToSend['walletId']) {
                             this.closeTab(i);
                             break;
                         }
@@ -486,7 +505,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Then figure out what type we are... then patch the values needed for the forms shown.
            Wallet type legal. */
-        if (wallet.walletType == 1) {
+        if (wallet.walletType === 1) {
             /* Patch the legal meta data into the form. */
             thisTab.formControl.controls['walletLei'].patchValue(wallet.Glei || '');
             thisTab.formControl.controls['walletUid'].patchValue(wallet.uid || '');
@@ -505,7 +524,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             thisTab.formControl.controls['walletAddrPostcode'].patchValue(wallet.postalCode);
         }
         /* Wallet type individual */
-        else if (wallet.walletType == 2) {
+        else if (wallet.walletType === 2) {
             /* Patch the individual basic information into the form. */
             thisTab.formControl.controls['aliases'].patchValue(wallet.aliases || '');
             thisTab.formControl.controls['formerName'].patchValue(wallet.formerName || '');
@@ -563,7 +582,8 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         const newTabId = this.tabsControl.length - 1;
         this.router.navigateByUrl('/user-administration/wallets/' + newTabId);
 
-        this.clearNewWallet(1, null);
+        /* Clear the new wallet form */
+        this.clearNewWallet(1, false);
 
         /* Return. */
         return;
@@ -615,7 +635,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Now let's check if the date object holds a valid date. */
             if (!isNaN(dateo.getTime())) {
                 /* If all is good, return a nice string. */
-                return dateo.getFullYear() + '-' + this.numberPad(dateo.getMonth()) + '-' + this.numberPad(dateo.getDate())
+                return dateo.getFullYear() + '-' + this.numberPad(dateo.getMonth()) + '-' + this.numberPad(dateo.getDate());
             }
 
             /* Not valid. */
@@ -675,10 +695,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Let's set all the values in the form controls. */
         this.tabsControl[tabid].formControl = this.newWalletFormGroup();
-        this.resetAddNewWalletForm();
 
         /* Override the changes. */
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
 
         /* Return. */
         return;
@@ -703,14 +722,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                   </tbody>
               </table>
           `);
-    }
-
-    resetAddNewWalletForm() {
-        this.tabsControl[1].formControl.controls['walletName'].setValue('');
-        this.tabsControl[1].formControl.controls['walletAccount'].setValue([]);
-        this.tabsControl[1].formControl.controls['walletType'].setValue([]);
-
-        this.changeDetectorRef.markForCheck();
     }
 
     private newWalletFormGroup(type: string = 'new'): FormGroup {
@@ -807,27 +818,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                   <tbody>
                       <tr>
                           <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    private showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
                       </tr>
                   </tbody>
               </table>
