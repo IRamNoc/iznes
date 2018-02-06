@@ -36,7 +36,7 @@
 
                 <div class="contract-party-container row">
                     <section formGroupName="{{party.id}}" class="form-block contract-party col-md-6" *ngFor="let party of parties; let idx = index;">
-                        <span class="party-title">{{party.title}}</span>
+                        <span class="text-badge">{{party.title}}</span>
 
                         <div class="form-group col-sm-6">
                             <various-address-select [formControl]="createContractForm.controls[party.id].controls['address']"
