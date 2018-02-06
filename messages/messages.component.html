@@ -16,7 +16,7 @@
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
                     <i class="fa fa-eye"></i> Mark as Read
                 </button>
-                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete" (click)="showDeleteModal = true">
+                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete" (click)="checked.length > 0 && showDeleteModal = true">
                     <i class="fa fa-trash-o"></i> Delete
                 </button>
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'deleted'" id="messagesPutBack" (click)="checkedPutBack()">
