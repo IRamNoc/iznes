@@ -7,7 +7,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService, immutableHelper} from '@setl/utils';
 /* User Admin Service. */
-import {PersistService} from "@setl/core-persist/";
+import {PersistService} from '@setl/core-persist/';
 import {UserAdminService} from '../useradmin.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import _ from 'lodash';
@@ -24,12 +24,12 @@ import {managedWalletsActions} from '@setl/core-store';
 
 /* Class. */
 export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
-    /* Wallet List. */
-    @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
     public filteredWalletList: any;
     /* Tabs control */
     public tabsControl: any = [];
+    /* Wallet List. */
+    @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     /* Types lists. */
     private accountTypes: any;
     private walletTypes: any;
@@ -46,8 +46,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _confirmationService: ConfirmationService,
                 private _persistService: PersistService) {
-
-
+        
         /* Get Countries list. */
         this.countriesList = this.userAdminService.countries;
 
@@ -57,39 +56,6 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             const tabId = _.get(params, 'walletid', 0);
             this.setTabActive(tabId);
         });
-    }
-
-    setInitialTabs() {
-
-        // Get opened tabs from redux store.
-        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['wallet', 'managedWallets', 'openedTabs']);
-
-        if (_.isEmpty(openedTabs)) {
-            /* Default tabs. */
-            this.tabsControl = [
-                {
-                    'title': {
-                        'icon': 'fa-search',
-                        'text': 'Search'
-                    },
-                    'walletId': -1,
-                    'active': true
-                },
-                {
-                    'title': {
-                        'icon': 'fa-user',
-                        'text': 'Add Wallet'
-                    },
-                    'walletId': -1,
-                    'formControl': this.newWalletFormGroup(),
-                    'active': false
-                }
-            ];
-            return true;
-        }
-
-        this.tabsControl = openedTabs;
-        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -134,6 +100,53 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+
+        /* Unsunscribe Observables. */
+        for (var key in this.subscriptions) {
+            this.subscriptions[key].unsubscribe();
+        }
+
+        this.ngRedux.dispatch(managedWalletsActions.setAllTabs(this.tabsControl));
+    }
+
+    setInitialTabs() {
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['wallet', 'managedWallets', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    'title': {
+                        'icon': 'fa-search',
+                        'text': 'Search'
+                    },
+                    'walletId': -1,
+                    'active': true
+                },
+                {
+                    'title': {
+                        'icon': 'fa-user',
+                        'text': 'Add Wallet'
+                    },
+                    'walletId': -1,
+                    'formControl': this.newWalletFormGroup(),
+                    'active': false
+                }
+            ];
+
+            this.resetAddNewWalletForm();
+
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
+        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
     }
 
     /**
@@ -456,8 +469,8 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         /* Variables and thisTab reference. */
         const thisTab = this.tabsControl[this.tabsControl.length - 1];
         let
-            walletAccount = [{id: wallet.accountId, text: wallet.accountName}],
-            walletType = [{id: wallet.walletType, text: wallet.walletTypeName}],
+            walletAccount = [{ id: wallet.accountId, text: wallet.accountName }],
+            walletType = [{ id: wallet.walletType, text: wallet.walletTypeName }],
             resolvedCountry, selectWallet;
 
         /* Now let's patch the core values. */
@@ -477,7 +490,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['walletIncDate'].patchValue(incDate || '');
 
             /* Patch the legal correspondence address into the form. */
-            resolvedCountry = this.userAdminService.resolveCountries([{text: wallet.country}]);
+            resolvedCountry = this.userAdminService.resolveCountries([{ text: wallet.country }]);
             thisTab.formControl.controls['walletAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['walletAddrPrefix'].patchValue(wallet.addressPrefix || '');
             thisTab.formControl.controls['walletAddr1'].patchValue(wallet.address1);
@@ -494,7 +507,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['idCardNum'].patchValue(wallet.idCardNum || '');
 
             /* Patch the residential address into the form. */
-            resolvedCountry = this.userAdminService.resolveCountries([{text: wallet.rdaCountry}]);
+            resolvedCountry = this.userAdminService.resolveCountries([{ text: wallet.rdaCountry }]);
             thisTab.formControl.controls['rdaAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['rdaAddrPrefix'].patchValue(wallet.rdaAddressPrefix || '');
             thisTab.formControl.controls['rdaAddr1'].patchValue(wallet.rdaAddress1 || '');
@@ -504,7 +517,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['rdaAddrPostcode'].patchValue(wallet.rdaPostalCode || '');
 
             /* Patch the correspondence address into the form. */
-            resolvedCountry = this.userAdminService.resolveCountries([{text: wallet.caCountry}]);
+            resolvedCountry = this.userAdminService.resolveCountries([{ text: wallet.caCountry }]);
             thisTab.formControl.controls['caAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['caAddrPrefix'].patchValue(wallet.caAddressPrefix || '');
             thisTab.formControl.controls['caAddr1'].patchValue(wallet.caAddress1 || '');
@@ -530,7 +543,7 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
             thisTab.formControl.controls['bankAccountNum'].patchValue(wallet.bankAccountNum || '');
 
             /* Patch the bank address into the form. */
-            resolvedCountry = this.userAdminService.resolveCountries([{text: wallet.bdCountry}]);
+            resolvedCountry = this.userAdminService.resolveCountries([{ text: wallet.bdCountry }]);
             thisTab.formControl.controls['bdAddrCountry'].patchValue(resolvedCountry);
             thisTab.formControl.controls['bdAddrPrefix'].patchValue(wallet.bdAddressPrefix || '');
             thisTab.formControl.controls['bdAddr1'].patchValue(wallet.bdAddress1 || '');
@@ -544,6 +557,8 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
         // this.setTabActive(this.tabsControl.length - 1);
         const newTabId = this.tabsControl.length - 1;
         this.router.navigateByUrl('/user-administration/wallets/' + newTabId);
+
+        this.clearNewWallet(1, null);
 
         /* Return. */
         return;
@@ -649,10 +664,13 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
      */
     public clearNewWallet(tabid, event): void {
         /* Prevent submit. */
-        if (event) event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
 
         /* Let's set all the values in the form controls. */
         this.tabsControl[tabid].formControl = this.newWalletFormGroup();
+        this.resetAddNewWalletForm();
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
@@ -682,16 +700,12 @@ export class AdminWalletsComponent implements AfterViewInit, OnDestroy {
           `);
     }
 
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
+    resetAddNewWalletForm() {
+        this.tabsControl[1].formControl.controls['walletName'].setValue('');
+        this.tabsControl[1].formControl.controls['walletAccount'].setValue([]);
+        this.tabsControl[1].formControl.controls['walletType'].setValue([]);
 
-        /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
-            this.subscriptions[key].unsubscribe();
-        }
-
-        this.ngRedux.dispatch(managedWalletsActions.setAllTabs(this.tabsControl));
+        this.changeDetectorRef.markForCheck();
     }
 
     private newWalletFormGroup(): FormGroup {
