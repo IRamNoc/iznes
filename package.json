@@ -56,7 +56,7 @@
     "angular2-toaster": "^4.0.2",
     "clarity-angular": "0.10.16",
     "clarity-icons": "^0.10.24",
-    "clarity-ui": "^0.10.24",
+    "clarity-ui": "0.10.18",
     "core-js": "^2.5.3",
     "immutable": "^3.8.1",
     "karma-headless-chrome-launcher": "0.0.6",
