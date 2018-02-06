@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ToasterService} from 'angular2-toaster';
+
 @Component({
     selector: 'app-blank',
     templateUrl: './ui-form.component.html',
@@ -19,7 +22,7 @@ export class UiFormComponent implements OnInit {
     longForm: FormGroup;
     dropdownForm: FormGroup;
 
-    constructor() {
+    constructor(private alerts: AlertsService, private toaster: ToasterService) {
         this.initMocks();
         this.initForms();
     }
@@ -123,5 +126,70 @@ export class UiFormComponent implements OnInit {
     
     dataGridEDelete(): void {
         console.log('Delete data grid item function here');        
+    }
+
+    
+    // alerts
+    showSimpleAlert(): void {
+        this.alerts.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-success">This is a success alert</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+    showTabledAlert(): void {
+        this.alerts.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="left"><b>Item 1:</b></td>
+                        <td>Value 1</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Item 2:</b></td>
+                        <td>Value 2</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Item 3:</b></td>
+                        <td>Value 3</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Item 4:</b></td>
+                        <td>Value 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+    showErrorAlert(): void {
+        this.alerts.create('error', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">This is an error alert</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+
+    // toaster
+    showSuccessToaster(): void {
+        this.toaster.pop('success', 'This is a success toaster!');
+    }
+
+    showWarningToaster(): void {
+        this.toaster.pop('warning', 'This is a warning toaster!');
+    }
+
+    showErrorToaster(): void {
+        this.toaster.pop('error', 'This is a error toaster!');
     }
 }
