@@ -1,0 +1,84 @@
+button.disabled {
+    color: #ccc;
+    cursor: default;
+    border-color: #eaeaea;
+}
+
+.padding {
+    width: 20px;
+    height: 4px;
+    float: left;
+}
+
+h2 {
+    display: inline-block;
+}
+
+.message_list_item_check i {
+    color: #57a5e3;
+}
+
+@keyframes chevron-fade-in {
+    0%   { opacity: 0; transform: translateX(-20px) }
+    100% { opacity: 1; transform: translateX(0) }
+}
+
+.message_menu ul li.active i.fa-chevron-right {
+    color: #57a5e3;
+    animation: chevron-fade-in 500ms 1;
+}
+
+.mail-count {
+    font-size: 14px;
+    padding: 0px 5px;
+    color: white;
+    background: #57a5e3;
+    border-radius: 10px 10px 10px 0;
+    position: relative;
+    bottom: 17px;
+    right: 4px;
+    text-align: center;
+    display: inline-block;
+    height: 20px;
+    min-width: 20px;
+    line-height: 20px;
+    font-weight: normal;
+}
+
+.search {
+    float: right;
+    text-align: right;
+    padding: 20px;
+    button {
+        background: transparent;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: border-color .5s ease;
+        &:hover {
+            border-color: grey;
+        }
+    }
+    .search-filter {
+        margin: 20px;
+        padding: 5px;
+        background: #57a5e3;
+        color: white;
+        border-radius: 5px;
+        transition: transform;
+        &:hover {
+            transform: scale(1.1);
+            text-decoration: line-through;
+            background: #e3625c;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        i {
+            color: white;
+        }
+    }
+}
