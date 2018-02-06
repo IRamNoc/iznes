@@ -59,6 +59,13 @@ interface Encumber {
     metadata: string;
 }
 
+interface CreateContract {
+    walletId: number;
+    address: string;
+    function: string;
+    contractData: any;
+}
+
 @Injectable()
 export class WalletnodeTxService {
 
@@ -147,7 +154,7 @@ export class WalletnodeTxService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
-    newContract(requestData: { walletId: number, address: string, 'function': string, contractData: any }): any {
+    newContract(requestData: CreateContract): any {
         const messageBody: NewContractMessageBody = {
             topic: 'conew',
             walletid: _.get(requestData, 'walletId', 0),
