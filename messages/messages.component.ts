@@ -2,13 +2,13 @@ import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
 import {setRequestedMailList} from '@setl/core-store';
 import {MyMessagesService} from '@setl/core-req-services';
 import {MessagesService} from "../messages.service";
 import {MailHelper} from './mailHelper';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ToasterService} from 'angular2-toaster';
 import {Observable} from 'rxjs/Observable';
 
 @Component({
@@ -86,9 +86,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private _alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private toaster: ToasterService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -450,43 +450,17 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             recipients[i] = obj.walletId;
         }
 
-        if (!formData.subject || !bodyObj.general || !formData.recipients) {
-            console.log('error: incomplete fields');
-
-            this._alertsService.create('error', `<table class="table grid">
-                    <tbody>
-                        <tr class="fadeIn">
-                            <td class="text-center" width="500px">
-                            <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                            &nbsp;Incomplete messages cannot be sent.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `);
-
+        if (subject === '' || bodyObj.general === '' || formData.recipients === '') {
+            this.toaster.pop('error', 'Please fill out all fields');
         } else {
             this.messageService.sendMessage(recipients, subject, body, null).then(
                 () => {
-                    this._alertsService.create('success', `
-                        <table class="table grid">
-                            <tbody>
-                                <tr class="fadeIn">
-                                    <td class="text-center" width="500px">
-                                        <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
-                                        &nbsp;Your message has been sent!
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    `);
-                    setTimeout(() => {
-                        this.closeAndResetComposed();
-                    }, 2000);
+                    this.toaster.pop('success', 'Your message has been sent!');
+                    this.closeAndResetComposed();
                 },
                 (err) => {
-
-
-                    console.log('error: ', err);
+                    this.toaster.pop('error', 'Message sending failed');
+                    console.error('Message sending failed', err);
                 }
             );
         }
