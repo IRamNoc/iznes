@@ -27,6 +27,7 @@ import {
     SET_PRODUCTION
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
+import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -65,7 +66,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     showForgottenPasswordModal = false;
     emailUser = '';
     emailSent = false;
-    countdown= 3;
+    countdown = 3;
     token = '';
     isTokenExpired = false;
     changePassword = false;
@@ -87,6 +88,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
+                private toasterService: ToasterService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language
@@ -165,6 +167,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
         this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
             this.updateState(authentication);
         }));
+
+        this.toasterService.pop('success', 'Session Expired!');
 
         window.onbeforeunload = null;
 
