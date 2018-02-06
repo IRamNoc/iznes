@@ -74,7 +74,7 @@ export class UiDataGridComponent {
         console.log('Edit data grid item function here');
     }
     
-    dataGridEDelete(): void {
+    dataGridDelete(): void {
         console.log('Delete data grid item function here');        
     }
 
