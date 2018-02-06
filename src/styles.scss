@@ -1,2 +1,15 @@
 /*  Include the core OpenCSD styles. */
 @import "../node_modules/\@setl/core-layout/css/core_import";
+
+
+.datagrid .datagrid-column .datagrid-filter-toggle, .datagrid .datagrid-head .datagrid-row-actions .datagrid-filter-toggle {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg aria-hidden='true' data-prefix='fal' data-icon='search' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' class='svg-inline--fa fa-search fa-w-16 fa-1x'%3e%3cpath fill='currentColor' d='M508.5 481.6l-129-129c-2.3-2.3-5.3-3.5-8.5-3.5h-10.3C395 312 416 262.5 416 208 416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c54.5 0 104-21 141.1-55.2V371c0 3.2 1.3 6.2 3.5 8.5l129 129c4.7 4.7 12.3 4.7 17 0l9.9-9.9c4.7-4.7 4.7-12.3 0-17zM208 384c-97.3 0-176-78.7-176-176S110.7 32 208 32s176 78.7 176 176-78.7 176-176 176z' class=''%3e%3c/path%3e%3c/svg%3e") !important;
+}
+
+.datagrid .datagrid-column.asc .datagrid-column-flex:after, .datagrid .datagrid-head .asc.datagrid-row-actions .datagrid-column-flex:after {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg aria-hidden='true' data-prefix='fas' data-icon='sort-up' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 -80 320 512' class='svg-inline--fa fa-sort-up fa-w-10 fa-1x'%3e%3cpath fill='currentColor' d='M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z' class=''%3e%3c/path%3e%3c/svg%3e") !important;
+}
+
+.datagrid .datagrid-column.desc .datagrid-column-flex:after, .datagrid .datagrid-head .desc.datagrid-row-actions .datagrid-column-flex:after {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg aria-hidden='true' data-prefix='fas' data-icon='sort-down' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 128 320 512' class='svg-inline--fa fa-sort-down fa-w-10 fa-1x'%3e%3cpath fill='currentColor' d='M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z' class=''%3e%3c/path%3e%3c/svg%3e") !important;
+}
