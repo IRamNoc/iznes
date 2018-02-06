@@ -60,6 +60,9 @@ export class ContractsComponent implements OnInit, OnChanges {
 
         let contract = this.loadContract();
         console.log(contract);
+
+        this.contract = contract;
+
         this.exportContract(contract);
         this.contracts = [
             contract
@@ -69,6 +72,7 @@ export class ContractsComponent implements OnInit, OnChanges {
         for (let prop in contract) {
             this.contractFields.push(prop);
         }
+
     }
 
     /**
@@ -87,7 +91,7 @@ export class ContractsComponent implements OnInit, OnChanges {
     }
 
     public loadContract() {
-        const contractJSON = {};
+        const contractJSON = require('../../contract.json');
         return this.contractService.fromJSON(contractJSON);
     }
 
@@ -114,6 +118,7 @@ export class ContractsComponent implements OnInit, OnChanges {
 
         /* Push the edit tab into the array. */
         const contract = this.contracts[index];
+        console.log('Contract for tab:', contract);
 
         /* And also pre-fill the form... let's sort some of the data out. */
         this.tabsControl.push({
