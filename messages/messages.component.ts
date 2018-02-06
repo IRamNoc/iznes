@@ -450,7 +450,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             recipients[i] = obj.walletId;
         }
 
-        if (subject === '' || bodyObj.general === '' || formData.recipients === '') {
+        if (!formData.subject || !bodyObj.general || !formData.recipients) {
             console.log('error: incomplete fields');
 
             this._alertsService.create('error', `<table class="table grid">
