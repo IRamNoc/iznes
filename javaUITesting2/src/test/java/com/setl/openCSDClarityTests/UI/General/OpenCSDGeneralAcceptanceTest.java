@@ -217,7 +217,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("test needs to be cleaned and have an assertion")
+    @Ignore("test needs to be cleaned and have an assertion")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67");
@@ -225,7 +225,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("test needs to be finished")
+    @Ignore("test needs to be finished")
     public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67");
@@ -233,7 +233,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("test needs to be finished")
+    @Ignore("test needs to be finished")
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67");
@@ -241,7 +241,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("test needs to be finished")
+    @Ignore("test needs to be finished")
     public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67");
