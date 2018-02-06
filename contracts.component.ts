@@ -91,7 +91,7 @@ export class ContractsComponent implements OnInit, OnChanges {
     }
 
     public loadContract() {
-        const contractJSON = require('../../contract.json');
+        const contractJSON = {}; // require('../../contract.json');
         return this.contractService.fromJSON(contractJSON);
     }
 

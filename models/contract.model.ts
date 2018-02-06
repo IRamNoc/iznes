@@ -31,7 +31,6 @@ export class ContractModel {
     public name: string = '';
     public function: string = '';
     public __function: string = '';
-    public events: Array<any> = new Array();
     public complete: boolean = false;
 }
 
