@@ -88,6 +88,7 @@
     "@types/node": "^6.0.96",
     "chromedriver": "~2.34",
     "codelyzer": "~3.0.1",
+    "gulp": "3.9.1",
     "gulp-nsp": "^2.4.2",
     "gulp-sonar": "^3.0.1",
     "jasmine-core": "~2.6.2",
