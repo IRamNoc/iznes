@@ -479,9 +479,13 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             </tbody>
                         </table>
                     `);
-                    this.closeAndResetComposed();
+                    setTimeout(() => {
+                        this.closeAndResetComposed();
+                    }, 2000);
                 },
                 (err) => {
+
+
                     console.log('error: ', err);
                 }
             );
