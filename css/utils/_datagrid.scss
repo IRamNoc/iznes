@@ -8,11 +8,23 @@
 
     .datagrid-head {
         border-bottom: 1px solid #ccc;
+
+        .datagrid-column {
+            &.actions {
+                text-align: right;
+            }
+        }
     }
 
     .datagrid-body {
         .datagrid-row {
             border-top: 1px solid #ececec;
+
+            .datagrid-cell {
+                &.actions {
+                    text-align: right;
+                }
+            }
         }
     }
 }

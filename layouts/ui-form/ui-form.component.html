@@ -2,39 +2,282 @@
     <h1><i class="fa fa-user-plus"></i> <span mltag="txt_xregisterissuer">UI Form</span></h1>
 </div>
 
-<clr-tabs>
-    <clr-tab>
-        <button clrTabLink id="testlinkreg">
-            <i class="fa fa-plus-circle"></i> <span mltag="txt_newissuer">New Issuer</span></button>
-        <clr-tab-content *clrIfActive>
-            <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer(registerIssuerForm.value)">
-                <section class="form-block">
-                    <div class="form-group col-sm-6">
-                        <label for="issuer-identifier" mltag="txt_issueridentifier">Issuer Identifier</label>
-                        <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45"
-                               [formControl]="issuerIdentifier" mltag="txt_issueridentifier"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" mltag="txt_issueraddress">Issuer Address</label>
-                        <ng-select
-                            [items]="walletAddressSelectItems"
-                            [allowClear]="true"
-                            placeholder="Select Issuer Address"
-                            [formControl]="issuerAddress"
+<div class="row">
+    <div class="col-sm-9">
 
-                            mltag="txt_selectissueraddress">
-                        </ng-select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" mltag="txt_registerissuer">Register Issuer</button>
-                </section>
-            </form>
-        </clr-tab-content>
-    </clr-tab>
-    <clr-tab>
-        <button clrTabLink id="testlinkreg2">
-            <i class="fa fa-plus-circle"></i> <span mltag="txt_newissuer">New Issuer</span></button>
-        <clr-tab-content *clrIfActive>
-            xxxx
-        </clr-tab-content>
-    </clr-tab>
-</clr-tabs>
+        <div class="padding">
+            <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes.'"></app-ui-info-pane>
+        </div>
+
+        <!-- // TABS -->
+        <section id="tabs">
+            <h3>Tabs</h3>
+
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="primarytab">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_primarytab">Primary Tab</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'The primary tab should always be used to display the main data for the feature in which it is being used. New tabs should also be opened to the right of the primary tab. If the tab is dynamic is should spawn to the right of both the primary tab and any static tabs.'"></app-ui-info-pane>
+                    </clr-tab-content>
+                </clr-tab>
+                <clr-tab>
+                    <button clrTabLink id="secondarytab">
+                        <i class="fa fa-plus-circle"></i> <span mltag="txt_ui_secondarytab">Secondary Tab</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Secondary tabs can be static and for actions, e.g. \'Add User\', or they can be dynamic and spawned from actions within the primary tab, e.g. \'Edit User\'.'"></app-ui-info-pane>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+        </section>
+
+        <!-- // FORMS -->
+        <section id="forms">
+            <h3>Forms</h3>
+
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="standardform">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_standardform">Standard Form</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <form [formGroup]="basicForm" (ngSubmit)="submitForm()">
+                            <section class="form-block">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="input" mltag="txt_ui_inputfield">Input field</label>
+                                    <input type="text" name="input" id="input" formControlName="input" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label required-field" for="inputRequired" mltag="txt_ui_inputfieldreq">Input field (required)</label>
+                                    <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired" />
+                                    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Add \'required-field\' class to the \'label\' or the \'.form-group\' to show the asterix.'"></app-ui-info-pane>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="inputIcon" mltag="txt_ui_inputicon">Input icon</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar"></span>
+                                        <input name="inputIcon" id="inputIcon" formControlName="inputIcon" />
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="select" mltag="txt_ui_select">Dropdown</label>
+                                    <ng-select id="select"
+                                        [items]="mockSelectItems"
+                                        [allowClear]="true"
+                                        placeholder="Select"
+                                        [formControl]="basicForm.controls['select']"
+                                        mltag="txt_ui_select">
+                                    </ng-select>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <button id="submit" type="submit" class="btn btn-primary" mltag="txt_ui_submit">Submit Button</button>
+                                </div>
+
+                                <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Form fields should be 50% of the width of their container. This can be achieved with the \'col-sm-6\' class.'"></app-ui-info-pane>
+                            </section>
+                        </form>
+                    </clr-tab-content>
+                </clr-tab>
+                
+                <clr-tab>
+                    <button clrTabLink id="longform">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_longform">Long Form</span>
+                    </button>
+                    
+                    <clr-tab-content *clrIfActive>
+                        <form [formGroup]="longForm" (ngSubmit)="submitForm()">
+                            <section class="form-block">
+                                <div class="row">
+                                    <div class="form-group required-field col-sm-6">
+                                        <label class="control-label" for="firstName" mltag="txt_ui_firstname">First name</label>
+                                        <input type="text" name="firstName" id="firstName" formControlName="firstName" />
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label required-field" for="lastName" mltag="txt_ui_lastname">Last name</label>
+                                        <input type="text" name="lastName" id="lastName" formControlName="lastName" />
+                                    </div>                                    
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label required-field" for="password" mltag="txt_ui_password">Password</label>
+                                        <input type="text" name="password" id="password" formControlName="password" />
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="control-label required-field" for="passwordConfirm" mltag="txt_ui_passwordconfirm">Confirm password</label>
+                                        <input type="text" name="passwordConfirm" id="passwordConfirm" formControlName="passwordConfirm" />
+                                    </div>
+                                    
+                                    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Simply wrap 2 \'form-group col-sm-6\' in a \'row\' class to achieve side-by-side fields.'"></app-ui-info-pane>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="input" mltag="txt_ui_inputfield">Input field</label>
+                                    <input type="text" name="input" id="input" formControlName="input" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label required-field" for="inputRequired" mltag="txt_ui_inputfieldreq">Input field (required)</label>
+                                    <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="inputIcon" mltag="txt_ui_inputicon">Input icon</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar"></span>
+                                        <input name="inputIcon" id="inputIcon" formControlName="inputIcon" />
+                                    </div>
+                                    
+                                    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Add icons to inputs that need it such as Date and Time.'"></app-ui-info-pane>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="select" mltag="txt_ui_select">Dropdown</label>
+                                    <ng-select id="select"
+                                        [items]="mockSelectItems"
+                                        [allowClear]="true"
+                                        placeholder="Select"
+                                        [formControl]="longForm.controls['select']"
+                                        mltag="txt_ui_select">
+                                    </ng-select>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <button id="submit" type="submit" class="btn btn-primary" mltag="txt_ui_submit">Submit Button</button>
+                                </div>
+                            </section>
+                        </form>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+        </section>
+
+        <!-- // DROPDOWNS -->
+        <section id="dropdowns">
+            <h3>Dropdowns (select)</h3>
+
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="basicselect">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_basicselect">Basic Select</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <form>
+                            <section class="form-block">
+                                <div class="form-group col-sm-6">
+                                    <ng-select id="select"
+                                        [items]="mockSelectItems"
+                                        [allowClear]="true"
+                                        placeholder="Select"
+                                        mltag="txt_ui_select">
+                                    </ng-select>
+                                </div>
+                            </section>
+                        </form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="addressselect">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_addressselect">Address Select</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <form>
+                            <section class="form-block">
+                                <div class="form-group col-sm-6">
+                                    <various-address-select [formControl]="dropdownForm.controls['address']"
+                                        [relationshipArray]="dropdownAddressSelectItems"
+                                        [ownWalletAddressArray]="[]"
+                                        [class.error]="!dropdownForm.controls['address'].valid && dropdownForm.controls['address'].touched"
+                                        [required]="true">
+                                    </various-address-select>
+
+                                    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'You can add the \'required\' input to the address select to give it an asterix. This does not make it required in your form though.'"></app-ui-info-pane>
+                                </div>
+                            </section>
+                        </form>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+        </section>
+
+        <!-- // DATAGRID -->
+        <section id="datagrid">
+            <h3>Data Grid</h3>
+
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="datagrid">
+                        <i class="fa fa-bars"></i> <span mltag="txt_ui_datagrid">Data Grid</span>
+                    </button>
+
+                    <clr-tab-content *clrIfActive>
+                        <clr-datagrid #dataGrid>
+                            <clr-dg-column mltag="txt_ui_column1">Column 1</clr-dg-column>
+                            <clr-dg-column mltag="txt_ui_column2">Column 2</clr-dg-column>
+                            <clr-dg-column class="actions" mltag="txt_ui_actions">Actions</clr-dg-column>
+            
+                            <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
+                                <clr-dg-cell>{{item.value1}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.value2}}</clr-dg-cell>
+                                <clr-dg-cell class="actions">
+                                    <div class="btn-group btn-sm">
+                                        <button id="edit" (click)="dataGridEdit()" class="btn">
+                                            <i class="fa fa-pencil-square-o"></i> <span mltag="txt_ui_edit">Edit</span>
+                                        </button>
+
+                                        <button id="delete" (click)="dataGridDelete()" class="btn">
+                                            <i class="fa fa-trash-o"></i> <span mltag="txt_ui_delete">Delete</span>
+                                        </button>
+                                    </div>
+                                </clr-dg-cell>
+                            </clr-dg-row>
+            
+                            <clr-dg-footer>
+                                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                                <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+                            </clr-dg-footer>
+                        </clr-datagrid>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+        </section>
+
+    </div>
+
+    <!-- // NAVIGATION -->
+    <div class="col-sm-3 navigation">
+        
+        <clr-tabs>
+            <clr-tab>
+                <button clrTabLink id="testlinkreg">
+                    <i class="fa fa-bars"></i> <span mltag="txt_navigation">Navigation</span>
+                </button>
+
+                <clr-tab-content *clrIfActive>
+                    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' : '[+] show info panes' }}</a>
+                    <ul>
+                        <li><a href="#" (click)="scrollTo($event, 'tabs')">Tabs</a></li>
+                        <li><a href="#" (click)="scrollTo($event, 'forms')">Forms</a></li>
+                        <li><a href="#" (click)="scrollTo($event, 'dropdowns')">Dropdowns (Select)</a></li>
+                        <li><a href="#" (click)="scrollTo($event, 'datagrid')">Data Grid</a></li>
+                    </ul>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+
+    </div>
+</div>

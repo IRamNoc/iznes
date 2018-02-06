@@ -376,7 +376,7 @@ form various-address-select.error .form-group input[type=text] {
     margin: -30px 0 0 375px;
 }
 
-.required-field { /* new version of mandatory */
+label.required-field, .form-group.required-field label { /* new version of mandatory */
     &:after {
         color: red;
         content: "*";
