@@ -44,6 +44,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentPage;
     public currentBox;
     public search: string = '';
+    public showDeleteModal: boolean = false;
 
     public unreadMessages;
 
@@ -146,6 +147,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         });
 
         this.route.params.subscribe((params) => {
+            this.uncheckAll();
             if (params.category) {
                 if (params.category === 'view') {
                     return;
@@ -196,6 +198,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                 }
             }
+            message.isChecked = false;
             return message;
         });
 
@@ -232,8 +235,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.requestMailboxByCategory(categoryType, page);
     }
 
-    getChecked() {
+    get checked(): Array<any> {
         return this.messages.filter(message => message.isChecked);
+    }
+
+    uncheckAll() {
+        this.messages = this.messages.map((message) => {
+            return { ...message, isChecked: false };
+        });
     }
 
     /**
@@ -249,7 +258,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Mark as Read - Multiselect
      */
     checkedMarkAsRead() {
-        this.getChecked().forEach(message => this.mailHelper.markMessageAsRead(message.recipientId, message.mailId));
+        this.checked.forEach(message => this.mailHelper.markMessageAsRead(message.recipientId, message.mailId));
         this.refreshMailbox();
     }
 
@@ -257,7 +266,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Deleted - Multiselect
      */
     checkedDeleted() {
-        this.getChecked().forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message));
         this.refreshMailbox();
     }
 
@@ -278,7 +287,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      *
      * @param index
      */
-    messageChecked(index) {
+    messageChecked(index, event) {
+        event.stopPropagation();
         if (this.messages[index].isChecked === true) {
             this.messages[index].isChecked = false;
             return;
@@ -357,6 +367,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     showCategory(index, composeSelected = false, page = 0) {
         this.messageView = false;
         this.resetMessages();
+        this.uncheckAll();
         this.clearSearch();
         this.composeSelected = composeSelected;
 
