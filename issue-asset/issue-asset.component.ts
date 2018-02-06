@@ -1,31 +1,19 @@
-import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SagaHelper, walletHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
-    WalletNodeRequestService,
-    WalletnodeTxService,
-    InitialisationService,
-    MyWalletsService
+    InitialisationService, MyWalletsService, WalletNodeRequestService,
+    WalletnodeTxService
 } from '@setl/core-req-services';
 import {
-    getConnectedWallet,
-    setRequestedWalletInstrument,
-    getMyInstrumentsList,
-    getWalletAddressList,
-    getWalletToRelationshipList,
-    setRequestedWalletToRelationship,
-    getWalletDirectoryList,
-    ISSUE_ASSET_SUCCESS,
-    ISSUE_ASSET_FAIL,
-    finishIssueAssetNotification,
-    setRequestedWalletAddresses,
-    setRequestedWalletLabel
+    finishIssueAssetNotification, ISSUE_ASSET_FAIL, ISSUE_ASSET_SUCCESS, setRequestedWalletAddresses,
+    setRequestedWalletInstrument, setRequestedWalletToRelationship
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Unsubscribe} from 'redux';
 import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-issue-asset',
@@ -70,16 +58,19 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsService: MyWalletsService) {
+                private myWalletsService: MyWalletsService,
+                private _persistService: PersistService) {
 
         /**
          * Issuer Asset form
          */
-        this.issueAssetForm = new FormGroup({
+        const formGroup = new FormGroup({
             asset: new FormControl('', Validators.required),
             recipient: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
         });
+
+        this.issueAssetForm = this._persistService.watchForm('assetServicing/issueAsset', formGroup);
 
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
@@ -110,7 +101,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        
+
     }
 
     updateToRelationship() {

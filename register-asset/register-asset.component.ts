@@ -1,21 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux} from '@angular-redux/store';
 import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
 import {
-    getConnectedWallet,
-    getRequestedIssuerState,
-    setRequestedWalletIssuer,
-    SET_WALLET_ISSUER_LIST,
-    getWalletIssuerDetail,
-    REGISTER_ASSET_SUCCESS,
-    REGISTER_ASSET_FAIL,
-    getNewInstrumentRequest,
-    finishRegisterInstrumentNotification
+    finishRegisterInstrumentNotification, getConnectedWallet, getNewInstrumentRequest, getRequestedIssuerState,
+    getWalletIssuerDetail, REGISTER_ASSET_FAIL, REGISTER_ASSET_SUCCESS, SET_WALLET_ISSUER_LIST, setRequestedWalletIssuer
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-register-asset',
@@ -36,17 +30,20 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService) {
+                private walletnodeTxService: WalletnodeTxService,
+                private _persistService: PersistService) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
          * Register Asset form
          */
-        this.registerAssetForm = new FormGroup({
+        const formGroup = new FormGroup({
             issuerIdentifier: new FormControl(this.walletIssuerDetail.walletIssuer, Validators.required),
             instrumentIdentifier: new FormControl('', Validators.required)
         });
+
+        this.registerAssetForm = this._persistService.watchForm('assetServicing/registerAsset', formGroup);
     }
 
     ngOnInit() {

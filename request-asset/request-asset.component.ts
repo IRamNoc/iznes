@@ -1,25 +1,19 @@
-import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {walletHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
-import {MessagesService, MessageActionsConfig} from '@setl/core-messages';
+import {MessageActionsConfig, MessagesService} from '@setl/core-messages';
 import {
-    WalletNodeRequestService,
-    WalletnodeTxService,
-    InitialisationService,
-    MyWalletsService
+    InitialisationService, MyWalletsService, WalletNodeRequestService,
+    WalletnodeTxService
 } from '@setl/core-req-services';
-import {
-    getConnectedWallet,
-    setRequestedWalletToRelationship,
-    TRANSFER_ASSET_SUCCESS,
-    TRANSFER_ASSET_FAIL
-} from '@setl/core-store';
+import {TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs';
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-request-asset',
@@ -27,7 +21,7 @@ import {Observable} from 'rxjs';
     styleUrls: ['./request-asset.component.css']
 })
 export class RequestAssetComponent implements OnInit, OnDestroy {
-    
+
     requestAssetForm: FormGroup;
 
     subscriptionsArray: Array<Subscription> = [];
@@ -59,24 +53,28 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletService: MyWalletsService,
-                private messagesService: MessagesService) {
+                private messagesService: MessagesService,
+                private _persistService: PersistService) {
 
         /* send asset form */
-        this.requestAssetForm = new FormGroup({
+        const formGroup = new FormGroup({
             asset: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required)
         });
+
+        this.requestAssetForm = this._persistService.watchForm('assetServicing/requestAsset', formGroup);
 
         /* data subscriptions */
         this.initAssetSubscriptions();
     }
 
-    ngOnInit() { }
-    
+    ngOnInit() {
+    }
+
     private initAssetSubscriptions(): void {
         this.subscriptionsArray.push(
             this.requestedAllInstrumentOb.subscribe((requested) => {
-                if(!requested) InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
+                if (!requested) InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
             }),
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
@@ -111,7 +109,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         const instrument = fullAssetIdSplit.instrument;
 
         const amount = this.requestAssetForm.get('amount').value;
-        
+
         const actionConfig: MessageActionsConfig = new MessageActionsConfig();
         actionConfig.completeText = 'Transfer of Asset Complete';
 
@@ -174,7 +172,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        for(const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
