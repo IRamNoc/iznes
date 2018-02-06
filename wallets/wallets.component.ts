@@ -1,13 +1,5 @@
 /* Core / Angular imports. */
-import {
-    AfterViewChecked,
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnDestroy,
-    OnInit
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 /* Redux. */
 import {NgRedux, select} from '@angular-redux/store';
@@ -31,7 +23,7 @@ import {managedWalletsActions} from '@setl/core-store';
 })
 
 /* Class. */
-export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Wallet List. */
     @select(['wallet', 'managedWallets', 'walletList']) walletsListOb;
     public walletList: any;
@@ -111,21 +103,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy, 
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
-    }
-
-    ngAfterViewChecked() {
-        let activeTabIndex = 0;
-
-        this.tabsControl.map((tab, index) => {
-            if (tab.active) {
-                activeTabIndex = index;
-                return;
-            }
-        });
-
-        if (activeTabIndex === 0) {
-            this.clearNewWallet(1, false);
-        }
     }
 
     ngOnDestroy(): void {
