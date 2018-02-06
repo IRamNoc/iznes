@@ -66,7 +66,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     showForgottenPasswordModal = false;
     emailUser = '';
     emailSent = false;
-    countdown = 3;
+    countdown = 5;
     token = '';
     isTokenExpired = false;
     changePassword = false;
