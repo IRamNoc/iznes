@@ -1,26 +1,20 @@
-import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {SagaHelper, walletHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
-    WalletNodeRequestService,
-    WalletnodeTxService,
-    InitialisationService,
-    MyWalletsService
+    InitialisationService, MyWalletsService, WalletNodeRequestService,
+    WalletnodeTxService
 } from '@setl/core-req-services';
 import {
-    getConnectedWallet,
-    getWalletToRelationshipList,
-    getWalletDirectoryList,
-    setRequestedWalletAddresses,
-    SEND_ASSET_SUCCESS,
-    SEND_ASSET_FAIL,
-    finishSendAssetNotification
+    finishSendAssetNotification, getConnectedWallet, getWalletDirectoryList, getWalletToRelationshipList,
+    SEND_ASSET_FAIL, SEND_ASSET_SUCCESS, setRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-send-asset',
@@ -28,7 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
     styleUrls: ['./send-asset.component.css']
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
-    
+
     sendAssetForm: FormGroup;
 
     subscriptionsArray: Array<Subscription> = [];
@@ -41,7 +35,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     // Asset
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
-    
+
     // Asset Address
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
@@ -59,18 +53,21 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                private _persistService: PersistService) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
-        
+
         /* send asset form */
-        this.sendAssetForm = new FormGroup({
+        const formGroup = new FormGroup({
             asset: new FormControl('', Validators.required),
             assetAddress: new FormControl('', Validators.required),
             recipient: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required)
         });
+
+        this.sendAssetForm = this._persistService.watchForm('assetServicing/sendAsset', formGroup);
 
         /* data subscriptions */
         this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
@@ -78,11 +75,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
-        
+
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
-        
+
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
@@ -96,7 +93,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe(newSendAssetRequest => this.showResponseModal(newSendAssetRequest)));
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     sendAsset(): void {
         if (this.sendAssetForm.valid) {
@@ -174,7 +172,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             `);
 
             this.ngRedux.dispatch(finishSendAssetNotification());
-        }      
+        }
     }
 
     showErrorModal(data): void {
@@ -184,7 +182,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
     updateState(): void {
         const newState = this.ngRedux.getState();
-        
+
         // Set connected WalletId
         this.connectedWalletId = getConnectedWallet(newState);
 
@@ -229,27 +227,27 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 text: (item.label) ? item.label : item.addr
             });
         });
-        
+
         return dropdownItems;
     }
 
     getError(): any {
-        if(this.fieldHasError('asset')) {
+        if (this.fieldHasError('asset')) {
             return {
                 mltag: 'txt_assetisrequired',
                 text: 'Asset is Required'
             }
-        } else if(this.fieldHasError('assetAddress')) {
+        } else if (this.fieldHasError('assetAddress')) {
             return {
                 mltag: 'txt_assetisrequired',
                 text: 'Asset Address is Required'
             }
-        } else if(this.fieldHasError('recipient')) {
+        } else if (this.fieldHasError('recipient')) {
             return {
                 mltag: 'txt_recipientisrequired',
                 text: 'Recipient is Required'
             }
-        } else if(this.fieldHasError('amount')) {
+        } else if (this.fieldHasError('amount')) {
             return {
                 mltag: 'txt_amountisrequired',
                 text: 'Amount is Required'
@@ -267,7 +265,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.reduxUnsubscribe();
 
-        for(const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
