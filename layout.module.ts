@@ -11,8 +11,13 @@ import {NavigationTopbarComponent} from './navigation-topbar/navigation-topbar.c
 
 import {HomeComponent} from './home/home.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
-import {UiFormComponent} from './layouts/ui-form/ui-form.component';
 import {UiInfoPaneComponent} from './layouts/ui-form/info-pane/info-pane.component';
+import {UiTabsComponent} from './layouts/ui-form/components/tabs/tabs.component';
+import {UiFormsComponent} from './layouts/ui-form/components/forms/forms.component';
+import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
+import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
+import {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.component';
+import {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -51,8 +56,13 @@ import {ClarityModule} from 'clarity-angular';
         BasicTileComponent,
         HomeComponent,
         FormElementsComponent,
-        UiFormComponent,
-        UiInfoPaneComponent
+        UiInfoPaneComponent,
+        UiTabsComponent,
+        UiFormsComponent,
+        UiDropdownsComponent,
+        UiDataGridComponent,
+        UiAlertsComponent,
+        UiToasterComponent
     ],
     exports: [
         /* Directives. */
@@ -67,8 +77,13 @@ import {ClarityModule} from 'clarity-angular';
         CounterTileComponent,
         HomeComponent,
         FormElementsComponent,
-        UiFormComponent,
-        UiInfoPaneComponent
+        UiInfoPaneComponent,
+        UiTabsComponent,
+        UiFormsComponent,
+        UiDropdownsComponent,
+        UiDataGridComponent,
+        UiAlertsComponent,
+        UiToasterComponent
     ],
     providers: [
         /* Services. */
