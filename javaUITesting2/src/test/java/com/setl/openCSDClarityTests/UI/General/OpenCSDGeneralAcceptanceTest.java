@@ -216,6 +216,22 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
+    @Test
+    @Ignore("test needs to be cleaned and have an assertion")
+    public void shouldSendMessageToWallet() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToPageByID("menu-messages");
+        driver.findElement(By.id("messagescompose")).click();
+        driver.findElement(By.id("messagesRecipients")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys("Investor");
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li/div/a")).click();
+        driver.findElement(By.id("messagesSubject")).sendKeys("Messages Subject");
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys("AMWallet");
+        driver.findElement(By.id("messagesSendMessage")).click();
+        Thread.sleep(2000);
+    }
+
     public static void fundCheckRoundingUp(String enteringField, String value, String expected){
         driver.findElement(By.id(enteringField)).clear();
         driver.findElement(By.id(enteringField)).sendKeys(value);
