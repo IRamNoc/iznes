@@ -43,17 +43,22 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #141 : Awaiting code completion")
+    //@Ignore("TG #141 : Awaiting code completion")
     public void shouldAutosaveInformation() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPage("user-admin-users");
+        Thread.sleep(2000);
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
-        myAccountClearField("DisplayName");myAccountSendKeys("DisplayName", "autosave-check");
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
-        navigateToDropdown("menu-account-module");
-        navigateToPage("my-account");
-        assertTrue("DisplayName".equals("autosave-check"));
+        navigateToDropdown("menu-user-administration");
+        navigateToPage("user-admin-users");
+        Thread.sleep(2000);
+        driver.findElement(By.id("user-tab-1")).click();
+        String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
+        assertTrue(username.equals("I wonder if this will stay here"));
     }
 
     @Test
