@@ -14,6 +14,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 
 import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
@@ -192,6 +193,83 @@ public class OpenCSDGeneralAcceptanceTest {
         clickID("btnAddNewFund");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
+    @Test
+    public void shouldHaveIZNESlogoOnLoginPage() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        try {
+            driver.findElement(By.id("logo-iznes")).isDisplayed();
+        }catch (Error e){
+            fail("logo was not present");
+        }
+    }
+
+    @Test
+    public void shouldHaveIZNESinSubHeadingOnLoginPage() throws IOException, InterruptedException {
+        navigateToLoginPage();
+        try {
+            String subHeadingText = driver.findElement(By.className("login-subheading")).getText();
+            assertTrue(subHeadingText.equals("Log in to IZNES"));
+        }catch (Error e){
+            fail("IZNES was not present in sub-heading");
+        }
+    }
+
+    @Test
+    @Ignore("#193 Awaiting code completion")
+    public void shouldSendMessageToWallet() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg67", "TextMessage", "Your message has been sent!");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+    }
+
+    @Test
+    @Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg68", "TextMessage", "Please fill out all fields");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+    }
+
+    @Test
+    @Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
+    }
+
+    @Test
+    @Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
+    }
+
+    public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
+        navigateToPageByID("menu-messages");
+        driver.findElement(By.id("messagescompose")).click();
+        driver.findElement(By.id("messagesRecipients")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys(recipient);
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li/div/a")).click();
+        driver.findElement(By.id("messagesSubject")).sendKeys(subject);
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
+        try{
+            driver.findElement(By.id("messagesSendMessage")).click();
+        }catch (Error e){
+            fail("send message was not clickable");
+        }
+        String JasperoModel = driver.findElement(By.className("toast-title")).getText();
+        assertTrue(JasperoModel.equals(toasterMessage));
+    }
+
+    public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
+        loginAndVerifySuccess(recipientUsername, recipientPassword);
+        navigateToPageByID("menu-messages");
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-messages/div/div[2]/div[5]/div/div[2]")).click();
+        String subjectMessage = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-messages/div/div[2]/div[1]/h4/b")).getText();
+        assertTrue(subjectMessage.equals(subject));
     }
 
     public static void fundCheckRoundingUp(String enteringField, String value, String expected){
