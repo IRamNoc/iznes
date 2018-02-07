@@ -24,6 +24,8 @@
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="inputRequired" mltag="txt_ui_inputfieldreq">Input field (required)</label>
                         <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired" />
+                        <span class="field-error">Field is required</span>
+                        <br />
                         <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Add \'required-field\' class to the \'label\' or the \'.form-group\' to show the asterix.'"></app-ui-info-pane>
                     </div>
                     
@@ -68,23 +70,27 @@
                         <div class="form-group required-field col-sm-6">
                             <label class="control-label" for="firstName" mltag="txt_ui_firstname">First name</label>
                             <input type="text" name="firstName" id="firstName" formControlName="firstName" />
+                            <span class="field-error">Field is required</span>
                         </div>
                         
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="lastName" mltag="txt_ui_lastname">Last name</label>
                             <input type="text" name="lastName" id="lastName" formControlName="lastName" />
+                            <span class="field-error">Field is required</span>
                         </div>                                    
                     </div>
                     
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="password" mltag="txt_ui_password">Password</label>
-                            <input type="text" name="password" id="password" formControlName="password" />
+                            <input type="password" name="password" id="password" formControlName="password" />
+                            <span class="field-error">Field is required</span>
                         </div>
                         
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="passwordConfirm" mltag="txt_ui_passwordconfirm">Confirm password</label>
-                            <input type="text" name="passwordConfirm" id="passwordConfirm" formControlName="passwordConfirm" />
+                            <input type="password" name="passwordConfirm" id="passwordConfirm" formControlName="passwordConfirm" />
+                            <span class="field-error">Field is required</span>
                         </div>
                         
                         <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Simply wrap 2 \'form-group col-sm-6\' in a \'row\' class to achieve side-by-side fields.'"></app-ui-info-pane>
@@ -98,6 +104,7 @@
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="inputRequired" mltag="txt_ui_inputfieldreq">Input field (required)</label>
                         <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired" />
+                        <span class="field-error">Field is required</span>
                     </div>
 
                     <div class="form-group col-sm-6">
