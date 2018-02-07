@@ -12,12 +12,9 @@ import { SelectModule } from '@setl/utils/components/ng2-select/select.module';
 import { QuillEditorModule } from 'ngx-quill-editor';
 import { SetlPipesModule } from '@setl/utils/pipes';
 import { FileViewerModule } from '@setl/core-fileviewer/fileviewer.module';
-import { FileViewerComponent } from '../../core-fileviewer/fileviewer.component';
 import { MyMessagesService } from '@setl/core-req-services/my-messages/my-messages.service';
 import { MemberSocketService } from '@setl/websocket-service/member-socket.service';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { MessagesService } from './messages.service';
-import { MessageAction, MessageActionsConfig } from './message-components/message-form-action/message-form-action.model';
+import { ToasterService } from 'angular2-toaster';
 import { MockMailHelper } from './mockMailHelper';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -85,7 +82,7 @@ describe('SetlMessagesComponent', () => {
         providers: [
             MyMessagesService,
             MemberSocketService,
-            AlertsService,
+            ToasterService,
             { provide: ActivatedRoute, useValue: { params: Observable.of({category: 'inbox'}) } },
             { provide: APP_BASE_HREF, useValue : '/' },
             {
