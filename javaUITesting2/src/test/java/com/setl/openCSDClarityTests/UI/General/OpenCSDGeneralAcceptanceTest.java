@@ -217,38 +217,36 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("test needs to be cleaned and have an assertion")
+    @Ignore("#193 Awaiting code completion")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67");
-        verifyMessageHasBeenRecieved("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWallet("investor", "c5bg67", "TextMessage", "Your message has been sent!");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
     }
 
     @Test
-    @Ignore("test needs to be finished")
+    @Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67");
-        verifyMessageHasBeenRecieved("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWallet("investor", "c5bg68", "TextMessage", "Please fill out all fields");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
     }
 
     @Test
-    @Ignore("test needs to be finished")
+    @Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67");
-        verifyMessageHasBeenRecieved("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
     }
 
     @Test
-    @Ignore("test needs to be finished")
+    @Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67");
-        verifyMessageHasBeenRecieved("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
     }
 
-    public static void sendMessageToSelectedWallet(String recipient, String subject) throws InterruptedException {
+    public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
         navigateToPageByID("menu-messages");
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
@@ -256,17 +254,17 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li/div/a")).click();
         driver.findElement(By.id("messagesSubject")).sendKeys(subject);
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
-        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys("Test Message");
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
         try{
             driver.findElement(By.id("messagesSendMessage")).click();
         }catch (Error e){
             fail("send message was not clickable");
         }
-        String JasperoModel = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(JasperoModel.equals("Success!"));
+        String JasperoModel = driver.findElement(By.className("toast-title")).getText();
+        assertTrue(JasperoModel.equals(toasterMessage));
     }
 
-    public static void verifyMessageHasBeenRecieved(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
+    public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
         navigateToPageByID("menu-messages");
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-messages/div/div[2]/div[5]/div/div[2]")).click();
