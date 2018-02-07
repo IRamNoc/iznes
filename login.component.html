@@ -119,6 +119,10 @@
         <br><br>
         This pop-up will automatically close in {{countdown}} seconds.
         <br><br>
+        <button id="fp-newpassword-close-button" class="btn btn-info" type="button" (click)="closeFPModal()">
+            <span mltag="txt_close">Close</span>
+        </button>
+        <br><br>
     </div>
     <div class="modal-body text-center" *ngIf="changePassword">
         <p>Please type a password</p>
