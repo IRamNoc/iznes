@@ -3,4 +3,5 @@ export interface AlertSettings {
     overlayClickToClose?: boolean;
     showCloseButton?: boolean;
     duration?: number;
+    buttonMessage?: string;
 }
