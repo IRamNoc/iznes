@@ -5,7 +5,7 @@
     <div class="message_list">
         <h2>{{currentBox.name}} <span class="mail-count" *ngIf="messages.length > 0">{{messages.length || 0}}</span></h2>
         <div class="search">
-            <span *ngIf="search" class="search-filter"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>
+            <span [class.show]="search" class="search-filter"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>
             <input type="form-control" placeholder="Search {{currentBox.name}}" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '' " type="text" id="messagesSearch">
             <button (click)="handleSearch(searchBox.value)" class="" id="messagesSearchBtn"><i class="fa fa-search"></i></button>
         </div>
@@ -25,7 +25,7 @@
             </div>
             <div class="message_list_menu_pages">
                 <pagination-controls
-                    (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
+                    (pageChange)="page = $event; onPageChange($event)" maxSize="3"></pagination-controls>
             </div>
         </div>
 
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
+        <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: page, totalItems:currentBoxCount }; let i = index"
              [ngClass]="{'message-active': i === currentMessage.id}">
 
             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
@@ -54,9 +54,9 @@
                     <!--<clr-icon shape="balance" *ngIf="message.action"></clr-icon>-->
                     <!--<clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>-->
                 </div>
-                <div class="message_list_item_sender" (click)="showMessage(i)">{{message.senderWalletName}}</div>
+                <div class="message_list_item_sender" (click)="showMessage(i)" id="message_list_sender_{{page}}_{{i}}">{{message.senderWalletName}}</div>
                 <div class="message_list_item_subject" (click)="showMessage(i)">
-                    <span [innerHtml]="message.subject | truncate: [200]"></span>
+                    <span [innerHtml]="message.subject | truncate: [200]" id="message_list_subject_{{page}}_{{i}}"></span>
                 </div>
                 <div class="message_list_item_date" (click)="showMessage(i)">{{message.date | datex: "MMM D, YYYY"}}</div>
             </div>
@@ -71,7 +71,7 @@
     <div class="message_view">
 
         <div class="message_view_header">
-            <h4>Subject: <b [innerHtml]="currentMessage.subject"></b></h4>
+            <h4>Subject: <b [innerHtml]="currentMessage.subject" id="messagesSubject"></b></h4>
             <div class="message_view_header_title">
                 <p>From: {{currentMessage.senderWalletName}}</p>
                 <p>To: {{currentMessage.recipientWalletName}}</p>
