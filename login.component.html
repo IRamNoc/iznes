@@ -78,7 +78,7 @@
 <!--CUSTOM TEXT MODALS-->
 <clr-modal [(clrModalOpen)]="showForgottenPasswordModal" [clrModalClosable]="false">
 
-    <h3 class="modal-title" *ngIf="(!emailSent || isTokenExpired) && !changePassword">Forgotten password ?</h3>
+    <h3 class="modal-title" *ngIf="(!emailSent || isTokenExpired) && !changePassword">Forgotten password?</h3>
     <h3 class="modal-title" *ngIf="emailSent && !changePassword">Email sent</h3>
     <h3 class="modal-title" *ngIf="changePassword">Change your password</h3>
     <div class="modal-body text-center" *ngIf="!emailSent && !changePassword">
