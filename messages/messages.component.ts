@@ -37,11 +37,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public connectedWalletId;
     public walletDirectoryList;
     public walletWithCommuPub;
+    public page;
 
     public myWalletList;
     public mailCounts;
     public currentBoxCount;
-    public currentPage;
     public currentBox;
     public search: string = '';
     public showDeleteModal: boolean = false;
@@ -221,16 +221,16 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {number} number
      */
     onPageChange(number: number) {
-        const page = number - 1;
+        this.page = number - 1;
         const categoryType = this.categories[this.currentCategory].type;
-        this.requestMailboxByCategory(categoryType, page);
+        this.requestMailboxByCategory(categoryType, this.page);
     }
 
     /**
      * Refresh Mailbox
      */
     refreshMailbox(page = 0) {
-        this.currentPage = page;
+        this.page = page;
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -251,7 +251,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     deleteMessage() {
         this.closeMessage();
         this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage);
-        this.refreshMailbox(this.currentPage);
+        this.refreshMailbox(this.page);
     }
 
     /**
@@ -365,6 +365,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {boolean} composeSelected
      */
     showCategory(index, composeSelected = false, page = 0) {
+        this.page = page;
         this.messageView = false;
         this.resetMessages();
         this.uncheckAll();
@@ -427,7 +428,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.messages = [];
         // Default current category
         this.currentCategory = 0;
-        this.currentPage = 0;
+        this.page = 0;
         // Default current message
         this.currentMessage = {
             id: 0
@@ -450,7 +451,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             recipients[i] = obj.walletId;
         }
 
-        if (subject === '' || bodyObj.general === '' || formData.recipients === '') {
+        if ( !formData.subject || !bodyObj.general || !formData.recipients ) {
             this.toaster.pop('error', 'Please fill out all fields');
         } else {
             this.messageService.sendMessage(recipients, subject, body, null).then(
