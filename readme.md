@@ -65,3 +65,22 @@ const returnedGroup = new PersistService().watchForm(formName, formGroup);
 #### Returns
 
 `FormGroup` - the original FormGroup passed in as the second parameter.
+
+## `PersistService.unwatchForm()`
+
+The `unwatchForm` method accepts a form's name, and removes a valueChange subscription if it exists for that form. The subscription is added to the form by calling `watchForm`.
+
+### Syntax
+
+```typescript
+const wasWatched = new PersistService().unwatchForm(formName);
+```
+
+#### Parameters
+
+`formName` - a string identifier of the form whose FormGroup is being watched.
+
+#### Returns
+
+`true` is returned if a subscription was un-subscribed, `false` if there was not one.
+
