@@ -37,11 +37,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public connectedWalletId;
     public walletDirectoryList;
     public walletWithCommuPub;
-    public page;
 
     public myWalletList;
     public mailCounts;
     public currentBoxCount;
+    public currentPage;
     public currentBox;
     public search: string = '';
     public showDeleteModal: boolean = false;
@@ -221,16 +221,16 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {number} number
      */
     onPageChange(number: number) {
-        this.page = number - 1;
+        const page = number - 1;
         const categoryType = this.categories[this.currentCategory].type;
-        this.requestMailboxByCategory(categoryType, this.page);
+        this.requestMailboxByCategory(categoryType, page);
     }
 
     /**
      * Refresh Mailbox
      */
     refreshMailbox(page = 0) {
-        this.page = page;
+        this.currentPage = page;
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -251,7 +251,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     deleteMessage() {
         this.closeMessage();
         this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage);
-        this.refreshMailbox(this.page);
+        this.refreshMailbox(this.currentPage);
     }
 
     /**
@@ -365,7 +365,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {boolean} composeSelected
      */
     showCategory(index, composeSelected = false, page = 0) {
-        this.page = page;
         this.messageView = false;
         this.resetMessages();
         this.uncheckAll();
@@ -428,7 +427,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.messages = [];
         // Default current category
         this.currentCategory = 0;
-        this.page = 0;
+        this.currentPage = 0;
         // Default current message
         this.currentMessage = {
             id: 0
