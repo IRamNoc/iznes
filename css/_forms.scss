@@ -158,6 +158,21 @@ form, .form {
                 }
                 background: white;
             }
+
+            + .field-error {
+                color: red;
+                display: none;
+                height: 0px;
+                margin-top: -8px !important;
+            }
+
+            &.ng-invalid.ng-touched {
+                border-color: rgba(255, 0, 0, 0.5);
+
+                + .field-error {
+                    display: block;
+                }
+            }
         }
 
         input[type=text].error, form .form-group input[type=password].error {
