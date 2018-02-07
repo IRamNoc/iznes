@@ -46,7 +46,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
                         <path d="M32.137 28.342c-1.104 0-2 .896-2 2v17c0 1.104.896 2 2 2s2-.896 2-2v-17c0-1.105-.896-2-2-2z"/>
                     </svg>
                 </ng-template>
-
+                
                 <ng-template ngSwitchCase="waiting">
                     <div class="loader"></div>
                 </ng-template>
@@ -58,7 +58,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             <div class="jaspero__dialog-content" [innerHTML]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
-                <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">Close</button>
+                <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">{{incomingData.buttonMessage}}</button>
             </div>
         </div>
     `,
@@ -274,7 +274,8 @@ export class AlertComponent implements OnInit {
         overlay: true,
         overlayClickToClose: true,
         showCloseButton: true,
-        duration: 0
+        duration: 0,
+        buttonMessage: 'Close'
     };
 
     ngOnInit() {
@@ -289,13 +290,13 @@ export class AlertComponent implements OnInit {
                         ),
                     this.incomingData.duration
                 )
-            )
+            );
         }
     }
 
     closeSelf() {
         this.animationState = 'leave';
-        this.close.emit(Object.assign({close: true}, this.incomingData))
+        this.close.emit(Object.assign({close: true}, this.incomingData));
     }
 
     overlayClick() {

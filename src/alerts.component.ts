@@ -38,7 +38,8 @@ export class AlertsComponent implements OnInit, OnDestroy {
         overlay: true,
         overlayClickToClose: true,
         showCloseButton: true,
-        duration: 3000
+        duration: 3000,
+        buttonMessage: 'Close'
     };
 
     private _current: ComponentRef<AlertComponent>;
