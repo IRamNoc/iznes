@@ -14,7 +14,7 @@ import {
     RequestContractByAddressBody,
     RequestTransactionHistoryBody
 } from './walletnode-request.service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface RequestIssueHolding {
     walletId: number;
@@ -42,9 +42,9 @@ interface RequestWalletInstrument {
 export class WalletNodeRequestService {
 
     constructor(private walletNodeSocketService: WalletNodeSocketService,
-        private http: Http,
-        @Inject(APP_CONFIG) public appConfig: AppConfig
-    ) {}
+                private http: Http,
+                @Inject(APP_CONFIG) public appConfig: AppConfig) {
+    }
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
 
@@ -160,7 +160,7 @@ export class WalletNodeRequestService {
             walletids: requestData.walletIds,
             chainid: requestData.chainId,
             pagesize: pageSize,
-            classid: requestData.asset || '',
+            classid: 'ALPHA DRIVE GLOBAL CONVERTIBLES PART A' || requestData.asset || '',
             pagenum: pageNum
         };
 
@@ -168,7 +168,7 @@ export class WalletNodeRequestService {
     }
 
     requestTransactionHistoryFromReportingNode(msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
-        return this.http.post(this.appConfig.reportingNodeUrl, { request: msgId });
+        return this.http.post(this.appConfig.reportingNodeUrl, {request: msgId});
     }
 
 }

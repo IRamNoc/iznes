@@ -4,7 +4,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {AddFileMessageBody, GetHistoricalCsvMessageBody} from './file.service.model';
 import {select} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface AddFileRequest {
     files: string;
