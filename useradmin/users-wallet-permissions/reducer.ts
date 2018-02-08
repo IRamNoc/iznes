@@ -4,7 +4,7 @@ import {
     UsersWalletPermissionsState,
     UsersWalletPermissionsDetail,
 } from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 import {getUsersWalletPermissions} from './selectors';

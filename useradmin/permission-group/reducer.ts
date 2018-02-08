@@ -1,7 +1,7 @@
 import {Action} from 'redux';
 import * as PermissionGroupActions from './actions';
 import {PermissionGroupState, AdminPermGroupDetail, TranPermGroupDetail} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {SET_ALL_TABS} from './actions';
 import {immutableHelper} from '@setl/utils';

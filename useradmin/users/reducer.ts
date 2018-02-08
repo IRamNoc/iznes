@@ -1,7 +1,7 @@
 import * as UsersActions from './actions';
 import {ADD_TAB, REMOVE_TAB, SET_TAB_ACTIVE, SET_ALL_TABS} from './actions';
 import {UsersState, UsersDetail} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 import {Action} from 'redux';

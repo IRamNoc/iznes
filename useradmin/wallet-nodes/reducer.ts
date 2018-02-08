@@ -4,7 +4,7 @@ import {
     CLEAR_REQUESTED_WALLET_NODE_LIST
 } from './actions';
 import {WalletNodeDetail, WalletNodeState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 

@@ -2,7 +2,7 @@ import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyMessageActions from './actions';
 import {MyMessagesState, MessageDetail} from './model';
 import {SagaHelper, Common} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {setDecryptedContent} from "./actions";
 

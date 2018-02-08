@@ -4,7 +4,7 @@ import {
     CLEAR_REQUESTED_ACCOUNT_LIST
 } from './actions';
 import {AccountDetail, AccountListState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 

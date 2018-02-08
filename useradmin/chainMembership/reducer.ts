@@ -2,7 +2,7 @@ import {
     SET_CHAIN_MEMBERSHIP_LIST
 } from './actions';
 import {ChainMembershipState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 

@@ -1,6 +1,6 @@
 /* Core Imports. */
 import {Action} from 'redux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 /* Actions. */

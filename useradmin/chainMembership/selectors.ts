@@ -4,7 +4,7 @@ import {ChainMembershipState} from './index';
 import {getMemberList} from '../../member/index';
 import {getWalletNodeList} from '../../useradmin/wallet-nodes/index';
 import {fromJS, Map} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const getUserAdmin = (state): AdminUsersState => state.userAdmin;
 

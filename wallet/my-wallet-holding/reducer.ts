@@ -2,7 +2,7 @@ import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletHoldingActions from './actions';
 import {CLEAR_REQUESTED_WALLET_HOLDING, SET_REQUESTED_WALLET_HOLDING} from './actions';
 import {MyWalletHoldingState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ShortHash} from '@setl/utils/helper/common/shorthash';
 
 const initialState: MyWalletHoldingState = {

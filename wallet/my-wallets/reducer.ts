@@ -1,7 +1,7 @@
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletActions from './actions';
 import {MyWalletsState, WalletDetail} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 const initialState: MyWalletsState = {

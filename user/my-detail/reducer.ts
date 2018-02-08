@@ -1,7 +1,7 @@
 import {Action} from 'redux';
 import * as MyDetailActions from './actions';
 import {MyDetailState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 
 const initialState: MyDetailState = {

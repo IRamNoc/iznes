@@ -6,7 +6,7 @@ import {
     RESET_MEMBERNODE_SESSION_MANAGER
 } from './actions';
 import {ConnectedState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const initialState: ConnectedState = {
     connectedChain: 0,

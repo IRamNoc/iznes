@@ -1,6 +1,6 @@
 import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
 import {SiteSettingsState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 let defaultLanguage;
 switch (window.navigator.language) {
