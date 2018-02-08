@@ -78,7 +78,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private router: Router,
                 private _persistService: PersistService,
                 private _confirmationService: ConfirmationService) {
-
+        /* Stub. */
     }
 
     setInitialTabs() {
@@ -1371,7 +1371,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the form group and watch it using the persistService. */
         if (type === 'new') {
-            return group; // this._persistService.watchForm('useradmin/newUser', group);
+            return this._persistService.watchForm('useradmin/newUser', group);
         } else {
             return group;
         }
