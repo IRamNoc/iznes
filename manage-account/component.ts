@@ -1,24 +1,19 @@
 // Vendor
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
-import {select, NgRedux} from '@angular-redux/store';
-
+import {NgRedux, select} from '@angular-redux/store';
 // Internal
+import {AccountsService, MemberService} from '@setl/core-req-services';
 import {
-    AccountsService,
-    MemberService
-} from '@setl/core-req-services';
-import {
-    setRequestedAccountList,
-    SET_ACCOUNT_LIST,
-    setRequestedManageMemberList,
-    SET_MANAGE_MEMBER_LIST
+    SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList,
+    setRequestedManageMemberList
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
 import _ from 'lodash';
+import {PersistService} from "@setl/core-persist";
 
 export function getManageMember(state) {
 
@@ -65,7 +60,8 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private accountService: AccountsService,
                 private memberService: MemberService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private _persistService: PersistService) {
         /* Default tabs. */
         this.tabsControl = [
             {
@@ -76,13 +72,13 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Account',
                 accountId: -1,
-                formControl: new FormGroup(
+                formControl: this._persistService.watchForm('manageMember/manageAccount', new FormGroup(
                     {
                         accountName: new FormControl('', Validators.required),
                         accountDescription: new FormControl('', Validators.required),
                         member: new FormControl([])
                     }
-                ),
+                )),
                 active: false
             }
         ];
