@@ -1,4 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Router} from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -21,7 +22,7 @@ export class OfiManageNavList implements OnInit, OnDestroy {
     // mock data
     mockDataGridItems: any[];
 
-    constructor() {}
+    constructor(private router: Router) {}
 
     ngOnInit() {
         this.initDataTypes();
@@ -61,6 +62,10 @@ export class OfiManageNavList implements OnInit, OnDestroy {
     
     addNav(): void {
         console.log('Go to add nav page');
+    }
+
+    navigateToShare(): void {
+        this.router.navigateByUrl('product-module/net-asset-value-view-mock');
     }
 
     ngOnDestroy() {}
