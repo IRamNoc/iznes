@@ -1,7 +1,7 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import _ from 'lodash';
+import * as _ from 'lodash';
 /* Request service. */
 import {PersistRequestService} from "@setl/core-req-services";
 
