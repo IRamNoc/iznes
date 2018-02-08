@@ -30,6 +30,7 @@ export class ContractModel {
     // Additional Fields
     public name: string = '';
     public function: string = '';
+    public __function: string = '';
     public complete: boolean = false;
 }
 
