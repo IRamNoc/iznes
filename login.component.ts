@@ -27,6 +27,7 @@ import {
     SET_PRODUCTION
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
+import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -65,7 +66,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     showForgottenPasswordModal = false;
     emailUser = '';
     emailSent = false;
-    countdown = 3;
+    countdown = 5;
     token = '';
     isTokenExpired = false;
     changePassword = false;
@@ -87,6 +88,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
+                private toasterService: ToasterService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language
@@ -374,25 +376,25 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
 
         switch (responseStatus) {
             case 'fail':
-                this.showLoginErrorMessage(
-                    '<span mltag="txt_loginerror" class="text-warning">Sorry, login details incorrect, please try again.</span>'
+                this.showLoginErrorMessage('warning',
+                    '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
                 );
                 break;
             case 'locked':
-                this.showLoginErrorMessage(
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                this.showLoginErrorMessage('info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
                     'Please contact Setl support.</span>'
                 );
                 break;
             default:
-                this.showLoginErrorMessage(
+                this.showLoginErrorMessage('error',
                     '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
                 );
                 break;
         }
     }
 
-    showLoginErrorMessage(msg) {
-        this.alertsService.create('error', msg);
+    showLoginErrorMessage(type, msg) {
+        this.alertsService.create(type, msg, {buttonMessage: 'Please try again to log in'});
     }
 }
