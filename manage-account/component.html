@@ -38,12 +38,14 @@
         <div class="panel-body">
 
             <clr-datagrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_accountname">Account Name</clr-dg-column>
                 <clr-dg-column mltag="txt_description">Description</clr-dg-column>
+                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
 
 
                 <clr-dg-row *clrDgItems="let account of accountList;">
+                    <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
+                    <clr-dg-cell>{{account.description}}</clr-dg-cell>
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button (click)="handleEdit(account.index)" class="btn">
@@ -52,8 +54,6 @@
                                 <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>{{account.description}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
