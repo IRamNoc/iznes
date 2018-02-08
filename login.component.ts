@@ -168,8 +168,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
             this.updateState(authentication);
         }));
 
-        this.toasterService.pop('success', 'Session Expired!');
-
         window.onbeforeunload = null;
 
     }
@@ -378,25 +376,25 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
 
         switch (responseStatus) {
             case 'fail':
-                this.showLoginErrorMessage(
-                    '<span mltag="txt_loginerror" class="text-warning">Sorry, login details incorrect, please try again.</span>'
+                this.showLoginErrorMessage('warning',
+                    '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
                 );
                 break;
             case 'locked':
-                this.showLoginErrorMessage(
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                this.showLoginErrorMessage('info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
                     'Please contact Setl support.</span>'
                 );
                 break;
             default:
-                this.showLoginErrorMessage(
+                this.showLoginErrorMessage('error',
                     '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
                 );
                 break;
         }
     }
 
-    showLoginErrorMessage(msg) {
-        this.alertsService.create('error', msg);
+    showLoginErrorMessage(type, msg) {
+        this.alertsService.create(type, msg, {buttonMessage: 'Please try again to log in'});
     }
 }
