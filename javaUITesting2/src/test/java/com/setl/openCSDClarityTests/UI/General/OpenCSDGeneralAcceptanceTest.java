@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.General;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -32,7 +33,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(40000);
+    public Timeout globalTimeout = new Timeout(4000000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -226,7 +227,6 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
-        Thread.sleep(5000);
         try{
             logout();
         }catch (Error e){
@@ -296,7 +296,8 @@ public class OpenCSDGeneralAcceptanceTest {
         assertTrue(subjectMessage.equals(subject));
     }
 
-    public static void fundCheckRoundingUp(String enteringField, String value, String expected){
+    public static void fundCheckRoundingUp(String enteringField, String value, String expected) throws InterruptedException {
+        Thread.sleep(2000);
         driver.findElement(By.id(enteringField)).clear();
         driver.findElement(By.id(enteringField)).sendKeys(value);
         driver.findElement(By.id("fundName_0")).sendKeys("");
