@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 /* Package Imports. */
 import {Observable} from 'rxjs';
 import {Subscription} from 'rxjs/Subscription';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils/index';
 import {MyMessagesService} from '@setl/core-req-services';

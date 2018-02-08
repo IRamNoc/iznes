@@ -10,6 +10,7 @@ import {MessagesService} from "../messages.service";
 import {MailHelper} from './mailHelper';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 
 @Component({
     selector: 'setl-messages',
@@ -52,8 +53,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     private value: any = ['Athens'];
     private _disabledV = '0';
     private disabled = false;
-    private mailHelper: MailHelper;
     private messageService: MessagesService;
+    public mailHelper: MailHelper;
 
     subscriptionsArray: Array<Subscription> = [];
 
@@ -89,7 +90,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
-        this.mailHelper = new MailHelper(this.ngRedux, this.myMessageService);
+        this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
 
         this._appConfig = _appConfig;
@@ -110,17 +111,17 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 this.getConnectedWallet.distinctUntilChanged().filter(walletId => walletId > 0),
                 this.getWalletDirectoryList
             )
-            .subscribe((subs) => {
-                const walletId = subs[0];
-                const walletDirectoryList = subs[1];
+                .subscribe((subs) => {
+                    const walletId = subs[0];
+                    const walletDirectoryList = subs[1];
 
-                this.connectedWalletId = walletId;
-                this.mailHelper.retrieveMessages(walletId, this.currentBox.type || 'inbox', 0, 15, this.search);
+                    this.connectedWalletId = walletId;
+                    this.mailHelper.retrieveMessages(walletId, this.currentBox.type || 'inbox', 0, 15, this.search);
 
-                this.walletDirectoryList = walletDirectoryList;
-                this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
-                this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.connectedWalletId);
-            })
+                    this.walletDirectoryList = walletDirectoryList;
+                    this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
+                    this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.connectedWalletId);
+                })
         );
 
         this.subscriptionsArray.push(
