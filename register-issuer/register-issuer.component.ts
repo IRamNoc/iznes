@@ -1,27 +1,20 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {FormBuilder, FormGroup, AbstractControl, Validators} from '@angular/forms';
-import {List, Map, fromJS} from 'immutable';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {
-    WalletnodeTxService,
-    WalletNodeRequestService,
-    InitialisationService,
-    MyWalletsService
+    InitialisationService, MyWalletsService, WalletNodeRequestService,
+    WalletnodeTxService
 } from '@setl/core-req-services';
 import {SagaHelper, walletHelper} from '@setl/utils';
 import {
-    getWalletAddressList,
-    REGISTER_ISSUER_SUCCESS,
-    REGISTER_ISSUER_FAIL,
-    getNewIssuerRequest,
-    finishRegisterIssuerNotification,
-    getConnectedWallet,
-    setRequestedWalletAddresses
+    finishRegisterIssuerNotification, getConnectedWallet, getNewIssuerRequest, getWalletAddressList,
+    REGISTER_ISSUER_FAIL, REGISTER_ISSUER_SUCCESS, setRequestedWalletAddresses
 } from '@setl/core-store';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import {Subscription} from 'rxjs/Subscription';
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-register-issuer',
@@ -52,7 +45,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private fb: FormBuilder,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                private _persistService: PersistService) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -60,10 +54,12 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
         /**
          * Form control setup
          */
-        this.registerIssuerForm = fb.group({
+        const formGroup = fb.group({
             'issueIdentifier': ['', Validators.required],
             'issuerAddress': ['', Validators.required]
         });
+
+        this.registerIssuerForm = this._persistService.watchForm('assetServicing/registerIssuer', formGroup);
 
         this.issuerIdentifier = this.registerIssuerForm.controls['issueIdentifier'];
         this.issuerAddress = this.registerIssuerForm.controls['issuerAddress'];
