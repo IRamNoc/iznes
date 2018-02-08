@@ -34,7 +34,7 @@ import {Subject} from 'rxjs/Subject';
 import {Router, ActivatedRoute} from '@angular/router';
 import _ from 'lodash';
 import {ClarityModule} from 'clarity-angular';
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 
 const environment = {
     logoID: '',
@@ -70,7 +70,7 @@ describe('SetlLoginComComponent', () => {
                 {provide: ToasterService, useClass: ToasterServiceMock},
                 {provide: AlertsService, useClass: AlertsServiceMock},
                 {provide: Router, useValue: RouterMock},
-                { provide: ActivatedRoute, useValue: { params: Observable.of({token: ''}) } },
+                {provide: ActivatedRoute, useValue: {params: Observable.of({token: ''})}},
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
@@ -200,21 +200,22 @@ describe('SetlLoginComComponent', () => {
         })
     );
 
-    // it('AlertsService should called with error type', () => {
-    //     spyOn(component.alertsService, 'create');
-    //
-    //     const response = [
-    //         '', {Data: [{Status: 'fail'}]}
-    //     ];
-    //
-    //     component.showLoginErrorMessage(response);
-    //
-    //     expect(component.alertsService.create).toHaveBeenCalledWith(
-    //         'error',
-    //         response
-    //     );
-    //
-    // });
+    it('AlertsService should called with error type', () => {
+        spyOn(component.alertsService, 'create');
+
+        const response = [
+            '', {Data: [{Status: 'fail'}]}
+        ];
+
+        component.showLoginErrorMessage('error', response);
+
+        expect(component.alertsService.create).toHaveBeenCalledWith(
+            'error',
+            response,
+            {buttonMessage: 'Please try again to log in'}
+        );
+
+    });
 
     it('login method: if form is valid, loginRequest should be called', () => {
         spyOn(component.myUserService, 'loginRequest');
