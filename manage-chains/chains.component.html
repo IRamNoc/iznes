@@ -10,11 +10,13 @@
             <section class="form-block">
 
                 <clr-datagrid>
-                    <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
                     <clr-dg-column [clrDgField]="'chainId'" mltag="txt_chainidentification">Chain Identification</clr-dg-column>
                     <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
+                    <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let chain of chainsList">
+                        <clr-dg-cell>{{chain.chainId}}</clr-dg-cell>
+                        <clr-dg-cell>{{chain.chainName}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
                                 <button id="chainBtnEditChain" class="btn" (click)="editChain(chain)"><i class="fa fa-edit"></i></button>
@@ -23,8 +25,6 @@
                                 </button>
                             </div>
                         </clr-dg-cell>
-                        <clr-dg-cell>{{chain.chainId}}</clr-dg-cell>
-                        <clr-dg-cell>{{chain.chainName}}</clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
