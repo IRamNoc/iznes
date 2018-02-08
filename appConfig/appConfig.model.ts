@@ -33,6 +33,7 @@ export interface AppConfig {
 export interface MessagesMenuItem {
     name: string;
     desc: string;
+    level: number;
     icon: string;
     type: string;
     active: boolean;

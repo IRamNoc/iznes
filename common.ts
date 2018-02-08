@@ -1,6 +1,6 @@
 import * as SagaHelper from './sagaHelper';
 import {always as k} from 'ramda';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export const kAction = type => k({type});
 
