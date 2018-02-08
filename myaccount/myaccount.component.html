@@ -12,16 +12,17 @@
                 <section class="form-block">
                     <form [formGroup]="userDetailsForm" (ngSubmit)="submitDetails(userDetailsForm.value)">
                         <div class="row">
-                            <div class="col-sm-12 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label for="udDisplayName">
                                     <span mltag="txt_displayname">Display name</span>
                                     <div class="mandatory text-danger">*</div>
                                 </label>
                                 <div>
-                                    <input type="text" id="udDisplayName" [formControl]="displayName" size="45" style="width:97.5%" class="udDisplayName">
+                                    <input type="text" id="udDisplayName" [formControl]="displayName" size="45" class="udDisplayName">
                                 </div>
                                 <div *ngIf="displayName.hasError('required') && displayName.touched" class="text-danger" mltag="txt_displaynamerequired">Display name is required</div>
                             </div>
+                            <div class="col-sm-6 form-group"></div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
@@ -131,31 +132,30 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-6">
                                 <label for="udMemorableQuestion" mltag="txt_memorablequestion">Memorable question</label>
                                 <div>
-                                    <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion" size="45" style="width:97.5%">
+                                    <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion" size="45">
                                 </div>
                                 <div *ngIf="memorableQuestion.hasError('required') && memorableQuestion.touched" class="text-danger" mltag="txt_memorablequestionrequired">Memorable question is required</div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="col-sm-6 form-group">
                                 <label for="udMemorableAnswer" mltag="txt_memorableanswer">Memorable answer</label>
                                 <div>
-                                    <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45" style="width:97.5%">
+                                    <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45">
                                 </div>
                                 <div *ngIf="memorableAnswer.hasError('required') && memorableAnswer.touched" class="text-danger" mltag="txt_memorableanswerrequired">Memorable answer is required</div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-6">
                                 <label for="udProfileText" mltag="txt_profiletext">Profile text</label>
                                 <div>
-                                    <textarea id="udProfileText" [formControl]="profileText" rows="5" style="width:97.5%"></textarea>
+                                    <textarea id="udProfileText" [formControl]="profileText" rows="5" style="width:95%"></textarea>
                                     <div *ngIf="profileText.hasError('required') && profileText.touched" class="text-danger" mltag="txt_profiletextrequired">Profile text is required</div>
                                 </div>
                             </div>
+                            <div class="col-sm-6 form-group"></div>
                         </div>
                         <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
                         <button id="udReset" type="reset" class="btn btn-warning" mltag="txt_reset">Reset</button>
