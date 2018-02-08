@@ -10,7 +10,7 @@ import {WalletNodesModel} from './model';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {isNull} from 'util';
 
 /* Actions */

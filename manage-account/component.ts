@@ -18,7 +18,7 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export function getManageMember(state) {
 
