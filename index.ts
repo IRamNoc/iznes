@@ -12,6 +12,7 @@ export {OfiHomeComponent} from './ofi-home/home/component';
 export {OfiNavModule} from './ofi-nav/module';
 export {OfiManageOfiNavComponent} from './ofi-nav/ofi-mangage-nav-list/component';
 export {OfiManageNavList} from './ofi-nav/ofi-manage-nav-list-mock/component';
+export {OfiManageNavView} from './ofi-nav/ofi-manage-nav-view-mock/component';
 
 /**
  * Services
