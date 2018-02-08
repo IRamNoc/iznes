@@ -32,7 +32,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(40000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -43,17 +43,22 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("TG #141 : Awaiting code completion")
+    //@Ignore("TG #141 : Awaiting code completion")
     public void shouldAutosaveInformation() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPage("user-admin-users");
+        Thread.sleep(2000);
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
-        myAccountClearField("DisplayName");myAccountSendKeys("DisplayName", "autosave-check");
-        navigateToDropdown("menu-chain-administration");
-        navigateToPage("chain-admin/manage-member");
-        navigateToDropdown("menu-account-module");
-        navigateToPage("my-account");
-        assertTrue("DisplayName".equals("autosave-check"));
+        navigateToDropdown("menu-user-administration");
+        navigateToPage("user-admin-users");
+        Thread.sleep(2000);
+        driver.findElement(By.id("user-tab-1")).click();
+        String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
+        assertTrue(username.equals("I wonder if this will stay here"));
     }
 
     @Test
@@ -185,6 +190,7 @@ public class OpenCSDGeneralAcceptanceTest {
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
+
     @Test
     public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
@@ -214,6 +220,62 @@ public class OpenCSDGeneralAcceptanceTest {
         }catch (Error e){
             fail("IZNES was not present in sub-heading");
         }
+    }
+
+    @Test
+    //@Ignore("#193 Awaiting code completion")
+    public void shouldSendMessageToWallet() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg67", "TextMessage", "Your message has been sent!");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+    }
+
+    @Test
+    //@Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg68", "TextMessage", "Please fill out all fields");
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+    }
+
+    @Test
+    //@Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
+    }
+
+    @Test
+    //@Ignore("#193 Awaiting code completion")
+    public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
+    }
+
+    public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
+        navigateToPageByID("menu-messages");
+        driver.findElement(By.id("messagescompose")).click();
+        driver.findElement(By.id("messagesRecipients")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys(recipient);
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li/div/a")).click();
+        driver.findElement(By.id("messagesSubject")).sendKeys(subject);
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
+        driver.findElement(By.id("messagesSendMessage")).click();
+        Thread.sleep(1000);
+        String JasperoModel = driver.findElement(By.className("toast-title")).getText();
+        try {
+            assertTrue(JasperoModel.equals(toasterMessage));
+            }catch (Error e){
+            fail("toaster message did not match");
+            }
+        }
+
+    public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
+        loginAndVerifySuccess(recipientUsername, recipientPassword);
+        navigateToPageByID("menu-messages");
+        String subjectMessage = driver.findElement(By.xpath("message_list_subject_0_0")).getText();
+        assertTrue(subjectMessage.equals(subject));
     }
 
     public static void fundCheckRoundingUp(String enteringField, String value, String expected){
