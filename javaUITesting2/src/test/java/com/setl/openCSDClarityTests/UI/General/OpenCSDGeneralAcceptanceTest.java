@@ -18,7 +18,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
