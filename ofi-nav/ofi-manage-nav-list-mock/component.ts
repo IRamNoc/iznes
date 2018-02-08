@@ -58,11 +58,7 @@ export class OfiManageNavList implements OnInit, OnDestroy {
             status: 'Estimated'
         }
     }
-
-    editNav(): void {
-        console.log('Go to edit nav page');
-    }
-
+    
     addNav(): void {
         console.log('Go to add nav page');
     }
