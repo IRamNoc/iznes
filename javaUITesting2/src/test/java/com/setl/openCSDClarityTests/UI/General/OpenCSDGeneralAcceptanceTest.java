@@ -240,7 +240,6 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage","Please fill out all fields");
     }
-
     @Test
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
