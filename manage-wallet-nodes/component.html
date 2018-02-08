@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_walletnodes">Wallet Nodes</h1>
+    <h1><i class="fa fa-code-fork"></i> <span mltag="txt_walletnodes">Wallet Nodes</span></h1>
 </div>
 
 <clr-tabs>
@@ -60,7 +60,7 @@
             <section class="form-block">
                 <form [formGroup]="currentForm.form" novalidate (ngSubmit)="save(currentForm.form.value, ix)">
                     <div class="row">
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-6">
                             <div *ngIf="currentForm.modelForm.walletNodeId > 0">
                                 <input type="hidden" id="walletNodeID_{{ix}}" class="form-control" formControlName="walletNodeId" [(ngModel)]="currentForm.modelForm.walletNodeId">
                             </div>
@@ -73,7 +73,7 @@
                                 This field is required
                             </div>
                         </div>
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-6">
                             <label for="walletNodeAddress_{{ix}}">
                                 <span mltag="txt_nodeaddress">Node Address</span>
                                 <div class="mandatory text-danger">*</div>
@@ -81,7 +81,9 @@
                             <input type="text" id="walletNodeAddress_{{ix}}" class="form-control" formControlName="nodeAddress" [(ngModel)]="currentForm.modelForm.nodeAddress">
                             <div *ngIf="currentForm.form.controls.nodeAddress.hasError('required') && currentForm.form.controls.nodeAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
-                        <div class="form-group col-sm-12">
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
                             <label for="walletNodePath_{{ix}}">
                                 <span mltag="txt_nodepath">Node Path</span>
                             </label>
@@ -90,7 +92,7 @@
                                  class="text-danger" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-6">
                             <label for="walletNodePort_{{ix}}">
                                 <span mltag="txt_nodeport">Node Port</span>
                                 <div class="mandatory text-danger">*</div>
@@ -102,6 +104,8 @@
                                  class="text-danger" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-sm-12">
                             <label for="walletNodeChain_{{ix}}">
                                 <span mltag="txt_chain">Chain</span>
@@ -122,15 +126,17 @@
                                 </div>
                             </ng-template>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-sm-12">
                             <div class="form-group col-sm-12">
-                                <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-success"
+                                <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-primary"
                                         [disabled]="!currentForm.form.valid && !isDebug">
                                     <div *ngIf="currentForm.modelForm.walletNodeId > 0; else editWalletNodeBtSubmit">
-                                        <span mltag="txt_update">Update</span>
+                                        <i class="fa fa-save"></i> <span mltag="txt_update">Update</span>
                                     </div>
                                     <ng-template #editWalletNodeBtSubmit>
-                                        <span mltag="txt_send">Send</span>
+                                        <i class="fa fa-save"></i> <span mltag="txt_send">Save</span>
                                     </ng-template>
                                 </button>
                                 <button id="walletNodeBtnResetForm" *ngIf="currentForm.modelForm.walletNodeId === 0"
