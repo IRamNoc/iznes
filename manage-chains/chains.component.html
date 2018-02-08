@@ -72,12 +72,12 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <button id="chainBtnSubmitForm" type="submit" class="btn btn-success" [disabled]="!chainForm.valid">
+                            <button id="chainBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!chainForm.valid">
                                 <div *ngIf="!editForm; else editChainFBtSubmit">
-                                    <span mltag="txt_send">Send</span>
+                                    <i class="fa fa-save"></i> <span mltag="txt_send">Save</span>
                                 </div>
                                 <ng-template #editChainFBtSubmit>
-                                    <span mltag="txt_update">Update</span>
+                                    <i class="fa fa-save"></i> <span mltag="txt_update">Update</span>
                                 </ng-template>
                             </button>
                             <button id="chainBtnResetForm" *ngIf="!editForm" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
