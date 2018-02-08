@@ -1,4 +1,4 @@
-import { EncumbranceAddressModel } from '@setl/core-contracts/models/encumbranceAddress.model';
+import { EncumbranceAddressModel } from './encumbranceAddress.model';
 
 export class EncumbranceModel {
     public publicKey: string = null;

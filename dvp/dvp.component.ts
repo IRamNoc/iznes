@@ -18,7 +18,7 @@ import {
 
 import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
 import {DVPContractService} from './dvp.service';
-import {ContractService} from '@setl/core-contracts/services';
+import {ContractService} from '../services';
 
 @Component({
     selector: 'setl-contracts-dvp',
@@ -60,7 +60,7 @@ export class ContractsDvpComponent implements OnInit {
         private contractService: ContractService) {
 
     }
-        
+
     ngOnInit() {
         this.initSubscriptions();
         this.initParties();
@@ -71,7 +71,7 @@ export class ContractsDvpComponent implements OnInit {
     /**
      * Redux
      */
-    private initSubscriptions(): void { 
+    private initSubscriptions(): void {
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
@@ -92,7 +92,7 @@ export class ContractsDvpComponent implements OnInit {
             this.changeDetectorRef.markForCheck();
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
-        
+
         this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requested) => this.requestWalletToRelationship(requested)));
         this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
             this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(toRelationshipList, this.walletDirectoryList);
@@ -132,7 +132,7 @@ export class ContractsDvpComponent implements OnInit {
             InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
-    
+
 
     /**
      * UI

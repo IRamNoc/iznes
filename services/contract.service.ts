@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ContractModel } from '@setl/core-contracts/models/contract.model';
-import { PartyService } from '@setl/core-contracts/services/party.service';
-import { PartyModel } from '@setl/core-contracts/models/party.model';
-import { AuthorisationService } from '@setl/core-contracts/services/authorisation.service';
-import { AuthorisationModel } from '@setl/core-contracts/models/authorisation.model';
-import { ParameterItemService } from '@setl/core-contracts/services/parameterItem.service';
-import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.model';
-import { EncumbranceService } from '@setl/core-contracts/services/encumbrance.service';
-import { EncumbranceModel } from '@setl/core-contracts/models/encumbrance.model';
+import { ContractModel } from '../models';
+import { PartyService } from '../services';
+import { PartyModel } from '../models';
+import { AuthorisationService } from '../services';
+import { AuthorisationModel } from '../models';
+import { ParameterItemService } from '../services';
+import { ParameterItemModel } from '../models';
+import { EncumbranceService } from '../services';
+import { EncumbranceModel } from '../models';
 import * as moment from 'moment';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class ContractService {
