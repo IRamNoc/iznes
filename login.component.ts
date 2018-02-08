@@ -168,8 +168,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
             this.updateState(authentication);
         }));
 
-        this.toasterService.pop('success', 'Session Expired!');
-
         window.onbeforeunload = null;
 
     }
