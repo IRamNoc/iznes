@@ -169,45 +169,50 @@
                 <span mltag="txt_changepassword">Change password</span></button>
             <clr-tab-content *clrIfActive="tabStates.password">
                 <section class="form-block">
-                    <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
-                        <div class="form-group">
-                            <label for="cpOldPassword">
-                                <span mltag="txt_oldpassword">Old Password</span>
-                                <div class="mandatory text-danger"> *</div>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="text-danger" mltag="txt_oldpasswordrequired">Old Password is required</div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
+                                <div class="form-group">
+                                    <label for="cpOldPassword">
+                                        <span mltag="txt_oldpassword">Old Password</span>
+                                        <div class="mandatory text-danger"> *</div>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpOldPassword" [formControl]="oldPassword" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="text-danger" mltag="txt_oldpasswordrequired">Old Password is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpPassword">
+                                        <span mltag="txt_password">Password</span>
+                                        <div class="mandatory text-danger"> *</div>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpPassword" [formControl]="password" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="password.hasError('required') && password.touched" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
+                                    <div *ngIf="changePassForm.controls.password.hasError('minlength') && !password.hasError('required') && password.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                                    <div *ngIf="!changePassForm.controls.password.hasError('required') && !changePassForm.controls.password.hasError('minlength') && changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="text-danger" mltag="txt_passwordnewdiffold">The new password should not be the same as the old</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpPasswordConfirm">
+                                        <span mltag="txt_passwordconfirm">Password confirmation</span>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
+                                    <div *ngIf="changePassForm.controls.passwordConfirm.hasError('minlength') && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                                    <div *ngIf="!passwordConfirm.hasError('required') && !changePassForm.controls.passwordConfirm.hasError('minlength') && changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                                </div>
+                                <button type="submit" class="btn btn-success" [disabled]="!changePassForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="cpPassword">
-                                <span mltag="txt_password">Password</span>
-                                <div class="mandatory text-danger"> *</div>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="password.hasError('required') && password.touched" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
-                            <div *ngIf="!password.valid && !password.hasError('required') && password.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
-                            <div *ngIf="changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="text-danger" mltag="txt_passwordnewdiffold">The new password should not be the same as the old</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="cpPasswordConfirm">
-                                <span mltag="txt_passwordconfirm">Password confirmation</span>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
-                            <div *ngIf="!passwordConfirm.valid && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
-                            <div *ngIf="changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
-                        </div>
-                        <button type="submit" class="btn btn-success" [disabled]="!changePassForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
-                    </form>
+                        <div class="form-group col-sm-6"></div>
+                    </div>
                 </section>
             </clr-tab-content>
         </clr-tab>
