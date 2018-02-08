@@ -223,30 +223,31 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("#193 Awaiting code completion")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67", "TextMessage", "Your message has been sent!");
-        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
+        Thread.sleep(5000);
+        try{
+            logout();
+        }catch (Error e){
+            fail("logout button was not clickable");
+        }
+        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67a");
     }
 
     @Test
-    //@Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg68", "TextMessage", "Please fill out all fields");
-        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67");
+        sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage","Please fill out all fields");
     }
 
     @Test
-    //@Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
     }
 
     @Test
-    //@Ignore("#193 Awaiting code completion")
     public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
@@ -262,7 +263,23 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
         driver.findElement(By.id("messagesSendMessage")).click();
-        Thread.sleep(1000);
+        Thread.sleep(750);
+        String JasperoModel = driver.findElement(By.className("toast-title")).getText();
+        try {
+            assertTrue(JasperoModel.equals(toasterMessage));
+            }catch (Error e){
+            fail("toaster message did not match");
+            }
+        }
+
+    public static void sendMessageToSelectedWalletWithoutRecipient (String subject, String message, String toasterMessage) throws InterruptedException {
+        navigateToPageByID("menu-messages");
+        driver.findElement(By.id("messagescompose")).click();
+        driver.findElement(By.id("messagesSubject")).sendKeys(subject);
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
+        driver.findElement(By.id("messagesSendMessage")).click();
+        Thread.sleep(750);
         String JasperoModel = driver.findElement(By.className("toast-title")).getText();
         try {
             assertTrue(JasperoModel.equals(toasterMessage));
@@ -274,7 +291,9 @@ public class OpenCSDGeneralAcceptanceTest {
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
         navigateToPageByID("menu-messages");
-        String subjectMessage = driver.findElement(By.xpath("message_list_subject_0_0")).getText();
+        String subjectMessage = driver.findElement(By.id("message_list_subject_0_0")).getText();
+        System.out.println(subjectMessage);
+        System.out.println(subject);
         assertTrue(subjectMessage.equals(subject));
     }
 
