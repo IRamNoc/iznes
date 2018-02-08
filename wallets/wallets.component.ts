@@ -10,7 +10,7 @@ import {ConfirmationService, immutableHelper} from '@setl/utils';
 import {PersistService} from "@setl/core-persist/";
 import {UserAdminService} from '../useradmin.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {managedWalletsActions} from '@setl/core-store';
 
 /* Decorator. */

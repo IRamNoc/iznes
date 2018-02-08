@@ -6,10 +6,10 @@ import {
 import {NgRedux} from '@angular-redux/store';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ToasterService} from 'angular2-toaster';
-import {StringFilter} from "clarity-angular";
+import {ClrDatagridStringFilterInterface} from "@clr/angular";
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ConfirmationService, immutableHelper} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {permissionGroupActions} from '@setl/core-store';
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
@@ -19,7 +19,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Persist service. */
 import {PersistService} from "@setl/core-persist";
 
-class TypeFilter implements StringFilter<any> {
+class TypeFilter implements ClrDatagridStringFilterInterface<any> {
     accepts(group: any, search: string): boolean {
         return group.category[0].text.toLowerCase().indexOf(search) >= 0;
     }
