@@ -49,7 +49,7 @@
             <form [formGroup]="chainForm" novalidate (ngSubmit)="save(chainForm.value)">
                 <section class="form-block">
                     <div class="row">
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-6">
                             <label for="chainId">
                                 <span mltag="txt_chainidentification">Chain Identification</span>
                                 <div class="mandatory text-danger">*</div>
@@ -61,7 +61,10 @@
                             <div *ngIf="chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.touched" class="text-danger"><span mltag="txt_thisfieldisrequired">This field is required</span></div>
                             <div *ngIf="!chainForm.controls.chainId.hasError('required') && chainForm.controls.chainId.hasError('invalid')" class="text-danger">This field should be an integer</div>
                         </div>
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-6"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
                             <label for="chainName">
                                 <span mltag="txt_chainname">Chain Name</span>
                                 <div class="mandatory text-danger">*</div>
@@ -71,6 +74,9 @@
                                 <span mltag="txt_thisfieldisrequired">This field is required</span>
                             </div>
                         </div>
+                        <div class="form-group col-sm-6"></div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-sm-12">
                             <button id="chainBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!chainForm.valid">
                                 <div *ngIf="!editForm; else editChainFBtSubmit">
