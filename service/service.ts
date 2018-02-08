@@ -1,8 +1,10 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
 import {FormGroup} from "@angular/forms";
+
 /* Request service. */
 import {PersistRequestService} from "@setl/core-req-services";
+
 /* Low dash */
 import _ from 'lodash';
 
@@ -26,8 +28,10 @@ export class PersistService {
      * ----------
      * Allows a form group value changes observable to be monitored and for the value to be restored.
      *
-     * @param {string} name
-     * @param {FormGroup} group
+     * @param {string} name - The name identifier of the form, must coenside with the name registered in the database.
+     * @param {FormGroup} group - The FormGroup to be watched and restored.
+     *
+     * @return {FormGroup} - The FormGroup origininally passed in.
      */
     public watchForm(name: string, group: FormGroup): FormGroup {
         console.log(' |-- Persist - watchForm: ', name);
@@ -76,8 +80,9 @@ export class PersistService {
                 /* Send the request. */
                 this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
                     /* Stub. */
+                    console.log(' | Form state save reply: ', save_data);
                 }).catch((error) => {
-                    console.warn(' | P: Failed to save this form\'s state: ', error);
+                    console.warn(' | Failed to save this form\'s state: ', error);
                 });
             }, 1000 * secondsToWait);
         });
@@ -93,11 +98,12 @@ export class PersistService {
      * Removes the subscription on a FormGroup that was already added passed into watchForm, if the form isn't already
      * being watched then false is returned.
      *
-     * @param {string} name
+     * @param {string} name - The name of a form.
+     *
      * @return {boolean} - True for a successful unsubscription and false for no subscription that needed to be
      * unsubscribed.
      */
-    public unwatchForm(name: string) {
+    public unwatchForm(name: string): boolean {
         console.log(' |-- Persist - unwatchForm: ', name);
         /* If we have a subscription... */
         if (this._subscriptions[name]) {
@@ -111,5 +117,33 @@ export class PersistService {
 
         /* else, return false, as we didn't unsubscribe anything. */
         return false;
+    }
+
+    /**
+     * Refresh State
+     * -----------
+     * Refreshes the saved state of a form to the value of a new FormGroup.
+     *
+     * @param  name  - the name of the form.
+     * @param  group - the new FormGroup object.
+     *
+     * @return group - the FormGroup passed in.
+     */
+    public refreshState(name: string, group: FormGroup): FormGroup {
+        console.log(' |--- Persist - clearState: ', name);
+        /* Let's firstly set the new form value. */
+        this._forms[name] = group.value;
+        console.log(' | Form value in service: ', this._forms[name]);
+
+        /* Then let's save the empty value to the server. */
+        this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
+            /* Stub. */
+            console.log(' | Form state refesh reply: ', save_data);
+        }).catch((error) => {
+            console.warn(' | Failed to refresh this form\'s state: ', error);
+        });
+
+        /* Return. */
+        return group;
     }
 }

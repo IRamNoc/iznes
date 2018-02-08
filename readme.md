@@ -4,7 +4,7 @@ Core Persist is a module that contains the form state saving tool.
 # Getting started
 ## 1. Import the `Persist Module`.
 
-Import the `Persist Module` into the module your component is declared in. 
+Import the `Persist Module` into the module your component is declared in.
 
 ```typescript
 import {PersistModule} from "@setl/core-persist";
@@ -28,14 +28,14 @@ import {PersistService} from "@setl/core-persist";
 export class MyComponent {
     /* Properties. */
     public myForm: FormGroup;
-    
+
     /* Constructor. */
     constructor (private persistService: PersistService) {
-        /* Your formgroup. */
+        /* Your FormGroup. */
         const group = new FormGroup({
             "example": new FormControl(""),
         });
-        
+
         /* Attaching the persist to the group,
            simple pass your group into the watchForm,
            and it'll be returned. */
@@ -53,6 +53,7 @@ The `watchForm` method accepts a form's name and a FormGroup object that it subs
 ### Syntax
 
 ```typescript
+/* In angular you should import the service in a module and assign the service to a property on a component. */
 const returnedGroup = new PersistService().watchForm(formName, formGroup);
 ```
 
@@ -73,6 +74,7 @@ The `unwatchForm` method accepts a form's name, and removes a valueChange subscr
 ### Syntax
 
 ```typescript
+/* In angular you should import the service in a module and assign the service to a property on a component. */
 const wasWatched = new PersistService().unwatchForm(formName);
 ```
 
@@ -84,3 +86,23 @@ const wasWatched = new PersistService().unwatchForm(formName);
 
 `true` is returned if a subscription was un-subscribed, `false` if there was not one.
 
+## `PersistService.refreshState()`
+
+The `refreshState` method accepts a form's name, and a new FormGroup object. It sets the value of a saved form state to the FormGroup passed in, so is useful for clearing a form state to an empty one.
+
+### Syntax
+
+```typescript
+/* In angular you should import the service in a module and assign the service to a property on a component. */
+const formGroup = new PersistService().refeshState(formName, formGroup);
+```
+
+#### Parameters
+
+`formName` - a string identifier of the form whose FormGroup is being watched.
+
+`formGroup` - a FormGroup object whose value is to be saved over any previous one.
+
+#### Returns
+
+`FormGroup` - the original FormGroup passed in as the second parameter.
