@@ -7,7 +7,7 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {FormGroup, FormControl, Validators, AbstractControl} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
