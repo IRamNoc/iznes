@@ -1331,7 +1331,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = this.getNewUserFormGroup();
+        this.tabsControl[tabid].formControl = this._persistService.refreshState('useradmin/newUser', this.getNewUserFormGroup('clear'));
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
