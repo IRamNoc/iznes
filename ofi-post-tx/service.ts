@@ -1,12 +1,12 @@
 // Vender
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 
 // Internal
 import {MemberSocketService} from '@setl/websocket-service';
-import {OfiFundInvestService} from '@ofi/ofi-main';
+import {OfiFundInvestService} from '../ofi-req-services/ofi-fund-invest/service';
 import {OfiNavService} from '../ofi-req-services/ofi-product/nav/service';
 import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
 import {WalletnodeTxService} from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';

@@ -1,5 +1,5 @@
 import {Action} from 'redux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /* Local types. */
 import {HomeOrders} from './';

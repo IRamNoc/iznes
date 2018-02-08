@@ -8,7 +8,7 @@ import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
 import {immutableHelper, NumberConverterService, mDateHelper, commonHelper} from '@setl/utils';
 import {PnlHelper} from '../pnlHelper/class';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {
     InitialisationService,

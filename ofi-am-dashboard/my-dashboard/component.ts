@@ -5,7 +5,7 @@ import {fromJS} from 'immutable';
 import {SagaHelper} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /* Selectors */
 import {getOfiUserIssuedAssets} from '@ofi/ofi-main/ofi-store';

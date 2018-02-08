@@ -2,7 +2,7 @@
 import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // Internal
 import {

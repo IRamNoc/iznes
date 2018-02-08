@@ -22,7 +22,7 @@ import {AlertsService} from "@setl/jaspero-ng2-alerts";
 import {getOfiManageOrderList, getOfiUserIssuedAssets, ofiSetRequestedManageOrder} from "../../ofi-store";
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */

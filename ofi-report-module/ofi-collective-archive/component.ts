@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {immutableHelper, NumberConverterService, mDateHelper} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {setRequestedCollectiveArchive} from '../../ofi-store/ofi-orders/collective-archive/actions';

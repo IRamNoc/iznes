@@ -1,6 +1,6 @@
 import {CurrentRequest, OfiManageNavListState} from './model';
 import {Action} from 'redux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {fromJS} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 

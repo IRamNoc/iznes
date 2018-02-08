@@ -1,6 +1,6 @@
 import {List, Set} from 'immutable';
 import {immutableHelper, NumberConverterService} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as math from 'mathjs';
 
 export const enum ActionDirection {

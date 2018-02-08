@@ -17,7 +17,7 @@ import {setLastCreatedContractDetail} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {ArrangementType} from '../../ofi-req-services/ofi-fund-invest/model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class InvestFundFormService {

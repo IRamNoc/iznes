@@ -16,7 +16,7 @@ import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
 import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ofiMyOrderActions} from '@ofi/ofi-main/ofi-store';
 
 

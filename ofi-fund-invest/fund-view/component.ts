@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-fund-view',
