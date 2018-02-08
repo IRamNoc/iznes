@@ -13,13 +13,13 @@
                     <i class="fa fa-plus"></i> <span mltag="txt_addnewwalletnode">Add New Wallet Node</span>
                 </button>
                 <clr-datagrid>
+                    <clr-dg-column [clrDgField]="'walletNodeName'"><span mltag="txt_nodename">Node Name</span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'chainName'"><span mltag="txt_chainname">Chain Name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'walletNodeName'"><span mltag="txt_nodename">Node Name</span>
-                    </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'chainName'"><span mltag="txt_chainname">Chain Name</span>
-                    </clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let node of walletNodesList">
+                        <clr-dg-cell>{{node.walletNodeName}}</clr-dg-cell>
+                        <clr-dg-cell>{{node.chainName}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
                                 <button id="btnEditWalletNode" class="btn" (click)="editForm(node)"><i
@@ -29,8 +29,6 @@
                                         class="fa fa-trash"></i></button>
                             </div>
                         </clr-dg-cell>
-                        <clr-dg-cell>{{node.walletNodeName}}</clr-dg-cell>
-                        <clr-dg-cell>{{node.chainName}}</clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
