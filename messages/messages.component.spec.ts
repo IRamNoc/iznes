@@ -26,6 +26,7 @@ import {APP_CONFIG} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
+import { ToasterService } from 'angular2-toaster';
 import {MailHelper} from './mailHelper';
 
 const routes = [
@@ -124,6 +125,7 @@ describe('SetlMessagesComponent', () => {
                 {provide: MyMessagesService},
                 {provide: MemberSocketService},
                 AlertsService,
+                ToasterService,
                 {provide: ActivatedRoute, useValue: {params: Observable.of({category: 'inbox'})}},
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {

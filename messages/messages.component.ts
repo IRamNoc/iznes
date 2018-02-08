@@ -2,13 +2,13 @@ import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
 import {setRequestedMailList} from '@setl/core-store';
 import {MyMessagesService} from '@setl/core-req-services';
 import {MessagesService} from "../messages.service";
 import {MailHelper} from './mailHelper';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ToasterService} from 'angular2-toaster';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
@@ -45,6 +45,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentPage;
     public currentBox;
     public search: string = '';
+    public showDeleteModal: boolean = false;
 
     public unreadMessages;
 
@@ -86,9 +87,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private _alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private toaster: ToasterService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -147,6 +148,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         });
 
         this.route.params.subscribe((params) => {
+            this.uncheckAll();
             if (params.category) {
                 if (params.category === 'view') {
                     return;
@@ -197,6 +199,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                 }
             }
+            message.isChecked = false;
             return message;
         });
 
@@ -233,8 +236,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.requestMailboxByCategory(categoryType, page);
     }
 
-    getChecked() {
+    get checked(): Array<any> {
         return this.messages.filter(message => message.isChecked);
+    }
+
+    uncheckAll() {
+        this.messages = this.messages.map((message) => {
+            return { ...message, isChecked: false };
+        });
     }
 
     /**
@@ -250,7 +259,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Mark as Read - Multiselect
      */
     checkedMarkAsRead() {
-        this.getChecked().forEach(message => this.mailHelper.markMessageAsRead(message.recipientId, message.mailId));
+        this.checked.forEach(message => this.mailHelper.markMessageAsRead(message.recipientId, message.mailId));
         this.refreshMailbox();
     }
 
@@ -258,7 +267,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Deleted - Multiselect
      */
     checkedDeleted() {
-        this.getChecked().forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message));
         this.refreshMailbox();
     }
 
@@ -279,7 +288,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      *
      * @param index
      */
-    messageChecked(index) {
+    messageChecked(index, event) {
+        event.stopPropagation();
         if (this.messages[index].isChecked === true) {
             this.messages[index].isChecked = false;
             return;
@@ -358,6 +368,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     showCategory(index, composeSelected = false, page = 0) {
         this.messageView = false;
         this.resetMessages();
+        this.uncheckAll();
         this.clearSearch();
         this.composeSelected = composeSelected;
 
@@ -440,39 +451,17 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             recipients[i] = obj.walletId;
         }
 
-        if (subject === '' || bodyObj.general === '' || formData.recipients === '') {
-            console.log('error: incomplete fields');
-
-            this._alertsService.create('error', `<table class="table grid">
-                    <tbody>
-                        <tr class="fadeIn">
-                            <td class="text-center" width="500px">
-                            <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                            &nbsp;Incomplete messages cannot be sent.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `);
-
+        if ( !formData.subject || !bodyObj.general || !formData.recipients ) {
+            this.toaster.pop('error', 'Please fill out all fields');
         } else {
             this.messageService.sendMessage(recipients, subject, body, null).then(
                 () => {
-                    this._alertsService.create('success', `
-                        <table class="table grid">
-                            <tbody>
-                                <tr class="fadeIn">
-                                    <td class="text-center" width="500px">
-                                        <i class="fa fa-envelope-o text-primary" aria-hidden="true"></i>
-                                        &nbsp;Your message has been sent!
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    `);
+                    this.toaster.pop('success', 'Your message has been sent!');
                     this.closeAndResetComposed();
                 },
                 (err) => {
-                    console.log('error: ', err);
+                    this.toaster.pop('error', 'Message sending failed');
+                    console.error('Message sending failed', err);
                 }
             );
         }
