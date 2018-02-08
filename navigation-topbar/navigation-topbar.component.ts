@@ -24,7 +24,7 @@ import {
     setRequestedMailInitial
 } from '@setl/core-store';
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import {
     InitialisationService,
