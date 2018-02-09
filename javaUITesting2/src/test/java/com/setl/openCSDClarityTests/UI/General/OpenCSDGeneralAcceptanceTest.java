@@ -253,6 +253,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Awaiting code completion")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccess(username,password);
         navigateToDropdown("menu-user-administration");
