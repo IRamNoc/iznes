@@ -1,6 +1,6 @@
 package com.setl.workflows;
 
-import SETLAPIHelpers.WebSocketAPI.LoginHelper;
+
 import io.setl.wsclient.shared.Connection;
 import io.setl.wsclient.shared.SocketClientEndpoint;
 import io.setl.wsclient.shared.encryption.KeyHolder;
@@ -14,8 +14,6 @@ import org.junit.rules.Timeout;
 import java.util.concurrent.ExecutionException;
 
 import static SETLAPIHelpers.UserDetailsHelper.generateUserDetails;
-import static SETLAPIHelpers.WebSocketAPI.LoginHelper.login;
-import static SETLAPIHelpers.WebSocketAPI.UserHelper.createUserAndCaptureDetails;
 
 public class CreateUser {
 
@@ -36,10 +34,10 @@ public class CreateUser {
         String password = userDetails[1];
         String email = userDetails[2];
 
-        Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
-        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);
+      /*  Connection connection = login(socket, localAddress, LoginHelper::loginResponse);
+        createUserAndCaptureDetails(factory, socket, "8", "35", userName, email, password);*/
 
 
-        connection.disconnect();
+       // connection.disconnect();
     }
 }
