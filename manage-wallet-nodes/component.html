@@ -9,9 +9,9 @@
         </button>
         <clr-tab-content *clrIfActive="showDashboard">
             <section class="form-block">
-                <button id="btnAddNewNode" class="btn btn-success mb-2" type="button" (click)="newForm()">
-                    <i class="fa fa-plus"></i> <span mltag="txt_addnewwalletnode">Add New Wallet Node</span>
-                </button>
+                <!--<button id="btnAddNewNode" class="btn btn-success mb-2" type="button" (click)="newForm()">-->
+                    <!--<i class="fa fa-plus"></i> <span mltag="txt_addnewwalletnode">Add New Wallet Node</span>-->
+                <!--</button>-->
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'walletNodeName'"><span mltag="txt_nodename">Node Name</span></clr-dg-column>
                     <clr-dg-column [clrDgField]="'chainName'"><span mltag="txt_chainname">Chain Name</span></clr-dg-column>
@@ -38,6 +38,12 @@
                 </clr-datagrid>
             </section>
         </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab *ngIf="showAddNewTab">
+        <button id="fakeNewWalletNodeBtn" clrTabLink (click)="newForm()">
+            <i class="fa fa-plus"></i> <span mltag="txt_addnewwalletnode">Add New Wallet Node</span>
+        </button>
     </clr-tab>
 
     <clr-tab *ngFor="let currentForm of multiForm; let ix = index">
