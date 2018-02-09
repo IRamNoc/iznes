@@ -56,7 +56,7 @@
                 </div>
                 <div class="message_list_item_sender" (click)="showMessage(i)" id="message_list_sender_{{currentPage}}_{{i}}">{{message.senderWalletName}}</div>
                 <div class="message_list_item_subject" (click)="showMessage(i)">
-                    <span [innerHtml]="message.subject | truncate: [200]" id="message_list_subject_{{currentPage}}_{{i}}"></span>
+                    <span [innerHtml]="message.subject | truncate: [200]" class="messagesSubject" id="message_list_subject_{{currentPage}}_{{i}}"></span>
                 </div>
                 <div class="message_list_item_date" (click)="showMessage(i)">{{message.date | datex: "MMM D, YYYY"}}</div>
             </div>

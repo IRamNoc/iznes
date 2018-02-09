@@ -4,6 +4,14 @@ button.disabled {
     border-color: #eaeaea;
 }
 
+.messagesSubject {
+    word-wrap: break-word;
+}
+
+.message_view_header h4 b {
+    word-wrap: break-word;
+}
+
 .padding {
     width: 20px;
     height: 4px;
