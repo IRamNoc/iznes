@@ -671,7 +671,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = this.newWalletFormGroup();
+        this.tabsControl[tabid].formControl = this._persistService.refreshState('useradmin/newWallet', this.newWalletFormGroup('clear'));
 
         /* Override the changes. */
         this.changeDetectorRef.markForCheck();
