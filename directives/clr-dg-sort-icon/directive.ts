@@ -33,21 +33,17 @@ export class ClrDgIconSortDirective implements AfterViewInit {
     }
 
     private showDefault() {
-        console.log('yo', this.labelEl);
         if (this.labelEl instanceof HTMLElement)
             this.labelEl.innerHTML = '<i class="fa fa-sort" style="font-weight:bolder; padding-left: 10px"></i>';
-        console.log('yo', 'default');
     }
 
     private showDes() {
         if (this.labelEl instanceof HTMLElement)
             this.labelEl.innerHTML = '<i class="fa fa-sort-down" style="font-weight:bolder; padding-left: 10px"></i>';
-        console.log('yo', 'desc');
     }
 
     private showAsc() {
         if (this.labelEl instanceof HTMLElement)
             this.labelEl.innerHTML = '<i class="fa fa-sort-up" style="font-weight:bolder; padding-left: 10px"></i>';
-        console.log('yo', 'asc');
     }
 }
