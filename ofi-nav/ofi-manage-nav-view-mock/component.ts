@@ -10,8 +10,12 @@ export class OfiManageNavView implements OnInit, OnDestroy {
     
     currentDate: string = moment().format('DD-MM-YY');
 
+    searchDateFrom = moment().add(-10, 'days');
+    searchDateTo = moment().add(-1, 'days');
+
     // mock data
     mockDataGridItems: any[];
+    mockDatePeriodItems: any[];
     exportOptions: any[];
 
     constructor() {}
@@ -27,6 +31,23 @@ export class OfiManageNavView implements OnInit, OnDestroy {
         for(let i = 1; i < 11; i++) {
             this.mockDataGridItems.push(this.getGridDataItem(i));
         }
+
+        this.mockDatePeriodItems = [{
+            id: '3',
+            text: 'last 3 days'
+        }, {
+            id: '7',
+            text: 'last 7 days'
+        }, {
+            id: '14',
+            text: 'last 14 days'
+        }, {
+            id: '30',
+            text: 'last 30 days'
+        }, {
+            id: '60',
+            text: 'last 60 days'
+        }]
 
         this.exportOptions = [{
             id: 'csv',
