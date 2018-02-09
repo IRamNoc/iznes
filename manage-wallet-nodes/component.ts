@@ -204,7 +204,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 isEdit: isEdit ? true : false
             });
         } else {
-            console.log('new');
             // place at the beginning
             this.multiForm.unshift({
                 form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
