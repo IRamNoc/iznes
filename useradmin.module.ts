@@ -26,6 +26,8 @@ import {ManageSubPortfolioComponent} from './sub-portfolio/component';
 import {MultilingualModule} from '@setl/multilingual';
 /* Persist Module. */
 import {PersistModule} from '@setl/core-persist';
+/* directive Module. */
+import {SetlDirectivesModule} from '@setl/utils';
 
 /* User admin service. */
 @NgModule({
@@ -71,7 +73,8 @@ import {PersistModule} from '@setl/core-persist';
         PermissionGridModule,
         MultilingualModule,
         PersistModule,
-        RouterModule
+        RouterModule,
+        SetlDirectivesModule
     ],
     providers: [AdminUsersService]
 })
