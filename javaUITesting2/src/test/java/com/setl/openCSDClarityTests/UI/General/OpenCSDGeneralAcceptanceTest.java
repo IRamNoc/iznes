@@ -98,7 +98,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToAddNewMemberTab();
         try {
             navigateToPageByID("menu-user-admin-users");
-        }catch (Error e){
+        } catch (Error e) {
             System.out.println("Could not navigate back to manage member");
             fail();
         }
@@ -206,7 +206,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToLoginPage();
         try {
             driver.findElement(By.id("logo-iznes")).isDisplayed();
-        }catch (Error e){
+        } catch (Error e) {
             fail("logo was not present");
         }
     }
@@ -217,7 +217,7 @@ public class OpenCSDGeneralAcceptanceTest {
         try {
             String subHeadingText = driver.findElement(By.className("login-subheading")).getText();
             assertTrue(subHeadingText.equals("Log in to IZNES"));
-        }catch (Error e){
+        } catch (Error e) {
             fail("IZNES was not present in sub-heading");
         }
     }
@@ -226,9 +226,9 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
-        try{
+        try {
             logout();
-        }catch (Error e){
+        } catch (Error e) {
             fail("logout button was not clickable");
         }
         verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67a");
@@ -237,8 +237,9 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage","Please fill out all fields");
+        sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage", "Please fill out all fields");
     }
+
     @Test
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
@@ -249,6 +250,43 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
+    }
+
+    @Test
+    @Ignore("Awaiting code completion")
+    public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
+        loginAndVerifySuccess(username,password);
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).sendKeys("Jordan");
+        driver.findElement(By.id("new-user-email")).sendKeys("user1@setl.io");
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        driver.findElement(By.id("new-user-password")).sendKeys("alex");
+        driver.findElement(By.id("new-user-password-repeat")).sendKeys("alex");
+        driver.findElement(By.id("new-user-submit")).click();
+        try{
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getAttribute("value");
+            assertTrue(success.equals("Success!"));
+        }catch (Error e){
+            fail("success message did not match");
+        }
+        try {
+            driver.findElement(By.className("default ng-tns-c5-9")).click();
+        }catch (Error e){
+            fail("Could not close alert");
+        }
+        logout();
+        try {
+            driver.findElement(By.id("forgotten-password-link")).click();
+        }catch (Error e){
+            fail("could not click forgotten password link");
+        }
+        driver.findElement(By.id("fp-email-field")).sendKeys("user1@setl.io");
+        driver.findElement(By.id("fp-submit-sendemail-button")).click();
+        //Manually assert that email has been received
+
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
@@ -265,10 +303,22 @@ public class OpenCSDGeneralAcceptanceTest {
         String JasperoModel = driver.findElement(By.className("toast-title")).getText();
         try {
             assertTrue(JasperoModel.equals(toasterMessage));
-            }catch (Error e){
+        } catch (Error e) {
             fail("toaster message did not match");
-            }
         }
+    }
+
+    public static void selectManageUserAccountDropdown(){
+        driver.findElement(By.id("new-user-account-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/ul/li[1]")).click();
+        driver.findElement(By.id("new-user-account-select")).click();
+    }
+
+    public static void selectManageUserUserDropdown(){
+        driver.findElement(By.id("new-user-usertype-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/ul/li[1]")).click();
+        driver.findElement(By.id("new-user-usertype-select")).click();
+    }
 
     public static void sendMessageToSelectedWalletWithoutRecipient (String subject, String message, String toasterMessage) throws InterruptedException {
         navigateToPageByID("menu-messages");
