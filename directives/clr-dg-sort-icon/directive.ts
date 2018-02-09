@@ -1,7 +1,7 @@
 import {AfterViewInit, Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 
 @Directive({selector: '[clrDgSortIcon]'})
-export class ClrDgIconSortDirective implements OnInit, AfterViewInit {
+export class ClrDgIconSortDirective implements AfterViewInit {
 
     private el: HTMLInputElement;
     @Input() fractionSize: number;
