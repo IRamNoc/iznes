@@ -78,18 +78,15 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
-                    <clr-dg-cell>{{item.share}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.ISIN}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.NAV}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navCurrency}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.status}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.share}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.ISIN}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.NAV}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.navCurrency}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.status}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="editNav" (click)="editNav()" class="btn">
-                                <i class="fa fa-edit"></i> <span mltag="txt_viewnav">Edit</span>
-                            </button>
                             <button id="addNav" (click)="addNav()" class="btn">
                                 <i class="fa fa-plus"></i> <span mltag="txt_addnewnav">Add new NAV</span>
                             </button>
