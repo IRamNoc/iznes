@@ -8,7 +8,7 @@ import {
     EditMemberMessageBody,
     DeleteMemberMessageBody
 } from './service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface AddMemberRequest {
     memberName: string;

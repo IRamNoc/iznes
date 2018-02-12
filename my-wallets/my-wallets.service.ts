@@ -12,7 +12,7 @@ import {
     NewWalletLabelMessageBody,
     UpdateWalletLabelMessageBody
 } from './my-wallets.service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {NgRedux} from '@angular-redux/store';
 import {
     setRequestedWalletLabel,

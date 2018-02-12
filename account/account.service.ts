@@ -8,7 +8,7 @@ import {
     EditAccountMessageBody,
     DeleteAccountMessageBody
 } from './account.service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface AddAccountRequest {
     accountName: string;

@@ -4,7 +4,7 @@ import {select, NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface CreatePdfMetadata {
     type: number;
