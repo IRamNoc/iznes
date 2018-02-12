@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ErrorHandler, NgModule} from '@angular/core';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {RouterModule} from '@angular/router';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
@@ -100,7 +100,7 @@ export function memberSocketServiceFactory() {
         BrowserModule,
         BrowserAnimationsModule,
         HttpModule,
-        ClarityModule.forRoot(),
+        ClarityModule,
         RouterModule.forRoot(ROUTES),
         SelectModule,
         ToasterModule,
@@ -135,7 +135,7 @@ export function memberSocketServiceFactory() {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler
         },
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
 
         {
             provide: MemberSocketService,

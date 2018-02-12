@@ -1,13 +1,35 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "baseUrl": "./",
-    "module": "es2015",
-    "types": []
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "baseUrl": "./",
+        "module": "es2015",
+        "types": []
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "../node_modules/@ofi/**/*.spec.ts",
+        "../node_modules/@setl/**/*.spec.ts",
+        "../node_modules/@setl/utils/components/ng2-date-picker/demo/**/*",
+        "../node_modules/@setl/core-test-util/**/*",
+        "../node_modules/@setl/core-messages/messages/mockMailHelper.ts",
+        "../node_modules/@setl/core-fileviewer/http.mock.ts",
+        "../setl_modules/**/*.spec.ts",
+        "../setl_modules/@setl/utils/components/ng2-date-picker/demo/**/*",
+        "../setl_modules/core-test/**/*",
+        "../setl_modules/module-template/**/*",
+        "../setl_modules/node_modules/*/*",
+        "../setl_modules/utils/components/ng2-date-picker/demo/**/*",
+        "../setl_modules/core-messages/messages/mockMailHelper.ts",
+        "../setl_modules/core-fileviewer/http.mock.ts"
+    ],
+    "include": [
+        "../src/**/*",
+        "../node_modules/@ofi/**/*",
+        "../node_modules/@setl/**/*",
+        "../setl_modules/**/*",
+        "../node_modules/ng2-gravatar-directive/src/**/*",
+        "../node_modules/ngx-quill-editor/**/*"
+    ]
 }
