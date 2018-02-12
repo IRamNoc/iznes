@@ -150,7 +150,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
     newForm() {
         this.addForm();
-        this.showAddNewTab = false;
+        // this.showAddNewTab = false;
     }
 
     addForm(isEdit?) {
@@ -196,21 +196,14 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             this.modelForm.walletNodeId = 0;
         }
 
-        if (isEdit) {
-            // place at the end
-            this.multiForm.push({
-                form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
-                modelForm: this.modelForm,
-                isEdit: isEdit ? true : false
-            });
-        } else {
-            // place at the beginning
-            this.multiForm.unshift({
-                form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
-                modelForm: this.modelForm,
-                isEdit: isEdit ? true : false
-            });
-            this.currentTab = 0;
+        this.multiForm.push({
+            form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
+            modelForm: this.modelForm,
+            isEdit: isEdit ? true : false
+        });
+
+        if (!isEdit) {
+            this.currentTab = this.multiForm.length - 1;
         }
     }
 
