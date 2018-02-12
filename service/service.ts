@@ -1,12 +1,11 @@
 /* Core imports. */
 import {Injectable} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-
+import * as _ from 'lodash';
 /* Request service. */
 import {PersistRequestService} from "@setl/core-req-services";
 
 /* Low dash */
-import _ from 'lodash';
 
 /* Decorator. */
 @Injectable()
