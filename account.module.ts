@@ -6,7 +6,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 import {RouterModule} from '@angular/router';
 
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {SetlPipesModule} from '@setl/utils';
 import {SelectModule} from '@setl/utils';
 
