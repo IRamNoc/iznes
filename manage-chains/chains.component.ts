@@ -9,6 +9,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfirmationService, SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
+import * as _ from 'lodash';
 
 import {ChainInterface} from './chains.interface';
 import {ChainModel} from './chains.model';
