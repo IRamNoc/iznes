@@ -1,20 +1,28 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/spec",
-    "baseUrl": "./",
-    "module": "commonjs",
-    "target": "es5",
-    "types": [
-      "jasmine",
-      "node"
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/spec",
+        "baseUrl": "./",
+        "module": "commonjs",
+        "target": "es5",
+        "types": [
+            "jasmine",
+            "node"
+        ]
+    },
+    "files": [
+        "test.ts"
+    ],
+    "exclude": [
+        "../setl_modules/module-template"
+    ],
+    "include": [
+        "**/*.spec.ts",
+        "**/*.d.ts",
+        "../node_modules/@ofi/**/*",
+        "../node_modules/@setl/**/*",
+        "../setl_modules/**/*",
+        "../node_modules/ng2-gravatar-directive/src/**/*",
+        "../node_modules/ngx-quill-editor/**/*"
     ]
-  },
-  "files": [
-    "test.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
 }

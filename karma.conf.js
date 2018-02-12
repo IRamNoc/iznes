@@ -40,10 +40,15 @@ module.exports = function (config) {
                     '--remote-debugging-port=9222'
                 ]
             }
-        }
+        },
+        webpack: {node: {fs: 'empty',}},
+        captureTimeout: 210000,
+        browserDisconnectTolerance: 3,
+        browserDisconnectTimeout: 210000,
+        browserNoActivityTimeout: 210000
 
     });
-  junitReporter = {
-    outputFile: 'test-results.xml'
-  };
+    junitReporter = {
+        outputFile: 'test-results.xml'
+    };
 };
