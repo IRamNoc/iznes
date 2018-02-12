@@ -134,8 +134,8 @@
             <section class="form-block">
                 <div class="form-group">
                     <div>
-                        <input id="fp-password-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="password" size="45" placeholder="New password">
-                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                        <input id="fp-password-field" [type]="(showPasswords1 === true) ? 'text' : 'password'" class="form-control" formControlName="password" size="45" placeholder="New password">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(1)" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
                     <div [ngStyle]="{'height':'24px'}" *ngIf="changePasswordForm.controls.password.valid || changePasswordForm.controls.password.pristine"></div>
                     <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
@@ -143,8 +143,8 @@
                 </div>
                 <div class="form-group text-center">
                     <div>
-                        <input id="fp-passwordconfirm-field" [type]="(showPasswords === true) ? 'text' : 'password'" class="form-control" formControlName="passwordConfirm" placeholder="Password confirmation">
-                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                        <input id="fp-passwordconfirm-field" [type]="(showPasswords2 === true) ? 'text' : 'password'" class="form-control" formControlName="passwordConfirm" placeholder="Password confirmation">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(2)" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
                     <div [ngStyle]="{'height':'24px'}" *ngIf="changePasswordForm.controls.passwordConfirm.valid || changePasswordForm.controls.passwordConfirm.pristine"></div>
                     <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
