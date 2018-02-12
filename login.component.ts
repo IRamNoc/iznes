@@ -72,9 +72,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     isTokenExpired = false;
     changePassword = false;
 
-    showForgottenPasswordModal = true;
-    changePassword = true;
-
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
@@ -88,7 +85,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
-                // private _activatedRoute: ActivatedRoute,
+                private _activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
