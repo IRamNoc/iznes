@@ -1,8 +1,11 @@
-import { MailHelper } from './mailHelper';
+import {MailHelper} from './mailHelper';
+import {NgRedux} from '@angular-redux/store';
+import {MyMessagesService} from '@setl/core-req-services/my-messages/my-messages.service';
 
 export class MockMailHelper extends MailHelper {
 
-    public constructor() {
+    constructor(ngRedux: any, myMessageService: any) {
+        super(ngRedux, myMessageService);
     }
 
     public retrieveMessages(walletId, type = 'inbox', page = 0, pageSize = 8) {
@@ -17,10 +20,17 @@ export class MockMailHelper extends MailHelper {
      * @return {Promise}
      */
     public decryptMessage(message, type = 'inbox') {
-        message.content = 'Decrypted Message';
-        return Promise.resolve(message);
+        return new Promise((resolve, reject) => {
+            message.isDecrypted = true;
+            message.content = 'Decrypted Message';
+            console.log('calling this one');
+            resolve(message);
+        });
     }
 
     public markMessageAsRead(walletId, mailId) {
+    }
+
+    public deleteMessage(walletId, message) {
     }
 }
