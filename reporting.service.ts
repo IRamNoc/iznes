@@ -1,22 +1,25 @@
-import { Injectable } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
-import { Observable } from 'rxjs/Observable';
-import { isEmpty } from 'lodash';
-import { InitialisationService, WalletNodeRequestService } from '@setl/core-req-services';
-import { SagaHelper, WalletTxHelper, WalletTxHelperModel } from '@setl/utils';
+import {Injectable} from '@angular/core';
+import {NgRedux} from '@angular-redux/store';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-wallet-holding';
+import {Observable} from 'rxjs/Observable';
+import {isEmpty} from 'lodash';
+import {InitialisationService, WalletNodeRequestService} from '@setl/core-req-services';
+import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
     SET_WALLET_ISSUER_LIST,
     SET_ISSUE_HOLDING,
     SET_ALL_TRANSACTIONS,
-    SET_ASSET_TRANSACTIONS } from '@setl/core-store';
-import { WalletIssuerDetail } from '../core-store/assets/my-issuers';
-import 'rxjs/add/operator/combineLatest';
-import { Transaction } from '../core-store/wallet/transactions/model';
-import { TransactionsByAsset } from '../core-store/wallet/transactions';
+    SET_ASSET_TRANSACTIONS
+} from '@setl/core-store';
+import {WalletIssuerDetail} from '../core-store/assets/my-issuers';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/filter';
+import {Transaction} from '../core-store/wallet/transactions/model';
+import {TransactionsByAsset} from '../core-store/wallet/transactions';
 
 export interface Asset {
     asset: string;
@@ -36,7 +39,7 @@ export class ReportingService {
     myChainAccess: any;
     allTransactions$: Observable<Transaction[]>;
     transactionsByAsset$: Observable<TransactionsByAsset>;
-    walletInfo = { walletName: '' };
+    walletInfo = {walletName: ''};
 
     walletIssuerDetailSubject: BehaviorSubject<WalletIssuerDetail>;
     holdingsByAssetSubject: BehaviorSubject<any>;
@@ -44,10 +47,8 @@ export class ReportingService {
 
     initialised$: Observable<any>;
 
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private walletNodeRequestService: WalletNodeRequestService
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private walletNodeRequestService: WalletNodeRequestService) {
         const connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
         const connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
         const myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
@@ -93,13 +94,13 @@ export class ReportingService {
                 .filter((wallets: MyWalletHoldingState) => {
                     return !!wallets && !isEmpty(wallets.holdingByAsset);
                 }).subscribe((wallets) => {
-                    if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
-                        this.holdingsByAssetSubject.next(
-                            Object.getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
-                                  .map(key => wallets.holdingByAsset[this.connectedWalletId][key])
-                        );
-                    }
-                });
+                if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
+                    this.holdingsByAssetSubject.next(
+                        Object.getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
+                            .map(key => wallets.holdingByAsset[this.connectedWalletId][key])
+                    );
+                }
+            });
             connectedWalletId$.subscribe((connectedWalletId: number) => {
                 this.connectedWalletId = connectedWalletId;
                 this.refreshDataSources();
@@ -152,7 +153,11 @@ export class ReportingService {
                 .then((holdings: Array<any>) => {
                     const total = holdings.reduce((a, h) => a + h.balance, 0);
                     return resolve(holdings.map(holding => {
-                        return { ...holding, walletName: this.walletInfo.walletName, percentage: (holding.balance / total) * 100 };
+                        return {
+                            ...holding,
+                            walletName: this.walletInfo.walletName,
+                            percentage: (holding.balance / total) * 100
+                        };
                     }));
                 })
                 .catch(() => reject('Failed to get holdings for ' + asset));
@@ -205,7 +210,7 @@ export class ReportingService {
             req,
             {},
             (data) => {
-                this.getTransactionsFromReportingNode(data, { ...payload, asset: asset });
+                this.getTransactionsFromReportingNode(data, {...payload, asset: asset});
             },
             (data) => {
                 console.log('get transaction history error:', data);
@@ -224,10 +229,13 @@ export class ReportingService {
             ).subscribe((res) => {
                 const transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
                 if (payload.asset) {
-                    const action: any = { type: SET_ASSET_TRANSACTIONS, payload: { asset: payload.asset, items: transactions }};
+                    const action: any = {
+                        type: SET_ASSET_TRANSACTIONS,
+                        payload: {asset: payload.asset, items: transactions}
+                    };
                     this.ngRedux.dispatch(action);
                 } else {
-                    const action: any = { type: SET_ALL_TRANSACTIONS, payload: { items: transactions }};
+                    const action: any = {type: SET_ALL_TRANSACTIONS, payload: {items: transactions}};
                     this.ngRedux.dispatch(action);
                 }
             }, (e) => {
@@ -287,7 +295,7 @@ export class ReportingService {
                             const balance = asset.holders[addr],
                                 encumbered = 0,
                                 free = balance - encumbered;
-                            return { addr, balance, encumbered, free };
+                            return {addr, balance, encumbered, free};
                         });
                     }
 
