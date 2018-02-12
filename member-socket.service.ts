@@ -47,7 +47,9 @@ export class MemberSocketService {
         };
 
         this.socket.errorCallback = () => {
-            this.errorCallback();
+            if (this.errorCallback) {
+                this.errorCallback();
+            }
             return true;
         };
 
