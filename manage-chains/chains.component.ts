@@ -4,7 +4,7 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfirmationService, SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
@@ -13,15 +13,14 @@ import * as _ from 'lodash';
 
 import {ChainInterface} from './chains.interface';
 import {ChainModel} from './chains.model';
-
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 // Internal
 import {Subscription} from 'rxjs/Subscription';
-
 // Services
 import {ChainService} from "@setl/core-req-services/chain/service";
+/*  */
+import {PersistService} from "@setl/core-persist";
 
 @Component({
     selector: 'app-manage-chains',
@@ -30,7 +29,7 @@ import {ChainService} from "@setl/core-req-services/chain/service";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ManageChainsComponent implements OnInit, OnDestroy {
+export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     language = 'en';
 
@@ -56,14 +55,13 @@ export class ManageChainsComponent implements OnInit, OnDestroy {
     @select(['chain', 'chainList', 'requested']) requestedChainOb;
     @select(['chain', 'chainList', 'chainList']) chainListOb;
 
-    constructor(
-        private _fb: FormBuilder,
-        private ngRedux: NgRedux<any>,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _alertsService: AlertsService,
-        private _chainService: ChainService,
-        private _confirmationService: ConfirmationService
-    ) {
+    constructor(private _fb: FormBuilder,
+                private ngRedux: NgRedux<any>,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private _alertsService: AlertsService,
+                private _chainService: ChainService,
+                private _confirmationService: ConfirmationService,
+                private _persistService: PersistService) {
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
         this.subscriptionsArray.push(this.requestedChainOb.subscribe((requested) => this.getChainsListRequested(requested)));
         this.subscriptionsArray.push(this.chainListOb.subscribe((chainsList) => this.getChainsListFromRedux(chainsList)));
@@ -85,6 +83,10 @@ export class ManageChainsComponent implements OnInit, OnDestroy {
                 ])
             ],
         });
+    }
+
+    ngAfterViewInit() {
+        this._persistService.watchForm('manageMember/manageChains', this.chainForm);
     }
 
     ngOnDestroy() {
@@ -121,7 +123,7 @@ export class ManageChainsComponent implements OnInit, OnDestroy {
         if (Number.isInteger(chainid)) {
             return null;
         } else {
-            return { invalid: true };
+            return {invalid: true};
         }
     }
 

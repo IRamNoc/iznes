@@ -17,6 +17,7 @@ import {
 } from '@setl/core-store';
 import {ConfirmationService} from '@setl/utils';
 import {SagaHelper} from '@setl/utils';
+import {PersistService} from "@setl/core-persist";
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -52,7 +53,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private memberService: MemberService,
                 private confirmationService: ConfirmationService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private _persistService: PersistService) {
         this.allowedToSave = [];
         /* Default tabs. */
         this.tabsControl = [
@@ -64,12 +66,12 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Member',
                 memberId: -1,
-                formControl: new FormGroup(
+                formControl: this._persistService.watchForm('manageMember/manageMember', new FormGroup(
                     {
                         memberName: new FormControl('', Validators.required),
                         email: new FormControl('', Validators.required)
                     }
-                ),
+                )),
                 active: false
             }
         ];

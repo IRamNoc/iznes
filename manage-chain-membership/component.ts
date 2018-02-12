@@ -5,17 +5,12 @@ import {select, NgRedux} from '@angular-redux/store';
 import {fromJS, Set} from 'immutable';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
-
 // Internal
-import {MemberService, AdminUsersService} from '@setl/core-req-services';
+import {AdminUsersService, MemberService} from '@setl/core-req-services';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {
-    setRequestedManageMemberList,
-    SET_MANAGE_MEMBER_LIST,
-    setRequestedWalletNodeList,
-    SET_WALLET_NODE_LIST,
-    SET_CHAIN_MEMBERSHIP_LIST,
-    getCurrentChainMembershipList
+    getCurrentChainMembershipList, SET_CHAIN_MEMBERSHIP_LIST, SET_MANAGE_MEMBER_LIST,
+    setRequestedManageMemberList
 } from '@setl/core-store';
 import {SagaHelper} from '@setl/utils';
 

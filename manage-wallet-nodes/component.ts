@@ -5,27 +5,29 @@
 */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {WalletNodesModel} from './model';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
 import * as _ from 'lodash';
-import {isNull} from 'util';
+import {PersistService} from "@setl/core-persist";
 
 /* Actions */
 // import {SET_FUND_SHARE_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
 
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 // Internal
 import {Subscription} from 'rxjs/Subscription';
-
 // Services
 import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
 import {ChainService} from '@setl/core-req-services/chain/service';
 import {MultilingualService} from '@setl/multilingual';
+
+/* Actions */
+
+// import {SET_FUND_SHARE_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
 
 @Component({
     selector: 'app-wallet-nodes',
@@ -50,6 +52,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
     // index Tabs
     showDashboard = false;
+    showAddNewTab = true;
 
     // Modals
     showConfirmModal = false;
@@ -76,15 +79,14 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     @select(['chain', 'chainList', 'requested']) requestedChainOb;
     @select(['chain', 'chainList', 'chainList']) chainListOb;
 
-    constructor(
-            private _fb: FormBuilder,
-            private ngRedux: NgRedux<any>,
-            private _adminUsersService: AdminUsersService,
-            private _chainService: ChainService,
-            private _changeDetectorRef: ChangeDetectorRef,
-            private _alertsService: AlertsService,
-            private multilingualService: MultilingualService,
-        ) {
+    constructor(private _fb: FormBuilder,
+                private ngRedux: NgRedux<any>,
+                private _adminUsersService: AdminUsersService,
+                private _chainService: ChainService,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private _alertsService: AlertsService,
+                private multilingualService: MultilingualService,
+                private _persistService: PersistService) {
         // language
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptionsArray.push(this.requestedWalletNodesOb.subscribe((requestedWalletNodeList) => this.getWalletNodesRequested(requestedWalletNodeList)));
@@ -153,6 +155,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
     newForm() {
         this.addForm();
+        this.showAddNewTab = false;
     }
 
     addForm(isEdit?) {
@@ -198,13 +201,21 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             this.modelForm.walletNodeId = 0;
         }
 
-        this.multiForm.push({
-            form: this.walletNodesForm,
-            modelForm: this.modelForm,
-        });
-
-        if (!isEdit) {
-            this.currentTab = this.multiForm.length - 1;
+        if (isEdit) {
+            // place at the end
+            this.multiForm.push({
+                form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
+                modelForm: this.modelForm,
+                isEdit: isEdit ? true : false
+            });
+        } else {
+            // place at the beginning
+            this.multiForm.unshift({
+                form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
+                modelForm: this.modelForm,
+                isEdit: isEdit ? true : false
+            });
+            this.currentTab = 0;
         }
     }
 
@@ -351,6 +362,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     }
 
     removeForm(arrayIndex) {
+        if (!this.multiForm[arrayIndex].isEdit) {
+            this.showAddNewTab = true;
+        }
         this.multiForm.splice(arrayIndex, 1);
         this.showDashboard = true;
         this.currentTab = null;
