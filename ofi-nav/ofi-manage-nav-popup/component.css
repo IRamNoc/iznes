@@ -1,0 +1,6 @@
+:host form .form-group input, :host ng-select {
+    background: #FFF !important;
+}
+:host form .form-group input[readonly] {
+    background: #EEE !important;
+}
