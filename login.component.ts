@@ -56,7 +56,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     email: AbstractControl;
 
     changePasswordForm: FormGroup;
-    showPasswords = false;
+    showPasswords1 = false;
+    showPasswords2 = false;
 
     changedPassword = false;
 
@@ -70,6 +71,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
     token = '';
     isTokenExpired = false;
     changePassword = false;
+
+    showForgottenPasswordModal = true;
+    changePassword = true;
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -255,8 +259,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
         return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
     }
 
-    toggleShowPasswords() {
-        this.showPasswords = (this.showPasswords === false) ? true : false;
+    toggleShowPasswords(num) {
+        if (num === 1) {
+            this.showPasswords1 = (this.showPasswords1 === false) ? true : false;
+        } else if (num === 2) {
+            this.showPasswords2 = (this.showPasswords2 === false) ? true : false;
+        }
     }
 
     showFPModal() {
@@ -285,7 +293,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                     setTimeout(() => {
                         clearInterval(intervalCountdown);
                         this.closeFPModal();
-                    }, 3000);
+                    }, 5000);
                 } else {
                     this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
                     this.closeFPModal();
