@@ -59,35 +59,29 @@
 </ng-template>
 
 <ng-template #dynamicViewTab let-formControl="formControl" let-tabid="tabid" let-contract="contract" let-template="template" let-transaction="transaction">
-    <div class="user-tab-panel-body panel-body">
+    <div class="panel-body">
 
-        <!-- Contract view -->
-        <div *ngIf="template === 'contractDetails'">
-            <div class="contractDetails-tab-panel-body panel-body">
-                <form>
-                    <div class="form-horizontal">
-                        <div class="form-group tx-view-header">
-                            <div class="col-sm-3">&nbsp;</div>
-                            <label class="col-sm-4">
-                                <span class="ml" mltag="txt_contractdetails">Contract Details</span>
-                            </label>
-                        </div>
+        <clr-datagrid #contractsDataGrid>
+            <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
+            <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
+            <clr-dg-column mltag="txt_element">Element</clr-dg-column>
+            <clr-dg-column mltag="txt_status">Status</clr-dg-column>
 
-                        <ng-container *ngFor="let contractField of contractFields">
-                            {{contractField}}
-                            <div class="form-group" *ngIf="contract[contractField]">
-                                <label class="col-sm-3 control-label">
-                                    <span class="ml" mltag="txt_">{{contractField}}</span>
-                                </label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" readonly="" value="{{contract[contractField]}}">
-                                </div>
-                            </div>
-                        </ng-container>
+            <clr-dg-row *clrDgItems="let party of contract.parties; let i = index">
+                <clr-dg-cell>
+                    <div class="btn-group btn-sm">
+                        <button id="edit-{{party.partyIdentifier}}" (click)="handleView(i)" class="btn">
+                            <i class="fa fa-search"></i> <span mltag="txt_view">Pending</span></button>
                     </div>
-                </form>
-            </div>
-        </div>
+                </clr-dg-cell>
+                <clr-dg-cell>{{contract.partyIdentifier}}</clr-dg-cell>
+                <clr-dg-cell>{{contract.expiry}}</clr-dg-cell>
+                <clr-dg-cell>
+                    <span *ngIf="contract.complete == true" class="label label-success" mltag="txt_enabled">Complete</span>
+                    <span *ngIf="contract.complete != true" class="label label-warning" mltag="disabled">Incomplete</span>
+                </clr-dg-cell>
+            </clr-dg-row>
+        </clr-datagrid>
 
         <div class="form-group tx-view-header">
             <button type="button" class="btn btn-primary" (click)="closeTab(tabid)">Close</button>

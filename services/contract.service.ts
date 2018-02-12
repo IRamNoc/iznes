@@ -41,7 +41,6 @@ export class ContractService {
             }
             console.log('Contract Property:', prop, 'Value:', json[prop]);
         }
-        console.log(contract.contractdata);
         if (typeof contract.contractdata !== 'undefined' && typeof contract.contractdata.metadata !== 'undefined') {
             if (contract.contractdata.metadata !== null) {
                 contract.name = JSON.parse(contract.contractdata.metadata).title;
@@ -52,7 +51,7 @@ export class ContractService {
         if (typeof contract.contractdata.parties !== 'undefined' && contract.contractdata.parties !== null) {
             const partyCount = contract.contractdata.parties.shift();
             _.each(contract.contractdata.parties, (partyJson) => {
-               this.addParty(contract, this.partyService.fromJSON(partyJson));
+                this.addParty(contract, this.partyService.fromJSON(partyJson));
             });
             delete contract.contractdata.parties;
         }
@@ -87,6 +86,9 @@ export class ContractService {
                 contract[prop] = contract.contractdata[prop];
             }
         }
+
+
+
         contract.function = contract.contractdata.__function;
         delete contract.contractdata;
 
@@ -127,7 +129,7 @@ export class ContractService {
                 typeof contract[contractDataFields[index]] !== 'undefined'
             ) {
                 contractJsonObject.contractdata[contractDataFields[index]] = this.convertSubModels(contract[contractDataFields[index]]);
-                delete contract[contractDataFields[index]];
+                // delete contract[contractDataFields[index]];
             } else {
                 contractJsonObject.contractdata[contractDataFields[index]] = contract[contractDataFields[index]];
             }
