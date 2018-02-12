@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 /* Clarity module. */
-import { ClarityModule } from 'clarity-angular';
+import { ClarityModule } from '@clr/angular';
 /* 3rd party modules. */
 import { SelectModule } from '@setl/utils';
 /* Multilingual coolness. */
