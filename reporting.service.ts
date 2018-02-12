@@ -14,12 +14,12 @@ import {
     SET_ALL_TRANSACTIONS,
     SET_ASSET_TRANSACTIONS
 } from '@setl/core-store';
-import {WalletIssuerDetail} from '../core-store/assets/my-issuers';
+import {WalletIssuerDetail} from '@setl/core-store/assets/my-issuers';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/filter';
-import {Transaction} from '../core-store/wallet/transactions/model';
-import {TransactionsByAsset} from '../core-store/wallet/transactions';
+import {Transaction} from '@setl/core-store/wallet/transactions/model';
+import {TransactionsByAsset} from '@setl/core-store/wallet/transactions';
 
 export interface Asset {
     asset: string;
