@@ -32,7 +32,7 @@ import {
 
 import {immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ofiCouponActions} from '@ofi/ofi-main/ofi-store';
 
 /* Decorator. */

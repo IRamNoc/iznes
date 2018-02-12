@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import {OfiInitialisationService} from '../initialisation/initialisation.service';
 

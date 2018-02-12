@@ -1,7 +1,7 @@
 import {Action} from 'redux';
 import * as FundActions from './actions';
 import {FundDetail, FundListState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 

@@ -6,7 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 
 /* Clarity module. */
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 
 /* 3rd party modules. */
 import {SelectModule, SetlPipesModule} from '@setl/utils';
@@ -15,8 +15,8 @@ import {SelectModule, SetlPipesModule} from '@setl/utils';
 import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
-import {FundHoldingsComponent} from './fund-holdings/component'
-import {MyDashboardComponent} from './my-dashboard/component'
+import {FundHoldingsComponent} from './fund-holdings/component';
+import {MyDashboardComponent} from './my-dashboard/component';
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';

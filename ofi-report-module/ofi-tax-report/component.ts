@@ -8,7 +8,7 @@ import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
 import {immutableHelper, NumberConverterService, mDateHelper, commonHelper} from '@setl/utils';
 import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';

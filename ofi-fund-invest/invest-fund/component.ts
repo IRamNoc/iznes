@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 import {NgRedux} from '@angular-redux/store';

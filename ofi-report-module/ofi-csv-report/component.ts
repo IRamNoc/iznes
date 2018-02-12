@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
 import {FileService} from '@setl/core-req-services';
 
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // Internal
 import {
