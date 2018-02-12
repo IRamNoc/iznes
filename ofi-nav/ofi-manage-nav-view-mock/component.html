@@ -19,52 +19,52 @@
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <label class="control-label" for="shareName" mltag="txt_sharename">Share name</label>
-                        <input type="text" id="shareName" name="shareName" value="Mock Share 1" readonly />
+                        <input type="text" id="shareName" name="shareName" value="{{share.name}}" readonly />
                     </div>
                     
                     <div class="form-group col-sm-3">
                         <label class="control-label" for="isin" mltag="txt_isin">ISIN</label>
-                        <input type="text" id="isin" name="isin" value="1000001" readonly />
+                        <input type="text" id="isin" name="isin" value="{{share.ISIN}}" readonly />
                     </div>
                     
                     <div class="form-group col-sm-3">
                         <label class="control-label" for="amCompany" mltag="txt_amcompany">Asset Management Company</label>
-                        <input type="text" id="amCompany" name="amCompany" value="Mock Assets Co." readonly />
+                        <input type="text" id="amCompany" name="amCompany" value="{{share.ASM}}" readonly />
                     </div>
                 </div>
                 
                 <div class="hr-line-dashed"></div>
-                <span class="text-badge">NAV Information</span>
+                <span class="text-badge">Current NAV Information</span>
 
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="currentDate" mltag="txt_currentDate">Date</label>
-                        <input type="text" id="currentDate" name="currentDate" [(ngModel)]="currentDate" readonly />
+                        <input type="text" id="currentDate" name="currentDate" [(ngModel)]="nav.date" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
-                        <input type="text" id="nav" name="nav" value="1" readonly />
+                        <input type="text" id="nav" name="nav" value="{{nav.value}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="units" mltag="txt_units">Units</label>
-                        <input type="text" id="units" name="units" value="500" readonly />
+                        <input type="text" id="units" name="units" value="{{nav.units}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
-                        <input type="text" id="aum" name="aum" value="1000" readonly />
+                        <input type="text" id="aum" name="aum" value="{{nav.aum}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="navCurrency" mltag="txt_navCurrency">NAV Currency</label>
-                        <input type="text" id="navCurrency" name="navCurrency" value="GBP" readonly />
+                        <input type="text" id="navCurrency" name="navCurrency" value="{{nav.currency}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label">&nbsp;</label>
-                        <button class="btn btn-primary">Add New NAV</button>
+                        <button class="btn btn-primary" (click)="addNav()">Add New NAV</button>
                     </div>
                 </div>
             </form>
@@ -144,17 +144,17 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
-                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.NAV}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navCurrency}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.date}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.pubDate}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.value}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.currency}}</clr-dg-cell>
                     <clr-dg-cell>{{item.status}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="editNav" (click)="editNav()" class="btn">
+                            <button id="editNav" (click)="editNav(item)" class="btn">
                                 <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit</span>
                             </button>
-                            <button id="cancelNav" (click)="cancelNav()" class="btn">
+                            <button id="cancelNav" (click)="cancelNav(item)" class="btn">
                                 <i class="fa fa-remove"></i> <span mltag="txt_cancelnav">Cancel</span>
                             </button>
                         </div>
@@ -188,3 +188,5 @@
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
+
+<app-nav-add [hidden]="!navObj" [share]="navObj" [mode]="navPopupMode"></app-nav-add>

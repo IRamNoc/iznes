@@ -2,13 +2,15 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import * as moment from 'moment';
 
+import * as model from '../OfiManageNav';
+
 @Component({
     selector: 'app-nav-manage-list',
     templateUrl: './component.html',
     styleUrls: ['./component.css']
 })
 export class OfiManageNavList implements OnInit, OnDestroy {
-
+    
     dateTypes: any[];
     searchDate: Date;
     dateConfig = {
@@ -19,8 +21,11 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         locale: null // TODO
     };
 
+    navPopupMode: model.NavPopupMode = model.NavPopupMode.ADD;
+    addNavShare: model.NavModel = null;
+
     // mock data
-    mockDataGridItems: any[];
+    mockDataGridItems: model.NavInfoModel[];
 
     constructor(private router: Router) {}
 
@@ -48,20 +53,21 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         }
     }
 
-    private getGridDataItem(num: number): any {
+    private getGridDataItem(num: number): model.NavInfoModel {
         return {
-            share: `Mock Share ${num}`,
-            ISIN: `100000${num}`,
-            NAV: Math.random(),
-            navCurrency: 'GBP',
-            navDate: moment().format('DD-MM-YY'),
-            navPubDate: moment().format('DD-MM-YY'),
+            name: `Mock Share ${num}`,
+            ISIN: parseInt(`100000${num}`),
+            value: 0,
+            lastValue: Math.random(),
+            currency: 'GBP',
+            date: moment().format('DD-MM-YY'),
+            pubDate: moment().format('DD-MM-YY'),
             status: 'Estimated'
         }
     }
     
-    addNav(): void {
-        console.log('Go to add nav page');
+    addNav(share: model.NavInfoModel): void {
+        this.addNavShare = share;
     }
 
     navigateToShare(): void {
