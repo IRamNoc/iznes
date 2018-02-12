@@ -84,7 +84,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
-                private _activatedRoute: ActivatedRoute,
+                // private _activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,

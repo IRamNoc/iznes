@@ -10,7 +10,7 @@ import {SetlLoginComponent} from './login.component';
 /* Notifications. */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual';
 
 /**

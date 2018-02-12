@@ -32,9 +32,10 @@ import {
 import {MemberSocketService} from '@setl/websocket-service';
 import {Subject} from 'rxjs/Subject';
 import {Router, ActivatedRoute} from '@angular/router';
-import _ from 'lodash';
-import {ClarityModule} from 'clarity-angular';
+import * as _ from 'lodash';
+import {ClarityModule} from '@clr/angular';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 const environment = {
     logoID: '',
@@ -46,6 +47,9 @@ describe('SetlLoginComComponent', () => {
     let component: SetlLoginComponent;
     let fixture: ComponentFixture<SetlLoginComponent>;
     let element: Element;
+    const memberSocketService = new MemberSocketService();
+    const myUserServiceMock = new MyUserServiceMock(memberSocketService);
+    const alertServiceMock = new AlertsServiceMock();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -54,12 +58,12 @@ describe('SetlLoginComComponent', () => {
                 NgReduxTestingModule,
                 ToasterModule,
                 CoreTestUtilModule,
-                ClarityModule
+                ClarityModule,
             ],
             declarations: [SetlLoginComponent],
             providers: [
-                {provide: MyUserService, useClass: MyUserServiceMock},
-                {provide: MemberSocketService, useClass: MemberSocketServiceMock},
+                {provide: MyUserService, useValue: myUserServiceMock},
+                {provide: MemberSocketService, useValue: memberSocketService},
                 {provide: MyWalletsService, useClass: MyWalletsServiceMock},
                 {provide: ChannelService, useClass: ChannelServiceMock},
                 {provide: AccountsService, useClass: AccountsServiceMock},
@@ -68,7 +72,7 @@ describe('SetlLoginComComponent', () => {
                 {provide: InitialisationService, useClass: InitialisationServiceMock},
                 {provide: MemberSocketService, useClass: MemberSocketServiceMock},
                 {provide: ToasterService, useClass: ToasterServiceMock},
-                {provide: AlertsService, useClass: AlertsServiceMock},
+                {provide: AlertsService, useValue: alertServiceMock},
                 {provide: Router, useValue: RouterMock},
                 {provide: ActivatedRoute, useValue: {params: Observable.of({token: ''})}},
                 {
@@ -201,7 +205,7 @@ describe('SetlLoginComComponent', () => {
     );
 
     it('AlertsService should called with error type', () => {
-        spyOn(component.alertsService, 'create');
+        spyOn(alertServiceMock, 'create');
 
         const response = [
             '', {Data: [{Status: 'fail'}]}
@@ -209,7 +213,7 @@ describe('SetlLoginComComponent', () => {
 
         component.showLoginErrorMessage('error', response);
 
-        expect(component.alertsService.create).toHaveBeenCalledWith(
+        expect(alertServiceMock.create).toHaveBeenCalledWith(
             'error',
             response,
             {buttonMessage: 'Please try again to log in'}
@@ -218,7 +222,7 @@ describe('SetlLoginComComponent', () => {
     });
 
     it('login method: if form is valid, loginRequest should be called', () => {
-        spyOn(component.myUserService, 'loginRequest');
+        spyOn(myUserServiceMock, 'loginRequest');
 
         const formValue = {
             username: 'user name',
@@ -228,14 +232,14 @@ describe('SetlLoginComComponent', () => {
         component.loginForm.controls['username'].setValue(formValue.username);
         component.loginForm.controls['password'].setValue(formValue.password);
         component.login(formValue);
-        expect(component.myUserService.loginRequest).toHaveBeenCalledWith({
+        expect(myUserServiceMock.loginRequest).toHaveBeenCalledWith({
             username: 'user name',
             password: 'user password'
         });
     });
 
     it('login method: if form is invalid, loginRequest should be not be called', () => {
-        spyOn(component.myUserService, 'loginRequest');
+        spyOn(myUserServiceMock, 'loginRequest');
 
         const formValue = {
             username: 'user name',
@@ -245,7 +249,7 @@ describe('SetlLoginComComponent', () => {
         component.loginForm.controls['username'].setValue(formValue.username);
         component.loginForm.controls['password'].setValue(formValue.password);
         component.login(formValue);
-        expect(component.myUserService.loginRequest).not.toHaveBeenCalled();
+        expect(myUserServiceMock.loginRequest).not.toHaveBeenCalled();
     });
 
     it('login method: if there is alert popup present, the the popup should be remove, and login request should not be called', () => {
@@ -258,7 +262,7 @@ describe('SetlLoginComComponent', () => {
 
         spyOn(document, 'getElementsByClassName').and.returnValue(errorElements);
         spyOn(errorElements[0].parentNode, 'removeChild');
-        spyOn(component.myUserService, 'loginRequest');
+        spyOn(myUserServiceMock, 'loginRequest');
 
         const formValue = {
             username: 'user name',
@@ -268,7 +272,7 @@ describe('SetlLoginComComponent', () => {
         component.loginForm.controls['username'].setValue(formValue.username);
         component.loginForm.controls['password'].setValue(formValue.password);
         component.login(formValue);
-        expect(component.myUserService.loginRequest).not.toHaveBeenCalled();
+        expect(myUserServiceMock.loginRequest).not.toHaveBeenCalled();
         expect(errorElements[0].parentNode.removeChild).toHaveBeenCalled();
     });
 });
