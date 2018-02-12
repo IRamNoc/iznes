@@ -285,7 +285,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
                     setTimeout(() => {
                         clearInterval(intervalCountdown);
                         this.closeFPModal();
-                    }, 3000);
+                    }, 5000);
                 } else {
                     this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
                     this.closeFPModal();
