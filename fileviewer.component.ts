@@ -40,7 +40,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public constructor(
         private alertsService: AlertsService,
         private memberSocketService: MemberSocketService,
-        private sanitizer: DomSanitizer,
+        public sanitizer: DomSanitizer,
         private pdfService: PdfService,
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,

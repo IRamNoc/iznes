@@ -3,7 +3,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {NgRedux} from '@angular-redux/store';
 import {MockNgRedux} from "@angular-redux/store/lib/testing";
 import {MemberSocketService} from '@setl/websocket-service';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {APP_CONFIG} from '@setl/utils';
 import {FileViewerComponent} from './fileviewer.component';
@@ -18,18 +18,7 @@ describe('FileViewerComponent', () => {
 
     beforeAll(() => {
         origRunAsync = SagaHelper.runAsync;
-        SagaHelper.runAsync = function (a, b, c, d, e, f) {
-            e({
-                0: {
 
-                },
-                1: {
-                    Data: {
-                        downloadId: 'downloadId'
-                    }
-                }
-            });
-        };
     });
     afterAll(() => {
         SagaHelper.runAsync = origRunAsync;
@@ -38,8 +27,8 @@ describe('FileViewerComponent', () => {
     let component: FileViewerComponent;
     let fixture: ComponentFixture<FileViewerComponent>;
     const pdfMockService = new PdfMockService('', '');
-    const sanitizer: DomSanitizer = new DomSanitizer();
     beforeEach(() => {
+
         TestBed.configureTestingModule({
             imports: [ClarityModule],
             declarations: [FileViewerComponent],
@@ -84,14 +73,14 @@ describe('FileViewerComponent', () => {
         component.userId = 'userId';
         component.walletId = 'walletId';
         component.fileHash = 'fileHash';
-        let expectedFileUrl = sanitizer.bypassSecurityTrustResourceUrl(
+        const expectedFileUrl = component.sanitizer.bypassSecurityTrustResourceUrl(
             component.baseUrl +
             '/mn/file?method=retrieve&downloadId=downloadId&walletId=walletId'
-        );
+        ).toString();
         component.openFileModal().then(() => {
                 fixture.detectChanges();
                 expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-                expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
+                expect(component.sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
             },
             () => {
             });
@@ -103,17 +92,17 @@ describe('FileViewerComponent', () => {
         component.walletId = 'walletId';
         component.pdfId = 'pdfId';
         component.fileHash = 'fileHash';
-        let expectedFileUrl = sanitizer.bypassSecurityTrustResourceUrl(
+        const expectedFileUrl = component.sanitizer.bypassSecurityTrustResourceUrl(
             component.baseUrl +
             '/mn/file?method=retrieve&downloadId=downloadId&walletId=walletId'
-        );
+        ).toString();
         spyOn(pdfMockService, 'getPdf').and.callThrough();
         component.openFileModal().then(() => {
                 fixture.detectChanges();
                 expect(pdfMockService.getPdf).toHaveBeenCalled();
                 expect(typeof component.fileUrl === 'undefined').toBeFalsy();
                 expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-                expect(sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
+                expect(component.sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
             },
             () => {
             });
