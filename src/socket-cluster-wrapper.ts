@@ -4,10 +4,10 @@
  * 2. Handle JWT when talking to walletnode, if we are going to communicate to walletnode directly.
  */
 
-import _ from 'lodash';
-import sha256 from 'sha256';
+import * as _ from 'lodash';
+import * as sha256 from 'sha256';
 import * as SocketCluster from 'socketcluster-client';
-import sodium from 'libsodium-wrappers';
+import * as sodium from 'libsodium-wrappers';
 
 const initialRequestTemplate = {
     EndPoint: 'member',
