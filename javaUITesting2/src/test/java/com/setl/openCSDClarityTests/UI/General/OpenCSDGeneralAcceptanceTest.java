@@ -126,7 +126,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
     }
@@ -136,7 +136,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.255555", "1.25556");
     }
@@ -146,7 +146,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "1.2", "1.2000");
     }
@@ -156,7 +156,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "1.25555", "1.2556");
     }
@@ -166,7 +166,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.2", "1.20");
     }
@@ -176,7 +176,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.255", "1.25");
     }
@@ -186,7 +186,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
     }
@@ -196,7 +196,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
-        clickID("btnAddNewFund");
+        clickID("fakeNewFundBtn");
         clickID("tabfundShareNav_Characteristic_0_0");
         fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
     }
