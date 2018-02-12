@@ -1,5 +1,5 @@
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /**
  * Convert wallet Address to an array the select2 can use to render a list a wallet address.
