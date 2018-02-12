@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_myaccount">My Account</h1>
+    <h1><i class="fa fa-user"></i><span mltag="txt_myaccount">My Account</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -12,16 +12,17 @@
                 <section class="form-block">
                     <form [formGroup]="userDetailsForm" (ngSubmit)="submitDetails(userDetailsForm.value)">
                         <div class="row">
-                            <div class="col-sm-12 form-group">
+                            <div class="col-sm-6 form-group">
                                 <label for="udDisplayName">
                                     <span mltag="txt_displayname">Display name</span>
                                     <div class="mandatory text-danger">*</div>
                                 </label>
                                 <div>
-                                    <input type="text" id="udDisplayName" [formControl]="displayName" size="45" style="width:97.5%" class="udDisplayName">
+                                    <input type="text" id="udDisplayName" [formControl]="displayName" size="45" class="udDisplayName">
                                 </div>
-                                <div *ngIf="displayName.hasError('required') && displayName.touched" class="alert alert-danger" mltag="txt_displaynamerequired">Display name is required</div>
+                                <div *ngIf="displayName.hasError('required') && displayName.touched" class="text-danger" mltag="txt_displaynamerequired">Display name is required</div>
                             </div>
+                            <div class="col-sm-6 form-group"></div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
@@ -32,7 +33,7 @@
                                 <div>
                                     <input type="text" id="udFirstName" [formControl]="firstName" size="45">
                                 </div>
-                                <div *ngIf="firstName.hasError('required') && firstName.touched" class="alert alert-danger" mltag="txt_firstnamerequired">First name is required</div>
+                                <div *ngIf="firstName.hasError('required') && firstName.touched" class="text-danger" mltag="txt_firstnamerequired">First name is required</div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="udLastName">
@@ -42,7 +43,7 @@
                                 <div>
                                     <input type="text" id="udLastName" [formControl]="lastName" size="45">
                                 </div>
-                                <div *ngIf="lastName.hasError('required') && lastName.touched" class="alert alert-danger" mltag="txt_lastnamerequired">Last name is required</div>
+                                <div *ngIf="lastName.hasError('required') && lastName.touched" class="text-danger" mltag="txt_lastnamerequired">Last name is required</div>
                             </div>
                         </div>
                         <div class="row">
@@ -54,7 +55,7 @@
                                 <div>
                                     <input type="text" id="udMobilePhone" [formControl]="mobilePhone" size="45">
                                 </div>
-                                <div *ngIf="mobilePhone.hasError('required') && mobilePhone.touched" class="alert alert-danger" mltag="txt_mobilephonerequired">Mobile phone is required</div>
+                                <div *ngIf="mobilePhone.hasError('required') && mobilePhone.touched" class="text-danger" mltag="txt_mobilephonerequired">Mobile phone is required</div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="udAddressPrefix">
@@ -63,7 +64,7 @@
                                 <div>
                                     <input type="text" id="udAddressPrefix" mltag="txt_apartmentorhouse" placeholder="Apartment or house" [formControl]="addressPrefix" size="45">
                                 </div>
-                                <div *ngIf="addressPrefix.hasError('required') && addressPrefix.touched" class="alert alert-danger" mltag="txt_addressprefixrequired">Address prefix is required</div>
+                                <div *ngIf="addressPrefix.hasError('required') && addressPrefix.touched" class="text-danger" mltag="txt_addressprefixrequired">Address prefix is required</div>
                             </div>
                         </div>
                         <div class="row">
@@ -75,7 +76,7 @@
                                 <div>
                                     <input type="text" id="udAddress1" [formControl]="address1" size="45">
                                 </div>
-                                <div *ngIf="address1.hasError('required') && address1.touched" class="alert alert-danger" mltag="txt_addressrequired">Address is required</div>
+                                <div *ngIf="address1.hasError('required') && address1.touched" class="text-danger" mltag="txt_addressrequired">Address is required</div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="udAddress2">&nbsp;</label>
@@ -94,14 +95,14 @@
                                 <div>
                                     <input type="text" id="udAddress3" [formControl]="address3" size="45">
                                 </div>
-                                <div *ngIf="address3.hasError('required') && address3.touched" class="alert alert-danger" mltag="txt_cityortownrequired">City or Town is required</div>
+                                <div *ngIf="address3.hasError('required') && address3.touched" class="text-danger" mltag="txt_cityortownrequired">City or Town is required</div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="udAddress4" mltag="txt_stateorarea">State or Area</label>
                                 <div>
                                     <input type="text" id="udAddress4" [formControl]="address4" size="45">
                                 </div>
-                                <div *ngIf="address4.hasError('required') && address4.touched" class="alert alert-danger" mltag="txt_stateorarearequired">State or Area is required</div>
+                                <div *ngIf="address4.hasError('required') && address4.touched" class="text-danger" mltag="txt_stateorarearequired">State or Area is required</div>
                             </div>
                         </div>
                         <div class="row">
@@ -114,8 +115,8 @@
                                     <input type="text" id="udPostalCode" [formControl]="postalCode" size="45">
 
                                 </div>
-                                <div *ngIf="postalCode.hasError('required') && postalCode.touched" class="alert alert-danger" mltag="txt_postalcoderequired">Postal Code is required</div>
-                                <div *ngIf="!postalCode.valid && postalCode.touched && !postalCode.hasError('required')" class="alert alert-danger" mltag="txt_postalcodeinvalid">Postal Code is not valid</div>
+                                <div *ngIf="postalCode.hasError('required') && postalCode.touched" class="text-danger" mltag="txt_postalcoderequired">Postal Code is required</div>
+                                <div *ngIf="!postalCode.valid && postalCode.touched && !postalCode.hasError('required')" class="text-danger" mltag="txt_postalcodeinvalid">Postal Code is not valid</div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <div class="form-group">
@@ -126,39 +127,39 @@
                                 </div>
                                 <div id="country">
                                     <ng-select [items]="countries" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" [formControl]="country"></ng-select>
-                                    <div *ngIf="country.hasError('required') && country.touched" class="alert alert-danger" mltag="txt_countryrequired">Country is required</div>
+                                    <div *ngIf="country.hasError('required') && country.touched" class="text-danger" mltag="txt_countryrequired">Country is required</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-6">
                                 <label for="udMemorableQuestion" mltag="txt_memorablequestion">Memorable question</label>
                                 <div>
-                                    <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion" size="45" style="width:97.5%">
+                                    <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion" size="45">
                                 </div>
-                                <div *ngIf="memorableQuestion.hasError('required') && memorableQuestion.touched" class="alert alert-danger" mltag="txt_memorablequestionrequired">Memorable question is required</div>
+                                <div *ngIf="memorableQuestion.hasError('required') && memorableQuestion.touched" class="text-danger" mltag="txt_memorablequestionrequired">Memorable question is required</div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="col-sm-6 form-group">
                                 <label for="udMemorableAnswer" mltag="txt_memorableanswer">Memorable answer</label>
                                 <div>
-                                    <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45" style="width:97.5%">
+                                    <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45">
                                 </div>
-                                <div *ngIf="memorableAnswer.hasError('required') && memorableAnswer.touched" class="alert alert-danger" mltag="txt_memorableanswerrequired">Memorable answer is required</div>
+                                <div *ngIf="memorableAnswer.hasError('required') && memorableAnswer.touched" class="text-danger" mltag="txt_memorableanswerrequired">Memorable answer is required</div>
                             </div>
                         </div>
+
                         <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-6">
                                 <label for="udProfileText" mltag="txt_profiletext">Profile text</label>
                                 <div>
-                                    <textarea id="udProfileText" [formControl]="profileText" rows="5" style="width:97.5%"></textarea>
-                                    <div *ngIf="profileText.hasError('required') && profileText.touched" class="alert alert-danger" mltag="txt_profiletextrequired">Profile text is required</div>
+                                    <textarea id="udProfileText" [formControl]="profileText" rows="5" style="width:95%"></textarea>
+                                    <div *ngIf="profileText.hasError('required') && profileText.touched" class="text-danger" mltag="txt_profiletextrequired">Profile text is required</div>
                                 </div>
                             </div>
+                            <div class="col-sm-6 form-group"></div>
                         </div>
-                        <button id="udSubmit" type="submit" class="btn btn-success" [disabled]="!userDetailsForm.valid" mltag="txt_update">Update</button>
-                        <button id="udReset" type="reset" class="btn btn-warning" mltag="txt_reset">Reset</button>
+                        <button id="udSubmit" type="submit" class="btn btn-primary" [disabled]="!userDetailsForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                        <button id="udReset" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
                     </form>
                 </section>
             </clr-tab-content>
@@ -169,45 +170,50 @@
                 <span mltag="txt_changepassword">Change password</span></button>
             <clr-tab-content *clrIfActive="tabStates.password">
                 <section class="form-block">
-                    <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
-                        <div class="form-group">
-                            <label for="cpOldPassword">
-                                <span mltag="txt_oldpassword">Old Password</span>
-                                <div class="mandatory text-danger"> *</div>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="alert alert-danger" mltag="txt_oldpasswordrequired">Old Password is required</div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
+                                <div class="form-group">
+                                    <label for="cpOldPassword">
+                                        <span mltag="txt_oldpassword">Old Password</span>
+                                        <div class="mandatory text-danger"> *</div>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpOldPassword" [formControl]="oldPassword" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="text-danger" mltag="txt_oldpasswordrequired">Old Password is required</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpPassword">
+                                        <span mltag="txt_password">Password</span>
+                                        <div class="mandatory text-danger"> *</div>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpPassword" [formControl]="password" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="password.hasError('required') && password.touched" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
+                                    <div *ngIf="changePassForm.controls.password.hasError('minlength') && !password.hasError('required') && password.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                                    <div *ngIf="!changePassForm.controls.password.hasError('required') && !changePassForm.controls.password.hasError('minlength') && changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="text-danger" mltag="txt_passwordnewdiffold">The new password should not be the same as the old</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpPasswordConfirm">
+                                        <span mltag="txt_passwordconfirm">Password confirmation</span>
+                                    </label>
+                                    <div>
+                                        <input [type]="(showPasswords === true) ? 'text' : 'password'" style="width:93.5%" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
+                                        <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
+                                    <div *ngIf="changePassForm.controls.passwordConfirm.hasError('minlength') && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                                    <div *ngIf="!passwordConfirm.hasError('required') && !changePassForm.controls.passwordConfirm.hasError('minlength') && changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="cpPassword">
-                                <span mltag="txt_password">Password</span>
-                                <div class="mandatory text-danger"> *</div>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="password.hasError('required') && password.touched" class="alert alert-danger" mltag="txt_passwordrequired">Password is required</div>
-                            <div *ngIf="!password.valid && !password.hasError('required') && password.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
-                            <div *ngIf="changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="alert alert-danger" mltag="txt_passwordnewdiffold">The new password should not be the same as the old</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="cpPasswordConfirm">
-                                <span mltag="txt_passwordconfirm">Password confirmation</span>
-                            </label>
-                            <div>
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
-                                <span style="margin-left:10px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords()" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
-                            </div>
-                            <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="alert alert-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
-                            <div *ngIf="!passwordConfirm.valid && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="alert alert-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
-                            <div *ngIf="changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="alert alert-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
-                        </div>
-                        <button type="submit" class="btn btn-success" [disabled]="!changePassForm.valid" mltag="txt_send">Update</button>
-                    </form>
+                        <div class="form-group col-sm-6"></div>
+                    </div>
                 </section>
             </clr-tab-content>
         </clr-tab>
