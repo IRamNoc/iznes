@@ -11,6 +11,13 @@ import {NavigationTopbarComponent} from './navigation-topbar/navigation-topbar.c
 
 import {HomeComponent} from './home/home.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
+import {UiInfoPaneComponent} from './layouts/ui-form/info-pane/info-pane.component';
+import {UiTabsComponent} from './layouts/ui-form/components/tabs/tabs.component';
+import {UiFormsComponent} from './layouts/ui-form/components/forms/forms.component';
+import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
+import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
+import {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.component';
+import {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -20,7 +27,7 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlPipesModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 
 @NgModule({
@@ -32,7 +39,8 @@ import {ClarityModule} from '@clr/angular';
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
-        SetlPipesModule
+        SetlPipesModule,
+        SetlComponentsModule
     ],
     declarations: [
         /* Directives. */
@@ -47,7 +55,14 @@ import {ClarityModule} from '@clr/angular';
         CounterTileComponent,
         BasicTileComponent,
         HomeComponent,
-        FormElementsComponent
+        FormElementsComponent,
+        UiInfoPaneComponent,
+        UiTabsComponent,
+        UiFormsComponent,
+        UiDropdownsComponent,
+        UiDataGridComponent,
+        UiAlertsComponent,
+        UiToasterComponent
     ],
     exports: [
         /* Directives. */
@@ -61,7 +76,14 @@ import {ClarityModule} from '@clr/angular';
         DashboardComponent,
         CounterTileComponent,
         HomeComponent,
-        FormElementsComponent
+        FormElementsComponent,
+        UiInfoPaneComponent,
+        UiTabsComponent,
+        UiFormsComponent,
+        UiDropdownsComponent,
+        UiDataGridComponent,
+        UiAlertsComponent,
+        UiToasterComponent
     ],
     providers: [
         /* Services. */

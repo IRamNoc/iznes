@@ -524,13 +524,13 @@ form, .form {
     padding: 0px !important;
 }
 
-.datagrid-placeholder-image:before {
-    content: "No Results Found";
+app-login .modal-dialog{
+  max-width: 360px !important;
+}
+app-login .modal-body{
+  padding-bottom: 0 !important;
 }
 
-.datagrid-placeholder-image {
-    background-image: none !important;
-    width: 100% !important;
-    line-height: 2.5rem !important;
-    text-align: center !important;
+.toast-top-right {
+    top: 86px;
 }
