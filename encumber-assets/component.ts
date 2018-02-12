@@ -10,7 +10,7 @@ import {
 import {ConfirmationService, SagaHelper, walletHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // import {ChainInterface} from './interface';
 // import {ChainModel} from './model';

@@ -11,7 +11,8 @@ import {
     setRequestedWalletInstrument, setRequestedWalletToRelationship
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import _ from 'lodash';
+import {Unsubscribe} from 'redux';
+import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {PersistService} from "@setl/core-persist";
 
