@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.model';
+import { ParameterItemModel } from '../models';
 @Injectable()
 export class ParameterItemService {
     public fromJSON(json, key) {

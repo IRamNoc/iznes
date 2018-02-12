@@ -3,10 +3,11 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {NgRedux} from '@angular-redux/store';
 import {MockNgRedux} from "@angular-redux/store/lib/testing";
 import {MemberSocketService} from '@setl/websocket-service';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {APP_CONFIG} from '@setl/utils';
 import {ContractsComponent} from './contracts.component';
+
 describe('ContractsComponent', () => {
 
     let component: ContractsComponent;

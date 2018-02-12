@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthorisationModel } from '@setl/core-contracts/models/authorisation.model';
+import { AuthorisationModel } from '../models';
 @Injectable()
 export class AuthorisationService {
     public fromJSON(json) {

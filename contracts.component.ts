@@ -5,7 +5,7 @@ import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
-import {ContractService} from '@setl/core-contracts/services/contract.service';
+import {ContractService} from './services';
 
 
 @Component({

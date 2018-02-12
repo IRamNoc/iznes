@@ -1,7 +1,7 @@
-import { PartyModel } from '@setl/core-contracts/models/party.model';
-import { EncumbranceModel } from '@setl/core-contracts/models/encumbrance.model';
-import { AuthorisationModel } from '@setl/core-contracts/models/authorisation.model';
-import { ParameterItemModel } from '@setl/core-contracts/models/parameterItem.model';
+import { PartyModel } from './party.model';
+import { EncumbranceModel } from './encumbrance.model';
+import { AuthorisationModel } from './authorisation.model';
+import { ParameterItemModel } from './parameterItem.model';
 
 export class ContractModel {
     public updated: boolean = false;

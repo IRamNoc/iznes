@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PayListItemModel } from '@setl/core-contracts/models/paylistitem.model';
+import { PayListItemModel } from '../models';
 @Injectable()
 export class PayListItemService {
     public fromJSON(json) {

@@ -1,5 +1,5 @@
-import { PayListItemModel } from '@setl/core-contracts/models/paylistitem.model';
-import { ReceiveListItemModel } from '@setl/core-contracts/models/receivelistitem.model';
+import { PayListItemModel } from './paylistitem.model';
+import { ReceiveListItemModel } from './receivelistitem.model';
 
 export class PartyModel {
     public partyIdentifier: string = '';
