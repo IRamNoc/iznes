@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import sha256 from 'sha256';
-import sodium from 'libsodium-wrappers';
+import * as _ from 'lodash';
+import * as sha256 from 'sha256';
+import * as sodium from 'libsodium-wrappers';
 
 const GibberishAES = (<any>window).GibberishAES;
 const JXG = (<any>window).JXG;
@@ -129,7 +129,7 @@ export class SetlWebSocket {
 
         try {
             console.log('%cOn Message : %c' + _.defaultTo(_.get(message, 'Request.MessageBody.RequestName', undefined),
-                    _.get(message, 'Request.MessageType', undefined)), 'color: green', 'color: black');
+                _.get(message, 'Request.MessageType', undefined)), 'color: green', 'color: black');
         } catch (e) {
             console.log('Fail to get message RequestName/MessageType');
         }
@@ -171,7 +171,7 @@ export class SetlWebSocket {
          */
         if (
             (this.initialising) ||
-            (   this.requiredAuthentication && (!this.authenticated) &&
+            (this.requiredAuthentication && (!this.authenticated) &&
                 (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', '')).toLowerCase()))
             )
         ) {
@@ -315,11 +315,11 @@ export class SetlWebSocket {
                     this.webSocketConn.onclose = (e) => {
                         this.defaultOnClose(e);
 
-                        if (this.hasConnected) {
-                            if (this.callbackHandler) {
-                                this.callbackHandler.handleEvent('onClose', {});
-                            }
+                        // if (this.hasConnected) {
+                        if (this.callbackHandler) {
+                            this.callbackHandler.handleEvent('onClose', {});
                         }
+                        // }
                     };
 
                     this.webSocketConn.onerror = (e) => {
