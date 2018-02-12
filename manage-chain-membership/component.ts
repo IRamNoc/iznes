@@ -1,9 +1,9 @@
 // Vendor
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
-import _ from 'lodash';
+import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
+import {select, NgRedux} from '@angular-redux/store';
+import {fromJS, Set} from 'immutable';
+import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 // Internal
 import {AdminUsersService, MemberService} from '@setl/core-req-services';

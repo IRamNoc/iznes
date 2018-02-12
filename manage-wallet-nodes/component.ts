@@ -10,7 +10,12 @@ import {WalletNodesModel} from './model';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
+import * as _ from 'lodash';
 import {PersistService} from "@setl/core-persist";
+
+/* Actions */
+// import {SET_FUND_SHARE_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 // Internal

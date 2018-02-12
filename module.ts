@@ -1,7 +1,7 @@
 // Vendor imports
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ClarityModule} from 'clarity-angular';
+import {ClarityModule} from '@clr/angular';
 import {CommonModule} from '@angular/common';
 import {SelectModule} from '@setl/utils';
 
