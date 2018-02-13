@@ -5,7 +5,7 @@ import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
 import { ReportingService } from '../reporting.service';
 import { Location } from '@angular/common';
-import { Transaction } from '../../core-store/wallet/transactions/model';
+import { Transaction } from '@setl/core-store/wallet/transactions/model';
 
 import { TabControl, Tab } from '../tabs';
 import { Subscription } from 'rxjs/Subscription';
