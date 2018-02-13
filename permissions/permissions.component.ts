@@ -636,7 +636,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         ];
 
         /* Reset tabs. */
-        this.router.navigateByUrl('/user-administration/0');
+        this.router.navigateByUrl('/user-administration/permissions/0');
 
         /* Return */
         return;
