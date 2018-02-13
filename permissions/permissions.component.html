@@ -111,8 +111,8 @@
                         1 - group or 2 - transactional.
                     -->
                     <div
-                    *ngIf="formControl.controls['type']._value[0]"
-                    [ngSwitch]="formControl.controls['type']._value[0].id">
+                    *ngIf="formControl.value.type[0]"
+                    [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid *ngSwitchCase="'0'"
                             [permissionAreas]="filteredAdminAreaList"
@@ -195,8 +195,8 @@
                         1 - group or 2 - transactional.
                     -->
                     <div
-                    *ngIf="formControl.controls['type']._value[0]"
-                    [ngSwitch]="formControl.controls['type']._value[0].id">
+                    *ngIf="formControl.value.type[0]"
+                    [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid *ngSwitchCase="'0'"
                             [initData]="permissionsEmitter"
