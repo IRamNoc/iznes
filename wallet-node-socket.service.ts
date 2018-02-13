@@ -1,10 +1,12 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {SetlCallbackRegister, SetlWebSocket} from '@setl/vanilla-websocket-wrapper';
 import {ToasterService} from 'angular2-toaster';
 import * as _ from 'lodash';
 
 @Injectable()
-export class WalletNodeSocketService {
+export class WalletNodeSocketService{
+    public walletnodeClose: EventEmitter<any> = new EventEmitter();
+
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
@@ -12,9 +14,6 @@ export class WalletNodeSocketService {
     // Expose on update callback.
     // Default to nothing now.
     public walletnodeUpdateCallback: any = () => true;
-
-    // Expose an close callback.
-    public walletnodeCloseCallback: any = () => true;
 
     constructor(private toasterService: ToasterService) {
     }
@@ -38,6 +37,7 @@ export class WalletNodeSocketService {
             (ID, message, UserData) => {
                 if (this.websocket) {
                     console.log('reconnect to wallet node');
+                    this.walletnodeClose.emit(message);
                     setTimeout(() => this.websocket.openWebSocket(), 2000);
                 }
             }, {}
