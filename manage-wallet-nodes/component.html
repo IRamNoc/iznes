@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-code-fork"></i> <span mltag="txt_walletnodes">Wallet Nodes</span></h1>
+    <h1 id="wallet-nodes"><i class="fa fa-code-fork"></i> <span mltag="txt_walletnodes">Wallet Nodes</span></h1>
 </div>
 
 <clr-tabs>
@@ -17,14 +17,14 @@
                     <clr-dg-column [clrDgField]="'chainName'"><span mltag="txt_chainname">Chain Name</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let node of walletNodesList">
-                        <clr-dg-cell>{{node.walletNodeName}}</clr-dg-cell>
-                        <clr-dg-cell>{{node.chainName}}</clr-dg-cell>
+                    <clr-dg-row *clrDgItems="let node of walletNodesList; let id = index;">
+                        <clr-dg-cell id="wallet_node_name_{{id}}">{{node.walletNodeName}}</clr-dg-cell>
+                        <clr-dg-cell id="wallet_node_chain_name_{{id}}">{{node.chainName}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
-                                <button id="btnEditWalletNode" class="btn" (click)="editForm(node)"><i
+                                <button id="btnEditWalletNode_{{id}}" class="btn" (click)="editForm(node)"><i
                                         class="fa fa-edit"></i></button>
-                                <button id="btnDeleteWalletNode" class="btn"
+                                <button id="btnDeleteWalletNode_{{id}}" class="btn"
                                         (click)="nodeToDelete = node; showConfirmModal = true;"><i
                                         class="fa fa-trash"></i></button>
                             </div>

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-chain"></i> <span mltag="txt_chains">CHAINS</span></h1>
+    <h1 id="manage-chains"><i class="fa fa-chain"></i> <span mltag="txt_chains">CHAINS</span></h1>
 </div>
 
 <clr-tabs>
@@ -14,13 +14,13 @@
                     <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let chain of chainsList">
-                        <clr-dg-cell>{{chain.chainId}}</clr-dg-cell>
-                        <clr-dg-cell>{{chain.chainName}}</clr-dg-cell>
+                    <clr-dg-row *clrDgItems="let chain of chainsList; let id = index">
+                        <clr-dg-cell id="chain_id_{{id}}">{{chain.chainId}}</clr-dg-cell>
+                        <clr-dg-cell id="chain_name_{{id}}">{{chain.chainName}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
-                                <button id="chainBtnEditChain" class="btn" (click)="editChain(chain)"><i class="fa fa-edit"></i></button>
-                                <button id="chainBtnDeleteChain" class="btn" (click)="chainToDelete = chain; showConfirmModal = true;">
+                                <button id="chainBtnEditChain_{{id}}" class="btn" (click)="editChain(chain)"><i class="fa fa-edit"></i></button>
+                                <button id="chainBtnDeleteChain_{{id}}" class="btn" (click)="chainToDelete = chain; showConfirmModal = true;">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </div>
