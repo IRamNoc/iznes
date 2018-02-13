@@ -2,31 +2,9 @@ node {
 
 }
 
-def notifySlack(String buildStatus = 'STARTED') {
-    // Build status of null means success.
-    buildStatus = buildStatus ?: 'SUCCESS'
-
-    def color
-
-    if (buildStatus == 'STARTED') {
-        color = '#0000CD'
-    } else if (buildStatus == 'SUCCESS') {
-        color = '#008000'
-    } else if (buildStatus == 'UNSTABLE') {
-        color = '#FFFF00'
-    } else {
-        color = '#FF0000'
-    }
-    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    slackSend(channel: "opencsdfrontenddev", color: color, message: msg)
-}
-
 node {
     timestamps {
-        try {
-            notifySlack()
-
-            stage('Deploy Frontend to Test Environment') {
+                stage('Deploy Frontend to Test Environment') {
                 node {
                     sh '''
                             ssh root@139.162.213.130 rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
@@ -61,11 +39,5 @@ node {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
             }
 
-        } catch (e) {
-            currentBuild.result = 'FAILURE'
-            throw e
-        } finally {
-            notifySlack(currentBuild.result)
-        }
     }
 }
