@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, HostListener} from '@angular/core';
+import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {InitialisationService, MyUserService, WalletnodeChannelService} from '@setl/core-req-services';
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService} from 'angular2-toaster';
 import {NgRedux} from '@angular-redux/store';
+import 'rxjs/add/operator/throttleTime';
 
 import {setLanguage, setMenuShown} from '@setl/core-store';
 
@@ -13,7 +14,7 @@ import {setLanguage, setMenuShown} from '@setl/core-store';
     styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any;
@@ -41,8 +42,11 @@ export class AppComponent implements AfterViewInit {
                 private ofiPostTxService: OfiPostTxService,
                 private _myUserService: MyUserService,
                 private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
+    }
 
-        memberSocketService.disconnectCallback = () => {
+    ngOnInit(){
+
+        this.memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('error', 'Member node connection disconnected');
 
         };
@@ -51,7 +55,7 @@ export class AppComponent implements AfterViewInit {
         //     this.toasterService.pop('warning', 'Member node connection error');
         // };
 
-        memberSocketService.reconnectCallback = () => {
+        this.memberSocketService.reconnectCallback = () => {
             this.toasterService.pop('success', 'Member node connection reconnected');
 
             // If this connection is connected, let backend know about it, by sending the backend a request(in the case,
@@ -70,11 +74,16 @@ export class AppComponent implements AfterViewInit {
             this._ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
 
+        this.walletNodeSocketService.walletnodeClose.throttleTime(2000).subscribe((message) => {
+            this.toasterService.pop('warning', 'Wallet node connection is closed');
+        });
+
         this.initialisationService.channelUpdateCallbacks.push((data) => {
             this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
         });
 
         this.checkUserLanguage();
+
     }
 
     /**
