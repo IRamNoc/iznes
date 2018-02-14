@@ -29,26 +29,23 @@ node {
             stage('Deploy Frontend to Sales Environment'){
                 node{
                     sh '''
-              ssh root@sales.iznes.io mv /var/www_setltestnet/ /var/www_setltestnet_$(date +%F-%H:%M) &&
-              ssh root@sales.iznes.io mkdir /var/www_setltestnet && 
-              scp -pr /var/lib/jenkins/Deploy/dist/*  root@sales.iznes.io:/var/www_setltestnet'''
+              ssh root@sales.iznes.io rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
+              rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  root@sales.iznes.io:/var/www_setltestnet'''
                 }
             }
             stage('Deploy Backend to Sales Environment') {
                 node {
                     sh '''
-                            ssh root@sales.iznes.io mv /var/phpapps/backend /var/phpapps/backend_$(date +%F-%H:%M) &&
-                            ssh root@sales.iznes.io mkdir /var/phpapps/backend && 
-                            scp -pr /var/lib/jenkins/Deploy/backend/*  root@sales.iznes.io:/var/phpapps/backend'''
+                            ssh root@sales.iznes.io rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
+                            rsync -avhm --stats --exclude 'config.json' /var/lib/jenkins/Deploy/backend/* root@sales.iznes.io:/var/phpapps/backend'''
                 }
             }
 
             stage('Deploy French Fund Daemon to Sales Environment') {
                 node {
                     sh '''
-                            ssh root@sales.iznes.io mv /var/phpapps/frenchfunddaemon /var/phpapps/frenchfunddaemon_$(date +%F-%H:%M) &&
-                            ssh root@sales.iznes.io mkdir /var/phpapps/frenchfunddaemon && 
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@sales.iznes.io:/var/phpapps/frenchfunddaemon'''
+                            ssh root@sales.iznes.io rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/* root@sales.iznes.io:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
