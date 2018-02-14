@@ -9,7 +9,7 @@ import {
     Renderer,
     ChangeDetectorRef
 } from '@angular/core';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 
 import {FormControl} from '@angular/forms';
