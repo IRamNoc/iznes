@@ -10,7 +10,7 @@ import {
     NewContractMessageBody,
     EncumberMessageBody
 } from './walletnode-request.service.model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface RegisterIssuer {
     walletId: number;

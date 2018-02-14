@@ -13,7 +13,7 @@ import {
     setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
     updateLastCreatedRegisterIssuerDetail
 } from '@setl/core-store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import {SagaHelper} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';

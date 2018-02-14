@@ -16,7 +16,7 @@ import {
     SET_CHAIN_LIST
 } from '@setl/core-store';
 import {NgRedux} from '@angular-redux/store';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class T2sService {
