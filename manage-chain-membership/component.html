@@ -1,6 +1,6 @@
 
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> <span mltag="txt_chainmembership">Chain Membership</span></h1>
+    <h1 id="chain-memberships"><i class="fa fa-users"></i> <span mltag="txt_chainmembership">Chain Membership</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -34,6 +34,7 @@
                                 (selected)="selectChain($event)"
                                 formControlName="chain"
                                 mltag="txt_selectchain"
+                                id="chain-list"
                         >
                         </ng-select>
                     </div>
@@ -57,6 +58,7 @@
                                             [formControl]="thisFormGroup.controls['member']"
                                             (selected)="selectMember($event, i)"
                                             mltag="txt_selectmember"
+                                            id="membership-member-{{i}}"
                                     >
                                     </ng-select>
                                 </div>
@@ -68,6 +70,7 @@
                                             placeholder="Select Membership Type"
                                             [formControl]="thisFormGroup.controls['memberType']"
                                             mltag="txt_selectmembershiptype"
+                                            id="membership-type-{{i}}"
                                     >
                                     </ng-select>
                                 </div>
@@ -78,10 +81,11 @@
                                             [allowClear]="false"
                                             placeholder="Select Wallet Node"
                                             [formControl]="thisFormGroup.controls['node']"
+                                            id="membership-node-{{i}}"
                                     >
                                     </ng-select>
 
-                                    <div class="float-sm-left delete-times-btn" (click)="removeMembershipItem(i)">
+                                    <div class="float-sm-left delete-times-btn" (click)="removeMembershipItem(i)" id="membership-delete-{{i}}">
                                         <i class="fa fa-times"></i>
                                     </div>
                                 </div>
@@ -93,11 +97,11 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-default member_chain_access-add-btn" (click)="addMembershipItem()">
+                        <button type="button" class="btn btn-default member_chain_access-add-btn" (click)="addMembershipItem()" id="membership-add-btn">
                             <i class="fa fa-plus"></i>
                             <span class="ml" mltag="txt_newmemberaccess">New Member Access </span></button>
                         &nbsp;
-                        <button type="submit" class="btn btn-primary member_chain_access-submit-btn">
+                        <button type="submit" class="btn btn-primary member_chain_access-submit-btn" id="membership-save-btn">
                             <i class="fa fa-save"></i>
                             <span class="ml" mltag="txt_save">Save</span></button>
                     </div>

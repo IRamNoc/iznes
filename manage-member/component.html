@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> <span mltag="txt_managemember">Manage Member</span></h1>
+    <h1 id="manage-member"><i class="fa fa-users"></i> <span mltag="txt_managemember">Manage Member</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -39,16 +39,16 @@
             <clr-datagrid #membersDataGrid>
                 <clr-dg-column *ngIf="isSymAdmin" mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_membername">Member Name</clr-dg-column>
-                <clr-dg-row *clrDgItems="let member of manageMembersList;">
+                <clr-dg-row *clrDgItems="let member of manageMembersList; let id = index">
                     <clr-dg-cell *ngIf="isSymAdmin">
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(member.index)" class="btn">
+                            <button (click)="handleEdit(member.index)" class="btn" id="edit-member-{{id}}">
                                 <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
                             <button (click)="handleDelete(member.index)" class="btn">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete" id="delete-member-{{id}}">Delete</span></button>
                         </div>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{member.memberName}}</clr-dg-cell>
+                    <clr-dg-cell id="member-name-{{id}}">{{member.memberName}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -68,10 +68,10 @@
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label class="control-label">
-                                    <span class="ml_translated" mltag="txt_membername">Member Name</span>
+                                    <span class="ml_translated" mltag="txt_membername" id="new-member-name">Member Name</span>
                                 </label>
                                 <div>
-                                    <input type="text" formControlName="memberName" placeholder="Member Name" class="form-control mlp_translated" mltag="txt_membername" maxlength="100"/>
+                                    <input type="text" formControlName="memberName" placeholder="Member Name" id="new-member-name" class="form-control mlp_translated" mltag="txt_membername" maxlength="100"/>
                                 </div>
                             </div>
 
@@ -84,14 +84,14 @@
                                     <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
                                 </label>
                                 <div>
-                                    <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail"/>
+                                    <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail" id="new-member-email" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group button-group">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
                                 </button>
                             </div>
                         </div>
