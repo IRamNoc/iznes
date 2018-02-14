@@ -9,6 +9,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
+import { MenuItem } from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
     clearRequestedMailInitial,
@@ -24,6 +25,7 @@ import {
     setRequestedMailInitial
 } from '@setl/core-store';
 import {fromJS} from 'immutable';
+import {MultilingualService} from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
 
 import {
@@ -58,6 +60,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     appConfig: AppConfig;
     topbarLogoUrl: string;
+    profileMenu: Array<MenuItem>;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -86,6 +89,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private _myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
+                private multilingualService: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -161,7 +165,25 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-
+        this.subscriptionsArray.push(this.multilingualService.getLanguage.subscribe((data) => {
+            const currentState = this.ngRedux.getState();
+            const currentUserDetails = getMyDetail(currentState);
+            const userType = currentUserDetails.userType;
+            const userTypeStr = {
+                '15': 'system_admin',
+                '25': 'chain_admin',
+                '35': 'member_user',
+                '36': 'am',
+                '45': 'standard_user',
+                '46': 'investor',
+                '47': 'valuer',
+                '48': 'custodian',
+                '49': 'cac',
+                '50': 'registrar',
+                '60': 't2s',
+            }[userType];
+            this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+        }));
     }
 
     ngAfterViewInit() {
