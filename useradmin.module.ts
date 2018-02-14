@@ -1,7 +1,6 @@
 /* Core imports. */
 import {NgModule} from "@angular/core";
 import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 /* Clarity module. */
@@ -66,7 +65,6 @@ import {SetlDirectivesModule} from '@setl/utils';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        BrowserModule,
         FormsModule,
         ClarityModule,
         SelectModule,
