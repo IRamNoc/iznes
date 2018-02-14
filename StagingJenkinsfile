@@ -9,7 +9,7 @@ node {
                 node{
                     sh '''
                         ssh jenkins@172.104.147.135 sudo rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
-                        scp -pr /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
+                        rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
 
                 }
             }
@@ -17,7 +17,7 @@ node {
                 node {
                     sh '''
                         ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
-                        scp -pr /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
+                        rsync -avhm --stats --exclude 'config.json' /var/lib/jenkins/Deploy/backend/*  jenkins@172.104.147.135:/var/phpapps/backend'''
                 }
             }
 
@@ -26,7 +26,7 @@ node {
                 node {
                     sh '''
                             ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/*  jenkins@172.104.147.135:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
