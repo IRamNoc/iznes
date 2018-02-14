@@ -1,4 +1,12 @@
 export interface NavDetail {
+    shareId: number;
+    fundName: string;
+    navDate: string;
+    status: number;
+    currency: string;
+    isin: number;
+    companyName: string;
+    companyId: number;
     price: number;
 }
 

@@ -11,6 +11,8 @@ import {
     SET_REQUESTED_MANAGE_NAV_LIST
 } from './actions';
 
+import {NavDetail} from './model';
+
 const initialState: OfiManageNavListState = {
     navList: [],
     currentRequest: {
@@ -58,14 +60,22 @@ export const OfiManageNavListReducer = function (state: OfiManageNavListState = 
  */
 function handleSetManageNavList(state: OfiManageNavListState, action: Action): OfiManageNavListState {
     const navListData = _.get(action, 'payload[1].Data', []);
-    let navList = [];
+    let navList: NavDetail[] = [];
     try {
-        navList = immutableHelper.reduce(navListData, (result, item) => {
+        navList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
+            const metadata = JSON.parse(item.get('metadata', {}));
+            const currency = metadata.shareCurrency[0].id;
+
             result.push({
+                shareId: item.get('shareId', 0),
                 fundName: item.get('fundName', ''),
                 navDate: item.get('navDate', ''),
                 status: item.get('status', 0),
-                price: item.get('price', 0)
+                price: item.get('price', 0),
+                currency: currency,
+                isin: item.get('isin', 0),
+                companyName: item.get('price', 0),
+                companyId: item.get('price', 0),
             });
             return result;
         }, []);
