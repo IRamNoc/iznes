@@ -4,6 +4,7 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {ClarityModule} from '@clr/angular';
 import {RouterModule} from '@angular/router';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {LoginGuardService} from '@setl/core-login';
 import {HttpModule} from '@angular/http';
 import {SidebarModule} from 'ng-sidebar';
 
@@ -40,7 +41,6 @@ import {
 /* Routes. */
 import {ROUTES} from './app.routes';
 /* SETL Modules. */
-import {LoginGuardService, SetlLoginModule} from '@setl/core-login';
 import {SetlMessagesModule} from '@setl/core-messages';
 import {SetlAccountModule} from '@setl/core-account';
 import {SetlBalancesModule} from '@setl/core-balances';
@@ -110,7 +110,6 @@ export function memberSocketServiceFactory() {
         SidebarModule.forRoot(),
 
         /* External modules */
-        SetlLoginModule,
         UserAdminModule,
         SetlMessagesModule,
         SetlAccountModule,
@@ -128,7 +127,8 @@ export function memberSocketServiceFactory() {
         ConnectionsModule,
         CoreWorkflowEngineModule,
         T2sModule,
-        SetlLayoutModule
+        SetlLayoutModule,
+        NgbModule.forRoot()
     ],
     providers: [
         {
@@ -152,7 +152,6 @@ export function memberSocketServiceFactory() {
         MyWalletsService,
         WalletnodeTxService,
         WalletNodeRequestService,
-        LoginGuardService,
         ToasterService,
         ChannelService,
         AccountsService,
@@ -162,7 +161,8 @@ export function memberSocketServiceFactory() {
         WalletnodeChannelService,
         InitialisationService,
         FileService,
-        PdfService
+        PdfService,
+        LoginGuardService
     ],
     bootstrap: [AppComponent]
 })
