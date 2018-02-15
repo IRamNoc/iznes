@@ -1,5 +1,5 @@
 // Vendors
-import {Component, OnDestroy, Inject, OnInit} from '@angular/core';
+import {Component, OnDestroy, Inject, OnInit, AfterViewInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {
     FormGroup,
@@ -40,7 +40,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 
 /* Class. */
-export class SetlLoginComponent implements OnDestroy, OnInit {
+export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     appConfig: AppConfig;
 
     // Locale
@@ -171,6 +171,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit {
 
         window.onbeforeunload = null;
 
+    }
+
+    ngAfterViewInit() {
+        document.getElementById('username-field').focus();
     }
 
     login(value) {
