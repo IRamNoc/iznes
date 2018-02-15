@@ -1,0 +1,87 @@
+<div class="login-container">
+    <div>
+        <div class="logo-wrap">
+            <img id="{{appConfig.logoID}}" src="{{appConfig.logoUrl}}"/>
+        </div>
+
+        <div *ngIf="changedPassword" class="changedPasswordSuccess mt-2">
+            <b>Your password has been changed!</b>
+        </div>
+
+        <div class="login-inner-wrapper">
+            <span class="login-subheading">Sign up to {{appConfig.platform}}</span>
+            <br>
+            <p class="login-subpara">Your {{appConfig.platform}} account will be created with this email address, provided by the Asset Management company.</p>
+            <br>
+            <p class="login-subpara text-grey">Please choose a password.</p>
+            <br>
+            <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)"
+                  [class.error]="!signupForm.valid && signupForm.touched">
+
+                <div class="form-group">
+                    <input id="su-username-field" type="text" name="username" placeholder="User name" class="form-control" disabled
+                           formControlName="username"
+                           [class.error]="!signupForm.controls['username'].valid && signupForm.controls['username'].touched"
+                           mltag="txt_username">
+                </div>
+                <div class="form-group">
+                    <div>
+                        <input id="su-password-field" name="password" [type]="(showPasswords1 === true) ? 'text' : 'password'" class="form-control" placeholder="Password"
+                               formControlName="password"
+                               [class.error]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched"
+                               mltag="txt_password">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(1)" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                    </div>
+                    <div *ngIf="signupForm.controls.password.hasError('required') && signupForm.controls.password.dirty" class="text-danger" mltag="txt_passwordrequired">Password is required</div>
+                    <div *ngIf="!signupForm.controls.password.valid && !signupForm.controls.password.hasError('required') && signupForm.controls.password.touched" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <input id="su-passwordConfirm-field" name="passwordConfirm" [type]="(showPasswords2 === true) ? 'text' : 'password'" class="form-control" placeholder="Retype password"
+                               formControlName="passwordConfirm"
+                               [class.error]="!signupForm.controls.passwordConfirm.valid && signupForm.controls.passwordConfirm.touched">
+                        <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(2)" mltag="txt_showhidepassword" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                    </div>
+                    <div *ngIf="signupForm.controls.passwordConfirm.hasError('required')
+                                && signupForm.controls.passwordConfirm.touched" class="text-danger" mltag="txt_confirmationrequired">Confirmation is required</div>
+                    <div *ngIf="signupForm.controls.passwordConfirm.hasError('minlength')
+                                && !signupForm.controls.passwordConfirm.hasError('required')
+                                && signupForm.controls.passwordConfirm.dirty" class="text-danger" mltag="txt_password6chars">Your password must be at least 6 characters</div>
+                    <div *ngIf="!signupForm.controls.passwordConfirm.hasError('minlength')
+                                && !signupForm.controls.passwordConfirm.hasError('required')
+                                && signupForm.controls.passwordConfirm.dirty
+                                && signupForm.hasError('mismatch')
+                                && signupForm.controls.password.valid" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                </div>
+
+                <div class="form-group">
+                    <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b" [disabled]="!signupForm.valid">Create an account</button>
+                </div>
+            </form>
+
+        </div>
+
+        <p>
+            <small>
+                <span class="ml" mltag="txt_setlopencsdisaprivateenvironmentsubjecttoauthorisedaccessonly">SETL OpenCSD is a private environment subject to authorised access only.</span>
+            </small>
+        </p>
+    </div>
+</div>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="isSignUp">Success</h3>
+    <div class="modal-body text-center" *ngIf="isSignUp">
+        <p>Your account was created</p>
+        <br>
+        <i class="fa fa-check fa-5x text-success" aria-hidden="true"></i>
+        <br><br>
+        <small>A confirmation email was sent to you.</small>
+        <br><br>
+        <button id="su-continu-button" class="btn btn-info" type="button" (click)="logAfterSignup()">
+            <span>Continue to {{appConfig.platform}}</span>
+        </button>
+        <br><br>
+    </div>
+</clr-modal>
