@@ -39,9 +39,6 @@ import {MultilingualModule} from '@setl/multilingual';
                 path: 'reset/:token',
                 component: SetlLoginComponent,
             },
-            {
-                path: 'invite/:invitationToken', component: SetlLoginComponent,
-            },
         ]),
     ],
     exports: [

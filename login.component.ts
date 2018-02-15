@@ -52,8 +52,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     username: AbstractControl;
     password: AbstractControl;
 
-    signupForm: FormGroup;
-
     forgottenPasswordForm: FormGroup;
     email: AbstractControl;
 
@@ -73,10 +71,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
-
-    invitationToken = '';
-    showSignup = false;
-    isSignUp = false;
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -98,10 +92,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private toasterService: ToasterService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
+        this.appConfig = appConfig;
+
         // language
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-
-        this.appConfig = appConfig;
 
         /**
          * Form control setup
@@ -110,29 +104,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             username: new FormControl('', Validators.required),
             password: new FormControl('', Validators.required)
         });
-        /**
-         * Form control setup
-         */
-        this.signupForm = new FormGroup({
-            username: new FormControl(
-                '',
-                Validators.required
-            ),
-            password: new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                    Validators.minLength(6)
-                ])
-            ),
-            passwordConfirm: new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                    Validators.minLength(6)
-                ])
-            ),
-        }, this.passwordValidator);
         /**
          * Form control setup
          */
@@ -190,12 +161,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             this.resetToken = params['token'];
             if (typeof this.resetToken !== 'undefined' && this.resetToken !== '') {
                 this.verifyToken(this.resetToken);
-            }
-            this.invitationToken = params['invitationToken'];
-            if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
-                this.signupForm.controls['username'].patchValue(this.invitationToken);
-                console.log(this.invitationToken);
-                this.showSignup = true;
             }
         }));
 
@@ -257,26 +222,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         ));
 
         return false;
-    }
-
-    signup(value) {
-        // if the alert popup exists.
-        if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
-            // remove the popup and return false.
-            const elements = document.getElementsByClassName('error');
-            if (elements.length > 0) {
-                elements[0].parentNode.removeChild(elements[0]);
-            }
-            return false;
-        }
-
-        this.isSignUp = true;
-        this.showModal = true;
-    }
-
-    logAfterSignup() {
-        this.showModal = false;
-        this.isSignUp = false;
     }
 
     updateState(myAuthenData) {
