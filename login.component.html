@@ -84,7 +84,7 @@
     <h3 class="modal-title" *ngIf="changePassword">Change your password</h3>
     <div class="modal-body text-center" *ngIf="!emailSent && !changePassword">
         <div *ngIf="isTokenExpired; else notExpired" class="text-center">
-            <span class="text-danger">This link as expired!</span>
+            <span class="text-danger">This link has expired!</span>
             <p><i class="fa fa-exclamation fa-5x text-danger" aria-hidden="true"></i></p>
             <p>Please retype your email address to change your password.</p>
         </div>
