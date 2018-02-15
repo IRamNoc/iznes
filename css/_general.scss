@@ -534,3 +534,8 @@ app-login .modal-body{
 .toast-top-right {
     top: 86px;
 }
+
+/* modal on navigation too */
+.modal-backdrop {
+  top: -75px !important;
+}

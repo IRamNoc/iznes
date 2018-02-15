@@ -12,11 +12,11 @@
     </a>
 
     <section *ngIf="childMenuJson.children" class="nav-group collapsible">
-        <label [attr.id]="childMenuJson.element_id" menu-dropdown><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
+        <label [attr.id]="childMenuJson.element_id" menu-dropdown appHighlight><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
             <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
         <ul class="nav-list">
             <li *ngFor="let innerChild of childMenuJson.children">
-                <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link">
+                <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link" appHighlight>
                     <i class="{{innerChild.icon_class}}" aria-hidden="true"></i>
                     <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span></a>
             </li>

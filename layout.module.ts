@@ -27,7 +27,7 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
@@ -42,6 +42,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         ClarityModule,
         SetlPipesModule,
         SetlComponentsModule,
+        SetlDirectivesModule,
         MultilingualModule,
     ],
     declarations: [
