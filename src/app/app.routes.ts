@@ -6,7 +6,7 @@ import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
-import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
+import {LoginGuardService} from '@setl/core-login';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -72,7 +72,6 @@ import {
     ManageMemberComponent,
     ManageWalletNodesComponent,
 } from '@setl/core-manage-member';
-import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
 import {ConnectionComponent} from '@setl/core-connections/connections/component';
@@ -80,29 +79,19 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
  * T2S Module.
  */
 import {T2sMessagesComponent} from '@setl/core-t2s';
+import { SetlMessagesComponent } from '@setl/core-messages';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
     {path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full'},
     {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
-
     /* Blank layout connections */
     {
-        path: '', component: BlankLayoutComponent,
-        children: [
-            {
-                path: 'login', component: SetlLoginComponent,
-            },
-            {
-                path: 'invite/:invitationToken', component: SetlLoginComponent,
-            },
-            {
-                path: 'reset/:token', component: SetlLoginComponent,
-            },
-        ]
+        path: '',
+        component: BlankLayoutComponent,
+        loadChildren: '@setl/core-login/login.module#SetlLoginModule',
     },
-
     /* Basic Layout pages. */
     {
         path: '',
@@ -132,6 +121,12 @@ export const ROUTES: Routes = [
             {
                 path: 'messages',
                 redirectTo: '/messages/inbox'
+            },
+            {
+                path: 'core-home',
+                component: HomeComponent,
+                canActivate: [LoginGuardService],
+                data: {state: 'home'}
             },
             {
                 path: 'account',
