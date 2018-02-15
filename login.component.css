@@ -31,6 +31,11 @@ form .form-group, .form .form-group {
     font-weight: 300;
 }
 
+.text-grey {
+    color: #787878;
+    font-weight: bold;
+}
+
 form .form-group > label:not(:first-child), form .form-group > span:not(:first-child),
 form .form-group > input[type=text], form .form-group input[type=password], form .form-group input[type=number],
 form .form-group input[type=email], form .form-group input[type=url], form .form-group input[type=tel],
@@ -50,7 +55,7 @@ form .form-group > .radio-inline, form .form-group > button, form .form-group > 
     margin-right: 0;
 }
 
-#login-submit {
+#login-submit, #signup-submit {
     width: 100%;
     margin: 0 auto;
 }

@@ -52,6 +52,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     username: AbstractControl;
     password: AbstractControl;
 
+    signupForm: FormGroup;
+
     forgottenPasswordForm: FormGroup;
     email: AbstractControl;
 
@@ -64,13 +66,17 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    showForgottenPasswordModal = false;
+    showModal = false;
     emailUser = '';
     emailSent = false;
     countdown = 5;
-    token = '';
+    resetToken = '';
     isTokenExpired = false;
     changePassword = false;
+
+    invitationToken = '';
+    showSignup = false;
+    isSignUp = false;
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -104,6 +110,29 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             username: new FormControl('', Validators.required),
             password: new FormControl('', Validators.required)
         });
+        /**
+         * Form control setup
+         */
+        this.signupForm = new FormGroup({
+            username: new FormControl(
+                '',
+                Validators.required
+            ),
+            password: new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            ),
+            passwordConfirm: new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            ),
+        }, this.passwordValidator);
         /**
          * Form control setup
          */
@@ -158,9 +187,15 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.isLogin = false;
 
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
-            this.token = params['token'];
-            if (typeof this.token !== 'undefined' && this.token !== '') {
-                this.verifyToken(this.token);
+            this.resetToken = params['token'];
+            if (typeof this.resetToken !== 'undefined' && this.resetToken !== '') {
+                this.verifyToken(this.resetToken);
+            }
+            this.invitationToken = params['invitationToken'];
+            if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
+                this.signupForm.controls['username'].patchValue(this.invitationToken);
+                console.log(this.invitationToken);
+                this.showSignup = true;
             }
         }));
 
@@ -224,6 +259,26 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         return false;
     }
 
+    signup(value) {
+        // if the alert popup exists.
+        if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
+            // remove the popup and return false.
+            const elements = document.getElementsByClassName('error');
+            if (elements.length > 0) {
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+            return false;
+        }
+
+        this.isSignUp = true;
+        this.showModal = true;
+    }
+
+    logAfterSignup() {
+        this.showModal = false;
+        this.isSignUp = false;
+    }
+
     updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
@@ -270,7 +325,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     showFPModal() {
         this.isTokenExpired = false;
-        this.showForgottenPasswordModal = true;
+        this.showModal = true;
     }
 
     sendEmail(formValues) {
@@ -319,29 +374,29 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             (data) => {
                 if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
                     this.changePassword = true;
-                    this.showForgottenPasswordModal = true;
+                    this.showModal = true;
                 } else {
                     // this.isTokenExpired = true;
                     this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
                 }
                 this.changePassword = true;
-                this.showForgottenPasswordModal = true;
+                this.showModal = true;
             },
             (data) => {
                 // console.log('error: ', data);
                 this.isTokenExpired = true;
-                this.showForgottenPasswordModal = true;
+                this.showModal = true;
             })
         );
         // // just to test
         // this.changePassword = true;
-        // this.showForgottenPasswordModal = true;
+        // this.showModal = true;
     }
 
     saveNewPassword(formValues) {
         const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
             {
-                token: this.token,
+                token: this.resetToken,
                 password: formValues.password,
                 lang: this.language
             });
@@ -368,8 +423,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     closeFPModal() {
         this.forgottenPasswordForm.reset();
         this.emailUser = '';
-        this.countdown = 3;
-        this.showForgottenPasswordModal = false;
+        this.countdown = 5;
+        this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
     }
