@@ -423,7 +423,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     closeFPModal() {
         this.forgottenPasswordForm.reset();
         this.emailUser = '';
-        this.countdown = 3;
+        this.countdown = 5;
         this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
