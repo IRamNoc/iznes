@@ -13,17 +13,17 @@ import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
 import {OfiInviteInvestorsComponent} from './invite-investors/component';
-import {SetlSignUpComponent} from './signup/component';
+import {OfiSignUpComponent} from './signup/component';
 
 /* Decorator. */
 @NgModule({
     declarations: [
         OfiInviteInvestorsComponent,
-        SetlSignUpComponent,
+        OfiSignUpComponent,
     ],
     exports: [
         OfiInviteInvestorsComponent,
-        SetlSignUpComponent,
+        OfiSignUpComponent,
     ],
     imports: [
         CommonModule,

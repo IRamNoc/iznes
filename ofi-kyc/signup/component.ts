@@ -40,7 +40,7 @@ import {Subscription} from 'rxjs/Subscription';
 })
 
 /* Class. */
-export class SetlSignUpComponent implements OnDestroy, OnInit {
+export class OfiSignUpComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
 
     // Locale
