@@ -171,18 +171,18 @@ public class LoginAndNavigationHelper {
 
     public static void logout() throws InterruptedException {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement logOff = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/a[3]"));
-            wait.until(visibilityOf(logOff));
-            wait.until(elementToBeClickable(logOff));
-            logOff.click();
+            driver.findElement(By.id("dropdown-settings")).click();
         }catch (Exception e){
-            System.out.println("Logout button not available " + e.getMessage());
+            fail("Logout button not available " + e.getMessage());
         }
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
+        wait.until(visibilityOf(logOff));
+        Thread.sleep(5000);
         try {
-            assertTrue(isElementPresent(By.id("login_btn")));
-        } catch (Error e) {
-            verificationErrors.append(e.toString());
+            driver.findElement(By.id("dropdown-btn-logout")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
         }
     }
 
