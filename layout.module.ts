@@ -27,7 +27,7 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 
 @NgModule({
@@ -40,7 +40,8 @@ import {ClarityModule} from '@clr/angular';
         SelectModule,
         ClarityModule,
         SetlPipesModule,
-        SetlComponentsModule
+        SetlComponentsModule,
+        SetlDirectivesModule,
     ],
     declarations: [
         /* Directives. */
