@@ -23,6 +23,8 @@ import {
     MyOrdersComponent,
     OfiCollectiveArchiveComponent,
     OfiHomeComponent,
+    OfiInviteInvestorsComponent,
+    OfiSignUpComponent,
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
     OfiManageOfiNavComponent,
@@ -91,6 +93,16 @@ export const ROUTES: Routes = [
         component: BlankLayoutComponent,
         loadChildren: '@setl/core-login/login.module#SetlLoginModule',
     },
+    {
+        path: 'signup',
+        component: BlankLayoutComponent,
+        children: [
+            {
+                path: ':invitationToken',
+                component: OfiSignUpComponent,
+            },
+        ],
+    },
     /* Basic Layout pages. */
     {
         path: '',
@@ -102,6 +114,18 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
+                path: 'core-home',
+                component: HomeComponent,
+                canActivate: [LoginGuardService],
+                data: {state: 'home'}
+            },
+            {
+                path: 'invite-investors',
+                component: OfiInviteInvestorsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+
                 path: 'messages/:category',
                 component: SetlMessagesComponent,
                 canActivate: [LoginGuardService],
@@ -174,7 +198,7 @@ export const ROUTES: Routes = [
                         path: 'net-asset-value-view-mock',
                         component: OfiManageNavView,
                         canActivate: [LoginGuardService],
-                    }                    
+                    }
                 ]
             },
             {
