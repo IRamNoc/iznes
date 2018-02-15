@@ -128,7 +128,6 @@ export function memberSocketServiceFactory() {
         CoreWorkflowEngineModule,
         T2sModule,
         SetlLayoutModule,
-        NgbModule.forRoot()
     ],
     providers: [
         {
