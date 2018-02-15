@@ -63,27 +63,6 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.navListOb.subscribe(navList => {
             this.updateNavList(navList);
         }));
-    }    
-
-    /**
-     * Request my fund access base of the requested state.
-     * @param requested boolean
-     * @return void
-     */
-    private requestUserIssuedAssets(requested: boolean): void {
-        if (!requested) {
-            OfiCorpActionService.defaultRequestUserIssuedAsset(this.ofiCorpActionService, this.redux);
-        }
-    }
-
-    /**
-     * update asset list
-     * @param assetList ShareModel
-     * @return void
-     */
-    private updateUserIssuedAssets(assetList: model.ShareModel[]): void {
-        this.shareListItems = assetList;
-        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -95,9 +74,7 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         const requestData = {
             fundName: '',
             navDate: moment().format('YY-MM-DD 00:00:00'),
-            status: 0,
-            pageNum: 0,
-            pageSize: 1000
+            navDateField: 'navDate'
         }
 
         OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
@@ -122,6 +99,27 @@ export class OfiManageNavList implements OnInit, OnDestroy {
             id: 'navPubDate',
             text: 'NAV Published Date'
         }];
+    }
+
+    getCurrency(currency: string): string {
+        let currencyIcon;
+
+        switch (currency) {
+            case 'GBP':
+                currencyIcon = '£';                
+                break;
+            case 'EUR':
+                currencyIcon = '€';
+                break;
+            case 'USD':
+                currencyIcon = '$';
+                break;
+            default:
+                currencyIcon = 'N/A';
+                break;
+        }
+        
+        return currencyIcon;
     }
     
     addNav(share: model.NavInfoModel): void {

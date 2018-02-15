@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
-    RequetNavListMessageBody,
+    RequestNavListMessageBody,
     UpdateNavMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
@@ -43,14 +43,12 @@ export class OfiNavService {
     }
 
     requestNavList(requestData: any): any {
-        const messageBody: RequetNavListMessageBody = {
-            RequestName: 'getNavList',
+        const messageBody: RequestNavListMessageBody = {
+            RequestName: 'getNavFundShares',
             token: this.memberSocketService.token,
             fundName: _.get(requestData, 'fundName', ''),
-            navDate: _.get(requestData, 'navDate', ''),
-            status: _.get(requestData, 'status', 0),
-            pageNum: _.get(requestData, 'pageNum', 0),
-            pageSize: _.get(requestData, 'pageSize', 1000),
+            navDateField: _.get(requestData, 'navDateField', 'navDate'),
+            navDate: _.get(requestData, 'navDate', null)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

@@ -17,10 +17,8 @@ const initialState: OfiManageNavListState = {
     navList: [],
     currentRequest: {
         fundName: '',
-        navDate: '',
-        status: 0,
-        pageNum: 0,
-        pageSize: 0
+        navDateField: '',
+        navDate: ''
     },
     requested: true
 };
@@ -68,14 +66,13 @@ function handleSetManageNavList(state: OfiManageNavListState, action: Action): O
 
             result.push({
                 shareId: item.get('shareId', 0),
-                fundName: item.get('fundName', ''),
-                navDate: item.get('navDate', ''),
-                status: item.get('status', 0),
-                price: item.get('price', 0),
-                currency: currency,
+                fundId: item.get('fundId', 0),
+                fundShareName: item.get('fundShareName', ''),
                 isin: item.get('isin', 0),
-                companyName: item.get('price', 0),
-                companyId: item.get('price', 0),
+                currency: currency,
+                nav: item.get('nav', 0),
+                navDate: item.get('navDate', ''),
+                status: item.get('status', 0)
             });
             return result;
         }, []);

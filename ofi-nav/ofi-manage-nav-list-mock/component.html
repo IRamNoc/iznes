@@ -59,10 +59,10 @@
                     <span mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_nav">NAV</span>
+                    <span mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navccy">NAV CCY</span>
+                    <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_navdate">NAV Date</span>
@@ -78,14 +78,27 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems">
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.fundName}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item)">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.price}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.currency}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{'pubDate'}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item)">
-                        <span class="label label-warning">{{item.status}}</span>
+                        {{item.currency}} ({{getCurrency(item.currency)}})
+                    </clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item)">{{item.nav}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item)">N/A</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item)">
+                        <span [ngSwitch]="item.status">
+                            <span *ngSwitchCase="-1">
+                                <span class="label label-success" mltag="txt_final">Final</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                            </span>
+
+                            <span *ngSwitchCase="2">
+                                <span class="label label-warning" mltag="txt_pending">Pending</span>
+                            </span>
+                        </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">

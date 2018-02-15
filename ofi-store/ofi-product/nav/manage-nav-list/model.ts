@@ -1,21 +1,18 @@
 export interface NavDetail {
     shareId: number;
-    fundName: string;
+    fundId: number;
+    fundShareName: string;
+    isin: number;
+    currency: string;
+    nav: number;
     navDate: string;
     status: number;
-    currency: string;
-    isin: number;
-    companyName: string;
-    companyId: number;
-    price: number;
 }
 
 export interface CurrentRequest {
     fundName: string;
+    navDateField: string;
     navDate: string;
-    status: number;
-    pageNum: number;
-    pageSize: number;
 }
 
 export interface OfiManageNavListState {
