@@ -4,17 +4,20 @@ import {ReactiveFormsModule} from '@angular/forms';
 
 import {NumberFormatterDirective} from './number-formatter/directive';
 import {ClrDgIconSortDirective} from './clr-dg-sort-icon/directive';
+import {HighlightDirective} from './highlight/highlight.directive';
 import {MoneyValuePipe} from '../pipes';
 
 
 @NgModule({
     declarations: [
         NumberFormatterDirective,
-        ClrDgIconSortDirective
+        ClrDgIconSortDirective,
+        HighlightDirective
     ],
     exports: [
         NumberFormatterDirective,
-        ClrDgIconSortDirective
+        ClrDgIconSortDirective,
+        HighlightDirective
     ],
     imports: [
         CommonModule,
@@ -24,4 +27,5 @@ import {MoneyValuePipe} from '../pipes';
 })
 
 export class SetlDirectivesModule {
+
 }
