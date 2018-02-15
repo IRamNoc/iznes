@@ -50,7 +50,7 @@
             </div>
 
             <clr-dropdown>
-                <div class="nav-button" clrDropdownToggle>
+                <div class="nav-button" clrDropdownToggle id='dropdown-user'>
                     <clr-icon shape="user" class="icon"></clr-icon>
                     <p mltag="txt_profile">Profile</p>
                 </div>
@@ -61,13 +61,13 @@
             </clr-dropdown>
 
             <clr-dropdown class="bottom-right">
-                <a class="nav-button" clrDropdownToggle>
+                <a class="nav-button" clrDropdownToggle id='dropdown-settings'>
                     <clr-icon shape="cog" class="icon"></clr-icon>
-                    <p mltag="txt_settings">Properties</p>
+                    <p mltag="txt_settings">Settings</p>
                 </a>
                 <div class="dropdown-menu" style="margin-right: 10px">
-                    <a clrDropdownItem mltag="txt_languages" (click)="toggleSidebar.emit($event)">Language</a>
-                    <a [routerLink]="['/logout']" clrDropdownItem mltag="txt_logout">Log out</a>
+                    <a clrDropdownItem mltag="txt_languages" (click)="toggleSidebar.emit($event)" id='dropdown-btn-lang'>Language</a>
+                    <a [routerLink]="['/logout']" clrDropdownItem mltag="txt_logout" id='dropdown-btn-logout'>Log out</a>
                 </div>
             </clr-dropdown>
         </div>
