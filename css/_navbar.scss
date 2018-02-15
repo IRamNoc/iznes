@@ -6,6 +6,9 @@ header {
 
     // everything other then the search box
     .header-actions {
+
+        justify-content: space-between;
+
         .nav-link.nav-icon {
             @extend .animate;
             color: $setlHoverDarker;
@@ -46,6 +49,18 @@ header {
             }
         }
 
+        .user-profile {
+            padding-right: 20px;
+            border-right: 1px solid #efefef;
+        }
+
+        .right-buttons {
+            .dropdown {
+                height: 75px;
+                border-left: 1px solid #efefef;
+            }
+        }
+
         .nav-link.nav-icon::after {
             background: #7d7d7d;
         }
@@ -56,6 +71,7 @@ header {
             border-left: 1px solid rgba(250, 250, 250, 0.15) !important;
             height: 50px !important;
             margin: 13px 20px 0 !important;
+            margin-left: 0!important;
             padding-left: 15px !important;
             width: 200px !important;
             opacity: 1.0 !important;
@@ -86,12 +102,57 @@ header {
             }
         }
 
+        .nav-button {
+            position: relative;
+            text-align: center;
+            width: 100px;
+            float: left !important;
+            border-left: 1px solid rgba(250, 250, 250, 0.15) !important;
+            height: 50px !important;
+            margin: 13px 0px 0 !important;
+            padding-left: 15px !important;
+            opacity: 1.0 !important;
+            color: #969696;
+            &:hover {
+                color: #57a5e3;
+                .icon {
+                    color: #57a5e3;
+                }
+                p {
+                    color: #57a5e3;
+                }
+            }
+
+            .icon {
+                position: absolute;
+                width: 1rem!important;
+                height: 1rem!important;
+                transform: translateX(-50%)!important;
+                top: 6px!important;
+                color: #969696;
+            }
+
+            p {
+                position: absolute;
+                bottom: 0px;
+                line-height: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+
+                margin-top: 3px !important;
+                font-size: 13px !important;
+                float: left !important;
+                color: #969696;
+                width: 100%;
+            }
+        }
+
         .wallet {
             @extend .animate;
             float: left;
             border-left: 1px solid rgba(250, 250, 250, 0.15);
             height: 50px;
-            margin-top: 13px;
+            margin-top: 18px;
             padding-left: 15px;
             margin-right: 15px;
 

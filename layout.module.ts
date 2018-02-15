@@ -29,6 +29,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
+import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
 @NgModule({
     imports: [
@@ -42,6 +43,7 @@ import {ClarityModule} from '@clr/angular';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
+        MultilingualModule,
     ],
     declarations: [
         /* Directives. */

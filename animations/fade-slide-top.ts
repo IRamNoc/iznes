@@ -9,13 +9,13 @@ export const FadeSlideTop =
             query(':enter', [
                 style({
                     position: 'fixed',
-                    width: 'calc(100% - 230px)',
+                    width: '100%',
                     opacity: 0,
                     transform: `translateY(${slideDistance}px)`,
                 }),
                 animate(`${slideDuration}ms ease`, style({
                     position: 'fixed',
-                    width: 'calc(100% - 230px)' ,
+                    width: '100%' ,
                     opacity: 1,
                     transform: 'translateY(0%)'
                 })),
