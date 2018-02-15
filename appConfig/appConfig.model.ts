@@ -8,7 +8,14 @@ export interface MenuItem {
 }
 
 export interface MenuSpec {
-    [userType: string]: Array<MenuItem>;
+    top: {
+        profile: {
+            [userType: string]: Array<MenuItem>;
+        }
+    },
+    side: {
+        [userType: string]: Array<MenuItem>;
+    }
 }
 
 interface MemberNodeConnection {
