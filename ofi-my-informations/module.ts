@@ -11,20 +11,16 @@ import {ClarityModule} from '@clr/angular';
 
 import {MultilingualModule} from '@setl/multilingual';
 
-/* My informations module */
-import {OfiMyInformationsModule} from '../ofi-my-informations/module';
-
 /* Components. */
-import {OfiHomeComponent} from './home/component';
-
+import {OfiMyInformationsComponent} from './my-informations/component';
 
 /* Decorator. */
 @NgModule({
     declarations: [
-        OfiHomeComponent,
+        OfiMyInformationsComponent,
     ],
     exports: [
-        OfiHomeComponent,
+        OfiMyInformationsComponent,
     ],
     imports: [
         CommonModule,
@@ -37,8 +33,7 @@ import {OfiHomeComponent} from './home/component';
         SelectModule,
         SetlPipesModule,
         SetlComponentsModule,
-        SetlDirectivesModule,
-        OfiMyInformationsModule,
+        SetlDirectivesModule
     ],
     providers: [
 
@@ -46,6 +41,6 @@ import {OfiHomeComponent} from './home/component';
 })
 
 /* Class. */
-export class OfiHomeModule {
+export class OfiMyInformationsModule {
 
 }

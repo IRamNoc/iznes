@@ -5,7 +5,14 @@ export {OfiInvestorFundListComponent} from './ofi-fund-invest/investor-fund-list
  * Home
  */
 export {OfiHomeComponent} from './ofi-home/home/component';
-
+/**
+ * Invite Investors
+ */
+export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component';
+/**
+ * My informations
+ */
+export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/component';
 /**
  * Nav
  */
