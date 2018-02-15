@@ -126,7 +126,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
     saveAdditionnal(formValues) {
         const listImu = fromJS([
-            {id: 'nav-link-settings'},
+            {id: 'dropdown-user'},
             {id: 'menu-account-module'},
         ]);
 
