@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
 import {ContractsComponent} from './contracts.component';
 import {ContractsDvpComponent} from './dvp/dvp.component';
 import {ClarityModule} from '@clr/angular';
