@@ -12,6 +12,19 @@
         <!--</label>-->
     </form>
     <div class="header-actions">
+
+        <clr-dropdown class="user-profile">
+            <div class="user" clrDropdownToggle>
+                <img src="assets/images/male.png">
+                <p>{{username}} <i class="fa fa-angle-down"></i></p>
+                <span mltag="txt_last">Last</span> <span>{{lastLogin}}</span>
+            </div>
+
+            <div class="dropdown-menu">
+                <a [routerLink]="['/account/my-account']" clrDropdownItem mltag="txt_myaccount">My Account</a>
+            </div>
+        </clr-dropdown>
+
         <div class="wallet">
             <div>
                 <ng-select [allowClear]="false"
@@ -28,39 +41,36 @@
             </div>
         </div>
 
-
-        <clr-dropdown>
-            <!--<button class="btn btn-outline-primary" >-->
-            <!--Dropdown-->
-            <!--<clr-icon shape="caret down"></clr-icon>-->
-            <!--</button>-->
-            <div class="user" clrDropdownToggle>
-                <img src="assets/images/male.png">
-                <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <span mltag="txt_last">Last</span> <span>{{lastLogin}}</span>
+        <div class="right-buttons">
+            <div class="dropdown">
+                <a [routerLink]="['/messages']" class="nav-button dropdown-toggle">
+                    <clr-icon shape="email" class="icon" [ngClass]="hasMail"></clr-icon>
+                    <p mltag="txt_messages">Messages</p>
+                </a>
             </div>
 
-            <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account/detail']" clrDropdownItem mltag="txt_myaccount">My Account</a>
-                <!--<div class="dropdown-divider"></div>-->
-                <!--<a href="/#/login" clrDropdownItem mltag="txt_logout">Logout</a>-->
-            </div>
-        </clr-dropdown>
+            <clr-dropdown>
+                <div class="nav-button" clrDropdownToggle>
+                    <clr-icon shape="user" class="icon"></clr-icon>
+                    <p mltag="txt_profile">Profile</p>
+                </div>
 
-        <a [routerLink]="['/messages']" class="nav-link nav-icon">
-            <clr-icon shape="email" class="is-solid" [ngClass]="hasMail"></clr-icon>
-            <label mltag="txt_messages">Messages</label>
-        </a>
+                <div class="dropdown-menu">
+                    <a *ngFor="let item of profileMenu" [routerLink]="[item.routerLink]" [id]="item.element_id" clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
+                </div>
+            </clr-dropdown>
 
-        <a class="nav-link nav-icon" (click)="callToggleSidebar($event)">
-            <clr-icon shape="cog"></clr-icon>
-            <label mltag="txt_settings">Settings</label>
-        </a>
-
-        <a [routerLink]="['/login']" class="nav-link nav-icon" (click)="logout()">
-            <clr-icon shape="logout"></clr-icon>
-            <label mltag="txt_logout">Logout</label>
-        </a>
+            <clr-dropdown class="bottom-right">
+                <a class="nav-button" clrDropdownToggle>
+                    <clr-icon shape="cog" class="icon"></clr-icon>
+                    <p mltag="txt_settings">Properties</p>
+                </a>
+                <div class="dropdown-menu" style="margin-right: 10px">
+                    <a clrDropdownItem mltag="txt_languages" (click)="toggleSidebar.emit($event)">Language</a>
+                    <a [routerLink]="['/logout']" clrDropdownItem mltag="txt_logout">Log out</a>
+                </div>
+            </clr-dropdown>
+        </div>
 
         <button class="header-overflow-trigger" type="button">
             <span></span>

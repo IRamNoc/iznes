@@ -45,7 +45,8 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '50': 'registrar',
                 '60': 't2s',
             }[userType];
-            this.menuJson = this.translateMenu(this.appConfig.menuSpec[userTypeStr]);
+            console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
+            this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
         });
 
     }
