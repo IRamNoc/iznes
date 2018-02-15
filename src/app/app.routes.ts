@@ -23,6 +23,7 @@ import {
     MyOrdersComponent,
     OfiCollectiveArchiveComponent,
     OfiHomeComponent,
+    OfiInviteInvestorsComponent,
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
     OfiManageOfiNavComponent,
@@ -94,6 +95,9 @@ export const ROUTES: Routes = [
                 path: 'login', component: SetlLoginComponent,
             },
             {
+                path: 'invite/:invitationToken', component: SetlLoginComponent,
+            },
+            {
                 path: 'reset/:token', component: SetlLoginComponent,
             },
         ]
@@ -114,6 +118,11 @@ export const ROUTES: Routes = [
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
                 data: {state: 'home'}
+            },
+            {
+                path: 'invite-investors',
+                component: OfiInviteInvestorsComponent,
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'messages/:category',

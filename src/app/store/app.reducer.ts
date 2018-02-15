@@ -19,7 +19,9 @@ import {
     walletReducer,
     WalletState,
     WorkflowState,
-    WorkflowReducer
+    WorkflowReducer,
+    HighlightListState,
+    HighlightListReducer,
 } from '@setl/core-store';
 
 import { OfiReducer, OfiState } from '@ofi/ofi-main';
@@ -34,6 +36,7 @@ export interface AppState {
     member: MemberState;
     chain: ChainState;
     workflow: WorkflowState;
+    highlight: HighlightListState;
     ofi: OfiState;
 }
 
@@ -48,6 +51,7 @@ const appReducer: Reducer<any> = combineReducers<any>({
     chain: ChainReducer,
     connection: ConnectionReducer,
     workflow: WorkflowReducer,
+    highlight: HighlightListReducer,
     ofi: OfiReducer
 });
 
