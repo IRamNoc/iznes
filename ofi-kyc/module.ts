@@ -14,16 +14,20 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {OfiInviteInvestorsComponent} from './invite-investors/component';
 import {OfiSignUpComponent} from './signup/component';
+import {OfiDocumentsComponent} from './documents/component';
+import {MockKYCDocumentsService} from './documents/documents.mock.service';
 
 /* Decorator. */
 @NgModule({
     declarations: [
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
+        OfiDocumentsComponent,
     ],
     exports: [
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
+        OfiDocumentsComponent,
     ],
     imports: [
         CommonModule,
@@ -39,7 +43,7 @@ import {OfiSignUpComponent} from './signup/component';
         SetlDirectivesModule
     ],
     providers: [
-
+        MockKYCDocumentsService,
     ]
 })
 

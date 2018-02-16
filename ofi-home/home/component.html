@@ -1,4 +1,4 @@
-<div *ngIf="hasFilledAdditionnalInfos">
+<div *ngIf="hasFilledAdditionnalInfos || myDetails.userType === 36">
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-homepage"><i class="fa fa-home"></i> <span mltag="txt_home">Home</span> - {{ connectedWalletName }}</h1>
@@ -164,6 +164,6 @@
     </div>
 </div>
 
-<div *ngIf="!hasFilledAdditionnalInfos">
+<div *ngIf="!hasFilledAdditionnalInfos && myDetails.userType === 46">
     <app-my-informations></app-my-informations>
 </div>

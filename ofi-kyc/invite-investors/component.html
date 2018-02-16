@@ -16,8 +16,8 @@
     </div>
 
     <form [formGroup]="invitationForm" novalidate (ngSubmit)="save(invitationForm.value)">
-        <section class="form-block">
-            <div class="investorBlock" *ngFor="let investor of invitationForm.controls['investors'].controls; let i = index">
+        <section class="form-block" formArrayName="investors">
+            <div class="investorBlock" *ngFor="let investor of getControls(invitationForm, 'investors'); let i = index">
                 <div [formGroup]="investor">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -47,7 +47,6 @@
                         <div class="form-group col-sm-6">
                             <label for="kyc_lastName_{{i}}">
                                 <span>Last name (optional):</span>
-                                <div class="mandatory text-danger">*</div>
                             </label>
                             <div>
                                 <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
