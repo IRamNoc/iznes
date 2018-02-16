@@ -52,6 +52,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         
         this.initDataTypes();
         this.initSearchForm();
+        this.clearRequestedList();
         this.initSubscriptions();
     }
         
@@ -69,12 +70,12 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     private initSearchForm(): void {
         this.searchForm = new FormGroup({
             shareName: new FormControl(''),
-            dateType: new FormControl('navDate'),
+            dateType: new FormControl([this.dateTypes[0]]),
             date: new FormControl('')
         });
 
         this.searchForm.valueChanges.subscribe(() => {
-            // do stuff
+            this.clearRequestedList();
         });
     }
 
@@ -84,8 +85,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavList(requested: boolean): void {
+        if(requested) return;
+
         const requestData = {
-            fundName: '',
+            fundName: this.searchForm.value.shareName,
             navDateField: this.searchForm.value.dateType,
             navDate: this.searchForm.value.date
         }
@@ -141,6 +144,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     navigateToShare(): void {
         this.router.navigateByUrl('product-module/net-asset-value-view-mock');
+    }
+
+    clearRequestedList(): void {
+        this.redux.dispatch(clearRequestedNavFundsList());
     }
 
     ngOnDestroy() {}
