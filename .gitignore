@@ -119,3 +119,5 @@ javaUITesting2/build/tmp/
 /.gradle/4.0/taskHistory/taskHistory.bin
 /.gradle/4.0/taskHistory/taskHistory.lock
 /javaUITesting2/gradlew
+
+TESTS-*.xml
