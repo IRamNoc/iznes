@@ -1,0 +1,98 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-kyc-invite-investors"><i class="fa fa-user-plus"></i> <span>Invite Investors to IZNES</span></h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                Please provide the email address(es) of the Investors you would like to invite to IZNES.
+                <br>
+                <span class="text-danger">Please note that the people you add will all be Super Admins within their company.</span>
+            </p>
+        </div>
+    </div>
+
+    <form [formGroup]="invitationForm" novalidate (ngSubmit)="save(invitationForm.value)">
+        <section class="form-block">
+            <div class="investorBlock" *ngFor="let investor of invitationForm.controls['investors'].controls; let i = index">
+                <div [formGroup]="investor">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_email_{{i}}">
+                                <span>Email address:</span>
+                                <div class="mandatory text-danger">*</div>
+                            </label>
+                            <div>
+                                <input type="text" id="kyc_email_{{i}}" class="form-control" formControlName="email">
+                            </div>
+                            <div *ngIf="investor.controls.email.hasError('required') && investor.controls.email.dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="!investor.controls.email.valid && !investor.controls.email.hasError('required')" class="text-danger">Email not valid!</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <i class="fa fa-times-circle text-warning" *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}" (click)="removeInvestor(invitationForm, i)" [ngStyle]="{'cursor':'pointer','margin-left':'14px','font-size':'18px','position':'absolute','right':'0'}"></i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_firstName_{{i}}">
+                                <span>First name (optional):</span>
+                            </label>
+                            <div>
+                                <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_lastName_{{i}}">
+                                <span>Last name (optional):</span>
+                                <div class="mandatory text-danger">*</div>
+                            </label>
+                            <div>
+                                <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
+                        <i class="fa fa-plus"></i> <span>Add another email invitation</span>
+                    </button>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">
+                    <span mltag="txt_close">Close</span>
+                </button>
+                <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
+                    <i class="fa fa-save"></i> <span>Send email invitation</span>
+                </button>
+            </div>
+        </section>
+    </form>
+</div>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="emailSent">Success!</h3>
+    <div class="modal-body text-center" [ngStyle]="{'padding-bottom':'0'}" *ngIf="emailSent">
+        <i class="fa fa-check fa-3x text-success"></i>
+        <div class="kycEmailList">
+            <p><b>An invitation email to IZNES was sent to:</b></p>
+            <br>
+            <div class="kycEachEmail" *ngFor="let email of emailList">
+                {{email}}
+            </div>
+        </div>
+        <br><br>
+        This pop-up will automatically close in {{countdown}} seconds.
+        <br><br>
+        <button id="btnKycCloseModal" class="btn btn-info" type="button" (click)="closeModal()">
+            <span mltag="txt_close">Close</span>
+        </button>
+        <br><br>
+    </div>
+</clr-modal>

@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 
 /* Custom Ofi imports. */
 import {OfiHomeModule} from './ofi-home/module';
+import {OfiMyInformationsModule} from './ofi-my-informations/module';
+import {OfiKYCModule} from './ofi-kyc/module';
 import {OfiFundInvestModule} from './ofi-fund-invest/module';
 import {OfiRequestServicesModule} from './ofi-req-services/module';
 import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
@@ -17,6 +19,8 @@ import {MultilingualModule} from '@setl/multilingual';
 @NgModule({
     imports: [
         OfiHomeModule,
+        OfiMyInformationsModule,
+        OfiKYCModule,
         OfiFundInvestModule,
         OfiCorpActionsModule,
         OfiRequestServicesModule,
