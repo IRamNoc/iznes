@@ -25,6 +25,7 @@ import {
     OfiHomeComponent,
     OfiInviteInvestorsComponent,
     OfiSignUpComponent,
+    OfiDocumentsComponent,
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
     OfiManageOfiNavComponent,
@@ -150,6 +151,11 @@ export const ROUTES: Routes = [
                         data: {state: 'my-account'}
                     }
                 ]
+            },
+            {
+                path: 'kyc',
+                component: OfiDocumentsComponent,
+                canActivate: [LoginGuardService]
             },
             {
                 path: 'asset-management',
