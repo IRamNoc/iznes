@@ -98,9 +98,8 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToAddNewMemberTab();
         try {
             navigateToPageByID("menu-user-admin-users");
-        } catch (Error e) {
-            System.out.println("Could not navigate back to manage member");
-            fail();
+        } catch (Exception e) {
+            fail("Exception : " + e.getMessage());
         }
         WebElement tab = driver.findElement(By.id("user-tab-0"));
         assertTrue(elementHasClass(tab, "active"));

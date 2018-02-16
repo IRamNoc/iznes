@@ -2,42 +2,20 @@ node {
 
 }
 
-def notifySlack(String buildStatus = 'STARTED') {
-    // Build status of null means success.
-    buildStatus = buildStatus ?: 'SUCCESS'
-
-    def color
-
-    if (buildStatus == 'STARTED') {
-        color = '#0000CD'
-    } else if (buildStatus == 'SUCCESS') {
-        color = '#008000'
-    } else if (buildStatus == 'UNSTABLE') {
-        color = '#FFFF00'
-    } else {
-        color = '#FF0000'
-    }
-    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    slackSend(channel: "opencsdfrontenddev", color: color, message: msg)
-}
-
 node {
     timestamps {
-        try {
-            notifySlack()
-
-            stage('Deploy Frontend to Test Environment') {
+                stage('Deploy Frontend to Test Environment') {
                 node {
                     sh '''
                             ssh root@139.162.213.130 rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
-                            scp -pr /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  root@139.162.213.130:/var/www_setltestnet'''
                 }
             }
             stage('Deploy Backend to Test Environment') {
                 node {
                     sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats --exclude \'node_modules\' /var/phpapps/backend/ /var/ofi_backups/backend &&
-                            scp -pr /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
+                            rsync -avhm --stats --exclude \'config.json\' /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
                 }
             }
 
@@ -45,7 +23,7 @@ node {
                 node {
                     sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
-                            scp -pr /var/lib/jenkins/Deploy/ffdaemon/*  root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/* root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
                 }
             }
 
@@ -61,11 +39,5 @@ node {
                 sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
             }
 
-        } catch (e) {
-            currentBuild.result = 'FAILURE'
-            throw e
-        } finally {
-            notifySlack(currentBuild.result)
-        }
     }
 }
