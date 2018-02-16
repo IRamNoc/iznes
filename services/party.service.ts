@@ -50,12 +50,17 @@ export class PartyService {
         party.partyIdentifier = partyIdentifier;
         party.sigAddress = sigAddress;
 
-        this.addPayListItem(party, payList);
-        this.addReceiveListItem(party, receiveList);
+        _.each(payList, (payListItem) => {
+           this.addPayListItem(party, this.payListItemService.fromJSON(payListItem));
+        });
+        _.each(receiveList, (receiveListItem) => {
+           this.addReceiveListItem(party, this.receiveListItemService.fromJSON(receiveListItem));
+        });
 
         party.publicKey = publicKey;
         party.signature = signature;
         party.mustSign = mustSign;
+        console.log('PARTY JSON:', party);
         return party;
     }
 
