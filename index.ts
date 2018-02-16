@@ -10,6 +10,7 @@ export {OfiHomeComponent} from './ofi-home/home/component';
  */
 export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component';
 export {OfiSignUpComponent} from './ofi-kyc/signup/component';
+export {OfiDocumentsComponent} from './ofi-kyc/documents/component';
 /**
  * My informations
  */

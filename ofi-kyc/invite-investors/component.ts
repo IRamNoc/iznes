@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
 
 @Component({
@@ -11,7 +11,7 @@ import {Location} from '@angular/common';
 export class OfiInviteInvestorsComponent implements OnDestroy {
 
     invitationForm: FormGroup;
-    investor: object = {};
+    investor: any;
 
     showModal = false;
     countdown = 5;
@@ -30,6 +30,10 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
             investors: this._fb.array([])
         });
         this.addInvestor(this.invitationForm);
+    }
+
+    getControls(frmGrp: FormGroup, key: string) {
+        return (<FormArray>frmGrp.controls[key]).controls;
     }
 
     addInvestor(formObj) {
