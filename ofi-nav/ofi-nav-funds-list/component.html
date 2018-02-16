@@ -75,15 +75,15 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems">
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.fundShareName}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         {{item.currency}} ({{getCurrency(item.currency)}})
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.nav}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">N/A</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item)">
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.nav}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">N/A</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
                                 <span class="label label-success" mltag="txt_final">Final</span>

@@ -142,8 +142,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.addNavShare = share;
     }
 
-    navigateToShare(): void {
-        this.router.navigateByUrl('product-module/net-asset-value-view-mock');
+    navigateToShare(shareId: number): void {
+        this.router.navigateByUrl(`product-module/net-asset-value/${shareId}`);
     }
 
     clearRequestedList(): void {
