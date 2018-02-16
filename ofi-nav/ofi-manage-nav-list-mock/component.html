@@ -15,20 +15,21 @@
         </button>
 
         <clr-tab-content *clrIfActive="true">
-            <form>
+            <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-3">
                             <label class="control-label" for="navSearch" mltag="txt_searchsharenameisin">Search a Share Name or ISIN</label>
-                            <input type="text" id="navSearch" name="navSearch" />
+                            <input type="text" id="navSearch" name="navSearch" formControlName="shareName" />
                         </div>
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-3" *ngIf="dateTypes && searchForm">
                             <label class="control-label" for="selectDateType" mltag="txt_selectadate">Select a Date</label>
                             <ng-select id="selectDateType"
                                 class="fluid-width"
+                                [items]="dateTypes"
+                                [active]="[dateTypes[0]]"
                                 mltag="txt_ui_select"
                                 placeholder="Select Date type"
-                                [items]="dateTypes"
                                 [allowClear]="false">
                             </ng-select>
                         </div>
@@ -37,7 +38,7 @@
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
                                 <input id="navDatePicker" name="searchDate" placeholder="Choose a date" mltag="txt_chooseadate"
-                                    [(ngModel)]="searchDate"
+                                    formControlName="date"
                                     [dpDayPicker]="dateConfig"
                                     mode="day"
                                     theme="dp-material" />

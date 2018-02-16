@@ -1,4 +1,5 @@
 import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
@@ -25,8 +26,8 @@ export class OfiManageNavList implements OnInit, OnDestroy {
     shareListItems: any[];
     navListItems: any[];
     
+    searchForm: FormGroup;
     dateTypes: any[];
-    searchDate: Date;
     dateConfig = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
@@ -49,12 +50,12 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         private ofiCorpActionService: OfiCorpActionService,
         private ofiNavService: OfiNavService) {
         
+        this.initDataTypes();
+        this.initSearchForm();
         this.initSubscriptions();
     }
         
-    ngOnInit() {
-        this.initDataTypes();
-    }
+    ngOnInit() { }
 
     private initSubscriptions(): void {
         this.subscriptionsArray.push(this.navRequestedOb.subscribe(requested => {
@@ -65,6 +66,18 @@ export class OfiManageNavList implements OnInit, OnDestroy {
         }));
     }
 
+    private initSearchForm(): void {
+        this.searchForm = new FormGroup({
+            shareName: new FormControl(''),
+            dateType: new FormControl('navDate'),
+            date: new FormControl('')
+        });
+
+        this.searchForm.valueChanges.subscribe(() => {
+            // do stuff
+        });
+    }
+
     /**
      * request the nav list
      * @param requested boolean
@@ -73,8 +86,8 @@ export class OfiManageNavList implements OnInit, OnDestroy {
     private requestNavList(requested: boolean): void {
         const requestData = {
             fundName: '',
-            navDate: moment().format('YY-MM-DD 00:00:00'),
-            navDateField: 'navDate'
+            navDateField: this.searchForm.value.dateType,
+            navDate: this.searchForm.value.date
         }
 
         OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
