@@ -57,6 +57,12 @@ node {
                 sh 'ssh -t root@sales.iznes.io \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
             }
 
+
+            stage('Check node server is running') {
+                sh 'ssh -t root@sales.iznes.io \'cd /var/phpapps/backend/ ; bash && sudo node checkServer.js\''
+            }
+
+
         } catch (e) {
             currentBuild.result = 'FAILURE'
             throw e

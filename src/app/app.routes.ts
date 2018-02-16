@@ -6,7 +6,7 @@ import {SetlMyAccountComponent} from '@setl/core-account';
 /**
  * Login Guard service
  */
-import {LoginGuardService, SetlLoginComponent} from '@setl/core-login';
+import {LoginGuardService} from '@setl/core-login';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -23,6 +23,8 @@ import {
     MyOrdersComponent,
     OfiCollectiveArchiveComponent,
     OfiHomeComponent,
+    OfiInviteInvestorsComponent,
+    OfiSignUpComponent,
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
     OfiManageOfiNavComponent,
@@ -71,7 +73,6 @@ import {
     ManageMemberComponent,
     ManageWalletNodesComponent,
 } from '@setl/core-manage-member';
-import {SetlMessagesComponent} from '@setl/core-messages';
 import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
 import {ConnectionComponent} from '@setl/core-connections/connections/component';
@@ -79,26 +80,29 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
  * T2S Module.
  */
 import {T2sMessagesComponent} from '@setl/core-t2s';
+import { SetlMessagesComponent } from '@setl/core-messages';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
     {path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full'},
     {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
-
     /* Blank layout connections */
     {
-        path: '', component: BlankLayoutComponent,
+        path: '',
+        component: BlankLayoutComponent,
+        loadChildren: '@setl/core-login/login.module#SetlLoginModule',
+    },
+    {
+        path: 'signup',
+        component: BlankLayoutComponent,
         children: [
             {
-                path: 'login', component: SetlLoginComponent,
+                path: ':invitationToken',
+                component: OfiSignUpComponent,
             },
-            {
-                path: 'reset/:token', component: SetlLoginComponent,
-            },
-        ]
+        ],
     },
-
     /* Basic Layout pages. */
     {
         path: '',
@@ -116,6 +120,12 @@ export const ROUTES: Routes = [
                 data: {state: 'home'}
             },
             {
+                path: 'invite-investors',
+                component: OfiInviteInvestorsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+
                 path: 'messages/:category',
                 component: SetlMessagesComponent,
                 canActivate: [LoginGuardService],
@@ -123,6 +133,12 @@ export const ROUTES: Routes = [
             {
                 path: 'messages',
                 redirectTo: '/messages/inbox'
+            },
+            {
+                path: 'core-home',
+                component: HomeComponent,
+                canActivate: [LoginGuardService],
+                data: {state: 'home'}
             },
             {
                 path: 'account',
@@ -182,7 +198,7 @@ export const ROUTES: Routes = [
                         path: 'net-asset-value-view-mock',
                         component: OfiManageNavView,
                         canActivate: [LoginGuardService],
-                    }                    
+                    }
                 ]
             },
             {
