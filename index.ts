@@ -10,8 +10,7 @@ export {OfiHomeComponent} from './ofi-home/home/component';
  * Nav
  */
 export {OfiNavModule} from './ofi-nav/module';
-export {OfiManageOfiNavComponent} from './ofi-nav/ofi-mangage-nav-list/component';
-export {OfiManageNavList} from './ofi-nav/ofi-manage-nav-list-mock/component';
+export {OfiNavFundsList} from './ofi-nav/ofi-nav-funds-list/component';
 export {OfiManageNavView} from './ofi-nav/ofi-manage-nav-view-mock/component';
 export {OfiManageNavPopup} from './ofi-nav/ofi-manage-nav-popup/component';
 

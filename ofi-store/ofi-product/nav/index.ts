@@ -1,35 +1,35 @@
 import {combineReducers, Reducer} from 'redux';
 
 import {
-    OfiManageNavListState,
-    OfiManageNavListReducer,
+    OfiNavFundsListState,
+    OfiNavFundsListReducer,
 
     // Actions
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
 
     // selector
-    getOfiManageNavListCurrentRequest
-} from './manage-nav-list';
+    getOfiNavFundsListCurrentRequest
+} from './nav-funds-list';
 
 export {
     // Actions
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
 
     // selector
-    getOfiManageNavListCurrentRequest
+    getOfiNavFundsListCurrentRequest
 };
 
 export interface OfiManageNavState {
-    ofiManageNavList: OfiManageNavListState;
+    ofiNavFundsList: OfiNavFundsListState;
 }
 
 export const OfiManageNavReducer: Reducer<OfiManageNavState> = combineReducers<OfiManageNavState>({
-    ofiManageNavList: OfiManageNavListReducer,
+    ofiNavFundsList: OfiNavFundsListReducer,
 });
 

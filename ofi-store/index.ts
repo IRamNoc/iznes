@@ -105,11 +105,11 @@ export {
 };
 
 export {
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
-    getOfiManageNavListCurrentRequest
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
+    getOfiNavFundsListCurrentRequest
 } from './ofi-product';
 
 export interface OfiState {

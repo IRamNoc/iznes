@@ -10,8 +10,9 @@ import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest
 } from '../../../ofi-store/ofi-product/nav';
 
 @Injectable()
@@ -29,13 +30,13 @@ export class OfiNavService {
      */
     static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedManageNavList());
+        ngRedux.dispatch(setRequestedNavFundsList());
 
         // Request the list.
         const asyncTaskPipe = ofiNavService.requestNavList(requestData);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_MANAGE_NAV_LIST],
+            [SET_NAV_FUNDS_LIST],
             [],
             asyncTaskPipe,
             {}

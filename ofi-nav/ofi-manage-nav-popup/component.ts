@@ -1,7 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 import * as moment from 'moment';
 
-import * as model from '../OfiManageNav';
+import * as model from '../OfiNav';
 
 @Component({
     selector: 'app-nav-add',

@@ -1,20 +1,20 @@
-import {CurrentRequest, OfiManageNavListState} from './model';
+import {CurrentRequest, OfiNavFundsListState} from './model';
 import {Action} from 'redux';
 import * as _ from 'lodash';
 import {fromJS} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 
 import {
-    SET_MANAGE_NAV_LIST,
-    OFI_SET_CURRENT_MANAGE_NAV_REQUEST,
-    CLEAR_REQUESTED_MANAGE_NAV_LIST,
-    SET_REQUESTED_MANAGE_NAV_LIST
+    SET_NAV_FUNDS_LIST,
+    OFI_SET_CURRENT_NAV_FUNDS_LIST,
+    CLEAR_REQUESTED_NAV_FUNDS_LIST,
+    SET_REQUESTED_NAV_FUNDS_LIST
 } from './actions';
 
 import {NavDetail} from './model';
 
-const initialState: OfiManageNavListState = {
-    navList: [],
+const initialState: OfiNavFundsListState = {
+    navFundsList: [],
     currentRequest: {
         fundName: '',
         navDateField: '',
@@ -30,18 +30,18 @@ const initialState: OfiManageNavListState = {
  * @return {any}
  * @constructor
  */
-export const OfiManageNavListReducer = function (state: OfiManageNavListState = initialState, action: Action): OfiManageNavListState {
+export const OfiNavFundsListReducer = function (state: OfiNavFundsListState = initialState, action: Action): OfiNavFundsListState {
     switch (action.type) {
-        case SET_MANAGE_NAV_LIST:
-            return handleSetManageNavList(state, action);
+        case SET_NAV_FUNDS_LIST:
+            return handleSetOfiNavFundsList(state, action);
 
-        case OFI_SET_CURRENT_MANAGE_NAV_REQUEST:
+        case OFI_SET_CURRENT_NAV_FUNDS_LIST:
             return handleSetCurrentRequest(state, action);
 
-        case SET_REQUESTED_MANAGE_NAV_LIST:
+        case SET_REQUESTED_NAV_FUNDS_LIST:
             return toggleRequested(state, true);
 
-        case CLEAR_REQUESTED_MANAGE_NAV_LIST:
+        case CLEAR_REQUESTED_NAV_FUNDS_LIST:
             return toggleRequested(state, false);
 
         default:
@@ -54,13 +54,13 @@ export const OfiManageNavListReducer = function (state: OfiManageNavListState = 
  *
  * @param state
  * @param action
- * @return {OfiManageNavListState}
+ * @return {OfiNavFundsListState}
  */
-function handleSetManageNavList(state: OfiManageNavListState, action: Action): OfiManageNavListState {
+function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): OfiNavFundsListState {
     const navListData = _.get(action, 'payload[1].Data', []);
-    let navList: NavDetail[] = [];
+    let navFundsList: NavDetail[] = [];
     try {
-        navList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
+        navFundsList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
             const metadata = JSON.parse(item.get('metadata', {}));
             const currency = metadata.shareCurrency[0].id;
 
@@ -77,11 +77,11 @@ function handleSetManageNavList(state: OfiManageNavListState, action: Action): O
             return result;
         }, []);
     } catch (e) {
-        navList = [];
+        navFundsList = [];
     }
 
     return Object.assign({}, state, {
-        navList
+        navFundsList
     });
 }
 
@@ -89,9 +89,9 @@ function handleSetManageNavList(state: OfiManageNavListState, action: Action): O
  * Handle set requested
  * @param state
  * @param action
- * @return {{}&OfiManageNavListState&{currentRequest: CurrentRequest, requested: boolean}}
+ * @return {{}&OfiNavFundsListState&{currentRequest: CurrentRequest, requested: boolean}}
  */
-function handleSetCurrentRequest(state: OfiManageNavListState, action: Action): OfiManageNavListState {
+function handleSetCurrentRequest(state: OfiNavFundsListState, action: Action): OfiNavFundsListState {
     const currentRequest: CurrentRequest = _.get(action, 'currentRequest');
 
     return Object.assign({}, state, {
@@ -102,9 +102,9 @@ function handleSetCurrentRequest(state: OfiManageNavListState, action: Action): 
 /**
  * Toggle requested
  * @param state
- * @return {{}&OfiManageNavListState&{requested: boolean}}
+ * @return {{}&OfiNavFundsListState&{requested: boolean}}
  */
-function toggleRequested(state: OfiManageNavListState, requested): OfiManageNavListState {
+function toggleRequested(state: OfiNavFundsListState, requested): OfiNavFundsListState {
 
     return Object.assign({}, state, {
         requested

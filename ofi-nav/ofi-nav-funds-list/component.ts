@@ -6,14 +6,14 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
 
-import * as model from '../OfiManageNav';
+import * as model from '../OfiNav';
 
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {
-    ofiSetCurrentManageNavRequest,
-    clearRequestedManageNavList,
-    getOfiManageNavListCurrentRequest
+    ofiSetCurrentNavFundsListRequest,
+    clearRequestedNavFundsList,
+    getOfiNavFundsListCurrentRequest
 } from '../../ofi-store/ofi-product/nav';
 
 @Component({
@@ -21,7 +21,7 @@ import {
     templateUrl: './component.html',
     styleUrls: ['./component.css']
 })
-export class OfiManageNavList implements OnInit, OnDestroy {
+export class OfiNavFundsList implements OnInit, OnDestroy {
 
     shareListItems: any[];
     navListItems: any[];
@@ -41,8 +41,8 @@ export class OfiManageNavList implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'requested']) navRequestedOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiManageNavList', 'navList']) navListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
 
     constructor(private router: Router,
         private redux: NgRedux<any>,

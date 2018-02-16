@@ -15,8 +15,8 @@ export interface CurrentRequest {
     navDate: string;
 }
 
-export interface OfiManageNavListState {
-    navList: Array<NavDetail>;
+export interface OfiNavFundsListState {
+    navFundsList: Array<NavDetail>;
     currentRequest: CurrentRequest;
     requested: boolean;
 }

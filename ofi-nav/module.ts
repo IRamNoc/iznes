@@ -5,8 +5,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // Local components
-import {OfiManageOfiNavComponent} from './ofi-mangage-nav-list/component';
-import {OfiManageNavList} from './ofi-manage-nav-list-mock/component';
+import {OfiNavFundsList} from './ofi-nav-funds-list/component';
 import {OfiManageNavView} from './ofi-manage-nav-view-mock/component';
 import {OfiManageNavPopup} from './ofi-manage-nav-popup/component';
 import {DpDatePickerModule, SelectModule, SetlPipesModule, SetlDirectivesModule, SetlServicesModule} from '@setl/utils';
@@ -26,14 +25,12 @@ import {MultilingualModule} from '@setl/multilingual';
         MultilingualModule
     ],
     exports: [
-        OfiManageOfiNavComponent,
-        OfiManageNavList,
+        OfiNavFundsList,
         OfiManageNavView,
         OfiManageNavPopup
     ],
     declarations: [
-        OfiManageOfiNavComponent,
-        OfiManageNavList,
+        OfiNavFundsList,
         OfiManageNavView,
         OfiManageNavPopup
     ],
