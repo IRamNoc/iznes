@@ -105,11 +105,18 @@ export {
 };
 
 export {
+    // LIST
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
     clearRequestedNavFundsList,
     ofiSetCurrentNavFundsListRequest,
-    getOfiNavFundsListCurrentRequest
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest
 } from './ofi-product';
 
 export interface OfiState {

@@ -7,8 +7,9 @@ export enum NavStatus {
     PENDING = 2
 }
 
-export interface RequestNavListMessageBody extends MemberNodeMessageBody {
+export interface RequestNavMessageBody extends MemberNodeMessageBody {
     token: string;
+    shareId?: number;
     fundName: string;
     navDate: string;
     navDateField: 'navDate'|'navDatePublished';

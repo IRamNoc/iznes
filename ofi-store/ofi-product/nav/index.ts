@@ -25,11 +25,38 @@ export {
     getOfiNavFundsListCurrentRequest
 };
 
+import {
+    OfiNavFundViewState,
+    OfiNavFundViewReducer,
+
+    // Actions
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+
+    // selector
+    getOfiNavFundViewCurrentRequest
+} from './nav-fund-view';
+
+export {
+    // Actions
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+
+    // selector
+    getOfiNavFundViewCurrentRequest
+};
+
 export interface OfiManageNavState {
     ofiNavFundsList: OfiNavFundsListState;
+    ofiNavFundView: OfiNavFundViewState;
 }
 
 export const OfiManageNavReducer: Reducer<OfiManageNavState> = combineReducers<OfiManageNavState>({
     ofiNavFundsList: OfiNavFundsListReducer,
+    ofiNavFundView: OfiNavFundViewReducer
 });
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
-    RequestNavListMessageBody,
+    RequestNavMessageBody,
     UpdateNavMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
@@ -28,12 +28,12 @@ export class OfiNavService {
      * @param ngRedux
      * @param requestData
      */
-    static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
+    static defaultRequestNav(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedNavFundsList());
 
         // Request the list.
-        const asyncTaskPipe = ofiNavService.requestNavList(requestData);
+        const asyncTaskPipe = ofiNavService.requestNav(requestData);
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_NAV_FUNDS_LIST],
@@ -43,10 +43,11 @@ export class OfiNavService {
         ));
     }
 
-    requestNavList(requestData: any): any {
-        const messageBody: RequestNavListMessageBody = {
+    requestNav(requestData: any): any {
+        const messageBody: RequestNavMessageBody = {
             RequestName: 'getNavFundShares',
             token: this.memberSocketService.token,
+            shareId: _.get(requestData, 'shareId', undefined),
             fundName: _.get(requestData, 'fundName', ''),
             navDateField: _.get(requestData, 'navDateField', 'navDate'),
             navDate: _.get(requestData, 'navDate', null)

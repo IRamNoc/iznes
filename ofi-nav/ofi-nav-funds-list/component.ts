@@ -93,7 +93,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             navDate: this.searchForm.value.date
         }
 
-        OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
+        OfiNavService.defaultRequestNav(this.ofiNavService, this.redux, requestData);
     }
 
     /**

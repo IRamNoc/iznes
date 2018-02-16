@@ -19,7 +19,7 @@ export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/
  */
 export {OfiNavModule} from './ofi-nav/module';
 export {OfiNavFundsList} from './ofi-nav/ofi-nav-funds-list/component';
-export {OfiManageNavView} from './ofi-nav/ofi-manage-nav-view-mock/component';
+export {OfiNavFundView} from './ofi-nav/ofi-nav-fund-view/component';
 export {OfiManageNavPopup} from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**

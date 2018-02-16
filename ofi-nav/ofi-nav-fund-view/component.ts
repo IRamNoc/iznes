@@ -34,8 +34,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFund', 'requested']) navRequestedOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFund', 'navFund']) navListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFund']) navListOb: Observable<any>;
 
     constructor(private route: ActivatedRoute,
         private redux: NgRedux<any>,
@@ -68,12 +68,13 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         if(requested) return;
 
         const requestData = {
+            shareId: this.shareId,
             fundName: '',
             navDateField: '',
             navDate: moment().format('DD-MM-YY')
         }
 
-        OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
+        OfiNavService.defaultRequestNav(this.ofiNavService, this.redux, requestData);
     }
 
     /**
@@ -81,8 +82,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @param navList NavList
      * @return void
      */
-    private updateNavFund(fundNav: model.ShareModel): void {
-        this.fundNav = fundNav;
+    private updateNavFund(fundNav: model.ShareModel[]): void {
+        this.fundNav = fundNav[0];
         this.changeDetectorRef.markForCheck();
     }
 

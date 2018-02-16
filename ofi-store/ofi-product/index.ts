@@ -21,11 +21,18 @@ import {
 import {
     OfiManageNavState,
     OfiManageNavReducer,
+    // LIST
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
     clearRequestedNavFundsList,
     ofiSetCurrentNavFundsListRequest,
-    getOfiNavFundsListCurrentRequest
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest
 } from './nav';
 
 export {
@@ -38,12 +45,18 @@ export {
     FundState,
     FundReducer,
     SET_FUND_LIST,
-
+    // LIST
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
     clearRequestedNavFundsList,
     ofiSetCurrentNavFundsListRequest,
-    getOfiNavFundsListCurrentRequest
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest
 };
 
 export interface OfiProductState {
