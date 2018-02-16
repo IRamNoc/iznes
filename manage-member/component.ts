@@ -5,18 +5,11 @@ import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import * as _ from 'lodash';
 import {fromJS} from 'immutable';
-
 // Internal
 import {MemberService} from '@setl/core-req-services';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {
-    setRequestedManageMemberList,
-    clearRequestedManageMemberList,
-    SET_REQUESTED_MANAGE_MEMBER_LIST,
-    SET_MANAGE_MEMBER_LIST
-} from '@setl/core-store';
-import {ConfirmationService} from '@setl/utils';
-import {SagaHelper} from '@setl/utils';
+import {clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList} from '@setl/core-store';
+import {ConfirmationService, SagaHelper} from '@setl/utils';
 import {PersistService} from "@setl/core-persist";
 
 interface NewMemberUserDetail {
@@ -365,28 +358,28 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         <table class="table grid large">
             <tr>
                 <td class="left">Member Name</td>
-                <td class="left">${this.createdNewMemberUser.memberName}</td>
+                <td class="left" id="newMemberName">${this.createdNewMemberUser.memberName}</td>
             </tr>
             <tr>
                 <td class="left">Email Address</td>
-                <td class="left">${this.createdNewMemberUser.emailAddress}</td>
+                <td class="left" id="newMemberEmail">${this.createdNewMemberUser.emailAddress}</td>
             </tr>
             <tr>
                 <td class="left">Username</td>
-                <td class="left">${this.createdNewMemberUser.userName}</td>
+                <td class="left" id="newMemberUsername">${this.createdNewMemberUser.userName}</td>
             </tr>
             <tr>
                 <td class="left">Password</td>
-                <td class="left">${this.createdNewMemberUser.password}</td>
+                <td class="left" id="newMemberPassword">${this.createdNewMemberUser.password}</td>
             </tr>
 
         </table>
                     `);
     }
 
-    acceptedCharacters(str){
+    acceptedCharacters(str) {
         let patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
-        if (!patt.test(str)){
+        if (!patt.test(str)) {
             this.alertsService.create('error', `<table class="table grid">
                         <tbody>
                             <tr class="fadeIn">
@@ -398,7 +391,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                     </table>
                 `);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
