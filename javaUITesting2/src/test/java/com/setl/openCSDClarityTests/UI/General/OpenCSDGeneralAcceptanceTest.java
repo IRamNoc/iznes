@@ -43,9 +43,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    //@Ignore("TG #141 : Awaiting code completion")
+    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldAutosaveInformation() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("investor", "trb2017");
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
         Thread.sleep(2000);
@@ -63,7 +63,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
         //Manually check title is not displayed inside text field
@@ -71,7 +71,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
         //Manually check asterisks are displayed next to title
@@ -79,20 +79,21 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         driver.navigate().refresh();
         checkAlert();
     }
 
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
     }
 
     @Test
+    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
@@ -107,7 +108,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
-        loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToPage("messages");
         assertButtonIsNotPresent("messagesworkflow");
     }
@@ -222,6 +223,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
@@ -254,7 +256,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     @Ignore("Awaiting code completion")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
-        loginAndVerifySuccess(username,password);
+        loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         driver.findElement(By.id("user-tab-1")).click();
