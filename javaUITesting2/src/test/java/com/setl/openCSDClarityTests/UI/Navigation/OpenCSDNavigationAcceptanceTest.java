@@ -97,7 +97,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
-        navigateToPageByID("menu-product-fund");
+
     }
 
     @Test
