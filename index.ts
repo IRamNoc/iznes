@@ -203,6 +203,14 @@ export {
 } from './account';
 
 export {
+    HighlightListState,
+    HighlightListReducer,
+    SET_HIGHLIGHT_LIST,
+    setAppliedHighlight,
+    clearAppliedHighlight,
+} from './highlight';
+
+export {
     // Manage member list Actions
     SET_REQUESTED_MANAGE_MEMBER_LIST,
     setRequestedManageMemberList,
