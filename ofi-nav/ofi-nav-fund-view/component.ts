@@ -9,6 +9,11 @@ import * as moment from 'moment';
 import * as model from '../OfiNav';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import {
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest
+} from '../../ofi-store/ofi-product/nav/nav-fund-view';
+import { clearRequestedNavFundView } from '../../ofi-store/ofi-product/nav/nav-fund-view/actions';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -17,10 +22,7 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 })
 export class OfiNavFundView implements OnInit, OnDestroy {
     
-    fundNav: model.ShareModel;
-    shareId: number;
-
-    nav: model.NavModel = null;
+    navFund: model.NavInfoModel;
 
     currentDate: string = moment().format('DD-MM-YY');
     searchDateFrom = moment().add(-10, 'days');
@@ -34,56 +36,51 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navRequestedOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFund']) navListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navFundRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
 
     constructor(private route: ActivatedRoute,
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiCorpActionService: OfiCorpActionService,
-        private ofiNavService: OfiNavService) {
-        
-        route.params.subscribe((params) => {
-            this.shareId = parseInt(params.shareId);
-        });
+        private ofiNavService: OfiNavService) { 
+
+        this.initSubscriptions();
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.redux.dispatch(clearRequestedNavFundView());
+    }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.navRequestedOb.subscribe(requested => {
-            this.requestFundNav(requested);
+        this.subscriptionsArray.push(this.navFundRequestedOb.subscribe(requested => {
+            this.requestNavFund(requested);
         }));
-        this.subscriptionsArray.push(this.navListOb.subscribe(navList => {
-            this.updateNavFund(navList);
+        this.subscriptionsArray.push(this.navFundOb.subscribe(navFund => {
+            this.updateNavFund(navFund);
         }));
     }
 
     /**
-     * request the nav list
+     * request the nav fund
      * @param requested boolean
      * @return void
      */
-    private requestFundNav(requested: boolean): void {
+    private requestNavFund(requested: boolean): void {
         if(requested) return;
 
-        const requestData = {
-            shareId: this.shareId,
-            fundName: '',
-            navDateField: '',
-            navDate: moment().format('DD-MM-YY')
-        }
+        const requestData = getOfiNavFundViewCurrentRequest(this.redux.getState());
 
-        OfiNavService.defaultRequestNav(this.ofiNavService, this.redux, requestData);
+        OfiNavService.defaultRequestNavFund(this.ofiNavService, this.redux, requestData);
     }
 
     /**
-     * update the nav list
+     * update the nav fund
      * @param navList NavList
      * @return void
      */
-    private updateNavFund(fundNav: model.ShareModel[]): void {
-        this.fundNav = fundNav[0];
+    private updateNavFund(navFund: model.NavInfoModel[]): void {
+        this.navFund = navFund ? navFund[0] : undefined;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -147,18 +144,18 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     addNav(): void {
         this.navPopupMode = model.NavPopupMode.ADD;
-        this.nav.lastValue = this.nav.nav;
+        this.navFund.lastValue = this.navFund.nav;
         
-        const newnavObj = Object.create(this.nav);
-        this.navObj = Object.assign(newnavObj, this.fundNav);
+        const newnavObj = Object.create(this.navFund);
+        this.navObj = Object.assign(newnavObj, this.navFund);
     }
     
     editNav(nav: model.NavModel): void {
         this.navPopupMode = model.NavPopupMode.EDIT;
-        nav.lastValue = this.nav.nav;
+        nav.lastValue = this.navFund.nav;
 
         const newnavObj = Object.create(nav);
-        this.navObj = Object.assign(newnavObj, this.fundNav)
+        this.navObj = Object.assign(newnavObj, this.navFund)
     }
 
     ngOnDestroy() {}

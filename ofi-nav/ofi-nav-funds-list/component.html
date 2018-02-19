@@ -80,7 +80,10 @@
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         {{item.currency}} ({{getCurrency(item.currency)}})
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.nav}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                        <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">N/A</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">

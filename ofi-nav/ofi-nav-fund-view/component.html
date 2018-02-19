@@ -1,7 +1,7 @@
-<div class="header-breadcrumbs" *ngIf="share">
+<div class="header-breadcrumbs" *ngIf="navFund">
     <h1>
         <i class="fa fa-ellipsis-h"></i>
-        <span mltag="txt_netassetvalue">Net asset value</span>: {{share.fundShareName}}
+        <span mltag="txt_netassetvalue">Net asset value</span>: {{navFund.fundShareName}}
     </h1>
 
     <span>View and manage NAV's for a share.</span>
@@ -15,16 +15,16 @@
         </button>
 
         <clr-tab-content *clrIfActive="true">
-            <form *ngIf="share">
+            <form *ngIf="navFund">
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <label class="control-label" for="shareName" mltag="txt_sharename">Share name</label>
-                        <input type="text" id="shareName" name="shareName" value="{{share.fundShareName}}" readonly />
+                        <input type="text" id="shareName" name="shareName" value="{{navFund.fundShareName}}" readonly />
                     </div>
                     
                     <div class="form-group col-sm-3">
                         <label class="control-label" for="isin" mltag="txt_isin">ISIN</label>
-                        <input type="text" id="isin" name="isin" value="{{share.isin}}" readonly />
+                        <input type="text" id="isin" name="isin" value="{{navFund.isin}}" readonly />
                     </div>
                     
                     <div class="form-group col-sm-3">
@@ -39,12 +39,12 @@
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="currentDate" mltag="txt_currentDate">Date</label>
-                        <input type="text" id="currentDate" name="currentDate" [(ngModel)]="share.navDate" readonly />
+                        <input type="text" id="currentDate" name="currentDate" [(ngModel)]="navFund.navDate" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
-                        <input type="text" id="nav" name="nav" value="{{share.nav}}" readonly />
+                        <input type="text" id="nav" name="nav" value="{{navFund.nav}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
@@ -54,12 +54,12 @@
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
-                        <input type="text" id="aum" name="aum" value="TBA readonly" />
+                        <input type="text" id="aum" name="aum" value="TBA" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="navCurrency" mltag="txt_navCurrency">NAV Currency</label>
-                        <input type="text" id="navCurrency" name="navCurrency" value="{{share.currency}}" readonly />
+                        <input type="text" id="navCurrency" name="navCurrency" value="{{navFund.currency}}" readonly />
                     </div>
 
                     <div class="form-group col-sm-2">
@@ -170,7 +170,7 @@
             <form>
                 <div class="row">
                     <div class="form-block form-group col-sm-6">
-                        <a href="/#/product-module/net-asset-value-mock" class="btn btn-primary">Close</a>
+                        <a href="/#/product-module/net-asset-value" class="btn btn-primary">Close</a>
                     </div>
 
                     <div class="col-sm-3 offset-sm-3 export-nav">

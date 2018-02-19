@@ -12,7 +12,10 @@ import * as _ from 'lodash';
 import {
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
-    ofiSetCurrentNavFundsListRequest
+    ofiSetCurrentNavFundsListRequest,
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest
 } from '../../../ofi-store/ofi-product/nav';
 import { error } from 'selenium-webdriver';
 
@@ -29,7 +32,7 @@ export class OfiNavService {
      * @param ngRedux
      * @param requestData
      */
-    static defaultRequestNav(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
+    static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedNavFundsList());
 
@@ -45,7 +48,30 @@ export class OfiNavService {
     }
 
     /**
-     * Default static call to get nav list, and dispatch default actions, and other
+     * Default static call to get nav fund, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultRequestNavFund(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedNavFundView());
+
+        // Request the list.
+        const asyncTaskPipe = ofiNavService.requestNav(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_NAV_FUND_VIEW],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
+     * Default static call to update nav, and dispatch default actions, and other
      * default task.
      *
      * @param ofiNavService

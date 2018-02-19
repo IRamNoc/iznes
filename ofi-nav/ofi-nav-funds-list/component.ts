@@ -13,7 +13,10 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {
     ofiSetCurrentNavFundsListRequest,
     clearRequestedNavFundsList,
-    getOfiNavFundsListCurrentRequest
+    getOfiNavFundsListCurrentRequest,
+    ofiSetCurrentNavFundViewRequest,
+    clearRequestedNavFundView,
+    getOfiNavFundViewCurrentRequest
 } from '../../ofi-store/ofi-product/nav';
 
 @Component({
@@ -71,7 +74,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.searchForm = new FormGroup({
             shareName: new FormControl(''),
             dateType: new FormControl([this.dateTypes[0]]),
-            date: new FormControl('')
+            date: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
         this.searchForm.valueChanges.subscribe(() => {
@@ -90,10 +93,12 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         const requestData = {
             fundName: this.searchForm.value.shareName,
             navDateField: this.searchForm.value.dateType[0].id,
-            navDate: this.searchForm.value.date
+            navDate: `${this.searchForm.value.date} 00:00:00`
         }
 
-        OfiNavService.defaultRequestNav(this.ofiNavService, this.redux, requestData);
+        OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
+
+        this.redux.dispatch(ofiSetCurrentNavFundsListRequest(requestData));
     }
 
     /**
@@ -137,12 +142,21 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         
         return currencyIcon;
     }
+
+    isNavNull(nav: number): boolean {
+        return nav == null;
+    }
     
     addNav(share: model.NavInfoModel): void {
         this.addNavShare = share;
     }
 
     navigateToShare(shareId: number): void {
+        const navFundViewRequest: any = getOfiNavFundsListCurrentRequest(this.redux.getState());
+        navFundViewRequest.shareId = shareId;
+
+        this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
+
         this.router.navigateByUrl(`product-module/net-asset-value/${shareId}`);
     }
 
