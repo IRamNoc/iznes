@@ -19,22 +19,18 @@
             <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)"
                   [class.error]="!loginForm.valid && loginForm.touched">
 
-
                 <div class="form-group">
                     <input id="username-field" type="text" name="username" placeholder="User name" class="form-control"
                            formControlName="username"
                            [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
                            autofocus mltag="txt_username">
-
-
                 </div>
+
                 <div class="form-group">
                     <input id="password-field" name="password" type="password" class="form-control"
                            placeholder="Password" formControlName="password"
                            [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
                            mltag="txt_password">
-
-
                 </div>
 
                 <div class="form-group">
@@ -46,7 +42,6 @@
 
                 <div *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
                      class="alert-items">
-
 
                     <div class="alert alert-danger">
                         <div class="alert-items">
@@ -61,7 +56,6 @@
                 <div *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
                      class="alert-items">
 
-
                     <div class="alert alert-danger">
                         <div class="alert-items">
                             <div class="alert-item static">
@@ -69,17 +63,15 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </form>
 
             <p class="mt-1">
                 <span class="ml"><a id="forgotten-password-link" [ngStyle]="{'cursor':'pointer'}"
                                     (click)="showFPModal()" mltag="txt_forgotyourpassword">
-                        Forgot your password?</a></span>
+                        Forgot your password?
+                    </a></span>
             </p>
-
         </div>
 
         <p>
@@ -93,7 +85,8 @@
 <!--CUSTOM TEXT MODALS-->
 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
     <h3 class="modal-title" *ngIf="(!emailSent || isTokenExpired) && !changePassword" mltag="txt_forgottenpassword">
-        Forgotten password?</h3>
+        Forgotten password?
+    </h3>
     <h3 class="modal-title" *ngIf="emailSent && !changePassword" mltag="txt_emailsent">Email sent</h3>
     <h3 class="modal-title" *ngIf="changePassword" mltag="txt_changeyourpassword">Change your password</h3>
     <div class="modal-body text-center" *ngIf="!emailSent && !changePassword">
@@ -101,7 +94,8 @@
             <span class="text-danger" mltag="txt_thislinkhasexpired">This link has expired!</span>
             <p><i class="fa fa-exclamation fa-5x text-danger" aria-hidden="true"></i></p>
             <p mltag="txt_pleaseretypeyouremailaddressto923aeb5a06">Please retype your email address to change your
-                password.</p>
+                password.
+            </p>
         </div>
         <ng-template #notExpired>
             <p mltag="txt_pleaseenteryouremailaddress">Please enter your email address.</p>
@@ -116,36 +110,42 @@
                     <div [ngStyle]="{'height':'24px'}"
                          *ngIf="forgottenPasswordForm.controls.email.valid || forgottenPasswordForm.controls.email.pristine">
                     </div>
+
                     <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.dirty"
                          class="text-danger" mltag="txt_thisfieldisrequired">
                         This field is required
                     </div>
+
                     <div *ngIf="!forgottenPasswordForm.controls.email.valid && !forgottenPasswordForm.controls.email.hasError('required')"
                          class="text-danger" mltag="txt_emailnotvalid">
                         Email not valid!
                     </div>
                 </div>
+
                 <div class="text-center">
                     <small mltag="txt_ifyouclicksendanemailwillbesenb5646984c0">If you click Send, an email will be sent
                         to this address.
                     </small>
                 </div>
+
                 <div class="text-center mt-1">
                     <button id="fp-cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeFPModal()">
                         <span mltag="txt_cancel">Cancel</span>
                     </button>
+                    
                     <button id="fp-submit-sendemail-button" type="submit" class="btn btn-success"
                             [disabled]="!forgottenPasswordForm.valid">
-
                         <span mltag="txt_send">Send</span>
                     </button>
                 </div>
             </section>
         </form>
     </div>
+
     <div class="modal-body text-center" *ngIf="emailSent && !changePassword">
         <p><span mltag="txt_anemailhasbeensenttotheemailade85cadbb5a">An email has been sent to the email address</span>:<br><b
-                [ngStyle]="{'color':'#62a420'}">{{emailUser}}</b></p>
+                [ngStyle]="{'color':'#62a420'}">
+            {{emailUser}}</b></p>
         <br>
         <i class="fa fa-paper-plane-o fa-5x" aria-hidden="true"></i>
         <br><br>This pop-up will automatically close in {{countdown}} seconds.
@@ -156,6 +156,7 @@
         </button>
         <br><br>
     </div>
+    
     <div class="modal-body text-center" *ngIf="changePassword">
         <p mltag="txt_pleasetypeapassword">Please type a password</p>
         <br>
@@ -169,21 +170,26 @@
                                class="form-control" formControlName="password" size="45" placeholder="New password"
                                mltag="txt_newpassword">
 
+
                         <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;"
                               (click)="toggleShowPasswords(1)" title="Show/hide passwords">
+
                             <i class="fa fa-eye-slash" aria-hidden="true">
                             </i></span>
                     </div>
                     <div [ngStyle]="{'height':'24px'}"
                          *ngIf="changePasswordForm.controls.password.valid || changePasswordForm.controls.password.pristine">
+
                     </div>
                     <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty"
                          class="text-danger" mltag="txt_passwordisrequired">
                         Password is required
+
                     </div>
                     <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched"
                          class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
                         Your password must be at least 6 characters
+
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -195,33 +201,40 @@
 
                         <span style="margin-top: -45px !important; position: absolute; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;"
                               (click)="toggleShowPasswords(2)" title="Show/hide passwords">
+
                             <i class="fa fa-eye-slash" aria-hidden="true">
                             </i></span>
                     </div>
                     <div [ngStyle]="{'height':'24px'}"
                          *ngIf="changePasswordForm.controls.passwordConfirm.valid || changePasswordForm.controls.passwordConfirm.pristine">
+
                     </div>
                     <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
                          class="text-danger" mltag="txt_confirmationisrequired">
                         Confirmation is required
+
                     </div>
                     <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
                          class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
                         Your password must be at least 6 characters
+
                     </div>
                     <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
                          class="text-danger" mltag="txt_passworddoesnotmatch">
                         Password does not match
+
                     </div>
                 </div>
                 <div class="text-center mt-1">
                     <button id="fp-newpassword-cancel-button" class="btn btn-info" type="button"
                             (click)="closeFPModal()">
 
+
                         <span mltag="txt_cancel">Cancel</span>
                     </button>
                     <button id="fp-newpassword-submit-button" type="submit" class="btn btn-success"
                             [disabled]="!changePasswordForm.valid">
+
 
                         <span mltag="txt_validate">Validate</span>
                     </button>
