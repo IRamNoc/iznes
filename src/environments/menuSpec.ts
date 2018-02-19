@@ -314,7 +314,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_invite_investors',
                     icon_class: '',
                     element_id: 'top-menu-invite-investors',
-                    router_link: ''
+                    router_link: '/invite-investors'
                 },
                 {
                     label: 'Add an AM',
