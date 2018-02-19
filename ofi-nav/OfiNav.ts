@@ -4,13 +4,13 @@ export enum NavPopupMode {
 }
 
 export class ShareModel {
-    name: string;
-    ISIN: number;
-    ASM?: string;
+    fundShareName: string;
+    isin: number;
+    asm?: string;
 }
 
 export class NavModel {
-    value: number;
+    nav: number;
     lastValue?: number;
     currency: string;
     date: string;

@@ -14,6 +14,7 @@ import {
     setRequestedNavFundsList,
     ofiSetCurrentNavFundsListRequest
 } from '../../../ofi-store/ofi-product/nav';
+import { error } from 'selenium-webdriver';
 
 @Injectable()
 export class OfiNavService {
@@ -40,6 +41,33 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {}
+        ));
+    }
+
+    /**
+     * Default static call to get nav list, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultUpdateNav(ofiNavService: OfiNavService,
+        ngRedux: NgRedux<any>,
+        requestData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+            
+        // Create the request.
+        const asyncTaskPipe = ofiNavService.updateNav(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            successCallback,
+            errorCallback
         ));
     }
 

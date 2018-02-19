@@ -147,7 +147,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     addNav(): void {
         this.navPopupMode = model.NavPopupMode.ADD;
-        this.nav.lastValue = this.nav.value;
+        this.nav.lastValue = this.nav.nav;
         
         const newnavObj = Object.create(this.nav);
         this.navObj = Object.assign(newnavObj, this.fundNav);
@@ -155,7 +155,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     
     editNav(nav: model.NavModel): void {
         this.navPopupMode = model.NavPopupMode.EDIT;
-        nav.lastValue = this.nav.value;
+        nav.lastValue = this.nav.nav;
 
         const newnavObj = Object.create(nav);
         this.navObj = Object.assign(newnavObj, this.fundNav)

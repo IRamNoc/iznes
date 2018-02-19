@@ -50,10 +50,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         private ofiCorpActionService: OfiCorpActionService,
         private ofiNavService: OfiNavService) {
         
+        this.initSubscriptions();
         this.initDataTypes();
         this.initSearchForm();
         this.clearRequestedList();
-        this.initSubscriptions();
     }
         
     ngOnInit() { }
@@ -89,7 +89,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         const requestData = {
             fundName: this.searchForm.value.shareName,
-            navDateField: this.searchForm.value.dateType,
+            navDateField: this.searchForm.value.dateType[0].id,
             navDate: this.searchForm.value.date
         }
 

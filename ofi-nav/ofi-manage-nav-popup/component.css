@@ -4,3 +4,8 @@
 :host form .form-group input[readonly] {
     background: #EEE !important;
 }
+
+:host .modal-body {
+    overflow-x: visible;
+    overflow-y: visible;
+}
