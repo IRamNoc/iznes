@@ -1,11 +1,9 @@
+<toaster-container></toaster-container>
+
 <div class="login-container">
     <div>
         <div class="logo-wrap">
             <img id="{{appConfig.logoID}}" src="{{appConfig.logoUrl}}">
-        </div>
-
-        <div *ngIf="changedPassword" class="changedPasswordSuccess mt-2">
-            <b mltag="txt_yourpasswordhasbeenchanged">Your password has been changed!</b>
         </div>
 
         <div class="login-inner-wrapper">
@@ -132,7 +130,7 @@
                     <button id="fp-cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeFPModal()">
                         <span mltag="txt_cancel">Cancel</span>
                     </button>
-                    
+
                     <button id="fp-submit-sendemail-button" type="submit" class="btn btn-success"
                             [disabled]="!forgottenPasswordForm.valid">
                         <span mltag="txt_send">Send</span>
@@ -156,7 +154,7 @@
         </button>
         <br><br>
     </div>
-    
+
     <div class="modal-body text-center" *ngIf="changePassword">
         <p mltag="txt_pleasetypeapassword">Please type a password</p>
         <br>
