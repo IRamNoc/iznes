@@ -28,7 +28,7 @@ import {
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
     OfiNavFundsList,
-    OfiManageNavView,
+    OfiNavFundView,
     OfiPnlReportComponent,
     OfiTaxReportComponent
 } from '@ofi/ofi-main';
@@ -189,8 +189,8 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'net-asset-value-view-mock',
-                        component: OfiManageNavView,
+                        path: 'net-asset-value/:shareId',
+                        component: OfiNavFundView,
                         canActivate: [LoginGuardService],
                     }
                 ]
