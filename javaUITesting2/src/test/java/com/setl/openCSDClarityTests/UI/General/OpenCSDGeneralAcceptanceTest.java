@@ -22,6 +22,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -287,7 +288,35 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("fp-email-field")).sendKeys("user1@setl.io");
         driver.findElement(By.id("fp-submit-sendemail-button")).click();
         //Manually assert that email has been received
+    }
 
+    @Test
+    public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        driver.findElement(By.id("dropdown-user")).click();
+        try {
+            driver.findElement(By.id("top-menu-invite-investors")).click();
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
+    }
+
+    @Test
+    @Ignore("Awaiting code completion")
+    public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
+        loginAndVerifySuccessAdmin("investor", "trb2017");
+        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
+        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
+        try {
+            driver.findElement(By.id("btnKycSubmit")).click();
+        }catch (Exception e){
+            fail("FAILED : " +e.getMessage());
+        }
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement KYCPopups = wait.until(elementToBeClickable(By.id("addInfo-ok-button")));
+        WebElement KYCPopup = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-my-informations/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3"));
+        assertTrue(KYCPopup.getText().equals("MY INFORMATION"));
+        KYCPopups.click();
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
@@ -341,8 +370,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
         navigateToPageByID("menu-messages");
         String subjectMessage = driver.findElement(By.id("message_list_subject_0_0")).getText();
-        System.out.println(subjectMessage);
-        System.out.println(subject);
+        System.out.println(subjectMessage + subject);
         assertTrue(subjectMessage.equals(subject));
     }
 
