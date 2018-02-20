@@ -189,7 +189,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'net-asset-value/:shareId',
+                        path: 'nav-fund-view',
                         component: OfiNavFundView,
                         canActivate: [LoginGuardService],
                     }
