@@ -76,6 +76,14 @@ export {
     OfiManageCsvComponent
 } from './ofi-report-module';
 
+/*
+ * Profile module
+ */
+export {
+    OfiProfileMyInformationsComponent,
+} from './ofi-profile/profile-my-informations/component';
+
+
 /**
  * Ofi main module
  */

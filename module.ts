@@ -10,6 +10,7 @@ import {OfiRequestServicesModule} from './ofi-req-services/module';
 import {OfiCorpActionsModule} from './ofi-corp-actions/ofi-corp-actions.module';
 import {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 import {OfiPostTxService} from './ofi-post-tx/service';
+import {OfiProfileModule} from './ofi-profile/module';
 import {OfiNavModule} from './ofi-nav/module';
 import {OfiReportModule} from './ofi-report-module';
 import {OfiAmDashboardModule} from './ofi-am-dashboard/module';
@@ -25,6 +26,7 @@ import {MultilingualModule} from '@setl/multilingual';
         OfiCorpActionsModule,
         OfiRequestServicesModule,
         OfiOrdersModule,
+        OfiProfileModule,
         OfiNavModule,
         OfiReportModule,
         OfiAmDashboardModule,

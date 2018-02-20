@@ -1,0 +1,9 @@
+<app-my-informations
+    [icon]="'fa-user'"
+    [header]="'My informations: ' + userInfo.firstName + ' ' + userInfo.lastName"
+    [subTitle]="'Here are the data concerning me on ' + appConfig.platform"
+    [userInfo]="kycMyInformations"
+    [viewMode]="'POPUP'"
+    (onSubmit)="saveUserInformations($event)"
+    (onClose)="closeUserInformations()"
+></app-my-informations>

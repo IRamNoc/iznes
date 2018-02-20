@@ -165,5 +165,29 @@
 </div>
 
 <div *ngIf="!hasFilledAdditionnalInfos && myDetails.userType === 46">
-    <app-my-informations></app-my-informations>
+    <app-my-informations
+        [icon]="'fa-unlock'"
+        [header]="'Welcome to ' + appConfig.platform"
+        [subTitle]="'Please provide a bit information:'"
+        [viewMode]="'PAGE'"
+        [userInfo]="kycMyInformations"
+        (onSubmit)="openMyInformationsModal($event)"
+    ></app-my-informations>
+
+    <!--CUSTOM TEXT MODALS-->
+    <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+        <h3 class="modal-title">MY INFORMATION</h3>
+        <div class="modal-body text-center">
+            <p>
+                These information will be saved in <b>"Profile"</b> (above), in <b>"My information"</b>
+                <br>
+                It is located at the top right of each page, in the top menu bar.
+            </p>
+            <br>
+            <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">
+                <span>OK, I understand</span>
+            </button>
+            <br>
+        </div>
+    </clr-modal>
 </div>
