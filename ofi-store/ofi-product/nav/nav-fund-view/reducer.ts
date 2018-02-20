@@ -72,7 +72,8 @@ function handleSetOfiNavFundView(state: OfiNavFundViewState, action: Action): Of
                 currency: currency,
                 nav: item.get('nav', 0),
                 navDate: item.get('navDate', ''),
-                status: item.get('status', 0)
+                status: item.get('status', 0),
+                asm: item.get('asm', '')
             });
             return result;
         }, []);

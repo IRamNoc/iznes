@@ -7,6 +7,7 @@ export interface NavDetail {
     nav: number;
     navDate: string;
     status: number;
+    asm: string;
 }
 
 export interface CurrentRequest {

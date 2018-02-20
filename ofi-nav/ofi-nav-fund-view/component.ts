@@ -25,14 +25,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     navFund: model.NavInfoModel;
 
     currentDate: string = moment().format('DD-MM-YY');
-    searchDateFrom = moment().add(-10, 'days');
+    searchDateFrom = moment().add(-1, 'weeks');
     searchDateTo = moment().add(-1, 'days');
 
     navPopupMode: model.NavPopupMode = model.NavPopupMode.EDIT;
     navObj: model.NavInfoModel = null;
-
-    // mock
-    exportOptions: any[];
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -82,64 +79,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private updateNavFund(navFund: model.NavInfoModel[]): void {
         this.navFund = navFund ? navFund[0] : undefined;
         this.changeDetectorRef.markForCheck();
-    }
-
-    // mock data
-    private generateMockData(): void {
-        // this.share = {
-        //     name: "Mock Share 1",
-        //     ISIN: 1000001,
-        //     ASM: 'Assets & Son.'
-        // }
-
-        // this.nav = {
-        //     value: 0.324234234324,
-        //     currency: 'GBP',
-        //     date: moment().format('DD-MM-YY'),
-        //     pubDate: moment().format('DD-MM-YY'),
-        //     status: 'Estimated',
-        //     aum: 1000,
-        //     units: 500
-        // }
-
-        // this.mockDataGridItems = [];
-
-        // for(let i = 1; i < 11; i++) {
-        //     this.mockDataGridItems.push(this.getGridDataItem(i));
-        // }
-
-        // this.mockDatePeriodItems = [{
-        //     id: '3',
-        //     text: 'last 3 days'
-        // }, {
-        //     id: '7',
-        //     text: 'last 7 days'
-        // }, {
-        //     id: '14',
-        //     text: 'last 14 days'
-        // }, {
-        //     id: '30',
-        //     text: 'last 30 days'
-        // }, {
-        //     id: '60',
-        //     text: 'last 60 days'
-        // }]
-
-        this.exportOptions = [{
-            id: 'csv',
-            text: 'CSV'
-        }];
-    }
-
-    private getGridDataItem(num: number): model.NavModel {
-        // return {
-        //     value: Math.random(),
-        //     currency: 'GBP',
-        //     date: moment().add(-num, 'day').format('DD-MM-YY'),
-        //     pubDate: moment().add(-num, 'day').format('DD-MM-YY'),
-        //     status: 'Estimated'
-        // }
-        return
     }
 
     addNav(): void {
