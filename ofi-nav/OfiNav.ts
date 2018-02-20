@@ -4,6 +4,7 @@ export enum NavPopupMode {
 }
 
 export class ShareModel {
+    shareId: number;
     fundShareName: string;
     isin: number;
     asm?: string;
@@ -18,6 +19,14 @@ export class NavModel {
     status: string;
     aum?: number;
     units?: number;
+}
+
+export class NavFundHistoryItem {
+    shareId: number;
+    currency: string;
+    nav: number;
+    navDate: string;
+    status: number;
 }
 
 export interface NavInfoModel extends ShareModel, NavModel {}

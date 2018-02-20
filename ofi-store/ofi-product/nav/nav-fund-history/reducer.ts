@@ -20,7 +20,7 @@ const initialState: OfiNavFundHistoryState = {
         navDateFrom: '',
         navDateTo: ''
     },
-    requested: true
+    requested: false
 };
 
 /**

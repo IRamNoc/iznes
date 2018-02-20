@@ -73,53 +73,48 @@
             <div class="hr-line-dashed"></div>
             <span class="text-badge">NAV History</span>
 
-            <form>
+            <form [formGroup]="navHistoryForm">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-3">
-                            <label class="control-label" for="searchDateFrom" mltag="txt_datefrom">Date From</label>
+                            <label class="control-label" for="navDateFrom" mltag="txt_datefrom">Date From</label>
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
-                                <input id="searchDateFrom" name="searchDateFrom" placeholder="Select date" mltag="txt_selectdate"
-                                    [(ngModel)]="searchDateFrom"
-                                    [dpDayPicker]="dateConfig"
+                                <input id="navDateFrom" name="navDateFrom" placeholder="Select date" mltag="txt_selectdate"
+                                    formControlName="navDateFrom"
+                                    [dpDayPicker]="dateFromConfig"
                                     mode="day"
                                     theme="dp-material" />
                             </div>
                         </div>
 
                         <div class="form-group col-sm-3">
-                            <label class="control-label" for="searchDateTo" mltag="txt_dateto">Date To</label>
+                            <label class="control-label" for="navDateTo" mltag="txt_dateto">Date To</label>
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
-                                <input id="searchDateTo" name="searchDateTo" placeholder="Select date" mltag="txt_selectdate"
-                                    [(ngModel)]="searchDateTo"
-                                    [dpDayPicker]="dateConfig"
+                                <input id="navDateTo" name="navDateTo" placeholder="Select date" mltag="txt_selectdate"
+                                    formControlName="navDateTo"
+                                    [dpDayPicker]="dateToConfig"
                                     mode="day"
                                     theme="dp-material" />
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-1 text-center">
+                        <!-- <div class="form-group col-sm-1 text-center">
                             <label class="control-label">&nbsp;</label>
                             <div><strong>- or -</strong></div>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group col-sm-3">
+                        <!-- <div class="form-group col-sm-3">
                             <label class="control-label" for="searchDatePeriod" mltag="txt_dateperiod">Date Period</label>
                             <ng-select id="searchDatePeriod"
                                 class="fluid-width"
-                                [items]="mockDatePeriodItems"
+                                [items]="datePeriodItems"
                                 [allowClear]="true"
                                 placeholder="Select date period"
                                 mltag="txt_selectdateperiod">
                             </ng-select>
-                        </div>
-
-                        <div class="form-group col-sm-2">
-                            <label class="control-label">&nbsp;</label>
-                            <button class="btn btn-primary">Filter History</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </form>
@@ -132,10 +127,10 @@
                     <span mltag="txt_navpubdate">NAV Publication Date</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_nav">NAV</span>
+                    <span mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navccy">NAV CCY</span>
+                    <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_status">Status</span>
@@ -144,11 +139,16 @@
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
-                    <clr-dg-cell>{{item.date}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.pubDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.value}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.currency}}</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index">
+                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell>N/A</clr-dg-cell>
+                    <clr-dg-cell>
+                        {{item.currency}} ({{getCurrency(item.currency)}})
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
                     <clr-dg-cell>{{item.status}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
