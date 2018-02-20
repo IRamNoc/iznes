@@ -24,6 +24,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 /* Core services*/
 import {
+    CommonRequestService,
     AccountsService,
     ChainService,
     ChannelService,
@@ -146,6 +147,7 @@ export function memberSocketServiceFactory() {
             useValue: environment
         },
 
+        CommonRequestService,
         WalletNodeSocketService,
         MyUserService,
         MyWalletsService,
