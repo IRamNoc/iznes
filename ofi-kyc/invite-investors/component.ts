@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
+import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import {immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-invite-investors',
@@ -20,12 +22,22 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
 
     private subscriptions: Array<any> = [];
 
+    /**
+     * Check whether we have multiple invites
+     * Use to render the send invite button
+     * @return {boolean}
+     */
+    get hasMultipleInvites(): boolean {
+        const invitesControl: FormArray = <FormArray> this.invitationForm.controls['investors'];
+        const numInvites: number = invitesControl.length;
+        return (numInvites > 1);
+    }
+
     /* Constructor. */
-    constructor(
-        private _fb: FormBuilder,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _location: Location
-    ) {
+    constructor(private _fb: FormBuilder,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private _location: Location,
+                private _ofiKycService: OfiKycService) {
         this.invitationForm = this._fb.group({
             investors: this._fb.array([])
         });
@@ -61,25 +73,38 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
         control.removeAt(i);
     }
 
-    save(formValues) {
+    /**
+     * Send out invitation(s)
+     * @param formValues
+     */
+    save(formValues): void {
         for (const inv of formValues.investors) {
             if (this.emailList.indexOf(inv.email) === -1) {
                 this.emailList.push(inv.email);
             }
         }
-        this.resetForm(formValues);
-        this.emailSent = true;
-        this.showModal = true;
-        const intervalCountdown = setInterval(() => {
-            this.countdown--;
-            this.markForCheck();
-        }, 1000);
 
-        setTimeout(() => {
-            clearInterval(intervalCountdown);
-            this.closeModal();
-            this.markForCheck();
-        }, 5000);
+        // make the request
+        const requestData = constructInvitationRequest(formValues);
+        this._ofiKycService.sendInvestInvitations(requestData).then(() => {
+            // success call back
+            this.resetForm(formValues);
+            this.emailSent = true;
+            this.showModal = true;
+            const intervalCountdown = setInterval(() => {
+                this.countdown--;
+                this.markForCheck();
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(intervalCountdown);
+                this.closeModal();
+                this.markForCheck();
+            }, 5000);
+        }, () => {
+            // fail call back
+            // todo
+        });
     }
 
     resetForm(formObj) {
@@ -114,4 +139,21 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
     markForCheck() {
         this._changeDetectorRef.markForCheck();
     }
+}
+
+/**
+ * construct invitation request with form value.
+ */
+function constructInvitationRequest(formValue) {
+    const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
+        result.push({email: item.get('email', ''), firstname: item.get('firstName', ''), lastname: item.get('lastName', '')});
+        return result;
+    }, []);
+
+    return {
+        assetManagerName: 'OFI',
+        amCompanyName: 'OFI Am Management',
+        investors,
+        lang: 'fr'
+    };
 }

@@ -67,7 +67,7 @@
                     <span mltag="txt_close">Close</span>
                 </button>
                 <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
-                    <i class="fa fa-save"></i> <span>Send email invitation</span>
+                    <i class="fa fa-save"></i> <span *ngIf="!hasMultipleInvites">Send email invitation</span><span *ngIf="hasMultipleInvites">Send email invitations</span>
                 </button>
             </div>
         </section>
