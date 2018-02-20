@@ -11,16 +11,19 @@ export interface KycMyInformationsState {
 }
 
 const initialState = {
-    email: 'tossanmusic@gmail.com',
-    firstName: 'toto',
-    lastName: 'titi',
-    invitedBy: 'tutu',
-    companyName: 'turlututu',
-    phoneCode: '+33',
-    phoneNumber: '123456',
+    email: '',
+    firstName: '',
+    lastName: '',
+    invitedBy: '',
+    companyName: '',
+    phoneCode: '',
+    phoneNumber: '',
 };
 
-export function KycMyInformationsReducer(state: KycMyInformationsState = initialState, action: KycMyInformationsAction): KycMyInformationsState {
+export function KycMyInformationsReducer(
+    state: KycMyInformationsState = initialState,
+    action: KycMyInformationsAction
+): KycMyInformationsState {
     switch (action.type) {
         case SET_INFORMATIONS:
             return {
