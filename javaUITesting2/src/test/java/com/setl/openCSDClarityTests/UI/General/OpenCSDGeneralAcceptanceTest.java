@@ -227,6 +227,7 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
         try {
+            Thread.sleep(5000);
             logout();
         } catch (Error e) {
             fail("logout button was not clickable");
