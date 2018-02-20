@@ -31,6 +31,10 @@ import {
  Ofi Orders
  */
 import {OfiOrdersReducer, OfiOrdersState} from "./ofi-orders";
+/*
+ Ofi My Informations
+ */
+import {KycReducer, KycState} from './ofi-kyc';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -118,6 +122,7 @@ export interface OfiState {
     ofiProduct: OfiProductState;
     ofiOrders: OfiOrdersState;
     ofiClientTx: OfiClientTxState;
+    ofiKyc: KycState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -126,4 +131,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiProduct: OfiProductReducer,
     ofiOrders: OfiOrdersReducer,
     ofiClientTx: OfiClientTxReducer,
+    ofiKyc: KycReducer,
 });
