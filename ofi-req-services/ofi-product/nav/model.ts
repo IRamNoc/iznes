@@ -17,6 +17,13 @@ export interface RequestNavMessageBody extends MemberNodeMessageBody {
     pageSize?: number;
 }
 
+export interface RequestNavFundHistoryMessageBody extends MemberNodeMessageBody {
+    token: string;
+    shareId: number;
+    navDateFrom: string;
+    navDateTo: string;
+}
+
 export interface UpdateNavMessageBody extends MemberNodeMessageBody {
     token: string;
     fundName: string;

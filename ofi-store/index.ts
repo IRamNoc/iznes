@@ -116,7 +116,13 @@ export {
     setRequestedNavFundView,
     clearRequestedNavFundView,
     ofiSetCurrentNavFundViewRequest,
-    getOfiNavFundViewCurrentRequest
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest
 } from './ofi-product';
 
 export interface OfiState {

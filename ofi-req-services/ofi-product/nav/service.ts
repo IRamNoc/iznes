@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
     RequestNavMessageBody,
+    RequestNavFundHistoryMessageBody,
     UpdateNavMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
@@ -15,7 +16,10 @@ import {
     ofiSetCurrentNavFundsListRequest,
     SET_NAV_FUND_VIEW,
     setRequestedNavFundView,
-    ofiSetCurrentNavFundViewRequest
+    ofiSetCurrentNavFundViewRequest,
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest
 } from '../../../ofi-store/ofi-product/nav';
 import { error } from 'selenium-webdriver';
 
@@ -71,6 +75,29 @@ export class OfiNavService {
     }
 
     /**
+     * Default static call to get nav fund, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultRequestNavHistory(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
+        // Set the state flag to true. so we do not request it again.
+        // ngRedux.dispatch(setRequestedNavFundView());
+
+        // Request the list.
+        const asyncTaskPipe = ofiNavService.requestNavFundHistory(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_NAV_FUND_HISTORY],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
      * Default static call to update nav, and dispatch default actions, and other
      * default task.
      *
@@ -105,6 +132,18 @@ export class OfiNavService {
             fundName: _.get(requestData, 'fundName', ''),
             navDateField: _.get(requestData, 'navDateField', 'navDate'),
             navDate: _.get(requestData, 'navDate', null)
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestNavFundHistory(requestData: any): any {
+        const messageBody: RequestNavFundHistoryMessageBody = {
+            RequestName: 'getNavFundHistory',
+            token: this.memberSocketService.token,
+            shareId: _.get(requestData, 'shareId', undefined),
+            navDateFrom: _.get(requestData, 'navDateFrom', null),
+            navDateTo: _.get(requestData, 'navDateTo', null)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

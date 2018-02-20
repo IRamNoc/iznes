@@ -22,6 +22,7 @@ import { clearRequestedNavFundView } from '../../ofi-store/ofi-product/nav/nav-f
 export class OfiNavFundView implements OnInit, OnDestroy {
     
     navFund: model.NavInfoModel;
+    navFundHistory: any;
 
     currentDate: string = moment().format('DD-MM-YY');
     searchDateFrom = moment().add(-1, 'weeks');
@@ -78,6 +79,38 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.navFund = navFund ? navFund[0] : undefined;
         this.changeDetectorRef.markForCheck();
     }
+
+
+    /**
+     * request the nav history for fund
+     * @param requested boolean
+     * @return void
+     */
+    private requestNavHistory(requested: boolean): void {
+        if(requested) return;
+
+        const requestData = {
+        //     fundName: this.searchForm.value.shareName,
+        //     navDateField: this.searchForm.value.dateType[0].id,
+        //     navDate: `${this.searchForm.value.date} 00:00:00`
+        }
+
+        OfiNavService.defaultRequestNavHistory(this.ofiNavService, this.redux, requestData);
+
+        // this.redux.dispatch(ofiSetCurrentNavFundsListRequest(requestData));
+    }
+
+    /**
+     * update the nav history for fund
+     * @param navFundHistory NavFundHistoryItem
+     * @return void
+     */
+    private updateNavFundHistory(navFundHistory: any): void {
+        this.navFundHistory = navFundHistory;
+        this.changeDetectorRef.markForCheck();
+    }
+
+
 
     addNav(): void {
         this.navPopupMode = model.NavPopupMode.ADD;

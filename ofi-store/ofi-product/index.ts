@@ -32,7 +32,13 @@ import {
     setRequestedNavFundView,
     clearRequestedNavFundView,
     ofiSetCurrentNavFundViewRequest,
-    getOfiNavFundViewCurrentRequest
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest
 } from './nav';
 
 export {
@@ -56,7 +62,13 @@ export {
     setRequestedNavFundView,
     clearRequestedNavFundView,
     ofiSetCurrentNavFundViewRequest,
-    getOfiNavFundViewCurrentRequest
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest
 };
 
 export interface OfiProductState {

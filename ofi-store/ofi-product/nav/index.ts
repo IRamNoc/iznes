@@ -50,13 +50,40 @@ export {
     getOfiNavFundViewCurrentRequest
 };
 
+import {
+    OfiNavFundHistoryState,
+    OfiNavFundHistoryReducer,
+
+    // Actions
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+
+    // selector
+    getOfiNavFundHistoryCurrentRequest
+} from './nav-fund-history';
+
+export {
+    // Actions
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+
+    // selector
+    getOfiNavFundHistoryCurrentRequest
+};
+
 export interface OfiManageNavState {
     ofiNavFundsList: OfiNavFundsListState;
     ofiNavFundView: OfiNavFundViewState;
+    ofiNavFundHistory: OfiNavFundHistoryState;
 }
 
 export const OfiManageNavReducer: Reducer<OfiManageNavState> = combineReducers<OfiManageNavState>({
     ofiNavFundsList: OfiNavFundsListReducer,
-    ofiNavFundView: OfiNavFundViewReducer
+    ofiNavFundView: OfiNavFundViewReducer,
+    ofiNavFundHistory: OfiNavFundHistoryReducer
 });
 
