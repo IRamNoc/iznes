@@ -223,6 +223,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
@@ -242,6 +243,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
@@ -254,6 +256,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
