@@ -63,6 +63,37 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
 }
 
 /**
+ * Create common member request helper.
+ *
+ * @param thisConnection
+ * @param messageBody
+ * @return {{pipe: any[]}}
+ */
+export function createMemberNodeRequest(thisConnection, messageBody: MemberNodeMessageBody): any {
+    const request: MemberNodeRequest = {
+        MessageType: 'DataRequest',
+        MessageHeader: '',
+        RequestID: 0, // RequestID in here is just legacy support. that is why the RequestID is 0.
+        MessageBody: messageBody
+    };
+
+    return new Promise((resolve, reject) => {
+        thisConnection.sendRequest(request, (messageId, data, userData) => {
+            const status = _.get(data, 'Status', 'Fail');
+            console.log('membernode response: ', data);
+            // status is ok -> success.
+            if (status === 'OK') {
+                // success
+                resolve([messageId, data, userData]);
+            } else {
+                // fail
+                reject([messageId, data, userData]);
+            }
+        });
+    });
+}
+
+/**
  * Wallet node request
  */
 export interface WalletNodeMessageBody {
