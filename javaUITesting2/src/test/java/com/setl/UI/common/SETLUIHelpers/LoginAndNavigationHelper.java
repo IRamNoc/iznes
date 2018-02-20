@@ -176,22 +176,21 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed();
+        driver.findElement(By.id("menu-account-module")).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
     }
 
     public static void logout() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             driver.findElement(By.id("dropdown-settings")).click();
         }catch (Exception e){
             fail("Logout button not available " + e.getMessage());
         }
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
         wait.until(visibilityOf(logOff));
-        Thread.sleep(5000);
         try {
             driver.findElement(By.id("dropdown-btn-logout")).click();
         }catch (Exception e){

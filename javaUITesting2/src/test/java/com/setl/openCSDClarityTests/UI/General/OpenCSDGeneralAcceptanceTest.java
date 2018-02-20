@@ -23,6 +23,7 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAdd
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -44,19 +45,18 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldAutosaveInformation() throws IOException, InterruptedException {
-        loginAndVerifySuccess("investor", "trb2017");
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
         navigateToDropdown("menu-account-module");
         navigateToPage("my-account");
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(username.equals("I wonder if this will stay here"));
@@ -92,9 +92,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
@@ -224,9 +223,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while Emmanuel user cannot see homepage")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("investor", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
         try {
             logout();
@@ -255,38 +253,13 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting code completion")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
-        driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).sendKeys("Jordan");
-        driver.findElement(By.id("new-user-email")).sendKeys("user1@setl.io");
-        selectManageUserAccountDropdown();
-        selectManageUserUserDropdown();
-        driver.findElement(By.id("new-user-password")).sendKeys("alex");
-        driver.findElement(By.id("new-user-password-repeat")).sendKeys("alex");
-        driver.findElement(By.id("new-user-submit")).click();
-        try{
-            String success = driver.findElement(By.className("jaspero__dialog-title")).getAttribute("value");
-            assertTrue(success.equals("Success!"));
-        }catch (Error e){
-            fail("success message did not match");
-        }
-        try {
-            driver.findElement(By.className("default ng-tns-c5-9")).click();
-        }catch (Error e){
-            fail("Could not close alert");
-        }
+        createUserAndVerifySuccess("Jordan", "user1@setl.io", "alex01");
         logout();
-        try {
-            driver.findElement(By.id("forgotten-password-link")).click();
-        }catch (Error e){
-            fail("could not click forgotten password link");
-        }
-        driver.findElement(By.id("fp-email-field")).sendKeys("user1@setl.io");
-        driver.findElement(By.id("fp-submit-sendemail-button")).click();
+        clickForgottenPassword("user1@setl.io");
         //Manually assert that email has been received
     }
 
@@ -319,6 +292,45 @@ public class OpenCSDGeneralAcceptanceTest {
         KYCPopups.click();
     }
 
+    public static void createUserAndVerifySuccess(String username, String email, String password) throws IOException, InterruptedException{
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).sendKeys(username);
+        driver.findElement(By.id("new-user-email")).sendKeys(email);
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
+        driver.findElement(By.id("new-user-password")).sendKeys(password);
+        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
+        driver.findElement(By.id("new-user-submit")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement jasperoPopup = driver.findElement(By.className("jaspero__dialog-title"));
+        wait.until(visibilityOf(jasperoPopup));
+        try{
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(success.equals("Success!"));
+        }catch (Exception e){
+            fail("success message did not match : " + e.getMessage());
+        }
+        try {
+            driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        }catch (Exception e){
+            fail("Could not close alert : " + e.getMessage());
+        }
+    }
+
+    public static void clickForgottenPassword(String email) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement forgottenPassword = driver.findElement(By.id("forgotten-password-link"));
+        wait.until(visibilityOf(forgottenPassword));
+        try {
+            driver.findElement(By.id("forgotten-password-link")).click();
+            driver.findElement(By.xpath("//*[@id=\"forgotten-password-link\"]")).click();
+        }catch (Exception e){
+            fail("could not click forgotten password link " + e.getMessage());
+        }
+        driver.findElement(By.id("fp-email-field")).sendKeys(email);
+        driver.findElement(By.id("fp-submit-sendemail-button")).click();
+    }
+
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
         navigateToPageByID("menu-messages");
         driver.findElement(By.id("messagescompose")).click();
@@ -340,14 +352,20 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectManageUserAccountDropdown(){
         driver.findElement(By.id("new-user-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-user-account-select")).click();
+        try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
     }
 
     public static void selectManageUserUserDropdown(){
         driver.findElement(By.id("new-user-usertype-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/ul/li[1]")).click();
-        driver.findElement(By.id("new-user-usertype-select")).click();
+        try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
     }
 
     public static void sendMessageToSelectedWalletWithoutRecipient (String subject, String message, String toasterMessage) throws InterruptedException {
