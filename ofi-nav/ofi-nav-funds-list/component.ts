@@ -157,7 +157,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
 
-        this.router.navigateByUrl(`product-module/net-asset-value/${shareId}`);
+        this.router.navigateByUrl(`product-module/net-asset-value`);
     }
 
     clearRequestedList(): void {

@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -36,8 +35,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navFundRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
 
-    constructor(private route: ActivatedRoute,
-        private redux: NgRedux<any>,
+    constructor(private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiCorpActionService: OfiCorpActionService,
         private ofiNavService: OfiNavService) { 
