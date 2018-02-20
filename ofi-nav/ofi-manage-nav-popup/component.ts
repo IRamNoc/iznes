@@ -4,6 +4,7 @@ import {select, NgRedux} from '@angular-redux/store';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
+import {OfiManageNavPopupService} from './service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 
 @Component({
@@ -13,8 +14,8 @@ import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 })
 export class OfiManageNavPopup implements OnInit {
 
-    private _addingNav: boolean = false;
-    private _share: model.NavInfoModel;
+    private mode: model.NavPopupMode;
+    private _isOpen: boolean;
 
     dateConfig = {
         firstDayOfWeek: 'mo',
@@ -27,39 +28,33 @@ export class OfiManageNavPopup implements OnInit {
     navForm: FormGroup;
     statusItems: any[];
 
-    @Input() mode: model.NavPopupMode = model.NavPopupMode.ADD;
-    @Input() get share(): model.NavInfoModel {
-        return this._share;   
-    }
-    set share(share: model.NavInfoModel) {
-        this._share = share;
-        this._addingNav = (share == null) ? false : true;
-        this.initNavForm();
-    }
-
     constructor(private redux: NgRedux<any>,
-        private ofiNavService: OfiNavService) {
+        private ofiNavService: OfiNavService,
+        private popupService: OfiManageNavPopupService) {
 
         this.initStatusData();
+        this.initNavForm();
     }
 
     ngOnInit() {}
 
-    get addingNav(): boolean {
-        return this._addingNav;
+    get share(): model.NavInfoModel {
+        return this.popupService.share();
     }
-    set addingNav(bool: boolean) {
-        this._addingNav = bool;
 
-        if(!bool) this.share = null;
+    get isOpen(): boolean {
+        return this.popupService.isOpen();
+    }
+    set isOpen(bool: boolean) {
+        if(!bool) this.popupService.close();
     }
 
     isAddMode(): boolean {
-        return this.mode === model.NavPopupMode.ADD;
+        return this.popupService.mode() === model.NavPopupMode.ADD;
     }
 
     isEditMode(): boolean {
-        return this.mode === model.NavPopupMode.EDIT;
+        return this.popupService.mode() === model.NavPopupMode.EDIT;
     }
 
     navFormValid(): boolean {

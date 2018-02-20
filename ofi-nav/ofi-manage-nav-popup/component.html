@@ -1,6 +1,8 @@
-<clr-modal [(clrModalOpen)]="addingNav">
+<clr-modal [(clrModalOpen)]="isOpen">
     <div class="modal-title">
-        <h4 class="modal-title-text"><span class="ml_translated" mltag="txt_addnewnav">Add New NAV</span></h4>
+        <h4 class="modal-title-text">
+            <span class="ml_translated" mltag="txt_addnewnav">Add New NAV</span>
+        </h4>
     </div>
     <div class="modal-body">
         <form [formGroup]="navForm" *ngIf="share">

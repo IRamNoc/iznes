@@ -8,6 +8,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OfiNavFundsList} from './ofi-nav-funds-list/component';
 import {OfiNavFundView} from './ofi-nav-fund-view/component';
 import {OfiManageNavPopup} from './ofi-manage-nav-popup/component';
+import {OfiManageNavPopupService} from './ofi-manage-nav-popup/service';
 import {DpDatePickerModule, SelectModule, SetlPipesModule, SetlDirectivesModule, SetlServicesModule} from '@setl/utils';
 import {MultilingualModule} from '@setl/multilingual';
 
@@ -34,7 +35,7 @@ import {MultilingualModule} from '@setl/multilingual';
         OfiNavFundView,
         OfiManageNavPopup
     ],
-    providers: [],
+    providers: [OfiManageNavPopupService],
 })
 export class OfiNavModule {
 }

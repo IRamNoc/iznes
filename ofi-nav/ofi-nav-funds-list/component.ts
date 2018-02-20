@@ -7,6 +7,7 @@ import {Subscription} from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
+import {OfiManageNavPopupService} from '../ofi-manage-nav-popup/service';
 
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
@@ -40,7 +41,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     };
 
     navPopupMode: model.NavPopupMode = model.NavPopupMode.ADD;
-    addNavShare: model.NavModel = null;
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -51,7 +51,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiCorpActionService: OfiCorpActionService,
-        private ofiNavService: OfiNavService) {
+        private ofiNavService: OfiNavService,
+        private popupService: OfiManageNavPopupService) {
         
         this.initSubscriptions();
         this.initDataTypes();
@@ -148,7 +149,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
     
     addNav(share: model.NavInfoModel): void {
-        this.addNavShare = share;
+        this.popupService.open(share, model.NavPopupMode.ADD);
     }
 
     navigateToShare(shareId: number): void {

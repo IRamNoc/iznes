@@ -3,10 +3,11 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
+import {OfiManageNavPopupService} from '../ofi-manage-nav-popup/service';
+
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {
@@ -63,7 +64,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     constructor(private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiCorpActionService: OfiCorpActionService,
-        private ofiNavService: OfiNavService) { 
+        private ofiNavService: OfiNavService,
+        private popupService: OfiManageNavPopupService) { 
 
         this.initDatePeriodItems();
         this.initNavHistoryForm();
@@ -128,7 +130,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavFund(requested: boolean): void {
-        console.log('XXX-requestNavFund', requested);
         if(requested) return;
 
         const requestData = getOfiNavFundViewCurrentRequest(this.redux.getState());
@@ -142,7 +143,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private updateNavFund(navFund: model.NavInfoModel[]): void {
-        console.log('XXX-updateNavFund', navFund);
         this.navFund = navFund ? navFund[0] : undefined;
 
         // fund history
@@ -165,7 +165,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavFundHistory(requested: boolean): void {
-        console.log('XXX-requestNavFundHistory', requested);
         if(requested || !this.navFund) return;
 
         const requestData = {
@@ -185,7 +184,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private updateNavFundHistory(navFundHistory: any): void {
-        console.log('XXX-updateNavFundHistory', navFundHistory);
         this.navFundHistory = navFundHistory;
 
         if(this.navFundHistory) this.redux.dispatch(setRequestedNavFundHistory());
