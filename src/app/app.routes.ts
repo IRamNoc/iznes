@@ -32,7 +32,8 @@ import {
     OfiManageNavList,
     OfiManageNavView,
     OfiPnlReportComponent,
-    OfiTaxReportComponent
+    OfiTaxReportComponent,
+    OfiProfileMyInformationsComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -156,6 +157,16 @@ export const ROUTES: Routes = [
                 path: 'kyc',
                 component: OfiDocumentsComponent,
                 canActivate: [LoginGuardService]
+            },
+            {
+                path: 'profile',
+                children: [
+                    {
+                        path: 'my-informations',
+                        component: OfiProfileMyInformationsComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                ],
             },
             {
                 path: 'asset-management',
