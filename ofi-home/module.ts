@@ -11,9 +11,6 @@ import {ClarityModule} from '@clr/angular';
 
 import {MultilingualModule} from '@setl/multilingual';
 
-/* My informations module */
-import {OfiMyInformationsModule} from '../ofi-my-informations/module';
-
 /* Components. */
 import {OfiHomeComponent} from './home/component';
 
@@ -38,7 +35,6 @@ import {OfiHomeComponent} from './home/component';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
-        OfiMyInformationsModule,
     ],
     providers: [
 

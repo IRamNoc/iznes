@@ -104,6 +104,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 '',
                 Validators.compose([
                     Validators.required,
+                    Validators.pattern(/^\d+$/),
                 ])
             ]
         });
@@ -135,6 +136,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     getPhoneCode(code: string) {
+        if (!code) {
+            return '';
+        }
         return [_.find(this.phoneNumbersCountryCodes, {id: code})] || '';
     }
 
