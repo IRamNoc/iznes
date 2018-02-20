@@ -291,7 +291,7 @@ const profileMyInfo = {
     label_txt: 'txt_my_information',
     icon_class: '',
     element_id: 'top-menu-my-info',
-    router_link: '/account/my-account-details'
+    router_link: '/profile/my-informations'
 };
 
 export const menuSpec: MenuSpec = {
