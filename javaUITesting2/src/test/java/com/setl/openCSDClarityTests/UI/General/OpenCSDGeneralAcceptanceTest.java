@@ -224,7 +224,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
-        loginAndVerifySuccess("investor", "trb2017");
+        loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
         try {
             logout();
