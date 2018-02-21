@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ReceiveListItemModel } from '@setl/core-contracts/models/receivelistitem.model';
+import { ReceiveListItemModel } from '../models';
 
 @Injectable()
 export class ReceiveListItemService {

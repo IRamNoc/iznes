@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { PartyModel } from '@setl/core-contracts/models/party.model';
-import { PayListItemService} from '@setl/core-contracts/services/paylistitem.service';
-import { PayListItemModel } from '@setl/core-contracts/models/paylistitem.model';
-import { ReceiveListItemService } from '@setl/core-contracts/services/receivelistitem.service';
-import { ReceiveListItemModel } from '@setl/core-contracts/models/receivelistitem.model';
-import _ from 'lodash';
+import { PartyModel } from '../models';
+import { PayListItemService} from '../services';
+import { PayListItemModel } from '../models';
+import { ReceiveListItemService } from '../services';
+import { ReceiveListItemModel } from '../models';
+import * as _ from 'lodash';
 
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { EncumbranceModel } from '@setl/core-contracts/models/encumbrance.model';
-import { EncumbranceAddressModel } from '@setl/core-contracts/models/encumbranceAddress.model';
-import { EncumbranceAddressService } from '@setl/core-contracts/services/encumbranceAddress.service';
-import _ from 'lodash';
+import { EncumbranceModel } from '../models';
+import { EncumbranceAddressModel } from '../models';
+import { EncumbranceAddressService } from '../services';
+import * as _ from 'lodash';
 
 @Injectable()
 export class EncumbranceService {

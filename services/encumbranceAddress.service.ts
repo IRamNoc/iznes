@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EncumbranceAddressModel } from '@setl/core-contracts/models/encumbranceAddress.model';
+import { EncumbranceAddressModel } from '../models';
 
 @Injectable()
 export class EncumbranceAddressService {

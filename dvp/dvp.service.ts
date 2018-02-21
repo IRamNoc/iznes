@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 
-import {ContractService} from '@setl/core-contracts/services';
+import {ContractService} from '../services';
 import {WalletnodeTxService} from '@setl/core-req-services';
 import {SagaHelper, mDateHelper} from '@setl/utils';
 
-import {ContractModel, ParameterItemModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '@setl/core-contracts/models';
+import {ContractModel, ParameterItemModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '../models';
 import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
 import * as moment from 'moment';
 import { error } from 'selenium-webdriver';
@@ -48,7 +48,7 @@ export class DVPContractService {
         contractData: any,
         successCallback: (res) => void,
         errorCallback: (res) => void): void {
-            
+
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId: walletId,
             address: address,
@@ -107,12 +107,12 @@ export class DVPContractService {
 
     private createPartyB(values: DvpForm, isExchange: boolean): PartyModel {
         // PARTY B
-        const party = new PartyModel();   
+        const party = new PartyModel();
 
         // configure Party A as the payee
         party.partyIdentifier = partyB;
         party.sigAddress = values[partyB].address;
-        party.mustSign = false;  
+        party.mustSign = false;
 
         // configure receive list
         party.receiveList.push(this.createReceiveListItem(

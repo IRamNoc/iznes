@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
 import {ContractsComponent} from '@setl/core-contracts/contracts.component';
 import {ContractsDvpComponent} from '@setl/core-contracts/dvp/dvp.component';
 import {ClarityModule} from '@clr/angular';
@@ -9,8 +8,8 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import {ContractService} from "@setl/core-contracts/services/contract.service";
-import {DVPContractService} from "@setl/core-contracts/dvp/dvp.service";
+import {ContractService} from './services';
+import {DVPContractService} from './dvp/dvp.service';
 
 @NgModule({
     imports: [
