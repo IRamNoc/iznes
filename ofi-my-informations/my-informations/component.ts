@@ -1,17 +1,28 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Inject} from '@angular/core';
-import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+    OnDestroy,
+    Input,
+    Output,
+    EventEmitter
+} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
 
-import {SET_HIGHLIGHT_LIST, setAppliedHighlight, clearAppliedHighlight} from '@setl/core-store';
+import * as _ from 'lodash';
 
-import { fromJS } from 'immutable';
+import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
+import {Observable} from 'rxjs/Observable';
 
-import {MultilingualService} from '@setl/multilingual';
-import {immutableHelper, MoneyValuePipe, NumberConverterService, APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
-import * as math from 'mathjs';
+export enum ViewMode {
+    PAGE = 'PAGE',
+    POPUP = 'POPUP'
+}
 
 @Component({
     selector: 'app-my-informations',
@@ -22,15 +33,18 @@ import * as math from 'mathjs';
 
 export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
-    appConfig: AppConfig;
-    showModal = false;
-
     // Locale
     language = 'fr-Latn';
 
-    hasFilledAdditionnalInfos = false;
+    @Input() icon: string;
+    @Input() header: string;
+    @Input() subTitle: string;
+    @Input() viewMode: ViewMode;
+    @Input() userInfo: Observable<KycMyInformations>;
+    @Output() onClose = new EventEmitter<void>();
+    @Output() onSubmit = new EventEmitter<KycMyInformations>();
+
     additionnalForm: FormGroup;
-    formSaved = false;
 
     private subscriptions: Array<any> = [];
 
@@ -38,40 +52,38 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    // @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations;
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _ngRedux: NgRedux<any>,
                 private _fb: FormBuilder,
-                private multilingualService: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
-
-        this.appConfig = appConfig;
+    ) {
 
         // language
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         this.additionnalForm = this._fb.group({
             email: [
-                'email@auto.com',
+                {value: '', disabled: true},
                 Validators.compose([
                     Validators.required,
                     Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
                 ])
             ],
             firstName: [
-                'Put automatically',
+                '',
                 Validators.compose([
                     Validators.required,
                 ])
             ],
             lastName: [
-                'Put automatically',
+                '',
                 Validators.compose([
                     Validators.required,
                 ])
             ],
             invitedBy: [
-                'Put automatically',
+                {value: '', disabled: true},
                 Validators.compose([
                     Validators.required,
                 ])
@@ -92,13 +104,42 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 '',
                 Validators.compose([
                     Validators.required,
+                    Validators.pattern(/^\d+$/),
                 ])
             ]
         });
+
+
     }
 
     ngOnInit() {
-        this.switchPhoneCode();
+
+        if (!this.additionnalForm.controls.phoneCode.value) {
+            this.switchPhoneCode();
+        }
+        // form data listeners
+        this.subscriptions.push(
+             this.userInfo.subscribe((d: KycMyInformations) => {
+                 this.additionnalForm.controls.email.setValue(d.email);
+                 this.additionnalForm.controls.firstName.setValue(d.firstName);
+                 this.additionnalForm.controls.lastName.setValue(d.lastName);
+                 this.additionnalForm.controls.invitedBy.setValue(d.invitedBy);
+                 this.additionnalForm.controls.companyName.setValue(d.companyName);
+                 this.additionnalForm.controls.phoneCode.setValue(this.getPhoneCode(d.phoneCode));
+                 this.additionnalForm.controls.phoneNumber.setValue(d.phoneNumber);
+             })
+        );
+    }
+
+    isPopUpMode() {
+        return this.viewMode === ViewMode.POPUP;
+    }
+
+    getPhoneCode(code: string) {
+        if (!code) {
+            return '';
+        }
+        return [_.find(this.phoneNumbersCountryCodes, {id: code})] || '';
     }
 
     switchPhoneCode() {
@@ -124,33 +165,16 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         }
     }
 
-    saveAdditionnal(formValues) {
-        const listImu = fromJS([
-            {id: 'dropdown-user'},
-            {id: 'menu-account-module'},
-        ]);
-
-        let listToRedux = [];
-        listToRedux = listImu.reduce((result, item) => {
-
-            result.push({
-                id: item.get('id', ''),
-            });
-
-            return result;
-        }, []);
-
-        this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: listToRedux});
-        this._ngRedux.dispatch(setAppliedHighlight());
-
-        this.formSaved = true;
-        this.showModal = true;
+    onClickCloseButton() {
+        this.onClose.emit();
     }
 
-    closeModal() {
-        this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
-        this._ngRedux.dispatch(clearAppliedHighlight());
-        this.showModal = false;
+    onSubmitClick() {
+        const userInformations = {
+            ...this.additionnalForm.value,
+            phoneCode: _.get(this.additionnalForm.value, ['phoneCode', '0', 'id'], ''),
+        };
+        this.onSubmit.emit(userInformations);
     }
 
     /* On Destroy. */

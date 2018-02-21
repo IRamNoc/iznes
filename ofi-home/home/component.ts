@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
 
 import { fromJS } from 'immutable';
-
+import {ToasterService} from 'angular2-toaster';
 import {MultilingualService} from '@setl/multilingual';
 import {immutableHelper, MoneyValuePipe, NumberConverterService, APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
 
@@ -14,7 +14,9 @@ import {immutableHelper, MoneyValuePipe, NumberConverterService, APP_CONFIG, App
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {ofiSetRequestedHomeOrder} from '../../ofi-store';
 import * as math from 'mathjs';
-
+import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
+import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -23,7 +25,7 @@ import * as math from 'mathjs';
 })
 export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
-    hasFilledAdditionnalInfos = false;
+    appConfig: AppConfig;
 
     /* Public properties. */
     public walletHoldingsByAddress: Array<any> = [];
@@ -55,8 +57,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 private _fb: FormBuilder,
                 private _router: Router,
                 private multilingualService: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
-
+        this.appConfig = appConfig;
     }
 
     ngAfterViewInit() {
@@ -103,6 +106,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
             this.myDetails = myDetails;
+            if (myDetails.userType === '46') {
+                this._router.navigate(['new-investor-home']);
+            }
         });
 
         /* Subscribe for this user's wallets. */

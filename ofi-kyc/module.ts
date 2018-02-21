@@ -16,6 +16,8 @@ import {OfiInviteInvestorsComponent} from './invite-investors/component';
 import {OfiSignUpComponent} from './signup/component';
 import {OfiDocumentsComponent} from './documents/component';
 import {MockKYCDocumentsService} from './documents/documents.mock.service';
+import {OfiKycHomeComponent} from './home/component';
+import {OfiMyInformationsModule} from '../ofi-my-informations/module';
 
 /* Decorator. */
 @NgModule({
@@ -23,11 +25,14 @@ import {MockKYCDocumentsService} from './documents/documents.mock.service';
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
         OfiDocumentsComponent,
+        OfiKycHomeComponent,
+
     ],
     exports: [
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
         OfiDocumentsComponent,
+        OfiKycHomeComponent,
     ],
     imports: [
         CommonModule,
@@ -40,7 +45,8 @@ import {MockKYCDocumentsService} from './documents/documents.mock.service';
         SelectModule,
         SetlPipesModule,
         SetlComponentsModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
+        OfiMyInformationsModule,
     ],
     providers: [
         MockKYCDocumentsService,
