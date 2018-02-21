@@ -34,6 +34,7 @@ import {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiProfileMyInformationsComponent,
+    OfiKycHomeComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -83,7 +84,6 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
  */
 import {T2sMessagesComponent} from '@setl/core-t2s';
 import { SetlMessagesComponent } from '@setl/core-messages';
-import {OfiKycHomeComponent} from '@ofi/ofi-main/ofi-kyc/home/component';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},

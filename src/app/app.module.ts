@@ -76,7 +76,6 @@ import {AppState} from './store/app.reducer';
  * Environment
  */
 import {environment} from '../environments/environment';
-import {OfiKYCModule} from '../../setl_modules/ofi-main/ofi-kyc/module';
 
 /**
  * Membersocket service factory
@@ -123,7 +122,6 @@ export function memberSocketServiceFactory() {
         CoreManageMemberModule,
         SetlComponentsModule,
         CorpActionsModule,
-        OfiKYCModule,
         OfiMainModule,
         SetlDirectivesModule,
         SetlServicesModule,
