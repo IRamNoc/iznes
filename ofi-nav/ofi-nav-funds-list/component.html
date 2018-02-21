@@ -101,7 +101,7 @@
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <div class="btn-group btn-sm">
+                        <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn">
                                 <i class="fa fa-plus"></i> <span mltag="txt_addnewnav">Add new NAV</span>
                             </button>

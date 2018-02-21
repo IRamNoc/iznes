@@ -12,10 +12,9 @@ export class ShareModel {
 
 export class NavModel {
     nav: number;
-    lastValue?: number;
     currency: string;
-    date: string;
-    pubDate: string;
+    navDate: string;
+    navPubDate: string;
     status: string;
     aum?: number;
     units?: number;

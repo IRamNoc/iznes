@@ -31,9 +31,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     navFund: model.NavInfoModel;
     navFundHistory: any;
 
-    navObj: model.NavInfoModel = null;
-    navPopupMode: model.NavPopupMode = model.NavPopupMode.EDIT;
-
     navHistoryForm: FormGroup;
     
     currentDate: string = moment().format('YYYY-MM-DD');
@@ -214,23 +211,19 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     isNavNull(nav: number): boolean {
-        return nav == null;
+        return nav === null;
     }
 
     addNav(): void {
-        this.navPopupMode = model.NavPopupMode.ADD;
-        this.navFund.lastValue = this.navFund.nav;
-        
-        const newnavObj = Object.create(this.navFund);
-        this.navObj = Object.assign(newnavObj, this.navFund);
+        this.popupService.open(this.navFund, model.NavPopupMode.ADD);
     }
     
-    editNav(nav: model.NavModel): void {
-        this.navPopupMode = model.NavPopupMode.EDIT;
-        nav.lastValue = this.navFund.nav;
+    editNav(nav: model.NavInfoModel): void {
+        const navObj: model.NavInfoModel = nav;
+        navObj.fundShareName = this.navFund.fundShareName;
+        navObj.isin = this.navFund.isin;
 
-        const newnavObj = Object.create(nav);
-        this.navObj = Object.assign(newnavObj, this.navFund)
+        this.popupService.open(navObj, model.NavPopupMode.EDIT);
     }
 
     private clearRequestedHistory(): void {

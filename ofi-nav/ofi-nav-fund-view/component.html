@@ -148,7 +148,20 @@
                         <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{item.status}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span [ngSwitch]="item.status">
+                            <span *ngSwitchCase="-1">
+                                <span class="label label-success" mltag="txt_final">Final</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                            </span>
+
+                            <span *ngSwitchCase="2">
+                                <span class="label label-warning" mltag="txt_pending">Pending</span>
+                            </span>
+                        </span>
+                    </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
                             <button id="editNav" (click)="editNav(item)" class="btn">

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import * as moment from 'moment';
@@ -17,7 +17,15 @@ export class OfiManageNavPopup implements OnInit {
     private mode: model.NavPopupMode;
     private _isOpen: boolean;
 
-    dateConfig = {
+    navDateConfig: any = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: null // TODO
+    };
+
+    navPublishDateConfig: any = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
@@ -29,14 +37,22 @@ export class OfiManageNavPopup implements OnInit {
     statusItems: any[];
 
     constructor(private redux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
         private ofiNavService: OfiNavService,
         private popupService: OfiManageNavPopupService) {
 
         this.initStatusData();
-        this.initNavForm();
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.popupService.onOpen.subscribe((res: {share: model.NavInfoModel, mode: model.NavPopupMode}) => {
+            this.initNavForm(res.share, res.mode);
+        });
+
+        this.popupService.onClose.subscribe(() => {
+            this.navForm = undefined;
+        });
+    }
 
     get share(): model.NavInfoModel {
         return this.popupService.share();
@@ -58,16 +74,24 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     navFormValid(): boolean {
-        return this.navForm.valid && this.share != undefined;
+        return (this.navForm) && this.navForm.valid && this.share != undefined;
     }
 
-    private initNavForm(): void {
+    private initNavForm(share: model.NavInfoModel, mode: model.NavPopupMode): void {
         this.navForm = new FormGroup({
-            price: new FormControl(this.share ? this.share.nav : 0, Validators.required),
-            navDate: new FormControl(moment().format('YYYY-MM-DD'), Validators.required),
-            navPubDate: new FormControl(moment().format('YYYY-MM-DD'), Validators.required),
+            price: new FormControl('', Validators.required),
+            navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
+            navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             status: new FormControl([this.statusItems[0]], Validators.required)
         });
+
+        if(mode === model.NavPopupMode.EDIT) {
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
+            this.navForm.controls.status.disable();
+        }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private initStatusData(): void {

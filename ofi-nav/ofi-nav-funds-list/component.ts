@@ -145,7 +145,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
 
     isNavNull(nav: number): boolean {
-        return nav == null;
+        return nav === null;
     }
     
     addNav(share: model.NavInfoModel): void {
