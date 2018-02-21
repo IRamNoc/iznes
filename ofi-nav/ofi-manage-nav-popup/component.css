@@ -25,6 +25,14 @@
     border: 1px solid #dadada !important;
 }
 
+:host .modal-body .row {
+    margin-right: -3em;
+}
+
+:host .modal-body .alert {
+    width: 95%;
+}
+
 :host .modal-footer {
     display: block;
 }

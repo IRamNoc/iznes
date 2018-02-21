@@ -64,7 +64,8 @@
 
                     <div class="form-group col-sm-2">
                         <label class="control-label">&nbsp;</label>
-                        <button class="btn btn-primary" (click)="addNav()">Add New NAV</button>
+                        <button class="btn btn-primary" (click)="addNav()" mltag="txt_addnewnav" *ngIf="!navFund.nav">Add New NAV</button>
+                        <button class="btn btn-primary" (click)="editNav(navFund)" mltag="txt_editnav" *ngIf="navFund.nav">Edit NAV</button>
                     </div>
                 </div>
             </form>
@@ -157,14 +158,14 @@
                     <clr-dg-cell>
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span class="label label-success" mltag="txt_final">Final</span>
+                                <span class="label label-success" mltag="txt_validated">Validated</span>
                             </span>
                             <span *ngSwitchCase="1">
                                 <span class="label label-warning" mltag="txt_estimated">Estimated</span>
                             </span>
 
                             <span *ngSwitchCase="2">
-                                <span class="label label-warning" mltag="txt_pending">Pending</span>
+                                <span class="label label-warning" mltag="txt_technical">Technical</span>
                             </span>
                         </span>
                     </clr-dg-cell>

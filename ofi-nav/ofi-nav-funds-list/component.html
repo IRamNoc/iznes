@@ -89,14 +89,14 @@
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span class="label label-success" mltag="txt_final">Final</span>
+                                <span class="label label-success" mltag="txt_validated">Validated</span>
                             </span>
                             <span *ngSwitchCase="1">
                                 <span class="label label-warning" mltag="txt_estimated">Estimated</span>
                             </span>
 
                             <span *ngSwitchCase="2">
-                                <span class="label label-warning" mltag="txt_pending">Pending</span>
+                                <span class="label label-warning" mltag="txt_technical">Technical</span>
                             </span>
                         </span>
                     </clr-dg-cell>

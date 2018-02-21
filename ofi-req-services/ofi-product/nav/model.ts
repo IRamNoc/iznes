@@ -33,5 +33,8 @@ export interface UpdateNavMessageBody extends MemberNodeMessageBody {
     force?: number;
 }
 
-
-
+export interface DeleteNavMessageBody extends MemberNodeMessageBody {
+    token: string;
+    shareId: number;
+    navDate: string;
+}

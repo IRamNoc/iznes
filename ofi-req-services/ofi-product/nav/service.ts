@@ -3,7 +3,8 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {
     RequestNavMessageBody,
     RequestNavFundHistoryMessageBody,
-    UpdateNavMessageBody
+    UpdateNavMessageBody,
+    DeleteNavMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -119,8 +120,35 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {},
-            successCallback,
-            errorCallback
+            (res) => successCallback(res),
+            (res) => errorCallback(res)
+        ));
+    }
+
+    /**
+     * Default static call to update nav, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultDeleteNav(ofiNavService: OfiNavService,
+        ngRedux: NgRedux<any>,
+        requestData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+            
+        // Create the request.
+        const asyncTaskPipe = ofiNavService.deleteNav(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => successCallback(res),
+            (res) => errorCallback(res)
         ));
     }
 
@@ -150,7 +178,6 @@ export class OfiNavService {
     }
 
     updateNav(requestData: any): any {
-
         const messageBody: UpdateNavMessageBody = {
             RequestName: 'updateNav',
             token: this.memberSocketService.token,
@@ -158,6 +185,17 @@ export class OfiNavService {
             fundDate: _.get(requestData, 'fundDate', ''),
             price: _.get(requestData, 'price', 0),
             priceStatus: _.get(requestData, 'priceStatus', 0)
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    deleteNav(requestData: any): any {
+        const messageBody: DeleteNavMessageBody = {
+            RequestName: 'deleteNav',
+            token: this.memberSocketService.token,
+            shareId: _.get(requestData, 'shareId', ''),
+            navDate: _.get(requestData, 'navDate', '')
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

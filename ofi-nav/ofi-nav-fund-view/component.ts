@@ -190,8 +190,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private requestNavFundHistory(requested: boolean): void {
         if(requested || !this.navFund) return;
 
-        console.log('xxxxxxxxxxxx', this.usingDatePeriodToSearch);
-
         let navDateFrom;
         let navDateTo;
 
@@ -278,8 +276,19 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         const navObj: model.NavInfoModel = nav;
         navObj.fundShareName = this.navFund.fundShareName;
         navObj.isin = this.navFund.isin;
+        navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.EDIT);
+    }
+
+    cancelNav(nav: model.NavInfoModel): void {
+        const navObj: model.NavInfoModel = nav;
+        navObj.fundShareName = this.navFund.fundShareName;
+        navObj.isin = this.navFund.isin;
+        navObj.shareId = this.navFund.shareId;
+        navObj.status = this.navFund.status;
+
+        this.popupService.open(navObj, model.NavPopupMode.DELETE);
     }
 
     private clearRequestedHistory(): void {

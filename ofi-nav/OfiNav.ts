@@ -1,6 +1,7 @@
 export enum NavPopupMode {
     ADD,
-    EDIT
+    EDIT,
+    DELETE
 }
 
 export class ShareModel {
