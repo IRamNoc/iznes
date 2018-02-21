@@ -79,6 +79,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         });
 
         this.searchForm.valueChanges.subscribe(() => {
+            this.changeDetectorRef.detectChanges();
+
             this.clearRequestedList();
         });
     }
