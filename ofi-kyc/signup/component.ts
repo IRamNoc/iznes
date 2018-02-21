@@ -198,7 +198,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 //go get the email linked to the token here.
 
                 this._ofiKycService.verifyInvitationToken(this.invitationToken).then((data)=>{
-                    this.signupForm.controls['username'].patchValue(data.email);
+                    this.signupForm.controls['username'].patchValue(data[1].Data[0].email);
                 }).catch((e)=>{
                     //handle error.
                     this.signupForm.controls['username'].patchValue('');

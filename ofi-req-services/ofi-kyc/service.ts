@@ -33,12 +33,12 @@ export class OfiKycService {
     verifyInvitationToken(token: string): any {
 
         const messageBody: VerifyInvitationTokenRequestBody = {
-            RequestName: '',
-            token: token
+            RequestName: 'iznesverifytoken',
+            token: token,
+            source: ''
         };
 
-        return Promise.resolve({Status: 'OK', email: 'stephen.strudwick@setl.io'}); //test code
-        //return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     createUser(requestData: CreateUserRequestData): any {
