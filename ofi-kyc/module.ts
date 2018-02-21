@@ -18,11 +18,15 @@ import {OfiDocumentsComponent} from './documents/component';
 import {MockKYCDocumentsService} from './documents/documents.mock.service';
 import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 import {KycUserDetailsComponent} from './kyc-user-details/component';
 import {OfiWaitingApprovalComponent} from './waiting-approval/component';
 >>>>>>> Stashed changes
+=======
+import {TextInputListComponent} from './text-input-list/component';
+>>>>>>> 284d93d... TG-266 feat(ofi-kyc): added basic user details presentational component
 
 /* Decorator. */
 @NgModule({
@@ -31,23 +35,31 @@ import {OfiWaitingApprovalComponent} from './waiting-approval/component';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 =======
         KycUserDetailsComponent,
         OfiWaitingApprovalComponent
 >>>>>>> Stashed changes
+=======
+        TextInputListComponent,
+>>>>>>> 284d93d... TG-266 feat(ofi-kyc): added basic user details presentational component
     ],
     exports: [
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
         KycUserDetailsComponent,
         OfiWaitingApprovalComponent,
 >>>>>>> Stashed changes
+=======
+        TextInputListComponent,
+>>>>>>> 284d93d... TG-266 feat(ofi-kyc): added basic user details presentational component
     ],
     imports: [
         CommonModule,
