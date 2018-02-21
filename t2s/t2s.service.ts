@@ -81,7 +81,7 @@ export class T2sService {
     public pingRequest (): any {
         /* Setup the message body. */
         const messageBody: BasicRequestBody = {
-            RequestName: 't2sNew',
+            RequestName: 't2sPing',
             token: this.memberSocketService.token
         };
 
