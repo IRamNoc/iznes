@@ -1,7 +1,8 @@
 <clr-modal [(clrModalOpen)]="isOpen">
     <div class="modal-title">
         <h4 class="modal-title-text">
-            <span class="ml_translated" mltag="txt_addnewnav">Add New NAV</span>
+            <span class="ml_translated" mltag="txt_addnewnav" *ngIf="isAddMode()">Add New NAV</span>
+            <span class="ml_translated" mltag="txt_editnav" *ngIf="isEditMode()">Edit NAV</span>
         </h4>
     </div>
     <div class="modal-body">
@@ -37,7 +38,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="navDate" mltag="txt_navdate">NAV Date</label>
                     <div class="input-group">
-                        <span class="fa fa-calendar"></span>
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
                         <input id="navDate" name="navDate" placeholder="Select date" mltag="txt_selectdate"
                             formControlName="navDate"
                             [dpDayPicker]="navDateConfig"
@@ -50,7 +51,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="navPublishDate" mltag="txt_navpubdate">Publication Date</label>
                     <div class="input-group">
-                        <span class="fa fa-calendar"></span>
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
                         <input id="navPublishDate" name="navPublishDate" placeholder="Select date" mltag="txt_selectdate"
                             formControlName="navPubDate"
                             [dpDayPicker]="navPublishDateConfig" 
@@ -79,13 +80,13 @@
         <div class="row">
             <div class="col-sm-6 text-left">
                 <button class="btn btn-secondary"
-                    (click)="close()">Cancel</button>
+                    (click)="close()" mltag="txt_cancel">Cancel</button>
             </div>
 
             <div class="col-sm-6 text-right">
                 <button class="btn btn-primary"
                     [disabled]="!navFormValid()"
-                    (click)="updateNav()">Add New NAV</button>
+                    (click)="updateNav()" mltag="txt_validate">Validate</button>
             </div>
         </div>        
     </div>
