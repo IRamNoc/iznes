@@ -78,7 +78,7 @@ export class T2sService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    public pingRequest (messageData: any): any {
+    public pingRequest (): any {
         /* Setup the message body. */
         const messageBody: BasicRequestBody = {
             RequestName: 't2sNew',
