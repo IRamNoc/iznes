@@ -91,16 +91,17 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
             this.resetForm(formValues);
             this.emailSent = true;
             this.showModal = true;
-            const intervalCountdown = setInterval(() => {
-                this.countdown--;
-                this.markForCheck();
-            }, 1000);
-
-            setTimeout(() => {
-                clearInterval(intervalCountdown);
-                this.closeModal();
-                this.markForCheck();
-            }, 5000);
+            this.markForCheck();
+            // const intervalCountdown = setInterval(() => {
+            //     this.countdown--;
+            //     this.markForCheck();
+            // }, 1000);
+            //
+            // setTimeout(() => {
+            //     clearInterval(intervalCountdown);
+            //     this.closeModal();
+            //     this.markForCheck();
+            // }, 5000);
         }, () => {
             // fail call back
             // todo

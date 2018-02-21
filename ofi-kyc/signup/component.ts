@@ -30,6 +30,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Subscription} from 'rxjs/Subscription';
+import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 
 
 /* Dectorator. */
@@ -95,6 +96,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
+                private _ofiKycService: OfiKycService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language
@@ -192,7 +194,17 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             }
             this.invitationToken = params['invitationToken'];
             if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
-                this.signupForm.controls['username'].patchValue(this.invitationToken);
+
+                //go get the email linked to the token here.
+
+                this._ofiKycService.verifyInvitationToken(this.invitationToken).then((data)=>{
+                    this.signupForm.controls['username'].patchValue(data.email);
+                }).catch((e)=>{
+                    //handle error.
+                    this.signupForm.controls['username'].patchValue('');
+                });
+
+                //this.signupForm.controls['username'].patchValue(this.invitationToken);
                 console.log(this.invitationToken);
             }
         }));
@@ -264,14 +276,58 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             return false;
         }
 
-        this.isSignUp = true;
-        this.showModal = true;
+        // go save data here.
+        this._ofiKycService.createUser({
+            token: this.invitationToken,
+            email: this.signupForm.controls.username.value,
+            password: this.signupForm.controls.password.value
+        }).then(()=>{
+            this.isSignUp = true;
+            this.showModal = true;
+        }).catch((e)=>{
+            //handle error.
+            this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+        });
     }
 
     logAfterSignup() {
         this.showModal = false;
         this.isSignUp = false;
+
         // call login function with signup informations
+        if (!this.signupForm.valid) {
+            return false;
+        }
+
+        // Dispatch a login request action.
+        // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
+        const loginRequestAction = loginRequestAC();
+        this.ngRedux.dispatch(loginRequestAction);
+
+        // Create a saga pipe.
+        const asyncTaskPipe = this.myUserService.loginRequest({
+            username: this.signupForm.controls.username.value,
+            password: this.signupForm.controls.password.value
+        });
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
+            asyncTaskPipe,
+            {},
+            () => {
+            },
+            // Fail to login
+            (data) => {
+                this.handleLoginFailMessage(data);
+            }
+        ));
+
+        return false;
     }
 
     updateState(myAuthenData) {
