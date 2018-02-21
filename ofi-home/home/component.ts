@@ -1,17 +1,22 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from "@angular/core";
-import {Router} from "@angular/router";
-/* Redux */
-import {NgRedux, select} from "@angular-redux/store";
-
-import {immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
-/* Ofi orders request service. */
-import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
-import {ofiSetRequestedHomeOrder} from "../../ofi-store";
-import * as math from 'mathjs';
-
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
 import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MoneyValuePipe} from '@setl/utils';
+import {Router} from '@angular/router';
+/* Redux */
+import {NgRedux, select} from '@angular-redux/store';
+
+import { fromJS } from 'immutable';
+import {ToasterService} from 'angular2-toaster';
+import {MultilingualService} from '@setl/multilingual';
+import {immutableHelper, MoneyValuePipe, NumberConverterService, APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
+
+/* Ofi orders request service. */
+import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+import {ofiSetRequestedHomeOrder} from '../../ofi-store';
+import * as math from 'mathjs';
+import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
+import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -19,6 +24,8 @@ import {MoneyValuePipe} from '@setl/utils';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfiHomeComponent implements AfterViewInit, OnDestroy {
+
+    appConfig: AppConfig;
 
     /* Public properties. */
     public walletHoldingsByAddress: Array<any> = [];
@@ -48,36 +55,12 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 private _ngRedux: NgRedux<any>,
                 private _moneyValuePipe: MoneyValuePipe,
                 private _fb: FormBuilder,
-                private _router: Router) {
-        /* Stub. */
-
-        // this.generateRandom();
-        // this.pipeForm = this._fb.group({
-        //     myField: [
-        //         this.randomNum,
-        //     ],
-        // });
+                private _router: Router,
+                private multilingualService: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
+        this.appConfig = appConfig;
     }
-
-    // generateRandom() {
-    //     this.randomNum = ((Math.random() * 1000000 + 1) * (Math.random() * 10)).toFixed(Math.random() * 10 + 1);
-    // }
-    //
-    // regenerateRandom() {
-    //     this.generateRandom();
-    //     this.pipeForm.get('myField').patchValue(this.randomNum, {emitEvent: false});
-    //     this.pipeForm.get('myField').updateValueAndValidity();
-    // }
-    //
-    // savePipeForm(formValues) {
-    //     console.log('formValues', formValues);
-    //     console.log('parse quantity', this._moneyValuePipe.parse(this.randomNum, 5));
-    //     console.log('parse amount/currency', this._moneyValuePipe.parse(this.randomNum, 4));
-    //     console.log('parse NAV', this._moneyValuePipe.parse(this.randomNum, 2));
-    //     console.log('transform quantity', this._moneyValuePipe.transform(this.randomNum, 5));
-    //     console.log('transform amount/currency', this._moneyValuePipe.transform(this.randomNum, 4));
-    //     console.log('transform NAV', this._moneyValuePipe.transform(this.randomNum, 2));
-    // }
 
     ngAfterViewInit() {
         /* Do observable subscriptions here. */
@@ -123,6 +106,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
             this.myDetails = myDetails;
+            if (myDetails.userType === '46') {
+                this._router.navigate(['new-investor-home']);
+            }
         });
 
         /* Subscribe for this user's wallets. */
@@ -165,7 +151,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 arrangementType: 0,
                 status: 1,
                 sortOrder: 'DESC'
-            }
+            };
         } else {
             /* Is holder. */
             request = {
@@ -177,7 +163,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 arrangementType: 0,
                 status: 4,
                 sortOrder: 'DESC'
-            }
+            };
         }
 
         this.ofiOrdersService.getHomeOrdersList(request)
@@ -306,18 +292,18 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      */
     private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if (!num && num != 0) return "";
+        if (!num && num != 0) return '';
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
             requiredZeros = zeros - num.length,
-            returnString = "";
+            returnString = '';
 
         /* Now add the zeros. */
         while (requiredZeros--) {
-            returnString += "0";
+            returnString += '0';
         }
 
         return returnString + num;

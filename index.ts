@@ -5,7 +5,16 @@ export {OfiInvestorFundListComponent} from './ofi-fund-invest/investor-fund-list
  * Home
  */
 export {OfiHomeComponent} from './ofi-home/home/component';
-
+/**
+ * Invite Investors
+ */
+export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component';
+export {OfiSignUpComponent} from './ofi-kyc/signup/component';
+export {OfiDocumentsComponent} from './ofi-kyc/documents/component';
+/**
+ * My informations
+ */
+export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/component';
 /**
  * Nav
  */
@@ -66,6 +75,14 @@ export {
     OfiReportModule,
     OfiManageCsvComponent
 } from './ofi-report-module';
+
+/*
+ * Profile module
+ */
+export {
+    OfiProfileMyInformationsComponent,
+} from './ofi-profile/profile-my-informations/component';
+
 
 /**
  * Ofi main module

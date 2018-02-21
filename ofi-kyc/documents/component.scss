@@ -1,0 +1,41 @@
+.wrapper.wrapper-content {
+    padding: 0px 20px;
+}
+//h1 {
+//    display: inline-block;
+//    margin: 0;
+//    float: left;
+//}
+.well {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    overflow: auto;
+}
+.panel-header {
+  a {
+      color: black;
+      line-height: 48px;
+  }
+  button {
+      margin-right: 0;
+  }
+  .fa-chevron-down {
+        transform: rotate(0deg);
+        transition: transform .5s;
+    &.reverse {
+         transform: rotate(-180deg);
+     }
+  }
+}
+.panel-body {
+    opacity: 1;
+    height: auto;
+    overflow: hidden;
+    transition: opacity .5s linear;
+&.hidden {
+     opacity: 0;
+     height: 0;
+ }
+}

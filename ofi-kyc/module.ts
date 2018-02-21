@@ -12,16 +12,27 @@ import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
-import {OfiHomeComponent} from './home/component';
-
+import {OfiInviteInvestorsComponent} from './invite-investors/component';
+import {OfiSignUpComponent} from './signup/component';
+import {OfiDocumentsComponent} from './documents/component';
+import {MockKYCDocumentsService} from './documents/documents.mock.service';
+import {OfiKycHomeComponent} from './home/component';
+import {OfiMyInformationsModule} from '../ofi-my-informations/module';
 
 /* Decorator. */
 @NgModule({
     declarations: [
-        OfiHomeComponent,
+        OfiInviteInvestorsComponent,
+        OfiSignUpComponent,
+        OfiDocumentsComponent,
+        OfiKycHomeComponent,
+
     ],
     exports: [
-        OfiHomeComponent,
+        OfiInviteInvestorsComponent,
+        OfiSignUpComponent,
+        OfiDocumentsComponent,
+        OfiKycHomeComponent,
     ],
     imports: [
         CommonModule,
@@ -35,13 +46,14 @@ import {OfiHomeComponent} from './home/component';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
+        OfiMyInformationsModule,
     ],
     providers: [
-
+        MockKYCDocumentsService,
     ]
 })
 
 /* Class. */
-export class OfiHomeModule {
+export class OfiKYCModule {
 
 }
