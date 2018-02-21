@@ -83,7 +83,7 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
  */
 import {T2sMessagesComponent} from '@setl/core-t2s';
 import { SetlMessagesComponent } from '@setl/core-messages';
-import {OfiKycHomeComponent} from '../../setl_modules/ofi-main/ofi-kyc/home/component';
+import {OfiKycHomeComponent} from '@ofi/ofi-main/ofi-kyc/home/component';
 
 export const ROUTES: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
