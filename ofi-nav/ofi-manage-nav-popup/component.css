@@ -9,3 +9,7 @@
     overflow-x: visible;
     overflow-y: visible;
 }
+
+:host .modal-footer {
+    display: block;
+}

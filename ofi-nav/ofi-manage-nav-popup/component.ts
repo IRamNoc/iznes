@@ -65,6 +65,10 @@ export class OfiManageNavPopup implements OnInit {
         if(!bool) this.popupService.close();
     }
 
+    close(): void {
+        this.popupService.close();
+    }
+
     isAddMode(): boolean {
         return this.popupService.mode() === model.NavPopupMode.ADD;
     }
