@@ -26,15 +26,35 @@ export class PartyService {
     }
 
     public toJSON(party: PartyModel) {
-        return [
+        let payList = [];
+        _.each(party.payList, (payListItem) => {
+            if (payListItem instanceof Array) {
+                payList.push(payListItem);
+            } else {
+                payList.push(this.payListItemService.toJSON(payListItem));
+            }
+        });
+
+        let receiveList = [];
+        _.each(party.receiveList, (receiveListItem) => {
+            if (receiveListItem instanceof Array) {
+                receiveList.push(receiveListItem);
+            } else {
+                receiveList.push(this.receiveListItemService.toJSON(receiveListItem));
+            }
+        });
+
+        let result =  [
             party.partyIdentifier,
             party.sigAddress,
-            party.payList,
-            party.receiveList,
+            payList,
+            receiveList,
             party.publicKey,
             party.signature,
             party.mustSign
         ];
+
+        return result;
     }
 
     public create(
@@ -60,7 +80,6 @@ export class PartyService {
         party.publicKey = publicKey;
         party.signature = signature;
         party.mustSign = mustSign;
-        console.log('PARTY JSON:', party);
         return party;
     }
 

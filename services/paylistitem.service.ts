@@ -21,9 +21,9 @@ export class PayListItemService {
     public toJSON(payListItem) {
         return [
             payListItem.address,
-            payListItem.namepsace,
+            payListItem.namespace,
             payListItem.assetId,
-            payListItem.quanitity,
+            payListItem.quantity,
             payListItem.publicKey,
             payListItem.signature,
             payListItem.issuance,

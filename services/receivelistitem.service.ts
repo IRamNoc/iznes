@@ -14,4 +14,17 @@ export class ReceiveListItemService {
         receiveListItem.quantity = json[3];
         return receiveListItem;
     }
+
+    public toJSON(receiveListItem) {
+        return [
+            receiveListItem.address,
+            receiveListItem.namespace,
+            receiveListItem.assetId,
+            receiveListItem.quantity,
+            receiveListItem.publicKey,
+            receiveListItem.signature,
+            receiveListItem.issuance,
+            receiveListItem.metadata
+        ];
+    }
 }

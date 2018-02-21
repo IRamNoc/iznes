@@ -195,7 +195,7 @@ export class ContractService {
                     jsonArray.push(this.authorisationService.toJSON(subModel));
                     break;
                 case 'ParameterItemModel':
-                    jsonArray = {}
+                    jsonArray = {};
                     jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
                     break;
                 case 'PartyModel':
