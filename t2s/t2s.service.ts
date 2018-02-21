@@ -78,4 +78,16 @@ export class T2sService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    public pingRequest (): any {
+        /* Setup the message body. */
+        const messageBody: BasicRequestBody = {
+            RequestName: 't2sNew',
+            token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
 }
