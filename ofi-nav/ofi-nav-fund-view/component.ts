@@ -39,17 +39,17 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null, // TODO,
+        locale: null
     }
     dateToConfig: any = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null, // TODO,
+        locale: null
     }
     datePeriodItems: any;
-
+    usingDatePeriodToSearch: boolean = false;
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -87,11 +87,23 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.navHistoryForm = new FormGroup({
             navDateFrom: new FormControl(moment().add(-1, 'weeks').add(-1, 'days').format('YYYY-MM-DD')),
             navDateTo: new FormControl(moment().add(-1, 'days').format('YYYY-MM-DD')),
-            // datePeriod: new FormControl([this.datePeriodItems[0]])
+            datePeriod: new FormControl([this.datePeriodItems[0]])
         });
 
         this.dateFromConfig.max = moment().add(-1, 'days');
         this.dateToConfig.max = moment().add(-1, 'days');
+        
+        this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
+            this.usingDatePeriodToSearch = false;
+        });
+        
+        this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
+            this.usingDatePeriodToSearch = false;
+        });
+        
+        this.navHistoryForm.controls.datePeriod.valueChanges.subscribe(() => {
+            this.usingDatePeriodToSearch = true;
+        });
 
         this.navHistoryForm.valueChanges.subscribe(() => {
             this.clearRequestedHistory();
@@ -100,25 +112,39 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private initDatePeriodItems(): void {
         this.datePeriodItems = [{
-            id: this.generateDatePeriod(-4, 'days', -1, 'days'),
-            text: 'Last 3 days'
-        }, {
-            id: this.generateDatePeriod(-8, 'days', -1, 'days'),
-            text: 'Last 7 days'
-        }, {
-            id: this.generateDatePeriod(-15, 'days', -1, 'days'),
-            text: 'Last 14 days'
-        }, {
-            id: this.generateDatePeriod(-31, 'days', -1, 'days'),
+            id: this.generateDatePeriod(-30, 'days', -1, 'days'),
             text: 'Last 30 days'
         }, {
-            id: this.generateDatePeriod(-61, 'days', -1, 'days'),
-            text: 'Last 60 days'
+            id: this.generateDatePeriod(-3, 'months', -1, 'days'),
+            text: 'Last 3 months'
+        }, {
+            id: this.generateDatePeriod(-6, 'months', -1, 'days'),
+            text: 'Last 6 months'
+        }, {
+            id: this.generateDatePeriod(-9, 'months', -1, 'days'),
+            text: 'Last 9 months'
+        }, {
+            id: this.generateDatePeriod(-12, 'months', -1, 'days'),
+            text: 'Last 12 months'
+        }, {
+            id: this.generateYearToDatePeriod(),
+            text: 'Year to date'
+        }, {
+            id: this.generateBeginningOfTimePeriod(),
+            text: 'Since the beginning'
         }]
     }
 
     private generateDatePeriod(fromInt: number, fromStr: string, toInt: number, toStr: string): string {
-        return `${moment().add(fromInt as any, fromStr).format('YYYY-MM-DD 00:00:00')}|${moment().add(toInt as any, toStr).format('YYYY-MM-DD 00:00:00')}`;
+        return `${moment().add(fromInt as any, fromStr).add(-1, 'days').format('YYYY-MM-DD 00:00:00')}|${moment().add(toInt as any, toStr).format('YYYY-MM-DD 00:00:00')}`;
+    }
+
+    private generateYearToDatePeriod(): string {
+        return `${moment().startOf('year').format('YYYY-MM-DD 00:00:00')}|${moment().add(-1, 'days').format('YYYY-MM-DD 00:00:00')}`;
+    }
+
+    private generateBeginningOfTimePeriod(): string {
+        return `${moment('1970-01-01 00:00:00').format('YYYY-MM-DD 00:00:00')}|${moment().add(-1, 'days').format('YYYY-MM-DD 00:00:00')}`;
     }
 
     /**
@@ -164,10 +190,24 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private requestNavFundHistory(requested: boolean): void {
         if(requested || !this.navFund) return;
 
+        console.log('xxxxxxxxxxxx', this.usingDatePeriodToSearch);
+
+        let navDateFrom;
+        let navDateTo;
+
+        if(this.usingDatePeriodToSearch) {
+            const dateArr = this.navHistoryForm.value.datePeriod[0].id.split('|');
+            navDateFrom = dateArr[0];
+            navDateTo = dateArr[1];
+        } else {
+            navDateFrom = `${this.navHistoryForm.value.navDateFrom} 00:00:00`;
+            navDateTo = `${this.navHistoryForm.value.navDateTo} 00:00:00`;
+        }
+
         const requestData = {
             shareId: this.navFund.shareId,
-            navDateFrom: `${this.navHistoryForm.value.navDateFrom} 00:00:00`,
-            navDateTo: `${this.navHistoryForm.value.navDateTo} 00:00:00`
+            navDateFrom: navDateFrom,
+            navDateTo: navDateTo
         }
 
         OfiNavService.defaultRequestNavHistory(this.ofiNavService, this.redux, requestData);
@@ -208,6 +248,22 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }
         
         return currencyIcon;
+    }
+
+    getFilteredByDateText(): string {
+        let navDateFrom: string;
+        let navDateTo: string;
+
+        if(this.usingDatePeriodToSearch) {
+            const dateArr = this.navHistoryForm.value.datePeriod[0].id.split('|');
+            navDateFrom = dateArr[0];
+            navDateTo = dateArr[1];
+        } else {
+            navDateFrom = this.navHistoryForm.value.navDateFrom;
+            navDateTo = this.navHistoryForm.value.navDateTo;
+        }
+
+        return `${moment(navDateFrom).format('YYYY-MM-DD')} > ${moment(navDateTo).format('YYYY-MM-DD')}`
     }
 
     isNavNull(nav: number): boolean {

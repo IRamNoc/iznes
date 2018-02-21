@@ -27,7 +27,7 @@
                         <input type="text" id="isin" name="isin" value="{{navFund.isin}}" readonly />
                     </div>
                     
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-5">
                         <label class="control-label" for="amCompany" mltag="txt_amcompany">Asset Management Company</label>
                         <input type="text" id="amCompany" name="amCompany" value="{{navFund.asm}}" readonly />
                     </div>
@@ -75,7 +75,7 @@
             <form [formGroup]="navHistoryForm">
                 <div class="form-horizontal">
                     <div class="row">
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-2">
                             <label class="control-label" for="navDateFrom" mltag="txt_datefrom">Date From</label>
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
@@ -87,7 +87,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-2">
                             <label class="control-label" for="navDateTo" mltag="txt_dateto">Date To</label>
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
@@ -99,21 +99,27 @@
                             </div>
                         </div>
 
-                        <!-- <div class="form-group col-sm-1 text-center">
+                        <div class="form-group col-sm-1 text-center">
                             <label class="control-label">&nbsp;</label>
                             <div><strong>- or -</strong></div>
-                        </div> -->
+                        </div>
 
-                        <!-- <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-3">
                             <label class="control-label" for="searchDatePeriod" mltag="txt_dateperiod">Date Period</label>
                             <ng-select id="searchDatePeriod"
                                 class="fluid-width"
                                 [items]="datePeriodItems"
+                                formControlName="datePeriod"
                                 [allowClear]="true"
                                 placeholder="Select date period"
                                 mltag="txt_selectdateperiod">
                             </ng-select>
-                        </div> -->
+                        </div>
+
+                        <div class="form-group col-sm-4 text-right">
+                            <label class="control-label">&nbsp;</label>
+                            <div>Filtered by: {{getFilteredByDateText()}}</div>
+                        </div>
                     </div>
                 </div>
             </form>
