@@ -26,6 +26,11 @@ export {OfiManageNavView} from './ofi-nav/ofi-manage-nav-view-mock/component';
 export {OfiManageNavPopup} from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**
+ * Waiting for approval
+ */
+export {OfiWaitingApprovalComponent} from './ofi-kyc/waiting-approval/component';
+
+/**
  * Services
  */
 export {OfiFundInvestService} from './ofi-req-services/ofi-fund-invest/service';

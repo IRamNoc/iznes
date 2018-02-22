@@ -18,6 +18,11 @@ import {OfiDocumentsComponent} from './documents/component';
 import {MockKYCDocumentsService} from './documents/documents.mock.service';
 import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
+<<<<<<< Updated upstream
+=======
+import {KycUserDetailsComponent} from './kyc-user-details/component';
+import {OfiWaitingApprovalComponent} from './waiting-approval/component';
+>>>>>>> Stashed changes
 
 /* Decorator. */
 @NgModule({
@@ -26,13 +31,23 @@ import {OfiMyInformationsModule} from '../ofi-my-informations/module';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+<<<<<<< Updated upstream
 
+=======
+        KycUserDetailsComponent,
+        OfiWaitingApprovalComponent
+>>>>>>> Stashed changes
     ],
     exports: [
         OfiInviteInvestorsComponent,
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+<<<<<<< Updated upstream
+=======
+        KycUserDetailsComponent,
+        OfiWaitingApprovalComponent,
+>>>>>>> Stashed changes
     ],
     imports: [
         CommonModule,
