@@ -11,6 +11,7 @@ import * as model from '../OfiNav';
 import {OfiManageNavPopupService} from './service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {
+    clearRequestedNavFundView,
     clearRequestedNavFundsList,
     clearRequestedNavFundHistory,
     ofiSetCurrentNavLatestRequest,
@@ -183,9 +184,11 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private updateNavSuccessCallback(res: any): void {
+        this.redux.dispatch(clearRequestedNavFundView());
+
         this.popupService.close();
 
-        this.showResponseModal(res[1].Data[0]);
+        this.showUpdateResponseModal(res[1].Data[0]);
     }
 
     private updateNavErrorCallback(res: any): void {
@@ -216,7 +219,7 @@ export class OfiManageNavPopup implements OnInit {
     private deleteNavSuccessCallback(res: any): void {
         this.popupService.close();
 
-        this.showResponseModal(res[1]);
+        this.showDeleteResponseModal(res[1]);
     }
 
     private deleteNavErrorCallback(res: any): void {
@@ -257,8 +260,21 @@ export class OfiManageNavPopup implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
+    private showUpdateResponseModal(response: any) {
+        this.alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-success">Successfully Updated NAV</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
 
-    private showResponseModal(response: any) {
+        this.responseModalCallback();
+    }
+    
+    private showDeleteResponseModal(response: any) {
         this.alertsService.create('success', `
             <table class="table grid">
                 <tbody>
@@ -269,6 +285,10 @@ export class OfiManageNavPopup implements OnInit {
             </table>
         `);
 
+        this.responseModalCallback();
+    }
+    
+    private responseModalCallback(): void {
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }

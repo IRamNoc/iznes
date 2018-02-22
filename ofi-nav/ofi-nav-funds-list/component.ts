@@ -58,9 +58,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
         
     ngOnInit() {
-        this.initSubscriptions();
         this.initDataTypes();
         this.initSearchForm();
+        this.initSubscriptions();
         this.clearRequestedList();
     }
 

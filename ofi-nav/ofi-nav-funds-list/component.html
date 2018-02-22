@@ -7,7 +7,7 @@
     <span>View the NAV's for the shares in the list below.</span>
 </div>
 
-<clr-tabs>
+<clr-tabs *ngIf="searchForm">
     <clr-tab>
         <button id="netAssetValueTab" clrTabLink>
             <i class="fa fa-th-list"></i>
