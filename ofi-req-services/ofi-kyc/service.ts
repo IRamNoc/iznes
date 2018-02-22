@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
+    CreateUserRequestBody,
+    CreateUserRequestData,
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
-    CreateUserRequestBody,
-    CreateUserRequestData
+    WaitingApprovalMessageBody
 } from './model';
 import {createMemberNodeRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -50,6 +50,53 @@ export class OfiKycService {
             password: _.get(requestData, 'password', ''),
             accountName: _.get(requestData, 'email', ''),
             accountDescription: _.get(requestData, 'email', '') + '_account'
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Accept an investor's KYC approval
+     *
+     * @param {number} kycId
+     * @returns {any}
+     */
+    approve(kycId: number): any {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesapprovekyc',
+            token: this.memberSocketService.token,
+            kycID: kycId
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Reject an investor's KYC approval
+     *
+     * @param {number} kycId
+     * @returns {any}
+     */
+    reject(kycId: number) {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesrejectkyc',
+            token: this.memberSocketService.token,
+            kycID: kycId
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Ask more informations for an investor's KYC approval
+     * @param {number} kycId
+     * @returns {any}
+     */
+    askMoreInfo(kycId: number) {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesrequestmoreinfo',
+            token: this.memberSocketService.token,
+            kycID: kycId
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
