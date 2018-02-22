@@ -5,11 +5,11 @@ node {
 node {
     timestamps {
 
-        stage('Deploy Flyway to Test Environment') {
+        stage('Deploy Membership-db to Test Environment') {
             node {
                 sh '''
-                            ssh root@139.162.213.130 rsync -avzh --stats /var/flyway /var/ofi_backups/flyway &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/flyway/*  root@139.162.213.130:/var/flyway'''
+                            ssh root@139.162.213.130 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db &&
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@139.162.213.130:/var/membership-db'''
             }
         }
         stage('Deploy Frontend to Test Environment') {
