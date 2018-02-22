@@ -4,6 +4,7 @@ import {Location} from '@angular/common';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select} from '@angular-redux/store';
 import {InvestorModel} from './model';
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
     selector: 'app-waiting-approval',
@@ -19,6 +20,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     language: string;
     userDetail: any;
     investor: InvestorModel;
+    kycId: any;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObs;
@@ -27,12 +29,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     /**
      * Constructor
      *
-     * @param {FormBuilder} fb
-     * @param {ChangeDetectorRef} cdr
-     * @param {Location} location
+     * @param {FormBuilder} _fb
+     * @param {ChangeDetectorRef} _cdr
+     * @param {Location} _location
+     * @param {OfiKycService} _kycService
      */
-    constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private location: Location) {
-        this.isRejectModalDisplayed = false;
+    constructor(private _fb: FormBuilder,
+                private _cdr: ChangeDetectorRef,
+                private _location: Location,
+                private _kycService: OfiKycService) {
+
+        console.clear();
 
         // Fake input value
         this.investor = {
@@ -44,7 +51,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             'approvalDateRequest': { label: 'Date of approval request:', value: '2018-02-21' }
         };
 
-        // Init
+        // TODO: set the real value of the kyc id once it's linked to stephen part
+        // const lastIndex = this._location.path().lastIndexOf('/') + 1;
+        // this.kycId = this._location.path().substr(lastIndex);
+        this.kycId = 6;
+
+        //
+        this.isRejectModalDisplayed = false;
         this.initWaitingApprovalForm();
         this.initStatuses();
     }
@@ -55,7 +68,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.cdr.detach();
+        this._cdr.detach();
 
         this.subscriptions.forEach((subscription) => {
             subscription.unsubscribe();
@@ -63,7 +76,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initWaitingApprovalForm(): void {
-        this.waitingApprovalFormGroup = this.fb.group({
+        this.waitingApprovalFormGroup = this._fb.group({
             status: [1, Validators.required],
             additionalText: ['', Validators.required],
             isKycAccepted: [false, Validators.required]
@@ -106,20 +119,38 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     handleBackButtonClick() {
         this.resetForm();
-        this.location.back();
+        this._location.back();
     }
 
     handleSubmitButtonClick(): void {
         const status = this.waitingApprovalFormGroup.controls['status'].value;
 
-        // Reject status
-        if (status === -1) {
-            this.isRejectModalDisplayed = true;
-        } else {
-            const additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value;
-            const isKycAccepted = this.waitingApprovalFormGroup.controls['isKycAccepted'].value;
-            this.resetForm();
-            this.location.back();
+        switch (status) {
+            case -1:
+                this.isRejectModalDisplayed = true;
+                break;
+            case 0:
+                this._kycService.askMoreInfo(this.kycId)
+                    .then((response) => {
+                        console.log('on ask for more info success: ', response[0]);
+                    }).catch((e) => {
+                        console.log('on ask for more info fail: ', e);
+                    }
+                );
+
+                this.resetForm();
+                break;
+            case 1:
+                this._kycService.approve(this.kycId)
+                    .then((response) => {
+                        console.log('on approve success: ', response[0]);
+                    }).catch((e) => {
+                        console.log('on approve fail: ', e);
+                    }
+                );
+
+                this.resetForm();
+                break;
         }
     }
 
@@ -129,6 +160,14 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     handleRejectButtonClick() {
         this.isRejectModalDisplayed = false;
+
+        this._kycService.reject(this.kycId)
+            .then((response) => {
+                console.log('on reject success: ', response[0]);
+            }).catch((e) => {
+                console.log('on reject fail: ', e);
+            }
+        );
     }
 
     resetForm(): void {
