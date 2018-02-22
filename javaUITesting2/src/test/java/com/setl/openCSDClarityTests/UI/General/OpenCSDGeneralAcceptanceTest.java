@@ -297,98 +297,75 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting code completion")
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
-        driver.findElement(By.id("dropdown-user")).click();
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestor("User1@setl.io", "Jordan", "Miller");
+    }
+
+    @Test
+    public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestor("User1@setl.io", "", "Miller");
+    }
+
+    @Test
+    public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestor("User1@setl.io", "Jordan", "");
+    }
+
+    @Test
+    public void shouldNotInviteAnInvestorWithoutEmail() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestorExpectingFailed("", "Jordan", "Miller");
+    }
+
+    public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement profileDropdown = driver.findElement(By.id("top-menu-invite-investors"));
+        driver.findElement(By.id(toplevelID)).click();
+        WebElement profileDropdown = driver.findElement(By.id(itemID));
         wait.until(visibilityOf(profileDropdown));
-        driver.findElement(By.id("top-menu-invite-investors")).click();
+        driver.findElement(By.id(itemID)).click();
         try{
-            assertTrue(driver.findElement(By.id("ofi-kyc-invite-investors")).isDisplayed());
+            assertTrue(driver.findElement(By.id(headingID)).isDisplayed());
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
-        driver.findElement(By.id("kyc_email_0")).sendKeys("user1@setl.io");
-        driver.findElement(By.id("kyc_firstName_0")).sendKeys("jordan");
-        driver.findElement(By.id("kyc_lastName_0")).sendKeys("miller");
+    }
+
+    public static void inviteAnInvestor(String email, String firstname, String lastname) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
             driver.findElement(By.id("btnKycSubmit")).click();
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
-        Thread.sleep(1000);
         WebElement popupSuccess = driver.findElement(By.className("modal-header"));
         wait.until(visibilityOf(popupSuccess));
         try{
-            String success = driver.findElement(By.className("modal-title ng-star-inserted")).getText();
+            String success = driver.findElement(By.className("modal-title")).getText();
             assertTrue(success.equals("Success!"));
         }catch (Exception e){
             fail("success message did not match : " + e.getMessage());
         }
     }
 
-    @Test
-    @Ignore("Awaiting code completion")
-    public void shouldInviteAnInvestorWithoutFirstnameAndLastname() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        driver.findElement(By.id("dropdown-user")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement profileDropdown = driver.findElement(By.id("top-menu-invite-investors"));
-        wait.until(visibilityOf(profileDropdown));
-        driver.findElement(By.id("top-menu-invite-investors")).click();
-        try{
-            assertTrue(driver.findElement(By.id("ofi-kyc-invite-investors")).isDisplayed());
-        }catch (Exception e){
-            fail("FAILED : " + e.getMessage());
-        }
-        driver.findElement(By.id("kyc_email_0")).sendKeys("user1@setl.io");
+    public static void inviteAnInvestorExpectingFailed(String email, String firstname, String lastname) throws IOException, InterruptedException{
+        driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
-            driver.findElement(By.id("btnKycSubmit")).click();
+               String test = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
+            assertTrue(test.equals("true"));
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
-        }
-        Thread.sleep(1000);
-        WebElement popupSuccess = driver.findElement(By.className("modal-header"));
-        wait.until(visibilityOf(popupSuccess));
-        try{
-            String success = driver.findElement(By.className("modal-title ng-star-inserted")).getText();
-            assertTrue(success.equals("Success!"));
-        }catch (Exception e){
-            fail("success message did not match : " + e.getMessage());
-        }
-    }
-
-    @Test
-    @Ignore("Awaiting code completion")
-    public void shouldntInviteAnInvestorWithoutEmail() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        driver.findElement(By.id("dropdown-user")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement profileDropdown = driver.findElement(By.id("top-menu-invite-investors"));
-        wait.until(visibilityOf(profileDropdown));
-        driver.findElement(By.id("top-menu-invite-investors")).click();
-        try{
-            assertTrue(driver.findElement(By.id("ofi-kyc-invite-investors")).isDisplayed());
-        }catch (Exception e){
-            fail("FAILED : " + e.getMessage());
-        }
-        driver.findElement(By.id("kyc_firstName_0")).sendKeys("jordan");
-        driver.findElement(By.id("kyc_lastName_0")).sendKeys("miller");
-        try {
-            driver.findElement(By.id("btnKycSubmit")).click();
-        }catch (Exception e){
-            fail("FAILED : " + e.getMessage());
-        }
-        Thread.sleep(1000);
-        WebElement popupSuccess = driver.findElement(By.className("modal-header"));
-        wait.until(visibilityOf(popupSuccess));
-        try{
-            String success = driver.findElement(By.className("modal-title ng-star-inserted")).getText();
-            assertTrue(success.equals("Success!"));
-        }catch (Exception e){
-            fail("success message did not match : " + e.getMessage());
         }
     }
 
