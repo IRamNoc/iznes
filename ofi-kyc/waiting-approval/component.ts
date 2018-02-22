@@ -1,13 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select} from '@angular-redux/store';
@@ -23,47 +15,43 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     subscriptions: Array<any> = [];
     waitingApprovalFormGroup: FormGroup;
     statuses: Object[];
-    amCompanyName: string;
+    isRejectModalDisplayed: boolean;
     language: string;
-
-    @Input() icon: string;
-    @Input() investor: InvestorModel;
-    @Output() onSubmit = new EventEmitter<void>();
+    userDetail: any;
+    investor: InvestorModel;
 
     /* Observables. */
-    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObs;
+    @select(['user', 'myDetail']) authUserDetailObs;
 
     /**
      * Constructor
      *
      * @param {FormBuilder} fb
      * @param {ChangeDetectorRef} cdr
+     * @param {Location} location
      */
-    constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
-        console.clear();
-
-        this.language = 'fr-Latn';
+    constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private location: Location) {
+        this.isRejectModalDisplayed = false;
 
         // Fake input value
         this.investor = {
-            companyName: 'OFI',
-            firstName: 'David',
-            lastName: 'Duong',
-            email: 'david.duong@setl.io',
-            phoneNumber: '0612345678',
-            approvalDateRequest: '2018-02-21'
+            'companyName': { label: 'Company name:', value: 'OFI' },
+            'firstName': { label: 'First name:', value: 'David' },
+            'lastName': { label: 'Last name:', value: 'Duong' },
+            'email': { label: 'Email address:', value: 'david.duong@setl.io' },
+            'phoneNumber': { label: 'Phone number:', value: '0612345678' },
+            'approvalDateRequest': { label: 'Date of approval request:', value: '2018-02-21' }
         };
 
-        this.icon = 'fa-check-circle';
-        this.amCompanyName = 'MOIIII';
-
-        //
+        // Init
         this.initWaitingApprovalForm();
         this.initStatuses();
     }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.requestLanguageObj.subscribe((language) => this.getLanguage(language)));
+        this.subscriptions.push(this.requestLanguageObs.subscribe((language) => this.getLanguage(language)));
+        this.subscriptions.push(this.authUserDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
     }
 
     ngOnDestroy(): void {
@@ -76,7 +64,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     initWaitingApprovalForm(): void {
         this.waitingApprovalFormGroup = this.fb.group({
-            status: [-1, Validators.required],
+            status: [1, Validators.required],
             additionalText: ['', Validators.required],
             isKycAccepted: [false, Validators.required]
         });
@@ -87,44 +75,65 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             {
                 id: 'reject',
                 label: 'Reject',
-                value: 0
+                value: -1
             },
             {
                 id: 'askForMoreInfo',
                 label: 'Ask for more info',
-                value: 1
+                value: 0
             },
             {
                 id: 'accept',
                 label: 'Accept',
-                value: -1
+                value: 1
             }
         ];
     }
 
     getLanguage(language: string): void {
         this.language = language;
-
-        console.log('get language: ', this.language);
     }
 
-    /**
-     * Submit the form
-     */
-    handleSubmitClick(): void {
-        console.log('on submit');
-        console.log('status: ', this.waitingApprovalFormGroup.controls['status'].value);
-        console.log('additionalText: ', this.waitingApprovalFormGroup.controls['additionalText'].value);
-        console.log('isKycAccepted: ', this.waitingApprovalFormGroup.controls['isKycAccepted'].value);
+    getUserDetail(userDetail): void {
+        this.userDetail = userDetail;
+    }
 
+    handleStatusChange() {
+        if (this.waitingApprovalFormGroup.controls['status'].value !== 1) {
+            this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
+        }
+    }
+
+    handleBackButtonClick() {
         this.resetForm();
-        // this.onSubmit.emit();
+        this.location.back();
+    }
+
+    handleSubmitButtonClick(): void {
+        const status = this.waitingApprovalFormGroup.controls['status'].value;
+
+        // Reject status
+        if (status === -1) {
+            this.isRejectModalDisplayed = true;
+        } else {
+            const additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value;
+            const isKycAccepted = this.waitingApprovalFormGroup.controls['isKycAccepted'].value;
+            this.resetForm();
+            this.location.back();
+        }
+    }
+
+    handleModalCloseButtonClick() {
+        this.isRejectModalDisplayed = false;
+    }
+
+    handleRejectButtonClick() {
+        this.isRejectModalDisplayed = false;
     }
 
     resetForm(): void {
-        // this.initStatuses();
-
-        this.waitingApprovalFormGroup.controls['status'].setValue(-1);
+        this.isRejectModalDisplayed = false;
+        this.waitingApprovalFormGroup.controls['status'].setValue(1);
         this.waitingApprovalFormGroup.controls['additionalText'].setValue('');
         this.waitingApprovalFormGroup.controls['isKycAccepted'].setValue(false);
     }
