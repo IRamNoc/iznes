@@ -3,6 +3,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {
     RequestNavMessageBody,
     RequestNavFundHistoryMessageBody,
+    RequestNavFundLatestMessageBody,
     UpdateNavMessageBody,
     DeleteNavMessageBody
 } from './model';
@@ -20,9 +21,11 @@ import {
     ofiSetCurrentNavFundViewRequest,
     SET_NAV_FUND_HISTORY,
     setRequestedNavFundHistory,
-    ofiSetCurrentNavFundHistoryRequest
+    ofiSetCurrentNavFundHistoryRequest,
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest
 } from '../../../ofi-store/ofi-product/nav';
-import { error } from 'selenium-webdriver';
 
 @Injectable()
 export class OfiNavService {
@@ -92,6 +95,33 @@ export class OfiNavService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_NAV_FUND_HISTORY],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    /**
+     * Default static call to get nav fund, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultRequestNavLatest(ofiNavService: OfiNavService,
+        ngRedux: NgRedux<any>,
+        requestData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedNavLatest());
+
+        // Request the list.
+        const asyncTaskPipe = ofiNavService.requestNavFundLatest(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_NAV_LATEST],
             [],
             asyncTaskPipe,
             {}
@@ -172,6 +202,17 @@ export class OfiNavService {
             shareId: _.get(requestData, 'shareId', undefined),
             navDateFrom: _.get(requestData, 'navDateFrom', null),
             navDateTo: _.get(requestData, 'navDateTo', null)
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestNavFundLatest(requestData: any): any {
+        const messageBody: RequestNavFundLatestMessageBody = {
+            RequestName: 'getNavFundLatest',
+            token: this.memberSocketService.token,
+            fundName: _.get(requestData, 'fundName', null),
+            navDate: _.get(requestData, 'navDate', null)
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

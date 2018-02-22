@@ -1,6 +1,8 @@
 import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -9,7 +11,10 @@ import * as model from '../OfiNav';
 import {OfiManageNavPopupService} from './service';
 import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
 import {
-    clearRequestedNavFundHistory
+    clearRequestedNavFundsList,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavLatestRequest,
+    clearRequestedNavLatest
 } from '../../ofi-store/ofi-product/nav';
 
 @Component({
@@ -21,6 +26,8 @@ export class OfiManageNavPopup implements OnInit {
 
     private mode: model.NavPopupMode;
     private _isOpen: boolean;
+
+    navLatest: number;
 
     navDateConfig: any = {
         firstDayOfWeek: 'mo',
@@ -40,6 +47,12 @@ export class OfiManageNavPopup implements OnInit {
 
     navForm: FormGroup;
     statusItems: any[];
+    navExceedsThreshold = false;
+
+    private subscriptionsArray: Subscription[] = [];
+
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavLatest', 'requested']) navLatestRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavLatest', 'navLatest']) navLatestOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
@@ -48,16 +61,28 @@ export class OfiManageNavPopup implements OnInit {
         private popupService: OfiManageNavPopupService) {
 
         this.initStatusData();
+        this.initSubscriptions();
     }
 
     ngOnInit() {
         this.popupService.onOpen.subscribe((res: {share: model.NavInfoModel, mode: model.NavPopupMode}) => {
+            this.redux.dispatch(clearRequestedNavLatest());
+            this.navExceedsThreshold = false;
             this.initNavForm(res.share, res.mode);
         });
 
         this.popupService.onClose.subscribe(() => {
             this.navForm = undefined;
         });
+    }
+
+    private initSubscriptions(): void {
+        this.subscriptionsArray.push(this.navLatestRequestedOb.subscribe(requested => {
+            this.requestNavLatest(requested);
+        }));
+        this.subscriptionsArray.push(this.navLatestOb.subscribe(navList => {
+            this.updateNavLatest(navList);
+        }));
     }
 
     get share(): model.NavInfoModel {
@@ -109,7 +134,17 @@ export class OfiManageNavPopup implements OnInit {
             this.navForm.controls.status.disable();
         }
 
+        this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
+            this.checkIfNavExceedsThreshold(nav);
+        });
+
         this.changeDetectorRef.markForCheck();
+    }
+
+    private checkIfNavExceedsThreshold(nav: number): void {
+        const diff = (nav - this.navLatest) / this.navLatest * 100;
+
+        this.navExceedsThreshold = diff > 10;
     }
 
     private initStatusData(): void {
@@ -189,6 +224,40 @@ export class OfiManageNavPopup implements OnInit {
     }
 
 
+    /**
+     * request the nav latest
+     * @param requested boolean
+     * @return void
+     */
+    private requestNavLatest(requested: boolean): void {
+        if(requested) return;
+
+        const requestData = {
+            fundName: this.share.fundShareName,
+            navDate: `${this.share.navDate}`
+        }
+
+        OfiNavService.defaultRequestNavLatest(this.ofiNavService,
+            this.redux,
+            requestData,
+            () => {},
+            () => {}
+        );
+
+        this.redux.dispatch(ofiSetCurrentNavLatestRequest(requestData));
+    }
+
+    /**
+     * update the nav latest
+     * @param navList NavList
+     * @return void
+     */
+    private updateNavLatest(navLatest: model.NavLatestModel[]): void {
+        this.navLatest = (navLatest[0]) ? navLatest[0].nav : null;
+        this.changeDetectorRef.markForCheck();
+    }
+
+
     private showResponseModal(response: any) {
         this.alertsService.create('success', `
             <table class="table grid">
@@ -200,13 +269,15 @@ export class OfiManageNavPopup implements OnInit {
             </table>
         `);
 
+        this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
-
+    
     private showErrorModal(data): void {
         this.alertsService.create('error',
-            `${data[1].status}`);
-
+        `${data[1].status}`);
+        
+        this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
 

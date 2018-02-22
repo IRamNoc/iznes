@@ -122,7 +122,13 @@ export {
     setRequestedNavFundHistory,
     clearRequestedNavFundHistory,
     ofiSetCurrentNavFundHistoryRequest,
-    getOfiNavFundHistoryCurrentRequest
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest
 } from './ofi-product';
 
 export interface OfiState {

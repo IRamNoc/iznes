@@ -21,6 +21,11 @@ export class NavModel {
     units?: number;
 }
 
+export class NavLatestModel {
+    nav: number;
+    navDate: string;
+}
+
 export class NavFundHistoryItem {
     shareId: number;
     currency: string;

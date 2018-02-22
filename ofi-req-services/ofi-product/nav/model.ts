@@ -24,6 +24,12 @@ export interface RequestNavFundHistoryMessageBody extends MemberNodeMessageBody 
     navDateTo: string;
 }
 
+export interface RequestNavFundLatestMessageBody extends MemberNodeMessageBody {
+    token: string;
+    fundName: number;
+    navDate: string;
+}
+
 export interface UpdateNavMessageBody extends MemberNodeMessageBody {
     token: string;
     fundName: string;

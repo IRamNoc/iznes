@@ -38,7 +38,15 @@ import {
     setRequestedNavFundHistory,
     clearRequestedNavFundHistory,
     ofiSetCurrentNavFundHistoryRequest,
-    getOfiNavFundHistoryCurrentRequest
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    OfiNavLatestState,
+    OfiNavLatestReducer,
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest
 } from './nav';
 
 export {
@@ -68,7 +76,15 @@ export {
     setRequestedNavFundHistory,
     clearRequestedNavFundHistory,
     ofiSetCurrentNavFundHistoryRequest,
-    getOfiNavFundHistoryCurrentRequest
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    OfiNavLatestState,
+    OfiNavLatestReducer,
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest    
 };
 
 export interface OfiProductState {
@@ -76,11 +92,13 @@ export interface OfiProductState {
     ofiSicav: SicavState;
     ofiFund: FundState;
     ofiManageNav: OfiManageNavState;
+    ofiNavLatest: OfiNavLatestState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
-    ofiManageNav: OfiManageNavReducer
+    ofiManageNav: OfiManageNavReducer,
+    ofiNavLatest: OfiNavLatestReducer
 });
