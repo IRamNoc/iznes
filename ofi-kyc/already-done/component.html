@@ -1,11 +1,11 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-unlock"></i> <span mltag="txt_ui_forms">Welcome to {{appConfig.platform}}</span></h1>
+    <h1><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> <span mltag="txt_ui_standardform">Standard Form</span>
+            <i class="fa fa-bars"></i> <span>Standard Form</span>
         </button>
 
         <clr-tab-content *clrIfActive>
@@ -17,12 +17,12 @@
                 <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
                     <div class="form-group opt-btn-container">
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="checkrads_11" value="YES" formControlName="opt">
-                            <label for="checkrads_11">Yes</label>
+                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt">
+                            <label for="opt-yes">Yes</label>
                         </div>
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="checkrads_12" value="NO" formControlName="opt">
-                            <label for="checkrads_12">No</label>
+                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt">
+                            <label for="opt-no">No</label>
                         </div>
                         <div class="opt-btn-context">
                             <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
