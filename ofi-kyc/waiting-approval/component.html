@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i [ngClass]="['fa', icon]"></i>
-        <span>KYC Documents Approval: {{investor.companyName}}</span>
+        <i class="fa fa-check-circle"></i>
+        <span>KYC Documents Approval: {{investor.companyName.value}}</span>
     </h1>
 </div>
 
@@ -9,119 +9,77 @@
     <clr-tab>
         <button clrTabLink id="waitingApprovalTab">
             <i class="fa fa-bars"></i>
-            <span>
-                KYC documents & client folder
-            </span>
+            <span>KYC documents & client folder</span>
         </button>
 
         <clr-tab-content *clrIfActive>
             <span>
-                Please confirm herebelow if this KYC documents have been previously filled up by your client {{investor.companyName}}, and have been approved by {{amCompanyName}}
+                Please confirm herebelow if this KYC documents have been previously filled up by your client {{investor.companyName.value}}, and have been approved by {{userDetail.username}}
             </span>
 
             <!-- Investor informations block -->
+            <app-text-input-list [title]="'Professional Investor:'" [content]="investor"></app-text-input-list>
+
+            <!-- Waiting for approval form -->
             <div class="blockRounded">
-                <span>Professional Investor:</span>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">First name:</span>
-                    <label>
-                        <input id="firstName" type="text" disabled value={{investor.firstName}}/>
-                    </label>
-                </div>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">Last name:</span>
-                    <label>
-                        <input id="lastName" type="text" disabled value={{investor.lastName}}/>
-                    </label>
-                </div>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">Email address:</span>
-                    <label>
-                        <input id="email" type="email" disabled value={{investor.email}}/>
-                    </label>
-                </div>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">Phone number:</span>
-                    <label>
-                        <input id="phoneNumber" type="tel" disabled value={{investor.phoneNumber}}/>
-                    </label>
-                </div>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">Company name:</span>
-                    <label>
-                        <input id="companyName" type="text" disabled value={{investor.companyName}}/>
-                    </label>
-                </div>
-
-                <div class="form-group col-sm-12">
-                    <span class="form-group col-sm-6">Date of approval request:</span>
-                    <label>
-                        <input id="approvalDateRequest" type="date" disabled value={{investor.approvalDateRequest}}/>
-                    </label>
-                </div>
-            </div>
-
-            <div class="blockRounded">
-                <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitClick()">
+                <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
-                        <h5 class="form-group col-sm-12">
-                            Please confirm that you validate your client"s KYC documents:
-                        </h5>
+                        <p><b>Please confirm that you validate your client's KYC documents:</b></p>
 
                         <div class="form-group col-sm-12">
-                            Does the Asset Management company ME, confirm that the client {{investor.companyName}}
+                            Does the Asset Management company ME, confirm that the client {{investor.companyName.value}}
                             has successfully filled up the KYC documents, and that you wish to authorise this client
                             to place orders on IZNES?
                         </div>
 
                         <!-- Radio buttons -->
                         <div class="row">
-                            <div class="form-check form-check-inline" *ngFor="let status of statuses">
+                            <div class="form-check form-check-inline"
+                                 *ngFor="let status of statuses">
                                 <input id={{status.id}}
                                        type="radio"
                                        class="form-check-input"
                                        formControlName="status"
                                        [value]="status.value"
-                                       [checked]="status.value === -1"/>
+                                       [checked]="status.value === 1"
+                                       (change)="handleStatusChange()"/>
 
-                                <label class="form-check-label" for={{status.id}}>
-                                    {{status.label}}
-                                </label>
+                                <label class="form-check-label" for={{status.id}}>{{status.label}}</label>
                             </div>
                         </div>
 
                         <!-- Checkbox -->
-                        <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === -1">
-                            <input id="checkbox"
-                                   class="form-check-input"
-                                   type="checkbox"
-                                   formControlName="isKycAccepted"
-                                   value="false"/>
+                        <div class="form-group col-sm-12">
+                            <div class="form-check"
+                                 *ngIf="waitingApprovalFormGroup.controls['status'].value === 1">
+                                <input id="checkbox"
+                                       class="form-check-input"
+                                       type="checkbox"
+                                       formControlName="isKycAccepted"
+                                       value="false"/>
 
-                            <label class="form-check-label" for="checkbox">
-                                We hereby validate that this client has fully completed the KYC documents with us, and
-                                is authorised to trade with us.
-                            </label>
+                                <label class="form-check-label" for="checkbox">
+                                    We hereby validate that this client has fully completed the KYC documents with us,
+                                    and is authorised to trade with us.
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Additional text -->
                         <div class="form-group col-sm-12"
-                             *ngIf="waitingApprovalFormGroup.controls['status'].value !== -1">
+                             *ngIf="waitingApprovalFormGroup.controls['status'].value !== 1">
 
                             <!-- Reject -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === 0"
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === -1"
+                                      id="rejectText"
                                       class="form-control"
                                       placeholder="Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform."
                                       formControlName="additionalText">
                             </textarea>
 
                             <!-- Ask for more info -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === 1"
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === 0"
+                                      id="askMoreInfoText"
                                       class="form-control"
                                       placeholder="Please ask more information here. This will be sent as a message to your client on the IZNES platform."
                                       formControlName="additionalText">
@@ -129,12 +87,17 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <button id="backButton" type="button" class="btn btn-info" onclick="goBack()">
+                            <button id="backButton"
+                                    type="button"
+                                    class="btn btn-light"
+                                    onclick="handleBackButtonClick()">
                                 Back
                             </button>
 
-                            <button id="submitButton" type="submit" class="btn btn-primary"
-                                    [disabled]="waitingApprovalFormGroup.controls['status'].value === -1 && waitingApprovalFormGroup.controls['isKycAccepted'].value === false">
+                            <button id="submitButton"
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    [disabled]="waitingApprovalFormGroup.controls['status'].value === 1 && waitingApprovalFormGroup.controls['isKycAccepted'].value === false">
                                 Validate
                             </button>
                         </div>
@@ -144,3 +107,30 @@
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
+
+<clr-modal [(clrModalOpen)]="isRejectModalDisplayed" [clrModalClosable]="false">
+    <div class="modal-title">
+        <h4 class="modal-title-text">
+            <span class="ml_translated">Confirm rejection?</span>
+        </h4>
+    </div>
+
+    <div class="modal-body text-center">
+        <p>Are you sure you want to reject this client's application?</p>
+        <p><i class="fa fa-question modal-icon text-muted text-danger"></i></p>
+        <p>You can also ask more information to this client in the previous page</p>
+    </div>
+
+    <div class="modal-footer text-center">
+        <button type="button"
+                id="backApprovalPageButton"
+                class="btn btn-outline-info"
+                (click)="handleModalCloseButtonClick()">
+            Back to approval page
+        </button>
+
+        <button id="rejectButton" type="button" class="btn btn-primary" (click)="handleRejectButtonClick()">
+            Reject the client's application
+        </button>
+    </div>
+</clr-modal>
