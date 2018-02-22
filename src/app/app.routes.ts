@@ -35,6 +35,7 @@ import {
     OfiTaxReportComponent,
     OfiProfileMyInformationsComponent,
     OfiKycHomeComponent,
+    OfiKycAlreadyDoneComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -160,9 +161,19 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'new-investor-home',
-                component: OfiKycHomeComponent,
-                canActivate: [LoginGuardService]
+                path: 'new-investor',
+                children: [
+                    {
+                        path: 'informations',
+                        component: OfiKycHomeComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'already-done',
+                        component: OfiKycAlreadyDoneComponent,
+                        canActivate: [LoginGuardService]
+                    }
+                ],
             },
             {
                 path: 'profile',
