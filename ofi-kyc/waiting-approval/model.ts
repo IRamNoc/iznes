@@ -1,9 +1,13 @@
+export interface FieldStructure {
+    label: string;
+    value: string;
+}
+
 export interface InvestorModel {
-    companyName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneCode?: string;
-    phoneNumber: string;
-    approvalDateRequest: string;
+    companyName: FieldStructure;
+    firstName: FieldStructure;
+    lastName: FieldStructure;
+    email: FieldStructure;
+    phoneNumber: FieldStructure;
+    approvalDateRequest: FieldStructure;
 }
