@@ -12,6 +12,7 @@ export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component'
 export {OfiSignUpComponent} from './ofi-kyc/signup/component';
 export {OfiDocumentsComponent} from './ofi-kyc/documents/component';
 export {OfiKycHomeComponent} from './ofi-kyc/home/component';
+export {OfiKycAlreadyDoneComponent} from './ofi-kyc/already-done/component';
 /**
  * My informations
  */

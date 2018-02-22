@@ -19,6 +19,7 @@ import {MockKYCDocumentsService} from './documents/documents.mock.service';
 import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
 import {TextInputListComponent} from './text-input-list/component';
+import {OfiKycAlreadyDoneComponent} from './already-done/component';
 
 /* Decorator. */
 @NgModule({
@@ -27,6 +28,7 @@ import {TextInputListComponent} from './text-input-list/component';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
     exports: [
@@ -34,6 +36,7 @@ import {TextInputListComponent} from './text-input-list/component';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
     imports: [

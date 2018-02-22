@@ -1,0 +1,52 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-unlock"></i> <span mltag="txt_ui_forms">Welcome to {{appConfig.platform}}</span></h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="standardform">
+            <i class="fa fa-bars"></i> <span mltag="txt_ui_standardform">Standard Form</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <p class="p1">Let's start with the mandatory administrative part: the KYC</p>
+
+            <section class="form-block confirm-container">
+                <h3>KYC & client folder</h3>
+                <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
+                <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group opt-btn-container">
+                        <div class="radio-inline opt-btn-element">
+                            <input type="radio" name="opt" id="checkrads_11" value="YES" formControlName="opt">
+                            <label for="checkrads_11">Yes</label>
+                        </div>
+                        <div class="radio-inline opt-btn-element">
+                            <input type="radio" name="opt" id="checkrads_12" value="NO" formControlName="opt">
+                            <label for="checkrads_12">No</label>
+                        </div>
+                        <div class="opt-btn-context">
+                            <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
+                            <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()">
+                            <span>Back</span>
+                        </button>
+                        <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid">
+                            <span mltag="txt_validate">Validate</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="form-block">
+                <app-text-input-list
+                        [title]="'Info: Details of your Asset Management company'"
+                        [content]="amDetails"
+                        [additionnalText]="'You can contact your asset manager directly.'"
+                ></app-text-input-list>
+             </section>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
