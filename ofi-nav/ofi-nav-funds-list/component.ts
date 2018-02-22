@@ -54,13 +54,15 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         private ofiNavService: OfiNavService,
         private popupService: OfiManageNavPopupService) {
         
+        
+    }
+        
+    ngOnInit() {
         this.initSubscriptions();
         this.initDataTypes();
         this.initSearchForm();
         this.clearRequestedList();
     }
-        
-    ngOnInit() { }
 
     private initSubscriptions(): void {
         this.subscriptionsArray.push(this.navRequestedOb.subscribe(requested => {
@@ -78,11 +80,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             date: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
-        this.searchForm.valueChanges.subscribe(() => {
-            this.changeDetectorRef.detectChanges();
-
+        this.subscriptionsArray.push(this.searchForm.valueChanges.subscribe(() => {
             this.clearRequestedList();
-        });
+        }));
     }
 
     /**
@@ -92,6 +92,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      */
     private requestNavList(requested: boolean): void {
         if(requested) return;
+
+        this.changeDetectorRef.detectChanges();
 
         const requestData = {
             fundName: this.searchForm.value.shareName,
@@ -156,6 +158,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     navigateToShare(shareId: number): void {
         const navFundViewRequest: any = getOfiNavFundsListCurrentRequest(this.redux.getState());
+        navFundViewRequest.navDate = moment().format('YYYY-MM-DD 00:00:00');
         navFundViewRequest.shareId = shareId;
 
         this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
@@ -167,6 +170,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.redux.dispatch(clearRequestedNavFundsList());
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+    }
 
 }

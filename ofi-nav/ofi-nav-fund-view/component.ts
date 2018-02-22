@@ -64,12 +64,13 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         private ofiNavService: OfiNavService,
         private popupService: OfiManageNavPopupService) { 
 
+        }
+        
+    ngOnInit() {
         this.initDatePeriodItems();
         this.initNavHistoryForm();
         this.initSubscriptions();
-    }
         
-    ngOnInit() {
         this.redux.dispatch(clearRequestedNavFundView());
     }
 
@@ -93,21 +94,21 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.dateFromConfig.max = moment().add(-1, 'days');
         this.dateToConfig.max = moment().add(-1, 'days');
         
-        this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
-        });
+        }));
         
-        this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
-        });
+        }));
         
-        this.navHistoryForm.controls.datePeriod.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.datePeriod.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = true;
-        });
+        }));
 
-        this.navHistoryForm.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.valueChanges.subscribe(() => {
             this.clearRequestedHistory();
-        });
+        }));
     }
 
     private initDatePeriodItems(): void {
