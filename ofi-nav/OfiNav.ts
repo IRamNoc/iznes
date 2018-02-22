@@ -1,0 +1,37 @@
+export enum NavPopupMode {
+    ADD,
+    EDIT,
+    DELETE
+}
+
+export class ShareModel {
+    shareId: number;
+    fundShareName: string;
+    isin: number;
+    asm?: string;
+}
+
+export class NavModel {
+    nav: number;
+    currency: string;
+    navDate: string;
+    navPubDate: string;
+    status: string;
+    aum?: number;
+    units?: number;
+}
+
+export class NavLatestModel {
+    nav: number;
+    navDate: string;
+}
+
+export class NavFundHistoryItem {
+    shareId: number;
+    currency: string;
+    nav: number;
+    navDate: string;
+    status: number;
+}
+
+export interface NavInfoModel extends ShareModel, NavModel {}

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 /* Actions. */
 import {
     OFI_SET_COUPON_LIST,
-    clearRequestedManageNavList,
+    clearRequestedNavFundsList,
     ofiClearRequestedHomeOrder,
     ofiClearRequestedMyOrder,
     ofiClearRequestedManageOrder,
@@ -82,7 +82,7 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'getfundaccessmy':
-                this.ngRedux.dispatch(clearRequestedManageNavList());
+                this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
                 break;
         }
@@ -91,5 +91,5 @@ export class OfiMemberNodeChannelService {
 
 function handleUpdateNav(ngRedux) {
     ngRedux.dispatch(ofiClearRequestedIssuedAssets());
-    ngRedux.dispatch(clearRequestedManageNavList());
+    ngRedux.dispatch(clearRequestedNavFundsList());
 }
