@@ -80,7 +80,7 @@
                     </ng-select>
                 </div>
 
-                <span class="text-danger" mltag="txt_navwarningmsg" *ngIf="!isDeleteMode()">
+                <span class="text-danger" mltag="txt_navwarningmsg" [hidden]="!showStatusWarning()">
                     Warning: If you click "Validate" you will not be able to modify the NAV at the selected date.
                 </span>
             </div>

@@ -117,6 +117,10 @@ export class OfiManageNavPopup implements OnInit {
         return (this.navForm) && this.navForm.valid && this.share != undefined;
     }
 
+    showStatusWarning(): boolean {
+        return !this.isDeleteMode() && this.navForm.controls['status'].value[0].id === -1;
+    }
+
     private initNavForm(share: model.NavInfoModel, mode: model.NavPopupMode): void {
         const statusObj = (share.status) ?
             [_.find(this.statusItems, { 'id': share.status })] :
