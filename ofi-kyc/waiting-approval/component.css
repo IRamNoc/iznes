@@ -3,17 +3,9 @@
 }
 
 .blockRounded {
-    padding: 15px;
-    margin: 15px 0;
-    border: 1px solid lightgrey;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    background-color: rgba(255, 255, 255, 0.6);
+    width: 100%;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px 0;
 }
-
-.subtitle {
-    font-weight: bolder;
-}
-
-
