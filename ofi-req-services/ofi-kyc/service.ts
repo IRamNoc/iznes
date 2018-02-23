@@ -84,11 +84,10 @@ export class OfiKycService {
     getAmKycList(): any {
 
         const messageBody: GetAmKycListRequestBody = {
-            RequestName: '',
+            RequestName: 'iznesgetamkyclist',
             token: this.memberSocketService.token
         };
 
-        // return new Promise().resolve();     //maybe?
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }

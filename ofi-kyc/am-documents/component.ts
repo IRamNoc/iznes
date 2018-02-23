@@ -31,7 +31,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
 
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
-    @select(['ofi', 'ofiKyc', 'amKycList', 'kycList']) kycListOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -54,288 +54,131 @@ export class OfiAmDocumentsComponent implements OnDestroy {
     }
 
     updateTable(tableData){
+
+        let columns = {
+            1: {
+                label: 'Status',
+                dataSource: 'status',
+                sortable: true,
+                link: '/product-module/shares/:id',
+            },
+            2: {
+                label: 'Company Name',
+                dataSource: 'companyName',
+                sortable: true,
+            },
+            3:{
+                label: 'Date of latest modification by the investor',
+                dataSource: 'actionDate',
+                sortable: true,
+            },
+            4:{
+                label: 'Date KYC started',
+                dataSource: 'kycDate',
+                sortable: true,
+            },
+            5:{
+                label: 'Date of approval',
+                dataSource: 'actionDate',
+                sortable: true,
+            },
+            6:{
+                label: 'Validated by',
+                dataSource: 'reviewBy',
+                sortable: true,
+            },
+            7:{
+                label: 'Date of latest modification by the investor',
+                dataSource: 'actionDate',
+                sortable: true,
+            },
+            8:{
+                label: 'Reviewed by',
+                dataSource: 'reviewBy',
+                sortable: true,
+            },
+            9:{
+                label: 'Date of rejection',
+                dataSource: 'actionDate',
+                sortable: true,
+            },
+            10:{
+                label: 'Rejected by',
+                dataSource: 'reviewBy',
+                sortable: true,
+            },
+            11:{
+                label: 'Date of latest modification',
+                dataSource: 'actionDate',
+                sortable: true,
+            }
+        };
+
+        let tables = {
+            '1':[],
+            '-1': [],
+            '2': [],
+            '-2': [],
+            'invited': [],
+            'all': []
+        };
+
+        let replaceStatus = {
+            '1': 'To Review',
+            '-1': 'Accepted',
+            '2': 'Waiting for more info',
+            '-2': 'Refused'
+        };
+
+        tableData.forEach((row)=>{
+            let rowStatus = row['status'];
+            if (row['invited']){
+                row['status'] = 'KYC started by client';
+                tables['invited'].push(row);
+            }else{
+                row['status'] = replaceStatus[rowStatus];
+                tables[rowStatus].push(row);
+            }
+            tables['all'].push(row);
+        });
+
         this.panelDefs = [
             {
-                title: 'Waiting for Approval 1',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of latest modification by the investor',
-                        dataSource: 'actionDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    }
-                ],
+                title: 'Waiting for Approval',
+                columns: [columns[1],columns[2],columns[3],columns[4]],
                 open: false,
-                data: [
-                    {
-                        status: 'To Review',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02'
-                    },
-                    {
-                        status: 'To Review',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02'
-                    },
-                ],
+                data: tables[1]
             },
             {
-                title: 'Accepted KYC Requests -1',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of approval',
-                        dataSource: 'approvalDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Validated by',
-                        dataSource: 'reviewBy',
-                        sortable: true,
-                    }
-                ],
+                title: 'Accepted KYC Requests',
+                columns: [columns[1],columns[2],columns[5],columns[4],columns[6]],
                 open: false,
-                data: [
-                    {
-                        status: 'Accepted',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'Me'
-                    },
-                    {
-                        status: 'Accepted',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'You'
-                    },
-                ],
+                data: tables[-1]
             },
             {
-                title: 'Awaiting for more information from your client 2',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of latest modification by the investor',
-                        dataSource: 'actionDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Reviewed by',
-                        dataSource: 'reviewBy',
-                        sortable: true,
-                    }
-                ],
+                title: 'Awaiting for more information from your client',
+                columns: [columns[1],columns[2],columns[7],columns[4],columns[8]],
                 open: false,
-                data: [
-                    {
-                        status: 'Accepted',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'Me'
-                    },
-                    {
-                        status: 'Accepted',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'You'
-                    },
-                ],
+                data: tables[2]
             },
             {
-                title: 'Rejected Requests -2',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of rejection',
-                        dataSource: 'rejectionDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Rejected by',
-                        dataSource: 'reviewBy',
-                        sortable: true,
-                    }
-                ],
+                title: 'Rejected Requests',
+                columns: [columns[1],columns[2],columns[9],columns[4],columns[10]],
                 open: false,
-                data: [
-                    {
-                        status: 'Accepted',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'Me'
-                    },
-                    {
-                        status: 'Accepted',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'You'
-                    },
-                ],
+                data: tables[-2]
             },
             {
-                title: 'Started by your clients [invited=true]',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of rejection',
-                        dataSource: 'rejectionDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Rejected by',
-                        dataSource: 'reviewBy',
-                        sortable: true,
-                    }
-                ],
+                title: 'Started by your clients',
+                columns: [columns[1],columns[2],columns[9],columns[4],columns[10]],
                 open: false,
-                data: [
-                    {
-                        status: 'Accepted',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'Me'
-                    },
-                    {
-                        status: 'Accepted',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'You'
-                    },
-                ],
+                data: tables['invited']
             },
             {
-                title: 'Started by your clients [all!] - redo title.',
-                columns: [
-                    {
-                        label: 'Status',
-                        dataSource: 'status',
-                        sortable: true,
-                        link: '/product-module/shares/:id',
-                    },
-                    {
-                        label: 'Company Name',
-                        dataSource: 'companyName',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date of latest modification',
-                        dataSource: 'actionDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Date KYC started',
-                        dataSource: 'kycDate',
-                        sortable: true,
-                    },
-                    {
-                        label: 'Reviewed by',
-                        dataSource: 'reviewBy',
-                        sortable: true,
-                    }
-                ],
+                title: 'All your KYC and Client Folders',
+                columns: [columns[1],columns[2],columns[11],columns[4],columns[8]],
                 open: false,
-                data: [
-                    {
-                        status: 'Accepted',
-                        companyName: 'test',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'Me'
-                    },
-                    {
-                        status: 'Accepted',
-                        companyName: 'test2',
-                        actionDate: '2018-01-01',
-                        kycDate: '2018-02-02',
-                        reviewBy: 'You'
-                    },
-                ],
-            },
+                data: tables['all']
+            }
         ];
     }
 

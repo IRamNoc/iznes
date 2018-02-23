@@ -1,5 +1,5 @@
 import {name} from './__init__';
-import {KycMyInformations} from './model';
+// import {KycMyInformations} from './model';
 import {Action} from 'redux';
 
 export const SET_AMKYCLIST = `${name}/SET_AMKYCLIST`;

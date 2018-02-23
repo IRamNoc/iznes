@@ -5,7 +5,7 @@ import {AmKycListState} from './model';
 import {immutableHelper} from '@setl/utils';
 
 const initialState: AmKycListState = {
-    kycList: [],
+    amKycList: [],
     requested: false
 };
 
@@ -41,7 +41,8 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 companyName: item.get('companyName', 0),
                 actionDate: item.get('actionDate', 0),
                 kycDate: item.get('kycDate', 0),
-                reviewBy: item.get('reviewBy', 0)
+                reviewBy: item.get('reviewBy', 0),
+                invited: item.get('invited', 0)
             });
             return result;
         }, []);
