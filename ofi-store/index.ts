@@ -109,11 +109,30 @@ export {
 };
 
 export {
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
-    getOfiManageNavListCurrentRequest
+    // LIST
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest
 } from './ofi-product';
 
 export interface OfiState {

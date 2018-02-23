@@ -11,6 +11,7 @@ import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
 import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
+import {Router} from '@angular/router';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -45,6 +46,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
+                private router: Router,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -94,6 +96,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
         this._ngRedux.dispatch(clearAppliedHighlight());
         this.showModal = false;
+        this.router.navigate(['new-investor', 'already-done']);
     }
 
     /* On Destroy. */

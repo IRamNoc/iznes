@@ -287,7 +287,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* ...and send it. */
             this.ofiAmDashboardService.buildRequest({
-                'taskPipe': this.ofiNavService.requestNavList(navRequest)
+                'taskPipe': this.ofiNavService.requestNav(navRequest)
             }).then((response) => {
                 console.log(' | success: ', response);
 

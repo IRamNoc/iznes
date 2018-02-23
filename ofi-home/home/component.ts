@@ -106,8 +106,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
             this.myDetails = myDetails;
-            if (myDetails.userType === '46') {
-                this._router.navigate(['new-investor-home']);
+            if (myDetails.userType === 46) {
+                this._router.navigate(['new-investor', 'informations']);
             }
         });
 
