@@ -11,6 +11,7 @@ export {OfiHomeComponent} from './ofi-home/home/component';
 export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component';
 export {OfiSignUpComponent} from './ofi-kyc/signup/component';
 export {OfiDocumentsComponent} from './ofi-kyc/documents/component';
+export {OfiAmDocumentsComponent} from './ofi-kyc/am-documents/component';
 export {OfiKycHomeComponent} from './ofi-kyc/home/component';
 export {OfiFundAccessComponent} from './ofi-kyc/fund-access/component';
 export {OfiKycAlreadyDoneComponent} from './ofi-kyc/already-done/component';

@@ -135,6 +135,7 @@ export {
     getOfiNavLatestCurrentRequest
 } from './ofi-product';
 
+
 export interface OfiState {
     ofiFundInvest: OfiFundInvestState;
     ofiCorpActions: OfiCorpActionsState;
