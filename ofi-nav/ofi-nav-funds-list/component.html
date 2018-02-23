@@ -7,7 +7,7 @@
     <span>View the NAV's for the shares in the list below.</span>
 </div>
 
-<clr-tabs>
+<clr-tabs *ngIf="searchForm">
     <clr-tab>
         <button id="netAssetValueTab" clrTabLink>
             <i class="fa fa-th-list"></i>
@@ -15,37 +15,34 @@
         </button>
 
         <clr-tab-content *clrIfActive="true">
-            <form>
+            <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-4">
                             <label class="control-label" for="navSearch" mltag="txt_searchsharenameisin">Search a Share Name or ISIN</label>
-                            <input type="text" id="navSearch" name="navSearch" />
+                            <input type="text" id="navSearch" name="navSearch" formControlName="shareName" />
                         </div>
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
                             <label class="control-label" for="selectDateType" mltag="txt_selectadate">Select a Date</label>
                             <ng-select id="selectDateType"
                                 class="fluid-width"
+                                [items]="dateTypes"
+                                formControlName="dateType"
                                 mltag="txt_ui_select"
                                 placeholder="Select Date type"
-                                [items]="dateTypes"
                                 [allowClear]="false">
                             </ng-select>
                         </div>
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-4">
                             <label class="control-label">&nbsp;</label>
                             <div class="input-group">
                                 <span class="fa fa-calendar"></span>
                                 <input id="navDatePicker" name="searchDate" placeholder="Choose a date" mltag="txt_chooseadate"
-                                    [(ngModel)]="searchDate"
+                                    formControlName="date"
                                     [dpDayPicker]="dateConfig"
                                     mode="day"
                                     theme="dp-material" />
                             </div>
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <label class="control-label">&nbsp;</label>
-                            <button class="btn btn-primary">Export Share List for selected dates</button>
                         </div>
                     </div>
                 </div>
@@ -59,10 +56,10 @@
                     <span mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_nav">NAV</span>
+                    <span mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navccy">NAV CCY</span>
+                    <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_navdate">NAV Date</span>
@@ -77,16 +74,34 @@
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.name}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.ISIN}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.value}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.currency}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.date}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.pubDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.ISIN)">{{item.status}}</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let item of navListItems">
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                        {{item.currency}} ({{getCurrency(item.currency)}})
+                    </clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                        <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">N/A</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                        <span [ngSwitch]="item.status">
+                            <span *ngSwitchCase="-1">
+                                <span class="label label-success" mltag="txt_validated">Validated</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                            </span>
+
+                            <span *ngSwitchCase="2">
+                                <span class="label label-warning" mltag="txt_technical">Technical</span>
+                            </span>
+                        </span>
+                    </clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <div class="btn-group btn-sm">
+                        <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn">
                                 <i class="fa fa-plus"></i> <span mltag="txt_addnewnav">Add new NAV</span>
                             </button>
@@ -99,8 +114,14 @@
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
+
+            <div class="row">
+                <!-- <div class="form-group offset-sm-9 col-sm-3 text-right export-nav">
+                    <button class="btn btn-primary">Export Share List for selected dates</button>
+                </div> -->
+            </div>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
 
-<app-nav-add [hidden]="!addNavShare" [share]="addNavShare" [mode]="navPopupMode"></app-nav-add>
+<app-nav-add></app-nav-add>

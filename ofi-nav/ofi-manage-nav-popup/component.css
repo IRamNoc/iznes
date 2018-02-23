@@ -1,6 +1,42 @@
 :host form .form-group input, :host ng-select {
     background: #FFF !important;
 }
-:host form .form-group input[readonly] {
+:host form .form-group input[readonly],
+:host form .form-group input[disabled],
+:host form .fa.disabled,
+:host /deep/ .ui-disabled + .dropdown,
+:host /deep/ .ui-disabled + .dropdown .ui-select-toggle:hover,
+:host /deep/ .ui-disabled + .dropdown .ui-select-toggle:focus {
     background: #EEE !important;
+}
+
+:host /deep/ .ui-disabled, :host /deep/ ng-select a.btn {
+    display: none;
+}
+
+:host .modal-body {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+:host .modal-body input[disabled],
+:host /deep/ .ui-disabled + .dropdown .ui-select-toggle:hover,
+:host /deep/ .ui-disabled + .dropdown .ui-select-toggle:focus {
+    border: 1px solid #dadada !important;
+}
+
+:host .modal-body .row {
+    margin-right: -3em;
+}
+
+:host .modal-body .alert {
+    width: 95%;
+}
+
+:host .modal-footer {
+    display: block;
+}
+
+:host .modal-footer .text-right .btn {
+    margin-right: 0.5em;
 }

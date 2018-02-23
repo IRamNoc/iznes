@@ -21,11 +21,32 @@ import {
 import {
     OfiManageNavState,
     OfiManageNavReducer,
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
-    getOfiManageNavListCurrentRequest
+    // LIST
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    OfiNavLatestState,
+    OfiNavLatestReducer,
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest
 } from './nav';
 
 export {
@@ -38,12 +59,32 @@ export {
     FundState,
     FundReducer,
     SET_FUND_LIST,
-
-    SET_MANAGE_NAV_LIST,
-    setRequestedManageNavList,
-    clearRequestedManageNavList,
-    ofiSetCurrentManageNavRequest,
-    getOfiManageNavListCurrentRequest
+    // LIST
+    SET_NAV_FUNDS_LIST,
+    setRequestedNavFundsList,
+    clearRequestedNavFundsList,
+    ofiSetCurrentNavFundsListRequest,
+    getOfiNavFundsListCurrentRequest,
+    // VIEW
+    SET_NAV_FUND_VIEW,
+    setRequestedNavFundView,
+    clearRequestedNavFundView,
+    ofiSetCurrentNavFundViewRequest,
+    getOfiNavFundViewCurrentRequest,
+    // HISTORY
+    SET_NAV_FUND_HISTORY,
+    setRequestedNavFundHistory,
+    clearRequestedNavFundHistory,
+    ofiSetCurrentNavFundHistoryRequest,
+    getOfiNavFundHistoryCurrentRequest,
+    // LATEST
+    OfiNavLatestState,
+    OfiNavLatestReducer,
+    SET_NAV_LATEST,
+    setRequestedNavLatest,
+    clearRequestedNavLatest,
+    ofiSetCurrentNavLatestRequest,
+    getOfiNavLatestCurrentRequest    
 };
 
 export interface OfiProductState {
@@ -51,11 +92,13 @@ export interface OfiProductState {
     ofiSicav: SicavState;
     ofiFund: FundState;
     ofiManageNav: OfiManageNavState;
+    ofiNavLatest: OfiNavLatestState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
-    ofiManageNav: OfiManageNavReducer
+    ofiManageNav: OfiManageNavReducer,
+    ofiNavLatest: OfiNavLatestReducer
 });
