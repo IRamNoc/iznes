@@ -11,7 +11,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class OfiKycAlreadyDoneComponent implements OnInit {
 
     appConfig: AppConfig;
+    hasFilledUp = false;
     kycDoneForm: FormGroup;
+    showModal = false;
     amDetails = {
         firstName: {value: '', label: 'First name'},
         lastName: {value: '', label: 'Last name'},
@@ -41,7 +43,13 @@ export class OfiKycAlreadyDoneComponent implements OnInit {
 
     onSubmit() {
         if (this.kycDoneForm.value['opt'] === 'YES') {
-            this.router.navigate(['new-investor', 'awaiting-confirmation']);
+            this.hasFilledUp = true;
+        } else {
+            this.showModal = true;
         }
+    }
+
+    closeModal() {
+        this.showModal = false;
     }
 }

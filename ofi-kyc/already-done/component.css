@@ -47,3 +47,13 @@ div.radio-inline.opt-btn-element {
 app-text-input-list {
     width: 100%;
 }
+
+.highlight {
+    background-color: rgba(86, 164, 223, 0.2);
+    border-radius: 6px;
+    padding: 6px;
+}
+
+.confirmed-container p {
+    text-indent: 12px;
+}
