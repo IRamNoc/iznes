@@ -40,3 +40,7 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody{
     accountName: string;
     accountDescription: string;
 }
+
+export interface GetAmKycListRequestBody extends MemberNodeMessageBody{
+    token: string;
+}

@@ -12,6 +12,8 @@ import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@s
 import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
 
+import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
@@ -28,9 +30,12 @@ export class OfiAmDocumentsComponent implements OnDestroy {
     private subscriptions: Array<any> = [];
 
     /* Observables. */
+    @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'kycList']) kycListOb;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
+                private _ofiKycService: OfiKycService,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
@@ -40,9 +45,18 @@ export class OfiAmDocumentsComponent implements OnDestroy {
 
 
     ngOnInit() {
+
+        this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
+            (requested) => this.requestKycList(requested)));
+        this.subscriptions.push(this.kycListOb.subscribe(
+            (amKycListData) => this.updateTable(amKycListData)));
+
+    }
+
+    updateTable(tableData){
         this.panelDefs = [
             {
-                title: 'Waiting for Approval',
+                title: 'Waiting for Approval 1',
                 columns: [
                     {
                         label: 'Status',
@@ -57,7 +71,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Date of latest modification by the investor',
-                        dataSource: 'modDate',
+                        dataSource: 'actionDate',
                         sortable: true,
                     },
                     {
@@ -71,19 +85,19 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     {
                         status: 'To Review',
                         companyName: 'test',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02'
                     },
                     {
                         status: 'To Review',
                         companyName: 'test2',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02'
                     },
                 ],
             },
             {
-                title: 'Accepted KYC Requests',
+                title: 'Accepted KYC Requests -1',
                 columns: [
                     {
                         label: 'Status',
@@ -108,7 +122,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Validated by',
-                        dataSource: 'validated',
+                        dataSource: 'reviewBy',
                         sortable: true,
                     }
                 ],
@@ -117,21 +131,21 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     {
                         status: 'Accepted',
                         companyName: 'test',
-                        approvalDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        validated: 'Me'
+                        reviewBy: 'Me'
                     },
                     {
                         status: 'Accepted',
                         companyName: 'test2',
-                        approvalDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        validated: 'You'
+                        reviewBy: 'You'
                     },
                 ],
             },
             {
-                title: 'Awaiting for more information from your client',
+                title: 'Awaiting for more information from your client 2',
                 columns: [
                     {
                         label: 'Status',
@@ -146,7 +160,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Date of latest modification by the investor',
-                        dataSource: 'modDate',
+                        dataSource: 'actionDate',
                         sortable: true,
                     },
                     {
@@ -156,30 +170,30 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Reviewed by',
-                        dataSource: 'reviewed',
+                        dataSource: 'reviewBy',
                         sortable: true,
                     }
                 ],
                 open: false,
                 data: [
                     {
-                        status: 'Waiting for more info',
+                        status: 'Accepted',
                         companyName: 'test',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        reviewed: 'Me'
+                        reviewBy: 'Me'
                     },
                     {
-                        status: 'Waiting for more info',
+                        status: 'Accepted',
                         companyName: 'test2',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        reviewed: 'You'
+                        reviewBy: 'You'
                     },
                 ],
             },
             {
-                title: 'Rejected Requests',
+                title: 'Rejected Requests -2',
                 columns: [
                     {
                         label: 'Status',
@@ -204,30 +218,30 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Rejected by',
-                        dataSource: 'rejected',
+                        dataSource: 'reviewBy',
                         sortable: true,
                     }
                 ],
                 open: false,
                 data: [
                     {
-                        status: 'Rejected',
+                        status: 'Accepted',
                         companyName: 'test',
-                        rejectionDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        rejected: 'Me'
+                        reviewBy: 'Me'
                     },
                     {
-                        status: 'Rejected',
+                        status: 'Accepted',
                         companyName: 'test2',
-                        rejectionDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        rejected: 'You'
+                        reviewBy: 'You'
                     },
                 ],
             },
             {
-                title: 'Started by your clients',
+                title: 'Started by your clients [invited=true]',
                 columns: [
                     {
                         label: 'Status',
@@ -252,30 +266,30 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Rejected by',
-                        dataSource: 'rejected',
+                        dataSource: 'reviewBy',
                         sortable: true,
                     }
                 ],
                 open: false,
                 data: [
                     {
-                        status: 'Rejected',
+                        status: 'Accepted',
                         companyName: 'test',
-                        rejectionDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        rejected: 'Me'
+                        reviewBy: 'Me'
                     },
                     {
-                        status: 'Rejected',
+                        status: 'Accepted',
                         companyName: 'test2',
-                        rejectionDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        rejected: 'You'
+                        reviewBy: 'You'
                     },
                 ],
             },
             {
-                title: 'Started by your clients',
+                title: 'Started by your clients [all!] - redo title.',
                 columns: [
                     {
                         label: 'Status',
@@ -290,7 +304,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Date of latest modification',
-                        dataSource: 'modDate',
+                        dataSource: 'actionDate',
                         sortable: true,
                     },
                     {
@@ -300,32 +314,40 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                     },
                     {
                         label: 'Reviewed by',
-                        dataSource: 'reviewed',
+                        dataSource: 'reviewBy',
                         sortable: true,
                     }
                 ],
                 open: false,
                 data: [
                     {
-                        status: 'To review',
+                        status: 'Accepted',
                         companyName: 'test',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        reviewed: 'Me'
+                        reviewBy: 'Me'
                     },
                     {
-                        status: 'To review',
+                        status: 'Accepted',
                         companyName: 'test2',
-                        modDate: '2018-01-01',
+                        actionDate: '2018-01-01',
                         kycDate: '2018-02-02',
-                        reviewed: 'You'
+                        reviewBy: 'You'
                     },
                 ],
             },
         ];
+    }
 
-        //need to grab this data from redux.
-
+    /**
+     * Request my fund access base of the requested state.
+     * @param requested
+     * @return void
+     */
+    requestKycList(requested): void {
+        if (!requested) {
+            OfiKycService.defaultRequestAmKycList(this._ofiKycService, this._ngRedux);
+        }
     }
 
     buildLink(column, row) {
