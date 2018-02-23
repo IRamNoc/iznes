@@ -294,6 +294,14 @@ const profileMyInfo = {
     router_link: '/profile/my-informations'
 };
 
+const kycDocuments = {
+    label: 'KYC Documents',
+    label_txt: 'txt_kyc_documents',
+    icon_class: 'fa fa-file',
+    element_id: 'top-menu-kyc-documents',
+    router_link: '/kyc-am-documents'
+};
+
 export const menuSpec: MenuSpec = {
     top: {
         profile: {
@@ -397,7 +405,8 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                     reportsHistoricalOrders,
                 ]
-            }
+            },
+            kycDocuments
         ],
         valuer: [
             home,

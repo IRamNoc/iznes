@@ -35,7 +35,8 @@ import {
     OfiProfileMyInformationsComponent,
     OfiKycHomeComponent,
     OfiFundAccessComponent,
-    OfiKycAlreadyDoneComponent
+    OfiKycAlreadyDoneComponent,
+    OfiAmDocumentsComponent
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -163,6 +164,11 @@ export const ROUTES: Routes = [
             {
                 path: 'fund-access',
                 component: OfiFundAccessComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'kyc-am-documents',
+                component: OfiAmDocumentsComponent,
                 canActivate: [LoginGuardService]
             },
             {
