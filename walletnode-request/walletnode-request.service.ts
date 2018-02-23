@@ -160,7 +160,7 @@ export class WalletNodeRequestService {
             walletids: requestData.walletIds,
             chainid: requestData.chainId,
             pagesize: pageSize,
-            classid: 'ALPHA DRIVE GLOBAL CONVERTIBLES PART A' || requestData.asset || '',
+            classid: requestData.asset || '',
             pagenum: pageNum
         };
 
