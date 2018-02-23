@@ -28,14 +28,14 @@ import {
     OfiDocumentsComponent,
     OfiInvestorFundListComponent,
     OfiManageCsvComponent,
-    OfiManageOfiNavComponent,
-    OfiManageNavList,
-    OfiManageNavView,
+    OfiNavFundsList,
+    OfiNavFundView,
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiProfileMyInformationsComponent,
     OfiKycHomeComponent,
-    OfiAmDocumentsComponent
+    OfiAmDocumentsComponent,
+    OfiKycAlreadyDoneComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -171,6 +171,21 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
+                path: 'new-investor',
+                children: [
+                    {
+                        path: 'informations',
+                        component: OfiKycHomeComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'already-done',
+                        component: OfiKycAlreadyDoneComponent,
+                        canActivate: [LoginGuardService]
+                    }
+                ],
+            },
+            {
                 path: 'profile',
                 children: [
                     {
@@ -215,17 +230,12 @@ export const ROUTES: Routes = [
                     },
                     {
                         path: 'net-asset-value',
-                        component: OfiManageOfiNavComponent,
+                        component: OfiNavFundsList,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'net-asset-value-mock',
-                        component: OfiManageNavList,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'net-asset-value-view-mock',
-                        component: OfiManageNavView,
+                        path: 'nav-fund-view',
+                        component: OfiNavFundView,
                         canActivate: [LoginGuardService],
                     }
                 ]
