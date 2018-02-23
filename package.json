@@ -28,7 +28,7 @@
         "@angular/platform-browser-dynamic": "^5.2.3",
         "@angular/platform-server": "^5.2.3",
         "@angular/router": "^5.2.3",
-        "@clr/angular": "^0.11.00",
+        "@clr/angular": "^0.11.6",
         "@clr/icons": "^0.11.0",
         "@clr/ui": "^0.11.0",
         "@ng-bootstrap/ng-bootstrap": "^1.0.0",
@@ -91,6 +91,7 @@
         "@types/node": "^6.0.96",
         "chromedriver": "~2.34",
         "codelyzer": "~3.0.1",
+        "gulp": "^3.9.1",
         "gulp-nsp": "^2.4.2",
         "gulp-sonar": "^3.0.1",
         "jasmine-core": "2.5.2",
@@ -109,6 +110,7 @@
         "ts-node": "~3.0.4",
         "tslint": "~5.3.2",
         "typescript": "2.4.2",
+        "yargs": "^11.0.0",
         "yarn": "^1.4.0"
     }
 }
