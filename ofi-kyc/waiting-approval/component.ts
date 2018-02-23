@@ -15,7 +15,7 @@ import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     subscriptions: Array<any> = [];
     waitingApprovalFormGroup: FormGroup;
-    statuses: Object[];
+    statuses: Array<any>;
     isRejectModalDisplayed: boolean;
     language: string;
     userDetail: any;
