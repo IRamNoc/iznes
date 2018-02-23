@@ -34,6 +34,7 @@ import {
     OfiTaxReportComponent,
     OfiProfileMyInformationsComponent,
     OfiKycHomeComponent,
+    OfiAmDocumentsComponent,
     OfiKycAlreadyDoneComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
@@ -157,6 +158,16 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'kyc-am-documents',
+                component: OfiAmDocumentsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'new-investor-home',
+                component: OfiKycHomeComponent,
                 canActivate: [LoginGuardService]
             },
             {

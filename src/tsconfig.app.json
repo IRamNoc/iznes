@@ -29,6 +29,7 @@
         "../node_modules/@ofi/**/*",
         "../node_modules/@setl/**/*",
         "../setl_modules/**/*",
+	"../ofi_modules/**/*",
         "../node_modules/ng2-gravatar-directive/src/**/*",
         "../node_modules/ngx-quill-editor/**/*"
     ]
