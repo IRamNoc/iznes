@@ -1,0 +1,170 @@
+<div class="header-breadcrumbs">
+    <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>
+        <span mltag="">Client folder - Funds' Shares access authorisation:</span> - [Company name of the investor]
+    </h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <div style="padding: 20px">Please select the funds you would like [Company name of the investor] to have access to:</div>
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink id="am-fund-holdings-tab">
+                <i class="fa fa-user"></i> <span mltag="">Professional Investor</span>
+            </button>
+            <clr-tab-content>
+                <div class="panel-body">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="test">
+                                    <span>Company Name:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test" class="form-control" value="professional investor company name" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="test6">
+                                    <span>Date of Approval Request:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test6" class="form-control" value="approval request date" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="test2">
+                                    <span>First Name:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test2" class="form-control" value="first name" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="test3">
+                                    <span>Last Name:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test3" class="form-control" value="last name" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="test4">
+                                    <span>Email Address:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test4" class="form-control" value="email address" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="test5">
+                                    <span>Telephone Number:</span>
+                                </label>
+                                <div>
+                                    <input type="text" id="test5" class="form-control" value="telephone number" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink id="am-fund-holdings-tab">
+                <i class="fa fa-unlock-alt"></i> <span mltag="">Funds' Shares Access Authorisation</span>
+            </button>
+            <clr-tab-content>
+                <div class="panel-body">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                We [AM name], wish to authorize [Company name of the investor] to be able to invest in the following funds' shares:
+                            </div>
+                        </div>
+                        <div class="row form-group" style="margin-top: 25px;">
+                            <div class="col-sm-12">
+                                <clr-datagrid #myDataGrid style="max-height: 275px; overflow: scroll;">
+                                    <clr-dg-column>Fund Name</clr-dg-column>
+                                    <clr-dg-column>Share Name</clr-dg-column>
+                                    <clr-dg-column>ISIN</clr-dg-column>
+                                    <clr-dg-column>Grant Access to this Share?</clr-dg-column>
+                                    <clr-dg-row *clrDgItems="let row of tableData">
+                                        <clr-dg-cell>
+                                            {{row['fundName']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            {{row['shareName']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            {{row['isin']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            <span class="pointer" (click)="access[row['id']] = !access[row['id']]">
+                                                <i class="fa fa-lg fa-{{(access[row['id']]?'un':'')}}lock text-{{(access[row['id']]?'green':'red')}}"></i> {{(access[row['id']]?'On':'Off')}}
+                                            </span>
+                                        </clr-dg-cell>
+                                    </clr-dg-row>
+                                </clr-datagrid>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12" align="center">
+                                <button class="btn btn-info">Back</button>
+                                <button class="btn btn-success" (click)="displayModal();">Validate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+</div>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+    <h3 class="modal-title">Confirm Fund Share Access:</h3>
+    <div class="modal-body text-center" [ngStyle]="{'padding-bottom':'0'}">
+        <i class="fa fa-check fa-3x text-success"></i>
+        <div *ngIf="!modalRows">
+            You are enabling [Company name of the investor] to invest in no shares.
+        </div>
+        <div *ngIf="modalRows">
+            You are enabling [Company name of the investor] to invest in the following funds' shares:
+            <br><br>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Fund Name</clr-dg-column>
+                <clr-dg-column>Share Name</clr-dg-column>
+                <clr-dg-column>ISIN</clr-dg-column>
+                <clr-dg-row *clrDgItems="let row of tableData">
+                    <ng-container *ngIf="access[row['id']]">
+                        <clr-dg-cell>
+                            {{row['fundName']}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            {{row['shareName']}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            {{row['isin']}}
+                        </clr-dg-cell>
+                    </ng-container>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
+        <br><br>
+        <button id="btnKycCloseModal" class="btn btn-info" type="button" (click)="showModal = false;">
+            <span mltag="txt_close">Close</span>
+        </button>
+        <button id="btnKycCloseModal" class="btn btn-success" type="button" (click)="showModal = false;">
+            <span mltag="" (click)="saveAccess();">Confirm Access</span>
+        </button>
+        <br><br>
+    </div>
+</clr-modal>
