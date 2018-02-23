@@ -19,6 +19,7 @@ import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
 import {OfiWaitingApprovalComponent} from './waiting-approval/component';
 import {TextInputListComponent} from './text-input-list/component';
+import {OfiKycAlreadyDoneComponent} from './already-done/component';
 
 /* Decorator. */
 @NgModule({
@@ -28,6 +29,7 @@ import {TextInputListComponent} from './text-input-list/component';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
+        OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
     exports: [
@@ -36,6 +38,7 @@ import {TextInputListComponent} from './text-input-list/component';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
+        OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
     imports: [
