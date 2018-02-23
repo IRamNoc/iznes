@@ -9,3 +9,16 @@
     padding: 20px;
     margin: 10px 0;
 }
+
+.statuses {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    padding: 10px;
+}
