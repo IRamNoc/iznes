@@ -18,6 +18,8 @@ import {MockKYCDocumentsService} from './documents/documents.mock.service';
 import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
 import {OfiWaitingApprovalComponent} from './waiting-approval/component';
+import {OfiFundAccessComponent} from './fund-access/component';
+import {OfiAmDocumentsComponent} from './am-documents/component';
 import {TextInputListComponent} from './text-input-list/component';
 import {OfiKycAlreadyDoneComponent} from './already-done/component';
 
@@ -29,6 +31,8 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
+        OfiFundAccessComponent,
+        OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
@@ -38,6 +42,8 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
+        OfiFundAccessComponent,
+        OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],

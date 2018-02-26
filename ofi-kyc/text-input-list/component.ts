@@ -32,16 +32,18 @@ export class TextInputListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.contentForm = this.fb.group({
-            ...Object.keys(this.content).reduce((acc, cur) => {
-                acc[cur] = {value: this.content[cur].value, disabled: true};
-                return acc;
-            }, {})
-        });
+        if (this.getContentKeys().length) {
+            this.contentForm = this.fb.group({
+                ...this.getContentKeys().reduce((acc, cur) => {
+                    acc[cur] = {value: this.content[cur].value, disabled: true};
+                    return acc;
+                }, {})
+            });
+        }
     }
 
     getContentKeys() {
-        return Object.keys(this.content);
+        return Object.keys(this.content) || [];
     }
 
 }

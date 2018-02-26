@@ -1,6 +1,6 @@
-<div class="am-details">
+<div class="text-input-list">
     <h4>{{title}}</h4>
-    <form [formGroup]="contentForm">
+    <form [formGroup]="contentForm" *ngIf="getContentKeys().length">
         <section class="form-block">
             <div class="row">
                 <div class="form-group col-sm-6" *ngFor="let field of getContentKeys()">

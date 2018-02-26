@@ -45,3 +45,7 @@ export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
 }
+
+export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
