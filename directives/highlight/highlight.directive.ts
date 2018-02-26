@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Directive, ElementRef, Renderer2, OnDestroy, HostListener } from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import { fromJS } from 'immutable';
 
