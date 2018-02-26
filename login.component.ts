@@ -312,18 +312,21 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             (data) => {
                 if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.changePassword = true;
-                    this.showModal = true;
+                    // add a delay to prevent appear effect side effects
+                    setTimeout(() => {
+                        this.changePassword = true;
+                        this.showModal = true;
+                    }, 1500);
                 } else {
                     this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
                 }
-
-                this.changePassword = true;
-                this.showModal = true;
             },
             (data) => {
-                this.isTokenExpired = true;
-                this.showModal = true;
+                // add a delay to prevent appear effect side effects
+                setTimeout(() => {
+                    this.isTokenExpired = true;
+                    this.showModal = true;
+                }, 1500);
             })
         );
     }
