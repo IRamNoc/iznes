@@ -39,6 +39,24 @@ node {
             sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
         }
 
+
+        stage('Deploy Blockchain jars to Test Environment') {
+            node {
+                sh '''
+                        rsync -avhmp --stats /var/lib/jenkins/Deploy/blockchain/scripts/*  root@139.162.213.130: &&
+                        ssh -t root@139.162.213.130 \'cd /root ; bash && ./stop_blockchain.sh \'
+                        ssh -t root@139.162.213.130 rm -f /usr/local/jar/*.jar &&
+                        ssh -t root@139.162.213.130 rm -f /usr/local/jar/cmdtools &&
+                        ssh -t root@139.162.213.130 rm -f /usr/local/jar/wallnode &&
+                        ssh -t root@139.162.213.130 rm -f /usr/local/jar/valnode &&
+                        rsync -avhm --stats /var/lib/jenkins/Deploy/blockchain/*.jar  root@139.162.213.130:/usr/local/jar &&
+                        ssh -t root@139.162.213.130 \'cd /root ; bash &&  ./relink.sh \' &&
+                        ssh -t root@139.162.213.130 \'cd /root ; bash && ./start_blockchain.sh \''''
+
+            }
+        }
+
+
         stage('Restart Node Server') {
             sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
         }
