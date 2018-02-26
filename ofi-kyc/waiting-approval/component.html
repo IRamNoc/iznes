@@ -14,7 +14,7 @@
 
         <clr-tab-content *clrIfActive>
             <span>
-                Please confirm herebelow if this KYC documents have been previously filled up by your client {{investor.companyName.value}}, and have been approved by {{userDetail.username}}
+                Please confirm herebelow if this KYC documents have been previously filled up by your client {{investor.companyName.value}}, and have been approved by {{amCompanyName}}
             </span>
 
             <!-- Investor informations block -->
@@ -39,7 +39,7 @@
                                        type="radio"
                                        formControlName="status"
                                        [value]="status.value"
-                                       [checked]="status.value === 1"
+                                       [checked]="status.value === APPROVED_STATUS"
                                        (change)="handleStatusChange()"/>
                                 <label for={{status.id}}>{{status.label}}</label>
                             </div>
@@ -48,7 +48,7 @@
                         <!-- Checkbox -->
                         <div class="form-group col-sm-12">
                             <div class="form-check"
-                                 *ngIf="waitingApprovalFormGroup.controls['status'].value === 1">
+                                 *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
                                 <input id="checkbox"
                                        class="form-check-input"
                                        type="checkbox"
@@ -64,10 +64,10 @@
 
                         <!-- Additional text -->
                         <div class="form-group col-sm-12"
-                             *ngIf="waitingApprovalFormGroup.controls['status'].value !== 1">
+                             *ngIf="waitingApprovalFormGroup.controls['status'].value !== APPROVED_STATUS">
 
                             <!-- Reject -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === -1"
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS"
                                       id="rejectText"
                                       class="form-control"
                                       placeholder="Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform."
@@ -75,11 +75,12 @@
                             </textarea>
 
                             <!-- Ask for more info -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === 0"
-                                      id="askMoreInfoText"
-                                      class="form-control"
-                                      placeholder="Please ask more information here. This will be sent as a message to your client on the IZNES platform."
-                                      formControlName="additionalText">
+                            <textarea
+                                    *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"
+                                    id="askMoreInfoText"
+                                    class="form-control"
+                                    placeholder="Please ask more information here. This will be sent as a message to your client on the IZNES platform."
+                                    formControlName="additionalText">
                             </textarea>
                         </div>
 
@@ -94,7 +95,8 @@
                             <button id="submitButton"
                                     type="submit"
                                     class="btn btn-primary"
-                                    [disabled]="waitingApprovalFormGroup.controls['status'].value === 1 && waitingApprovalFormGroup.controls['isKycAccepted'].value === false">
+                                    [disabled]="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS &&
+                                     waitingApprovalFormGroup.controls['isKycAccepted'].value === false">
                                 Validate
                             </button>
                         </div>
