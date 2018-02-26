@@ -223,7 +223,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
@@ -243,7 +242,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
@@ -411,7 +409,7 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys(recipient);
-        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("messagesSubject")).sendKeys(subject);
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
