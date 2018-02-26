@@ -5,6 +5,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NumberFormatterDirective} from './number-formatter/directive';
 import {ClrDgIconSortDirective} from './clr-dg-sort-icon/directive';
 import {HighlightDirective} from './highlight/highlight.directive';
+import {ClickedDirective} from './clicked/clicked.directive';
 import {MoneyValuePipe} from '../pipes';
 
 
@@ -12,12 +13,14 @@ import {MoneyValuePipe} from '../pipes';
     declarations: [
         NumberFormatterDirective,
         ClrDgIconSortDirective,
-        HighlightDirective
+        HighlightDirective,
+        ClickedDirective,
     ],
     exports: [
         NumberFormatterDirective,
         ClrDgIconSortDirective,
-        HighlightDirective
+        HighlightDirective,
+        ClickedDirective,
     ],
     imports: [
         CommonModule,
