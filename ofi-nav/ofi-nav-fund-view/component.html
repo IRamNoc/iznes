@@ -1,0 +1,212 @@
+<div class="header-breadcrumbs" *ngIf="navFund">
+    <h1>
+        <i class="fa fa-ellipsis-h"></i>
+        <span mltag="txt_netassetvalue">Net asset value</span>: {{navFund.fundShareName}}
+    </h1>
+
+    <span>View and manage NAV's for a share.</span>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="netAssetValueTab" clrTabLink>
+            <i class="fa fa-th-list"></i>
+            <span mltag="txt_view">View</span>
+        </button>
+
+        <clr-tab-content *clrIfActive="true">
+            <form *ngIf="navFund">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="shareName" mltag="txt_sharename">Share name</label>
+                        <input type="text" id="shareName" name="shareName" value="{{navFund.fundShareName}}" readonly />
+                    </div>
+                    
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="isin" mltag="txt_isin">ISIN</label>
+                        <input type="text" id="isin" name="isin" value="{{navFund.isin}}" readonly />
+                    </div>
+                    
+                    <div class="form-group col-sm-5">
+                        <label class="control-label" for="amCompany" mltag="txt_amcompany">Asset Management Company</label>
+                        <input type="text" id="amCompany" name="amCompany" value="{{navFund.asm}}" readonly />
+                    </div>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+                <span class="text-badge">Current NAV Information</span>
+
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="currentDate" mltag="txt_currentDate">Date</label>
+                        <input type="text" id="currentDate" name="currentDate" value="{{currentDate}}" readonly />
+                    </div>
+
+                    <!-- <div class="form-group col-sm-2">
+                        <label class="control-label" for="units" mltag="txt_units">Units</label>
+                        <input type="text" id="units" name="units" value="TBA" readonly />
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
+                        <input type="text" id="aum" name="aum" value="TBA" readonly />
+                    </div> -->
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="navCurrency" mltag="txt_navCurrency">NAV Currency</label>
+                        <input type="text" id="navCurrency" name="navCurrency" value="{{navFund.currency}} ({{getCurrency(navFund.currency)}})" readonly />
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
+                        <input type="text" id="nav" name="nav" value="{{navFund.nav ? navFund.nav : 'Pending'}}" readonly />
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label">&nbsp;</label>
+                        <button class="btn btn-primary" (click)="addNav()" mltag="txt_addnewnav" *ngIf="!navFund.nav">Add New NAV</button>
+                        <button class="btn btn-primary" (click)="editNav(navFund)" mltag="txt_editnav" *ngIf="navFund.nav">Edit NAV</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="hr-line-dashed"></div>
+            <span class="text-badge">NAV History</span>
+
+            <form [formGroup]="navHistoryForm">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-2">
+                            <label class="control-label" for="navDateFrom" mltag="txt_datefrom">Date From</label>
+                            <div class="input-group">
+                                <span class="fa fa-calendar"></span>
+                                <input id="navDateFrom" name="navDateFrom" placeholder="Select date" mltag="txt_selectdate"
+                                    formControlName="navDateFrom"
+                                    [dpDayPicker]="dateFromConfig"
+                                    mode="day"
+                                    theme="dp-material" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-2">
+                            <label class="control-label" for="navDateTo" mltag="txt_dateto">Date To</label>
+                            <div class="input-group">
+                                <span class="fa fa-calendar"></span>
+                                <input id="navDateTo" name="navDateTo" placeholder="Select date" mltag="txt_selectdate"
+                                    formControlName="navDateTo"
+                                    [dpDayPicker]="dateToConfig"
+                                    mode="day"
+                                    theme="dp-material" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-1 text-center">
+                            <label class="control-label">&nbsp;</label>
+                            <div><strong>- or -</strong></div>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="control-label" for="searchDatePeriod" mltag="txt_dateperiod">Date Period</label>
+                            <ng-select id="searchDatePeriod"
+                                class="fluid-width"
+                                [items]="datePeriodItems"
+                                formControlName="datePeriod"
+                                [allowClear]="true"
+                                placeholder="Select date period"
+                                mltag="txt_selectdateperiod">
+                            </ng-select>
+                        </div>
+
+                        <div class="form-group col-sm-4 text-right">
+                            <label class="control-label">&nbsp;</label>
+                            <div>Filtered by: {{getFilteredByDateText()}}</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column>
+                    <span mltag="txt_navdate">NAV Date</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_navpubdate">NAV Publication Date</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_navccy">NAV CCY</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_nav">NAV</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_status">Status</span>
+                </clr-dg-column>
+                <clr-dg-column class="actions">
+                    <span mltag="txt_actions">Actions</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index">
+                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell>N/A</clr-dg-cell>
+                    <clr-dg-cell>
+                        {{item.currency}} ({{getCurrency(item.currency)}})
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span [ngSwitch]="item.status">
+                            <span *ngSwitchCase="-1">
+                                <span class="label label-success" mltag="txt_validated">Validated</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                            </span>
+
+                            <span *ngSwitchCase="2">
+                                <span class="label label-warning" mltag="txt_technical">Technical</span>
+                            </span>
+                        </span>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="actions">
+                        <div class="btn-group btn-sm">
+                            <button id="editNav" (click)="editNav(item)" class="btn">
+                                <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit</span>
+                            </button>
+                            <button id="cancelNav" (click)="cancelNav(item)" class="btn">
+                                <i class="fa fa-remove"></i> <span mltag="txt_cancelnav">Cancel</span>
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <form>
+                <div class="row">
+                    <div class="form-block form-group col-sm-6">
+                        <a href="/#/product-module/net-asset-value" class="btn btn-secondary">Close</a>
+                    </div>
+
+                    <!-- <div class="col-sm-3 offset-sm-3 export-nav">
+                        <ng-select id="exportOptions"
+                            class="fluid-width"
+                            [items]="exportOptions"
+                            [allowClear]="true"
+                            placeholder="Select export"
+                            mltag="txt_selectexport">
+                        </ng-select>
+                        <button class="btn btn-primary">Export</button>
+                    </div> -->
+                </div>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<app-nav-add></app-nav-add>

@@ -11,6 +11,10 @@ export {OfiHomeComponent} from './ofi-home/home/component';
 export {OfiInviteInvestorsComponent} from './ofi-kyc/invite-investors/component';
 export {OfiSignUpComponent} from './ofi-kyc/signup/component';
 export {OfiDocumentsComponent} from './ofi-kyc/documents/component';
+export {OfiAmDocumentsComponent} from './ofi-kyc/am-documents/component';
+export {OfiKycHomeComponent} from './ofi-kyc/home/component';
+export {OfiFundAccessComponent} from './ofi-kyc/fund-access/component';
+export {OfiKycAlreadyDoneComponent} from './ofi-kyc/already-done/component';
 /**
  * My informations
  */
@@ -19,9 +23,8 @@ export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/
  * Nav
  */
 export {OfiNavModule} from './ofi-nav/module';
-export {OfiManageOfiNavComponent} from './ofi-nav/ofi-mangage-nav-list/component';
-export {OfiManageNavList} from './ofi-nav/ofi-manage-nav-list-mock/component';
-export {OfiManageNavView} from './ofi-nav/ofi-manage-nav-view-mock/component';
+export {OfiNavFundsList} from './ofi-nav/ofi-nav-funds-list/component';
+export {OfiNavFundView} from './ofi-nav/ofi-nav-fund-view/component';
 export {OfiManageNavPopup} from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**

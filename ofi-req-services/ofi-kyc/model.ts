@@ -22,3 +22,25 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     lang: string;
 }
 
+export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody{
+    token: string;
+    source: string;
+}
+
+export interface CreateUserRequestData{
+    token: string;
+    email: string;
+    password: string;
+}
+
+export interface CreateUserRequestBody extends MemberNodeMessageBody{
+    token: string;
+    email: string;
+    password: string;
+    accountName: string;
+    accountDescription: string;
+}
+
+export interface GetAmKycListRequestBody extends MemberNodeMessageBody{
+    token: string;
+}

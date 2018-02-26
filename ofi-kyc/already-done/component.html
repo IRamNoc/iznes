@@ -1,0 +1,87 @@
+<div class="header-breadcrumbs">
+    <h1 *ngIf="!hasFilledUp"><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
+    <h1 *ngIf="hasFilledUp"><i class="fa fa-unlock"></i> <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="standardform">
+            <i class="fa fa-bars"></i> <span>Standard Form</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <h3>Let's start with the mandatory administrative part: the KYC</h3>
+
+            <section *ngIf="!hasFilledUp" class="form-block confirm-container">
+                <h3>KYC & client folder</h3>
+                <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
+                <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group opt-btn-container">
+                        <div class="radio-inline opt-btn-element">
+                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt">
+                            <label for="opt-yes">Yes</label>
+                        </div>
+                        <div class="radio-inline opt-btn-element">
+                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt">
+                            <label for="opt-no">No</label>
+                        </div>
+                        <div class="opt-btn-context">
+                            <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
+                            <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()">
+                            <span>Back</span>
+                        </button>
+                        <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid">
+                            <span mltag="txt_validate">Validate</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section *ngIf="hasFilledUp" class="confirmed-container">
+                <p>
+                    Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
+                </p>
+                <p>
+                    A message was sent to {{amDetails.companyName.value}}.", asking them yo confirm this information.
+                </p>
+                <p>
+                    Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
+                </p>
+            </section>
+
+            <section class="form-block">
+                <app-text-input-list
+                        [title]="'Info: Details of your Asset Management company'"
+                        [content]="amDetails"
+                        [additionnalText]="'You can contact your asset manager directly.'"
+                ></app-text-input-list>
+             </section>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+    <h3 class="modal-title">CONFIRMATION SCREEN</h3>
+    <div class="modal-body text-center">
+        <p>
+            Please contact {{amDetails.companyName.value}}, in order to fill up and review the KYC documents with them.
+        </p>
+        <p>
+            Please note that {{amDetails.companyName.value}} may require additional information from their clients, on top of the KYC.
+        </p>
+        <br>
+        <p class="highlight">
+            Once they will have reviewed your KYC, you can close this confirmation screen, selects Yes and validates. A notification will be sent to the {{amDetails.companyName.value}}.
+        </p>
+        <br>
+        <button class="btn btn-primary" type="button" (click)="closeModal()">
+            <span>Close</span>
+        </button>
+        <br>
+    </div>
+</clr-modal>
