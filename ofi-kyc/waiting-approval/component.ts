@@ -2,9 +2,10 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {Location} from '@angular/common';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {InvestorModel} from './model';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'app-waiting-approval',
@@ -18,43 +19,46 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     statuses: Array<any>;
     isRejectModalDisplayed: boolean;
     language: string;
-    userDetail: any;
     investor: InvestorModel;
-    kycId: any;
+    kycId: number;
+    amKycList: Array<any>;
+    amCompanyName: string;
+
+    // Statuses
+    APPROVED_STATUS = -1;
+    REJECTED_STATUS = -2;
+    ASK_FOR_MORE_INFO_STATUS = 2;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObs;
-    @select(['user', 'myDetail']) authUserDetailObs;
+    @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
 
     /**
      * Constructor
      *
-     * @param {FormBuilder} _fb
-     * @param {ChangeDetectorRef} _cdr
-     * @param {Location} _location
-     * @param {OfiKycService} _kycService
+     * @param {FormBuilder} fb
+     * @param {ChangeDetectorRef} cdr
+     * @param {Location} location
+     * @param {OfiKycService} kycService
+     * @param {NgRedux<any>} ngRedux
+     * @param {ActivatedRoute} route
      */
-    constructor(private _fb: FormBuilder,
-                private _cdr: ChangeDetectorRef,
-                private _location: Location,
-                private _kycService: OfiKycService) {
+    constructor(private fb: FormBuilder,
+                private cdr: ChangeDetectorRef,
+                private location: Location,
+                private kycService: OfiKycService,
+                private ngRedux: NgRedux<any>,
+                private route: ActivatedRoute) {
 
         console.clear();
 
-        // Fake input value
-        this.investor = {
-            'companyName': { label: 'Company name:', value: 'OFI' },
-            'firstName': { label: 'First name:', value: 'David' },
-            'lastName': { label: 'Last name:', value: 'Duong' },
-            'email': { label: 'Email address:', value: 'david.duong@setl.io' },
-            'phoneNumber': { label: 'Phone number:', value: '0612345678' },
-            'approvalDateRequest': { label: 'Date of approval request:', value: '2018-02-21' }
-        };
-
-        // TODO: set the real value of the kyc id once it's linked to stephen part
-        // const lastIndex = this._location.path().lastIndexOf('/') + 1;
-        // this.kycId = this._location.path().substr(lastIndex);
-        this.kycId = 6;
+        // Get the parameter passed to URL
+        this.route.params.subscribe((params) => {
+            if (params.kycId) {
+                this.kycId = Number(params.kycId);
+            }
+        });
 
         //
         this.isRejectModalDisplayed = false;
@@ -64,11 +68,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscriptions.push(this.requestLanguageObs.subscribe((language) => this.getLanguage(language)));
-        this.subscriptions.push(this.authUserDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
+        this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
+        this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
     }
 
     ngOnDestroy(): void {
-        this._cdr.detach();
+        this.cdr.detach();
 
         this.subscriptions.forEach((subscription) => {
             subscription.unsubscribe();
@@ -76,8 +81,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initWaitingApprovalForm(): void {
-        this.waitingApprovalFormGroup = this._fb.group({
-            status: [1, Validators.required],
+        this.waitingApprovalFormGroup = this.fb.group({
+            status: [this.APPROVED_STATUS, Validators.required],
             additionalText: ['', Validators.required],
             isKycAccepted: [false, Validators.required]
         });
@@ -88,17 +93,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             {
                 id: 'reject',
                 label: 'Reject',
-                value: -1
+                value: this.REJECTED_STATUS
             },
             {
                 id: 'askForMoreInfo',
                 label: 'Ask for more info',
-                value: 0
+                value: this.ASK_FOR_MORE_INFO_STATUS
             },
             {
                 id: 'accept',
                 label: 'Accept',
-                value: 1
+                value: this.APPROVED_STATUS
             }
         ];
     }
@@ -107,30 +112,52 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.language = language;
     }
 
-    getUserDetail(userDetail): void {
-        this.userDetail = userDetail;
+    setAmKycListRequested(requested) {
+        if (!requested) {
+            OfiKycService.defaultRequestAmKycList(this.kycService, this.ngRedux);
+        }
+    }
+
+    getAmKycList(amKycList: any) {
+        if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
+            const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId);
+
+            this.investor = {
+                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
+                'firstName': { label: 'First name:', value: kyc.investorFirstName },
+                'lastName': { label: 'Last name:', value: kyc.investorLastName },
+                'email': { label: 'Email address:', value: kyc.investorEmail },
+                'phoneNumber': { label: 'Phone number:', value: `${kyc.phoneCode} ${kyc.phoneNumber}` },
+                'approvalDateRequest': { label: 'Date of approval request:', value: kyc.lastUpdated }
+            };
+
+            this.amCompanyName = kyc.amCompanyName;
+        }
+        // else {
+        //     this.location.back();
+        // }
     }
 
     handleStatusChange() {
-        if (this.waitingApprovalFormGroup.controls['status'].value !== 1) {
+        if (this.waitingApprovalFormGroup.controls['status'].value !== this.APPROVED_STATUS) {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
         }
     }
 
     handleBackButtonClick() {
         this.resetForm();
-        this._location.back();
+        this.location.back();
     }
 
     handleSubmitButtonClick(): void {
         const status = this.waitingApprovalFormGroup.controls['status'].value;
 
         switch (status) {
-            case -1:
+            case this.REJECTED_STATUS:
                 this.isRejectModalDisplayed = true;
                 break;
-            case 0:
-                this._kycService.askMoreInfo(this.kycId)
+            case this.ASK_FOR_MORE_INFO_STATUS:
+                this.kycService.askMoreInfo(this.kycId)
                     .then((response) => {
                         console.log('on ask for more info success: ', response[0]);
                     }).catch((e) => {
@@ -140,8 +167,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
                 this.resetForm();
                 break;
-            case 1:
-                this._kycService.approve(this.kycId)
+            case this.APPROVED_STATUS:
+                this.kycService.approve(this.kycId)
                     .then((response) => {
                         console.log('on approve success: ', response[0]);
                     }).catch((e) => {
@@ -161,7 +188,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     handleRejectButtonClick() {
         this.isRejectModalDisplayed = false;
 
-        this._kycService.reject(this.kycId)
+        this.kycService.reject(this.kycId)
             .then((response) => {
                 console.log('on reject success: ', response[0]);
             }).catch((e) => {
@@ -172,7 +199,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     resetForm(): void {
         this.isRejectModalDisplayed = false;
-        this.waitingApprovalFormGroup.controls['status'].setValue(1);
+        this.waitingApprovalFormGroup.controls['status'].setValue(this.APPROVED_STATUS);
         this.waitingApprovalFormGroup.controls['additionalText'].setValue('');
         this.waitingApprovalFormGroup.controls['isKycAccepted'].setValue(false);
     }
