@@ -9,10 +9,8 @@ const initialState: AmKycListState = {
     requested: false
 };
 
-export function AmKycListReducer(
-    state: AmKycListState = initialState,
-    action: Action
-): AmKycListState {
+export function AmKycListReducer(state: AmKycListState = initialState,
+                                 action: Action): AmKycListState {
     switch (action.type) {
         case actions.SET_AMKYCLIST:
             return handleSetAmKycList(state, action);
@@ -24,6 +22,7 @@ export function AmKycListReducer(
             return state;
     }
 }
+
 /**
  * Handle set am kyc list
  *
@@ -34,16 +33,32 @@ export function AmKycListReducer(
 function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListState {
     const amKycListData = _.get(action, 'payload[1].Data', []);
     let amKycList: AmKycListState[] = [];
+
     try {
         amKycList = immutableHelper.reduce(amKycListData, (result, item) => {
             result.push({
-                status: item.get('kycStatus', 0),
-                companyName: item.get('companyName', 0),
-                actionDate: item.get('actionDate', 0),
-                kycDate: item.get('kycDate', 0),
-                reviewBy: item.get('reviewBy', 0),
-                invited: item.get('invited', 0)
+                kycID: item.get('kycID', 0),
+                investorUserID: item.get('investorUserID', 0),
+                investorUserName: item.get('investorUserName', 0),
+                investorFirstName: item.get('investorFirstName', 0),
+                investorLastName: item.get('investorLastName', 0),
+                investorEmail: item.get('investorEmail', 0),
+                investorPhoneCode: item.get('phoneCode', 0),
+                investorPhoneNumber: item.get('phoneNumber', 0),
+                investorCompanyName: item.get('investorCompanyName', 0),
+                amUserName: item.get('amUserName', 0),
+                amFirstName: item.get('amFirstName', 0),
+                amLastName: item.get('amLastName', 0),
+                lastUpdated: item.get('lastUpdated', 0),
+                lastReviewBy: item.get('lastReviewBy', 0),
+                investorWalletID: item.get('investorWalletID', 0),
+                walletName: item.get('walletName', 0),
+                amManagementCompanyID: item.get('amManagementCompanyID', 0),
+                isInvited: item.get('isInvited', 0),
+                invitedID: item.get('invitedID', 0),
+                status: item.get('kycStatus', 0)
             });
+
             return result;
         }, []);
     } catch (e) {
