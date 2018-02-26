@@ -103,5 +103,31 @@ export class CoreWorkflowEngineService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    reportTx(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-ops-report-tx',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    reportLost(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-ops-report-lost',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    reportExec(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-ops-report-exec',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 
 }
