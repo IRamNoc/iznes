@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ContractModel } from '../models';
-import { PartyService } from '../services';
+import { PartyService } from '../services/party.service';
 import { PartyModel } from '../models';
-import { AuthorisationService } from '../services';
+import { AuthorisationService } from '../services/authorisation.service';
 import { AuthorisationModel } from '../models';
-import { ParameterItemService } from '../services';
+import { ParameterItemService } from '../services/parameterItem.service';
 import { ParameterItemModel } from '../models';
-import { EncumbranceService } from '../services';
+import { EncumbranceService } from '../services/encumbrance.service';
 import { EncumbranceModel } from '../models';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -108,7 +108,7 @@ export class ContractService {
 
         contract.address = contract.__address;
         contract.function = contract.__function;
-        contract.completed = contract.__completed == 0;
+        contract.completed = contract.__completed != 0;
         contract.timeevent = contract.__timeevent;
         return contract;
     }
@@ -156,7 +156,12 @@ export class ContractService {
             delete contractJsonObject.contractdata.function;
         }
 
+        contractJsonObject.contractdata.metadata = '{}';
+
         delete contractJsonObject.events;
+
+        // TODO: Fix this in DVP Component!
+        contractJsonObject.contractdata.parameters['nav'][2] = 0;
 
         return JSON.stringify(contractJsonObject);
     }

@@ -1,17 +1,17 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, OnChanges} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
-import {ContractService} from '@setl/core-contracts/services/contract.service';
+import {ContractService} from '@setl/core-contracts/services';
 import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
 import { WalletNodeRequestService } from '@setl/core-req-services/walletnode-request/walletnode-request.service';
 import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '@setl/core-balances/tabs';
 import * as _ from 'lodash';
-import {ContractModel} from '@setl/core-contracts/models/contract.model';
+import {ContractModel} from '@setl/core-contracts/models';
 import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 
@@ -26,8 +26,8 @@ export class ContractsComponent implements OnInit, OnChanges {
     public token: string = null;
     public userId: string = null;
     public walletId: string = null;
-    public addresses: Array<any> = new Array();
-    public contracts: Array<ContractModel> = new Array();
+    public addresses: Array<any> = [];
+    public contracts: Array<ContractModel> = [];
     public contract;
     public contractFields;
 
@@ -118,28 +118,80 @@ export class ContractsComponent implements OnInit, OnChanges {
         }));
     }
 
-    public commit(index: number, contract: ContractModel): void {
+    public commitAuthorisation(index: number, contract: ContractModel): void {
+        index++;
+        console.log('INDEX:', index);
         let contractJson = JSON.parse(this.contractService.toJSON(contract));
         contractJson = contractJson.contractdata;
         console.log('CONTRACT JSON:', contractJson);
-        let commitment = [];
+        const commitment = [];
         _.each(contractJson.parties[index][2], (payListItem, i) => {
             commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
         });
-        let receive = [];
+        const receive = [];
         _.each(contractJson.parties[index][3], (recieveListItem, i) => {
-            receive[i] = [i, contract.issuingaddress];
+            receive[i] = [i, contract.parties[index - 1].sigAddress];
         });
+
         const asyncTaskPipe = this.walletNodeRequestService.walletCommitToContract({
             walletid: this.walletId,
-            address: contract.parties[index].sigAddress,
+            address: contract.parties[index - 1].sigAddress,
             function: contract.function + '_commit',
             contractdata: {
-                contractfunction: contract.function,
+                contractfunction: contract.function + '_commit',
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
-                // parties: contractJson.parties,
-                party: [contractJson.parties[index].sigAddress, '', ''],
+                party: [
+                    index - 1,
+                    '',
+                    ''
+                ],
+                parties: contractJson.parties,
+                commitment: commitment,
+                receive: receive,
+                authorise: contractJson.authorisations
+            },
+            contractaddress: contract.address
+        });
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {},
+            () => {}
+        ));
+    }
+
+    public commitParty(index: number, contract: ContractModel): void {
+        index++;
+        console.log('INDEX:', index);
+        let contractJson = JSON.parse(this.contractService.toJSON(contract));
+        contractJson = contractJson.contractdata;
+        console.log('CONTRACT JSON:', contractJson);
+        const commitment = [];
+        _.each(contractJson.parties[index][2], (payListItem, i) => {
+            commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
+        });
+        const receive = [];
+        _.each(contractJson.parties[index][3], (recieveListItem, i) => {
+            receive[i] = [i, contract.parties[index - 1].sigAddress];
+        });
+
+        const asyncTaskPipe = this.walletNodeRequestService.walletCommitToContract({
+            walletid: this.walletId,
+            address: contract.parties[index - 1].sigAddress,
+            function: contract.function + '_commit',
+            contractdata: {
+                contractfunction: contract.function + '_commit',
+                issuingaddress: contract.issuingaddress,
+                contractaddress: contract.address,
+                party: [
+                  index - 1,
+                  '',
+                  ''
+                ],
+                parties: contractJson.parties,
                 commitment: commitment,
                 receive: receive,
                 authorise: contractJson.authorisations
@@ -230,7 +282,7 @@ export class ContractsComponent implements OnInit, OnChanges {
     public ngOnChanges() {
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }

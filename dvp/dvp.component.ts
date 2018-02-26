@@ -204,31 +204,31 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     getError(): any {
-        if(this.fieldHasError('creator')) {
+        if (this.fieldHasError('creator')) {
             return {
                 mltag: 'txt_contracterror_creator',
                 text: 'Creator Address is Required'
-            }
-        } else if(this.fieldHasError('expireDate')) {
+            };
+        } else if (this.fieldHasError('expireDate')) {
             return {
                 mltag: 'txt_contracterror_expiredate',
                 text: 'Expire Date is Required'
-            }
-        } else if(this.fieldHasError('expireTime')) {
+            };
+        } else if (this.fieldHasError('expireTime')) {
             return {
                 mltag: 'txt_contracterror_expiretime',
                 text: 'Expire Time is Required'
-            }
-        } else if(this.fieldHasError(partyA)) {
+            };
+        } else if (this.fieldHasError(partyA)) {
             return {
                 mltag: 'txt_contracterror_partya',
                 text: 'Party A is invalid'
-            }
-        } else if(this.fieldHasError(partyB)) {
+            };
+        } else if (this.fieldHasError(partyB)) {
             return {
                 mltag: 'txt_contracterror_partyb',
                 text: 'Party B is invalid'
-            }
+            };
         } else {
             return false;
         }
@@ -244,7 +244,10 @@ export class ContractsDvpComponent implements OnInit {
      * Create Contract
      */
     createContract(): void {
-        if(!this.isFormValid()) return;
+        if(!this.isFormValid()) {
+            console.log('Invalid form!');
+            return;
+        }
 
         this.dvpService.create(
             this.parties,

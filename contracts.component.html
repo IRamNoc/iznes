@@ -70,31 +70,62 @@
                 </tr>
             </tbody>
         </table>
-        <clr-datagrid #contractsDataGrid>
-            <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
-            <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
-            <clr-dg-column mltag="txt_element">Element</clr-dg-column>
-            <clr-dg-column mltag="txt_status">Status</clr-dg-column>
-            <clr-dg-row *clrDgItems="let party of contract.parties; let i = index">
-                <clr-dg-cell>
-                    <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
-                </clr-dg-cell>
-                <clr-dg-cell>{{party.sigAddress_label}}</clr-dg-cell>
-                <clr-dg-cell>
-                    <span mltag="txt_pay">Pay</span> {{contract.payors}}
-                    <span> - </span>
-                    <span mltag="txt_receive">Receive</span> {{contract.payees}}
-                </clr-dg-cell>
-                <clr-dg-cell>
-                    <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                    <span *ngIf="party.signature == ''">
-                        <button id="edit-{{i}}" (click)="commit(i, contract)" class="btn">
-                            <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
-                        </button>
-                    </span>
-                </clr-dg-cell>
-            </clr-dg-row>
-        </clr-datagrid>
+        <div *ngIf="contract.parties.length > 0">
+            Parties
+            <clr-datagrid #partiesDataGrid>
+                <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
+                <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
+                <clr-dg-column mltag="txt_element">Element</clr-dg-column>
+                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-row *clrDgItems="let party of contract.parties; let i = index">
+                    <clr-dg-cell>
+                        <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{party.sigAddress_label}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span mltag="txt_pay">Pay</span> {{contract.payors}}
+                        <span> - </span>
+                        <span mltag="txt_receive">Receive</span> {{contract.payees}}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                        <span *ngIf="party.signature == ''">
+                            <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn">
+                                <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
+                            </button>
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
+        <div *ngIf="contract.authorisations.length > 0">
+            Authorisations
+            <clr-datagrid #authorisationsDataGrid>
+                <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
+                <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
+                <clr-dg-column mltag="txt_element">Element</clr-dg-column>
+                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
+                    <clr-dg-cell>
+                        <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span mltag="txt_pay">Pay</span> {{contract.payors}}
+                        <span> - </span>
+                        <span mltag="txt_receive">Receive</span> {{contract.payees}}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                        <span *ngIf="authorisation.signature == ''">
+                            <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn">
+                                <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
+                            </button>
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
         <div class="form-group tx-view-header">
             <button type="button" class="btn btn-primary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;Close</button>
         </div>
