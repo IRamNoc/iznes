@@ -135,17 +135,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     getLanguage(requested): void {
         if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
+            this.language = requested;
         }
     }
 
