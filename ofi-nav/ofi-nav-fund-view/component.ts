@@ -30,6 +30,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     
     navFund: model.NavInfoModel;
     navFundHistory: any;
+    socketToken: string;
+    userId: number;
 
     navHistoryForm: FormGroup;
     
@@ -57,6 +59,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'requested']) navFundHistoryRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'navFundHistory']) navFundHistoryOb: Observable<any>;
+    @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userOb;
 
     constructor(private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
@@ -81,6 +85,12 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.navFundOb.subscribe(navFund => {
             this.updateNavFund(navFund);
+        }));
+        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+            this.socketToken = token;
+        }));
+        this.subscriptionsArray.push(this.userOb.subscribe(userId => {
+            this.userId = userId;
         }));
     }
 
@@ -191,6 +201,14 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private requestNavFundHistory(requested: boolean): void {
         if(requested || !this.navFund) return;
 
+        const requestData = this.getNavRequestData();
+
+        OfiNavService.defaultRequestNavHistory(this.ofiNavService, this.redux, requestData);
+
+        this.redux.dispatch(ofiSetCurrentNavFundHistoryRequest(requestData));
+    }
+
+    private getNavRequestData(): any {
         let navDateFrom;
         let navDateTo;
 
@@ -203,15 +221,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             navDateTo = `${this.navHistoryForm.value.navDateTo} 00:00:00`;
         }
 
-        const requestData = {
+        return {
             shareId: this.navFund.shareId,
             navDateFrom: navDateFrom,
             navDateTo: navDateTo
         }
-
-        OfiNavService.defaultRequestNavHistory(this.ofiNavService, this.redux, requestData);
-
-        this.redux.dispatch(ofiSetCurrentNavFundHistoryRequest(requestData));
     }
 
     /**
@@ -290,6 +304,19 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.DELETE);
+    }
+
+    exportCSV(): void {
+        const requestData = this.getNavRequestData();
+        
+        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundHistory&shareId=${requestData.shareId}&navDateFrom=${encodeURIComponent(requestData.navDateFrom)}&navDateTo=${encodeURIComponent(requestData.navDateTo)}`, false);
+        
+        window.open(url, '_blank');
+    }
+
+    private generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
     }
 
     private clearRequestedHistory(): void {
