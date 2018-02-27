@@ -33,15 +33,20 @@
                         </div>
 
                         <!-- Radio buttons -->
-                        <div class="statuses">
-                            <div class="status" *ngFor="let status of statuses">
-                                <input id={{status.id}}
-                                       type="radio"
-                                       formControlName="status"
-                                       [value]="status.value"
-                                       [checked]="status.value === statusId"
-                                       (change)="handleStatusChange()"/>
-                                <label for={{status.id}}>{{status.label}}</label>
+                        <div class="statuses col-sm-12">
+                            <div class="status col-sm-2" *ngFor="let status of statuses">
+                                <span class="statusRadio">
+                                    <input id={{status.id}}
+                                           type="radio"
+                                           formControlName="status"
+                                           [value]="status.value"
+                                           [checked]="status.value === statusId"
+                                           (change)="handleStatusChange()"/>
+                                </span>
+
+                                <span class="statusLabel">
+                                    <label for={{status.id}}>{{status.label}}</label>
+                                </span>
                             </div>
                         </div>
 
