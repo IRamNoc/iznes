@@ -4,11 +4,13 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
 /* Pipes. */
-import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
+import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
+
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
-
 import {MultilingualModule} from '@setl/multilingual';
 
 /* Components. */
@@ -18,6 +20,7 @@ import {OfiDocumentsComponent} from './documents/component';
 import {MockKYCDocumentsService} from './documents/documents.mock.service';
 import {OfiKycHomeComponent} from './home/component';
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
+import {OfiWaitingApprovalComponent} from './waiting-approval/component';
 import {OfiFundAccessComponent} from './fund-access/component';
 import {OfiAmDocumentsComponent} from './am-documents/component';
 import {TextInputListComponent} from './text-input-list/component';
@@ -30,6 +33,7 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiWaitingApprovalComponent,
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
@@ -40,12 +44,14 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiWaitingApprovalComponent,
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
     ],
     imports: [
+        ToasterModule,
         CommonModule,
         BrowserModule,
         FormsModule,
@@ -61,6 +67,7 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
     ],
     providers: [
         MockKYCDocumentsService,
+        ToasterService
     ]
 })
 

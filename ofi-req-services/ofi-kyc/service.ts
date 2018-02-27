@@ -1,30 +1,33 @@
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
-import * as _ from 'lodash';
 
 import {MemberSocketService} from '@setl/websocket-service';
 import {
-    SendInvestInvitationRequestBody,
-    SendInvitationRequestData,
-    VerifyInvitationTokenRequestBody,
     CreateUserRequestBody,
     CreateUserRequestData,
     GetAmKycListRequestBody,
     GetInvestorRequestBody,
+    SendInvestInvitationRequestBody,
+    SendInvitationRequestData,
+    VerifyInvitationTokenRequestBody,
+    WaitingApprovalMessageBody,
+    WaitingApprovalRequestData
 } from './model';
+
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper, Common} from '@setl/utils';
-import {SET_AMKYCLIST, SET_REQUESTED, CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+
+import * as _ from 'lodash';
+import {SagaHelper} from '@setl/utils';
+import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Injectable()
 export class OfiKycService {
-    constructor(
-        private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>,
-    ) {
+    constructor(private memberSocketService: MemberSocketService,
+                private ngRedux: NgRedux<any>) {
 
     }
+
     /**
      * Default static call to get my fund access, and dispatch default actions, and other
      * default task.
@@ -83,6 +86,53 @@ export class OfiKycService {
             password: _.get(requestData, 'password', ''),
             accountName: _.get(requestData, 'email', ''),
             accountDescription: _.get(requestData, 'email', '') + '_account'
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Accept an investor's KYC approval
+     *
+     * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
+     */
+    approve(requestData: WaitingApprovalRequestData): any {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesapprovekyc',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID', 0)
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Reject an investor's KYC approval
+     *
+     * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
+     */
+    reject(requestData: WaitingApprovalRequestData) {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesrejectkyc',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID', 0)
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Ask more informations for an investor's KYC approval
+     * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
+     */
+    askMoreInfo(requestData: WaitingApprovalRequestData) {
+        const messageBody: WaitingApprovalMessageBody = {
+            RequestName: 'iznesrequestmoreinfo',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID', 0)
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

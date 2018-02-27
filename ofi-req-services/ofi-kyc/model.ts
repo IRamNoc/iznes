@@ -8,10 +8,10 @@ interface Invitation {
 }
 
 export interface SendInvitationRequestData {
-   assetManagerName: string;
-   amCompanyName: string;
-   investors: Array<Invitation>;
-   lang: string;
+    assetManagerName: string;
+    amCompanyName: string;
+    investors: Array<Invitation>;
+    lang: string;
 }
 
 export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
@@ -22,18 +22,18 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     lang: string;
 }
 
-export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody{
+export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {
     token: string;
     source: string;
 }
 
-export interface CreateUserRequestData{
+export interface CreateUserRequestData {
     token: string;
     email: string;
     password: string;
 }
 
-export interface CreateUserRequestBody extends MemberNodeMessageBody{
+export interface CreateUserRequestBody extends MemberNodeMessageBody {
     token: string;
     email: string;
     password: string;
@@ -41,11 +41,19 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody{
     accountDescription: string;
 }
 
-export interface GetAmKycListRequestBody extends MemberNodeMessageBody{
+export interface WaitingApprovalRequestData {
+    kycID: number;
+}
+
+export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+}
+
+export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
     token: string;
 }
 
 export interface GetInvestorRequestBody extends MemberNodeMessageBody {
     token: string;
 }
-
