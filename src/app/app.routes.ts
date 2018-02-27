@@ -21,8 +21,10 @@ import {
     ManageOrdersComponent,
     MyDashboardComponent,
     MyOrdersComponent,
+    OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
     OfiDocumentsComponent,
+    OfiFundAccessComponent,
     OfiHomeComponent,
     OfiInvestorFundListComponent,
     OfiInviteInvestorsComponent,
@@ -34,7 +36,7 @@ import {
     OfiPnlReportComponent,
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
-    OfiTaxReportComponent,
+    OfiTaxReportComponent
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -158,6 +160,26 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'fund-access',
+                component: OfiFundAccessComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'kyc-am-documents',
+                component: OfiAmDocumentsComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'client/:kycId',
+                component: OfiWaitingApprovalComponent,
+                canActivate: [LoginGuardService]
+            },
+            {
+                path: 'new-investor-home',
+                component: OfiKycHomeComponent,
                 canActivate: [LoginGuardService]
             },
             {
@@ -508,17 +530,6 @@ export const ROUTES: Routes = [
                         path: 'messages',
                         canActivate: [LoginGuardService],
                         component: T2sMessagesComponent
-                    }
-                ]
-            },
-            {
-                path: 'kyc-documents',
-                canActivate: [LoginGuardService],
-                children: [
-                    {
-                        path: 'waiting-approval',
-                        canActivate: [LoginGuardService],
-                        component: OfiWaitingApprovalComponent
                     }
                 ]
             }
