@@ -173,11 +173,6 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'new-investor-home',
-                component: OfiKycHomeComponent,
-                canActivate: [LoginGuardService]
-            },
-            {
                 path: 'new-investor',
                 children: [
                     {
