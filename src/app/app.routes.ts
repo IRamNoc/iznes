@@ -173,11 +173,6 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'client/:kycId',
-                component: OfiWaitingApprovalComponent,
-                canActivate: [LoginGuardService]
-            },
-            {
                 path: 'new-investor-home',
                 component: OfiKycHomeComponent,
                 canActivate: [LoginGuardService]
@@ -532,7 +527,17 @@ export const ROUTES: Routes = [
                         component: T2sMessagesComponent
                     }
                 ]
-            }
+            },
+            {
+                path: 'kyc-documents',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'client/:kycId',
+                        component: OfiWaitingApprovalComponent,
+                    }
+                ]
+            },
         ],
         canActivate: [LoginGuardService]
     }
