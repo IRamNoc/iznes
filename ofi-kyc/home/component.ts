@@ -47,7 +47,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
-    private userSaved = false;
 
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
@@ -95,15 +94,10 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             return result;
         }, []);
 
-        if (!this.userSaved) {
-            this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: listToRedux});
-            this._ngRedux.dispatch(setAppliedHighlight());
-            this.showModal = true;
-            this.userSaved = true;
-        } else {
-            this._ngRedux.dispatch(setInformations(this.userInfo));
-            this.toasterService.pop('success', 'Your profile has been saved');
-        }
+        this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: listToRedux});
+        this._ngRedux.dispatch(setAppliedHighlight());
+        this.showModal = true;
+
     }
 
     closeModal() {
