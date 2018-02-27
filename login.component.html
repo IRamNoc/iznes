@@ -105,18 +105,16 @@
                     <input id="fp-email-field" type="text" class="form-control" formControlName="email"
                            placeholder="Email address" mltag="txt_emailaddress">
 
-                    <div [ngStyle]="{'height':'24px'}"
-                         *ngIf="forgottenPasswordForm.controls.email.valid || forgottenPasswordForm.controls.email.pristine">
-                    </div>
+                    <div [ngStyle]="{'height':'24px'}">
+                        <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.dirty"
+                             class="text-danger" mltag="txt_thisfieldisrequired">
+                            This field is required
+                        </div>
 
-                    <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.dirty"
-                         class="text-danger" mltag="txt_thisfieldisrequired">
-                        This field is required
-                    </div>
-
-                    <div *ngIf="!forgottenPasswordForm.controls.email.valid && !forgottenPasswordForm.controls.email.hasError('required')"
-                         class="text-danger" mltag="txt_emailnotvalid">
-                        Email not valid!
+                        <div *ngIf="!forgottenPasswordForm.controls.email.valid && !forgottenPasswordForm.controls.email.hasError('required')"
+                             class="text-danger" mltag="txt_emailnotvalid">
+                            Email not valid!
+                        </div>
                     </div>
                 </div>
 
@@ -175,19 +173,16 @@
                             <i class="fa fa-eye-slash" aria-hidden="true">
                             </i></span>
                     </div>
-                    <div [ngStyle]="{'height':'24px'}"
-                         *ngIf="changePasswordForm.controls.password.valid || changePasswordForm.controls.password.pristine">
+                    <div [ngStyle]="{'height':'24px'}">
+                        <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty"
+                             class="text-danger" mltag="txt_passwordisrequired">
+                            Password is required
+                        </div>
+                        <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched"
+                             class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
+                            Your password must be at least 6 characters
 
-                    </div>
-                    <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty"
-                         class="text-danger" mltag="txt_passwordisrequired">
-                        Password is required
-
-                    </div>
-                    <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched"
-                         class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
-                        Your password must be at least 6 characters
-
+                        </div>
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -203,24 +198,21 @@
                             <i class="fa fa-eye-slash" aria-hidden="true">
                             </i></span>
                     </div>
-                    <div [ngStyle]="{'height':'24px'}"
-                         *ngIf="changePasswordForm.controls.passwordConfirm.valid || changePasswordForm.controls.passwordConfirm.pristine">
+                    <div [ngStyle]="{'height':'24px'}">
+                        <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
+                             class="text-danger" mltag="txt_confirmationisrequired">
+                            Confirmation is required
+                        </div>
+                        <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
+                             class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
+                            Your password must be at least 6 characters
 
-                    </div>
-                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
-                         class="text-danger" mltag="txt_confirmationisrequired">
-                        Confirmation is required
+                        </div>
+                        <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
+                             class="text-danger" mltag="txt_passworddoesnotmatch">
+                            Password does not match
 
-                    </div>
-                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
-                         class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">
-                        Your password must be at least 6 characters
-
-                    </div>
-                    <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty"
-                         class="text-danger" mltag="txt_passworddoesnotmatch">
-                        Password does not match
-
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mt-1">
