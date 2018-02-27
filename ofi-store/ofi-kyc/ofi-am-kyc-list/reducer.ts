@@ -53,7 +53,7 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 lastReviewBy: item.get('lastReviewBy', 0),
                 investorWalletID: item.get('investorWalletID', 0),
                 walletName: item.get('walletName', 0),
-                amManagementCompanyID: item.get('amManagementCompanyID', 0),
+                companyName: item.get('companyName', 0),
                 isInvited: item.get('isInvited', 0),
                 invitedID: item.get('invitedID', 0),
                 status: item.get('kycStatus', 0)
