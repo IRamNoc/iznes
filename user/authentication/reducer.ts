@@ -7,7 +7,8 @@ const initialState: AuthenticationState = {
     token: '',
     apiKey: '',
     useTwoFactor: 0,
-    isLogin: false
+    isLogin: false,
+    defaultHomePage: '/home'
 };
 
 export const AuthenticationReducer = function (state: AuthenticationState = initialState, action: Action) {
@@ -17,12 +18,14 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             const token = _.get(loginedData, 'Token', '');
             const apiKey = _.get(loginedData, 'apiKey', '');
             const useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
+            const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
 
             const newState = Object.assign({}, state, {
                 token,
                 apiKey,
                 useTwoFactor,
-                isLogin: true
+                isLogin: true,
+                defaultHomePage
             });
 
             return newState;
