@@ -12,6 +12,9 @@ import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@s
 import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
 import {Router} from '@angular/router';
+import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import {MyUserService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils/index';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -29,7 +32,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         email: '',
         firstName: '',
         lastName: '',
-        invitedBy: '',
+        invitedBy: {
+            email: '',
+            firstName: '',
+            lastName: '',
+            companyName: '',
+            phoneCode: '',
+            phoneNumber: '',
+        },
         companyName: '',
         phoneCode: '',
         phoneNumber: '',
@@ -47,6 +57,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private router: Router,
+                private ofiKycService: OfiKycService,
+                private myUserService: MyUserService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -60,6 +72,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             /* Assign list to a property. */
             this.userInfo = d;
         });
+
+        /* fetch backend for existing data to pre fill the form */
+        this.ofiKycService.fetchInvestor();
 
     }
 
@@ -92,11 +107,39 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     closeModal() {
-        this._ngRedux.dispatch(setInformations(this.userInfo));
+        const user = {
+            displayName: '',
+            firstName: this.userInfo.firstName,
+            lastName: this.userInfo.lastName,
+            mobilePhone: '',
+            addressPrefix: '',
+            address1: '',
+            address2: '',
+            address3: '',
+            address4: '',
+            postalCode: '',
+            country: '',
+            memorableQuestion: '',
+            memorableAnswer: '',
+            profileText: '',
+            phoneCode: this.userInfo.phoneCode,
+            phoneNumber: this.userInfo.phoneNumber,
+            companyName: this.userInfo.companyName,
+        };
+        const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                this.toasterService.pop('success', `Your form has been saved successfully!`);
+            },
+            (data) => {
+                this.toasterService.pop('error', JSON.stringify(data));
+            })
+        );
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
         this._ngRedux.dispatch(clearAppliedHighlight());
         this.showModal = false;
-        this.router.navigate(['new-investor', 'already-done']);
+        this.router.navigate(['new-investor', 'already-done', 'confirmation']);
     }
 
     /* On Destroy. */

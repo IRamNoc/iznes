@@ -1,9 +1,12 @@
-export interface KycMyInformations {
+export interface KycUser {
     email: string;
     firstName: string;
     lastName: string;
-    invitedBy: string;
     companyName: string;
     phoneCode: string;
     phoneNumber: string;
+}
+
+export interface KycMyInformations extends KycUser {
+    invitedBy: KycUser;
 }

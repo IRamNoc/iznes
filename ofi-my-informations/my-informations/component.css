@@ -11,3 +11,21 @@
     border-radius: 6px;
     background-color: rgba(255, 255, 255, 0.6);
 }
+
+.phone-input-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.phone-input-container > div:first-child {
+    box-sizing: border-box;
+    margin-right: 10px;
+    width: 90%;
+}
+
+.phone-input-container > div:nth-child(1) {
+    width: 90%;
+}
