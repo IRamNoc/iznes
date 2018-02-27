@@ -11,6 +11,7 @@ import {
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
     WaitingApprovalMessageBody,
+    WaitingApprovalRequestData
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -93,14 +94,14 @@ export class OfiKycService {
     /**
      * Accept an investor's KYC approval
      *
-     * @param {number} kycId
      * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
      */
-    approve(kycId: number): any {
+    approve(requestData: WaitingApprovalRequestData): any {
         const messageBody: WaitingApprovalMessageBody = {
             RequestName: 'iznesapprovekyc',
             token: this.memberSocketService.token,
-            kycID: kycId
+            kycID: _.get(requestData, 'kycID', 0)
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -109,14 +110,14 @@ export class OfiKycService {
     /**
      * Reject an investor's KYC approval
      *
-     * @param {number} kycId
      * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
      */
-    reject(kycId: number) {
+    reject(requestData: WaitingApprovalRequestData) {
         const messageBody: WaitingApprovalMessageBody = {
             RequestName: 'iznesrejectkyc',
             token: this.memberSocketService.token,
-            kycID: kycId
+            kycID: _.get(requestData, 'kycID', 0)
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -124,14 +125,14 @@ export class OfiKycService {
 
     /**
      * Ask more informations for an investor's KYC approval
-     * @param {number} kycId
      * @returns {any}
+     * @param {WaitingApprovalRequestData} requestData
      */
-    askMoreInfo(kycId: number) {
+    askMoreInfo(requestData: WaitingApprovalRequestData) {
         const messageBody: WaitingApprovalMessageBody = {
             RequestName: 'iznesrequestmoreinfo',
             token: this.memberSocketService.token,
-            kycID: kycId
+            kycID: _.get(requestData, 'kycID', 0)
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
