@@ -28,7 +28,9 @@ import {
 export class OfiNavFundsList implements OnInit, OnDestroy {
 
     shareListItems: any[];
-    navListItems: any[];
+    navListItems: model.NavModel[];
+    socketToken: string;
+    userId: number;
     
     searchForm: FormGroup;
     dateTypes: any[];
@@ -37,7 +39,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null // TODO
+        locale: null
     };
 
     navPopupMode: model.NavPopupMode = model.NavPopupMode.ADD;
@@ -46,6 +48,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
+    @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userOb;
 
     constructor(private router: Router,
         private redux: NgRedux<any>,
@@ -71,6 +75,12 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.navListOb.subscribe(navList => {
             this.updateNavList(navList);
         }));
+        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+            this.socketToken = token;
+        }));
+        this.subscriptionsArray.push(this.userOb.subscribe(userId => {
+            this.userId = userId;
+        }));
     }
 
     private initSearchForm(): void {
@@ -95,15 +105,19 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         this.changeDetectorRef.detectChanges();
 
-        const requestData = {
-            fundName: this.searchForm.value.shareName,
-            navDateField: this.searchForm.value.dateType[0].id,
-            navDate: `${this.searchForm.value.date} 00:00:00`
-        }
+        const requestData = this.getRequestNavListData();
 
         OfiNavService.defaultRequestNavList(this.ofiNavService, this.redux, requestData);
 
         this.redux.dispatch(ofiSetCurrentNavFundsListRequest(requestData));
+    }
+
+    private getRequestNavListData(): any {
+        return {
+            fundName: this.searchForm.value.shareName,
+            navDateField: this.searchForm.value.dateType[0].id,
+            navDate: `${this.searchForm.value.date} 00:00:00`
+        }
     }
 
     /**
@@ -164,6 +178,19 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
 
         this.router.navigateByUrl(`product-module/nav-fund-view`);
+    }
+
+    exportCSV(): void {
+        const requestData = this.getRequestNavListData();
+        
+        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundShares&shareId=null&fundName=${encodeURIComponent(requestData.fundName)}&navDateField=${requestData.navDateField}&navDate=${encodeURIComponent(requestData.navDate)}`, false);
+        
+        window.open(url, '_blank');
+    }
+
+    private generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
     }
 
     clearRequestedList(): void {
