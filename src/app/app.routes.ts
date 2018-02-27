@@ -191,7 +191,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService]
                     },
                     {
-                        path: 'already-done',
+                        path: 'already-done/:status',
                         component: OfiKycAlreadyDoneComponent,
                         canActivate: [LoginGuardService]
                     }
