@@ -1,12 +1,12 @@
 <div class="header-breadcrumbs">
     <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>
-        <span mltag="">Client folder - Funds' Shares access authorisation:</span> - [Company name of the investor]
+        <span mltag="">Client folder - Funds' Shares access authorisation:</span> - {{investorData['companyName']}}
     </h1>
 </div>
 
 <div class="wrapper wrapper-content">
 
-    <div style="padding: 20px">Please select the funds you would like [Company name of the investor] to have access to:</div>
+    <div style="padding: 20px">Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
 
     <clr-tabs>
         <clr-tab>
@@ -22,7 +22,7 @@
                                     <span>Company Name:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test" class="form-control" value="professional investor company name" disabled>
+                                    <input type="text" id="test" class="form-control" value="{{investorData['companyName']}}" disabled>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -30,7 +30,7 @@
                                     <span>Date of Approval Request:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test6" class="form-control" value="approval request date" disabled>
+                                    <input type="text" id="test6" class="form-control" value="{{investorData['approvalDate']}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                                     <span>First Name:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test2" class="form-control" value="first name" disabled>
+                                    <input type="text" id="test2" class="form-control" value="{{investorData['firstName']}}" disabled>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -48,7 +48,7 @@
                                     <span>Last Name:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test3" class="form-control" value="last name" disabled>
+                                    <input type="text" id="test3" class="form-control" value="{{investorData['lastName']}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                                     <span>Email Address:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test4" class="form-control" value="email address" disabled>
+                                    <input type="text" id="test4" class="form-control" value="{{investorData['email']}}" disabled>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -66,7 +66,7 @@
                                     <span>Telephone Number:</span>
                                 </label>
                                 <div>
-                                    <input type="text" id="test5" class="form-control" value="telephone number" disabled>
+                                    <input type="text" id="test5" class="form-control" value="{{investorData['telephoneNumber']}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                We [AM name], wish to authorize [Company name of the investor] to be able to invest in the following funds' shares:
+                                We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
                             </div>
                         </div>
                         <div class="row form-group" style="margin-top: 25px;">
@@ -107,8 +107,8 @@
                                             {{row['isin']}}
                                         </clr-dg-cell>
                                         <clr-dg-cell>
-                                            <span class="pointer" (click)="access[row['id']] = !access[row['id']]">
-                                                <i class="fa fa-lg fa-{{(access[row['id']]?'un':'')}}lock text-{{(access[row['id']]?'green':'red')}}"></i> {{(access[row['id']]?'On':'Off')}}
+                                            <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
+                                                <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
                                             </span>
                                         </clr-dg-cell>
                                     </clr-dg-row>
@@ -133,18 +133,19 @@
     <h3 class="modal-title">Confirm Fund Share Access:</h3>
     <div class="modal-body text-center" [ngStyle]="{'padding-bottom':'0'}">
         <i class="fa fa-check fa-3x text-success"></i>
-        <div *ngIf="!modalRows">
-            You are enabling [Company name of the investor] to invest in no shares.
+        <div *ngIf="!changes['add'] && !changes['remove']">
+            No changes have been made to the Investors' Fund Access permissions.
         </div>
-        <div *ngIf="modalRows">
-            You are enabling [Company name of the investor] to invest in the following funds' shares:
+        <div *ngIf="changes['add']">
+            <br>
+            You are giving {{investorData['companyName']}} permission to invest in the following funds' shares:
             <br><br>
             <clr-datagrid #myDataGrid>
                 <clr-dg-column>Fund Name</clr-dg-column>
                 <clr-dg-column>Share Name</clr-dg-column>
                 <clr-dg-column>ISIN</clr-dg-column>
-                <clr-dg-row *clrDgItems="let row of tableData">
-                    <ng-container *ngIf="access[row['id']]">
+                <ng-container *ngFor="let row of tableData">
+                    <clr-dg-row *ngIf="access[row['id']]['changed'] && access[row['id']]['access']">
                         <clr-dg-cell>
                             {{row['fundName']}}
                         </clr-dg-cell>
@@ -154,15 +155,38 @@
                         <clr-dg-cell>
                             {{row['isin']}}
                         </clr-dg-cell>
-                    </ng-container>
-                </clr-dg-row>
+                    </clr-dg-row>
+                </ng-container>
+            </clr-datagrid>
+        </div>
+        <div *ngIf="changes['remove']">
+            <br>
+            You are removing {{investorData['companyName']}}'s permission to invest in the following funds' shares:
+            <br><br>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>Fund Name</clr-dg-column>
+                <clr-dg-column>Share Name</clr-dg-column>
+                <clr-dg-column>ISIN</clr-dg-column>
+                <ng-container *ngFor="let row of tableData">
+                    <clr-dg-row *ngIf="access[row['id']]['changed'] && !access[row['id']]['access']">
+                        <clr-dg-cell>
+                            {{row['fundName']}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            {{row['shareName']}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            {{row['isin']}}
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </ng-container>
             </clr-datagrid>
         </div>
         <br><br>
         <button id="btnKycCloseModal" class="btn btn-info" type="button" (click)="showModal = false;">
             <span mltag="txt_close">Close</span>
         </button>
-        <button id="btnKycCloseModal" class="btn btn-success" type="button" (click)="showModal = false;">
+        <button id="btnKycCloseModal" class="btn btn-success" disabled="{{(changes['add'] || changes['remove']?'':'disabled')}}" type="button" (click)="showModal = false;">
             <span mltag="" (click)="saveAccess();">Confirm Access</span>
         </button>
         <br><br>

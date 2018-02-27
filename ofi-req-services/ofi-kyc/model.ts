@@ -57,3 +57,22 @@ export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
 export interface GetInvestorRequestBody extends MemberNodeMessageBody {
     token: string;
 }
+
+interface Shares {
+    id: string;
+}
+
+export interface SaveFundAccessRequestData{
+    shareArray: Array<Shares>;
+    kycID: number;
+    investorWalletID: number;
+}
+
+export interface SaveFundAccessRequestBody extends MemberNodeMessageBody{
+    token: string;
+    shareArray: Array<Shares>;
+    kycID: number;
+    investorWalletID: number;
+    entryFee: number;
+    exitFee: number;
+}
