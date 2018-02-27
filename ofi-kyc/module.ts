@@ -4,12 +4,15 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
 /* Pipes. */
 import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
+
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
-
 import {MultilingualModule} from '@setl/multilingual';
+
 /* Components. */
 import {OfiInviteInvestorsComponent} from './invite-investors/component';
 import {OfiSignUpComponent} from './signup/component';
@@ -48,6 +51,7 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
         TextInputListComponent,
     ],
     imports: [
+        ToasterModule,
         CommonModule,
         BrowserModule,
         FormsModule,
@@ -63,6 +67,7 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
     ],
     providers: [
         MockKYCDocumentsService,
+        ToasterService
     ]
 })
 
