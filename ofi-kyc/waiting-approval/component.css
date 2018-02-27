@@ -14,11 +14,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    margin: 5px 0;
 }
 
 .status {
     display: flex;
-    flex-direction: column;
-    width: 20%;
     padding: 10px;
+}
+
+.statusRadio {
+    width: 20px;
+}
+
+.statusLabel {
+    flex-grow: 1;
 }
