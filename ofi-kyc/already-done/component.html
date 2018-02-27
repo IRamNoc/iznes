@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 *ngIf="!hasFilledUp"><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
-    <h1 *ngIf="hasFilledUp"><i class="fa fa-unlock"></i> <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
+    <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
+    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i> <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
 </div>
 
 <clr-tabs>
@@ -12,7 +12,7 @@
         <clr-tab-content *clrIfActive>
             <h3>Let's start with the mandatory administrative part: the KYC</h3>
 
-            <section *ngIf="!hasFilledUp" class="form-block confirm-container">
+            <section *ngIf="investorStatus == 'confirmation'" class="form-block confirm-container">
                 <h3>KYC & client folder</h3>
                 <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
                 <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
@@ -41,7 +41,7 @@
                 </form>
             </section>
 
-            <section *ngIf="hasFilledUp" class="confirmed-container">
+            <section *ngIf="investorStatus == 'waiting-for-validation'" class="confirmed-container">
                 <p>
                     Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
                 </p>

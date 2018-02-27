@@ -64,7 +64,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
         this.additionnalForm = this._fb.group({
             email: [
-                {value: '', disabled: true},
+                '',
                 Validators.compose([
                     Validators.required,
                     Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
@@ -123,7 +123,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                  this.additionnalForm.controls.email.setValue(d.email);
                  this.additionnalForm.controls.firstName.setValue(d.firstName);
                  this.additionnalForm.controls.lastName.setValue(d.lastName);
-                 this.additionnalForm.controls.invitedBy.setValue(d.invitedBy);
+                 this.additionnalForm.controls.invitedBy.setValue(`${d.invitedBy.firstName} ${d.invitedBy.lastName}`);
                  this.additionnalForm.controls.companyName.setValue(d.companyName);
                  this.additionnalForm.controls.phoneCode.setValue(this.getPhoneCode(d.phoneCode));
                  this.additionnalForm.controls.phoneNumber.setValue(d.phoneNumber);

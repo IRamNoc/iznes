@@ -1,4 +1,7 @@
 import {Injectable} from '@angular/core';
+import {NgRedux} from '@angular-redux/store';
+import * as _ from 'lodash';
+
 import {MemberSocketService} from '@setl/websocket-service';
 import {
     SendInvestInvitationRequestBody,
@@ -6,17 +9,21 @@ import {
     VerifyInvitationTokenRequestBody,
     CreateUserRequestBody,
     CreateUserRequestData,
-    GetAmKycListRequestBody
+    GetAmKycListRequestBody,
+    GetInvestorRequestBody,
 } from './model';
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
-import * as _ from 'lodash';
-import {SET_AMKYCLIST, SET_REQUESTED, CLEAR_REQUESTED} from '../../ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SagaHelper, Common} from '@setl/utils';
+import {SET_AMKYCLIST, SET_REQUESTED, CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Injectable()
 export class OfiKycService {
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
+
     }
     /**
      * Default static call to get my fund access, and dispatch default actions, and other
@@ -90,5 +97,38 @@ export class OfiKycService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    fetchInvestor() {
+        const messageBody: GetInvestorRequestBody = {
+            RequestName: 'iznesgetinvestinvitation',
+            token: this.memberSocketService.token,
+        };
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [SET_INFORMATIONS_FROM_API],
+        });
+    }
+
+    buildRequest(options) {
+        return new Promise((resolve, reject) => {
+            /* Dispatch the request. */
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    options.successActions || [],
+                    options.failActions || [],
+                    options.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
 }
+
 
