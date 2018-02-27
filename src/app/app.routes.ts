@@ -21,22 +21,22 @@ import {
     ManageOrdersComponent,
     MyDashboardComponent,
     MyOrdersComponent,
+    OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
-    OfiHomeComponent,
-    OfiInviteInvestorsComponent,
-    OfiSignUpComponent,
     OfiDocumentsComponent,
+    OfiFundAccessComponent,
+    OfiHomeComponent,
     OfiInvestorFundListComponent,
+    OfiInviteInvestorsComponent,
+    OfiKycAlreadyDoneComponent,
+    OfiKycHomeComponent,
     OfiManageCsvComponent,
     OfiNavFundsList,
     OfiNavFundView,
     OfiPnlReportComponent,
-    OfiTaxReportComponent,
     OfiProfileMyInformationsComponent,
-    OfiKycHomeComponent,
-    OfiFundAccessComponent,
-    OfiKycAlreadyDoneComponent,
-    OfiAmDocumentsComponent
+    OfiSignUpComponent,
+    OfiTaxReportComponent
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -85,13 +85,14 @@ import {ConnectionComponent} from '@setl/core-connections/connections/component'
  * T2S Module.
  */
 import {T2sMessagesComponent} from '@setl/core-t2s';
-import { SetlMessagesComponent } from '@setl/core-messages';
+import {SetlMessagesComponent} from '@setl/core-messages';
+import {OfiWaitingApprovalComponent} from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 
 export const ROUTES: Routes = [
-    {path: '', redirectTo: 'login', pathMatch: 'full'},
-    {path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full'},
-    {path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full'},
-    {path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full'},
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
+    { path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full' },
+    { path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full' },
     /* Blank layout connections */
     {
         path: '',
@@ -122,7 +123,7 @@ export const ROUTES: Routes = [
                 path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
-                data: {state: 'home'}
+                data: { state: 'home' }
             },
             {
                 path: 'invite-investors',
@@ -143,7 +144,7 @@ export const ROUTES: Routes = [
                 path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
-                data: {state: 'home'}
+                data: { state: 'home' }
             },
             {
                 path: 'account',
@@ -152,7 +153,7 @@ export const ROUTES: Routes = [
                         path: 'my-account/:tabname',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'my-account'}
+                        data: { state: 'my-account' }
                     }
                 ]
             },
@@ -263,22 +264,22 @@ export const ROUTES: Routes = [
                         path: 'balances',
                         component: SetlBalancesComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'reports-my-account'}
+                        data: { state: 'reports-my-account' }
                     },
                     {
                         path: 'issue',
                         component: SetlIssueComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'reports-issue'}
+                        data: { state: 'reports-issue' }
                     },
                     {
                         path: 'transactions',
                         component: SetlTransactionsComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'reports-transactions'}
+                        data: { state: 'reports-transactions' }
                     },
                 ],
-                data: {state: 'reports'}
+                data: { state: 'reports' }
             },
             {
                 path: 'connections',
@@ -339,13 +340,13 @@ export const ROUTES: Routes = [
                         path: 'users/:tabid',
                         component: AdminUsersComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'admin-users'}
+                        data: { state: 'admin-users' }
                     },
                     {
                         path: 'wallets/:walletid',
                         component: AdminWalletsComponent,
                         canActivate: [LoginGuardService],
-                        data: {state: 'admin-wallets'}
+                        data: { state: 'admin-wallets' }
                     },
                     {
                         path: 'permissions/:permissionid',
@@ -526,7 +527,17 @@ export const ROUTES: Routes = [
                         component: T2sMessagesComponent
                     }
                 ]
-            }
+            },
+            {
+                path: 'kyc-documents',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'client/:kycId',
+                        component: OfiWaitingApprovalComponent,
+                    }
+                ]
+            },
         ],
         canActivate: [LoginGuardService]
     }
