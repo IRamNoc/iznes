@@ -14,12 +14,13 @@
                     <div class="form-group col-sm-6">
                         <label for="kyc_additionnal_email">
                             <span>Email address:</span>
+                            <div class="mandatory text-danger">*</div>
                         </label>
                         <div>
                             <input type="text" id="kyc_additionnal_email" class="form-control" formControlName="email">
                         </div>
-                        <div *ngIf="additionnalForm.controls.email.hasError('required') && additionnalForm.controls.email.dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        <div *ngIf="!additionnalForm.controls.email.valid && additionnalForm.controls.email.hasError('required')" class="text-danger">Email not valid!</div>
+                        <div *ngIf="additionnalForm.controls['email'].hasError('required') && additionnalForm.controls['email'].dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="text-danger">Email not valid!</div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="kyc_additionnal_invitedBy">
@@ -34,6 +35,7 @@
                     <div class="form-group col-sm-6">
                         <label for="kyc_additionnal_firstName">
                             <span>First name:</span>
+                            <div class="mandatory text-danger">*</div>
                         </label>
                         <div>
                             <input type="text" id="kyc_additionnal_firstName" class="form-control" formControlName="firstName">
@@ -55,26 +57,28 @@
             <h5><b>I am a professional investor from:</b></h5>
             <div class="blockRounded">
                 <div class="row">
-                    <div class="form-group col-sm-5" [ngStyle]="{'height':'35px'}">
+                    <div class="form-group col-sm-6" [ngStyle]="{'height':'35px'}">
                         <label for="kyc_additionnal_companyName">
                             <span>Company name:</span>
+                            <div class="mandatory text-danger">*</div>
                         </label>
                         <div>
                             <input type="text" id="kyc_additionnal_companyName" class="form-control" formControlName="companyName">
                             <div *ngIf="additionnalForm.controls['companyName'].hasError('required') && additionnalForm.controls['companyName'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                     </div>
-                    <div class="form-group col-sm-7">
+                    <div class="form-group col-sm-6">
                         <label>
                             <span>Work phone number:</span>
                             <div class="mandatory text-danger">*</div>
                         </label>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <ng-select id="kyc_additionnal_phoneCode" [items]="phoneNumbersCountryCodes" [allowClear]="true" placeholder="Select" formControlName="phoneCode" [ngStyle]="{'padding':'6px 0'}" mltag="txt_select"></ng-select>
+
+                        <div class="form-group phone-input-container">
+                            <div>
+                                <ng-select id="kyc_additionnal_phoneCode" [items]="phoneNumbersCountryCodes" [allowClear]="true" placeholder="Select" formControlName="phoneCode" [ngStyle]="{'padding':'6px 0'}" [containerWidth]="'100%'" mltag="txt_select"></ng-select>
                                 <div *ngIf="additionnalForm.controls['phoneCode'].hasError('required') && additionnalForm.controls['phoneCode'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div>
                                 <input type="text" id="kyc_additionnal_phoneNumber" class="form-control" formControlName="phoneNumber">
                                 <div *ngIf="additionnalForm.controls['phoneNumber'].hasError('required') && additionnalForm.controls['phoneNumber'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                             </div>

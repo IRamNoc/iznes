@@ -3,8 +3,9 @@ export {
 } from './model';
 
 export {
+    SET_INFORMATIONS_FROM_API,
     SET_INFORMATIONS,
-    setInformations
+    setInformations,
 } from './actions';
 
 export {

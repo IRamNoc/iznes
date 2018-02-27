@@ -1,25 +1,30 @@
 import {Injectable} from '@angular/core';
+import {NgRedux} from '@angular-redux/store';
+
 import {MemberSocketService} from '@setl/websocket-service';
 import {
     CreateUserRequestBody,
     CreateUserRequestData,
     GetAmKycListRequestBody,
+    GetInvestorRequestBody,
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
-    WaitingApprovalMessageBody
+    WaitingApprovalMessageBody,
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
 
 import * as _ from 'lodash';
-import {SET_AMKYCLIST, SET_REQUESTED} from '../../ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SagaHelper} from '@setl/utils';
+import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Injectable()
 export class OfiKycService {
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService,
+                private ngRedux: NgRedux<any>) {
+
     }
 
     /**
@@ -141,5 +146,38 @@ export class OfiKycService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    fetchInvestor() {
+        const messageBody: GetInvestorRequestBody = {
+            RequestName: 'iznesgetinvestinvitation',
+            token: this.memberSocketService.token,
+        };
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [SET_INFORMATIONS_FROM_API],
+        });
+    }
+
+    buildRequest(options) {
+        return new Promise((resolve, reject) => {
+            /* Dispatch the request. */
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    options.successActions || [],
+                    options.failActions || [],
+                    options.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
 }
+
 

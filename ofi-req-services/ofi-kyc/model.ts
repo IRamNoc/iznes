@@ -49,3 +49,7 @@ export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
 export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface GetInvestorRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
