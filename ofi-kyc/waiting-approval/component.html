@@ -1,11 +1,11 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-check-circle"></i>
-        <span>KYC Documents Approval: {{investor.companyName.value}}</span>
+        <span *ngIf="investor">KYC Documents Approval: {{investor.companyName.value}}</span>
     </h1>
 </div>
 
-<clr-tabs>
+<clr-tabs *ngIf="investor">
     <clr-tab>
         <button clrTabLink id="waitingApprovalTab">
             <i class="fa fa-bars"></i>
@@ -27,9 +27,9 @@
                         <p><b>Please confirm that you validate your client's KYC documents:</b></p>
 
                         <div class="form-group col-sm-12">
-                            Does the Asset Management company ME, confirm that the client {{investor.companyName.value}}
-                            has successfully filled up the KYC documents, and that you wish to authorise this client
-                            to place orders on IZNES?
+                            Does the Asset Management company {{amCompanyName}}, confirm that the client
+                            {{investor.companyName.value}} has successfully filled up the KYC documents, and that you
+                            wish to authorise this client to place orders on IZNES?
                         </div>
 
                         <!-- Radio buttons -->
@@ -39,7 +39,7 @@
                                        type="radio"
                                        formControlName="status"
                                        [value]="status.value"
-                                       [checked]="status.value === APPROVED_STATUS"
+                                       [checked]="status.value === statusId"
                                        (change)="handleStatusChange()"/>
                                 <label for={{status.id}}>{{status.label}}</label>
                             </div>
@@ -84,19 +84,19 @@
                             </textarea>
                         </div>
 
+                        <!-- Back and submit buttons -->
                         <div class="form-group col-sm-12">
                             <button id="backButton"
                                     type="button"
                                     class="btn btn-light"
-                                    onclick="handleBackButtonClick()">
+                                    (click)="handleBackButtonClick()">
                                 Back
                             </button>
 
                             <button id="submitButton"
                                     type="submit"
                                     class="btn btn-primary"
-                                    [disabled]="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS &&
-                                     waitingApprovalFormGroup.controls['isKycAccepted'].value === false">
+                                    [disabled]="handleSubmitButtonDisabled()">
                                 Validate
                             </button>
                         </div>
@@ -107,6 +107,7 @@
     </clr-tab>
 </clr-tabs>
 
+<!-- Reject modal -->
 <clr-modal [(clrModalOpen)]="isRejectModalDisplayed" [clrModalClosable]="false">
     <div class="modal-title">
         <h4 class="modal-title-text">
