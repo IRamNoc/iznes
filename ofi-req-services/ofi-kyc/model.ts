@@ -41,6 +41,10 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody {
     accountDescription: string;
 }
 
+export interface WaitingApprovalRequestData {
+    kycID: number;
+}
+
 export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
