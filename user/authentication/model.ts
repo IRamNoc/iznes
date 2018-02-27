@@ -3,4 +3,5 @@ export interface AuthenticationState {
     apiKey: string;
     useTwoFactor: number;
     isLogin: boolean;
+    defaultHomePage: string;
 }
