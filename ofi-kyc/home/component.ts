@@ -9,10 +9,10 @@ import {APP_CONFIG, AppConfig} from '@setl/utils';
 
 /* Ofi orders request service. */
 import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
-import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
+import {setInformations, KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
 import {Router} from '@angular/router';
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils/index';
 

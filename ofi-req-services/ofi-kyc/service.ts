@@ -14,8 +14,8 @@ import {
 } from './model';
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 import {SagaHelper, Common} from '@setl/utils';
-import {SET_AMKYCLIST, SET_REQUESTED, CLEAR_REQUESTED} from '../../ofi-store/ofi-kyc/ofi-am-kyc-list';
-import {SET_INFORMATIONS_FROM_API} from '../../ofi-store/ofi-kyc/my-informations';
+import {SET_AMKYCLIST, SET_REQUESTED, CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Injectable()
 export class OfiKycService {
