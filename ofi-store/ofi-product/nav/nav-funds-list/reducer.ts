@@ -96,19 +96,19 @@ function getNextValuationDate(nextValuationDateRaw: string, navDate: string): st
 
     switch (nextValuationDateRaw) {
         case 'Daily':
-            nextValuationDate = date.add(1, 'day');
+            nextValuationDate = date.add(1, 'days');
             break;
         case 'Weekly':
-            nextValuationDate = date.add(1, 'week');
+            nextValuationDate = date.add(1, 'weeks');
             break;
         case 'Monthly':
-            nextValuationDate = date.add(1, 'month');
+            nextValuationDate = date.add(1, 'months');
             break;
         case 'Quarterly':
-            nextValuationDate = date.add(1, 'quarter');
+            nextValuationDate = date.add(12, 'weeks');
             break;
         case 'Annually':
-            nextValuationDate = date.add(1, 'year');
+            nextValuationDate = date.add(1, 'years');
             break;
         default:
             nextValuationDate = 'N/A';
