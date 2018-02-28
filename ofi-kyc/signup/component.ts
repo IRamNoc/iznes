@@ -280,7 +280,8 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
         this._ofiKycService.createUser({
             token: this.invitationToken,
             email: this.signupForm.controls.username.value,
-            password: this.signupForm.controls.password.value
+            password: this.signupForm.controls.password.value,
+            lang: this.language
         }).then(()=>{
             this.isSignUp = true;
             this.showModal = true;
