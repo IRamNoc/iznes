@@ -75,7 +75,7 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
                 isin: item.get('isin', 0),
                 currency: currency,
                 nav: item.get('nav', 0),
-                navDate: navDate,
+                navDate: moment(navDate).format('YYYY-MM-DD'),
                 status: item.get('status', 0),
                 nextValuationDate: nextValuationDate
             });

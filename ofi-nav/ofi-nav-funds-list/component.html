@@ -103,7 +103,7 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.nextValuationDate}}</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn">
