@@ -9,11 +9,29 @@ import {ResolveEmit} from './interfaces/resolve-emit';
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
             <div class="jaspero__dialog-title" [innerHtml]="incomingData.title">
             </div>
+            <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass != 'error'">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-warning scaleWarning">
+                        <span class="f-modal-body pulseWarningIns"></span>
+                        <span class="f-modal-dot pulseWarningIns"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass == 'error'">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-info-error scaleWarning">
+                        <span class="f-modal-body pulseWarningInsRed"></span>
+                        <span class="f-modal-dot pulseWarningInsRed"></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="jaspero__dialog-content" [innerHtml]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
                 <button class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
-                <button class="primary" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
+                <button class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
             </div>
         </div>
     `,
@@ -41,7 +59,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             right: 0;
             bottom: 0;
             left: 0;
-            background-color: rgba(0, 0, 0, .54);
+            background-color: rgba(141, 150, 165, 0.71);
             transform: translateZ(0);
             opacity: 0;
             transition: all .5s cubic-bezier(.35, 0, .25, 1);
@@ -51,7 +69,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
 
         .jaspero__dialog {
             min-width: 300px;
-            max-width: 50%;
+            max-width: 500px;
             max-height: 50%;
             display: -ms-flexbox;
             display: flex;
@@ -61,9 +79,8 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             position: relative;
             z-index: 2110;
             outline: none;
-            border-radius: 2px;
+            border-radius: 3px;
             opacity: 0;
-            box-shadow: 0 7px 9px -4px rgba(0, 0, 0, .2), 0 14px 21px 2px rgba(0, 0, 0, .14), 0 5px 26px 4px rgba(0, 0, 0, .12);
             -ms-transform: scale(.9, .85);
             transform: scale(.9, .85);
             -ms-transform-origin: center center;
@@ -75,7 +92,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
         }
 
         .jaspero__dialog-icon {
-            padding: 40px;
+            padding: 20px 10px 0;
             text-align: center;
         }
 
@@ -90,65 +107,57 @@ import {ResolveEmit} from './interfaces/resolve-emit';
 
         .jaspero__dialog-title {
             font-size: 24px;
-            font-weight: 500;
             letter-spacing: .005em;
             line-height: 26px;
-            margin-bottom: 20px;
-            padding: 24px 24px 0;
+            padding: 20px 20px 0;
             text-transform: capitalize;
+            text-align: center;
+            font-weight: 500;
+            border-bottom: 1px solid #d5d6d6;
+            background: #f7f7f7;
+            padding: 20px;
+            color: #383d48;
+            font-weight: bold;
+            margin-top: 0;
+            font-size: 22px;
         }
 
         .jaspero__dialog-content {
-            padding: 0 24px 24px;
+            padding: 0 20px 30px;
             -ms-flex: 1;
-            flex: 1;
-            overflow: auto;
             position: relative;
+            text-align: center;
+            line-height: 20px;
+            font-size: 13px;
         }
 
         .jaspero__dialog-actions {
-            min-height: 52px;
-            padding: 8px 8px 8px 24px;
+            border-top: 1px solid #d5d6d6;
+            background: #f8fafb;
+            min-height: 60px;
+            padding: 0;
             display: -ms-flexbox;
-            display: flex;
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
             justify-content: flex-end;
             position: relative;
+            text-align: center;
         }
 
         .jaspero__dialog-actions button {
-            min-width: 88px;
-            min-height: 36px;
-            margin: 6px 8px;
-            padding: 0 16px;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-            outline: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            border: 1px solid #afafaf;
+            color: #8c8c8c !important;
+            height: 36px;
+            border-radius: 3px;
+            line-height: 34px;
+            font-size: 12px;
+            padding-left: 35px;
+            padding-right: 35px;
             cursor: pointer;
-            background: none;
-            border: 0;
-            border-radius: 2px;
-            transition: all .4s cubic-bezier(.25, .8, .25, 1);
-            color: inherit;
-            font-family: inherit;
-            font-size: 14px;
-            font-style: inherit;
-            font-variant: inherit;
-            font-weight: 500;
-            letter-spacing: inherit;
-            line-height: 36px;
-            text-align: center;
-            text-transform: uppercase;
-            text-decoration: none;
-            vertical-align: top;
-            white-space: nowrap;
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-top: 12px;
         }
 
         .jaspero__dialog-actions button.default {
@@ -161,11 +170,35 @@ import {ResolveEmit} from './interfaces/resolve-emit';
 
         .jaspero__dialog-actions button.primary {
             background-color: #56a4df;
-            color: rgba(255, 255, 255, .87);
+            border: 1px solid #56a4df;
+            color: white !important;
         }
 
         .jaspero__dialog-actions button.primary:hover {
-            background-color: #56a4df;
+            background-color: #4092d0;
+            border: 1px solid #4092d0;
+        }
+
+        .jaspero__dialog-actions button.success {
+            background-color: #62a420;
+            border: 1px solid #62a420;
+            color: white !important;
+        }
+
+        .jaspero__dialog-actions button.success:hover {
+            background-color: #4b861f;
+            border: 1px solid #4b861f;
+        }
+
+        .jaspero__dialog-actions button.error {
+            background-color: #e62700;
+            border: 1px solid #e62700;
+            color: white !important;
+        }
+
+        .jaspero__dialog-actions button.error:hover {
+            background-color: #b82700;
+            border: 1px solid #b82700;
         }
 
         .jaspero__dialog-actions button.raised {
@@ -227,7 +260,8 @@ export class ConfirmationComponent {
         showCloseButton: true,
         confirmText: 'Yes',
         declineText: 'No',
-        resolve: null
+        resolve: null,
+        btnClass: 'primary'
     };
 
     overlayClick() {
@@ -235,7 +269,7 @@ export class ConfirmationComponent {
             return;
         }
 
-        this.close('overlayClick')
+        this.close('overlayClick');
     }
 
     close(type: string) {
