@@ -7,6 +7,11 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     template: `
         <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"></div>
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
+
+            <div class="jaspero__dialog-title">
+                {{type}}!
+            </div>
+
             <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
                 <ng-template ngSwitchCase="success">
                     <div class="f-modal-alert">
@@ -33,32 +38,34 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
                 </ng-template>
 
                 <ng-template ngSwitchCase="warning">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294 294">
-                        <path d="M147.475 103.102c-5.22 0-8.7 3.48-8.7 8.7v62.645c0 5.22 3.48 8.7 8.7 8.7 5.22 0 8.7-3.48 8.7-8.7v-62.644c0-5.22-3.48-8.7-8.7-8.7zm5.22 109.628c-3.48-3.48-8.7-3.48-12.18 0-1.74 1.74-1.74 5.22-1.74 6.96 0 3.48 0 5.22 1.74 6.96 1.74 1.74 5.22 1.74 6.96 1.74 1.74 0 5.22 0 3.48-1.74 1.74-1.74 3.48-5.22 3.48-6.96 0-3.48 0-5.22-1.74-6.96z"/>
-                        <path d="M288.425 214.47L185.758 35.238c-6.96-13.92-22.62-22.62-38.283-22.62-15.66 0-29.582 8.7-38.283 22.62L6.525 214.47c-8.7 13.92-8.7 31.322 0 45.243 6.96 13.92 22.62 22.62 38.283 22.62h205.334c17.4 0 31.322-8.7 38.283-22.62 8.7-13.92 8.7-31.322 0-45.243zm-13.92 38.283c-3.48 8.7-12.182 13.92-22.622 13.92H44.808c-8.7 0-17.4-5.22-22.62-13.92-5.22-8.7-5.22-19.14 0-27.842L124.853 45.68c3.48-8.7 12.18-13.92 22.62-13.92 10.442 0 19.142 5.22 24.363 13.92l102.668 179.23c5.22 8.7 5.22 19.142 0 27.843z"/>
-                    </svg>
+                    <div class="f-modal-alert">
+                        <div class="f-modal-icon f-modal-warning scaleWarning">
+                            <span class="f-modal-body pulseWarningIns"></span>
+                            <span class="f-modal-dot pulseWarningIns"></span>
+                        </div>
+                    </div>
                 </ng-template>
 
                 <ng-template ngSwitchCase="info">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 65">
-                        <path d="M32.5 0C14.58 0 0 14.58 0 32.5S14.58 65 32.5 65 65 50.42 65 32.5 50.42 0 32.5 0zm0 61C16.785 61 4 48.215 4 32.5S16.785 4 32.5 4 61 16.785 61 32.5 48.215 61 32.5 61z"/>
-                        <circle cx="33.018" cy="19.541" r="3.345"/>
-                        <path d="M32.137 28.342c-1.104 0-2 .896-2 2v17c0 1.104.896 2 2 2s2-.896 2-2v-17c0-1.105-.896-2-2-2z"/>
-                    </svg>
+                    <div class="f-modal-alert">
+                        <div class="f-modal-icon f-modal-info scaleWarning">
+                            <span class="f-modal-body pulseWarningInsBlue"></span>
+                            <span class="f-modal-dot pulseWarningInsBlue"></span>
+                        </div>
+                    </div>
                 </ng-template>
-                
+
                 <ng-template ngSwitchCase="waiting">
                     <div class="loader"></div>
                 </ng-template>
             </div>
 
-            <div class="jaspero__dialog-title">
-                {{type}}!
-            </div>
             <div class="jaspero__dialog-content" [innerHTML]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
-                <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">{{incomingData.buttonMessage}}</button>
+                <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">
+                    {{incomingData.buttonMessage}}
+                </button>
             </div>
         </div>
     `,
@@ -97,7 +104,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 
         .jaspero__dialog {
             min-width: 300px;
-            max-width: 600px;
+            max-width: 500px;
             max-height: 50%;
             display: -ms-flexbox;
             display: flex;
@@ -107,9 +114,9 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             position: relative;
             z-index: 2110;
             outline: none;
-            border-radius: 2px;
+            border-radius: 4px;
             opacity: 0;
-            box-shadow: 0 7px 9px -4px rgba(0, 0, 0, .2), 0 14px 21px 2px rgba(0, 0, 0, .14), 0 5px 26px 4px rgba(0, 0, 0, .12);
+            /*box-shadow: 0 7px 9px -4px rgba(0, 0, 0, .2), 0 14px 21px 2px rgba(0, 0, 0, .14), 0 5px 26px 4px rgba(0, 0, 0, .12);*/
             -ms-transform: scale(.9, .85);
             transform: scale(.9, .85);
             -ms-transform-origin: center center;
@@ -121,13 +128,13 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         }
 
         .jaspero__dialog-icon {
-            padding: 40px 20px 0;
+            padding: 20px 10px 0;
             text-align: center;
         }
 
         .jaspero__dialog-icon svg {
-            width: 80px;
-            height: 80px;
+            width: 40px;
+            height: 40px;
         }
 
         .jaspero__dialog-icon svg path {
@@ -138,66 +145,53 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             font-size: 24px;
             letter-spacing: .005em;
             line-height: 26px;
-            margin-bottom: 20px;
             padding: 20px 20px 0;
             text-transform: capitalize;
             text-align: center;
             font-weight: 500;
+            border-bottom: 1px solid #d5d6d6;
+            background: #f7f7f7;
+            padding: 20px;
+            color: #383d48;
+            font-weight: bold;
+            margin-top: 0;
+            font-size: 22px;
         }
 
         .jaspero__dialog-content {
             padding: 0 20px 30px;
             -ms-flex: 1;
-            flex: 1;
-            overflow: auto;
             position: relative;
             text-align: center;
-            font-weight: 400;
+            line-height: 20px;
         }
 
         .jaspero__dialog-actions {
-            min-height: 45px;
+            border-top: 1px solid #d5d6d6;
+            background: #f8fafb;
+            min-height: 60px;
             padding: 0;
             display: -ms-flexbox;
-            display: flex;
+            /*display: flex;*/
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
             justify-content: flex-end;
             position: relative;
+            text-align: center;
         }
 
         .jaspero__dialog-actions button {
-            width: 100%;
-            min-height: 45px;
-            margin: 0;
-            padding: 0 16px;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-            outline: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            margin-top: 11px;
+            border: 1px solid #afafaf;
+            color: #8c8c8c !important;
+            height: 36px;
+            border-radius: 3px;
+            line-height: 34px;
+            font-size: 12px;
+            padding-left: 35px;
+            padding-right: 35px;
             cursor: pointer;
-            background: rgba(141, 150, 165, 0.2);
-            border: 0;
-            border-radius: 2px;
-            transition: all .4s cubic-bezier(.25, .8, .25, 1);
-            color: currentColor;
-            font-family: inherit;
-            font-size: 14px;
-            font-style: inherit;
-            font-variant: inherit;
-            font-weight: 500;
-            letter-spacing: inherit;
-            line-height: 45px;
-            text-align: center;
-            text-transform: uppercase;
-            text-decoration: none;
-            vertical-align: top;
-            white-space: nowrap;
         }
 
         .jaspero__dialog-actions button.default {
@@ -205,7 +199,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         }
 
         .jaspero__dialog-actions button.default:hover {
-            background-color: rgba(141, 150, 165, 0.15);
+            background-color: rgba(141, 150, 165, 0.1);
         }
 
         .jaspero__dialog-actions button.primary {
