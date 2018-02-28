@@ -333,7 +333,8 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
-            this.router.navigateByUrl('/home');
+            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+            this.router.navigateByUrl(redirect);
 
             this.isLogin = true;
 

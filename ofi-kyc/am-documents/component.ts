@@ -60,7 +60,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 label: 'Status',
                 dataSource: 'status',
                 sortable: true,
-                link: '/product-module/shares/:id',
+                link: '/kyc-documents/client/:kycID',
             },
             2: {
                 label: 'Company Name',
@@ -180,6 +180,8 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 data: tables['all']
             }
         ];
+
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
