@@ -11,7 +11,9 @@ import {
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
     WaitingApprovalMessageBody,
-    WaitingApprovalRequestData
+    WaitingApprovalRequestData,
+    SaveFundAccessRequestData,
+    SaveFundAccessRequestBody
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -178,6 +180,36 @@ export class OfiKycService {
                 )
             );
         });
+    }
+
+    saveFundAccess(requestData: SaveFundAccessRequestData): any {
+
+        const messageBody: SaveFundAccessRequestBody = {
+            RequestName: 'iznesfundaccessadd',
+            token: this.memberSocketService.token,
+            shareArray: _.get(requestData, 'shareArray', ''),
+            kycID: _.get(requestData, 'kycID', ''),
+            investorWalletID: _.get(requestData, 'investorWalletID', ''),
+            entryFee: 0,
+            exitFee: 0
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    removeFundAccess(requestData: SaveFundAccessRequestData): any {
+
+        const messageBody: SaveFundAccessRequestBody = {
+            RequestName: 'iznesfundaccessdelete',
+            token: this.memberSocketService.token,
+            shareArray: _.get(requestData, 'shareArray', ''),
+            kycID: _.get(requestData, 'kycID', ''),
+            investorWalletID: _.get(requestData, 'investorWalletID', ''),
+            entryFee: 0,
+            exitFee: 0
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 }
 
