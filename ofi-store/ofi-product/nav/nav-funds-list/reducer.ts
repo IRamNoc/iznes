@@ -1,6 +1,7 @@
 import {CurrentRequest, OfiNavFundsListState} from './model';
 import {Action} from 'redux';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {fromJS} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 
@@ -63,6 +64,9 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
         navFundsList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
             const metadata = JSON.parse(item.get('metadata', {}));
             const currency = metadata.shareCurrency[0].id;
+            const navDate = item.get('navDate', '');
+            const nextValuationDateRaw = metadata.valuationFrequency[0].id;
+            const nextValuationDate = getNextValuationDate(nextValuationDateRaw, navDate);
 
             result.push({
                 shareId: item.get('shareId', 0),
@@ -71,8 +75,9 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
                 isin: item.get('isin', 0),
                 currency: currency,
                 nav: item.get('nav', 0),
-                navDate: item.get('navDate', ''),
-                status: item.get('status', 0)
+                navDate: navDate,
+                status: item.get('status', 0),
+                nextValuationDate: nextValuationDate
             });
             return result;
         }, []);
@@ -83,6 +88,33 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
     return Object.assign({}, state, {
         navFundsList
     });
+}
+
+function getNextValuationDate(nextValuationDateRaw: string, navDate: string): string {
+    let nextValuationDate;
+    const date = moment(navDate);
+
+    switch (nextValuationDateRaw) {
+        case 'Daily':
+            nextValuationDate = date.add(1, 'day');
+            break;
+        case 'Weekly':
+            nextValuationDate = date.add(1, 'week');
+            break;
+        case 'Monthly':
+            nextValuationDate = date.add(1, 'month');
+            break;
+        case 'Quarterly':
+            nextValuationDate = date.add(1, 'quarter');
+            break;
+        case 'Annually':
+            nextValuationDate = date.add(1, 'year');
+            break;
+        default:
+            nextValuationDate = 'N/A';
+    }
+
+    return nextValuationDate.format('YYYY-MM-DD');
 }
 
 /**

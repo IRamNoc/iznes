@@ -70,6 +70,9 @@
                 <clr-dg-column>
                     <span mltag="txt_status">Status</span>
                 </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_navnextvaluation">Next Valuation Date</span>
+                </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
@@ -100,6 +103,7 @@
                             </span>
                         </span>
                     </clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn">
