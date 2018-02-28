@@ -28,6 +28,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     language: string;
     investor: InvestorModel;
     kycId: number;
+    initialStatusId: number;
     statusId: number;
     amKycList: Array<any>;
     amCompanyName: string;
@@ -63,6 +64,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.isRejectModalDisplayed = false;
         this.kycId = null;
+        this.initialStatusId = null;
         this.statusId = null;
         this.amKycList = [];
         this.amCompanyName = '';
@@ -148,6 +150,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest }
             };
 
+            this.initialStatusId = kyc.status;
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
 
@@ -185,7 +188,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
             case Statuses.rejected:
-                if (this.statusId === Statuses.waitingApproval) {
+                if (this.initialStatusId === Statuses.waitingApproval) {
                     this.isRejectModalDisplayed = true;
                 } else {
                     this.toasterService.pop(
