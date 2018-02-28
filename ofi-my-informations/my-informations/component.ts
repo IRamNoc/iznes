@@ -123,7 +123,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                  this.additionnalForm.controls.email.setValue(d.email);
                  this.additionnalForm.controls.firstName.setValue(d.firstName);
                  this.additionnalForm.controls.lastName.setValue(d.lastName);
-                 this.additionnalForm.controls.invitedBy.setValue(`${d.invitedBy.firstName} ${d.invitedBy.lastName}`);
+                 this.additionnalForm.controls.invitedBy.setValue(d.invitedBy.companyName);
                  this.additionnalForm.controls.companyName.setValue(d.companyName);
                  this.additionnalForm.controls.phoneCode.setValue(this.getPhoneCode(d.phoneCode));
                  this.additionnalForm.controls.phoneNumber.setValue(d.phoneNumber);

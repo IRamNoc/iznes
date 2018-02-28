@@ -43,6 +43,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         companyName: '',
         phoneCode: '',
         phoneNumber: '',
+        amManagementCompanyID: 0,
+        invitationToken: '',
     };
 
     /* Private properties. */
@@ -102,20 +104,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     closeModal() {
         const user = {
-            displayName: '',
             firstName: this.userInfo.firstName,
             lastName: this.userInfo.lastName,
-            mobilePhone: '',
-            addressPrefix: '',
-            address1: '',
-            address2: '',
-            address3: '',
-            address4: '',
-            postalCode: '',
-            country: '',
-            memorableQuestion: '',
-            memorableAnswer: '',
-            profileText: '',
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
@@ -126,8 +116,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             () => {
                 this.toasterService.pop('success', `Your form has been saved successfully!`);
             },
-            (data) => {
-                this.toasterService.pop('error', JSON.stringify(data));
+            () => {
+                this.toasterService.pop('error', 'Failed to save your informations.');
+                return;
             })
         );
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
