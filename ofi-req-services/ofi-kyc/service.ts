@@ -162,6 +162,18 @@ export class OfiKycService {
         });
     }
 
+    sendNewKyc(options) {
+        const messageBody = {
+            RequestName: 'iznessendnewkyc',
+            token: this.memberSocketService.token,
+            inviteToken: options.invitationToken,
+            amManagementCompanyID: options.amManagementCompanyID,
+            investorWalletID: 0,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     buildRequest(options) {
         return new Promise((resolve, reject) => {
             /* Dispatch the request. */

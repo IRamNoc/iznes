@@ -1,15 +1,18 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {APP_CONFIG, AppConfig} from '@setl/utils/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select} from '@angular-redux/store';
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'app-ofi-kyc-already-done',
     templateUrl: './component.html',
     styleUrls: ['./component.css']
 })
-export class OfiKycAlreadyDoneComponent implements OnInit {
+export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     appConfig: AppConfig;
     investorStatus: string;
@@ -22,13 +25,20 @@ export class OfiKycAlreadyDoneComponent implements OnInit {
         phone: {value: '', label: 'Phone number'},
         companyName: {value: '', label: 'AM Company name'},
     };
+    sendNewKycBody = {
+        invitationToken: null,
+        amManagementCompanyID: null,
+    };
 
-    @select(['ofi', 'ofiKyc', 'myInformations', 'invitedBy']) amDetails$;
+    private unsubscribe: Subject<any> = new Subject();
+
+    @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
 
     constructor(
         private fb: FormBuilder,
         private router: Router,
         private route: ActivatedRoute,
+        private ofiKycService: OfiKycService,
         @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
@@ -39,13 +49,18 @@ export class OfiKycAlreadyDoneComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.amDetails$.subscribe((d) => {
-            this.amDetails.firstName.value = d.firstName;
-            this.amDetails.lastName.value = d.lastName;
-            this.amDetails.email.value = d.email;
-            this.amDetails.phone.value = `${d.phoneCode} ${d.phoneNumber}`;
-            this.amDetails.companyName.value = d.companyName;
-        });
+        this.myInfos$
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.amDetails.firstName.value = d.invitedBy.firstName;
+                this.amDetails.lastName.value = d.invitedBy.lastName;
+                this.amDetails.email.value = d.invitedBy.email;
+                this.amDetails.phone.value = `${d.invitedBy.phoneCode} ${d.invitedBy.phoneNumber}`;
+                this.amDetails.companyName.value = d.invitedBy.companyName;
+
+                this.sendNewKycBody.invitationToken = d.invitationToken;
+                this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
+            });
     }
 
     onCancel() {
@@ -54,6 +69,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit {
 
     onSubmit() {
         if (this.kycDoneForm.value['opt'] === 'YES') {
+            this.ofiKycService.sendNewKyc(this.sendNewKycBody);
             this.router.navigate(['new-investor', 'already-done', 'waiting-for-validation']);
         } else {
             this.showModal = true;
@@ -62,5 +78,10 @@ export class OfiKycAlreadyDoneComponent implements OnInit {
 
     closeModal() {
         this.showModal = false;
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

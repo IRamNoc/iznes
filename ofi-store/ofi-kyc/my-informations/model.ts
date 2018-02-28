@@ -9,4 +9,6 @@ export interface KycUser {
 
 export interface KycMyInformations extends KycUser {
     invitedBy: KycUser;
+    amManagementCompanyID: number;
+    invitationToken: string;
 }
