@@ -2,8 +2,8 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
-import { Subpanel } from './models';
-import { fromJS } from 'immutable';
+import {Subpanel} from './models';
+import {fromJS} from 'immutable';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 
@@ -38,8 +38,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
     }
 
@@ -53,61 +52,63 @@ export class OfiAmDocumentsComponent implements OnDestroy {
 
     }
 
-    updateTable(tableData){
+    updateTable(tableData) {
 
         let columns = {
             1: {
                 label: 'Status',
                 dataSource: 'status',
                 sortable: true,
-                link: '/kyc-documents/client/:kycID',
+                hasLink: true,
+                kycDocLink: '/kyc-documents/client/:kycID',
+                kycFundAccessLink: '/fund-access/:kycID',
             },
             2: {
                 label: 'Company Name',
                 dataSource: 'companyName',
                 sortable: true,
             },
-            3:{
+            3: {
                 label: 'Date of latest modification by the investor',
                 dataSource: 'actionDate',
                 sortable: true,
             },
-            4:{
+            4: {
                 label: 'Date KYC started',
                 dataSource: 'kycDate',
                 sortable: true,
             },
-            5:{
+            5: {
                 label: 'Date of approval',
                 dataSource: 'actionDate',
                 sortable: true,
             },
-            6:{
+            6: {
                 label: 'Validated by',
                 dataSource: 'reviewBy',
                 sortable: true,
             },
-            7:{
+            7: {
                 label: 'Date of latest modification by the investor',
                 dataSource: 'actionDate',
                 sortable: true,
             },
-            8:{
+            8: {
                 label: 'Reviewed by',
                 dataSource: 'reviewBy',
                 sortable: true,
             },
-            9:{
+            9: {
                 label: 'Date of rejection',
                 dataSource: 'actionDate',
                 sortable: true,
             },
-            10:{
+            10: {
                 label: 'Rejected by',
                 dataSource: 'reviewBy',
                 sortable: true,
             },
-            11:{
+            11: {
                 label: 'Date of latest modification',
                 dataSource: 'actionDate',
                 sortable: true,
@@ -115,7 +116,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
         };
 
         let tables = {
-            '1':[],
+            '1': [],
             '-1': [],
             '2': [],
             '-2': [],
@@ -130,14 +131,14 @@ export class OfiAmDocumentsComponent implements OnDestroy {
             '-2': 'Refused'
         };
 
-        tableData.forEach((row)=>{
-            let rowStatus = row['status'];
-            if (row['invited']){
-                row['status'] = 'KYC started by client';
+        tableData.forEach((row) => {
+            const rowStatus = row['status'];
+
+            row['status'] = replaceStatus[rowStatus];
+            tables[rowStatus].push(row);
+
+            if (row['isInvited'] === 1) {
                 tables['invited'].push(row);
-            }else{
-                row['status'] = replaceStatus[rowStatus];
-                tables[rowStatus].push(row);
             }
             tables['all'].push(row);
         });
@@ -145,37 +146,37 @@ export class OfiAmDocumentsComponent implements OnDestroy {
         this.panelDefs = [
             {
                 title: 'Waiting for Approval',
-                columns: [columns[1],columns[2],columns[3],columns[4]],
+                columns: [columns[1], columns[2], columns[3], columns[4]],
                 open: false,
                 data: tables[1]
             },
             {
                 title: 'Accepted KYC Requests',
-                columns: [columns[1],columns[2],columns[5],columns[4],columns[6]],
+                columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: false,
                 data: tables[-1]
             },
             {
                 title: 'Awaiting for more information from your client',
-                columns: [columns[1],columns[2],columns[7],columns[4],columns[8]],
+                columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables[2]
             },
             {
                 title: 'Rejected Requests',
-                columns: [columns[1],columns[2],columns[9],columns[4],columns[10]],
+                columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables[-2]
             },
             {
                 title: 'Started by your clients',
-                columns: [columns[1],columns[2],columns[9],columns[4],columns[10]],
+                columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables['invited']
             },
             {
                 title: 'All your KYC and Client Folders',
-                columns: [columns[1],columns[2],columns[11],columns[4],columns[8]],
+                columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
                 open: false,
                 data: tables['all']
             }
@@ -196,8 +197,9 @@ export class OfiAmDocumentsComponent implements OnDestroy {
     }
 
     buildLink(column, row) {
-        let ret = column.link;
-        column.link.match(/:\w+/g).forEach((match) => {
+        let ret = row.status === 'Accepted' ? column.kycFundAccessLink : column.kycDocLink;
+        const linkKey = row.status === -1 ? 'kycFundAccessLink' : 'kycDocLink';
+        column[linkKey].match(/:\w+/g).forEach((match) => {
             const key = match.substring(1);
             const regex = new RegExp(match);
             ret = ret.replace(regex, row[key]);
