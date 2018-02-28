@@ -3,17 +3,19 @@ import {NgRedux} from '@angular-redux/store';
 
 import {MemberSocketService} from '@setl/websocket-service';
 import {
+    ApprovedKycMessageBody,
+    ApprovedKycRequestData,
     CreateUserRequestBody,
     CreateUserRequestData,
     GetAmKycListRequestBody,
     GetInvestorRequestBody,
+    SaveFundAccessRequestBody,
+    SaveFundAccessRequestData,
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
     WaitingApprovalMessageBody,
-    WaitingApprovalRequestData,
-    SaveFundAccessRequestData,
-    SaveFundAccessRequestBody
+    WaitingApprovalRequestData
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -87,7 +89,8 @@ export class OfiKycService {
             email: _.get(requestData, 'email', ''),
             password: _.get(requestData, 'password', ''),
             accountName: _.get(requestData, 'email', ''),
-            accountDescription: _.get(requestData, 'email', '') + '_account'
+            accountDescription: _.get(requestData, 'email', '') + '_account',
+            lang: _.get(requestData, 'lang', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -97,13 +100,18 @@ export class OfiKycService {
      * Accept an investor's KYC approval
      *
      * @returns {any}
-     * @param {WaitingApprovalRequestData} requestData
+     * @param {ApprovedKycRequestData} requestData
      */
-    approve(requestData: WaitingApprovalRequestData): any {
-        const messageBody: WaitingApprovalMessageBody = {
+    approve(requestData: ApprovedKycRequestData): any {
+        const messageBody: ApprovedKycMessageBody = {
             RequestName: 'iznesapprovekyc',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', 0)
+            kycID: _.get(requestData, 'kycID', 0),
+            investorEmail: _.get(requestData, 'investorEmail', ''),
+            investorFirstName: _.get(requestData, 'investorFirstName', ''),
+            investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
+            amCompanyName: _.get(requestData, 'amCompanyName', ''),
+            lang: _.get(requestData, 'lang', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
