@@ -213,7 +213,16 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 break;
 
             case Statuses.approved:
-                this.kycService.approve({ kycID: this.kycId }).then(() => {
+                const data = {
+                    kycID: this.kycId,
+                    investorEmail: this.investor.email.value,
+                    investorFirstName: this.investor.firstName.value,
+                    investorCompanyName: this.investor.companyName.value,
+                    amCompanyName: this.amCompanyName,
+                    lang: this.language
+                };
+
+                this.kycService.approve(data).then(() => {
                     this.toasterService.pop('success', 'The KYC request has been successfully approved');
                     this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
                 }).catch((error) => {
