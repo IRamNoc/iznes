@@ -31,6 +31,7 @@ export interface CreateUserRequestData {
     token: string;
     email: string;
     password: string;
+    lang: string;
 }
 
 export interface CreateUserRequestBody extends MemberNodeMessageBody {
@@ -39,6 +40,7 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody {
     password: string;
     accountName: string;
     accountDescription: string;
+    lang: string;
 }
 
 export interface WaitingApprovalRequestData {
@@ -48,6 +50,25 @@ export interface WaitingApprovalRequestData {
 export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
+}
+
+export interface ApprovedKycRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
+}
+
+export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
 }
 
 export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
@@ -62,13 +83,13 @@ interface Shares {
     id: string;
 }
 
-export interface SaveFundAccessRequestData{
+export interface SaveFundAccessRequestData {
     shareArray: Array<Shares>;
     kycID: number;
     investorWalletID: number;
 }
 
-export interface SaveFundAccessRequestBody extends MemberNodeMessageBody{
+export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
     shareArray: Array<Shares>;
     kycID: number;
