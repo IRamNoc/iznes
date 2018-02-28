@@ -5,17 +5,19 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {
     ApprovedKycMessageBody,
     ApprovedKycRequestData,
+    AskForMoreInfoMessageBody,
+    AskForMoreInfoRequestData,
     CreateUserRequestBody,
     CreateUserRequestData,
     GetAmKycListRequestBody,
     GetInvestorRequestBody,
+    RejectedKycMessageBody,
+    RejectedKycRequestData,
     SaveFundAccessRequestBody,
     SaveFundAccessRequestData,
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
-    WaitingApprovalMessageBody,
-    WaitingApprovalRequestData
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -121,13 +123,21 @@ export class OfiKycService {
      * Reject an investor's KYC approval
      *
      * @returns {any}
-     * @param {WaitingApprovalRequestData} requestData
+     * @param {RejectedKycRequestData} requestData
      */
-    reject(requestData: WaitingApprovalRequestData) {
-        const messageBody: WaitingApprovalMessageBody = {
+    reject(requestData: RejectedKycRequestData) {
+        const messageBody: RejectedKycMessageBody = {
             RequestName: 'iznesrejectkyc',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', 0)
+            kycID: _.get(requestData, 'kycID', 0),
+            investorEmail: _.get(requestData, 'investorEmail', ''),
+            investorFirstName: _.get(requestData, 'investorFirstName', ''),
+            investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
+            amCompanyName: _.get(requestData, 'amCompanyName', ''),
+            amEmail: _.get(requestData, 'amEmail', ''),
+            amPhoneNumber: _.get(requestData, 'amPhoneNumber', ''),
+            amInfoText: _.get(requestData, 'amInfoText', ''),
+            lang: _.get(requestData, 'lang', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -136,13 +146,21 @@ export class OfiKycService {
     /**
      * Ask more informations for an investor's KYC approval
      * @returns {any}
-     * @param {WaitingApprovalRequestData} requestData
+     * @param {AskForMoreInfoRequestData} requestData
      */
-    askMoreInfo(requestData: WaitingApprovalRequestData) {
-        const messageBody: WaitingApprovalMessageBody = {
+    askMoreInfo(requestData: AskForMoreInfoRequestData) {
+        const messageBody: AskForMoreInfoMessageBody = {
             RequestName: 'iznesrequestmoreinfo',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', 0)
+            kycID: _.get(requestData, 'kycID', 0),
+            investorEmail: _.get(requestData, 'investorEmail', ''),
+            investorFirstName: _.get(requestData, 'investorFirstName', ''),
+            investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
+            amCompanyName: _.get(requestData, 'amCompanyName', ''),
+            amEmail: _.get(requestData, 'amEmail', ''),
+            amPhoneNumber: _.get(requestData, 'amPhoneNumber', ''),
+            amInfoText: _.get(requestData, 'amInfoText', ''),
+            lang: _.get(requestData, 'lang', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
