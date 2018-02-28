@@ -43,15 +43,6 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody {
     lang: string;
 }
 
-export interface WaitingApprovalRequestData {
-    kycID: number;
-}
-
-export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
-    token: string;
-    kycID: number;
-}
-
 export interface ApprovedKycRequestData {
     kycID: number;
     investorEmail: string;
@@ -68,6 +59,56 @@ export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     investorFirstName: string;
     investorCompanyName: string;
     amCompanyName: string;
+    lang: string;
+}
+
+export interface RejectedKycRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface RejectedKycMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface AskForMoreInfoRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface AskForMoreInfoMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
     lang: string;
 }
 
