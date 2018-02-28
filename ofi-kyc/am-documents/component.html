@@ -25,10 +25,10 @@
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-row *clrDgItems="let row of panel.data">
                     <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
-                        <a *ngIf="dataCol.link" [routerLink]="buildLink(dataCol, row)">
+                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">
                             {{row[dataCol.dataSource]}}
                         </a>
-                        <span *ngIf="!dataCol.link">
+                        <span *ngIf="!dataCol.hasLink">
                             {{row[dataCol.dataSource]}}
                         </span>
                     </clr-dg-cell>
