@@ -4,4 +4,5 @@ export interface ConfirmSettings {
     showCloseButton?: boolean;
     confirmText?: string;
     declineText: string;
+    btnClass?: string;
 }
