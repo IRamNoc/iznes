@@ -1,5 +1,5 @@
 export interface ContractDetail {
-    constractData: any;
+    contractData: any;
     requested: boolean;
 }
 

@@ -14,6 +14,7 @@ export {
     RESET_AUTH_LOGIN_DETAIL,
     getAuthentication,
     SET_NEW_PASSWORD,
+    CLEAR_MUST_CHANGE_PASSWORD,
 
     // connected
     setConnectedWallet,
@@ -61,6 +62,7 @@ export {
     SET_ISSUE_HOLDING,
     setRequestedWalletHolding,
     clearRequestedWalletHolding,
+    setContractList,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
     clearContractNeedHandle,

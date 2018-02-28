@@ -24,9 +24,10 @@ import {
     RESET_AUTH_LOGIN_DETAIL,
     getAuthentication,
     SET_NEW_PASSWORD,
+    CLEAR_MUST_CHANGE_PASSWORD,
 } from './authentication';
 
-export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD};
+export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD, CLEAR_MUST_CHANGE_PASSWORD};
 
 
 // connected
