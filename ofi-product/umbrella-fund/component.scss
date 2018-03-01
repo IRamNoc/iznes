@@ -1,0 +1,29 @@
+.well {
+  overflow: auto;
+}
+.panel-header {
+  cursor: pointer;
+  .fa-chevron-down {
+    transform: rotate(0deg);
+    transition: transform .5s;
+    &.reverse {
+      transform: rotate(-180deg);
+    }
+  }
+}
+.panel-body {
+  margin-top: 20px;
+  opacity: 1;
+  height: auto;
+  overflow: hidden;
+  transition: opacity .5s linear;
+  &.hidden {
+    margin-top: 0;
+    opacity: 0;
+    height: 0;
+  }
+}
+.inline-headers h4 {
+  display: inline-block;
+  vertical-align: baseline;
+}
