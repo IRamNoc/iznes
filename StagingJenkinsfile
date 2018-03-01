@@ -46,7 +46,7 @@ node {
             node {
                 sh '''
                         rsync -avhmp --stats /var/lib/jenkins/Deploy/blockchain/scripts/*  root@172.104.147.135: &&
-                        ssh -t root@172.104.147.135 \'cd /root ; bash &&  /stop_blockchain.sh \'
+                        ssh -t root@172.104.147.135 \'cd /root ; bash &&  ./stop_blockchain.sh \'
                         ssh -t root@172.104.147.135 rm -f /usr/local/jar/*.jar &&
                         ssh -t root@172.104.147.135 rm -f /usr/local/jar/cmdtools &&
                         ssh -t root@172.104.147.135 rm -f /usr/local/jar/wallnode &&
