@@ -77,7 +77,7 @@ export class MyUserService implements OnDestroy {
         this.subscriptionsArray = [];
     }
 
-    defaultRefreshToken(ngRedux: NgRedux<any>) {
+    defaultRefreshToken(ngRedux: NgRedux<any>): any {
         let asynTask;
 
         try {
