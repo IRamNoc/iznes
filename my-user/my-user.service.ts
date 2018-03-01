@@ -77,8 +77,14 @@ export class MyUserService implements OnDestroy {
         this.subscriptionsArray = [];
     }
 
-    defaultRefreshToken(ngRedux: NgRedux<any>) {
-        const asynTask = this.refreshToken();
+    defaultRefreshToken(ngRedux: NgRedux<any>): any {
+        let asynTask;
+
+        try {
+            asynTask = this.refreshToken();
+        } catch (e) {
+            return false;
+        }
 
         ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asynTask,
@@ -130,10 +136,12 @@ export class MyUserService implements OnDestroy {
     }
 
     saveMyUserDetails(userData: UserDetailsData): any {
-        const messageBody: SaveUserDetailsRequestBody =  {...{
-            RequestName: 'ud',
-            token: this.memberSocketService.token,
-        },  ...userData};
+        const messageBody: SaveUserDetailsRequestBody = {
+            ...{
+                RequestName: 'ud',
+                token: this.memberSocketService.token,
+            }, ...userData
+        };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
