@@ -257,6 +257,13 @@ const assetServicing = {
         }
     ]
 };
+const ofiProductHome = {
+    label: 'Shares / Funds / Umbrella funds',
+    label_txt: 'txt_sharesfundsumbrellafunds',
+    icon_class: 'fa fa-bar-chart',
+    element_id: 'menu-product-home',
+    router_link: '/product-module/home'
+};
 const productsManagementCompany = {
     label: 'Management Company',
     label_txt: 'txt_managementcompany',
@@ -389,6 +396,7 @@ export const menuSpec: MenuSpec = {
                 icon_class: 'fa fa-industry',
                 element_id: 'menu-product-module',
                 children: [
+                    ofiProductHome,
                     productsManagementCompany,
                     productsSicav,
                     productsFund,
