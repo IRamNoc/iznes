@@ -20,6 +20,11 @@ export {OfiKycAlreadyDoneComponent} from './ofi-kyc/already-done/component';
  */
 export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/component';
 /**
+ * Products
+ */
+export {ProductHomeComponent} from './ofi-product/home/component';
+export {UmbrellaFundComponent} from './ofi-product/umbrella-fund/component';
+/**
  * Nav
  */
 export {OfiNavModule} from './ofi-nav/module';
