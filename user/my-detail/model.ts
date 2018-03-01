@@ -21,4 +21,7 @@ export interface MyDetailState {
     admin: boolean;
     accountId: number;
     memberId: number;
+    companyName: string;
+    phoneCode: string;
+    phoneNumber: string;
 }
