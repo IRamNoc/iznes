@@ -369,6 +369,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _route: ActivatedRoute,
         private _router: Router,
         private _numberConverterService: NumberConverterService,
+        private _toasterService: ToasterService,
     ) {
         // language
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -478,7 +479,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
         });
 
-        this.subscriptionsArray.push(this.umbrellaFundForm.valueChanges.subscribe((form) => this.processFormChanges(form)));
+        this.subscriptionsArray.push(this.umbrellaFundForm.controls['country'].valueChanges.subscribe((form) => this.processFormChanges(form)));
     }
 
     getLanguage(requested): void {
@@ -497,23 +498,31 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    processFormChanges(form): void {
+    processFormChanges(field): void {
         this.showTransferAgent = false;
         this.showCentralizingAgent = false;
-        this.umbrellaFundForm.get('transferAgent').patchValue(null, {emitEvent: false});
-        this.umbrellaFundForm.get('transferAgent').setValidators(null);
-        this.umbrellaFundForm.get('centralizingAgent').patchValue(null, {emitEvent: false});
-        this.umbrellaFundForm.get('centralizingAgent').setValidators(null);
-        if (!!form.country && form.country.length > 0) {
-            if (form.country[0].id === 'LU' || form.country[0].id === 'IE') {
+        if (!!field && field.length > 0) {
+            if (field[0].id === 'LU' || field[0].id === 'IE') {
                 this.umbrellaFundForm.get('transferAgent').setValidators(Validators.required);
                 this.showTransferAgent = true;
-            }
-            if (form.country[0].id === 'FR') {
+            } else  if (field[0].id === 'FR') {
                 this.umbrellaFundForm.get('centralizingAgent').setValidators(Validators.required);
                 this.showCentralizingAgent = true;
+            } else {
+                this.umbrellaFundForm.get('transferAgent').patchValue(null, {emitEvent: false});
+                this.umbrellaFundForm.get('transferAgent').setValidators(null);
+                this.umbrellaFundForm.get('centralizingAgent').patchValue(null, {emitEvent: false});
+                this.umbrellaFundForm.get('centralizingAgent').setValidators(null);
             }
+        } else {
+            this.umbrellaFundForm.get('transferAgent').patchValue(null, {emitEvent: false});
+            this.umbrellaFundForm.get('transferAgent').setValidators(null);
+            this.umbrellaFundForm.get('centralizingAgent').patchValue(null, {emitEvent: false});
+            this.umbrellaFundForm.get('centralizingAgent').setValidators(null);
         }
+        // apply changes
+        this.umbrellaFundForm.get('transferAgent').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+        this.umbrellaFundForm.get('centralizingAgent').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
     }
 
     public ngOnInit() {
@@ -529,7 +538,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     save(formValues) {
-
+        // check if umbrellaID update else insert
+        this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully created!');
+        this._router.navigateByUrl('/product-module/home');
     }
 
     /**
