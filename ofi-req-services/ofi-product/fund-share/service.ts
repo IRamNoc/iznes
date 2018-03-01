@@ -2,16 +2,21 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {createMemberNodeSagaRequest, createMemberNodeRequest} from '@setl/utils/common';
 
 import {
-    AmAllFundShareListRequestBody
+    AmAllFundShareListRequestBody,
+    InvestorFundAccessRequestBody
 } from './model';
 import {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
     clearRequestedAmAllFundShare
 } from '../../../ofi-store/ofi-product/fundshare/actions';
+
+export interface RequestInvestorFundAccessData {
+    investorWalletId: number;
+}
 
 @Injectable()
 export class OfiFundShareService {
@@ -34,6 +39,10 @@ export class OfiFundShareService {
         ));
     }
 
+    /**
+     * Request all fund share for the asset manager, not just for under particular fund.
+     * @return {any}
+     */
     requestAmAllFundShareList(): any {
         const messageBody: AmAllFundShareListRequestBody = {
             RequestName: 'getfundstatus',
@@ -41,6 +50,21 @@ export class OfiFundShareService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Asset manager Request fund share access for particular investor walletid.
+     * @return {any}
+     */
+    requestInvestorFundAccess(requestData: RequestInvestorFundAccessData): any {
+        const messageBody: InvestorFundAccessRequestBody = {
+            RequestName: 'iznesgetinvestorfundaccess',
+            token: this.memberSocketService.token,
+            investorWalletId: requestData.investorWalletId
+        };
+        console.log('this is the request', messageBody);
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
 }
