@@ -180,6 +180,7 @@
                                 <div class="form-group col-sm-6">
                                 </div>
                             </div>
+                            <div *ngIf="mainInformationOpen" [ngStyle]="{'height':'100px'}"></div>
                         </div>
                     </div>
                     <br>
@@ -198,7 +199,7 @@
                                         <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
                                     <div>
-                                        <input type="text" id="uf_giin" class="form-control" formControlName="giin">
+                                        <input type="text" id="uf_giin" class="form-control" formControlName="giin" maxlength="19">
                                     </div>
                                     <div *ngIf="umbrellaFundForm.controls['giin'].hasError('required') && umbrellaFundForm.controls['giin'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
@@ -270,6 +271,7 @@
                                 </div>
                                 <div class="form-group col-sm-6"></div>
                             </div>
+                            <div *ngIf="optionalInformationOpen" [ngStyle]="{'height':'20px'}"></div>
                         </div>
                     </div>
                     <br>
@@ -308,7 +310,7 @@
     <h3 class="modal-title" mltag="txt_deletecurrentmanagementcompany">Deleting Management Company</h3>
     <div class="modal-body">
         <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
-            <strong>{{companyToDelete && companyToDelete.companyName}}</strong>
+            <strong>INSERT HERE</strong>
         </p>
     </div>
     <div class="modal-footer">
