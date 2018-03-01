@@ -28,6 +28,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     language: string;
     investor: InvestorModel;
     kycId: number;
+    initialStatusId: number;
     statusId: number;
     amKycList: Array<any>;
     amCompanyName: string;
@@ -63,6 +64,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.isRejectModalDisplayed = false;
         this.kycId = null;
+        this.initialStatusId = null;
         this.statusId = null;
         this.amKycList = [];
         this.amCompanyName = '';
@@ -136,7 +138,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     getAmKycList(amKycList: any) {
         if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
-            const phoneNumber = (kyc.phoneCode && kyc.phoneNumber) ? `${kyc.phoneCode} ${kyc.phoneNumber}` : '';
+            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
             const approvalDateRequest = '';
 
             this.investor = {
@@ -148,6 +150,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest }
             };
 
+            this.initialStatusId = kyc.status;
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
 
@@ -181,10 +184,11 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     handleSubmitButtonClick(): void {
         const status = this.waitingApprovalFormGroup.controls['status'].value;
+        let payload = null;
 
         switch (status) {
             case Statuses.rejected:
-                if (this.statusId === Statuses.waitingApproval) {
+                if (this.initialStatusId === Statuses.waitingApproval) {
                     this.isRejectModalDisplayed = true;
                 } else {
                     this.toasterService.pop(
@@ -195,7 +199,19 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 break;
 
             case Statuses.askMoreInfo:
-                this.kycService.askMoreInfo({ kycID: this.kycId }).then(() => {
+                payload = {
+                    kycID: this.kycId,
+                    investorEmail: this.investor.email.value,
+                    investorFirstName: this.investor.firstName.value,
+                    investorCompanyName: this.investor.companyName.value,
+                    amCompanyName: this.amCompanyName,
+                    amEmail: '',
+                    amPhoneNumber: '',
+                    amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
+                    lang: this.language
+                };
+
+                this.kycService.askMoreInfo(payload).then(() => {
                     this.toasterService.pop(
                         'success',
                         'The KYC request has been successfully updated and requires more information from the investor.'
@@ -213,7 +229,16 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 break;
 
             case Statuses.approved:
-                this.kycService.approve({ kycID: this.kycId }).then(() => {
+                payload = {
+                    kycID: this.kycId,
+                    investorEmail: this.investor.email.value,
+                    investorFirstName: this.investor.firstName.value,
+                    investorCompanyName: this.investor.companyName.value,
+                    amCompanyName: this.amCompanyName,
+                    lang: this.language
+                };
+
+                this.kycService.approve(payload).then(() => {
                     this.toasterService.pop('success', 'The KYC request has been successfully approved');
                     this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
                 }).catch((error) => {
@@ -237,7 +262,19 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     handleRejectButtonClick() {
         this.isRejectModalDisplayed = false;
 
-        this.kycService.reject({ kycID: this.kycId }).then(() => {
+        const payload = {
+            kycID: this.kycId,
+            investorEmail: this.investor.email.value,
+            investorFirstName: this.investor.firstName.value,
+            investorCompanyName: this.investor.companyName.value,
+            amCompanyName: this.amCompanyName,
+            amEmail: '',
+            amPhoneNumber: '',
+            amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
+            lang: this.language
+        };
+
+        this.kycService.reject(payload).then(() => {
             this.toasterService.pop('success', 'The KYC request has been successfully rejected');
         }).catch((error) => {
             const data = error[1].Data[0];
