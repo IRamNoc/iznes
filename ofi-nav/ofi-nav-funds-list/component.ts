@@ -162,6 +162,20 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         return currencyIcon;
     }
 
+    getNextValuationClass(nextValuationDate: string): string {
+        const fromNow = moment(nextValuationDate).diff(moment());
+        const duration = moment.duration(fromNow);
+        const timeBetween = duration.asDays();
+
+        if(timeBetween > 1 && timeBetween < 2) {
+            return 'time-orange';
+        } else if(timeBetween > 0 && timeBetween < 1) {
+            return 'time-red';
+        } else {
+            return '';
+        }
+    }
+
     isNavNull(nav: number): boolean {
         return nav === null;
     }

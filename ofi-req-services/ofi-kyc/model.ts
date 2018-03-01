@@ -31,6 +31,7 @@ export interface CreateUserRequestData {
     token: string;
     email: string;
     password: string;
+    lang: string;
 }
 
 export interface CreateUserRequestBody extends MemberNodeMessageBody {
@@ -39,15 +40,76 @@ export interface CreateUserRequestBody extends MemberNodeMessageBody {
     password: string;
     accountName: string;
     accountDescription: string;
+    lang: string;
 }
 
-export interface WaitingApprovalRequestData {
+export interface ApprovedKycRequestData {
     kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
 }
 
-export interface WaitingApprovalMessageBody extends MemberNodeMessageBody {
+export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
+}
+
+export interface RejectedKycRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface RejectedKycMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface AskForMoreInfoRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
+}
+
+export interface AskForMoreInfoMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    amEmail: string;
+    amPhoneNumber: string;
+    amInfoText: string;
+    lang: string;
 }
 
 export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
@@ -62,13 +124,13 @@ interface Shares {
     id: string;
 }
 
-export interface SaveFundAccessRequestData{
+export interface SaveFundAccessRequestData {
     shareArray: Array<Shares>;
     kycID: number;
     investorWalletID: number;
 }
 
-export interface SaveFundAccessRequestBody extends MemberNodeMessageBody{
+export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
     shareArray: Array<Shares>;
     kycID: number;
