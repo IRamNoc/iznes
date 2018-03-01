@@ -545,6 +545,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigateByUrl('/product-module/home');
     }
 
+    confirmModal() {
+
+    }
+
     /**
      * Format Date
      * -----------
