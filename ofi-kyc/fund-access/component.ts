@@ -12,6 +12,7 @@ import {mDateHelper, immutableHelper} from '@setl/utils';
 import {Observable} from 'rxjs/Observable';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
 import {AllFundShareDetail} from '../../ofi-store/ofi-product/fundshare/model';
+import * as _ from 'lodash';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -33,6 +34,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     };
     amCompany: string;
     kycId: number;
+    investorWalletId: number;
+    investorWalletIdFundAccess: Array<number>;
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
@@ -144,6 +147,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                         investorWalletID: this.investorData['investorWalletID'],
                         shareArray: shareArray['add']
                     }).then(() => {
+                        this.setChangedToFalse(shareArray['add']);
                         // success call back
                         resolve();
                     }, () => {
@@ -159,6 +163,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                         investorWalletID: this.investorData['investorWalletID'],
                         shareArray: shareArray['remove']
                     }).then(() => {
+                        this.setChangedToFalse(shareArray['remove']);
                         // success call back
                         resolve();
                     }, () => {
@@ -212,6 +217,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
 
             this.investorData = {
+                'kycID': kyc.kycID,
                 'investorWalletID': kyc.investorWalletID,
                 'companyName': kyc.investorCompanyName,
                 'firstName': kyc.investorFirstName,
@@ -222,10 +228,20 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             };
 
             this.amCompany = kyc.companyName;
+            this.investorWalletId = kyc.investorWalletID;
 
             console.log(this.investorData);
 
-            this._changeDetectorRef.markForCheck();
+            // Get the fund access for investor walletID and render it.
+            this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
+                this.investorWalletIdFundAccess = immutableHelper.reduce(_.get(data, '[1].Data', []), (result, item) => {
+                    result.push(item.get('shareID', 0));
+                    return result;
+                }, []);
+                this.updateFundAccess();
+            }).catch((e) => {
+
+            });
         }
     }
 
@@ -250,20 +266,26 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             return result;
         }, []);
 
-        this.updateFundAccess();
-
-        this._changeDetectorRef.markForCheck();
     }
 
     updateFundAccess() {
         this.tableData.forEach((row) => {
             this.access[row['id']] = {
-                access: row['access'],
+                access: this.investorWalletIdFundAccess.indexOf(row['id']) !== -1,
                 changed: false,
                 fundName: row['fundName'],
                 shareName: row['shareName'],
                 isin: row['isin']
             };
+        });
+        console.log(this.access);
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    setChangedToFalse(sharesArray: Array<number>) {
+        sharesArray.forEach((shareId) => {
+            this.access[shareId]['changed'] = false;
         });
     }
 }
