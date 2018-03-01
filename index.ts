@@ -12,3 +12,5 @@ export {
     MessageConnection,
     MessageConnectionConfig
 } from './messages/message-components/message-connection/message-connection.model';
+
+export {MessageKycConfig} from './messages/message-components/message-kyc/message-kyc.model';
