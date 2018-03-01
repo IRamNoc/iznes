@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {Location} from '@angular/common';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {ActivatedRoute} from '@angular/router';
-import {InvestorModel} from './model';
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {InvestorModel} from './model';
 
 enum Statuses {
     waitingApproval = 1,
@@ -137,7 +137,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     getAmKycList(amKycList: any) {
         if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
-            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
+            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ?
+                `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
 
             const approvalDateRequest = '';
 
@@ -184,7 +185,6 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     handleSubmitButtonClick(): void {
         const status = this.waitingApprovalFormGroup.controls['status'].value;
-        let payload = null;
 
         switch (status) {
             case Statuses.rejected:
@@ -196,52 +196,60 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 break;
 
             case Statuses.askMoreInfo:
-                payload = {
-                    kycID: this.kycId,
-                    investorEmail: this.investor.email.value,
-                    investorFirstName: this.investor.firstName.value,
-                    investorCompanyName: this.investor.companyName.value,
-                    amCompanyName: this.amCompanyName,
-                    amEmail: '',
-                    amPhoneNumber: '',
-                    amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
-                    lang: this.language
-                };
-
-                this.kycService.askMoreInfo(payload).then(() => {
-                    this.showSuccessAlert('The KYC request has been successfully updated and requires more information from the investor');
-                }).catch((error) => {
-                    const data = error[1].Data[0];
-
-                    if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
-                        this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
-                    }
-                });
+                this.onAskMoreInfoKyc();
                 break;
 
             case Statuses.approved:
-                payload = {
-                    kycID: this.kycId,
-                    investorEmail: this.investor.email.value,
-                    investorFirstName: this.investor.firstName.value,
-                    investorCompanyName: this.investor.companyName.value,
-                    amCompanyName: this.amCompanyName,
-                    lang: this.language
-                };
-
-                this.kycService.approve(payload).then(() => {
-                    this.showSuccessAlert('The KYC request has been successfully approved');
-                    // this.toasterService.pop('success', 'The KYC request has been successfully approved');
-                    this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
-                }).catch((error) => {
-                    const data = error[1].Data[0];
-
-                    if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
-                        this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
-                    }
-                });
+                this.onApproveKyc();
                 break;
         }
+    }
+
+    onAskMoreInfoKyc() {
+        const payload = {
+            kycID: this.kycId,
+            investorEmail: this.investor.email.value,
+            investorFirstName: this.investor.firstName.value,
+            investorCompanyName: this.investor.companyName.value,
+            amCompanyName: this.amCompanyName,
+            amEmail: '',
+            amPhoneNumber: '',
+            amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
+            lang: this.language
+        };
+
+        this.kycService.askMoreInfo(payload).then(() => {
+            this.showSuccessAlert('The KYC request has been successfully updated and requires more information from the investor');
+        }).catch((error) => {
+            const data = error[1].Data[0];
+
+            if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
+                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+            }
+        });
+    }
+
+    onApproveKyc() {
+        const payload = {
+            kycID: this.kycId,
+            investorEmail: this.investor.email.value,
+            investorFirstName: this.investor.firstName.value,
+            investorCompanyName: this.investor.companyName.value,
+            amCompanyName: this.amCompanyName,
+            lang: this.language
+        };
+
+        this.kycService.approve(payload).then(() => {
+            this.showSuccessAlert('The KYC request has been successfully approved');
+            // this.toasterService.pop('success', 'The KYC request has been successfully approved');
+            this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
+        }).catch((error) => {
+            const data = error[1].Data[0];
+
+            if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
+                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+            }
+        });
     }
 
     handleModalCloseButtonClick() {
@@ -265,8 +273,6 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.kycService.reject(payload).then(() => {
             this.showSuccessAlert('The KYC request has been successfully rejected');
-
-            // this.toasterService.pop('success', 'The KYC request has been successfully rejected');
         }).catch((error) => {
             const data = error[1].Data[0];
 
