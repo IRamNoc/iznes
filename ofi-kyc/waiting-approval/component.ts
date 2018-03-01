@@ -5,6 +5,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {MessageKycConfig, MessagesService} from '@setl/core-messages';
 import {InvestorModel} from './model';
 
 enum Statuses {
@@ -53,6 +54,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
      * @param {NgRedux<any>} redux
      * @param {ActivatedRoute} route
      * @param alertsService
+     * @param messagesService
      */
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -60,7 +62,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private kycService: OfiKycService,
                 private redux: NgRedux<any>,
                 private route: ActivatedRoute,
-                private alertsService: AlertsService) {
+                private alertsService: AlertsService,
+                private messagesService: MessagesService) {
 
         this.isRejectModalDisplayed = false;
         this.kycId = null;
@@ -239,16 +242,41 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             lang: this.language
         };
 
-        this.kycService.approve(payload).then(() => {
-            this.showSuccessAlert('The KYC request has been successfully approved');
-            // this.toasterService.pop('success', 'The KYC request has been successfully approved');
+        this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
+            this.showSuccessAlert('The KYC request has been successfully approved');
+
+            /* Send action message to investor */
+            this.sendActionMessageToInvestor(result[1].Data[0].investorWalletID);
+
         }).catch((error) => {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
                 this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
             }
+        });
+    }
+
+    sendActionMessageToInvestor(investorWalletId: number) {
+        const subject = (this.language === 'fr-Latn')
+            ? `Documents KYC: ${this.amCompanyName} a approuvé vos documents KYC`
+            : `KYC Documents: ${this.amCompanyName} approved your KYC documents`;
+
+        const actionConfig = new MessageKycConfig();
+        actionConfig.investorFirstName = this.investor.firstName.value;
+        actionConfig.investorCompanyName = this.investor.companyName.value;
+        actionConfig.amCompanyName = this.amCompanyName;
+
+        this.messagesService.sendMessage(
+            [investorWalletId],
+            subject,
+            '',
+            actionConfig
+        ).then((result) => {
+            console.log('on message success: ', result);
+        }).catch((error) => {
+            console.log('on message fail: ', error);
         });
     }
 
