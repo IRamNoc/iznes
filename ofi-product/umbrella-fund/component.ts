@@ -37,6 +37,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     editForm = false;
     showModal = false;
     showConfirmModal = false;
+    modalTitle = '';
+    modalText = '';
 
     mainInformationOpen = true;
     optionalInformationOpen = false;
