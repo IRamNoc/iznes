@@ -3,7 +3,6 @@ import * as MyDetailActions from './actions';
 import {MyDetailState} from './model';
 import * as _ from 'lodash';
 
-
 const initialState: MyDetailState = {
     username: '',
     emailAddress: '',
@@ -14,7 +13,10 @@ const initialState: MyDetailState = {
     lastName: '',
     admin: false,
     accountId: 0,
-    memberId: 0
+    memberId: 0,
+    companyName: '',
+    phoneCode: '',
+    phoneNumber: '',
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
@@ -54,6 +56,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
 
             const userDetailsData = _.get(action, 'payload[1].Data[0]', {});
 
+            console.log('userDetailsData: ', userDetailsData);
+
             const displayName = _.get(userDetailsData, 'displayName', '');
             const firstName = _.get(userDetailsData, 'firstName', '');
             const lastName = _.get(userDetailsData, 'lastName', '');
@@ -68,6 +72,9 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const memorableQuestion = _.get(userDetailsData, 'memorableQuestion', '');
             const memorableAnswer = _.get(userDetailsData, 'memorableAnswer', '');
             const profileText = _.get(userDetailsData, 'profileText', '');
+            const companyName = _.get(userDetailsData, 'companyName', '');
+            const phoneCode = _.get(userDetailsData, 'phoneCode', '');
+            const phoneNumber = _.get(userDetailsData, 'phoneNumber', '');
 
             newState = Object.assign({}, state, {
                 displayName,
@@ -83,7 +90,10 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 country,
                 memorableQuestion,
                 memorableAnswer,
-                profileText
+                profileText,
+                companyName,
+                phoneCode,
+                phoneNumber
             });
 
             return newState;
