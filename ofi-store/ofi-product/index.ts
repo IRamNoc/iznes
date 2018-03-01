@@ -49,6 +49,14 @@ import {
     getOfiNavLatestCurrentRequest
 } from './nav';
 
+import {
+   OfiFundShareState,
+   OfiFundShareReducer,
+   SET_AM_ALL_FUND_SHARE_LIST,
+   SET_REQUESTED_AM_All_FUND_SHARE,
+   CLEAR_REQUESTED_AM_All_FUND_SHARE
+} from './fundshare';
+
 export {
     ManagementCompanyState,
     ManagementCompanyReducer,
@@ -84,13 +92,19 @@ export {
     setRequestedNavLatest,
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
-    getOfiNavLatestCurrentRequest    
+    getOfiNavLatestCurrentRequest,
+
+    // Fund Share
+    SET_REQUESTED_AM_All_FUND_SHARE,
+    CLEAR_REQUESTED_AM_All_FUND_SHARE,
+    SET_AM_ALL_FUND_SHARE_LIST
 };
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
     ofiFund: FundState;
+    ofiFundShare: OfiFundShareState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
 }
@@ -99,6 +113,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
+    ofiFundShare: OfiFundShareReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer
 });
