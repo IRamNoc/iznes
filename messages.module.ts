@@ -19,7 +19,8 @@ import {SetlMessageAttachmentComponent} from './messages/message-components/mess
 import {SetlMessageBodyComponent} from './messages/message-components/message-body/message-body.component';
 import {SetlMessageConnectionComponent} from './messages/message-components/message-connection/message-connection.component';
 import {SetlMessageConnectionService} from './messages/message-components/message-connection/message-connection.service';
-import { RouterModule } from '@angular/router';
+import {SetlMessageKycComponent} from './messages/message-components/message-kyc/message-kyc.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
     imports: [
@@ -42,13 +43,15 @@ import { RouterModule } from '@angular/router';
         SetlMessageBodyComponent,
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
+        SetlMessageKycComponent
     ],
     exports: [
         SetlMessagesComponent,
         SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
         SetlMessageAttachmentComponent,
-        SetlMessageConnectionComponent
+        SetlMessageConnectionComponent,
+        SetlMessageKycComponent
     ],
     providers: [
         MyMessagesService,
