@@ -106,6 +106,10 @@
                         [mailId]="currentMessage.mailId">
                 </setl-message-connection>
             </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'kyc'">
+                <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
+            </p>
         </div>
 
         <div class="message_view_menu">
