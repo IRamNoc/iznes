@@ -8,7 +8,7 @@ node {
         stage('Deploy Membership-db to Test Environment') {
             node {
                 sh '''
-                           ssh jenkins@172.104.147.135 sudo --stats /var/membership-db /var/ofi_backups/membership-db &&
+                            ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats /var/membership-db /var/ofi_backups/membership-db &&
                             rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  jenkins@172.104.147.135:/var/membership-db'''
             }
         }
@@ -16,7 +16,7 @@ node {
         stage('Deploy Frontend to Staging Environment') {
             node {
                 sh '''
-                        ssh jenkins@172.104.147.135 sudo rsync -avzh --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
+                        ssh jenkins@172.104.147.135 sudo rsync -avzhm --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
                         rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  jenkins@172.104.147.135:/var/www_setltestnet'''
 
             }
