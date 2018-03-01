@@ -42,6 +42,22 @@ node {
             sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
         }
 
+        stage('Deploy Blockchain jars to Test Environment') {
+            node {
+                sh '''
+                        rsync -avhmp --stats /var/lib/jenkins/Deploy/blockchain/scripts/*  jenkins@172.104.147.135: &&
+                        ssh -t jenkins@172.104.147.135 \'cd /root ; bash && ./stop_blockchain.sh \'
+                        ssh -t jenkins@172.104.147.135 rm -f /usr/local/jar/*.jar &&
+                        ssh -t jenkins@172.104.147.135 rm -f /usr/local/jar/cmdtools &&
+                        ssh -t jenkins@172.104.147.135 rm -f /usr/local/jar/wallnode &&
+                        ssh -t jenkins@172.104.147.135 rm -f /usr/local/jar/valnode &&
+                        rsync -avhm --stats /var/lib/jenkins/Deploy/blockchain/*.jar  jenkins@172.104.147.135:/usr/local/jar &&
+                        ssh -t jenkins@172.104.147.135 \'cd /root ; bash &&  ./relink.sh \' &&
+                        ssh -t jenkins@172.104.147.135 \'cd /root ; bash && ./start_blockchain.sh \''''
+
+            }
+        }
+
         stage('Restart Node Server') {
             sh 'ssh -t jenkins@172.104.147.135 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
         }
