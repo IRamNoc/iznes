@@ -163,7 +163,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService]
             },
             {
-                path: 'fund-access',
+                path: 'fund-access/:kycId',
                 component: OfiFundAccessComponent,
                 canActivate: [LoginGuardService]
             },
