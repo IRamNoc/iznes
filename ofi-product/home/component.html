@@ -1,0 +1,47 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="am-product-home"><i class="fa fa-align-left"></i>
+        <span>Shares / Funds / Umbrella funds</span></h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <p>
+        Here are all the Shares / Funds and Umbrella funds that were created by [AM to replace].<br>
+        You can also add a new share, a new fund, a new umbrella fund:
+    </p>
+</div>
+
+<div class="well" *ngFor="let panel of panelDefs">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-9" (click)="panel.open = !panel.open; $event.preventDefault();">
+            <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i> {{panel.title}}
+        </div>
+        <div class="col-xs-3 text-right">
+            <button *ngIf="panel.action" class="btn btn-default action-button" (click)="addForm(panel.action.type)"><i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}</button>
+        </div>
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <div class="mb-1" *ngIf="panel.title === 'Shares'">
+                Display only active Shares <label class="switch"><input type="checkbox" class="form-control" id="switchActiveShares" [(ngModel)]="showOnlyActive"><span class="slider round"></span></label>
+            </div>
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column [clrDgField]="'column.dataSource'" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
+                <!--<clr-dg-row *clrDgItems="let row of panel.data">-->
+                    <!--<clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">-->
+                        <!--<a *ngIf="dataCol.link" [routerLink]="buildLink(dataCol, row)">-->
+                            <!--{{row[dataCol.dataSource]}}-->
+                        <!--</a>-->
+                        <!--<span *ngIf="!dataCol.link">-->
+                            <!--{{row[dataCol.dataSource]}}-->
+                        <!--</span>-->
+                    <!--</clr-dg-cell>-->
+                <!--</clr-dg-row>-->
+            </clr-datagrid>
+        </div>
+    </div>
+</div>
