@@ -1,0 +1,25 @@
+:host {
+    .message-field {
+        display: flex;
+        flex-wrap: wrap;
+
+        .hr-line-dashed {
+            flex: 1 0 100%;
+        }
+    }
+
+    .message-field--name {
+        flex: 0 1 35%;
+    }
+
+    .message-field--content {
+        flex: 0 1 65%;
+        font-weight: 700;
+    }
+
+    .message-state {
+        background: #F8F8F8;
+        color: #A5DC86;
+        padding: 10px;
+    }
+}
