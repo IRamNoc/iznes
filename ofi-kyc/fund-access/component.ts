@@ -1,28 +1,27 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, OnInit} from '@angular/core';
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
 
-import { fromJS } from 'immutable';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {MessagesService, MessageActionsConfig} from '@setl/core-messages';
-
-/* Ofi orders request service. */
-import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
-import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
+import {ActivatedRoute} from '@angular/router';
+import {mDateHelper, immutableHelper} from '@setl/utils';
 import {Observable} from 'rxjs/Observable';
+import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
+import {AllFundShareDetail} from '../../ofi-store/ofi-product/fundshare/model';
+import * as _ from 'lodash';
 
 @Component({
     styleUrls: ['./component.css'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiFundAccessComponent implements OnDestroy {
+export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     appConfig: AppConfig;
-    hasFilledAdditionnalInfos = false;
 
     /* Public properties. */
     investorData = {};
@@ -34,11 +33,18 @@ export class OfiFundAccessComponent implements OnDestroy {
         remove: false
     };
     amCompany: string;
+    kycId: number;
+    investorWalletId: number;
+    investorWalletIdFundAccess: Array<number>;
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
 
     /* Observables. */
+    @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedAmAllFundShareList']) requestedAmAllFundShareListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'amAllFundShareList']) amAllFundShareListOb: Observable<any>;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -46,12 +52,29 @@ export class OfiFundAccessComponent implements OnDestroy {
                 private toasterService: ToasterService,
                 private _ofiKycService: OfiKycService,
                 private _messagesService: MessagesService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                private _route: ActivatedRoute,
+                private _ofiFundShareService: OfiFundShareService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
     }
 
     ngOnInit() {
+        this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
+        this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
+        this.subscriptions.push(this.requestedAmKycListObs.subscribe(requested => {
+            this.requestAllFundShareList(requested);
+        }));
+        this.subscriptions.push(this.amAllFundShareListOb.subscribe(navList => {
+            this.updateAllFundShareList(navList);
+        }));
+
+        // Get the parameter passed to URL
+        this._route.params.subscribe((params) => {
+            if (params.kycId) {
+                this.kycId = Number(params.kycId);
+            }
+        });
+
         this.investorData = {
             kycID: 1,
             investorWalletID: 6,
@@ -63,28 +86,12 @@ export class OfiFundAccessComponent implements OnDestroy {
             approvalDate: '2018-02-28'
         };
 
-        //test data.
-        this.tableData = [
-            {
-                id: 1,
-                fundName: 'Fund 1',
-                shareName: 'Share Name A',
-                isin: 'FR123457890',
-                access: false
-            }
-        ];
+        // test data.
+        this.tableData = [];
 
-        this.tableData.forEach((row)=>{
-            this.access[row['id']] = {
-                access: row['access'],
-                changed: false,
-                fundName: row['fundName'],
-                shareName: row['shareName'],
-                isin: row['isin']
-            };
-        });
+        this.access = {};
 
-        this.amCompany = 'AM Company';
+        this.amCompany = '';
     }
 
     /* On Destroy. */
@@ -98,19 +105,19 @@ export class OfiFundAccessComponent implements OnDestroy {
         }
     }
 
-    displayModal(){
+    displayModal() {
         this.changes = {
             add: false,
             remove: false
         };
-        Object.keys(this.access).forEach((key)=>{
-            if (this.access[key]['changed']) this.changes[(this.access[key]['access']?'add':'remove')] = true;
+        Object.keys(this.access).forEach((key) => {
+            if (this.access[key]['changed']) this.changes[(this.access[key]['access'] ? 'add' : 'remove')] = true;
         });
         this.showModal = true;
     }
 
-    saveAccess(){
-        if (this.changes['add'] || this.changes['remove']){
+    saveAccess() {
+        if (this.changes['add'] || this.changes['remove']) {
             let shareArray = {
                 add: [],
                 remove: []
@@ -119,13 +126,13 @@ export class OfiFundAccessComponent implements OnDestroy {
                 add: {},
                 remove: {}
             };
-            Object.keys(this.access).forEach((key)=> {
-                if (this.access[key]['changed']){
-                    shareArray[(this.access[key]['access']?'add':'remove')].push(key);
+            Object.keys(this.access).forEach((key) => {
+                if (this.access[key]['changed']) {
+                    shareArray[(this.access[key]['access'] ? 'add' : 'remove')].push(key);
 
                     //array for email
-                    if (emailArray[(this.access[key]['access']?'add':'remove')][this.access[key]['fundName']]==null) emailArray[(this.access[key]['access']?'add':'remove')][this.access[key]['fundName']] = [];
-                    emailArray[(this.access[key]['access']?'add':'remove')][this.access[key]['fundName']].push({
+                    if (emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] == null) emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] = [];
+                    emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']].push({
                         shareName: this.access[key]['shareName'],
                         isin: this.access[key]['isin']
                     });
@@ -140,6 +147,7 @@ export class OfiFundAccessComponent implements OnDestroy {
                         investorWalletID: this.investorData['investorWalletID'],
                         shareArray: shareArray['add']
                     }).then(() => {
+                        this.setChangedToFalse(shareArray['add']);
                         // success call back
                         resolve();
                     }, () => {
@@ -155,6 +163,7 @@ export class OfiFundAccessComponent implements OnDestroy {
                         investorWalletID: this.investorData['investorWalletID'],
                         shareArray: shareArray['remove']
                     }).then(() => {
+                        this.setChangedToFalse(shareArray['remove']);
                         // success call back
                         resolve();
                     }, () => {
@@ -163,7 +172,7 @@ export class OfiFundAccessComponent implements OnDestroy {
                     });
                 }));
             }
-            Promise.all(promises).then(()=>{
+            Promise.all(promises).then(() => {
                 this.toasterService.pop('success', 'Share Permissions Saved');
 
                 let recipientsArr = [this.investorData['investorWalletID']];
@@ -192,5 +201,91 @@ export class OfiFundAccessComponent implements OnDestroy {
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
+    }
+
+    setAmKycListRequested(requested) {
+        if (!requested) {
+            OfiKycService.defaultRequestAmKycList(this._ofiKycService, this._ngRedux);
+        }
+    }
+
+    getAmKycList(amKycList: any) {
+        if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
+            const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
+            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
+            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD hh:mm:ss');
+            const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
+
+            this.investorData = {
+                'kycID': kyc.kycID,
+                'investorWalletID': kyc.investorWalletID,
+                'companyName': kyc.investorCompanyName,
+                'firstName': kyc.investorFirstName,
+                'lastName': kyc.investorLastName,
+                'email': kyc.investorEmail,
+                'telephoneNumber': phoneNumber,
+                'approvalDate': approvalDateRequest
+            };
+
+            this.amCompany = kyc.companyName;
+            this.investorWalletId = kyc.investorWalletID;
+
+            console.log(this.investorData);
+
+            // Get the fund access for investor walletID and render it.
+            this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
+                this.investorWalletIdFundAccess = immutableHelper.reduce(_.get(data, '[1].Data', []), (result, item) => {
+                    result.push(item.get('shareID', 0));
+                    return result;
+                }, []);
+                this.updateFundAccess();
+            }).catch((e) => {
+
+            });
+        }
+    }
+
+    requestAllFundShareList(requested: boolean) {
+
+        if (requested) {
+            return;
+        }
+
+        OfiFundShareService.defaultRequestAmAllFundShareList(this._ofiFundShareService, this._ngRedux);
+    }
+
+    updateAllFundShareList(shareData: { [shareId: string]: AllFundShareDetail }) {
+        this.tableData = immutableHelper.reduce(shareData, (result, item) => {
+            result.push({
+                id: item.get('shareId', ''),
+                fundName: item.get('fundName', ''),
+                shareName: item.get('shareName', ''),
+                isin: item.get('fundShareIsin', ''),
+                assess: false
+            });
+            return result;
+        }, []);
+
+    }
+
+    updateFundAccess() {
+        this.tableData.forEach((row) => {
+            this.access[row['id']] = {
+                access: this.investorWalletIdFundAccess.indexOf(row['id']) !== -1,
+                changed: false,
+                fundName: row['fundName'],
+                shareName: row['shareName'],
+                isin: row['isin']
+            };
+        });
+        console.log(this.access);
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    setChangedToFalse(sharesArray: Array<number>) {
+        sharesArray.forEach((shareId) => {
+            this.access[shareId]['changed'] = false;
+        });
     }
 }
