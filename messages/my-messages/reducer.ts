@@ -191,9 +191,6 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
             let subject, content;
             try {
                 subject = window.atob(thisMessageDetail.get('subject'));
-                if (window.btoa(window.atob(subject)) === subject) {
-                    subject = window.atob(subject);
-                }
             } catch (e) {
                 // something failed
                 subject = thisMessageDetail.get('subject');
