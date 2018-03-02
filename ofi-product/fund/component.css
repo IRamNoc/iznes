@@ -1,0 +1,42 @@
+.btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.btn-container p {
+    align-self: center;
+    margin-right: 30px;
+}
+
+.btn-container a {
+    margin-bottom: 10px;
+}
+
+.umbrella-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.umbrella-container p {
+    margin-bottom: 10px;
+}
+
+.umbrella-container .form-group {
+    width: 50%;
+    align-self: flex-end;
+}
+
+.submit-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.submit-container button {
+    width: 150px;
+    margin: 10px 10px;
+}

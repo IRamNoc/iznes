@@ -282,7 +282,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._router.navigateByUrl('/product-module/share');
                 break;
             case 'fund':
-                this._router.navigateByUrl('/product-module/fund');
+                this._router.navigateByUrl('/product-module/fund/create');
                 break;
             case 'ufund':
                 this._router.navigateByUrl('/product-module/umbrella-fund/0');

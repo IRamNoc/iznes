@@ -54,11 +54,13 @@
             </section>
 
             <section class="form-block">
-                <app-text-input-list
-                        [title]="'Info: Details of your Asset Management company'"
-                        [content]="amDetails"
-                        [additionnalText]="'You can contact your asset manager directly.'"
-                ></app-text-input-list>
+                <div class="text-input-list">
+                    <app-text-input-list
+                            [title]="'Info: Details of your Asset Management company'"
+                            [content]="amDetails"
+                            [additionnalText]="'You can contact your asset manager directly.'"
+                    ></app-text-input-list>
+                </div>
              </section>
         </clr-tab-content>
     </clr-tab>

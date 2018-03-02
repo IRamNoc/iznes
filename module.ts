@@ -39,6 +39,7 @@ import {MultilingualModule} from '@setl/multilingual';
         OfiCorpActionsModule
     ],
     declarations: [
+
     ],
     providers: [OfiPostTxService]
 })
