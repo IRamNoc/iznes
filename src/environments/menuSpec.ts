@@ -257,6 +257,13 @@ const assetServicing = {
         }
     ]
 };
+const ofiProductHome = {
+    label: 'Shares / Funds / Umbrella funds',
+    label_txt: 'txt_sharesfundsumbrellafunds',
+    icon_class: 'fa fa-bar-chart',
+    element_id: 'menu-product-home',
+    router_link: '/product-module/home'
+};
 const productsManagementCompany = {
     label: 'Management Company',
     label_txt: 'txt_managementcompany',
@@ -291,7 +298,15 @@ const profileMyInfo = {
     label_txt: 'txt_my_information',
     icon_class: '',
     element_id: 'top-menu-my-info',
-    router_link: '/account/my-account-details'
+    router_link: '/profile/my-informations'
+};
+
+const kycDocuments = {
+    label: 'KYC Documents',
+    label_txt: 'txt_kyc_documents',
+    icon_class: 'fa fa-file',
+    element_id: 'top-menu-kyc-documents',
+    router_link: '/kyc-am-documents'
 };
 
 export const menuSpec: MenuSpec = {
@@ -314,7 +329,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_invite_investors',
                     icon_class: '',
                     element_id: 'top-menu-invite-investors',
-                    router_link: ''
+                    router_link: '/invite-investors'
                 },
                 {
                     label: 'Add an AM',
@@ -381,6 +396,7 @@ export const menuSpec: MenuSpec = {
                 icon_class: 'fa fa-industry',
                 element_id: 'menu-product-module',
                 children: [
+                    ofiProductHome,
                     productsManagementCompany,
                     productsSicav,
                     productsFund,
@@ -397,7 +413,8 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                     reportsHistoricalOrders,
                 ]
-            }
+            },
+            kycDocuments
         ],
         valuer: [
             home,

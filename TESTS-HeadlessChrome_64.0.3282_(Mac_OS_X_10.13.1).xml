@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<testsuite name="HeadlessChrome 64.0.3282 (Mac OS X 10.13.1)" package="" timestamp="2018-02-15T16:45:25" id="0" hostname="iMac-de-Laurent.local" tests="31" errors="0" failures="0" time="6.792">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/64.0.3282.167 Safari/537.36"/>
+  </properties>
+  <testcase name="FileViewerComponent should display message given no fileHash or pdfID" time="0.373" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).FileViewerComponent"/>
+  <testcase name="FileViewerComponent should display button given a fileHash or pdfID" time="0.274" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).FileViewerComponent"/>
+  <testcase name="FileViewerComponent should create a valid file download URL given a fileHash" time="0.243" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).FileViewerComponent"/>
+  <testcase name="FileViewerComponent should create a valid file download URL given a pdfId" time="0.222" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).FileViewerComponent"/>
+  <testcase name="LoginGuardService should be created" time="0.035" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).LoginGuardService"/>
+  <testcase name="LoginGuardService when user is login, canActivate should return true" time="0.017" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).LoginGuardService"/>
+  <testcase name="LoginGuardService when user is not login, canActivate should return false" time="0.028" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).LoginGuardService"/>
+  <testcase name="LoginGuardService when user logged in, isLogin should set to true" time="0.031" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).LoginGuardService"/>
+  <testcase name="LoginGuardService when user loged out, isLogin should set to false" time="0.016" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).LoginGuardService"/>
+  <testcase name="SetlLoginComComponent should be created" time="0.324" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent should has the correct input fields" time="0.294" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent update method should be called, when authentication changed" time="0.291" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent Initialisation memberInitialisation static method should be call, when updateState is call" time="0.301" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent If Login button click, login method should be called" time="0.292" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent If Login button click, login method should be called" time="0.282" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent handleLoginFailMessage should handle response correctly" time="0.292" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent AlertsService should called with error type" time="0.315" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent login method: if form is valid, loginRequest should be called" time="0.275" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent login method: if form is invalid, loginRequest should be not be called" time="0.256" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlLoginComComponent login method: if there is alert popup present, the the popup should be remove, and login request should not be called" time="0.266" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlLoginComComponent"/>
+  <testcase name="SetlMessagesComponent should be created" time="0.365" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="SetlMessagesComponent should be able to decrypt message contents" time="0" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent">
+    <skipped/>
+  </testcase>
+  <testcase name="SetlMessagesComponent should be able to set the message list" time="0.539" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="SetlMessagesComponent should call requestMailboxByCategory on Page Change" time="0.37" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="SetlMessagesComponent should call requestMailboxByCategory on refreshMailbox" time="0.351" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="SetlMessagesComponent should call mailHelper deleteMessage and refreshMailBox when deleteMessage is called" time="0.361" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="SetlMessagesComponent should be able to reset messages" time="0.36" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).SetlMessagesComponent"/>
+  <testcase name="Service: ObUtilsService should ..." time="0.003" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).Service: ObUtilsService"/>
+  <testcase name="Service: ObUtilsService should check isDateValid method" time="0.01" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).Service: ObUtilsService"/>
+  <testcase name="Service: ObUtilsService should check updateSelected method for day" time="0.003" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).Service: ObUtilsService"/>
+  <testcase name="Service: ObUtilsService should check updateSelected method for month" time="0.003" classname="HeadlessChrome_64_0_3282_(Mac_OS_X_10_13_1).Service: ObUtilsService"/>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>
