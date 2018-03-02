@@ -12,7 +12,7 @@
     </a>
 
     <section *ngIf="childMenuJson.children" class="nav-group collapsible">
-        <label [attr.id]="childMenuJson.element_id" menu-dropdown appHighlight><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
+        <label [attr.id]="childMenuJson.element_id" menu-dropdown appHighlight [class.menuParent]="menuParentOpen == childMenuJson.element_id" (click)="menuSelected(childMenuJson.element_id)"><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
             <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
         <ul class="nav-list">
             <li *ngFor="let innerChild of childMenuJson.children">
