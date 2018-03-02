@@ -99,7 +99,7 @@
         </span>
     </span>
 </span>
-    <div class="option-wrapper ui-select-choices dropdown-menu" *ngIf="optionsOpened && inputMode">
+    <div class="option-wrapper ui-select-choices dropdown-menu {{(active.length == 0 ? 'no-active-top' : '')}}" *ngIf="optionsOpened && inputMode">
 
         <div class="select-search">
 
