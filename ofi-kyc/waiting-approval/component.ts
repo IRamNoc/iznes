@@ -74,6 +74,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.statusId = null;
         this.amKycList = [];
         this.amCompanyName = '';
+        this.userDetail = {};
 
         // Get the parameter passed to URL
         this.route.params.subscribe((params) => {
@@ -148,8 +149,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     getAmKycList(amKycList: any) {
         if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
-            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ?
-                `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
+
+            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber)
+                ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
 
             const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD hh:mm:ss');
             const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
@@ -218,8 +220,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     onAskMoreInfoKyc() {
-        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber) ?
-            `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
+        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber)
+            ? `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
 
         const payload = {
             kycID: this.kycId,
@@ -260,7 +262,6 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             /* Send action message to investor */
             this.sendActionMessageToInvestor(result[1].Data[0].investorWalletID);
-
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -299,8 +300,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     handleRejectButtonClick() {
         this.isRejectModalDisplayed = false;
 
-        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber) ?
-            `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
+        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber)
+            ? `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
 
         const payload = {
             kycID: this.kycId,
