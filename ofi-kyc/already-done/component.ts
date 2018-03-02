@@ -29,9 +29,11 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         invitationToken: null,
         amManagementCompanyID: null,
     };
+    lang: string;
 
     private unsubscribe: Subject<any> = new Subject();
 
+    @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
 
     constructor(
@@ -61,6 +63,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
             });
+
+        this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
     }
 
     onCancel() {
@@ -69,10 +73,20 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.kycDoneForm.value['opt'] === 'YES') {
+            this.sendNewKycBody = Object.assign({}, this.sendNewKycBody, {
+                selectedChoice: true,
+                lang: this.lang
+            });
+
             this.ofiKycService.sendNewKyc(this.sendNewKycBody);
             this.router.navigate(['new-investor', 'already-done', 'waiting-for-validation']);
         } else {
             this.showModal = true;
+
+            this.sendNewKycBody = Object.assign({}, this.sendNewKycBody, {
+                selectedChoice: false,
+                lang: this.lang
+            });
         }
     }
 
