@@ -14,6 +14,8 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
     public unreadMessages;
     menuJson: any;
+    menuParent = [];
+    menuParentOpen: string;
 
     private subscription: any;
 
@@ -47,6 +49,10 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             }[userType];
             console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
             this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
+
+            this.menuJson.forEach((row)=>{
+                if (row['children'] != null) this.menuParent.push(row['element_id']);
+            });
         });
 
     }
@@ -92,6 +98,14 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
      */
     public activeRoute(route): boolean {
         return !!(this.router.url.indexOf(route) !== -1);
+    }
+
+    public menuSelected(id){
+        if (this.menuParentOpen == id){
+            this.menuParentOpen = '';
+        }else if (this.menuParent.indexOf(id) !== -1) {
+            this.menuParentOpen = id;
+        }
     }
 
 }
