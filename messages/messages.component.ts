@@ -205,7 +205,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 message.isChecked = false;
                 return message;
             }
-        );
+        });
 
         if (this.mailCounts && this.currentCategory !== 999) {
             this.currentBox = this.categories[this.currentCategory];
