@@ -192,16 +192,20 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             if (message.senderId) {
                 if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
                     message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
+                } else {
+                    if (message.senderId = -1) {
+                        message.senderWalletName = 'System message';
+                    }
                 }
-            }
-            if (message.recipientId) {
-                if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
-                    message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                if (message.recipientId) {
+                    if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
+                        message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                    }
                 }
+                message.isChecked = false;
+                return message;
             }
-            message.isChecked = false;
-            return message;
-        });
+        );
 
         if (this.mailCounts && this.currentCategory !== 999) {
             this.currentBox = this.categories[this.currentCategory];
@@ -242,7 +246,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     uncheckAll() {
         this.messages = this.messages.map((message) => {
-            return { ...message, isChecked: false };
+            return {...message, isChecked: false};
         });
     }
 
@@ -437,13 +441,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public sendMessage() {
         const formData = this.messageComposeForm.value;
-        const bodyObj = {
-            general: btoa(formData.body),
-            action: ''
-        };
 
-        const body = JSON.stringify(bodyObj);
-        const subject = btoa(formData.subject);
+        const generalBody = formData.body;
+        const subject = formData.subject;
         const recipients = {};
 
         for (const i in formData.recipients) {
@@ -451,10 +451,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             recipients[i] = obj.walletId;
         }
 
-        if ( !formData.subject || !bodyObj.general || !formData.recipients ) {
+        if (!formData.subject || !generalBody || !formData.recipients) {
             this.toaster.pop('error', 'Please fill out all fields');
         } else {
-            this.messageService.sendMessage(recipients, subject, body, null).then(
+            this.messageService.sendMessage(recipients, subject, generalBody, null).then(
                 () => {
                     this.toaster.pop('success', 'Your message has been sent!');
                     this.closeAndResetComposed();
