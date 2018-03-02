@@ -172,14 +172,20 @@
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="fundCreationDate">Fund Creation Date (YYYY-MM-JJ)</label>
-                                            <input type="text" name="fundCreationDate" id="fundCreationDate" formControlName="fundCreationDate" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="input-group">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                            </div>
+                                            <div *ngIf="false" class="text-danger">User error feedback</div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="fundLaunchDate">Fund Launch Date (YYYY-MM-DD)</label>
-                                            <input type="text" name="fundLaunchDate" id="fundLaunchDate" formControlName="fundLaunchDate" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="input-group">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="fundLaunchDate" formControlName="fundLaunchDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                            </div>
+                                            <div *ngIf="false" class="text-danger">User error feedback</div>
                                         </div>
 
                                         <div class="form-group required-field col-sm-6">
@@ -196,8 +202,11 @@
 
                                         <div class="form-group required-field col-sm-6">
                                             <label class="control-label" for="fiscalYearEnd">Fiscal Year End (MM-DD)</label>
-                                            <input type="text" name="fiscalYearEnd" id="fiscalYearEnd" formControlName="fiscalYearEnd" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="input-group">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configDate" placeholder="Choose a date" mode="month" theme="dp-material"/>
+                                            </div>
+                                            <div *ngIf="false" class="text-danger">User error feedback</div>
                                         </div>
 
                                         <div class="form-group required-field col-sm-6">
@@ -284,145 +293,158 @@
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="giin">Global Intermediary Identification Number (GIIN)</label>
                                             <input type="text" name="giin" id="giin" formControlName="giin" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="delegatedManagementCompany">Delegated Management Company</label>
                                             <input type="text" name="delegatedManagementCompany" id="delegatedManagementCompany" formControlName="delegatedManagementCompany" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="investmentAdvisor">Investment Advisor</label>
                                             <input type="text" name="investmentAdvisor" id="investmentAdvisor" formControlName="investmentAdvisor" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="auditor">Auditor</label>
                                             <input type="text" name="auditor" id="auditor" formControlName="auditor" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="taxAuditor">Tax Auditor</label>
                                             <input type="text" name="taxAuditor" id="taxAuditor" formControlName="taxAuditor" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="legalAdvisor">Legal Advisor</label>
                                             <input type="text" name="legalAdvisor" id="legalAdvisor" formControlName="legalAdvisor" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="directors">Directors</label>
                                             <input type="text" name="directors" id="directors" formControlName="directors" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="pocket">Pocket</label>
                                             <input type="text" name="pocket" id="pocket" formControlName="pocket" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="hasEmbeddedDerivatives">Has Embedded Derivatives (Yes / No)</label>
-                                            <input type="text" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives" formControlName="hasEmbeddedDerivatives" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives" formControlName="hasEmbeddedDerivatives" />
+                                                <label for="hasEmbeddedDerivatives">Has Embedded Derivatives</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="hasCapitalPreservation">Has Capital Preservation (Yes / No)</label>
-                                            <input type="text" name="hasCapitalPreservation" id="hasCapitalPreservation" formControlName="hasCapitalPreservation" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasCapitalPreservation" id="hasCapitalPreservation" formControlName="hasCapitalPreservation" />
+                                                <label for="hasCapitalPreservation">Has Capital Preservation</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="capitalPreservationLevel">Capital Preservation Level</label>
                                             <input type="text" name="capitalPreservationLevel" id="capitalPreservationLevel" formControlName="capitalPreservationLevel" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="capitalPreservationPeriod">Capital Preservation Period</label>
                                             <input type="text" name="capitalPreservationPeriod" id="capitalPreservationPeriod" formControlName="capitalPreservationPeriod" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="hasCppi">Has CPPI (Yes / No)</label>
-                                            <input type="text" name="hasCppi" id="hasCppi" formControlName="hasCppi" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasCppi" id="hasCppi" formControlName="hasCppi" />
+                                                <label for="hasCppi">Has CPPI</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="cppiMultiplier">CPPI Multiplier</label>
                                             <input type="text" name="cppiMultiplier" id="cppiMultiplier" formControlName="cppiMultiplier" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="hasHedgeFundStrategy">Has Hedge Fund Strategy (Yes / No)</label>
-                                            <input type="text" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy" formControlName="hasHedgeFundStrategy" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy" formControlName="hasHedgeFundStrategy" />
+                                                <label for="hasHedgeFundStrategy">Has Hedge Fund Strategy</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="isLeveraged">Is Leveraged (Yes / No)</label>
-                                            <input type="text" name="isLeveraged" id="isLeveraged" formControlName="isLeveraged" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="isLeveraged" id="isLeveraged" formControlName="isLeveraged" />
+                                                <label for="isLeveraged">Is Leveraged</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="has130/30Strategy">Has 130/30 Strategy (Yes / No)</label>
-                                            <input type="text" name="has130/30Strategy" id="has130/30Strategy" formControlName="has130/30Strategy" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="has130/30Strategy" id="has130/30Strategy" formControlName="has130/30Strategy" />
+                                                <label for="has130/30Strategy">Has 130/30 Strategy</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="isFundTargetingEos">Is Fund Targeting Environmental or Social Objectives (EOS) (Yes / No)</label>
-                                            <input type="text" name="isFundTargetingEos" id="isFundTargetingEos" formControlName="isFundTargetingEos" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="isFundTargetingEos" id="isFundTargetingEos" formControlName="isFundTargetingEos" />
+                                                <label for="isFundTargetingEos">Is Fund Targeting Environmental or Social Objectives (EOS)</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="isFundTargetingSri">Is Fund Targeting Socially Responsible Investment (SRI) (Yes / No)</label>
-                                            <input type="text" name="isFundTargetingSri" id="isFundTargetingSri" formControlName="isFundTargetingSri" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="isFundTargetingSri" id="isFundTargetingSri" formControlName="isFundTargetingSri" />
+                                                <label for="isFundTargetingSri">Is Fund Targeting Socially Responsible Investment (SRI)</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="isPassiveFund">Is Passive Fund (Yes / No)</label>
-                                            <input type="text" name="isPassiveFund" id="isPassiveFund" formControlName="isPassiveFund" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="isPassiveFund" id="isPassiveFund" formControlName="isPassiveFund" />
+                                                <label for="isPassiveFund">Is Passive Fund</label>
+                                            </div>
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="hasSecurityLending">Has Security Lending (Yes / No)</label>
-                                            <input type="text" name="hasSecurityLending" id="hasSecurityLending" formControlName="hasSecurityLending" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasSecurityLending" id="hasSecurityLending" formControlName="hasSecurityLending" />
+                                                <label for="hasSecurityLending">Has Security Lending</label>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group col-sm-6">
+                                        <div class="form-group checkbox-container col-sm-6">
                                             <label class="control-label" for="hasSwap">Has Swap (Yes / No)</label>
-                                            <input type="text" name="hasSwap" id="hasSwap" formControlName="hasSwap" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasSwap" id="hasSwap" formControlName="hasSwap" />
+                                                <label for="hasSwap">Has Swap</label>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group col-sm-6">
+                                        <div class="form-group checkbox-container col-sm-6">
                                             <label class="control-label" for="hasDurationHedge">Has Duration Hedge (Yes / No)</label>
-                                            <input type="text" name="hasDurationHedge" id="hasDurationHedge" formControlName="hasDurationHedge" />
-                                            <span class="field-error">Field is required</span>
+                                            <div class="checkbox">
+                                                <input type="checkbox" name="hasDurationHedge" id="hasDurationHedge" formControlName="hasDurationHedge" />
+                                                <label for="hasDurationHedge">Has Duration Hedge</label>
+                                            </div>
+
                                         </div>
 
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="investmentObjective">Investment Objective</label>
                                             <input type="text" name="investmentObjective" id="investmentObjective" formControlName="investmentObjective" />
-                                            <span class="field-error">Field is required</span>
                                         </div>
 
                                     </div>

@@ -40,3 +40,11 @@
     width: 150px;
     margin: 10px 10px;
 }
+
+form .form-group>.checkbox {
+    margin-left: 24px;
+}
+
+.checkbox label:first-child {
+    padding-left: 0;
+}

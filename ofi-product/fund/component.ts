@@ -35,9 +35,21 @@ export class FundComponent implements OnInit, OnDestroy {
         },
     ];
 
+    // Locale
+    language = 'fr';
+
     // forms
     umbrellaForm: FormGroup;
     fundForm: FormGroup;
+
+    // Datepicker config
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language
+    };
 
 
     isFundFormVisible = false;
