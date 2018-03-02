@@ -84,6 +84,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         bold: false,
     };
 
+    public showCross = false;
+
     constructor(private ngRedux: NgRedux<any>,
                 private myMessageService: MyMessagesService,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -202,6 +204,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                         message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                     }
                 }
+
                 message.isChecked = false;
                 return message;
             }
