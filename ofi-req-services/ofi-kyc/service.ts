@@ -195,6 +195,8 @@ export class OfiKycService {
             inviteToken: options.invitationToken,
             amManagementCompanyID: options.amManagementCompanyID,
             investorWalletID: 0,
+            selectedChoice: options.selectedChoice,
+            lang: options.lang
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
