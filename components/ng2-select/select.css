@@ -147,8 +147,7 @@
 
 .ui-select-match.dropdown.open .ui-select-toggle {
   border-bottom: none !important;
-  border-radius: .125rem .125rem 0 0;
-  background-image: linear-gradient(#eee 20%, #fff 80%); }
+  border-radius: .125rem .125rem 0 0; }
 .ui-select-match.dropdown.open a.btn {
   background: transparent; }
 
@@ -212,5 +211,8 @@
   margin-left: 0px !important;
   border: 1px solid #dadada !important;
   padding: 0px 10px !important; }
+
+.no-active-top {
+  top: 1px; }
 
 /*# sourceMappingURL=select.css.map */

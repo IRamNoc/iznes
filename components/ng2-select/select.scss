@@ -177,7 +177,7 @@
     .ui-select-toggle {
         border-bottom: none !important;
         border-radius: .125rem .125rem 0 0;
-        background-image: linear-gradient(#eee 20%, #fff 80%);
+        //background-image: linear-gradient(#eee 20%, #fff 80%);
     }
 
     a.btn {
@@ -264,4 +264,6 @@
     padding: 0px 10px !important;
 }
 
-
+.no-active-top{
+    top: 1px;
+}
