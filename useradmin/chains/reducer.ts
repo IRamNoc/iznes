@@ -4,7 +4,7 @@ import {
     CLEAR_REQUESTED_CHAIN_LIST
 } from './actions';
 import {ChainDetail, ChainsState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 

@@ -5,7 +5,7 @@ import {
     SET_REQUESTED_ALL_INSTRUMENTS,
     CLEAR_REQUESTED_ALL_INSTRUMENTS
 } from './actions';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 

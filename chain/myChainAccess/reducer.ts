@@ -5,7 +5,7 @@ import {
 } from './actions';
 
 import {MyChainAccessState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS} from 'immutable';
 

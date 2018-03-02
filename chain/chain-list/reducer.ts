@@ -1,7 +1,7 @@
 import {Action} from 'redux';
 import * as ChainActions from './actions';
 import {ChainDetail, ChainListState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 
