@@ -12,9 +12,11 @@ label[menu-dropdown] + ul.nav-list.active {
 .collapsible label[menu-dropdown]:after {
     -webkit-transform: rotate(-90deg) translateX(-7px) translateY(-8px);
     transform: rotate(-90deg) translateX(-7px) translateY(-8px);
+    transition-duration: 0.3s;
 }
 
 .collapsible label[menu-dropdown].menuParent:after {
     -webkit-transform: translateX(-8px) translateY(7px);
     transform: translateX(-8px) translateY(7px);
+    transition-duration: 0.3s;
 }
