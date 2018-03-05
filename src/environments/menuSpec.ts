@@ -50,13 +50,6 @@ const accountModule = {
         }
     ]
 };
-const myOrders = {
-    label: 'My Orders',
-    label_txt: 'txt_myorders',
-    icon_class: 'fa fa-book',
-    element_id: 'menu-my-orders',
-    router_link: '/order-book/my-orders/0'
-};
 const orderBook = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
@@ -494,7 +487,7 @@ export const menuSpec: MenuSpec = {
             },
             listOfFunds,
             manageOrders,
-            myOrders,
+            OrderBook,
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
