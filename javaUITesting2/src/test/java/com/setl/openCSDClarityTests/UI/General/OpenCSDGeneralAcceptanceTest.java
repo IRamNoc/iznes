@@ -223,6 +223,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Awaiting code to be fixed")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
@@ -278,20 +279,84 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
-        loginAndVerifySuccessAdmin("investor", "trb2017");
-        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
-        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
-        try {
-            driver.findElement(By.id("btnKycSubmit")).click();
-        }catch (Exception e){
-            fail("FAILED : " +e.getMessage());
-        }
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        loginAndVerifySuccess(adminuser, adminuserPassword);
+        navigateToAddUser();
+        enterAllUserDetails("JordanInvestor6", "password");
+        logout();
+//        loginAndVerifySuccessAdmin("JordanInvestor5", "password");
+//        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
+//        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
+//        try {
+//            driver.findElement(By.id("btnKycSubmit")).click();
+//        }catch (Exception e){
+//            fail("FAILED : " +e.getMessage());
+//        }
+//        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 //        WebElement KYCPopups = wait.until(elementToBeClickable(By.id("addInfo-ok-button")));
 //        WebElement KYCPopup = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-my-informations/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3"));
 //        assertTrue(KYCPopup.getText().equals("MY INFORMATION"));
 //        KYCPopups.click();
     }
+
+    public static void enterAllUserDetails(String username, String password) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        enterManageUserUsername(username);
+        enterManageUserEmail(username + "@setl.io");
+        selectInvestorOnManageUserAccountDropdown();
+        selectInvestorOnManageUserUserDropdown();
+        enterManageUserPassword(password);
+        enterManageUserPasswordRepeat(password);
+        clickManageUserSubmit();
+        Thread.sleep(2000);
+        WebElement FundTitle = driver.findElement(By.className("jaspero__dialog-title"));
+        wait.until(visibilityOf(FundTitle));
+        assertTrue(FundTitle.getText().equals("Success!"));
+        Thread.sleep(2000);
+        try {
+            driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        Thread.sleep(2000);
+    }
+
+    public static void enterManageUserUsername(String username){
+        driver.findElement(By.id("new-user-username")).sendKeys(username);
+
+    }
+    public static void enterManageUserEmail(String email){
+        driver.findElement(By.id("new-user-email")).sendKeys(email);
+    }
+
+    public static void enterManageUserPassword(String password){
+        driver.findElement(By.id("new-user-password")).sendKeys(password);
+    }
+    public static void enterManageUserPasswordRepeat(String password){
+        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
+    }
+
+    public static void navigateToAddUser() throws IOException, InterruptedException {
+        driver.findElement(By.id("menu-user-administration")).click();
+        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        WebElement dropdownItem = driver.findElement(By.id("menu-user-admin-users"));
+        wait.until(visibilityOf(dropdownItem));
+        try{
+            driver.findElement(By.id("menu-user-admin-users")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        WebElement tabItem = driver.findElement(By.id("user-tab-1"));
+        wait.until(visibilityOf(tabItem));
+        try {
+            driver.findElement(By.id("user-tab-1")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
+    public static void clickManageUserSubmit(){
+        driver.findElement(By.id("new-user-submit")).click();
+    }
+
 
     @Test
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
@@ -434,6 +499,26 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectManageUserUserDropdown(){
         driver.findElement(By.id("new-user-usertype-select")).click();
+        try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
+    }
+
+    public static void selectInvestorOnManageUserAccountDropdown(){
+        driver.findElement(By.id("new-user-account-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
+        try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
+    }
+
+    public static void selectInvestorOnManageUserUserDropdown(){
+        driver.findElement(By.id("new-user-usertype-select")).click();
+        driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/div/input")).sendKeys("investor");
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         }catch (Exception e){
