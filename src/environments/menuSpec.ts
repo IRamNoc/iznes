@@ -57,6 +57,28 @@ const myOrders = {
     element_id: 'menu-my-orders',
     router_link: '/order-book/my-orders/0'
 };
+const orderBook = {
+    label: 'Order Book',
+    label_txt: 'txt_orderbook',
+    icon_class: 'fa fa-university',
+    element_id: 'menu-order-module',
+    children: [
+        {
+            label: 'List of funds',
+            label_txt: 'txt_listoffunds',
+            icon_class: 'fa fa-university',
+            element_id: 'menu-list-of-fund',
+            router_link: '/list-of-funds/0'
+        },
+        {
+            label: 'My Orders',
+            label_txt: 'txt_myorders',
+            icon_class: 'fa fa-book',
+            element_id: 'menu-my-orders',
+            router_link: '/order-book/my-orders/0'
+        }
+    ]
+};
 const fundHoldings = {
     label: 'Fund Holidings',
     label_txt: 'txt_fundholidings',
@@ -372,8 +394,7 @@ export const menuSpec: MenuSpec = {
             subPortfolio,
             messages,
             accountModule,
-            listOfFunds,
-            myOrders,
+            orderBook,
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
