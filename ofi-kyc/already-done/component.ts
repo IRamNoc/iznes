@@ -19,30 +19,36 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     kycDoneForm: FormGroup;
     showModal = false;
     amDetails = {
-        firstName: {value: '', label: 'First name'},
-        lastName: {value: '', label: 'Last name'},
-        email: {value: '', label: 'Email'},
-        phone: {value: '', label: 'Phone number'},
-        companyName: {value: '', label: 'AM Company name'},
+        firstName: { value: '', label: 'First name' },
+        lastName: { value: '', label: 'Last name' },
+        email: { value: '', label: 'Email' },
+        phone: { value: '', label: 'Phone number' },
+        companyName: { value: '', label: 'AM Company name' },
     };
+
+    investorDetails = {
+        email: '',
+        phoneCode: '',
+        phoneNumber: '',
+        companyName: ''
+    };
+
     sendNewKycBody = {
         invitationToken: null,
         amManagementCompanyID: null,
     };
-
+    lang: string;
+    @select(['user', 'siteSettings', 'language']) language$;
+    @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
     private unsubscribe: Subject<any> = new Subject();
 
-    @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
-
-    constructor(
-        private fb: FormBuilder,
-        private router: Router,
-        private route: ActivatedRoute,
-        private ofiKycService: OfiKycService,
-        @Inject(APP_CONFIG) appConfig: AppConfig
-    ) {
+    constructor(private fb: FormBuilder,
+                private router: Router,
+                private route: ActivatedRoute,
+                private ofiKycService: OfiKycService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
-        route.params.subscribe((p => this.investorStatus = p['status']))
+        route.params.subscribe((p => this.investorStatus = p['status']));
         this.kycDoneForm = fb.group({
             opt: ['', Validators.required],
         });
@@ -52,6 +58,12 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         this.myInfos$
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
+                const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
+
+                this.investorDetails.email = d.email;
+                this.investorDetails.phoneNumber = phoneNumber;
+                this.investorDetails.companyName = d.companyName;
+
                 this.amDetails.firstName.value = d.invitedBy.firstName;
                 this.amDetails.lastName.value = d.invitedBy.lastName;
                 this.amDetails.email.value = d.invitedBy.email;
@@ -61,6 +73,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
             });
+
+        this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
     }
 
     onCancel() {
@@ -69,10 +83,30 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.kycDoneForm.value['opt'] === 'YES') {
+            this.sendNewKycBody = Object.assign({}, this.sendNewKycBody, {
+                selectedChoice: true,
+                lang: this.lang,
+                amFirstName: this.amDetails.firstName.value,
+                amCompanyName: this.amDetails.companyName.value,
+                investorCompanyName: this.investorDetails.companyName
+            });
+
             this.ofiKycService.sendNewKyc(this.sendNewKycBody);
             this.router.navigate(['new-investor', 'already-done', 'waiting-for-validation']);
         } else {
             this.showModal = true;
+
+            this.sendNewKycBody = Object.assign({}, this.sendNewKycBody, {
+                selectedChoice: false,
+                lang: this.lang,
+                amFirstName: this.amDetails.firstName.value,
+                amCompanyName: this.amDetails.companyName.value,
+                investorCompanyName: this.investorDetails.companyName,
+                investorEmail: this.investorDetails.email,
+                investorPhoneNumber: this.investorDetails.phoneNumber,
+            });
+
+            this.ofiKycService.sendNewKyc(this.sendNewKycBody);
         }
     }
 
