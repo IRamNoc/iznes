@@ -12,4 +12,5 @@ export {UiFormsComponent} from './layouts/ui-form/components/forms/forms.compone
 export {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
 export {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
 export {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.component';
+export {UiModalComponent} from './layouts/ui-form/components/modal/modal.component';
 export {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
