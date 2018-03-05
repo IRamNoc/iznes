@@ -487,7 +487,7 @@ export const menuSpec: MenuSpec = {
             },
             listOfFunds,
             manageOrders,
-            OrderBook,
+            orderBook,
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
