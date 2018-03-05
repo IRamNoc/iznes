@@ -31,7 +31,7 @@ export const environment = {
             active: true
         },
         {
-            name: 'Actions',
+            name: 'Action Messages',
             desc: 'Messages that require actions',
             icon: 'fa-rocket',
             type: 'action',
