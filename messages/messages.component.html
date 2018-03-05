@@ -208,10 +208,8 @@
         <h3>Folders</h3>
 
         <ul *ngFor="let category of categories; let i = index">
-            <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory}" id="messages{{category.type}}">
-                <ng-container *ngIf="i === currentCategory"><i class="fa fa-chevron-right"></i></ng-container>
+            <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory, 'top-level-margin': category.level == 1, 'level-selected': i === currentCategory}" id="messages{{category.type}}">
                 <div *ngFor="let padding of getPadding(category)" class="padding"></div><i class="fa {{category.icon}}"></i> {{category.name}}
-
                 <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
             </li>
         </ul>
