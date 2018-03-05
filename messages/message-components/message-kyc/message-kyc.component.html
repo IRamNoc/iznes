@@ -1,15 +1,69 @@
 <ng-container *ngIf="config">
-    <p>Hello {{config.investorFirstName}},</p>
-    <p>
-        We have the pleasure to inform you that {{amCompanyName}} approved the KYC documents pertaining to
-        {{investor.companyName}}.
-    </p>
+    <div [ngSwitch]="config.type">
+        <!-- KYC approved -->
+        <div *ngSwitchCase="'kycApproved'">
+            <p class="padding">Hello {{config.investorFirstName}},</p>
 
-    <p>
-        {{amCompanyName}} will shortly enable you to access funds’ shares, in order for your company to be able to
-        invest on the IZNES platform.
-    </p>
+            <p class="padding">
+                We have the pleasure to inform you that {{config.amCompanyName}} approved the KYC documents pertaining
+                to {{config.investorCompanyName}}.
+            </p>
 
-    <p>Thank you,</p>
-    <p>The IZNES team.</p>
+            <p class="padding">
+                {{config.amCompanyName}} will shortly enable you to access funds’ shares, in order for your company to
+                be able to
+                invest on the IZNES platform.
+            </p>
+
+            <p class="padding">Thank you,</p>
+            <p class="padding">The IZNES team.</p>
+        </div>
+
+        <!-- KYC investor yes -->
+        <div *ngSwitchCase="'kycInvestorYes'">
+            <p class="padding">Hello {{config.amFirstName}},</p>
+
+            <p class="padding">{{config.investorCompanyName}} answered <b>"Yes"</b> to the question:</p>
+            <p class="padding">"Did you already fill up your KYC documents with {{config.amCompanyName}}?"</p>
+
+            <p class="padding">
+                Please click on the following link to "Approve", "Reject" or "Ask more information" in regards to
+                {{config.investorCompanyName}}'s KYC documents.
+            </p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                Go to the page "Approve / Reject / Ask for more information"
+            </button>
+
+            <p class="padding">Thank you,</p>
+            <p class="padding">The IZNES team.</p>
+        </div>
+
+        <!-- KYC investor no -->
+        <div *ngSwitchCase="'kycInvestorNo'">
+            <p class="padding">Hello {{config.amFirstName}},</p>
+            <p class="padding">{{config.investorCompanyName}} answered <b>"No"</b> to the question:</p>
+            <p class="padding">"Did you already fill up your KYC documents with {{config.amCompanyName}}?"</p>
+
+            <ul class="padding">
+                Here are {{config.investorCompanyName}}'s contact details in order to help them complete their KYC
+                documents:
+
+                <li>Email address: {{config.investorEmail}}</li>
+                <li>Phone number: {{config.investorPhoneNumber}}</li>
+            </ul>
+
+            <p class="padding">
+                Please click on the following link to "Approve", "Reject" or "Ask more information" once
+                {{config.investorCompanyName}}'s KYC documents are fully completed.
+            </p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                Go to the page "Approve / Reject / Ask for more information"
+            </button>
+
+            <p class="padding">Thank you,</p>
+            <p class="padding">The IZNES team.</p>
+        </div>
+    </div>
 </ng-container>
