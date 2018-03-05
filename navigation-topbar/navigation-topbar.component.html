@@ -13,7 +13,7 @@
     </form>
     <div class="header-actions">
 
-        <clr-dropdown class="user-profile">
+        <clr-dropdown class="user-profile" appClicked>
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
@@ -49,7 +49,7 @@
                 </a>
             </div>
 
-            <clr-dropdown id='dropdown-user' appHighlight>
+            <clr-dropdown id='dropdown-user' appClicked appHighlight>
                 <div class="nav-button" clrDropdownToggle>
                     <clr-icon shape="user" class="icon"></clr-icon>
                     <p mltag="txt_profile">Profile</p>
@@ -60,7 +60,7 @@
                 </div>
             </clr-dropdown>
 
-            <clr-dropdown class="bottom-right">
+            <clr-dropdown class="bottom-right" appClicked>
                 <a class="nav-button" clrDropdownToggle id='dropdown-settings'>
                     <clr-icon shape="cog" class="icon"></clr-icon>
                     <p mltag="txt_settings">Settings</p>
