@@ -64,8 +64,8 @@ const orderBook = {
     element_id: 'menu-order-module',
     children: [
         {
-            label: 'List of funds',
-            label_txt: 'txt_listoffunds',
+            label: 'Place Order',
+            label_txt: 'txt_placeorder',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
             router_link: '/list-of-funds/0'
