@@ -3,30 +3,39 @@
     <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
     <div class="message_list">
-        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="messages.length > 0">{{messages.length || 0}}</span></h2>
+        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="messages.length > 0">{{messages.length || 0}}</span>
+        </h2>
         <div class="search">
-            <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>
-            <input type="form-control text" placeholder="Search {{currentBox.name}}" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';" (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch">
-            <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn"><i class="fa fa-search"></i></button>
+            <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#"
+                                                                                (click)="clearSearch($event); searchBox.value='' "><i
+                    class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>
+            <input type="form-control text" placeholder="Search {{currentBox.name}}" #searchBox
+                   (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';"
+                   (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch">
+            <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class=""
+                    id="messagesSearchBtn"><i class="fa fa-search"></i></button>
             <i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>
         </div>
 
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
                 <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i> Refresh</button>
-                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
+                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'"
+                        id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
                     <i class="fa fa-eye"></i> Mark as Read
                 </button>
-                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete" (click)="checked.length > 0 && showDeleteModal = true">
+                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete"
+                        (click)="checked.length > 0 && showDeleteModal = true">
                     <i class="fa fa-trash-o"></i> Delete
                 </button>
-                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'deleted'" id="messagesPutBack" (click)="checkedPutBack()">
+                <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'deleted'"
+                        id="messagesPutBack" (click)="checkedPutBack()">
                     <i class="fa fa-inbox"></i> Restore Message
                 </button>
             </div>
             <div class="message_list_menu_pages">
                 <pagination-controls
-                    (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
+                        (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
             </div>
         </div>
 
@@ -44,22 +53,29 @@
             </div>
         </div>
 
-        <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
+        <div class=""
+             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
              [ngClass]="{'message-active': i === currentMessage.id}">
 
             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
 
-            <div [routerLink]="['/messages/view']" class="message_list_item" [ngClass]="{'message-unread': message.isRead === false}">
+            <div [routerLink]="['/messages/view']" class="message_list_item"
+                 [ngClass]="{'message-unread': message.isRead === false}">
                 <div class="message_list_item_check">
-                    <i class="fa" [ngClass]="{'fa-check': message.isChecked === true}" (click)="messageChecked(i, $event)"></i>
+                    <i class="fa" [ngClass]="{'fa-check': message.isChecked === true}"
+                       (click)="messageChecked(i, $event)"></i>
                     <!--<clr-icon shape="balance" *ngIf="message.action"></clr-icon>-->
                     <!--<clr-icon shape="organization" *ngIf="message.workflow"></clr-icon>-->
                 </div>
-                <div class="message_list_item_sender" (click)="showMessage(i)" id="message_list_sender_{{currentPage}}_{{i}}">{{message.senderWalletName}}</div>
-                <div class="message_list_item_subject" (click)="showMessage(i)">
-                    <span [innerHtml]="message.subject | truncate: [200]" class="messagesSubject" id="message_list_subject_{{currentPage}}_{{i}}"></span>
+                <div class="message_list_item_sender" (click)="showMessage(i)"
+                     id="message_list_sender_{{currentPage}}_{{i}}">{{message.senderWalletName}}
                 </div>
-                <div class="message_list_item_date" (click)="showMessage(i)">{{message.date | datex: "MMM D, YYYY"}}</div>
+                <div class="message_list_item_subject" (click)="showMessage(i)">
+                    <span [innerHtml]="message.subject | truncate: [200]" class="messagesSubject"
+                          id="message_list_subject_{{currentPage}}_{{i}}"></span>
+                </div>
+                <div class="message_list_item_date" (click)="showMessage(i)">{{message.date | datex: "MMM D, YYYY"}}
+                </div>
             </div>
         </div>
 
@@ -92,10 +108,10 @@
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
                 <setl-message-form-action
-                    [config]="currentMessage.action"
-                    [isActed]="currentMessage.isActed"
-                    [walletId]="currentWalletId"
-                    [mailId]="currentMessage.mailId">
+                        [config]="currentMessage.action"
+                        [isActed]="currentMessage.isActed"
+                        [walletId]="currentWalletId"
+                        [mailId]="currentMessage.mailId">
                 </setl-message-form-action>
             </p>
 
@@ -108,7 +124,10 @@
                 </setl-message-connection>
             </p>
 
-            <p *ngIf="currentMessage.action && currentMessage.action.type === 'kyc'">
+            <p *ngIf="currentMessage.action
+                    && currentMessage.action.type === 'kycApproved'
+                    || currentMessage.action.type === 'kycInvestorYes'
+                    || currentMessage.action.type === 'kycInvestorNo'">
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
         </div>
@@ -116,7 +135,9 @@
         <div class="message_view_menu">
             <!--<button><i class="fa fa-reply"></i> Reply</button>-->
             <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i> Close</button>
-            <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type" (click)="showDeleteModal = true"><i class="fa fa-trash-o"></i> Delete</button>
+            <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type"
+                    (click)="showDeleteModal = true"><i class="fa fa-trash-o"></i> Delete
+            </button>
         </div>
 
     </div>
@@ -162,25 +183,27 @@
                         Subject
                     </div>
                     <div class="message_compose_input_field_value">
-                        <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" placeholder="" size="45" id="messagesSubject">
+                        <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text"
+                               placeholder="" size="45" id="messagesSubject">
                     </div>
                 </div>
             </div>
 
             <div class="message_compose_input_body">
                 <quill-editor
-                    [formControl]="messageComposeForm.controls['body']"
-                    [options]="editorOptions"
-                    (blur)="onEditorBlurred($event)"
-                    (focus)="onEditorFocused($event)"
-                    (ready)="onEditorCreated($event)"
-                    (change)="onContentChanged($event)"
-                    id="messagesBody"></quill-editor>
+                        [formControl]="messageComposeForm.controls['body']"
+                        [options]="editorOptions"
+                        (blur)="onEditorBlurred($event)"
+                        (focus)="onEditorFocused($event)"
+                        (ready)="onEditorCreated($event)"
+                        (change)="onContentChanged($event)"
+                        id="messagesBody"></quill-editor>
             </div>
 
             <div class="message_view_menu">
                 <!--<button><i class="fa fa-reply"></i> Reply</button>-->
-                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i> Discard</button>
+                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i> Discard
+                </button>
                 <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i> Send</button>
             </div>
         </form>
@@ -195,21 +218,32 @@
         <p *ngIf="checked.length <= 1">Are you sure you want to delete this message?</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="showDeleteModal = false" id="messagesDeleteModalCancel">Cancel</button>
-        <button *ngIf="checked.length > 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; checkedDeleted()" id="messagesDeleteModalOk">Ok</button>
-        <button *ngIf="checked.length === 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; deleteMessage()" id="messagesDeleteModalOk">Ok</button>
+        <button type="button" class="btn btn-outline" (click)="showDeleteModal = false" id="messagesDeleteModalCancel">
+            Cancel
+        </button>
+        <button *ngIf="checked.length > 0" type="button" class="btn btn-primary"
+                (click)="showDeleteModal = false; checkedDeleted()" id="messagesDeleteModalOk">Ok
+        </button>
+        <button *ngIf="checked.length === 0" type="button" class="btn btn-primary"
+                (click)="showDeleteModal = false; deleteMessage()" id="messagesDeleteModalOk">Ok
+        </button>
     </div>
 </clr-modal>
 
 <ng-template #messageMenu>
     <div class="message_menu">
-        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose">Compose Message</button>
+        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose">
+            Compose Message
+        </button>
 
         <h3>Folders</h3>
 
         <ul *ngFor="let category of categories; let i = index">
-            <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory, 'top-level-margin': category.level == 1, 'level-selected': i === currentCategory}" id="messages{{category.type}}">
-                <div *ngFor="let padding of getPadding(category)" class="padding"></div><i class="fa {{category.icon}}"></i> {{category.name}}
+            <li [routerLink]="['/messages', category.type]"
+                [ngClass]="{'active': i === currentCategory, 'top-level-margin': category.level == 1, 'level-selected': i === currentCategory}"
+                id="messages{{category.type}}">
+                <div *ngFor="let padding of getPadding(category)" class="padding"></div>
+                <i class="fa {{category.icon}}"></i> {{category.name}}
                 <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
             </li>
         </ul>
