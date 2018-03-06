@@ -23,6 +23,9 @@ import {FundComponent as FundCreateComponent} from './fund/component';
 import {ChartsModule} from 'ng2-charts';
 import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 
+/* fundItems config ( should be served by backend TT ) */
+import fundItems from './fund/config';
+
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
@@ -50,7 +53,9 @@ import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
         ChartsModule,
         OfiKYCModule,
     ],
-    providers: []
+    providers: [
+        { provide: 'fund-items', useValue: fundItems },
+    ]
 })
 
 export class OfiAmProductHomeModule {

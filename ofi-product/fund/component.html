@@ -11,449 +11,610 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <h3>Please fill up the following information to create a new Fund:</h3>
+            <div *ngIf="viewMode === 'UMBRELLA'">
+                <h3>Please fill up the following information to create a new Fund:</h3>
 
-            <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
-                <section class="form-block">
-                    <div class="row">
-                        <div class="form-group required-field col-sm-6">
-                            <label class="control-label" for="select">
-                                <span>Is this Fund part of an Umbrella Fund?</span>
-                            </label>
-                            <ng-select id="select"
-                                       [items]="umbrellaItems"
-                                       [allowClear]="true"
-                                       placeholder="Select or type an Umbrella Fund name"
-                                       [formControl]="umbrellaForm.controls['umbrellaFund']">
-                            </ng-select>
-                        </div>
-                        <div class="col-sm-6 btn-container">
-                            <p>or</p>
-                            <a class="btn btn-default" routerLink="/product-module/home">Add a new Umbrella Fund</a>
-                        </div>
-                    </div>
-
-                    <div class="row" *ngIf="selectedUmbrella == 0">
-
-                        <div class="col-sm-12">
-                            <p>The fund is not part of an Umbrella Fund.</p>
-                        </div>
-                    </div>
-
-
-                    <section class="form-block" *ngIf="selectedUmbrella > 0">
+                <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
+                    <section class="form-block">
                         <div class="row">
-                            <div class="form-group col-sm-6">
-                                <label class="control-label" for="umbrellaFundName">Umbrella Fund Name</label>
-                                <input type="text" name="umbrellaFundName" id="umbrellaFundName" formControlName="umbrellaFundName" />
+                            <div class="form-group required-field col-sm-6">
+                                <label class="control-label" for="select">
+                                    <span>Is this Fund part of an Umbrella Fund?</span>
+                                </label>
+                                <ng-select id="select"
+                                           [items]="umbrellaItems"
+                                           [allowClear]="true"
+                                           placeholder="Select or type an Umbrella Fund name"
+                                           [formControl]="umbrellaForm.controls['umbrellaFund']">
+                                </ng-select>
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label class="control-label" for="umbrellaLei">Legal Entity Identifier (LEI)</label>
-                                <input type="text" name="umbrellaLei" id="umbrellaLei" formControlName="umbrellaLei" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label class="control-label" for="umbrellaFundDomicile">Umbrella Fund Domicile (Country)</label>
-                                <input type="text" name="umbrellaFundDomicile" id="umbrellaFundDomicile" formControlName="umbrellaFundDomicile" />
+                            <div class="col-sm-6 btn-container">
+                                <p>or</p>
+                                <a class="btn btn-default" routerLink="/product-module/home">Add a new Umbrella Fund</a>
                             </div>
                         </div>
+
+                        <div class="row" *ngIf="selectedUmbrella == 0">
+
+                            <div class="col-sm-12">
+                                <p>The fund is not part of an Umbrella Fund.</p>
+                            </div>
+                        </div>
+
+
+                        <section class="form-block" *ngIf="selectedUmbrella > 0">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaFundName">Umbrella Fund Name</label>
+                                    <input type="text" name="umbrellaFundName" id="umbrellaFundName" formControlName="umbrellaFundName" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaLei">Legal Entity Identifier (LEI)</label>
+                                    <input type="text" name="umbrellaLei" id="umbrellaLei" formControlName="umbrellaLei" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaFundDomicile">Umbrella Fund Domicile (Country)</label>
+                                    <input type="text" name="umbrellaFundDomicile" id="umbrellaFundDomicile" formControlName="umbrellaFundDomicile" />
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="row" *ngIf="!isFundFormVisible">
+                            <div class="form-group col-sm-12 submit-container">
+                                <button type="button" class="btn btn-default" (click)="onClickBack()">Cancel</button>
+                                <button id="submitUmbrella" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">Next</button>
+                            </div>
+                        </div>
+
                     </section>
+                </form>
+            </div>
 
 
+            <form [formGroup]="fundForm" (ngSubmit)="submitFundForm()" *ngIf="viewMode === 'FUND'">
 
-                    <div class="row" *ngIf="!isFundFormVisible">
-                        <div class="form-group col-sm-12 submit-container">
-                            <button type="button" class="btn btn-default" (click)="onClickBack()">Cancel</button>
-                            <button id="submitUmbrella" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">Next</button>
-                        </div>
-                    </div>
+                <h3>Fund: {{fundForm.value.fundName}}</h3>
 
-
-                </section>
-            </form>
-
-            <form [formGroup]="fundForm" (ngSubmit)="submitFundForm()" *ngIf="isFundFormVisible">
                 <clr-tree-node>
-                    Fund: {{fundForm.value.fundName}}
+                    Fund: Main Information
                     <ng-template [clrIfExpanded]="true">
-                        <clr-tree-node >
-                            Fund: Main Information
-                            <ng-template [clrIfExpanded]="true">
-                                <section class="form-block">
-                                    <div class="row">
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundStructure">Fund Structure</label>
-                                            <input type="text" name="fundStructure" id="fundStructure" formControlName="fundStructure" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="umbrellaName">Umbrella Name</label>
-                                            <input type="text" name="umbrellaName" id="umbrellaName" formControlName="umbrellaName" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundName">Fund Name</label>
-                                            <input type="text" name="fundName" id="fundName" formControlName="fundName" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="AuMFund">AuM Fund</label>
-                                            <input type="text" name="AuMFund" id="AuMFund" formControlName="AuMFund" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="AuMFundDate">AuM Fund</label>
-                                            <input type="text" name="AuMFundDate" id="AuMFundDate" formControlName="AuMFundDate" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="lei">Legal Entity Identifier (LEI)</label>
-                                            <input type="text" name="lei" id="lei" formControlName="lei" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="registeredOfficeName">Name of the Registered Office of the Fund</label>
-                                            <input type="text" name="registeredOfficeName" id="registeredOfficeName" formControlName="registeredOfficeName" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="registeredOfficeAddress">Address of the registered Office of the Fund</label>
-                                            <input type="text" name="registeredOfficeAddress" id="registeredOfficeAddress" formControlName="registeredOfficeAddress" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundDomicile">Address of the registered Office of the Fund</label>
-                                            <input type="text" name="fundDomicile" id="fundDomicile" formControlName="fundDomicile" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="isEuDirectiveRelevant">Is EU Directive Relevant</label>
-                                            <input type="text" name="isEuDirectiveRelevant" id="isEuDirectiveRelevant" formControlName="isEuDirectiveRelevant" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="euDirectiveType">Type of EU Directive</label>
-                                            <input type="text" name="euDirectiveType" id="euDirectiveType" formControlName="euDirectiveType" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="UCITSVersion">UCITS Version</label>
-                                            <input type="text" name="UCITSVersion" id="UCITSVersion" formControlName="UCITSVersion" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundLegalForm">Legal Form of the Fund</label>
-                                            <input type="text" name="fundLegalForm" id="fundLegalForm" formControlName="fundLegalForm" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="nationalNomenclatureOfLegalForm">National Nomenclature of Legal Fund</label>
-                                            <input type="text" name="nationalNomenclatureOfLegalForm" id="nationalNomenclatureOfLegalForm" formControlName="nationalNomenclatureOfLegalForm" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="homeCountryLegalType">Home Country Legal Type of Fund</label>
-                                            <input type="text" name="homeCountryLegalType" id="homeCountryLegalType" formControlName="homeCountryLegalType" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="fundCreationDate">Fund Creation Date (YYYY-MM-JJ)</label>
-                                            <div class="input-group">
-                                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
-                                            </div>
-                                            <div *ngIf="false" class="text-danger">User error feedback</div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="fundLaunchDate">Fund Launch Date (YYYY-MM-DD)</label>
-                                            <div class="input-group">
-                                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="fundLaunchDate" formControlName="fundLaunchDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
-                                            </div>
-                                            <div *ngIf="false" class="text-danger">User error feedback</div>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundCurrency">Fund Currency</label>
-                                            <input type="text" name="fundCurrency" id="fundCurrency" formControlName="fundCurrency" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundStructureType">Open-ended or Close-ended Fund Structure</label>
-                                            <input type="text" name="fundStructureType" id="fundStructureType" formControlName="fundStructureType" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fiscalYearEnd">Fiscal Year End (MM-DD)</label>
-                                            <div class="input-group">
-                                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configDate" placeholder="Choose a date" mode="month" theme="dp-material"/>
-                                            </div>
-                                            <div *ngIf="false" class="text-danger">User error feedback</div>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundOrFunds">Is Fund or Funds</label>
-                                            <input type="text" name="fundOrFunds" id="fundOrFunds" formControlName="fundOrFunds" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="managementCompany">Management Company</label>
-                                            <input type="text" name="managementCompany" id="managementCompany" formControlName="managementCompany" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="fundAdmin">Fund Administrator</label>
-                                            <input type="text" name="fundAdmin" id="fundAdmin" formControlName="fundAdmin" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="custodianBank">Custodian Bank</label>
-                                            <input type="text" name="custodianBank" id="custodianBank" formControlName="custodianBank" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="investmentManager">Investment Manager</label>
-                                            <input type="text" name="investmentManager" id="investmentManager" formControlName="investmentManager" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="principalPromoter">Principal Promoter</label>
-                                            <input type="text" name="principalPromoter" id="principalPromoter" formControlName="principalPromoter" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="payingAgent">Paying Agent</label>
-                                            <input type="text" name="payingAgent" id="payingAgent" formControlName="payingAgent" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="fundManagers">Fund Managers</label>
-                                            <input type="text" name="fundManagers" id="fundManagers" formControlName="fundManagers" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="transfertAgent">Transfert Agent</label>
-                                            <input type="text" name="transfertAgent" id="transfertAgent" formControlName="transfertAgent" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="centralizingAgent">Centralizing Agent</label>
-                                            <input type="text" name="centralizingAgent" id="centralizingAgent" formControlName="centralizingAgent" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="dedicatedFund">Dedicated Fund</label>
-                                            <input type="text" name="dedicatedFund" id="dedicatedFund" formControlName="dedicatedFund" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
-
-                                        <div class="form-group required-field col-sm-6">
-                                            <label class="control-label" for="portfolioCurrencyHedge">Portfolio Currency Hedge</label>
-                                            <input type="text" name="portfolioCurrencyHedge" id="portfolioCurrencyHedge" formControlName="portfolioCurrencyHedge" />
-                                            <span class="field-error">Field is required</span>
-                                        </div>
+                        <section class="form-block">
+                            <div class="row">
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label">Fund Structure</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="fundStructure" id="fundStructure1" formControlName="fundStructure" value="SINGLE">
+                                        <label for="fundStructure1">Single fund Structure</label>
                                     </div>
-                                </section>
-                            </ng-template>
-                        </clr-tree-node>
-
-                        <clr-tree-node>
-                            Optional Information
-                            <ng-template [clrIfExpanded]="false">
-                                <section class="form-block">
-                                    <div class="row">
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="giin">Global Intermediary Identification Number (GIIN)</label>
-                                            <input type="text" name="giin" id="giin" formControlName="giin" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="delegatedManagementCompany">Delegated Management Company</label>
-                                            <input type="text" name="delegatedManagementCompany" id="delegatedManagementCompany" formControlName="delegatedManagementCompany" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="investmentAdvisor">Investment Advisor</label>
-                                            <input type="text" name="investmentAdvisor" id="investmentAdvisor" formControlName="investmentAdvisor" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="auditor">Auditor</label>
-                                            <input type="text" name="auditor" id="auditor" formControlName="auditor" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="taxAuditor">Tax Auditor</label>
-                                            <input type="text" name="taxAuditor" id="taxAuditor" formControlName="taxAuditor" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="legalAdvisor">Legal Advisor</label>
-                                            <input type="text" name="legalAdvisor" id="legalAdvisor" formControlName="legalAdvisor" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="directors">Directors</label>
-                                            <input type="text" name="directors" id="directors" formControlName="directors" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="pocket">Pocket</label>
-                                            <input type="text" name="pocket" id="pocket" formControlName="pocket" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="hasEmbeddedDerivatives">Has Embedded Derivatives (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives" formControlName="hasEmbeddedDerivatives" />
-                                                <label for="hasEmbeddedDerivatives">Has Embedded Derivatives</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="hasCapitalPreservation">Has Capital Preservation (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasCapitalPreservation" id="hasCapitalPreservation" formControlName="hasCapitalPreservation" />
-                                                <label for="hasCapitalPreservation">Has Capital Preservation</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="capitalPreservationLevel">Capital Preservation Level</label>
-                                            <input type="text" name="capitalPreservationLevel" id="capitalPreservationLevel" formControlName="capitalPreservationLevel" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="capitalPreservationPeriod">Capital Preservation Period</label>
-                                            <input type="text" name="capitalPreservationPeriod" id="capitalPreservationPeriod" formControlName="capitalPreservationPeriod" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="hasCppi">Has CPPI (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasCppi" id="hasCppi" formControlName="hasCppi" />
-                                                <label for="hasCppi">Has CPPI</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="cppiMultiplier">CPPI Multiplier</label>
-                                            <input type="text" name="cppiMultiplier" id="cppiMultiplier" formControlName="cppiMultiplier" />
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="hasHedgeFundStrategy">Has Hedge Fund Strategy (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy" formControlName="hasHedgeFundStrategy" />
-                                                <label for="hasHedgeFundStrategy">Has Hedge Fund Strategy</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="isLeveraged">Is Leveraged (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="isLeveraged" id="isLeveraged" formControlName="isLeveraged" />
-                                                <label for="isLeveraged">Is Leveraged</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="has130/30Strategy">Has 130/30 Strategy (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="has130/30Strategy" id="has130/30Strategy" formControlName="has130/30Strategy" />
-                                                <label for="has130/30Strategy">Has 130/30 Strategy</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="isFundTargetingEos">Is Fund Targeting Environmental or Social Objectives (EOS) (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="isFundTargetingEos" id="isFundTargetingEos" formControlName="isFundTargetingEos" />
-                                                <label for="isFundTargetingEos">Is Fund Targeting Environmental or Social Objectives (EOS)</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="isFundTargetingSri">Is Fund Targeting Socially Responsible Investment (SRI) (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="isFundTargetingSri" id="isFundTargetingSri" formControlName="isFundTargetingSri" />
-                                                <label for="isFundTargetingSri">Is Fund Targeting Socially Responsible Investment (SRI)</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="isPassiveFund">Is Passive Fund (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="isPassiveFund" id="isPassiveFund" formControlName="isPassiveFund" />
-                                                <label for="isPassiveFund">Is Passive Fund</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="hasSecurityLending">Has Security Lending (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasSecurityLending" id="hasSecurityLending" formControlName="hasSecurityLending" />
-                                                <label for="hasSecurityLending">Has Security Lending</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group checkbox-container col-sm-6">
-                                            <label class="control-label" for="hasSwap">Has Swap (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasSwap" id="hasSwap" formControlName="hasSwap" />
-                                                <label for="hasSwap">Has Swap</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group checkbox-container col-sm-6">
-                                            <label class="control-label" for="hasDurationHedge">Has Duration Hedge (Yes / No)</label>
-                                            <div class="checkbox">
-                                                <input type="checkbox" name="hasDurationHedge" id="hasDurationHedge" formControlName="hasDurationHedge" />
-                                                <label for="hasDurationHedge">Has Duration Hedge</label>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="form-group col-sm-6">
-                                            <label class="control-label" for="investmentObjective">Investment Objective</label>
-                                            <input type="text" name="investmentObjective" id="investmentObjective" formControlName="investmentObjective" />
-                                        </div>
-
+                                    <div class="radio-inline">
+                                        <input type="radio" name="fundStructure" id="fundStructure2" formControlName="fundStructure" value="UMBRELLA">
+                                        <label for="fundStructure2">Fund Umbrella Structure</label>
                                     </div>
-                                </section>
-                            </ng-template>
-                        </clr-tree-node>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="fundName">Fund Name</label>
+                                    <input type="text" name="fundName" id="fundName" formControlName="fundName" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <div *ngIf="fundForm.controls['fundStructure'].value === 'UMBRELLA'" class="required-field">
+                                        <label class="control-label" for="umbrellaName">Umbrella Name</label>
+                                        <input type="text" name="umbrellaName" id="umbrellaName" formControlName="umbrellaName"/>
+                                        <span class="field-error">Field is required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="AuMFund">AuM Fund</label>
+                                    <input type="text" name="AuMFund" id="AuMFund" formControlName="AuMFund" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="AuMFundDate">AuM Fund Date</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="AuMFundDate" formControlName="AuMFundDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                    </div>
+                                    <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('required')" class="field-error">Field is required</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="lei">Legal Entity Identifier (LEI)</label>
+                                    <input type="text" name="lei" id="lei" formControlName="lei" />
+                                    <span *ngIf="fundForm.controls['lei'].touched && fundForm.controls['lei'].hasError('pattern')" class="field-error">Field should be 20 characters length</span>
+
+                                </div>
+                                </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="registeredOfficeName">Name of the Registered Office of the Fund</label>
+                                    <input type="text" name="registeredOfficeName" id="registeredOfficeName" formControlName="registeredOfficeName" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="registeredOfficeAddress">Address of the registered Office of the Fund</label>
+                                    <input type="text" name="registeredOfficeAddress" id="registeredOfficeAddress" formControlName="registeredOfficeAddress" />
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <div>
+                                        <label class="control-label" for="fundDomicile">Fund Domicile (country)</label>
+                                        <ng-select id="fundDomicile"
+                                                   [items]="fundDomicileItems"
+                                                   [allowClear]="true"
+                                                   placeholder="Select"
+                                                   [formControl]="fundForm.controls['fundDomicile']">
+                                        </ng-select>
+                                        <span class="field-error" *ngIf="fundForm.controls['fundDomicile'].hasError('required') && fundForm.controls['fundDomicile'].touched">Field is required</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <div *ngIf="homeCountryLegalTypeItems.length">
+                                        <label class="control-label" for="homeCountryLegalType">Home Country Legal Type of Fund</label>
+                                        <ng-select id="homeCountryLegalType"
+                                                   [items]="homeCountryLegalTypeItems"
+                                                   [allowClear]="true"
+                                                   placeholder="Select"
+                                                   [formControl]="fundForm.controls['homeCountryLegalType']">
+                                        </ng-select>
+                                        <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched">Field is required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label">Is EU Directive Relevant?</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isEuDirectiveRelevant" id="isEuDirectiveRelevant1" formControlName="isEuDirectiveRelevant" value="YES">
+                                        <label for="isEuDirectiveRelevant1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isEuDirectiveRelevant" id="isEuDirectiveRelevant2" formControlName="isEuDirectiveRelevant" value="NO">
+                                        <label for="isEuDirectiveRelevant2">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="fundForm.controls['isEuDirectiveRelevant'].value === 'YES'">
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="euDirectiveType">Type of EU Directive</label>
+                                    <ng-select id="euDirectiveType"
+                                               [items]="isEuDirectiveRelevantItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['euDirectiveType']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['euDirectiveType'].hasError('required') && fundForm.controls['euDirectiveType'].touched">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <div *ngIf="fundForm.controls['isEuDirectiveRelevant'].value === 'YES' && getEuDirectiveType() == 'UCITS'">
+                                        <label class="control-label" for="UCITSVersion">UCITS Version</label>
+                                        <ng-select id="UCITSVersion"
+                                                   [items]="UCITSVersionItems"
+                                                   [allowClear]="true"
+                                                   placeholder="Select"
+                                                   [formControl]="fundForm.controls['UCITSVersion']">
+                                        </ng-select>
+                                        <span class="field-error" *ngIf="fundForm.controls['UCITSVersion'].hasError('required') && fundForm.controls['UCITSVersion'].touched">Field is required</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group required-field col-sm-6">
+                                    <div>
+                                        <label class="control-label" for="fundLegalForm">Legal Form of the Fund</label>
+                                        <ng-select id="fundLegalForm"
+                                                   [items]="fundLegalFormItems"
+                                                   [allowClear]="true"
+                                                   placeholder="Select"
+                                                   [formControl]="fundForm.controls['fundLegalForm']">
+                                        </ng-select>
+                                        <span class="field-error" *ngIf="fundForm.controls['fundLegalForm'].hasError('required') && fundForm.controls['fundLegalForm'].touched">Field is required</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <div *ngIf="fundForm.controls['fundLegalForm'].value.length">
+                                        <label class="control-label" for="nationalNomenclatureOfLegalForm">National Nomenclature of Legal Fund</label>
+                                        <ng-select id="nationalNomenclatureOfLegalForm"
+                                                   [items]="nationalNomenclatureOfLegalFormItems"
+                                                   [allowClear]="true"
+                                                   placeholder="Select"
+                                                   [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
+                                        </ng-select>
+                                        <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">Field is required</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="fundCreationDate">Fund Creation Date (YYYY-MM-JJ)</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                    </div>
+                                    <div *ngIf="false" class="text-danger">User error feedback</div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="fundLaunchDate">Fund Launch Date (YYYY-MM-DD)</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="fundLaunchDate" formControlName="fundLaunchDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                    </div>
+                                    <div *ngIf="false" class="text-danger">User error feedback</div>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="fundCurrency">Fund Currency</label>
+                                    <ng-select id="fundCurrency"
+                                               [items]="fundCurrencyItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['fundCurrency']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label">Open-ended or Close-ended Fund Structure</label>
+                                    <div class="radio-inline">
+                                        <input type="radio"  name="fundStructureType" id="fundStructureType1">
+                                        <label for="fundStructureType1">Open-ended</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio"  name="fundStructureType" id="fundStructureType2">
+                                        <label for="fundStructureType2">Close-ended</label>
+                                    </div>
+                                    <span *ngIf="false" class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="fiscalYearEnd">Fiscal Year End (MM-DD)</label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" placeholder="Choose a date" mode="month" theme="dp-material"/>
+                                    </div>
+                                    <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')" class="text-danger">Field is required</div>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label">Is Fund of Funds</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="fundOfFunds" id="fundOfFunds1" formControlName="fundOfFunds" value="true">
+                                        <label for="fundOfFunds1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="fundOfFunds" id="fundOfFunds2" formControlName="fundOfFunds" value="false">
+                                        <label for="fundOfFunds2">No</label>
+                                    </div>
+                                    <span *ngIf="false" class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="managementCompany">Management Company</label>
+                                    <input type="text" name="managementCompany" id="managementCompany" formControlName="managementCompany" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="fundAdmin">Fund Administrator</label>
+                                    <input type="text" name="fundAdmin" id="fundAdmin" formControlName="fundAdmin" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="custodianBank">Custodian Bank</label>
+                                    <input type="text" name="custodianBank" id="custodianBank" formControlName="custodianBank" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="investmentManager">Investment Manager</label>
+                                    <input type="text" name="investmentManager" id="investmentManager" formControlName="investmentManager" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="principalPromoter">Principal Promoter</label>
+                                    <input type="text" name="principalPromoter" id="principalPromoter" formControlName="principalPromoter" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="payingAgent">Paying Agent</label>
+                                    <input type="text" name="payingAgent" id="payingAgent" formControlName="payingAgent" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="fundManagers">Fund Managers</label>
+                                    <input type="text" name="fundManagers" id="fundManagers" formControlName="fundManagers" />
+                                </div>
+
+                                <div class="form-group required-field col-sm-6" *ngIf="isTransfertAgentVisible()">
+                                    <label class="control-label" for="transfertAgent">Transfert Agent</label>
+                                    <input type="text" name="transfertAgent" id="transfertAgent" formControlName="transfertAgent" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6" *ngIf="isCentralizingAgentVisible()">
+                                    <label class="control-label" for="centralizingAgent">Centralizing Agent</label>
+                                    <input type="text" name="centralizingAgent" id="centralizingAgent" formControlName="centralizingAgent" />
+                                    <span class="field-error">Field is required</span>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label">Is Dedicated Fund</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="dedicatedFund" id="dedicatedFund1" formControlName="dedicatedFund" value="true">
+                                        <label for="dedicatedFund1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="dedicatedFund" id="dedicatedFund2" formControlName="dedicatedFund" value="false">
+                                        <label for="dedicatedFund2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group required-field col-sm-6">
+                                    <label class="control-label" for="portfolioCurrencyHedge">Portfolio Currency Hedge</label>
+                                    <ng-select id="portfolioCurrencyHedge"
+                                               [items]="portfolioCurrencyHedgeItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['portfolioCurrencyHedge']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">Field is required</span>
+                                </div>
+                            </div>
+                        </section>
                     </ng-template>
-
                 </clr-tree-node>
+
+                <clr-tree-node>
+                    Optional Information
+                    <ng-template [clrIfExpanded]="false">
+                        <section class="form-block">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="giin">Global Intermediary Identification Number (GIIN)</label>
+                                    <input type="text" name="giin" id="giin" formControlName="giin" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="delegatedManagementCompany">Delegated Management Company</label>
+                                    <input type="text" name="delegatedManagementCompany" id="delegatedManagementCompany" formControlName="delegatedManagementCompany" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="investmentAdvisor">Investment Advisor</label>
+                                    <ng-select id="investmentAdvisor"
+                                               [items]="investmentAdvisorItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['investmentAdvisor']">
+                                    </ng-select>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="auditor">Auditor</label>
+                                    <ng-select id="auditor"
+                                               [items]="auditorItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['auditor']">
+                                    </ng-select>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="taxAuditor">Tax Auditor</label>
+                                    <ng-select id="taxAuditor"
+                                               [items]="taxAuditorItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['taxAuditor']">
+                                    </ng-select>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="legalAdvisor">Legal Advisor</label>
+                                    <ng-select id="legalAdvisor"
+                                               [items]="legalAdvisorItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['legalAdvisor']">
+                                    </ng-select>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="directors">Directors</label>
+                                    <input type="text" name="directors" id="directors" formControlName="directors" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="pocket">Pocket</label>
+                                    <input type="text" name="pocket" id="pocket" formControlName="pocket" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has Embedded Derivatives</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives1" formControlName="hasEmbeddedDerivatives" value="YES">
+                                        <label for="hasEmbeddedDerivatives1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives2" formControlName="hasEmbeddedDerivatives" value="NO">
+                                        <label for="hasEmbeddedDerivatives2">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has Capital Preservation</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation1" formControlName="hasCapitalPreservation" value="YES">
+                                        <label for="hasCapitalPreservation1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation2" formControlName="hasCapitalPreservation" value="NO">
+                                        <label for="hasCapitalPreservation2">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value == 'YES'">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="capitalPreservationLevel">Capital Preservation Level</label>
+                                    <input type="number" name="capitalPreservationLevel" id="capitalPreservationLevel" formControlName="capitalPreservationLevel" />
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="capitalPreservationPeriod">Capital Preservation Period</label>
+                                    <input type="text" name="capitalPreservationPeriod" id="capitalPreservationPeriod" formControlName="capitalPreservationPeriod" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has CPPI</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasCppi" id="hasCppi1" formControlName="hasCppi" value="YES">
+                                        <label for="hasCppi1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasCppi" id="hasCppi2" formControlName="hasCppi" value="NO">
+                                        <label for="hasCppi2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <div *ngIf="fundForm.controls['hasCppi'].value === 'YES'">
+                                        <label class="control-label" for="cppiMultiplier">CPPI Multiplier</label>
+                                        <input type="number" name="cppiMultiplier" id="cppiMultiplier" formControlName="cppiMultiplier" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has Hedge Fund Strategy</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy1" formControlName="hasHedgeFundStrategy" value="YES">
+                                        <label for="hasHedgeFundStrategy1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy2" formControlName="hasHedgeFundStrategy" value="NO">
+                                        <label for="hasHedgeFundStrategy2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Is Leveraged</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isLeveraged" id="isLeveraged1" formControlName="isLeveraged" value="YES">
+                                        <label for="isLeveraged1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isLeveraged" id="isLeveraged2" formControlName="isLeveraged" value="NO">
+                                        <label for="isLeveraged2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has 130/30 Strategy</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="has130/30Strategy" id="has130/30Strategy1" formControlName="has130/30Strategy" value="YES">
+                                        <label for="has130/30Strategy1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="has130/30Strategy" id="has130/30Strategy2" formControlName="has130/30Strategy" value="NO">
+                                        <label for="has130/30Strategy2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Is Fund Targeting Environmental or Social Objectives (EOS)</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos1" formControlName="isFundTargetingEos" value="YES">
+                                        <label for="isFundTargetingEos1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos2" formControlName="isFundTargetingEos" value="NO">
+                                        <label for="isFundTargetingEos2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Is Fund Targeting Socially Responsible Investment (SRI)</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri1" formControlName="isFundTargetingSri" value="YES">
+                                        <label for="isFundTargetingSri1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri2" formControlName="isFundTargetingSri" value="NO">
+                                        <label for="isFundTargetingSri2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Is Passive Fund</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isPassiveFund" id="isPassiveFund1" formControlName="isPassiveFund" value="YES">
+                                        <label for="isPassiveFund1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="isPassiveFund" id="isPassiveFund2" formControlName="isPassiveFund" value="NO">
+                                        <label for="isPassiveFund2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label">Has Security Lending</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasSecurityLending" id="hasSecurityLending1" formControlName="hasSecurityLending" value="YES">
+                                        <label for="hasSecurityLending1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasSecurityLending" id="hasSecurityLending2" formControlName="hasSecurityLending" value="NO">
+                                        <label for="hasSecurityLending2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group checkbox-container col-sm-6">
+                                    <label class="control-label">Has Swap</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasSwap" id="hasSwap1" formControlName="hasSwap" value="YES">
+                                        <label for="hasSwap1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasSwap" id="hasSwap2" formControlName="hasSwap" value="NO">
+                                        <label for="hasSwap2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group checkbox-container col-sm-6">
+                                    <label class="control-label">Has Duration Hedge</label>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge1" formControlName="hasDurationHedge" value="YES">
+                                        <label for="hasDurationHedge1">Yes</label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge2" formControlName="hasDurationHedge" value="NO">
+                                        <label for="hasDurationHedge2">No</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="investmentObjective">Investment Objective</label>
+                                    <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective" ></textarea>
+                                </div>
+
+                            </div>
+                        </section>
+                    </ng-template>
+                </clr-tree-node>
+
                 <div class="form-group">
                     <div class="row">
                         <div class="form-group col-sm-12 submit-container">
