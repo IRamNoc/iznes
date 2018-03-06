@@ -34,6 +34,7 @@
         "@ng-bootstrap/ng-bootstrap": "^1.0.0",
         "@ofi/ofi-main": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git",
         "@ofi/product": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi_product.git",
+        "@setl/demo": "git+ssh://git@si-nexus01.dev.setl.io:Hauck/demo.git",
         "@setl/asset-servicing": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git",
         "@setl/core-account": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git",
         "@setl/core-balances": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-balances.git",

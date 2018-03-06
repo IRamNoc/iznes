@@ -3,6 +3,7 @@ import {Routes} from '@angular/router';
 import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
 /* Components. */
 import {SetlMyAccountComponent} from '@setl/core-account';
+import {SetlDemoDatagridComponent} from '@setl/demo';
 /**
  * Login Guard service
  */
@@ -140,12 +141,6 @@ export const ROUTES: Routes = [
             {
                 path: 'messages',
                 redirectTo: '/messages/inbox'
-            },
-            {
-                path: 'core-home',
-                component: HomeComponent,
-                canActivate: [LoginGuardService],
-                data: { state: 'home' }
             },
             {
                 path: 'account',
@@ -544,8 +539,17 @@ export const ROUTES: Routes = [
                     }
                 ]
             },
+            {
+                path: 'demo',
+                children: [
+                    {
+                        path: 'datagrid',
+                        component: SetlDemoDatagridComponent,
+                        canActivate: [LoginGuardService],
+                    }
+                ]
+            },
         ],
         canActivate: [LoginGuardService]
     }
 ];
-

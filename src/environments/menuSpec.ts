@@ -73,9 +73,9 @@ const fundHoldings = {
     router_link: '/asset-management/fund-holdings'
 };
 const manageOrders = {
-    label: 'Manage Orders',
-    label_txt: 'txt_manageorders',
-    icon_class: 'fa fa-pencil',
+    label: 'Order Book',
+    label_txt: 'txt_orderbook',
+    icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
     router_link: '/manage-orders/0'
 };
