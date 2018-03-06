@@ -50,19 +50,26 @@ const accountModule = {
         }
     ]
 };
-const OrderBook = {
+const orderBook = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
-    icon_class: 'fa fa-book',
-    element_id: 'menu-order-book',
+    icon_class: 'fa fa-university',
+    element_id: 'menu-order-module',
     children: [
+        {
+            label: 'Place Order',
+            label_txt: 'txt_placeorder',
+            icon_class: 'fa fa-university',
+            element_id: 'menu-list-of-fund',
+            router_link: '/list-of-funds/0'
+        },
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
             router_link: '/order-book/my-orders/0'
-        },
+        }
     ]
 };
 const fundHoldings = {
@@ -380,8 +387,7 @@ export const menuSpec: MenuSpec = {
             subPortfolio,
             messages,
             accountModule,
-            listOfFunds,
-            OrderBook,
+            orderBook,
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
@@ -481,7 +487,7 @@ export const menuSpec: MenuSpec = {
             },
             listOfFunds,
             manageOrders,
-            OrderBook,
+            orderBook,
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
