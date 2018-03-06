@@ -70,7 +70,6 @@ import {ResolveEmit} from './interfaces/resolve-emit';
         .jaspero__dialog {
             min-width: 300px;
             max-width: 500px;
-            max-height: 50%;
             display: -ms-flexbox;
             display: flex;
             -ms-flex-flow: column;
