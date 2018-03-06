@@ -7,9 +7,9 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {ContractService} from '@setl/core-contracts/services';
 import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
-import { WalletNodeRequestService } from '@setl/core-req-services/walletnode-request/walletnode-request.service';
-import { Subscription } from 'rxjs/Subscription';
-import { TabControl, Tab } from '@setl/core-balances/tabs';
+import {WalletNodeRequestService} from '@setl/core-req-services/walletnode-request/walletnode-request.service';
+import {Subscription} from 'rxjs/Subscription';
+import {TabControl, Tab} from '@setl/core-balances/tabs';
 import * as _ from 'lodash';
 import {ContractModel} from '@setl/core-contracts/models';
 import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
@@ -44,16 +44,14 @@ export class ContractsComponent implements OnInit, OnChanges {
     /**
      * Constructor
      */
-    public constructor(
-        private contractService: ContractService,
-        private alertsService: AlertsService,
-        private memberSocketService: MemberSocketService,
-        private walletService: MyWalletsService,
-        private walletNodeRequestService: WalletNodeRequestService,
-        private changeDetectorRef: ChangeDetectorRef,
-        private ngRedux: NgRedux<any>,
-        @Inject(APP_CONFIG) private appConfig: AppConfig
-    ) {
+    public constructor(private contractService: ContractService,
+                       private alertsService: AlertsService,
+                       private memberSocketService: MemberSocketService,
+                       private walletService: MyWalletsService,
+                       private walletNodeRequestService: WalletNodeRequestService,
+                       private changeDetectorRef: ChangeDetectorRef,
+                       private ngRedux: NgRedux<any>,
+                       @Inject(APP_CONFIG) private appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.token = this.memberSocketService.token;
         if (this.getUser) {
@@ -85,8 +83,10 @@ export class ContractsComponent implements OnInit, OnChanges {
                                         [],
                                         asyncTaskPipe,
                                         {},
-                                        () => {},
-                                        () => {}
+                                        () => {
+                                        },
+                                        () => {
+                                        }
                                     ));
                                 },
                                 (error) => {
@@ -100,21 +100,21 @@ export class ContractsComponent implements OnInit, OnChanges {
         }
 
         this.subscriptions.push(this.getContractList.subscribe((data) => {
-           if (typeof data === 'undefined' || data.length <= 0) {
-               return;
-           }
+            if (typeof data === 'undefined' || data.length <= 0) {
+                return;
+            }
 
-           data = _.groupBy(data[0].contractData, (contract) => contract.__address);
-           this.contracts = [];
-           _.each(data, (contract) => {
-               this.contract = this.contractService.fromJSON(contract[0], this.addresses);
-               this.contracts.push(this.contract);
-           });
-           this.contractFields = [];
-           for (const prop in this.contract) {
-               this.contractFields.push(prop);
-           }
-           this.changeDetectorRef.markForCheck();
+            data = _.groupBy(data[0].contractData, (contract) => contract.__address);
+            this.contracts = [];
+            _.each(data, (contract) => {
+                this.contract = this.contractService.fromJSON(contract[0], this.addresses);
+                this.contracts.push(this.contract);
+            });
+            this.contractFields = [];
+            for (const prop in this.contract) {
+                this.contractFields.push(prop);
+            }
+            this.changeDetectorRef.markForCheck();
         }));
     }
 
@@ -158,8 +158,10 @@ export class ContractsComponent implements OnInit, OnChanges {
             [],
             asyncTaskPipe,
             {},
-            () => {},
-            () => {}
+            () => {
+            },
+            () => {
+            }
         ));
     }
 
@@ -187,9 +189,9 @@ export class ContractsComponent implements OnInit, OnChanges {
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 party: [
-                  index - 1,
-                  '',
-                  ''
+                    index - 1,
+                    '',
+                    ''
                 ],
                 parties: contractJson.parties,
                 commitment: commitment,
@@ -203,8 +205,10 @@ export class ContractsComponent implements OnInit, OnChanges {
             [],
             asyncTaskPipe,
             {},
-            () => {},
-            () => {}
+            () => {
+            },
+            () => {
+            }
         ));
     }
 

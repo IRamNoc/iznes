@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { ContractModel } from '../models';
-import { PartyService } from '../services/party.service';
-import { PartyModel } from '../models';
-import { AuthorisationService } from '../services/authorisation.service';
-import { AuthorisationModel } from '../models';
-import { ParameterItemService } from '../services/parameterItem.service';
-import { ParameterItemModel } from '../models';
-import { EncumbranceService } from '../services/encumbrance.service';
-import { EncumbranceModel } from '../models';
+import {Injectable} from '@angular/core';
+import {ContractModel} from '../models';
+import {PartyService} from '../services/party.service';
+import {PartyModel} from '../models';
+import {AuthorisationService} from '../services/authorisation.service';
+import {AuthorisationModel} from '../models';
+import {ParameterItemService} from '../services/parameterItem.service';
+import {ParameterItemModel} from '../models';
+import {EncumbranceService} from '../services/encumbrance.service';
+import {EncumbranceModel} from '../models';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -18,12 +18,14 @@ export class ContractService {
     private parameterItemService: ParameterItemService;
     private encumbranceService: EncumbranceService;
     public addresses: Array<any> = new Array();
+
     constructor() {
         this.partyService = new PartyService();
         this.authorisationService = new AuthorisationService();
         this.parameterItemService = new ParameterItemService();
         this.encumbranceService = new EncumbranceService();
     }
+
     /**
      * From JSON method
      *
@@ -65,19 +67,19 @@ export class ContractService {
                     contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
                     if (contract.parties[partyIndex].payList.length > 0) {
                         _.each(contract.parties[partyIndex].payList, (payListItem) => {
-                            contract.payors += payListItem.quantity.toFixed(2) + ' ' + this.getAddressLabel(payListItem.address) + ',';
+                            contract.payors += payListItem.quantity.toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
                         });
                     }
                     if (contract.parties[partyIndex].receiveList.length > 0) {
                         _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
-                            contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + this.getAddressLabel(receiveListItem.address) + ',';
+                            contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
                         });
                     }
                     contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
                 }
             });
-            contract.payors = contract.payors.substr(0, contract.payors.length-1);
-            contract.payees = contract.payees.substr(0, contract.payees.length-1);
+            contract.payors = contract.payors.substr(0, contract.payors.length - 1);
+            contract.payees = contract.payees.substr(0, contract.payees.length - 1);
             contract.name = contract.__address;
             contract.issuingaddress_label = this.getAddressLabel(contract.issuingaddress);
             contract.fromaddr_label = this.getAddressLabel(contract.fromaddr);
