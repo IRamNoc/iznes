@@ -42,6 +42,11 @@ node {
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
         }
 
+        stage('Update database') {
+            sh 'ssh -tt root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./updatedb iznes \''
+        }
+
+
         stage('Deploy Blockchain jars to Test Environment') {
             node {
                 sh '''
