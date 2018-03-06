@@ -69,6 +69,7 @@ export {OfiOrdersModule} from './ofi-orders/ofi-orders.module';
 export {OfiOrdersService} from './ofi-req-services/ofi-orders/service';
 export {ManageOrdersComponent} from './ofi-orders/manage-orders/manage-orders.component';
 export {MyOrdersComponent} from './ofi-orders/my-orders/my-orders.component';
+export {PlaceOrdersComponent} from './ofi-orders/place-orders/place-orders.component';
 
 /**
  *
