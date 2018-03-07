@@ -2,6 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 
 @Component({
@@ -68,8 +69,6 @@ export class FundComponent implements OnInit, OnDestroy {
         this.isEuDirectiveRelevantItems = fundItems.isEuDirectiveRelevantItems;
         this.UCITSVersionItems = fundItems.UCITSVersionItems;
         this.fundLegalFormItems = fundItems.fundLegalFormItems;
-        this.nationalNomenclatureOfLegalFormItems = [];
-        this.homeCountryLegalTypeItems = [];
         this.fundCurrencyItems = fundItems.fundCurrencyItems;
         this.portfolioCurrencyHedgeItems = fundItems.portfolioCurrencyHedgeItems;
         this.investmentAdvisorItems = fundItems.investmentAdvisorItems;
@@ -152,7 +151,15 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.selectedUmbrella = null;
                 } else {
                     this.selectedUmbrella = d[0].id;
-                    this.umbrellaForm.controls['umbrellaFundName'].setValue('umbrella' + d[0].id);
+                    this.umbrellaForm.controls['umbrellaFundName'].setValue(d[0].text);
+                }
+            });
+
+        this.fundForm.controls['fundStructure'].valueChanges
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (d === 'FUND') {
+                    this.fundForm.controls['umbrellaName'].setValue('');
                 }
             });
 
@@ -196,6 +203,14 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[d[0].id] || [];
                 if (this.nationalNomenclatureOfLegalFormItems.length === 1) {
                     this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([this.nationalNomenclatureOfLegalFormItems[0]]);
+                }
+            });
+
+        this.fundForm.controls['hasCapitalPreservation'].valueChanges
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (d === 'NO') {
+                    this.fundForm.controls['capitalPreservationLevel'].setValue('');
                 }
             });
     }
