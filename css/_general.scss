@@ -511,11 +511,13 @@ h2.statement {
     padding: 0 7px;
     width: auto !important;
 }
+
 .text-badge:before,
 .text-badge:after {
     content: " ";
     display: table;
 }
+
 .text-badge:after {
     clear: both;
 }
@@ -524,11 +526,12 @@ form, .form {
     padding: 0px !important;
 }
 
-app-login .modal-dialog{
-  max-width: 360px !important;
+app-login .modal-dialog {
+    max-width: 360px !important;
 }
-app-login .modal-body{
-  padding-bottom: 0 !important;
+
+app-login .modal-body {
+    padding-bottom: 0 !important;
 }
 
 .toast-top-right {
@@ -537,5 +540,10 @@ app-login .modal-body{
 
 /* modal on navigation too */
 .modal-backdrop {
-  top: -75px !important;
+    top: -75px !important;
 }
+
+.modal-dialog.modal-sm {
+    width: 14rem;
+}
+
