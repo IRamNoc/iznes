@@ -20,6 +20,16 @@
     background-color: #cccc00;
 }
 
+.text-green-title{
+    color: green;
+}
+.text-red-title{
+    color: #cc0000;
+}
+.text-yellow-title{
+    color: #cccc00;
+}
+
 .search {
     position: relative;
     float: right;
