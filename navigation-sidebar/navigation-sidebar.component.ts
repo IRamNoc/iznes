@@ -31,9 +31,12 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         /* Subscribe for language change. */
         this.subscription = this.multilingualService.getLanguage.subscribe((data) => {
+            /* Retrieve and declare data... */
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
             const userType = currentUserDetails.userType;
+
+            /* Figure out what user we are, in a cool way. */
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
@@ -47,10 +50,18 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '50': 'registrar',
                 '60': 't2s',
             }[userType];
-            console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
-            this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
+            if (!userTypeStr) {
+                console.warn('Navigation Render: Missing user type!');
+            }
 
-            this.menuJson.forEach((row)=>{
+            console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
+            /* Translate the menu. */
+            this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
+            if (!this.menuJson) {
+                console.warn('Navigation Render: No menu structure found!');
+            }
+
+            this.menuJson && this.menuJson.forEach((row) => {
                 if (row['children'] != null) this.menuParent.push(row['element_id']);
             });
         });
@@ -100,12 +111,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         return !!(this.router.url.indexOf(route) !== -1);
     }
 
-    public menuSelected(id){
-        if (this.menuParentOpen == id){
+    public menuSelected(id) {
+        if (this.menuParentOpen == id) {
             this.menuParentOpen = '';
-        }else if (this.menuParent.indexOf(id) !== -1) {
+        } else if (this.menuParent.indexOf(id) !== -1) {
             this.menuParentOpen = id;
         }
     }
-
 }
