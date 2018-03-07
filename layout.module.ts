@@ -42,6 +42,9 @@ import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModul
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
+/* Import the persist module. */
+import {PersistModule} from "@setl/core-persist";
+
 @NgModule({
     imports: [
         RouterModule,
@@ -55,6 +58,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         SetlComponentsModule,
         SetlDirectivesModule,
         MultilingualModule,
+        PersistModule,
     ],
     declarations: [
         /* Directives. */
@@ -123,4 +127,3 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 export class SetlLayoutModule {
 
 }
-
