@@ -57,7 +57,7 @@ node {
         }
 
         stage('Update database') {
-            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./updatedb iznes && \''
+            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./updatedb iznes \\&& \''
             sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/project/iznes/baseDB && ./testBoxDeploy.sh \''
         }
 
