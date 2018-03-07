@@ -1,0 +1,41 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-archive"></i> <span mltag="txt_ui_button">Button
+    </span></h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes"
+                      [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="button">
+            <i class="fa fa-bars"></i> <span mltag="txt_ui_button">Button</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <section class="form-block">
+                    <p>For <b>Confirmation Alerts</b>, a Yes or No answer use Alerts on the left menu. Only use
+                        buttons for forms and including other components</p>
+
+                    <section class="form-block">
+                        <div class="form-group col-sm-12">
+                            <button id="showMediumButtonForm" class="btn btn-primary" (click)="showSmallButtonForm()">
+                                Show
+                                Small Button Form
+                            </button>
+                            <button id="showLargeButtonForm" class="btn btn-primary" (click)="showMediumButtonForm()">
+                                Show
+                                Medium Button Form
+                            </button>
+                        </div>
+                    </section>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

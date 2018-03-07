@@ -1,0 +1,23 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-archive"></i> <span mltag="txt_ui_modal">Text
+    </span></h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes"
+                      [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="modal">
+            <i class="fa fa-bars"></i> <span mltag="txt_ui_modal">Modal</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
