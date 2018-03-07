@@ -15,16 +15,15 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
     subscriptions: Array<Subscription> = [];
     placeOrdersFormGroup: FormGroup;
     routeOption: string;
+    subtitleLabel: string;
+    entryExitFeesLabel: string;
     shareName: string;
     isin: string;
     link: string;
     shareId: number;
 
     /** Date */
-    orderDateConfig: object;
-    cutOffDateConfig: object;
-    navDateConfig: object;
-    settlementDateConfig: object;
+    datePickerConfig: object;
 
     /* Accordion tabs */
     isGenInvestAccordionOpened: boolean;
@@ -57,21 +56,20 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
 
         // Get the parameter passed to URL
         this.route.params.subscribe((params) => {
+            if (params.option) {
+                this.routeOption = params.option.charAt(0).toUpperCase() + params.option.slice(1);
+                this.subtitleLabel = (params.option === 'subscription') ? 'subscribe to' : 'redeem';
+                this.entryExitFeesLabel = (params.option === 'subscription') ? 'Entry' : 'Exit';
+            }
+
             if (params.shareId) {
                 this.shareId = Number(params.shareId);
             }
         });
 
-        this.routeOption = 'Subscription';
         this.shareName = 'myShareName';
         this.isin = 'ThisIsAUniqueValue';
         this.link = 'https://google.fr';
-
-        /* Dates config */
-        this.orderDateConfig = this.initDatePickerConfig();
-        this.cutOffDateConfig = this.initDatePickerConfig();
-        this.navDateConfig = this.initDatePickerConfig();
-        this.settlementDateConfig = this.initDatePickerConfig();
 
         /* Accordion flags */
         this.isGenInvestAccordionOpened = true;
@@ -82,6 +80,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
 
         /* Init */
         this.initForm();
+        this.initDatePickerConfig();
     }
 
     ngOnInit(): void {
@@ -141,7 +140,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
     }
 
     initDatePickerConfig() {
-        return {
+        this.datePickerConfig = {
             firstDayOfWeek: 'mo',
             format: 'YYYY-MM-DD',
             closeOnSelect: true,
