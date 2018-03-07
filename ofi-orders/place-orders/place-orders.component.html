@@ -15,7 +15,7 @@
 
         <clr-tab-content *clrIfActive>
             <span>
-                Please fill up the following information to [subscribe to / redeem] a new share:
+                Please fill up the following information to {{subtitleLabel}} a new share:
             </span>
 
             <form [formGroup]="placeOrdersFormGroup" (ngSubmit)="handleSubmitButtonClick()">
@@ -51,7 +51,7 @@
 
                             <!-- Entry/exit fees -->
                             <div class="col-sm-6">
-                                <label for="entryExitFees">Entry/Exit fees:</label>
+                                <label for="entryExitFees">{{entryExitFeesLabel}} fees:</label>
                                 <input id="entryExitFees"
                                        class="form-control"
                                        type="number"
@@ -209,7 +209,7 @@
                                     <input id="navDate"
                                            placeholder="Choose a date"
                                            formControlName="navDate"
-                                           [dpDayPicker]="configDate"
+                                           [dpDayPicker]="datePickerConfig"
                                            mode="day"
                                            theme="dp-material"
                                            mltag="txt_chooseadate"/>
@@ -249,7 +249,7 @@
                                     <input id="orderDate"
                                            placeholder="Choose a date"
                                            formControlName="orderDate"
-                                           [dpDayPicker]="orderDateConfig"
+                                           [dpDayPicker]="datePickerConfig"
                                            mode="day"
                                            theme="dp-material"
                                            mltag="txt_chooseadate"/>
@@ -265,7 +265,7 @@
                                     <input id="cutOffDate"
                                            placeholder="Choose a date"
                                            formControlName="cutOffDate"
-                                           [dpDayPicker]="cutOffDate"
+                                           [dpDayPicker]="datePickerConfig"
                                            mode="day"
                                            theme="dp-material"
                                            mltag="txt_chooseadate"/>
@@ -281,7 +281,7 @@
                                     <input id="dateInfoNavDate"
                                            placeholder="Choose a date"
                                            formControlName="dateInfoNavDate"
-                                           [dpDayPicker]="navDateConfig"
+                                           [dpDayPicker]="datePickerConfig"
                                            mode="day"
                                            theme="dp-material"
                                            mltag="txt_chooseadate"/>
@@ -297,7 +297,7 @@
                                     <input id="settlementDate"
                                            placeholder="Choose a date"
                                            formControlName="settlementDate"
-                                           [dpDayPicker]="settlementDateConfig"
+                                           [dpDayPicker]="datePickerConfig"
                                            mode="day"
                                            theme="dp-material"
                                            mltag="txt_chooseadate"/>
@@ -311,14 +311,14 @@
                         <!-- Panel header -->
                         <div class="row panel-header">
                             <div class="col-sm-12"
-                                 (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
-                                <i class="fa fa-chevron-down" [class.reverse]="isDatesInfoAccordionOpened"></i>
+                                 (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="isOrderInfoAccordionOpened"></i>
                                 Order Information
                             </div>
                         </div>
 
                         <!-- Panel body -->
-                        <div class="row panel-body" [class.hidden]="!isDatesInfoAccordionOpened">
+                        <div class="row panel-body" [class.hidden]="!isOrderInfoAccordionOpened">
                             <!-- Order Reference -->
                             <div class="col-sm-6">
                                 <label for="orderReference">Order Reference:</label>
