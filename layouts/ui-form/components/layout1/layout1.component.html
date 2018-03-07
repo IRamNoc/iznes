@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-archive"></i> <span mltag="txt_ui_button">Layout One
+    <h1><i class="fa fa-th"></i> <span mltag="txt_ui_button">Layout One
     </span></h1>
 </div>
 
@@ -13,27 +13,25 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> <span mltag="txt_ui_button">Layout</span>
+            <i class="fa fa-bars"></i> <span mltag="txt_ui_button">Layout One</span>
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
                 <p>Lets add some text at the top if it required. No problems lots of space here</p>
-
-                <h2><i class="fa fa-archive"></i> Form Area</h2>
-
+                <h2><i class="fa fa-list"></i> Form Area</h2>
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label class="control-label" for="firstName" mltag="txt_ui_firstname">First name</label>
-                            <input type="text" name="firstName" id="firstName" formControlName="firstName"/>
+                            <input type="text" name="firstName" id="firstName"/>
                             <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="lastName" mltag="txt_ui_lastname">Last
                                 name</label>
-                            <input type="text" name="lastName" id="lastName" formControlName="lastName"/>
+                            <input type="text" name="lastName" id="lastName"/>
                             <span class="field-error">Field is required</span>
                         </div>
                     </div>
@@ -42,28 +40,68 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="password"
                                    mltag="txt_ui_password">Password</label>
-                            <input type="password" name="password" id="password" formControlName="password"/>
+                            <input type="password" name="password" id="password"/>
                             <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="passwordConfirm"
                                    mltag="txt_ui_passwordconfirm">Confirm password</label>
-                            <input type="password" name="passwordConfirm" id="passwordConfirm"
-                                   formControlName="passwordConfirm"/>
+                            <input type="password" name="passwordConfirm" id="passwordConfirm"/>
                             <span class="field-error">Field is required</span>
                         </div>
-
-                        <app-ui-info-pane [hidden]="!showInfoPanes"
-                                          [message]="'Simply wrap 2 \'form-group col-sm-6\' in a \'row\' class to achieve side-by-side fields.'"></app-ui-info-pane>
                     </div>
+                </section>
+                <div class="hr-line-dashed"></div>
 
+                <h2><i class="fa fa-info-circle"></i> Text & Info Area</h2>
+                <section class="form-block">
+                    <p><b>Please confirm that you validate your client's KYC documents</b></p>
+                    <p>Does the Asset Management company OFI AM, confirm that the client OFI AM has successfully filled
+                        up the KYC documents, and that you wish to authorise this client to place orders on IZNES?</p>
+                    <p>Can add more great things in here such as checkboxes</p>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <h2><i class="fa fa-table"></i> Datagrid Area</h2>
+                <section class="form-block">
+                    <clr-datagrid #dataGrid>
+                        <clr-dg-column mltag="txt_ui_column1">Column 1</clr-dg-column>
+                        <clr-dg-column mltag="txt_ui_column2">Column 2</clr-dg-column>
+                        <clr-dg-column class="actions" mltag="txt_ui_actions">Actions</clr-dg-column>
+
+                        <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
+                            <clr-dg-cell>{{item.value1}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.value2}}</clr-dg-cell>
+                            <clr-dg-cell class="actions">
+                                <div class="btn-group btn-sm">
+                                    <button id="edit" (click)="dataGridEdit()" class="btn">
+                                        <i class="fa fa-pencil-square-o"></i> <span mltag="txt_ui_edit">Edit</span>
+                                    </button>
+
+                                    <button id="delete" (click)="dataGridDelete()" class="btn">
+                                        <i class="fa fa-trash-o"></i> <span mltag="txt_ui_delete">Delete</span>
+                                    </button>
+                                </div>
+                            </clr-dg-cell>
+                        </clr-dg-row>
+
+                        <clr-dg-footer>
+                            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                            <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+                        </clr-dg-footer>
+                    </clr-datagrid>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <section class="form-block">
                     <div class="form-group col-sm-6">
                         <button id="submit" type="submit" class="btn btn-primary" mltag="txt_ui_submit">Submit
                             Button
                         </button>
                     </div>
                 </section>
+
             </form>
         </clr-tab-content>
     </clr-tab>

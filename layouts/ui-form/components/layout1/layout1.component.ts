@@ -28,12 +28,60 @@ export class UiLayout1Component {
 
     public showInfoPanes: boolean = true;
 
+    // mock data
+    mockDataGridItems: any[];
+
     constructor() {
+        this.initMocks();
+    }
+
+    // mock data
+    private initMocks(): void {
+        this.mockDataGridItems = [{
+            value1: 'Row 1 - Value 1',
+            value2: 'Row 1 - Value 2'
+        }, {
+            value1: 'Row 2 - Value 1',
+            value2: 'Row 2 - Value 2'
+        }, {
+            value1: 'Row 3 - Value 1',
+            value2: 'Row 3 - Value 2'
+        }, {
+            value1: 'Row 4 - Value 1',
+            value2: 'Row 4 - Value 2'
+        }, {
+            value1: 'Row 5 - Value 1',
+            value2: 'Row 5 - Value 2'
+        }, {
+            value1: 'Row 6 - Value 1',
+            value2: 'Row 6 - Value 2'
+        }, {
+            value1: 'Row 7 - Value 1',
+            value2: 'Row 7 - Value 2'
+        }, {
+            value1: 'Row 8 - Value 1',
+            value2: 'Row 8 - Value 2'
+        }, {
+            value1: 'Row 9 - Value 1',
+            value2: 'Row 9 - Value 2'
+        }, {
+            value1: 'Row 10 - Value 1',
+            value2: 'Row 10 - Value 2'
+        }];
     }
 
     toggleInfoPanes(event: Event): void {
         event.preventDefault();
 
         this.showInfoPanes = !this.showInfoPanes;
+    }
+
+    // datagrid
+    dataGridEdit(): void {
+        console.log('Edit data grid item function here');
+    }
+
+    dataGridDelete(): void {
+        console.log('Delete data grid item function here');
     }
 }
