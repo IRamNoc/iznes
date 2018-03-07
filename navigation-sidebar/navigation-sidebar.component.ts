@@ -31,12 +31,9 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         /* Subscribe for language change. */
         this.subscription = this.multilingualService.getLanguage.subscribe((data) => {
-            /* Retrieve and declare data... */
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
             const userType = currentUserDetails.userType;
-
-            /* Figure out what user we are, in a cool way. */
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
@@ -50,18 +47,10 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '50': 'registrar',
                 '60': 't2s',
             }[userType];
-            if (! userTypeStr) {
-                console.warn('Navigation Render: Missing user type!');
-            }
-
             console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
-            /* Translate the menu. */
             this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
-            if (! this.menuJson) {
-                console.warn('Navigation Render: No menu structure found!');
-            }
 
-            this.menuJson && this.menuJson.forEach((row)=>{
+            this.menuJson.forEach((row)=>{
                 if (row['children'] != null) this.menuParent.push(row['element_id']);
             });
         });
