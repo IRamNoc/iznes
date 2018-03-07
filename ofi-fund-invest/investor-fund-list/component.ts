@@ -13,6 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
+import {isInRootDir} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -28,6 +29,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     fundListObj: any;
 
     fundList: Array<any>;
+
+    public search: string = '';
+    public showCross = false;
+    public sortBy = {
+        field: 'isin',
+        order: 'asc'
+    };
+    public fullList: Array<any>;
 
     // production or not
     production: boolean;
@@ -80,7 +89,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa fa-th-list',
-                        text: 'List'
+                        text: 'Shares Available'
                     },
                     fundShareId: -1,
                     fundShareData: {},
@@ -123,26 +132,28 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         const fundListImu = fromJS(fundList);
 
-        this.fundList = fundListImu.reduce((result, item) => {
-
+        this.fullList = fundListImu.reduce((result, item) => {
             result.push({
                 id: item.get('shareId', 0),
-                assetManager: item.getIn(['managementCompany'], ''),
                 isin: item.getIn(['metaData', 'isin'], ''),
-                fundName: item.getIn(['shareName'], ''),
+                shareName: item.getIn(['metaData', 'shareName'], ''),
+                assetClass: item.getIn(['metaData', 'assetClass'], ''),
+                assetManager: item.getIn(['managementCompany'], ''),
+                srri: item.getIn(['metaData', 'srri'], ''),
+                sri: item.getIn(['metaData', 'fundSri'], ''),
+                currency: item.getIn(['metaData', 'shareCurrency', '0', 'text'], ''),
                 nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
-                currency: item.getIn(['metaData', 'portfolioCurrency', '0', 'text'], ''),
-                mainClass: item.getIn(['metaData', 'assetClass', '0', 'text'], ''),
-                subClass: item.getIn(['metaData', 'subAssetClass', '0', 'text'], ''),
-                geographic: item.getIn(['metaData', 'geographicalArea', '0', 'text'], '')
+                subscriptionDate: item.getIn(['metaData', 'subscriptionCutOff'], ''),
+                redemptionDate: item.getIn(['metaData', 'redemptionCutOff'], '')
             });
-
             return result;
         }, []);
 
         this.tabsControl = immutableHelper.copy(this.tabsControl);
 
         this._changeDetectorRef.markForCheck();
+
+        this.handleSearch(this.search);
     }
 
 
@@ -234,6 +245,44 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Handle buy/sell button is click in the list of funds.
+     * @param index
+     */
+    handleBuySell(index: number): void {
+        // /* Check if the tab is already open. */
+        // let i;
+        // for (i = 0; i < this.tabsControl.length; i++) {
+        //     if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'redeem')) {
+        //         this._router.navigateByUrl(`/list-of-funds/${i}`);
+        //
+        //         return;
+        //     }
+        // }
+        //
+        // /* Push the edit tab into the array. */
+        // const fundShareId = _.get(this.fundList, [index, 'id'], 0);
+        // const fundShareData = _.get(this.fundListObj, [fundShareId], {});
+        // const fundShareName = _.get(fundShareData, ['shareName'], '');
+        //
+        // this.tabsControl.push({
+        //     title: {
+        //         icon: 'fa-sign-out',
+        //         text: fundShareName,
+        //         colorClass: 'text-success'
+        //     },
+        //     fundShareId: fundShareId,
+        //     fundShareData: fundShareData,
+        //     actionType: 'redeem',
+        //     active: false,
+        //     formData: {}
+        // })
+        // ;
+        //
+        // // Activate the new tab.
+        // this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+    }
+
+    /**
      * Handle fund view is click in the list of funds.
      * @param index
      */
@@ -294,5 +343,43 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     updateFormData(tabId: number, formValue: any): void {
         this.tabsControl[tabId].formData = formValue;
+    }
+
+    handleSearch(value) {
+        this.search = value;
+        if (value == ''){
+            this.fundList = this.fullList;
+            this.fullList = [];
+        }else{
+            if (this.fullList.length == 0) this.fullList = this.fundList;
+            let searchFields = ['isin','shareName','assetManager','nav','subscriptionDate','redemptionDate'];
+            this.fundList = this.fullList.filter(row => return searchFields.some(field => return !!String(row[field]).match(new RegExp(this.search,'i'))));
+        }
+        this.fundList.sort(this.sortData());
+    }
+
+    clearSearch(event?: any) {
+        if (event) event.preventDefault();
+        this.handleSearch('');
+    }
+
+    sortTable(field){
+        if (this.sortBy['field'] == field && this.sortBy['order'] == 'asc'){
+            this.sortBy['order'] = 'desc';
+        }else{
+            this.sortBy = {
+                field: field,
+                order: 'asc'
+            };
+        }
+        this.fundList.sort(this.sortData());
+    }
+
+    sortData(){
+        var sortOrder = (this.sortBy['order']=='asc'?1:-1);
+        return (a,b)=>{
+            var result = (a[this.sortBy['field']] < b[this.sortBy['field']]) ? -1 : (a[this.sortBy['field']] > b[this.sortBy['field']]) ? 1 : 0;
+            return result * sortOrder;
+        };
     }
 }
