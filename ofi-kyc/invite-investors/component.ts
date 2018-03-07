@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {immutableHelper} from '@setl/utils';
+import {select} from '@angular-redux/store';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-invite-investors',
@@ -10,8 +12,7 @@ import {immutableHelper} from '@setl/utils';
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiInviteInvestorsComponent implements OnDestroy {
-
+export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
 
@@ -19,8 +20,21 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
     countdown = 5;
     emailSent = false;
     emailList = [];
+    language: string;
+    /* Observables */
+    @select(['user', 'siteSettings', 'language']) languageObs;
+    private subscriptions: Array<Subscription> = [];
 
-    private subscriptions: Array<any> = [];
+    /* Constructor. */
+    constructor(private _fb: FormBuilder,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private _location: Location,
+                private _ofiKycService: OfiKycService) {
+        this.invitationForm = this._fb.group({
+            investors: this._fb.array([])
+        });
+        this.addInvestor(this.invitationForm);
+    }
 
     /**
      * Check whether we have multiple invites
@@ -33,15 +47,16 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
         return (numInvites > 1);
     }
 
-    /* Constructor. */
-    constructor(private _fb: FormBuilder,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _location: Location,
-                private _ofiKycService: OfiKycService) {
-        this.invitationForm = this._fb.group({
-            investors: this._fb.array([])
-        });
-        this.addInvestor(this.invitationForm);
+    ngOnInit(): void {
+        this.subscriptions.push(this.languageObs.subscribe(language => this.language = language));
+    }
+
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this._changeDetectorRef.detach();
+
+        /* Unsubscribe Observables. */
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -85,7 +100,7 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
         }
 
         // make the request
-        const requestData = constructInvitationRequest(formValues);
+        const requestData = constructInvitationRequest(formValues, this.language);
         this._ofiKycService.sendInvestInvitations(requestData).then(() => {
             // success call back
             this.resetForm(formValues);
@@ -126,17 +141,6 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
         this._location.back();
     }
 
-    /* On Destroy. */
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        for (const key in this.subscriptions) {
-            this.subscriptions[key].unsubscribe();
-        }
-    }
-
     markForCheck() {
         this._changeDetectorRef.markForCheck();
     }
@@ -145,9 +149,13 @@ export class OfiInviteInvestorsComponent implements OnDestroy {
 /**
  * construct invitation request with form value.
  */
-function constructInvitationRequest(formValue) {
+function constructInvitationRequest(formValue, lang) {
     const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
-        result.push({email: item.get('email', ''), firstname: item.get('firstName', ''), lastname: item.get('lastName', '')});
+        result.push({
+            email: item.get('email', ''),
+            firstname: item.get('firstName', ''),
+            lastname: item.get('lastName', '')
+        });
         return result;
     }, []);
 
@@ -155,6 +163,6 @@ function constructInvitationRequest(formValue) {
         assetManagerName: 'OFI',
         amCompanyName: 'OFI Am Management',
         investors,
-        lang: 'fr'
+        lang
     };
 }
