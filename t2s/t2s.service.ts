@@ -68,10 +68,11 @@ export class T2sService {
 
     public newMessage(messageData: any): any {
         /* Setup the message body. */
+        console.log(' | T2S sending: ', messageData.message ? messageData.message : messageData);
         const messageBody: NewMessageBody = {
             RequestName: 't2sNew',
             token: this.memberSocketService.token,
-            message: messageData.message,
+            message: messageData.message ? messageData.message : messageData,
         };
 
         /* Return the new member node saga request. */
