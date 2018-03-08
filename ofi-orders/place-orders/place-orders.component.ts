@@ -21,6 +21,9 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
     isin: string;
     link: string;
     shareId: number;
+    isConfirmModalOpened: boolean;
+    investmentPortfolioItems: any;
+    selectedDropdownItem: string;
 
     /** Date */
     datePickerConfig: object;
@@ -70,6 +73,8 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.shareName = 'myShareName';
         this.isin = 'ThisIsAUniqueValue';
         this.link = 'https://google.fr';
+        this.isConfirmModalOpened = false;
+        this.selectedDropdownItem = '';
 
         /* Accordion flags */
         this.isGenInvestAccordionOpened = true;
@@ -77,6 +82,30 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.isProductInfoAccordionOpened = true;
         this.isDatesInfoAccordionOpened = true;
         this.isOrderInfoAccordionOpened = true;
+
+        /* Investment portfolio items */
+        this.investmentPortfolioItems = [
+            {
+                id: 1,
+                text: 'investment portfolio 1'
+            },
+            {
+                id: 2,
+                text: 'investment portfolio 2'
+            },
+            {
+                id: 3,
+                text: 'investment portfolio 3'
+            },
+            {
+                id: 4,
+                text: 'investment portfolio 4'
+            },
+            {
+                id: 5,
+                text: 'investment portfolio 5'
+            }
+        ];
 
         /* Init */
         this.initForm();
@@ -108,8 +137,8 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
             incidentalCosts: [{ value: 0, disabled: true }],
 
             /* Product information */
-            isin: [{ value: '', disabled: true }],
-            shareName: [{ value: '', disabled: true }],
+            isin: [{ value: this.isin, disabled: true }],
+            shareName: [{ value: this.shareName, disabled: true }],
             assetClass: [{ value: '', disabled: true }],
             srri: [{ value: '', disabled: true }],
             sri: [{ value: '', disabled: true }],
@@ -183,12 +212,30 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.placeOrdersFormGroup.reset();
     }
 
+    handleDropdownItemSelect(selectedItem) {
+        this.selectedDropdownItem = selectedItem.text;
+    }
+
     handleCancelButtonClick() {
         // TODO: add the route to redirect to
         this.router.navigate([]);
     }
 
     handleSubmitButtonClick() {
-        console.log('on submit button click');
+        this.isConfirmModalOpened = true;
+    }
+
+    handleModalCancelButtonClick() {
+        this.isConfirmModalOpened = false;
+    }
+
+    handleModalConfirmButtonClick() {
+        console.log('investment portfolio: ', this.placeOrdersFormGroup.controls['investmentPortfolio'].value);
+        console.log('share name: ', this.placeOrdersFormGroup.controls['shareName'].value);
+        console.log('ISIN: ', this.placeOrdersFormGroup.controls['isin'].value);
+        console.log('currency: ', this.placeOrdersFormGroup.controls['currency'].value);
+        console.log('quantity: ', this.placeOrdersFormGroup.controls['quantity'].value);
+        console.log('amount: ', this.placeOrdersFormGroup.controls['amount'].value);
+        console.log('settlement date: ', this.placeOrdersFormGroup.controls['settlementDate'].value);
     }
 }
