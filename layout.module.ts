@@ -18,7 +18,17 @@ import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropd
 import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
 import {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.component';
 import {UiModalComponent} from './layouts/ui-form/components/modal/modal.component';
+import {UiButtonComponent} from './layouts/ui-form/components/button/button.component';
 import {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
+
+import {UiColourComponent} from './layouts/ui-form/components/colour/colour.component';
+import {UiFormPersistComponent} from './layouts/ui-form/components/form-persist/form-persist.component';
+import {UiIconsComponent} from './layouts/ui-form/components/icons/icons.component';
+import {UiLayout1Component} from './layouts/ui-form/components/layout1/layout1.component';
+import {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.component';
+import {UiTextComponent} from './layouts/ui-form/components/text/text.component';
+
+
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -31,6 +41,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
+
+/* Import the persist module. */
+import {PersistModule} from '@setl/core-persist';
+
+import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.service';
 
 @NgModule({
     imports: [
@@ -45,6 +60,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         SetlComponentsModule,
         SetlDirectivesModule,
         MultilingualModule,
+        PersistModule,
     ],
     declarations: [
         /* Directives. */
@@ -67,7 +83,14 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         UiDataGridComponent,
         UiAlertsComponent,
         UiModalComponent,
-        UiToasterComponent
+        UiButtonComponent,
+        UiToasterComponent,
+        UiColourComponent,
+        UiFormPersistComponent,
+        UiIconsComponent,
+        UiLayout1Component,
+        UiLayout2Component,
+        UiTextComponent
     ],
     exports: [
         /* Directives. */
@@ -88,12 +111,20 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         UiDropdownsComponent,
         UiDataGridComponent,
         UiAlertsComponent,
+        UiButtonComponent,
         UiModalComponent,
-        UiToasterComponent
+        UiToasterComponent,
+        UiColourComponent,
+        UiFormPersistComponent,
+        UiIconsComponent,
+        UiLayout1Component,
+        UiLayout2Component,
+        UiTextComponent
     ],
     providers: [
         /* Services. */
-        MenuDropdownService
+        MenuDropdownService,
+        MockFundService
     ],
 })
 export class SetlLayoutModule {

@@ -50,18 +50,18 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '50': 'registrar',
                 '60': 't2s',
             }[userType];
-            if (! userTypeStr) {
+            if (!userTypeStr) {
                 console.warn('Navigation Render: Missing user type!');
             }
 
             console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
             /* Translate the menu. */
             this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
-            if (! this.menuJson) {
+            if (!this.menuJson) {
                 console.warn('Navigation Render: No menu structure found!');
             }
 
-            this.menuJson && this.menuJson.forEach((row)=>{
+            this.menuJson && this.menuJson.forEach((row) => {
                 if (row['children'] != null) this.menuParent.push(row['element_id']);
             });
         });
@@ -111,12 +111,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         return !!(this.router.url.indexOf(route) !== -1);
     }
 
-    public menuSelected(id){
-        if (this.menuParentOpen == id){
+    public menuSelected(id) {
+        if (this.menuParentOpen == id) {
             this.menuParentOpen = '';
-        }else if (this.menuParent.indexOf(id) !== -1) {
+        } else if (this.menuParent.indexOf(id) !== -1) {
             this.menuParentOpen = id;
         }
     }
-
 }
