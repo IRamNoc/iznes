@@ -81,5 +81,10 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 }
 
 .datagrid .datagrid-cell, .datagrid .datagrid-column, .datagrid .datagrid-head .datagrid-row-actions{
-    min-width: 50px !important;
+    //min-width: 50px !important;
+    min-width: 3rem;
+}
+
+.datagrid .datagrid-column .datagrid-column-title {
+    font-weight: normal;
 }
