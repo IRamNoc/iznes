@@ -23,17 +23,20 @@
                     <!-- General investment information -->
                     <div class="well">
                         <div class="row panel-header">
-                            <div class="col-sm-12"
-                                 (click)="isGenInvestAccordionOpened = !isGenInvestAccordionOpened; $event.preventDefault();">
+                            <h4 class="col-sm-12"
+                                (click)="isGenInvestAccordionOpened = !isGenInvestAccordionOpened; $event.preventDefault();">
                                 <i class="fa fa-chevron-down" [class.reverse]="isGenInvestAccordionOpened"></i>
                                 General Investment Information
-                            </div>
+                            </h4>
                         </div>
 
                         <div class="row panel-body" [class.hidden]="!isGenInvestAccordionOpened">
                             <div class="col-sm-6">
                                 <!-- Asset management company -->
-                                <label for="assetManagementCompany">Asset Management Company:</label>
+                                <label for="assetManagementCompany">
+                                    <span>Asset Management Company:</span>
+                                </label>
+
                                 <input id="assetManagementCompany"
                                        class="form-control"
                                        type="text"
@@ -43,10 +46,18 @@
                             <!-- Investment portfolio -->
                             <div class="col-sm-6">
                                 <label for="investmentPortfolio">Investment Portfolio:</label>
-                                <input id="investmentPortfolio"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="investmentPortfolio"/>
+
+                                <div class="form-control">
+                                    <div class="form-group col-sm-6">
+                                        <ng-select id="investmentPortfolio"
+                                                   placeholder="Select an investment portfolio"
+                                                   [items]="investmentPortfolioItems"
+                                                   [allowClear]="true"
+                                                   [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']"
+                                                   (selected)="handleDropdownItemSelect($event)">
+                                        </ng-select>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Entry/exit fees -->
@@ -61,11 +72,11 @@
                             <!-- MiFID -->
                             <div class="well">
                                 <div class="row panel-header">
-                                    <div class="col-sm-12"
-                                         (click)="isMifidAccordionOpened = !isMifidAccordionOpened; $event.preventDefault();">
+                                    <h4 class="col-sm-12"
+                                        (click)="isMifidAccordionOpened = !isMifidAccordionOpened; $event.preventDefault();">
                                         <i class="fa fa-chevron-down" [class.reverse]="isMifidAccordionOpened"></i>
                                         MiFID II Costs & Charges
-                                    </div>
+                                    </h4>
                                 </div>
 
                                 <div class="row panel-body" [class.hidden]="!isMifidAccordionOpened">
@@ -128,11 +139,11 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <div class="col-sm-12"
-                                 (click)="isProductInfoAccordionOpened = !isProductInfoAccordionOpened; $event.preventDefault();">
+                            <h4 class="col-sm-12"
+                                (click)="isProductInfoAccordionOpened = !isProductInfoAccordionOpened; $event.preventDefault();">
                                 <i class="fa fa-chevron-down" [class.reverse]="isProductInfoAccordionOpened"></i>
                                 Product Information
-                            </div>
+                            </h4>
                         </div>
 
                         <!-- Panel body -->
@@ -231,11 +242,11 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <div class="col-sm-12"
-                                 (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
+                            <h4 class="col-sm-12"
+                                (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
                                 <i class="fa fa-chevron-down" [class.reverse]="isDatesInfoAccordionOpened"></i>
                                 Dates Information
-                            </div>
+                            </h4>
                         </div>
 
                         <!-- Panel body -->
@@ -310,11 +321,11 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <div class="col-sm-12"
-                                 (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
+                            <h4 class="col-sm-12"
+                                (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
                                 <i class="fa fa-chevron-down" [class.reverse]="isOrderInfoAccordionOpened"></i>
                                 Order Information
-                            </div>
+                            </h4>
                         </div>
 
                         <!-- Panel body -->
@@ -407,8 +418,40 @@
                     </div>
                 </section>
             </form>
-
-
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
+
+<!-- Confirmation modal -->
+<clr-modal [(clrModalOpen)]="isConfirmModalOpened" [clrModalClosable]="false">
+    <div class="modal-title">
+        <h4 class="modal-title-text">
+            <span class="ml_translated">Order confirmation</span>
+        </h4>
+    </div>
+
+    <div class="modal-body text-center">
+        <p>Please check information about your order before confirm it:</p>
+        <p><i class="fa fa-exclamation-triangle modal-icon text-muted text-danger"></i></p>
+        <p>Investment Portfolio: {{selectedDropdownItem}}</p>
+        <p>Share Name: {{placeOrdersFormGroup.controls['shareName'].value}}</p>
+        <p>ISIN: {{placeOrdersFormGroup.controls['isin'].value}}</p>
+        <p>Currency: {{placeOrdersFormGroup.controls['shareCurrency'].value}}</p>
+        <p>Quantity: {{placeOrdersFormGroup.controls['quantity'].value}}</p>
+        <p>Amount: {{placeOrdersFormGroup.controls['amount'].value}}</p>
+        <p>Settlement Date: {{placeOrdersFormGroup.controls['settlementDate'].value}}</p>
+    </div>
+
+    <div class="modal-footer text-center">
+        <button id="modalCancelButton"
+                type="button"
+                class="btn btn-outline-info"
+                (click)="handleModalCancelButtonClick()">
+            Cancel
+        </button>
+
+        <button id="modalConfirmButton" type="button" class="btn btn-primary" (click)="handleModalConfirmButtonClick()">
+            Confirm
+        </button>
+    </div>
+</clr-modal>
