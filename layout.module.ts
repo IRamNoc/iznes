@@ -13,6 +13,7 @@ import {HomeComponent} from './home/home.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {UiInfoPaneComponent} from './layouts/ui-form/info-pane/info-pane.component';
 import {UiTabsComponent} from './layouts/ui-form/components/tabs/tabs.component';
+import {UiDynamicTabsComponent} from './layouts/ui-form/components/dynamic-tabs/dynamic-tabs.component';
 import {UiFormsComponent} from './layouts/ui-form/components/forms/forms.component';
 import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
 import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
@@ -76,6 +77,7 @@ import {PersistModule} from "@setl/core-persist";
         FormElementsComponent,
         UiInfoPaneComponent,
         UiTabsComponent,
+        UiDynamicTabsComponent,
         UiFormsComponent,
         UiDropdownsComponent,
         UiDataGridComponent,
