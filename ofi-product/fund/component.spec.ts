@@ -28,7 +28,7 @@ class RouterLinkStubDirective {
     }
 }
 
-fdescribe('FundComponent', () => {
+describe('FundComponent', () => {
 
     let comp:    FundComponent;
     let fixture: ComponentFixture<FundComponent>;
@@ -154,7 +154,7 @@ fdescribe('FundComponent', () => {
             expect(formGroupEls.length).toEqual(30);
         }));
 
-        fdescribe('conditionnal inputs', () => {
+        describe('conditionnal inputs', () => {
 
             beforeEach(fakeAsync(() => {
                 const value = comp.umbrellaItems[1];
@@ -402,7 +402,7 @@ fdescribe('FundComponent', () => {
                 }));
             });
 
-            fdescribe('capitalPreservationLevel', () => {
+            describe('capitalPreservationLevel', () => {
                 it('should display the capitalPreservationLevel input when hasCapitalPreservation is set to \'YES\'', fakeAsync(() => {
                     const capitalPreservationLevelBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#capitalPreservationLevel'));
                     expect(capitalPreservationLevelBeforeEls.length).toEqual(0);
@@ -439,30 +439,72 @@ fdescribe('FundComponent', () => {
 
             describe('capitalPreservationPeriod', () => {
                 it('should display the capitalPreservationPeriod input when hasCapitalPreservation is set to \'YES\'', fakeAsync(() => {
-                    pending()
+                    const capitalPreservationPeriodBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#capitalPreservationPeriod'));
+                    expect(capitalPreservationPeriodBeforeEls.length).toEqual(0);
+                    comp.fundForm.controls['hasCapitalPreservation'].setValue('YES');
+                    tick();
+                    fixture.detectChanges();
+                    const capitalPreservationPeriodAfterEls = fixture.debugElement.queryAllNodes(By.css('input#capitalPreservationPeriod'));
+                    expect(capitalPreservationPeriodAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the capitalPreservationPeriod input', () => {
-                    pending()
-                });
+                it('should not display the capitalPreservationPeriod input', fakeAsync(() => {
+                    const capitalPreservationPeriodBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#capitalPreservationPeriod'));
+                    expect(capitalPreservationPeriodBeforeEls.length).toEqual(0);
+                    comp.fundForm.controls['hasCapitalPreservation'].setValue('NO');
+                    tick();
+                    fixture.detectChanges();
+                    const capitalPreservationPeriodAfterEls = fixture.debugElement.queryAllNodes(By.css('input#capitalPreservationPeriod'));
+                    expect(capitalPreservationPeriodAfterEls.length).toEqual(0);
+                }));
 
-                it('should clear the capitalPreservationPeriod value', () => {
-                    pending()
-                });
+                it('should clear the capitalPreservationPeriod value', fakeAsync(() => {
+                    const testValue = 'test test test';
+                    comp.fundForm.controls['capitalPreservationPeriod'].setValue(testValue);
+                    tick();
+                    fixture.detectChanges();
+                    expect(comp.fundForm.controls['capitalPreservationPeriod'].value).toEqual(testValue);
+
+                    comp.fundForm.controls['hasCapitalPreservation'].setValue('NO');
+                    tick();
+                    fixture.detectChanges();
+                    expect(comp.fundForm.controls['capitalPreservationPeriod'].value).toEqual('');
+                }));
             });
 
             describe('cppiMultiplier', () => {
-                it('should display the cppiMultiplier input when hasCppi is set to \'YES\'', () => {
-                    pending()
-                });
+                it('should display the cppiMultiplier input when hasCppi is set to \'YES\'', fakeAsync(() => {
+                    const cppiMultiplierBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#cppiMultiplier'));
+                    expect(cppiMultiplierBeforeEls.length).toEqual(0);
+                    comp.fundForm.controls['hasCppi'].setValue('YES');
+                    tick();
+                    fixture.detectChanges();
+                    const cppiMultiplierAfterEls = fixture.debugElement.queryAllNodes(By.css('input#cppiMultiplier'));
+                    expect(cppiMultiplierAfterEls.length).toEqual(1);
+                }));
 
-                it('should not display the cppiMultiplier input', () => {
-                    pending()
-                });
+                it('should not display the cppiMultiplier input', fakeAsync(() => {
+                    const cppiMultiplierBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#cppiMultiplier'));
+                    expect(cppiMultiplierBeforeEls.length).toEqual(0);
+                    comp.fundForm.controls['hasCppi'].setValue('NO');
+                    tick();
+                    fixture.detectChanges();
+                    const cppiMultiplierAfterEls = fixture.debugElement.queryAllNodes(By.css('input#cppiMultiplier'));
+                    expect(cppiMultiplierAfterEls.length).toEqual(0);
+                }));
 
-                it('should clear the cppiMultiplier value', () => {
-                    pending()
-                });
+                it('should clear the cppiMultiplier value', fakeAsync(() => {
+                    const testValue = 123;
+                    comp.fundForm.controls['cppiMultiplier'].setValue(testValue);
+                    tick();
+                    fixture.detectChanges();
+                    expect(comp.fundForm.controls['cppiMultiplier'].value).toEqual(testValue);
+
+                    comp.fundForm.controls['hasCppi'].setValue('NO');
+                    tick();
+                    fixture.detectChanges();
+                    expect(comp.fundForm.controls['cppiMultiplier'].value).toEqual('');
+                }));
             });
         });
     });

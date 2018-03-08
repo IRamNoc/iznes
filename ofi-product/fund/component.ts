@@ -211,6 +211,15 @@ export class FundComponent implements OnInit, OnDestroy {
             .subscribe((d) => {
                 if (d === 'NO') {
                     this.fundForm.controls['capitalPreservationLevel'].setValue('');
+                    this.fundForm.controls['capitalPreservationPeriod'].setValue('');
+                }
+            });
+
+        this.fundForm.controls['hasCppi'].valueChanges
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (d === 'NO') {
+                    this.fundForm.controls['cppiMultiplier'].setValue('');
                 }
             });
     }
