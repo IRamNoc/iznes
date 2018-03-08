@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-archive"></i> <span mltag="txt_ui_button">Button
+    <h1><i class="fa fa-hand-pointer-o"></i> <span mltag="txt_ui_button">Button
     </span></h1>
 </div>
 
@@ -17,26 +17,56 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            More button things here...
-            <!--<form>-->
-            <!--<section class="form-block">-->
-            <!--<p>For <b>Confirmation Alerts</b>, a Yes or No answer use Alerts on the left menu. Only use-->
-            <!--buttons for forms and including other components</p>-->
+            <form>
+                <p>Lets add some text at the top if it required. No problems lots of space here</p>
 
-            <!--<section class="form-block">-->
-            <!--<div class="form-group col-sm-12">-->
-            <!--<button id="showMediumButtonForm" class="btn btn-primary" (click)="showSmallButtonForm()">-->
-            <!--Show-->
-            <!--Small Button Form-->
-            <!--</button>-->
-            <!--<button id="showLargeButtonForm" class="btn btn-primary" (click)="showMediumButtonForm()">-->
-            <!--Show-->
-            <!--Medium Button Form-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</section>-->
-            <!--</section>-->
-            <!--</form>-->
+                <h2><i class="fa fa-info-circle"></i> Text & Info Area</h2>
+                <section class="form-block">
+                    <p><b>Please confirm that you validate your client's KYC documents</b></p>
+                    <p>Does the Asset Management company OFI AM, confirm that the client OFI AM has successfully filled
+                        up the KYC documents, and that you wish to authorise this client to place orders on IZNES?</p>
+                    <p>Can add more great things in here such as checkboxes</p>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <h2><i class="fa fa-table"></i> Datagrid Area Button</h2>
+                <section class="form-block">
+                    <clr-datagrid #dataGrid>
+                        <clr-dg-column mltag="txt_ui_column1">Column 1</clr-dg-column>
+                        <clr-dg-column mltag="txt_ui_column2">Column 2</clr-dg-column>
+                        <clr-dg-column class="actions" mltag="txt_ui_actions">Actions</clr-dg-column>
+
+                        <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
+                            <clr-dg-cell>{{item.value1}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.value2}}</clr-dg-cell>
+                            <clr-dg-cell class="actions">
+                                <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                                    mltag="txt_ui_edit">Delete</span></button>
+
+                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                                    mltag="txt_ui_edit">Edit</span></button>
+
+                                <button class="btn btn-orange btn-sm"><i class="fa fa-"></i> <span
+                                    mltag="txt_ui_edit">View</span></button>
+                            </clr-dg-cell>
+                        </clr-dg-row>
+
+                        <clr-dg-footer>
+                            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                            <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+                        </clr-dg-footer>
+                    </clr-datagrid>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <button id="submit" type="submit" class="btn btn-primary" mltag="txt_ui_submit">Submit
+                            Button
+                        </button>
+                    </div>
+                </section>
+            </form>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

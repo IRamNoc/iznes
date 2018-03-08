@@ -43,7 +43,9 @@ import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
 /* Import the persist module. */
-import {PersistModule} from "@setl/core-persist";
+import {PersistModule} from '@setl/core-persist';
+
+import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.service';
 
 @NgModule({
     imports: [
@@ -121,7 +123,8 @@ import {PersistModule} from "@setl/core-persist";
     ],
     providers: [
         /* Services. */
-        MenuDropdownService
+        MenuDropdownService,
+        MockFundService
     ],
 })
 export class SetlLayoutModule {
