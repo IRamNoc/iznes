@@ -15,7 +15,7 @@ buildscript {
 
 
 ext.junitVersion = '4.12'
-ext.seleniumVersion = '3.8.1'
+ext.seleniumVersion = '3.9.1'
 
 repositories {
     maven { url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/" }
