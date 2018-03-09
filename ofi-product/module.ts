@@ -19,6 +19,9 @@ import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
 import {FundShareComponent} from './fund-share/component';
 
+import {DynamicFormComponent} from './fund-share/dynamic-form/component';
+import {DynamicFormService} from './fund-share/dynamic-form/service';
+
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
 
@@ -27,12 +30,14 @@ import {ChartsModule} from 'ng2-charts';
     declarations: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent
+        FundShareComponent,
+        DynamicFormComponent
     ],
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent
+        FundShareComponent,
+        DynamicFormComponent
     ],
     imports: [
         CommonModule,
