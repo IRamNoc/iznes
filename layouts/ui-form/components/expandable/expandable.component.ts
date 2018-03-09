@@ -4,7 +4,7 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 @Component({
     selector: 'app-ui-layouts-expandable',
     templateUrl: './expandable.component.html',
-    styles: [`        
+    classes: [`        
         .well {
             background: white;
             border: 1px solid #e6e6e6;
@@ -48,7 +48,10 @@ export class UiExpandableComponent {
     panels = {
         1: true,
         2: true,
-        3: false
+        3: false,
+        4: false,
+        5: false,
+        6: false
     };
 
     constructor() {
