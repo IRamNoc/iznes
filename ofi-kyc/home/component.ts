@@ -15,6 +15,7 @@ import {Router} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils/index';
+import {Endpoints} from '../config';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -24,6 +25,7 @@ import {SagaHelper} from '@setl/utils/index';
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     appConfig: AppConfig;
+    endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
 
     /* Public properties. */
@@ -60,9 +62,11 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private router: Router,
                 private ofiKycService: OfiKycService,
                 private myUserService: MyUserService,
+                @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
+        this.endpointsConfig = endpoints;
     }
 
     ngAfterViewInit() {
@@ -109,6 +113,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
+            defaultHomePage: this.endpointsConfig.alreadyDoneConfirmation,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
