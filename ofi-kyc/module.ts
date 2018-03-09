@@ -26,6 +26,9 @@ import {OfiAmDocumentsComponent} from './am-documents/component';
 import {TextInputListComponent} from './text-input-list/component';
 import {OfiKycAlreadyDoneComponent} from './already-done/component';
 
+/* Constants */
+import config from './config';
+
 /* Decorator. */
 @NgModule({
     declarations: [
@@ -67,7 +70,8 @@ import {OfiKycAlreadyDoneComponent} from './already-done/component';
     ],
     providers: [
         MockKYCDocumentsService,
-        ToasterService
+        ToasterService,
+        { provide: 'endpoints', useValue: config },
     ]
 })
 
