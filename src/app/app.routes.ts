@@ -217,7 +217,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'umbrella-fund',
+                        path: 'umbrella-fund/:id',
                         component: UmbrellaFundComponent,
                         canActivate: [LoginGuardService],
                     },
