@@ -1,18 +1,4 @@
-// export class ShareListing {
-//     bloombergCodeOfListing?: string = ''; // 1
-//     currency?: string = '';
-//     date?: string = '';
-//     exchangePlace?: string = ''; // 1
-//     iNAVBloombergCode?: string = ''; // 1
-//     iNAVReutersCode?: string = ''; //1
-//     inceptionPrice?: number = null;
-//     isPrimaryListing?: boolean = false;
-//     marketIdentifierCode?: string = ''; // 1
-//     reutersCode?: string = ''; // 1
-//     status?: string = '';
-// }
-
-import {FormItem, FormItemType} from '../dynamic-form/DynamicForm';
+import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareListing {
     bloombergCodeOfListing?: FormItem = {
@@ -26,7 +12,7 @@ export class ShareListing {
         required: false
     }
     date?: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.date,
         label: 'Listing Date',
         required: false
     }
@@ -66,7 +52,7 @@ export class ShareListing {
         required: false
     }
     status?: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.list,
         label: 'Status Of Listing',
         required: false,
         listItems: [

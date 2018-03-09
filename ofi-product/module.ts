@@ -10,6 +10,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from '@clr/angular';
 import {SetlPipesModule, DpDatePickerModule, SetlDirectivesModule} from '@setl/utils';
 import {SelectModule} from 'ng2-select';
+import {CoreDynamicFormsModule} from '@setl/core-dynamic-forms';
 
 /* Multilingual coolness. */
 import {MultilingualModule} from '@setl/multilingual';
@@ -19,9 +20,6 @@ import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
 import {FundShareComponent} from './fund-share/component';
 
-import {DynamicFormComponent} from './fund-share/dynamic-form/component';
-import {DynamicFormService} from './fund-share/dynamic-form/service';
-
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
 
@@ -30,14 +28,12 @@ import {ChartsModule} from 'ng2-charts';
     declarations: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent,
-        DynamicFormComponent
+        FundShareComponent
     ],
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent,
-        DynamicFormComponent
+        FundShareComponent
     ],
     imports: [
         CommonModule,
@@ -51,6 +47,7 @@ import {ChartsModule} from 'ng2-charts';
         SetlPipesModule,
         MultilingualModule,
         ChartsModule,
+        CoreDynamicFormsModule
     ],
     providers: []
 })

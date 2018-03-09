@@ -1,6 +1,6 @@
-import {ShareCharacteristic} from './models/characteristic';
-import {ShareFees} from './models/fees';
-import {ShareKeyFacts} from './models/keyFacts';
+import {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './models/characteristic';
+import {ShareFeesMandatory, ShareFeesOptional} from './models/fees';
+import {ShareKeyFactsMandatory, ShareKeyFactsOptional} from './models/keyFacts';
 import {ShareListing} from './models/listing';
 import {SharePRIIP} from './models/priip';
 import {ShareProfile} from './models/profile';
@@ -9,9 +9,18 @@ import {ShareSolvency} from './models/solvency';
 import {ShareTaxation} from './models/taxation';
 
 export class FundShare {
-    characteristic = new ShareCharacteristic();
-    fees = new ShareFees();
-    keyFacts = new ShareKeyFacts();
+    characteristic = {
+        mandatory: new ShareCharacteristicMandatory(),
+        optional: new ShareCharacteristicOptional()
+    }
+    fees = {
+        mandatory: new ShareFeesMandatory(),
+        optional: new ShareFeesOptional()
+    }
+    keyFacts = {
+        mandatory: new ShareKeyFactsMandatory(),
+        optional: new ShareKeyFactsOptional()
+    }
     listing = new ShareListing();
     priip = new SharePRIIP();
     profile = new ShareProfile();

@@ -8,7 +8,121 @@
             <span>Fund Share</span>
         </button>
         <clr-tab-content>
-            <app-dynamic-form [model]="listing"></app-dynamic-form>
+            
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="tabKeyFactsButton">
+                        <span>Key Facts</span>
+                    </button>
+                    <clr-tab-content>
+                        <h3>Key Facts: Main Information</h3>
+                        <app-dynamic-form [model]="keyFactsMandatory"></app-dynamic-form>
+
+                        <h3>Key Facts: Optional Information</h3>
+                        <app-dynamic-form [model]="keyFactsOptional"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCharacteristicsButton">
+                        <span>Characteristics</span>
+                    </button>
+                    <clr-tab-content>
+                        <h3>Characteristics: Main Information</h3>
+                        <app-dynamic-form [model]="characteristicsMandatory"></app-dynamic-form>
+
+                        <h3>Characteristics: Optional Information</h3>
+                        <app-dynamic-form [model]="characteristicsOptional"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCalendarButton">
+                        <span>Calendar</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Fees</span>
+                    </button>
+                    <clr-tab-content>
+                        <h3>Fees: Main Information</h3>
+                        <app-dynamic-form [model]="feesMandatory"></app-dynamic-form>
+
+                        <h3>Fees: Optional Information</h3>
+                        <app-dynamic-form [model]="feesOptional"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Profile</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Taxation</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Representation</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Listing</span>
+                    </button>
+                    <clr-tab-content>
+                        <h3>Listing: Optional Information</h3>
+                        <app-dynamic-form [model]="listing"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>PRIIP</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Solvency II</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Documents</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

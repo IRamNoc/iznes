@@ -1,6 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
-import { ShareListing } from './models/listing';
+import * as models from './models';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -11,7 +11,14 @@ import { ShareListing } from './models/listing';
 
 export class FundShareComponent implements OnInit {
 
-    listing = new ShareListing();
+    keyFactsMandatory = new models.ShareKeyFactsMandatory();
+    keyFactsOptional = new models.ShareKeyFactsOptional();
+    characteristicsMandatory = new models.ShareCharacteristicMandatory();
+    characteristicsOptional = new models.ShareCharacteristicOptional();
+    // calendar = new models.S();
+    feesMandatory = new models.ShareFeesMandatory();
+    feesOptional = new models.ShareFeesOptional();
+    listing = new models.ShareListing();
 
     constructor() {}
 
