@@ -225,7 +225,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     addForm(type) {
         switch (type) {
             case 'share':
-                this._router.navigateByUrl('/product-module/share');
+                this._router.navigateByUrl('/product-module/fund-share');
                 break;
             case 'fund':
                 this._router.navigateByUrl('/product-module/fund');
