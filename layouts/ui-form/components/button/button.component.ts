@@ -27,13 +27,47 @@ import {Component} from '@angular/core';
 export class UiButtonComponent {
 
     public showInfoPanes: boolean = true;
-    public smallButton: boolean = false;
-    public mediumButton: boolean = false;
-    public largeButton: boolean = false;
-    public mediumButtonForm: boolean = false;
-    public smallButtonForm: boolean = false;
+
+    // mock data
+    mockDataGridItems: any[];
 
     constructor() {
+        this.initMocks();
+    }
+
+    // mock data
+    private initMocks(): void {
+        this.mockDataGridItems = [{
+            value1: 'Row 1 - Value 1',
+            value2: 'Row 1 - Value 2'
+        }, {
+            value1: 'Row 2 - Value 1',
+            value2: 'Row 2 - Value 2'
+        }, {
+            value1: 'Row 3 - Value 1',
+            value2: 'Row 3 - Value 2'
+        }, {
+            value1: 'Row 4 - Value 1',
+            value2: 'Row 4 - Value 2'
+        }, {
+            value1: 'Row 5 - Value 1',
+            value2: 'Row 5 - Value 2'
+        }, {
+            value1: 'Row 6 - Value 1',
+            value2: 'Row 6 - Value 2'
+        }, {
+            value1: 'Row 7 - Value 1',
+            value2: 'Row 7 - Value 2'
+        }, {
+            value1: 'Row 8 - Value 1',
+            value2: 'Row 8 - Value 2'
+        }, {
+            value1: 'Row 9 - Value 1',
+            value2: 'Row 9 - Value 2'
+        }, {
+            value1: 'Row 10 - Value 1',
+            value2: 'Row 10 - Value 2'
+        }];
     }
 
     toggleInfoPanes(event: Event): void {
@@ -41,25 +75,4 @@ export class UiButtonComponent {
 
         this.showInfoPanes = !this.showInfoPanes;
     }
-
-    showSmallButton(): void {
-        this.smallButton = true;
-    }
-
-    showMediumButton(): void {
-        this.mediumButton = true;
-    }
-
-    showLargeButton(): void {
-        this.largeButton = true;
-    }
-
-    showSmallButtonForm(): void {
-        this.smallButtonForm = true;
-    }
-
-    showMediumButtonForm(): void {
-        this.mediumButtonForm = true;
-    }
-
 }

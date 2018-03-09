@@ -28,7 +28,7 @@ import {UiIconsComponent} from './layouts/ui-form/components/icons/icons.compone
 import {UiLayout1Component} from './layouts/ui-form/components/layout1/layout1.component';
 import {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.component';
 import {UiTextComponent} from './layouts/ui-form/components/text/text.component';
-
+import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
@@ -44,7 +44,9 @@ import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
 /* Import the persist module. */
-import {PersistModule} from "@setl/core-persist";
+import {PersistModule} from '@setl/core-persist';
+
+import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.service';
 
 @NgModule({
     imports: [
@@ -90,7 +92,8 @@ import {PersistModule} from "@setl/core-persist";
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent
     ],
     exports: [
         /* Directives. */
@@ -119,13 +122,16 @@ import {PersistModule} from "@setl/core-persist";
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent
     ],
     providers: [
         /* Services. */
-        MenuDropdownService
+        MenuDropdownService,
+        MockFundService
     ],
 })
 export class SetlLayoutModule {
 
 }
+
