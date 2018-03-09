@@ -6,46 +6,46 @@ node {
 timestamps {
     node {
 
-            stage('Establish Tunnel Connection') {
-                try{
-                    sh '''
+        stage('Establish Tunnel Connection') {
+            try{
+                sh '''
                 ssh -N -L localhost:9999:localhost:3306 root@139.162.213.130 &
                 '''
-                }catch (err) {
-                    throw err
-                }
+            }catch (err) {
+                throw err
             }
+        }
 
-            stage('Clear down database') {
-                        sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd /var/membership-db/deploy/ && ./cleanblockchain \''
-                    }
+        stage('Clear down database') {
+            sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd /var/membership-db/deploy/ && ./cleanblockchain \''
+            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/project/iznes/baseDB && ./testBoxDeploy.sh \''
+        }
+        stage('Check Out Tests') {
+            checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
+                      doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
+                      userRemoteConfigs                : [[credentialsId: '294d9ac9-499b-487d-8c4c-ba53c0cb56a7',
+                                                           url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+        }
 
-            stage('Check Out Tests') {
-                checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
-                          doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
-                          userRemoteConfigs                : [[credentialsId: '294d9ac9-499b-487d-8c4c-ba53c0cb56a7',
-                                                               url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-            }
-
-            stage('Run Acceptance Tests') {
-                try{
-                    sh '''rm -f target/test-attachments/*.jpg &&
+        stage('Run Acceptance Tests') {
+            try{
+                sh '''rm -f target/test-attachments/*.jpg &&
                     cd ~/workspace/IznesUIAcceptanceTests/javaUITesting2
                     export DISPLAY=:10
                     ./gradlew clean build'''
 
 
-                } catch (err) {
-                    if (currentBuild.result == 'UNSTABLE')
-                        currentBuild.result = 'FAILURE'
-                    throw err
-                } finally {
-                    archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/test-attachments/*.jpg'
+            } catch (err) {
+                if (currentBuild.result == 'UNSTABLE')
+                    currentBuild.result = 'FAILURE'
+                throw err
+            } finally {
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/test-attachments/*.jpg'
 
-                    junit allowEmptyResults: true, keepLongStdio: true,
-                        testResults: '**/build/test-results/test/TEST-com**'
-                }
+                junit allowEmptyResults: true, keepLongStdio: true,
+                    testResults: '**/build/test-results/test/TEST-com**'
             }
+        }
 
     }
 }

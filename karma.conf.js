@@ -11,7 +11,8 @@ module.exports = function (config) {
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('@angular/cli/plugins/karma'),
-            require('karma-junit-reporter')
+            require('karma-junit-reporter'),
+            require('karma-mocha-reporter')
         ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -23,7 +24,7 @@ module.exports = function (config) {
         angularCli: {
             environment: 'dev'
         },
-        reporters: ['progress', 'kjhtml', 'dots', 'junit'],
+        reporters: ['progress', 'kjhtml', 'dots', 'junit', 'mocha'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -45,8 +46,22 @@ module.exports = function (config) {
         captureTimeout: 210000,
         browserDisconnectTolerance: 3,
         browserDisconnectTimeout: 210000,
-        browserNoActivityTimeout: 210000
-
+        browserNoActivityTimeout: 210000,
+        mochaReporter: {
+            colors: {
+                success: 'green',
+                info: 'blue',
+                warning: 'cyan',
+                error: 'red'
+            },
+            symbols: {
+                success: '+',
+                info: '#',
+                warning: '!',
+                error: 'x'
+            },
+            output: 'full'
+        }
     });
     junitReporter = {
         outputFile: 'test-results.xml'

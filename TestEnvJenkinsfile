@@ -9,9 +9,12 @@ node {
             node {
                 sh '''
                             ssh root@139.162.213.130 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@139.162.213.130:/var/membership-db'''
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@139.162.213.130:/var/membership-db &&
+                            cd /var/membership-db/deploy/ && ./updatedb iznes \\&&  '''
             }
         }
+
+
         stage('Deploy Frontend to Test Environment') {
             node {
                 sh '''
@@ -56,7 +59,6 @@ node {
             }
         }
 
-
         stage('Restart Node Server') {
             sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps ; bash && sudo supervisorctl restart node_server\''
         }
@@ -67,3 +69,4 @@ node {
 
     }
 }
+

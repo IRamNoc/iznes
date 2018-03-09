@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
@@ -223,7 +224,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting code to be fixed")
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
@@ -255,7 +255,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while work is being done for this section of the site.")
+    @Disabled("Broken while work is being done for this section of the site.")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
@@ -281,9 +281,9 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
-        enterAllUserDetails("JordanInvestor6", "password");
+        enterAllUserDetails("JordanInvestor7", "password");
         logout();
-//        loginAndVerifySuccessAdmin("JordanInvestor5", "password");
+        loginAndVerifySuccessAdmin("JordanInvestor7", "password");
 //        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
 //        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
 //        try {

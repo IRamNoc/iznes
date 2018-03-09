@@ -64,11 +64,10 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    @Ignore
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-account-module");
-        navigateToPageByID("menu-my-account");
+        navigateToDropdown("dropdown-user");
+        navigateToPageByID("top-menu-my-info");
     }
 
     @Test
