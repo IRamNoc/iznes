@@ -39,9 +39,9 @@ export class LoginGuardService implements CanActivate {
                 state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
         if (!this.isLogin) {
+            if (typeof(Storage) !== 'undefined') localStorage.setItem('redirect', state['url']);
             this.toasterService.pop('warning', 'Session Expired!');
             this.router.navigateByUrl('');
-
         } else {
             // refresh token.
             this._myUserService.defaultRefreshToken(this.ngRedux);
