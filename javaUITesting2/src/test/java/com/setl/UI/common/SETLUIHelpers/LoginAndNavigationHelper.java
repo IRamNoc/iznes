@@ -21,6 +21,14 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
+    public static void navigateTo365Page() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.get("https://www.office.com/");
+        WebElement page_heading = driver.findElement(By.id("hero-header"));
+        wait.until(visibilityOf(page_heading));
+
+    }
+
     public static void navigateToPage2(String pageHref) throws InterruptedException {
       Thread.sleep(750);
       try {
