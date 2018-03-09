@@ -199,6 +199,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             {},
             () => {
+                if (localStorage.getItem('redirect') !== null) {
+                    this.router.navigateByUrl(localStorage.getItem('redirect'));
+                    localStorage.removeItem('redirect');
+                }
             },
             // Fail to login
             (data) => {
