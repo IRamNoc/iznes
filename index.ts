@@ -1,3 +1,5 @@
+import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
+
 export {SetlLayoutModule} from './layout.module';
 export {BasicLayoutComponent} from './layouts/basic/basic.component';
 export {BlankLayoutComponent} from './layouts/blank/blank.component';
@@ -22,5 +24,5 @@ export {UiIconsComponent} from './layouts/ui-form/components/icons/icons.compone
 export {UiLayout1Component} from './layouts/ui-form/components/layout1/layout1.component';
 export {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.component';
 export {UiTextComponent} from './layouts/ui-form/components/text/text.component';
-
+export {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 

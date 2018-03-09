@@ -27,7 +27,7 @@ import {UiIconsComponent} from './layouts/ui-form/components/icons/icons.compone
 import {UiLayout1Component} from './layouts/ui-form/components/layout1/layout1.component';
 import {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.component';
 import {UiTextComponent} from './layouts/ui-form/components/text/text.component';
-
+import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
@@ -90,7 +90,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent
     ],
     exports: [
         /* Directives. */
@@ -119,7 +120,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent
     ],
     providers: [
         /* Services. */
