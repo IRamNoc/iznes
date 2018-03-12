@@ -4,6 +4,7 @@ import {KycUser} from './model';
 
 export interface KycMyInformationsState extends KycUser {
     invitedBy: KycUser;
+    amCompanyName: string;
     amManagementCompanyID: number;
     invitationToken: string;
 }
