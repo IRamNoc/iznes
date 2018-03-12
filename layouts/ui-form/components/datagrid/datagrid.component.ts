@@ -69,13 +69,13 @@ export class UiDataGridComponent {
         }];
     }
 
-    // datagrid
+    // datagrid-expand
     dataGridEdit(): void {
         console.log('Edit data grid item function here');
     }
-    
+
     dataGridDelete(): void {
-        console.log('Delete data grid item function here');        
+        console.log('Delete data grid item function here');
     }
 
 }

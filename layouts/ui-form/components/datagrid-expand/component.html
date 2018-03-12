@@ -1,0 +1,279 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <clr-icon shape="happy-face" class="is-solid"></clr-icon>
+        <span>Data Grid Expand</span></h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="demoOptimisedDatagridBtn" clrTabLink>
+            <i class="fa fa-th-list"></i> <span>Optimised Datagrid Demo</span>
+        </button>
+        <clr-tab-content *clrIfActive>
+            <section class="form-block">
+
+                <form [formGroup]="searchForm" id="searchForm">
+                    <div class="row bordered form-group">
+                        <div class="col-sm-4">
+                            <label>
+                                <span>Âge</span>
+                            </label>
+                            <div class="input-button-group">
+                                <input id="orders-search-fundname" formControlName="age" name="search-fundname"
+                                       type="text" placeholder="Âge"/>
+                                <button (click)="requestSearch()" style="margin-top: 0;"><i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <span>Start date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input id="startDateID" formControlName="startDate" [dpDayPicker]="configDate"
+                                       placeholder="Choose a date" mode="day" theme="dp-material"
+                                       mltag="txt_chooseadate"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <span>End date</span>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input id="endDateID" formControlName="endDate" [dpDayPicker]="configDate"
+                                       placeholder="Choose a date" mode="day" theme="dp-material"
+                                       mltag="txt_chooseadate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bordered form-group">
+                        <div class="col-sm-4">
+                            <label>
+                                <span mltag="txt_sharename">Genders</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="genderOptions"
+                                    [allowClear]="true"
+                                    [formControl]="searchForm.controls['genders']"
+                                    placeholder="Status"></ng-select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <span>Currencies</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="currencyOptions"
+                                    [allowClear]="true"
+                                    [formControl]="searchForm.controls['currencies']"
+                                    placeholder="Status"></ng-select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>
+                                <span>Available</span>
+                            </label>
+                            <div>
+                                <ng-select
+                                    class="fluid-width"
+                                    [items]="availableOptions"
+                                    [allowClear]="true"
+                                    [formControl]="searchForm.controls['available']"
+                                    placeholder="Type"></ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <br>
+
+                <clr-datagrid class="expandable">
+                    <clr-dg-column [clrDgField]="'id'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>ID</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'name'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Name</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'age'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Age</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'startDate'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Start Date</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'endDate'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>End Date</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'animal'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Animals</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'sport'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Sports</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'color'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Colors</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'gender'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Genders</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'amount'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Amount</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'currency'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Currency</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'codeBank'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Code Bank</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'password'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Password</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'available'">
+                        <ng-container *clrDgHideableColumn="{hidden: true}">
+                            <span>Available</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'country'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Countries</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column><span>Delete</span></clr-dg-column>
+                    <clr-dg-column><span>Edit</span></clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let data of filteredDatas" [clrDgItem]="data">
+                        <clr-dg-cell>{{data.id}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.name}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.age}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.startDate}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.endDate}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.animal}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.sport}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.color}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.gender}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.amount}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.currency}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.codeBank}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.password}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.available}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.country}}</clr-dg-cell>
+                        <clr-dg-cell>
+                            <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                                mltag="txt_ui_edit">Delete</span></button>
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                                mltag="txt_ui_edit">Edit</span></button>
+                        </clr-dg-cell>
+                        <clr-dg-row-detail *clrIfExpanded>
+                            <div class="additionalInfos">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <table>
+                                            <tr>
+                                                <td><b>Age</b></td>
+                                                <td>{{data.age}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Start Date</b></td>
+                                                <td>{{data.startDate}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>End Date</b></td>
+                                                <td>{{data.endDate}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="form-group col-sm-4">
+                                        <table>
+                                            <tr>
+                                                <td><b>Gender</b></td>
+                                                <td>{{data.gender}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Currency</b></td>
+                                                <td>{{data.currency}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Available</b></td>
+                                                <td>{{data.available}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="form-group col-sm-4">
+                                        <table>
+                                            <tr>
+                                                <td><b>Age</b></td>
+                                                <td>{{data.age}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Start Date</b></td>
+                                                <td>{{data.startDate}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>End Date</b></td>
+                                                <td>{{data.endDate}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </clr-dg-row-detail>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        <!-- Optional customization of hide/show columns toggle -->
+                        <clr-dg-column-toggle>
+                            <clr-dg-column-toggle-title>Show/hide fields:</clr-dg-column-toggle-title>
+                            <!--<clr-dg-column-toggle-button clrType="selectAll">-->
+                            <!--<button type="button" class="btn btn-primary">-->
+                            <!--Select All-->
+                            <!--</button>-->
+                            <!--</clr-dg-column-toggle-button>-->
+                            <clr-dg-column-toggle-button clrType="ok">
+                                <button type="button" class="btn btn-primary" style="padding:0 20px">
+                                    <clr-icon shape="check"></clr-icon>
+                                </button>
+                            </clr-dg-column-toggle-button>
+                        </clr-dg-column-toggle>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

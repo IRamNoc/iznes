@@ -119,9 +119,9 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 
 // expandable
 
-clr-datagrid.expandable {
+.expandable {
     .datagrid clr-dg-row:nth-child(even) {
-        background: #f9f9f9 !important;
+        background: white !important;
     }
 
     .datagrid .datagrid-expandable-caret .datagrid-expandable-caret-button {
@@ -132,6 +132,6 @@ clr-datagrid.expandable {
     .datagrid .datagrid-body .datagrid-row .datagrid-row-detail.datagrid-container {
         padding-top: 0;
         border-top: 1px dashed #e0e0e0 !important;
-        background: white;
+        background: #f6f6f6;
     }
 }

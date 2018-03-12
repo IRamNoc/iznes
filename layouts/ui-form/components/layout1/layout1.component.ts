@@ -76,7 +76,7 @@ export class UiLayout1Component {
         this.showInfoPanes = !this.showInfoPanes;
     }
 
-    // datagrid
+    // datagrid-expand
     dataGridEdit(): void {
         console.log('Edit data grid item function here');
     }
