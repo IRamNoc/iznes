@@ -15,10 +15,16 @@ export class FundShareComponent implements OnInit {
     keyFactsOptional = new models.ShareKeyFactsOptional();
     characteristicsMandatory = new models.ShareCharacteristicMandatory();
     characteristicsOptional = new models.ShareCharacteristicOptional();
-    // calendar = new models.S();
+    calendarMandatory = new models.ShareCalendarMandatory();
     feesMandatory = new models.ShareFeesMandatory();
     feesOptional = new models.ShareFeesOptional();
-    listing = new models.ShareListing();
+    listingOptional = new models.ShareListingOptional();
+    priipOptional = new models.SharePRIIPOptional();
+    profileMandatory = new models.ShareProfileMandatory();
+    profileOptional = new models.ShareProfileOptional();
+    representationOptional = new models.ShareRepresentationOptional();
+    solvencyOptional = new models.ShareSolvencyOptional();
+    taxationOptional = new models.ShareTaxationOptional();
 
     constructor() {}
 

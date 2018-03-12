@@ -41,7 +41,8 @@
                         <span>Calendar</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>Calendar: Main Information</h3>
+                        <app-dynamic-form [model]="calendarMandatory"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -63,7 +64,11 @@
                         <span>Profile</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>Profile: Main Information</h3>
+                        <app-dynamic-form [model]="profileMandatory"></app-dynamic-form>
+
+                        <h3>Profile: Optional Information</h3>
+                        <app-dynamic-form [model]="profileOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -72,7 +77,8 @@
                         <span>Taxation</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>Taxation: Optional Information</h3>
+                        <app-dynamic-form [model]="taxationOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -81,7 +87,8 @@
                         <span>Representation</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>Representation: Optional Information</h3>
+                        <app-dynamic-form [model]="representationOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -91,7 +98,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Listing: Optional Information</h3>
-                        <app-dynamic-form [model]="listing"></app-dynamic-form>
+                        <app-dynamic-form [model]="listingOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -100,7 +107,8 @@
                         <span>PRIIP</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>PRRIP: Optional Information</h3>
+                        <app-dynamic-form [model]="priipOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -109,7 +117,8 @@
                         <span>Solvency II</span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <h3>Solvency II: Optional Information</h3>
+                        <app-dynamic-form [model]="solvencyOptional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
