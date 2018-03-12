@@ -22,7 +22,6 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
@@ -68,7 +67,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertEquals("My information:", driver.findElement(By.id("ofi-welcome-additionnal")).getText());
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contentEquals("My informations:"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
