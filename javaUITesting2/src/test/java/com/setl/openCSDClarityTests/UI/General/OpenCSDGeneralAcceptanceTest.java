@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
@@ -255,7 +254,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Disabled("Broken while work is being done for this section of the site.")
+    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
