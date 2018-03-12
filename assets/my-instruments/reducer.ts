@@ -1,7 +1,7 @@
 import {Action} from 'redux';
 import * as MyInstrumentActions from './actions';
 import {InstrumentDetail, NewInstrumentRequest, MyInstrumentsState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 const initialState: MyInstrumentsState = {

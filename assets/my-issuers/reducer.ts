@@ -6,7 +6,7 @@ import {
     CLEAR_REGISTER_ISSUER_NEED_HANDLE
 } from './actions';
 import {MyIssuersState, IssuerDetail, NewIssuerRequest} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 

@@ -5,7 +5,7 @@ import {
     UsersAdminPermissonDetail,
     UsersTxPermissonDetail
 } from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 import { getAdminPermissions, getTranPermissions } from '@setl/core-store'

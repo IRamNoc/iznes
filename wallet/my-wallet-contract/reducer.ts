@@ -6,7 +6,7 @@ import {
     SET_LAST_CREATED_CONTRACT_DETAIL,
     UPDATE_LAST_CREATED_CONTRACT_DETAIL
 } from './actions';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {immutableHelper} from '@setl/utils';
 import {ContractModel} from '@setl/core-contracts/models';
 

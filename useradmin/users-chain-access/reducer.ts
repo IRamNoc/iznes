@@ -4,7 +4,7 @@ import {
     UsersChainAccessState,
     UsersChainAccessDetail,
 } from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
 import {getUsersChainAccess} from './selectors';

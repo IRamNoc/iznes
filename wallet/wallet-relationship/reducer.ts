@@ -1,6 +1,6 @@
 import * as WalletRelationshipActions from './actions';
 import {WalletDetail, WalletRelationshipState} from './model';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Action} from 'redux';
 import {fromJS, List, Map} from 'immutable';
 

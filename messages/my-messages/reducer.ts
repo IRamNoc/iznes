@@ -2,7 +2,7 @@ import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyMessageActions from './actions';
 import {MyMessagesState, MessageDetail} from './model';
 import {SagaHelper, Common} from '@setl/utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {setDecryptedContent} from "./actions";
 
@@ -191,9 +191,6 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
             let subject, content;
             try {
                 subject = window.atob(thisMessageDetail.get('subject'));
-                if (window.btoa(window.atob(subject)) === subject) {
-                    subject = window.atob(subject);
-                }
             } catch (e) {
                 // something failed
                 subject = thisMessageDetail.get('subject');
