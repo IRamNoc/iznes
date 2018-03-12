@@ -67,10 +67,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
-    private ordersList: Array<any> = [];
+    ordersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
-    private userAssetList: Array<any> = [];
+    userAssetList: Array<any> = [];
     private connectedWalletId: any = 0;
     private requestedSearch: any;
     private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.

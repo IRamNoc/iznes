@@ -31,16 +31,16 @@
             </div>
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'column.dataSource'" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
-                <!--<clr-dg-row *clrDgItems="let row of panel.data">-->
-                    <!--<clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">-->
-                        <!--<a *ngIf="dataCol.link" [routerLink]="buildLink(dataCol, row)">-->
-                            <!--{{row[dataCol.dataSource]}}-->
-                        <!--</a>-->
-                        <!--<span *ngIf="!dataCol.link">-->
-                            <!--{{row[dataCol.dataSource]}}-->
-                        <!--</span>-->
-                    <!--</clr-dg-cell>-->
-                <!--</clr-dg-row>-->
+                <clr-dg-row *clrDgItems="let row of panel.data">
+                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
+                        <a *ngIf="dataCol.link" (click)="buildLink(dataCol, row)">
+                            {{row[dataCol.dataSource]}}
+                        </a>
+                        <span *ngIf="!dataCol.link">
+                            {{row[dataCol.dataSource]}}
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
             </clr-datagrid>
         </div>
     </div>
