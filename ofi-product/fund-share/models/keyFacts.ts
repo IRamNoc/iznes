@@ -1,9 +1,14 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareKeyFactsMandatory {
     name: FormItem = {
         type: FormItemType.text,
         label: 'Full Share Name',
+        required: true
+    }
+    isin: FormItem = {
+        type: FormItemType.text,
+        label: 'ISIN',
         required: true
     }
     code: FormItem = {
@@ -18,11 +23,6 @@ export class ShareKeyFactsMandatory {
             { id: 'class-i', text: 'Class I' }
         ]
     }
-    isin: FormItem = {
-        type: FormItemType.text,
-        label: 'ISIN',
-        required: true
-    }
     currency: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Currency',
@@ -36,7 +36,8 @@ export class ShareKeyFactsMandatory {
     subscriptionStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Subscription Period Start Date',
-        required: true
+        required: true,
+        style: [FormItemStyle.BreakOnAfter]
     }
     launchDate: FormItem = {
         type: FormItemType.date,
@@ -95,6 +96,25 @@ export class ShareKeyFactsMandatory {
             { id: 'na', text: 'N/A' }
         ]
     }
+    // conditional - status
+    master: FormItem = {
+        type: FormItemType.text,
+        label: 'Master',
+        required: true,
+        hidden: () => {
+            const val = (this.status.value() as any);
+            return (val == undefined) || val[0].id !== 'master';
+        }
+    }
+    feeder: FormItem = {
+        type: FormItemType.text,
+        label: 'Feeder',
+        required: true,
+        hidden: () => {
+            const val = (this.status.value() as any);
+            return (val == undefined) || val[0].id !== 'feeder';
+        }
+    }
     valuationFrequency: FormItem = {
         type: FormItemType.list,
         label: 'Valuation Frequency',
@@ -110,7 +130,8 @@ export class ShareKeyFactsMandatory {
             { id: 'annually', text: 'Annually' },
             { id: 'at-least-annualy', text: 'At least Annualy' },
             { id: 'other', text: 'Other' }
-        ]
+        ],
+        style: [FormItemStyle.BreakOnBefore]
     }
     historicOrForwardPricing: FormItem = {
         type: FormItemType.list,
@@ -124,7 +145,8 @@ export class ShareKeyFactsMandatory {
     hasCoupon: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Coupon',
-        required: false
+        required: false,
+        style: [FormItemStyle.SingleRow]
     }
     // conditional - hasCoupon
     couponType: FormItem = {
@@ -184,7 +206,8 @@ export class ShareKeyFactsOptional {
     sedol: FormItem = {
         type: FormItemType.text,
         label: 'SEDOL',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     dormantStartDate: FormItem = {
         type: FormItemType.date,
@@ -263,17 +286,6 @@ export class ShareKeyFactsOptional {
         label: 'SRI (Synthetic Risk Indicator)',
         required: false
     }
-    // conditional - status
-    master: FormItem = {
-        type: FormItemType.text,
-        label: 'Master',
-        required: true
-    }
-    feeder: FormItem = {
-        type: FormItemType.text,
-        label: 'Feeder',
-        required: true
-    }
     navHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Class NAV Hedge',
@@ -336,7 +348,10 @@ export class ShareKeyFactsOptional {
     indexName: FormItem = {
         type: FormItemType.text,
         label: 'Index Name',
-        required: false
+        required: false,
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     indexCurrency: FormItem = {
         type: FormItemType.list,
@@ -346,7 +361,10 @@ export class ShareKeyFactsOptional {
             { id: 'EUR', text: 'EUR' },
             { id: 'GBP', text: 'GBP' },
             { id: 'USD', text: 'USD' }
-        ]
+        ],
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     indexType: FormItem = {
         type: FormItemType.list,
@@ -357,32 +375,52 @@ export class ShareKeyFactsOptional {
             { id: 'performance', text: 'Performance' },
             { id: 'perfomance-net-dividends', text: 'Perfomance net dividends' },
             { id: 'performance-gross-dividends', text: 'Performance gross dividends' }
-        ]
+        ],
+        style: [FormItemStyle.BreakOnAfter],
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     bloombergUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code Of Underlying Index',
-        required: false
+        required: false,
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     reutersUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Reuters Code Of Underlying Index',
-        required: false
+        required: false,
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     denominationBase: FormItem = {
         type: FormItemType.number,
         label: 'Denomination Base',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter],
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     isETC: FormItem = {
         type: FormItemType.boolean,
         label: 'Is ETC',
-        required: false
+        required: false,
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     isShort: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Short',
-        required: false
+        required: false,
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     replicationMethodologyFirstLevel: FormItem = {
         type: FormItemType.list,
@@ -392,7 +430,10 @@ export class ShareKeyFactsOptional {
             { id: 'physical', text: 'Physical' },
             { id: 'synthetical', text: 'Synthetical' },
             { id: 'others', text: 'Others' }
-        ]
+        ],
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     replicationMethodologySecondLevel: FormItem = {
         type: FormItemType.list,
@@ -406,7 +447,10 @@ export class ShareKeyFactsOptional {
             { id: 'funded-swap', text: 'Funded swap' },
             { id: 'combination-unfunded-and-funded-swap', text: 'Combination unfunded and funded swap' },
             { id: 'futures', text: 'Futures' }
-        ]
+        ],
+        hidden: () => {
+            return this.isETF.value() !== true;
+        }
     }
     hasPRIIPDataDelivery: FormItem = {
         type: FormItemType.boolean,

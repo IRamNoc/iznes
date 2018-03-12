@@ -1,4 +1,4 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareSolvencyOptional {
     mifidSecuritiesClassification: FormItem = {
@@ -9,7 +9,8 @@ export class ShareSolvencyOptional {
             { id: 'Non-complex instrument', text: 'Non-complex instrument' },
             { id: 'Complex instrument', text: 'Complex instrument' },
             { id: 'Others', text: 'Others' }
-        ]
+        ],
+        style: [FormItemStyle.BreakOnAfter]
     }
     efamaMainEFCCategory: FormItem = {
         type: FormItemType.list,
@@ -72,7 +73,8 @@ export class ShareSolvencyOptional {
     spreadStructured: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Spread Structured',
-        required: true
+        required: true,
+        style: [FormItemStyle.BreakOnAfter]
     } // 1
     spreadDerivativesUp: FormItem = {
         type: FormItemType.number,

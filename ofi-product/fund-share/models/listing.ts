@@ -1,10 +1,11 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareListingOptional {
     bloombergCodeOfListing: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code Of Listing',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     currency: FormItem = {
         type: FormItemType.text,
@@ -19,7 +20,8 @@ export class ShareListingOptional {
     exchangePlace: FormItem = {
         type: FormItemType.text,
         label: 'Exchange Place',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     iNAVBloombergCode: FormItem = {
         type: FormItemType.text,

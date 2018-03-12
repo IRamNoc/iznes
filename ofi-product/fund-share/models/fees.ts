@@ -1,4 +1,5 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import { FormStyle } from '@angular/common';
 
 export class ShareFeesMandatory {
     maxManagementFee: FormItem = {
@@ -14,7 +15,8 @@ export class ShareFeesMandatory {
     maxRedemptionFee: FormItem = {
         type: FormItemType.number,
         label: 'Redemption Fee Maximum',
-        required: true
+        required: true,
+        style: [FormItemStyle.BreakOnAfter]
     }
     miFIDIIOngoingCharges: FormItem = {
         type: FormItemType.number,
@@ -87,7 +89,8 @@ export class ShareFeesOptional {
     exPostTransactionCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Transaction Costs Period End',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostManagementFeeAppliedPercentage: FormItem = {
         type: FormItemType.number,
@@ -102,7 +105,8 @@ export class ShareFeesOptional {
     exPostManagementFeeAppliedPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Management Fee Applied Period End',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostOtherOngoingCostsAsPercentage: FormItem = {
         type: FormItemType.number,
@@ -117,7 +121,8 @@ export class ShareFeesOptional {
     exPostOtherOngoingCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Other Ongoing Costs Period End',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostIncidentalCostsPercentage: FormItem = {
         type: FormItemType.number,
@@ -132,7 +137,8 @@ export class ShareFeesOptional {
     exPostIncidentalCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Incidental Costs Period End',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exitCostDescription: FormItem = {
         type: FormItemType.text,
@@ -157,7 +163,8 @@ export class ShareFeesOptional {
     performanceFeeMaximum: FormItem = {
         type: FormItemType.number,
         label: 'Performance Fee Maximum',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     hurdleRate: FormItem = {
         type: FormItemType.number,
@@ -182,12 +189,14 @@ export class ShareFeesOptional {
     subscriptionFeeInFavourOfFund: FormItem = {
         type: FormItemType.number,
         label: 'Subscription Fee In Favour Of Fund',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     hasContingentDeferredSalesChargeFee: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Contingent Deferred Sales Charge Fee',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     redemptionFeeMinimum: FormItem = {
         type: FormItemType.number,
@@ -252,7 +261,8 @@ export class ShareFeesOptional {
     transactionCosts: FormItem = {
         type: FormItemType.number,
         label: 'Transaction Costs',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     carriedInterest: FormItem = {
         type: FormItemType.number,
@@ -267,12 +277,14 @@ export class ShareFeesOptional {
     ongoingChargesDate: FormItem = {
         type: FormItemType.date,
         label: 'Ongoing Charges Date',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     isTrailerFeeClean: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Trailer Fee Clean',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     hasSeparateDistributionFee: FormItem = {
         type: FormItemType.boolean,
@@ -287,7 +299,8 @@ export class ShareFeesOptional {
     distributionFeeDate: FormItem = {
         type: FormItemType.date,
         label: 'Distribution Fee Reference Date',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     hasDilutionLevyApplied: FormItem = {
         type: FormItemType.boolean,
