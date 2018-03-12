@@ -41,7 +41,6 @@ public class OpenCSDMyAccountAcceptanceTest {
     static String testusername = "TestUserNullInfo";
     static String testpassword = "Testpass123";
 
-
     JavascriptExecutor jse = (JavascriptExecutor)driver;
 
     @Rule
@@ -52,8 +51,6 @@ public class OpenCSDMyAccountAcceptanceTest {
     public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
-
-
 
     @Before
     public void setUp() throws Exception {
@@ -92,16 +89,25 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689");
+        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689", true);
     }
 
-    private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber) throws InterruptedException {
+
+    @Test
+    public void shouldNotSaveDataOnMyInformationPageWhenCancelled() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("dropdown-user");
+        navigateToPageByID("top-menu-my-info");
+        verifyMyInfoPage();
+        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689", false);
+    }
+
+    private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
 
         driver.findElement(By.id("kyc_additionnal_email")).sendKeys(email);
         driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys(firstName);
         driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys(lastName);
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
-
 
         try {
             driver.findElement(By.id("kyc_additionnal_phoneCode")).click();
@@ -113,20 +119,34 @@ public class OpenCSDMyAccountAcceptanceTest {
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
         assertTrue(driver.findElement(By.id("btnKycClose")).isEnabled());
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isEnabled());
-        driver.findElement(By.id("btnKycSubmit")).click();
-        try {
-         assertTrue(driver.findElement(By.className("toast-title")).isDisplayed());
-        }catch  (Error et){
+        String msgText = null;
+        String btnToClick = null;
 
-        fail("popup is not displayed");
-
+        if(save == false)
+        { msgText = null;
+                btnToClick = "btnKycClose";
+        }else {
+            msgText = "Saved changes";
+            btnToClick = "btnKycSubmit";
         }
 
-        String popup = driver.findElement(By.className("toast-title")).getText();
-        try {
-            assertTrue(popup.equals("Saved changes"));
-        } catch (Error e) {
-            fail("Toaster message did not match: Expected Message = Saved Changes /  Actual message =  " + popup );
+        driver.findElement(By.id(btnToClick)).click();
+        if (btnToClick == "btnKycClose"){
+                assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
+        }else {
+            try {
+                assertTrue(driver.findElement(By.className("toast-title")).isDisplayed());
+            } catch (Error et) {
+                fail("Popup is not displayed" + et.getMessage());
+
+                String popup = driver.findElement(By.className("toast-title")).getText();
+
+                try {
+                    assertTrue(popup.equals(msgText));
+                } catch (Error e) {
+                    fail("Toaster message did not match: Expected Message = " + msgText + "  /  Actual message =  " + popup);
+                }
+            }
         }
     }
 
@@ -134,7 +154,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertEquals("My informations:", driver.findElement(By.id("ofi-welcome-additionnal")).getText());
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contentEquals("My informations:"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
