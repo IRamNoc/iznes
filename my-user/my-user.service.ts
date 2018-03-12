@@ -27,20 +27,24 @@ interface LoginRequestData {
 }
 
 interface UserDetailsData {
-    displayName: string;
-    firstName: string;
-    lastName: string;
-    mobilePhone: string;
-    addressPrefix: string;
-    address1: string;
-    address2: string;
-    address3: string;
-    address4: string;
-    postalCode: string;
-    country: string;
-    memorableQuestion: string;
-    memorableAnswer: string;
-    profileText: string;
+    displayName?: string;
+    firstName?: string;
+    lastName?: string;
+    mobilePhone?: string;
+    addressPrefix?: string;
+    address1?: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
+    postalCode?: string;
+    country?: string;
+    companyName?: string;
+    phoneCode?: string;
+    phoneNumber?: string;
+    defaultHomePage?: string;
+    memorableQuestion?: string;
+    memorableAnswer?: string;
+    profileText?: string;
 }
 
 interface NewPasswordData {
@@ -73,8 +77,14 @@ export class MyUserService implements OnDestroy {
         this.subscriptionsArray = [];
     }
 
-    defaultRefreshToken(ngRedux: NgRedux<any>) {
-        const asynTask = this.refreshToken();
+    defaultRefreshToken(ngRedux: NgRedux<any>): any {
+        let asynTask;
+
+        try {
+            asynTask = this.refreshToken();
+        } catch (e) {
+            return false;
+        }
 
         ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asynTask,
@@ -127,22 +137,10 @@ export class MyUserService implements OnDestroy {
 
     saveMyUserDetails(userData: UserDetailsData): any {
         const messageBody: SaveUserDetailsRequestBody = {
-            RequestName: 'ud',
-            token: this.memberSocketService.token,
-            displayName: userData.displayName,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            mobilePhone: userData.mobilePhone,
-            addressPrefix: userData.addressPrefix,
-            address1: userData.address1,
-            address2: userData.address2,
-            address3: userData.address3,
-            address4: userData.address4,
-            postalCode: userData.postalCode,
-            country: userData.country,
-            memorableQuestion: userData.memorableQuestion,
-            memorableAnswer: userData.memorableAnswer,
-            profileText: userData.profileText
+            ...{
+                RequestName: 'ud',
+                token: this.memberSocketService.token,
+            }, ...userData
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
