@@ -136,9 +136,8 @@ export class ShareKeyFactsMandatory {
             { id: 'capital-gain', text: 'Capital gain' },
             { id: 'interest-capital-gain', text: 'Interest & Capital gain' }
         ],
-        conditional: {
-            formItem: 'hasCoupon',
-            showOnValue: true
+        hidden: () => {
+            return this.hasCoupon.value() !== true;
         }
     }
     frequencyOfDistributionDeclaration: FormItem = {
@@ -155,9 +154,8 @@ export class ShareKeyFactsMandatory {
             { id: 'twice-a-year', text: 'Twice a year' },
             { id: 'annually', text: 'Annually' }
         ],
-        conditional: {
-            formItem: 'hasCoupon',
-            showOnValue: true
+        hidden: () => {
+            return this.hasCoupon.value() !== true;
         }
     }
 }
@@ -212,7 +210,10 @@ export class ShareKeyFactsOptional {
     terminationDateExplanation: FormItem = {
         type: FormItemType.text,
         label: 'Share Class Termination Date Explanation',
-        required: false
+        required: false,
+        hidden: () => {
+            return (this.terminationDate.value() as string).length === 0;
+        }
     }
     assetClass: FormItem = {
         type: FormItemType.list,
