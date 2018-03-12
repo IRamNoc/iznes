@@ -298,6 +298,8 @@ public class OpenCSDGeneralAcceptanceTest {
 //        KYCPopups.click();
     }
 
+
+
     public static void enterAllUserDetails(String username, String password) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
         enterManageUserUsername(username);
@@ -357,7 +359,6 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("new-user-submit")).click();
     }
 
-
     @Test
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
@@ -385,6 +386,54 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
         inviteAnInvestorExpectingFailed("", "Jordan", "Miller");
     }
+
+    @Test
+    public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+
+    }
+
+    @Test
+    public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+
+    }
+    @Test
+    public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+
+    }
+
+    @Test
+    public void shouldLoginToOffice365() throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        navigateTo365Page();
+        driver.findElement(By.className("msame_Header_name")).click();
+        WebElement signInEmail = driver.findElement(By.id("i0116"));
+        wait.until(visibilityOf(signInEmail));
+        signInEmail.sendKeys("test@setl.io");
+        try{
+            driver.findElement(By.id("idSIButton9")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        Thread.sleep(750);
+        WebElement signInPassword2 = driver.findElement(By.id("displayName"));
+        wait.until(visibilityOf(signInPassword2));
+
+        WebElement signInPassword = driver.findElement(By.id("i0118"));
+        signInPassword.sendKeys("Sphericals1057!");
+        try {
+            driver.findElement(By.id("idSIButton9")).click();
+            Thread.sleep(15000);
+        }catch (Error e){
+            fail();
+        }
+    }
+
 
     public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
