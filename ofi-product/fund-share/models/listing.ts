@@ -1,57 +1,57 @@
 import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
 
-export class ShareListing {
-    bloombergCodeOfListing?: FormItem = {
+export class ShareListingOptional {
+    bloombergCodeOfListing: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code Of Listing',
         required: false
     }
-    currency?: FormItem = {
+    currency: FormItem = {
         type: FormItemType.text,
         label: 'Listing Currency',
         required: false
     }
-    date?: FormItem = {
+    date: FormItem = {
         type: FormItemType.date,
         label: 'Listing Date',
         required: false
     }
-    exchangePlace?: FormItem = {
+    exchangePlace: FormItem = {
         type: FormItemType.text,
         label: 'Exchange Place',
         required: false
     }
-    iNAVBloombergCode?: FormItem = {
+    iNAVBloombergCode: FormItem = {
         type: FormItemType.text,
         label: 'iNAV Bloomberg Code Of Listing',
         required: false
     }
-    iNAVReutersCode?: FormItem = {
+    iNAVReutersCode: FormItem = {
         type: FormItemType.text,
         label: 'iNAV Reuters Code Of Listing',
         required: false
     }
-    inceptionPrice?: FormItem = {
+    inceptionPrice: FormItem = {
         type: FormItemType.number,
         label: 'Inception Price',
         required: false
     }
-    isPrimaryListing?: FormItem = {
+    isPrimaryListing: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Primary Listing',
         required: false
     }
-    marketIdentifierCode?: FormItem = {
+    marketIdentifierCode: FormItem = {
         type: FormItemType.text,
         label: 'Market Identifier Code (ISO 10383)',
         required: false
     }
-    reutersCode?: FormItem = {
+    reutersCode: FormItem = {
         type: FormItemType.text,
         label: 'Reuters Code Of Listing',
         required: false
     }
-    status?: FormItem = {
+    status: FormItem = {
         type: FormItemType.list,
         label: 'Status Of Listing',
         required: false,

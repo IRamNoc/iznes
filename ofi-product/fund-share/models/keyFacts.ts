@@ -1,7 +1,6 @@
 import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareKeyFactsMandatory {
-    // MANDATORY
     name: FormItem = {
         type: FormItemType.text,
         label: 'Full Share Name',
@@ -124,11 +123,11 @@ export class ShareKeyFactsMandatory {
     }
     hasCoupon: FormItem = {
         type: FormItemType.boolean,
-        label: 'Has Coupon ',
+        label: 'Has Coupon',
         required: false
     }
     // conditional - hasCoupon
-    couponType?: FormItem = {
+    couponType: FormItem = {
         type: FormItemType.list,
         label: 'Coupon type',
         required: false,
@@ -136,9 +135,13 @@ export class ShareKeyFactsMandatory {
             { id: 'interest', text: 'Interest' },
             { id: 'capital-gain', text: 'Capital gain' },
             { id: 'interest-capital-gain', text: 'Interest & Capital gain' }
-        ]
+        ],
+        conditional: {
+            formItem: 'hasCoupon',
+            showOnValue: true
+        }
     }
-    frequencyOfDistributionDeclaration?: FormItem = {
+    frequencyOfDistributionDeclaration: FormItem = {
         type: FormItemType.list,
         label: 'Frequency Of Distribution Declaration',
         required: false,
@@ -151,63 +154,67 @@ export class ShareKeyFactsMandatory {
             { id: 'quartely', text: 'Quartely' },
             { id: 'twice-a-year', text: 'Twice a year' },
             { id: 'annually', text: 'Annually' }
-        ]
+        ],
+        conditional: {
+            formItem: 'hasCoupon',
+            showOnValue: true
+        }
     }
 }
 
 export class ShareKeyFactsOptional {
-    cusip?: FormItem = {
+    cusip: FormItem = {
         type: FormItemType.text,
         label: 'CUSIP',
         required: true
     }
-    valor?: FormItem = {
+    valor: FormItem = {
         type: FormItemType.number,
         label: 'Valor',
         required: false
     }
-    wkn?: FormItem = {
+    wkn: FormItem = {
         type: FormItemType.text,
         label: 'WKN',
         required: false
     }
-    bloombergCode?: FormItem = {
+    bloombergCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code',
         required: true
     }
-    sedol?: FormItem = {
+    sedol: FormItem = {
         type: FormItemType.text,
         label: 'SEDOL',
         required: false
     }
-    dormantStartDate?: FormItem = {
+    dormantStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant Start Date',
         required: true
     }
-    dormantEndDate?: FormItem = {
+    dormantEndDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant End Date',
         required: true
     }
-    liquidationStartDate?: FormItem = {
+    liquidationStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Liquidation Start Date',
         required: false
     }
-    terminationDate?: FormItem = {
+    terminationDate: FormItem = {
         type: FormItemType.date,
         label: 'Share Class Termination Date',
         required: false
     }
     // conditional - classTerminationDate
-    terminationDateExplanation?: FormItem = {
+    terminationDateExplanation: FormItem = {
         type: FormItemType.text,
         label: 'Share Class Termination Date Explanation',
         required: false
     }
-    assetClass?: FormItem = {
+    assetClass: FormItem = {
         type: FormItemType.list,
         label: 'Asset Class',
         required: true,
@@ -224,7 +231,7 @@ export class ShareKeyFactsOptional {
             { id: 'real-estate', text: 'Real Estate' }
         ]
     }
-    geographicalArea?: FormItem = {
+    geographicalArea: FormItem = {
         type: FormItemType.list,
         label: 'Geographical Area',
         required: true,
@@ -245,28 +252,28 @@ export class ShareKeyFactsOptional {
             { id: 'usa', text: 'USA' }
         ]
     }
-    srri?: FormItem = {
+    srri: FormItem = {
         type: FormItemType.number,
         label: 'SRRI (Synthetic Risk and Reward Indicator)',
         required: false
     }
-    sri?: FormItem = {
+    sri: FormItem = {
         type: FormItemType.number,
         label: 'SRI (Synthetic Risk Indicator)',
         required: false
     }
     // conditional - status
-    master?: FormItem = {
+    master: FormItem = {
         type: FormItemType.text,
         label: 'Master',
         required: true
     }
-    feeder?: FormItem = {
+    feeder: FormItem = {
         type: FormItemType.text,
         label: 'Feeder',
         required: true
     }
-    navHedge?: FormItem = {
+    navHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Class NAV Hedge',
         required: false,
@@ -276,7 +283,7 @@ export class ShareKeyFactsOptional {
             { id: 'yes-residual-hedge', text: 'Yes, residual hedge' }
         ]
     }
-    distributionPolicy?: FormItem = {
+    distributionPolicy: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Distribution Policy',
         required: false,
@@ -286,7 +293,7 @@ export class ShareKeyFactsOptional {
             {id: 'accumulating-distributing', text: 'Accumulating & distributing' }
         ]
     }
-    lifecycle?: FormItem = {
+    lifecycle: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Lifecycle',
         required: false,
@@ -300,37 +307,37 @@ export class ShareKeyFactsOptional {
             { id: 'terminated', text: 'Terminated' }
         ]
     }
-    isClassUCITSEligible?: FormItem = {
+    isClassUCITSEligible: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Share Class Eligible For UCITS',
         required: false
     }
-    isRDRCompliant?: FormItem = {
+    isRDRCompliant: FormItem = {
         type: FormItemType.boolean,
         label: 'Is RDR Compliant',
         required: false
     }
-    isRestrictedToSeparateFeeArrangement?: FormItem = {
+    isRestrictedToSeparateFeeArrangement: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Restricted To Separate Fee Arrangement',
         required: false
     }
-    hasForcedRedemption?: FormItem = {
+    hasForcedRedemption: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Forced Redemption',
         required: false
     }
-    isETF?: FormItem = {
+    isETF: FormItem = {
         type: FormItemType.boolean,
         label: 'Is ETF',
         required: false
     }
-    indexName?: FormItem = {
+    indexName: FormItem = {
         type: FormItemType.text,
         label: 'Index Name',
         required: false
     }
-    indexCurrency?: FormItem = {
+    indexCurrency: FormItem = {
         type: FormItemType.list,
         label: 'Index Currency',
         required: false,
@@ -340,7 +347,7 @@ export class ShareKeyFactsOptional {
             { id: 'USD', text: 'USD' }
         ]
     }
-    indexType?: FormItem = {
+    indexType: FormItem = {
         type: FormItemType.list,
         label: 'Index Type',
         required: false,
@@ -351,32 +358,32 @@ export class ShareKeyFactsOptional {
             { id: 'performance-gross-dividends', text: 'Performance gross dividends' }
         ]
     }
-    bloombergUnderlyingIndexCode?: FormItem = {
+    bloombergUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code Of Underlying Index',
         required: false
     }
-    reutersUnderlyingIndexCode?: FormItem = {
+    reutersUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Reuters Code Of Underlying Index',
         required: false
     }
-    denominationBase?: FormItem = {
+    denominationBase: FormItem = {
         type: FormItemType.number,
         label: 'Denomination Base',
         required: false
     }
-    isETC?: FormItem = {
+    isETC: FormItem = {
         type: FormItemType.boolean,
         label: 'Is ETC',
         required: false
     }
-    isShort?: FormItem = {
+    isShort: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Short',
         required: false
     }
-    replicationMethodologyFirstLevel?: FormItem = {
+    replicationMethodologyFirstLevel: FormItem = {
         type: FormItemType.list,
         label: 'Replication Methodology First Level',
         required: false,
@@ -386,7 +393,7 @@ export class ShareKeyFactsOptional {
             { id: 'others', text: 'Others' }
         ]
     }
-    replicationMethodologySecondLevel?: FormItem = {
+    replicationMethodologySecondLevel: FormItem = {
         type: FormItemType.list,
         label: 'Replication Methodology Second Level',
         required: false,
@@ -400,17 +407,17 @@ export class ShareKeyFactsOptional {
             { id: 'futures', text: 'Futures' }
         ]
     }
-    hasPRIIPDataDelivery?: FormItem = {
+    hasPRIIPDataDelivery: FormItem = {
         type: FormItemType.boolean,
         label: 'Has PRIIP Data Delivery',
         required: false
     }
-    hasUCITSDataDelivery?: FormItem = {
+    hasUCITSDataDelivery: FormItem = {
         type: FormItemType.boolean,
         label: 'Has UCITS Data Delivery',
         required: false
     }
-    ucitsKiidUrl?: FormItem = {
+    ucitsKiidUrl: FormItem = {
         type: FormItemType.text,
         label: 'UCITS KIID URL',
         required: false

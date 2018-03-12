@@ -16,7 +16,7 @@ export class ShareCharacteristicMandatory {
             { id: 'shares-and-amount', text: 'Shares and Amount' }
         ]
     }
-    subscriptionCurrency?: FormItem = {
+    subscriptionCurrency: FormItem = {
         type: FormItemType.list,
         label: 'Currency of Subscription',
         required: true,
@@ -26,22 +26,22 @@ export class ShareCharacteristicMandatory {
             { id: 'USD', text: 'USD' }
         ]
     }
-    minInitialSubscriptionShares?: FormItem = {
+    minInitialSubscriptionShares: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Subscription In Shares',
         required: true
     }
-    minInitialSubscriptionAmount?: FormItem = {
+    minInitialSubscriptionAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Subscription In Amount',
         required: true
     }
-    minSubsequentSubscriptionShares?: FormItem = {
+    minSubsequentSubscriptionShares: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Subscription In Shares',
         required: true
     }
-    minSubsequentSubscriptionAmount?: FormItem = {
+    minSubsequentSubscriptionAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Subscription In Amount',
         required: true
@@ -56,7 +56,7 @@ export class ShareCharacteristicMandatory {
             { id: 'shares-and-amount', text: 'Shares and Amount' }
         ]
     }
-    redemptionCurrency?: FormItem = {
+    redemptionCurrency: FormItem = {
         type: FormItemType.list,
         label: 'Currency of Redemption',
         required: true,
@@ -66,22 +66,22 @@ export class ShareCharacteristicMandatory {
             { id: 'USD', text: 'USD' }
         ]
     }
-    minInitialRedemptionShares?: FormItem = {
+    minInitialRedemptionShares: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Redemption In Shares',
         required: true
     }
-    minInitialRedemptionAmount?: FormItem = {
+    minInitialRedemptionAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Redemption In Amount',
         required: true
     }
-    minSubsequentRedemptionShares?: FormItem = {
+    minSubsequentRedemptionShares: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Redemption In Shares',
         required: true
     }
-    minSubsequentRedemptionAmount?: FormItem = {
+    minSubsequentRedemptionAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Redemption In Amount',
         required: true
@@ -89,7 +89,7 @@ export class ShareCharacteristicMandatory {
 }
 
 export class ShareCharacteristicOptional {
-    portfolioCurrencyHedge?: FormItem = {
+    portfolioCurrencyHedge: FormItem = {
         type: FormItemType.list,
         label: 'Portfolio Currency Hedge',
         required: false,
