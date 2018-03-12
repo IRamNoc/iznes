@@ -1,7 +1,7 @@
 import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareKeyFactsMandatory {
-    name: FormItem = {
+    fundShareName: FormItem = {
         type: FormItemType.text,
         label: 'Full Share Name',
         required: true
@@ -11,10 +11,10 @@ export class ShareKeyFactsMandatory {
         label: 'ISIN',
         required: true
     }
-    code: FormItem = {
+    shareClassCode: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Code',
-        required: false,
+        required: true,
         listItems: [
             { id: 'class-a', text: 'Class A' },
             { id: 'class-c', text: 'Class C' },
@@ -23,10 +23,10 @@ export class ShareKeyFactsMandatory {
             { id: 'class-i', text: 'Class I' }
         ]
     }
-    currency: FormItem = {
+    shareClassCurrency: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Currency',
-        required: false,
+        required: true,
         listItems: [
             { id: 'EUR', text: 'EUR' },
             { id: 'GBP', text: 'GBP' },
@@ -42,9 +42,9 @@ export class ShareKeyFactsMandatory {
     launchDate: FormItem = {
         type: FormItemType.date,
         label: 'Share Class Launch Date',
-        required: false
+        required: true
     }
-    investmentStatus: FormItem = {
+    shareClassInvestmentStatus: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Investment Status',
         required: true,
@@ -89,7 +89,7 @@ export class ShareKeyFactsMandatory {
     status: FormItem = {
         type: FormItemType.list,
         label: 'Share Status',
-        required: false,
+        required: true,
         listItems: [
             { id: 'master', text: 'Master' },
             { id: 'feeder', text: 'Feeder' },
@@ -100,7 +100,7 @@ export class ShareKeyFactsMandatory {
     master: FormItem = {
         type: FormItemType.text,
         label: 'Master',
-        required: true,
+        required: false,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined) || val[0].id !== 'master';
@@ -109,7 +109,7 @@ export class ShareKeyFactsMandatory {
     feeder: FormItem = {
         type: FormItemType.text,
         label: 'Feeder',
-        required: true,
+        required: false,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined) || val[0].id !== 'feeder';
@@ -136,7 +136,7 @@ export class ShareKeyFactsMandatory {
     historicOrForwardPricing: FormItem = {
         type: FormItemType.list,
         label: 'Historic or Forward Pricing',
-        required: false,
+        required: true,
         listItems: [
             { id: 'historic', text: 'Historic' },
             { id: 'forward', text: 'Forward' }
@@ -145,7 +145,7 @@ export class ShareKeyFactsMandatory {
     hasCoupon: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Coupon',
-        required: false,
+        required: true,
         style: [FormItemStyle.SingleRow]
     }
     // conditional - hasCoupon
@@ -162,7 +162,7 @@ export class ShareKeyFactsMandatory {
             return this.hasCoupon.value() !== true;
         }
     }
-    frequencyOfDistributionDeclaration: FormItem = {
+    freqOfDistributionDeclaration: FormItem = {
         type: FormItemType.list,
         label: 'Frequency Of Distribution Declaration',
         required: false,
@@ -186,7 +186,7 @@ export class ShareKeyFactsOptional {
     cusip: FormItem = {
         type: FormItemType.text,
         label: 'CUSIP',
-        required: true
+        required: false
     }
     valor: FormItem = {
         type: FormItemType.number,
@@ -201,7 +201,7 @@ export class ShareKeyFactsOptional {
     bloombergCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code',
-        required: true
+        required: false
     }
     sedol: FormItem = {
         type: FormItemType.text,
@@ -212,12 +212,12 @@ export class ShareKeyFactsOptional {
     dormantStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant Start Date',
-        required: true
+        required: false
     }
     dormantEndDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant End Date',
-        required: true
+        required: false
     }
     liquidationStartDate: FormItem = {
         type: FormItemType.date,
@@ -241,7 +241,7 @@ export class ShareKeyFactsOptional {
     assetClass: FormItem = {
         type: FormItemType.list,
         label: 'Asset Class',
-        required: true,
+        required: false,
         listItems: [
             { id: 'alternatives', text: 'Alternatives' },
             { id: 'bonds', text: 'Bonds' },
@@ -258,7 +258,7 @@ export class ShareKeyFactsOptional {
     geographicalArea: FormItem = {
         type: FormItemType.list,
         label: 'Geographical Area',
-        required: true,
+        required: false,
         listItems: [
             { id: 'asia', text: 'Asia' },
             { id: 'asia-ex-japan', text: 'Asia Ex Japan' },

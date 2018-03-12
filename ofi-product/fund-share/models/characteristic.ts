@@ -1,7 +1,7 @@
 import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareCharacteristicMandatory {
-    maxDecimalShares: FormItem = {
+    maximumNumDecimal: FormItem = {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',
         required: true,
@@ -33,7 +33,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minInitialSubscriptionShares: FormItem = {
+    minInitialSubscriptionInShare: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Subscription In Shares',
         required: true,
@@ -42,7 +42,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minInitialSubscriptionAmount: FormItem = {
+    minInitialSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Subscription In Amount',
         required: true,
@@ -51,7 +51,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minSubsequentSubscriptionShares: FormItem = {
+    minSubsequentSubscriptionInShare: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Subscription In Shares',
         required: true,
@@ -60,7 +60,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minSubsequentSubscriptionAmount: FormItem = {
+    minSubsequentSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Subscription In Amount',
         required: true,
@@ -95,7 +95,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minInitialRedemptionShares: FormItem = {
+    minInitialRedemptionInShare: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Redemption In Shares',
         required: true,
@@ -104,7 +104,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minInitialRedemptionAmount: FormItem = {
+    minInitialRedemptionInAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Initial Redemption In Amount',
         required: true,
@@ -113,7 +113,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minSubsequentRedemptionShares: FormItem = {
+    minSubsequentRedemptionInShare: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Redemption In Shares',
         required: true,
@@ -122,7 +122,7 @@ export class ShareCharacteristicMandatory {
             return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
         }
     }
-    minSubsequentRedemptionAmount: FormItem = {
+    minSubsequentRedemptionInAmount: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Redemption In Amount',
         required: true,

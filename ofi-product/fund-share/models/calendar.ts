@@ -1,7 +1,7 @@
 import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
 
 export class ShareCalendarMandatory {
-    tradeDate: FormItem = {
+    tradeDay: FormItem = {
         type: FormItemType.list,
         label: 'Trade Date',
         required: true,
@@ -14,12 +14,12 @@ export class ShareCalendarMandatory {
         ],
         style: [FormItemStyle.BreakOnAfter]
     }
-    subscriptionCutOff: FormItem = {
+    subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
         required: true
     }
-    subscriptionTZForCutOff: FormItem = {
+    subscriptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
         label: 'Time Zone For Cut-off For Subscription And Redemption',
         required: true,
@@ -49,12 +49,12 @@ export class ShareCalendarMandatory {
             { id: 'utc-11', text: 'UTC -11' }           
         ]
     }
-    redemptionCutOff: FormItem = {
+    redemptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Redemption',
         required: true
     }
-    redemptionTZForCutOff: FormItem = {
+    redemptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
         label: 'Time Zone For Cut-off For Subscription And Redemption',
         required: true,
