@@ -43,6 +43,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneNumber: '',
         },
         companyName: '',
+        amCompanyName: '',
         phoneCode: '',
         phoneNumber: '',
         amManagementCompanyID: 0,
