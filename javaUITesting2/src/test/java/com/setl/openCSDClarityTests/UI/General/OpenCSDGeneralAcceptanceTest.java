@@ -64,16 +64,16 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        //navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        //navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         //Manually check title is not displayed inside text field
     }
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        //navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        //navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         //Manually check asterisks are displayed next to title
     }
 
