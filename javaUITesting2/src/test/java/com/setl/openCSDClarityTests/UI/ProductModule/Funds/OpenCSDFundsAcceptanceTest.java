@@ -360,8 +360,8 @@ public class OpenCSDFundsAcceptanceTest {
     @Test
     public void shouldNotAcceptFundWithQuantityLowerThan0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-account-module");
-        navigateToPage("my-account");
+        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         try {
             driver.findElement(By.cssSelector("#udDisplayName")).sendKeys("helloworld");
         }catch (Error e){
