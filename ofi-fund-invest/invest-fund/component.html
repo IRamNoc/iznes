@@ -1,216 +1,410 @@
 <form (ngSubmit)="handleSubmit()" [formGroup]="form" [class.error]="!form.valid && form.touched">
     <div class="form-horizontal">
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_registrar">Registrar</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="metaData.registrar" [readonly]="true">
+
+        <h4>{{(type=='subscribe'?'Subscription':'Redemption')}}</h4>
+
+        <span>Please fill up the following information to {{(type=='subscribe'?'subscribe to':'redeem')}} a new share:</span><br><br>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[1] = !panels[1]; $event.preventDefault();">
+                        <i class="fa fa-chevron-down" [class.reverse]="panels[1]"></i> General Investment Information
+                    </a>
                 </div>
             </div>
 
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_fundshare">Fund share</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="metaData.shareName" [readonly]="true">
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[1]">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Asset Management Company</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [value]="metaData.registrar" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Investment Portfolio</span>
+                        </label>
+                        <div>
+                            <ng-select
+                                    [class.error]="!form.controls['address'].valid && form.controls['address'].touched"
+                                    [items]="addressList"
+                                    [allowClear]="false"
+                                    placeholder="Select an investment porfolio"
+                                    formControlName="address"
+                                    (selected)="handleSelectedAddress($event)"
+                                    mltag="txt_selectsubportfolio">
+                            </ng-select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="hr-line-dashed"></div>
-
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_isincode">ISIN code</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="metaData.isin" [readonly]="true">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="ml_translated">{{formConfig.feeLabel}} fee</span>
+                            <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_currency">Currency</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="metaData.currency" [readonly]="true">
-                </div>
-            </div>
+                <div class="well">
+                    <!-- Panel header -->
+                    <div class="row panel-header">
+                        <div class="col-xs-6" style="margin-bottom:15px;">
+                            <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="panels[2]"></i> MiFID II Costs & Charges
+                            </a>
+                        </div>
+                    </div>
 
-        </div>
+                    <!-- Panel body -->
+                    <div class="panel-body" [class.hidden]="!panels[2]">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">One-off charges</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">On-going charges</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="hr-line-dashed"></div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">Costs related to transactions initiated</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">Charges related to ancillary services</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <app-switch-button [value]="actionBy" (updateValue)="actionBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>
-                <div>
-                    <span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{formConfig.actionLabel}} by amount or unit for this fund share</span>.</span>
-                    <span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by quantity for this fund share</span>.</span>
-                    <span *ngIf="metaData.allowType === 'amount'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by amount for this fund share</span>.</span>
-                    <span class="help-block m-b-none text-success" [ngStyle]="{'width': '100%'}"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated" mltag="txt_decimalisation">Decimalisation</span>: {{metaData.decimalisationNumber}}.</span>
-                </div>
-            </div>
-        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">Costs related to transactions initiated</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">Charges related to ancillary services</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_quantity">Quantity</span>
-                </label>
-                <div>
-                    <input type="text" formControlName="quantity" class="form-control mlp_translated"
-                           [readonly]="actionBy === 1"
-                           [class.error]="!form.controls['quantity'].valid && form.controls['quantity'].touched"
-                           (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
-                </label>
-                <div>
-                    <ng-select
-                        [class.error]="!form.controls['address'].valid && form.controls['address'].touched"
-                        [items]="addressList"
-                        [allowClear]="false"
-                        placeholder="Select sub-portfolio"
-                        formControlName="address"
-                        (selected)="handleSelectedAddress($event)"
-                      mltag="txt_selectsubportfolio">
-                    </ng-select>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_netassetvalue">Net asset value</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">
-                </div>
-            </div>
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_grossamount">Gross amount</span>
-                </label>
-                <div>
-                    <input type="text" formControlName="grossAmount" class="form-control mlp_translated"
-                           [readonly]="actionBy === 0"
-                           [class.error]="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched"
-                           (focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>
-                </div>
-            </div>
-        </div>
-
-        <div class="hr-line-dashed"></div>
-
-        <div class="row">
-            <div>
-                <span *ngIf="!metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by unknown NAV</span>.</span>
-                <span *ngIf="metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by known NAV</span>.</span>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_cutoffdate">Cut-off date</span>
-                </label>
-                <div class="input-group date-pick-wrapper">
-                    <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                    <!--<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
-                    <input formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
-                           [readonly]="doValidate"
-                           (dateChange)="subscribeForChangeDate('cutoff', $event)"
-                    />
-                </div>
-            </div>
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_valuationdate">Valuation date</span>
-                </label>
-
-                <div class="input-group date-pick-wrapper">
-                    <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                    <!--<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>-->
-                    <input formControlName="valuationDate" [dpDayPicker]="configDateValuation" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"
-                           [readonly]="doValidate"
-                           (dateChange)="subscribeForChangeDate('valuation', $event)"
-                    />
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="row">
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_settlementdate">Settlement date</span>
-                </label>
-                <div class="input-group date-pick-wrapper">
-                    <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                    <!--<input [dpDayPicker]="configDate" -->
-                    <!--[value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' "-->
-                    <!--placeholder="Choose a date"-->
-                    <!--mode="day"-->
-                    <!--theme="dp-material"-->
-                    <!--[ngStyle]="{'width':'100%'}" -->
-                    <!--mltag="txt_chooseadate"/>-->
-                    <input
-                        formControlName="settlementDate"
-                        [dpDayPicker]="configDateCutoff"
-                        placeholder="Choose a date"
-                        mode="day"
-                        theme="dp-material"
-                        [ngStyle]="{'width':'100%'}"
-                        [readonly]="doValidate"
-                        [disabled]="doValidate"
-                        mltag="txt_chooseadate"/>
-                </div>
-            </div>
-
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated">{{formConfig.feeLabel}} fee</span>
-                    <span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>
-                </label>
-                <div>
-                    <input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="row">
-            <div class="form-group col-sm-6">
-                <label class="control-label">
-                    <span class="ml_translated" mltag="txt_comment">Comment</span>
-                </label>
-                <div>
-                    <input type="text" formControlName="comment" class="form-control mlp_translated">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label">
+                                    <span class="" mltag="">Incidental costs</span>
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="hr-line-dashed"></div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
+                        <i class="fa fa-chevron-down" [class.reverse]="panels[3]"></i> Product Information
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[3]">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">ISIN</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [value]="metaData.isin" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Share Name</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [value]="metaData.shareName" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Asset Class</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">SRRI</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">SRI</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Share Currency</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">NAV</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [value]="metaData.nav" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">NAV Date</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Decimalization</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
+                        <i class="fa fa-chevron-down" [class.reverse]="panels[4]"></i> Date Information
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[4]">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Order Date</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Cut-off Date</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="cutoffDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">NAV Date</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="valuationDate">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Settlement Date</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="settlementDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[5] = !panels[5]; $event.preventDefault();">
+                        <i class="fa fa-chevron-down" [class.reverse]="panels[5]"></i> Order Information
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[5]">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Order Reference</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Order Type</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Order Reference</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Order Type</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" [readonly]="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">Please type below a quantity or an amount</div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Gross Amount</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="grossAmount">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Fee Amount</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="feeAmount">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            <span class="" mltag="">Net Amount</span>
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" formControlName="netAmount">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">Comment:</div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <textarea class="form-control" formControlName="comment"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[6] = !panels[6]; $event.preventDefault();">
+                        <i class="fa fa-chevron-down" [class.reverse]="panels[6]"></i> Disclaimer
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[6]">
+                <div class="row">
+                    <div class="form-group col-sm-12" style="text-align: center; vertical-align: middle;">
+                        <input id="checkbox"
+                               class="form-check-input"
+                               style="margin-top: 10px; margin-right: 10px;"
+                               type="checkbox"
+                               value="false"/>
+                        <label class="form-check-label" for="checkbox">
+                            I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.
+                        </label>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        The lastest version of the KIID can be accessed via this link: "www.[Share Name]/KIID"
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="form-group button-group">
@@ -223,53 +417,280 @@
             </div>
         </div>
 
-        <div *ngIf="!form.controls['quantity'].valid && form.controls['quantity'].touched" class="alert-items">
 
-            <div class="alert alert-danger">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>
-                    </div>
-                </div>
-            </div>
 
-        </div>
 
-        <div *ngIf="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched" class="alert-items">
 
-            <div class="alert alert-danger">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>
-                    </div>
-                </div>
-            </div>
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_registrar">Registrar</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="metaData.registrar" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
 
-        </div>
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_fundshare">Fund share</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="metaData.shareName" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
-        <div *ngIf="!form.controls['comment'].valid && form.controls['comment'].touched" class="alert-items">
+        <!--<div class="hr-line-dashed"></div>-->
 
-            <div class="alert alert-danger">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>
-                    </div>
-                </div>
-            </div>
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_isincode">ISIN code</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="metaData.isin" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
 
-        </div>
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_currency">Currency</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="metaData.currency" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
 
-        <div *ngIf="!form.controls['address'].valid && form.controls['address'].touched" class="alert-items">
+        <!--</div>-->
 
-            <div class="alert alert-danger">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>
-                    </div>
-                </div>
-            </div>
+        <!--<div class="hr-line-dashed"></div>-->
 
-        </div>
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<app-switch-button [value]="actionBy" (updateValue)="actionBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>-->
+                <!--<div>-->
+                    <!--<span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{formConfig.actionLabel}} by amount or unit for this fund share</span>.</span>-->
+                    <!--<span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by quantity for this fund share</span>.</span>-->
+                    <!--<span *ngIf="metaData.allowType === 'amount'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{formConfig.actionLabel}}  by amount for this fund share</span>.</span>-->
+                    <!--<span class="help-block m-b-none text-success" [ngStyle]="{'width': '100%'}"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated" mltag="txt_decimalisation">Decimalisation</span>: {{metaData.decimalisationNumber}}.</span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_quantity">Quantity</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" formControlName="quantity" class="form-control mlp_translated"-->
+                           <!--[readonly]="actionBy === 1"-->
+                           <!--[class.error]="!form.controls['quantity'].valid && form.controls['quantity'].touched"-->
+                           <!--(focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<ng-select-->
+                        <!--[class.error]="!form.controls['address'].valid && form.controls['address'].touched"-->
+                        <!--[items]="addressList"-->
+                        <!--[allowClear]="false"-->
+                        <!--placeholder="Select sub-portfolio"-->
+                        <!--formControlName="address"-->
+                        <!--(selected)="handleSelectedAddress($event)"-->
+                      <!--mltag="txt_selectsubportfolio">-->
+                    <!--</ng-select>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!--<div class="row">-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_netassetvalue">Net asset value</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_grossamount">Gross amount</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" formControlName="grossAmount" class="form-control mlp_translated"-->
+                           <!--[readonly]="actionBy === 0"-->
+                           <!--[class.error]="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched"-->
+                           <!--(focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="hr-line-dashed"></div>-->
+
+        <!--<div class="row">-->
+            <!--<div>-->
+                <!--<span *ngIf="!metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by unknown NAV</span>.</span>-->
+                <!--<span *ngIf="metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{formConfig.actionLabel}} by known NAV</span>.</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_cutoffdate">Cut-off date</span>-->
+                <!--</label>-->
+                <!--<div class="input-group date-pick-wrapper">-->
+                    <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
+
+                    <!--&lt;!&ndash;<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>&ndash;&gt;-->
+                    <!--<input formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"-->
+                           <!--[readonly]="doValidate"-->
+                           <!--(dateChange)="subscribeForChangeDate('cutoff', $event)"-->
+                    <!--/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_valuationdate">Valuation date</span>-->
+                <!--</label>-->
+
+                <!--<div class="input-group date-pick-wrapper">-->
+                    <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
+
+                    <!--&lt;!&ndash;<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>&ndash;&gt;-->
+                    <!--<input formControlName="valuationDate" [dpDayPicker]="configDateValuation" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"-->
+                           <!--[readonly]="doValidate"-->
+                           <!--(dateChange)="subscribeForChangeDate('valuation', $event)"-->
+                    <!--/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+
+        <!--<div class="row">-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_settlementdate">Settlement date</span>-->
+                <!--</label>-->
+                <!--<div class="input-group date-pick-wrapper">-->
+                    <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
+
+                    <!--&lt;!&ndash;<input [dpDayPicker]="configDate" &ndash;&gt;-->
+                    <!--&lt;!&ndash;[value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' "&ndash;&gt;-->
+                    <!--&lt;!&ndash;placeholder="Choose a date"&ndash;&gt;-->
+                    <!--&lt;!&ndash;mode="day"&ndash;&gt;-->
+                    <!--&lt;!&ndash;theme="dp-material"&ndash;&gt;-->
+                    <!--&lt;!&ndash;[ngStyle]="{'width':'100%'}" &ndash;&gt;-->
+                    <!--&lt;!&ndash;mltag="txt_chooseadate"/>&ndash;&gt;-->
+                    <!--<input-->
+                        <!--formControlName="settlementDate"-->
+                        <!--[dpDayPicker]="configDateCutoff"-->
+                        <!--placeholder="Choose a date"-->
+                        <!--mode="day"-->
+                        <!--theme="dp-material"-->
+                        <!--[ngStyle]="{'width':'100%'}"-->
+                        <!--[readonly]="doValidate"-->
+                        <!--[disabled]="doValidate"-->
+                        <!--mltag="txt_chooseadate"/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated">{{formConfig.feeLabel}} fee</span>-->
+                    <!--<span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+
+        <!--<div class="row">-->
+            <!--<div class="form-group col-sm-6">-->
+                <!--<label class="control-label">-->
+                    <!--<span class="ml_translated" mltag="txt_comment">Comment</span>-->
+                <!--</label>-->
+                <!--<div>-->
+                    <!--<input type="text" formControlName="comment" class="form-control mlp_translated">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="hr-line-dashed"></div>-->
+
+        <!--<div class="row">-->
+            <!--<div class="form-group button-group">-->
+                <!--<div class="col-sm-12">-->
+                    <!--<button type="submit" class="btn btn-primary">-->
+                        <!--<i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>-->
+                    <!--</button>-->
+                    <!--<button (click)="handleClose()" class="btn btn-secondary" mltag="txt_close"> Close</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div *ngIf="!form.controls['quantity'].valid && form.controls['quantity'].touched" class="alert-items">-->
+
+            <!--<div class="alert alert-danger">-->
+                <!--<div class="alert-items">-->
+                    <!--<div class="alert-item static">-->
+                        <!--<span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!--<div *ngIf="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched" class="alert-items">-->
+
+            <!--<div class="alert alert-danger">-->
+                <!--<div class="alert-items">-->
+                    <!--<div class="alert-item static">-->
+                        <!--<span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!--<div *ngIf="!form.controls['comment'].valid && form.controls['comment'].touched" class="alert-items">-->
+
+            <!--<div class="alert alert-danger">-->
+                <!--<div class="alert-items">-->
+                    <!--<div class="alert-item static">-->
+                        <!--<span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!--<div *ngIf="!form.controls['address'].valid && form.controls['address'].touched" class="alert-items">-->
+
+            <!--<div class="alert alert-danger">-->
+                <!--<div class="alert-items">-->
+                    <!--<div class="alert-item static">-->
+                        <!--<span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
 
     </div>
 
