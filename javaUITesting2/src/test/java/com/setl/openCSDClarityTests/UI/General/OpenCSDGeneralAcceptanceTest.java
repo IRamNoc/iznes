@@ -46,15 +46,14 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldAutosaveInformation() throws IOException, InterruptedException {
-        loginAndVerifySuccessAdmin("am", "trb2017");
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
-        navigateToDropdown("menu-account-module");
-        navigateToPage("my-account");
-        navigateToDropdown("menu-user-administration");
+        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
@@ -65,16 +64,16 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        //navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        //navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         //Manually check title is not displayed inside text field
     }
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        //navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        //navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
+        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
         //Manually check asterisks are displayed next to title
     }
 
@@ -88,7 +87,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        assertTrue(driver.findElement(By.id("menu-account-module")).isDisplayed());
+        assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
     }
 
     @Test
