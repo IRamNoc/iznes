@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-umbrella"></i> <span>Add a new Fund Share</span></h1>
+    <h1><i class="fa fa-umbrella"></i> <span>Create a new Fund Share</span></h1>
 </div>
 
 <clr-tabs>
@@ -7,8 +7,17 @@
         <button clrTabLink id="tabFundShareButton">
             <span>Fund Share</span>
         </button>
-        <clr-tab-content>
+        <clr-tab-content class="outer">
             
+            <div class="form-group row actions">
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button type="button" class="btn btn-default action-button save" (click)="test()">Create</button>
+                </div>
+            </div>
+
             <clr-tabs>
                 <clr-tab>
                     <button clrTabLink id="tabKeyFactsButton">
@@ -16,10 +25,10 @@
                     </button>
                     <clr-tab-content>
                         <h3>Key Facts: Main Information</h3>
-                        <app-dynamic-form [model]="keyFactsMandatory"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.keyFacts.mandatory"></app-dynamic-form>
 
                         <h3>Key Facts: Optional Information</h3>
-                        <app-dynamic-form [model]="keyFactsOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.keyFacts.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -29,10 +38,10 @@
                     </button>
                     <clr-tab-content>
                         <h3>Characteristics: Main Information</h3>
-                        <app-dynamic-form [model]="characteristicsMandatory"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.characteristic.mandatory"></app-dynamic-form>
 
                         <h3>Characteristics: Optional Information</h3>
-                        <app-dynamic-form [model]="characteristicsOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.characteristic.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -42,7 +51,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Calendar: Main Information</h3>
-                        <app-dynamic-form [model]="calendarMandatory"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -52,10 +61,10 @@
                     </button>
                     <clr-tab-content>
                         <h3>Fees: Main Information</h3>
-                        <app-dynamic-form [model]="feesMandatory"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.fees.mandatory"></app-dynamic-form>
 
                         <h3>Fees: Optional Information</h3>
-                        <app-dynamic-form [model]="feesOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.fees.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -65,10 +74,10 @@
                     </button>
                     <clr-tab-content>
                         <h3>Profile: Main Information</h3>
-                        <app-dynamic-form [model]="profileMandatory"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.profile.mandatory"></app-dynamic-form>
 
                         <h3>Profile: Optional Information</h3>
-                        <app-dynamic-form [model]="profileOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.profile.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -78,7 +87,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Taxation: Optional Information</h3>
-                        <app-dynamic-form [model]="taxationOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.taxation.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -88,7 +97,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Representation: Optional Information</h3>
-                        <app-dynamic-form [model]="representationOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.representation.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -98,7 +107,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Listing: Optional Information</h3>
-                        <app-dynamic-form [model]="listingOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.listing.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -108,7 +117,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>PRRIP: Optional Information</h3>
-                        <app-dynamic-form [model]="priipOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.priip.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -118,7 +127,7 @@
                     </button>
                     <clr-tab-content>
                         <h3>Solvency II: Optional Information</h3>
-                        <app-dynamic-form [model]="solvencyOptional"></app-dynamic-form>
+                        <app-dynamic-form [model]="model.solvency.optional"></app-dynamic-form>
                     </clr-tab-content>
                 </clr-tab>
 
@@ -131,6 +140,15 @@
                     </clr-tab-content>
                 </clr-tab>
             </clr-tabs>
+
+            <div class="form-group row actions bottom">
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button type="button" class="btn btn-default action-button save" (click)="test()">Create</button>
+                </div>
+            </div>
 
         </clr-tab-content>
     </clr-tab>

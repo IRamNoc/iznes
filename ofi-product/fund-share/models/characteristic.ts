@@ -78,7 +78,7 @@ export class ShareCharacteristicMandatory {
             { id: 'amount', text: 'Amount' },
             { id: 'shares-and-amount', text: 'Shares and Amount' }
         ],
-        style: [FormItemStyle.BreakOnBefore]
+        style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter]
     }
     redemptionCurrency: FormItem = {
         type: FormItemType.list,

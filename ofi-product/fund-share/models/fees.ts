@@ -49,7 +49,8 @@ export class ShareFeesOptional {
     exPostOneOffEntryCostsPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post One-off Entry Costs As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostOneOffEntryCostsPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -64,7 +65,8 @@ export class ShareFeesOptional {
     exPostOneOffExitCostsPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post One-off Exit Costs As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostOneOffExitCostsPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -79,7 +81,8 @@ export class ShareFeesOptional {
     exPostTransactionCostsPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post Transaction Costs As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostTransactionCostsPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -89,13 +92,13 @@ export class ShareFeesOptional {
     exPostTransactionCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Transaction Costs Period End',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        required: false
     }
     exPostManagementFeeAppliedPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post Management Fee Applied As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostManagementFeeAppliedPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -105,13 +108,13 @@ export class ShareFeesOptional {
     exPostManagementFeeAppliedPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Management Fee Applied Period End',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        required: false
     }
     exPostOtherOngoingCostsAsPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post Other Ongoing Costs As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostOtherOngoingCostsPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -121,13 +124,13 @@ export class ShareFeesOptional {
     exPostOtherOngoingCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Other Ongoing Costs Period End',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        required: false
     }
     exPostIncidentalCostsPercentage: FormItem = {
         type: FormItemType.number,
         label: 'Ex-post Incidental Costs As Percentage',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     exPostIncidentalCostsPeriodStart: FormItem = {
         type: FormItemType.date,
@@ -137,13 +140,13 @@ export class ShareFeesOptional {
     exPostIncidentalCostsPeriodEnd: FormItem = {
         type: FormItemType.date,
         label: 'Ex-post Incidental Costs Period End',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        required: false
     }
     exitCostDescription: FormItem = {
         type: FormItemType.text,
         label: 'Exit Cost Description',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
     hasPerformanceFee: FormItem = {
         type: FormItemType.boolean,
@@ -163,13 +166,13 @@ export class ShareFeesOptional {
     performanceFeeMaximum: FormItem = {
         type: FormItemType.number,
         label: 'Performance Fee Maximum',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        required: false
     }
     hurdleRate: FormItem = {
         type: FormItemType.number,
         label: 'Hurdle Rate',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnBefore]
     }
     highWaterMark: FormItem = {
         type: FormItemType.number,

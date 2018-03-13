@@ -1,0 +1,32 @@
+:host {
+    clr-tabs {
+        margin-bottom: 20px;
+    }
+    clr-tab-content {
+        &.outer {
+            padding-right: 0;
+        }
+        &:not(.outer) {
+            width: calc(100% - 20px);
+        }
+    }
+    .row.actions {
+        border-bottom: 1px solid #DDD;
+        border-radius: 4px;
+        margin: 0 0 20px;
+        padding: 0 0 20px;
+        width: calc(100% - 20px);
+
+        &.bottom {
+            border-bottom: none;
+            border-top: 1px solid #DDD;
+            padding: 20px 0 0;
+        }
+
+        > div {
+            padding: 0;
+
+            button { margin: 0; }
+        }
+    }
+}
