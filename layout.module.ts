@@ -17,6 +17,7 @@ import {UiFormsComponent} from './layouts/ui-form/components/forms/forms.compone
 import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
 import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
 import {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.component';
+import {UiModalComponent} from './layouts/ui-form/components/modal/modal.component';
 import {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
@@ -65,6 +66,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         UiDropdownsComponent,
         UiDataGridComponent,
         UiAlertsComponent,
+        UiModalComponent,
         UiToasterComponent
     ],
     exports: [
@@ -86,6 +88,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
         UiDropdownsComponent,
         UiDataGridComponent,
         UiAlertsComponent,
+        UiModalComponent,
         UiToasterComponent
     ],
     providers: [
