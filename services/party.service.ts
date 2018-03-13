@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PartyModel } from '../models';
-import { PayListItemService} from '../services';
+import { PayListItemService} from '../services/paylistitem.service';
 import { PayListItemModel } from '../models';
-import { ReceiveListItemService } from '../services';
+import { ReceiveListItemService } from '../services/receivelistitem.service';
 import { ReceiveListItemModel } from '../models';
 import * as _ from 'lodash';
 
@@ -26,15 +26,35 @@ export class PartyService {
     }
 
     public toJSON(party: PartyModel) {
-        return [
+        let payList = [];
+        _.each(party.payList, (payListItem) => {
+            if (payListItem instanceof Array) {
+                payList.push(payListItem);
+            } else {
+                payList.push(this.payListItemService.toJSON(payListItem));
+            }
+        });
+
+        let receiveList = [];
+        _.each(party.receiveList, (receiveListItem) => {
+            if (receiveListItem instanceof Array) {
+                receiveList.push(receiveListItem);
+            } else {
+                receiveList.push(this.receiveListItemService.toJSON(receiveListItem));
+            }
+        });
+
+        let result =  [
             party.partyIdentifier,
             party.sigAddress,
-            party.payList,
-            party.receiveList,
+            payList,
+            receiveList,
             party.publicKey,
             party.signature,
             party.mustSign
         ];
+
+        return result;
     }
 
     public create(
@@ -50,8 +70,12 @@ export class PartyService {
         party.partyIdentifier = partyIdentifier;
         party.sigAddress = sigAddress;
 
-        this.addPayListItem(party, payList);
-        this.addReceiveListItem(party, receiveList);
+        _.each(payList, (payListItem) => {
+           this.addPayListItem(party, this.payListItemService.fromJSON(payListItem));
+        });
+        _.each(receiveList, (receiveListItem) => {
+           this.addReceiveListItem(party, this.receiveListItemService.fromJSON(receiveListItem));
+        });
 
         party.publicKey = publicKey;
         party.signature = signature;

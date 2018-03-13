@@ -56,15 +56,19 @@ export class DVPContractService {
             contractData: contractData
         });
 
+        console.log('ABOUT TO DISPATCH DVP', asyncTaskPipe, this.ngRedux, SagaHelper);
+
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
             asyncTaskPipe,
             {},
             (data) => {
+                console.log('DVP SUCCESS');
                 successCallback(data[1].data);
             },
             (data) => {
+                console.log('DVP ERROR');
                 errorCallback(data);
             }
         ));

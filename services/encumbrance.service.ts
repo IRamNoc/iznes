@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EncumbranceModel } from '../models';
 import { EncumbranceAddressModel } from '../models';
-import { EncumbranceAddressService } from '../services';
+import { EncumbranceAddressService } from '../services/encumbranceAddress.service';
 import * as _ from 'lodash';
 
 @Injectable()

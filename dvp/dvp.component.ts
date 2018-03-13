@@ -52,12 +52,12 @@ export class ContractsDvpComponent implements OnInit {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     constructor(private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private walletNodeRequestService: WalletNodeRequestService,
-        private myWalletService: MyWalletsService,
-        private alertsService: AlertsService,
-        private dvpService: DVPContractService,
-        private contractService: ContractService) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private myWalletService: MyWalletsService,
+                private alertsService: AlertsService,
+                private dvpService: DVPContractService,
+                private contractService: ContractService) {
 
     }
 
@@ -126,7 +126,7 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     private requestWalletToRelationship(requestedInstrumentState) {
-        if(!requestedInstrumentState) {
+        if (!requestedInstrumentState) {
             this.ngRedux.dispatch(setRequestedWalletToRelationship());
 
             InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
@@ -140,10 +140,10 @@ export class ContractsDvpComponent implements OnInit {
     private initParties(): void {
         this.parties = [{
             id: partyA,
-            title: "Party A"
+            title: 'Party A'
         }, {
             id: partyB,
-            title: "Party B",
+            title: 'Party B',
             toggleAssetReturn: true
         }];
     }
@@ -152,9 +152,9 @@ export class ContractsDvpComponent implements OnInit {
         const currentDate = moment(mDateHelper.getCurrentUnixTimestamp());
 
         this.createContractForm = new FormGroup({
-            "creator": new FormControl('', Validators.required),
-            "expireDate": new FormControl(currentDate.add(1 ,'days').format('YYYY-MM-DD'), Validators.required),
-            "expireTime": new FormControl(currentDate.format('HH:mm'), Validators.required)
+            'creator': new FormControl('', Validators.required),
+            'expireDate': new FormControl(currentDate.add(1, 'days').format('YYYY-MM-DD'), Validators.required),
+            'expireTime': new FormControl(currentDate.format('HH:mm'), Validators.required)
         });
 
         this.addPartiesToForm();
@@ -174,10 +174,10 @@ export class ContractsDvpComponent implements OnInit {
 
     private generatePartyFormGroup(): FormGroup {
         return new FormGroup({
-            "asset": new FormControl('', Validators.required),
-            "address": new FormControl('', Validators.required),
-            "amount": new FormControl('', Validators.required),
-            "return_asset": new FormControl(false, Validators.required)
+            'asset': new FormControl('', Validators.required),
+            'address': new FormControl('', Validators.required),
+            'amount': new FormControl('', Validators.required),
+            'return_asset': new FormControl(false, Validators.required)
         });
     }
 
@@ -187,7 +187,7 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     private toggleReturnAsset(value: boolean): void {
-        if(value) {
+        if (value) {
             this.createContractForm.controls[partyB].get('asset').setValidators(Validators.required);
             this.createContractForm.controls[partyB].get('amount').setValidators(Validators.required);
         } else {
@@ -204,31 +204,31 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     getError(): any {
-        if(this.fieldHasError('creator')) {
+        if (this.fieldHasError('creator')) {
             return {
                 mltag: 'txt_contracterror_creator',
                 text: 'Creator Address is Required'
-            }
-        } else if(this.fieldHasError('expireDate')) {
+            };
+        } else if (this.fieldHasError('expireDate')) {
             return {
                 mltag: 'txt_contracterror_expiredate',
                 text: 'Expire Date is Required'
-            }
-        } else if(this.fieldHasError('expireTime')) {
+            };
+        } else if (this.fieldHasError('expireTime')) {
             return {
                 mltag: 'txt_contracterror_expiretime',
                 text: 'Expire Time is Required'
-            }
-        } else if(this.fieldHasError(partyA)) {
+            };
+        } else if (this.fieldHasError(partyA)) {
             return {
                 mltag: 'txt_contracterror_partya',
                 text: 'Party A is invalid'
-            }
-        } else if(this.fieldHasError(partyB)) {
+            };
+        } else if (this.fieldHasError(partyB)) {
             return {
                 mltag: 'txt_contracterror_partyb',
                 text: 'Party B is invalid'
-            }
+            };
         } else {
             return false;
         }
@@ -244,7 +244,10 @@ export class ContractsDvpComponent implements OnInit {
      * Create Contract
      */
     createContract(): void {
-        if(!this.isFormValid()) return;
+        if (!this.isFormValid()) {
+            console.log('Invalid form!');
+            return;
+        }
 
         this.dvpService.create(
             this.parties,
@@ -256,14 +259,19 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     showResponseModal(createContractResponse) {
-        const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
+        //const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
+        const expiryDate = 'Broken, Check Code';
 
         this.alertsService.create('success', `
             <table class="table grid">
                 <tbody>
+                <tr>
+                        <td class="left"><b>Contract:</b></td>
+                        <td>${createContractResponse.contractaddress}</td>
+                    </tr>
                     <tr>
                         <td class="left"><b>Creator Address:</b></td>
-                        <td>${createContractResponse.contractdata.issuingaddress}</td>
+                        <td><!-- createContractResponse.contractdata.issuingaddress --></td>
                     </tr>
                     <tr>
                         <td class="left"><b>Contract Expires:</b></td>
@@ -271,7 +279,7 @@ export class ContractsDvpComponent implements OnInit {
                     </tr>
                     <tr>
                         <td class="left"><b>Tx hash:</b></td>
-                        <td>${createContractResponse.hash.substring(0, 10)}...</td>
+                        <td><!--  createContractResponse.hash.substring(0, 10)}...  --></td>
                     </tr>
                 </tbody>
             </table>
@@ -284,7 +292,7 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        for(const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }

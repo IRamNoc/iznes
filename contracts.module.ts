@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ContractsComponent} from './contracts.component';
-import {ContractsDvpComponent} from './dvp/dvp.component';
+import {ContractsComponent} from '@setl/core-contracts/contracts.component';
+import {ContractsDvpComponent} from '@setl/core-contracts/dvp/dvp.component';
 import {ClarityModule} from '@clr/angular';
 import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
 import {

@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { ContractModel } from '../models';
-import { PartyService } from '../services';
-import { PartyModel } from '../models';
-import { AuthorisationService } from '../services';
-import { AuthorisationModel } from '../models';
-import { ParameterItemService } from '../services';
-import { ParameterItemModel } from '../models';
-import { EncumbranceService } from '../services';
-import { EncumbranceModel } from '../models';
+import {Injectable} from '@angular/core';
+import {ContractModel} from '../models';
+import {PartyService} from '../services/party.service';
+import {PartyModel} from '../models';
+import {AuthorisationService} from '../services/authorisation.service';
+import {AuthorisationModel} from '../models';
+import {ParameterItemService} from '../services/parameterItem.service';
+import {ParameterItemModel} from '../models';
+import {EncumbranceService} from '../services/encumbrance.service';
+import {EncumbranceModel} from '../models';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -17,82 +17,107 @@ export class ContractService {
     private authorisationService: AuthorisationService;
     private parameterItemService: ParameterItemService;
     private encumbranceService: EncumbranceService;
+    public addresses: Array<any> = new Array();
+
     constructor() {
         this.partyService = new PartyService();
         this.authorisationService = new AuthorisationService();
         this.parameterItemService = new ParameterItemService();
         this.encumbranceService = new EncumbranceService();
     }
+
     /**
      * From JSON method
      *
-     * @param json
+     * @param {object} json
+     * @param {array}  addresses
      *
      * @returns {ContractModel}
      */
-    public fromJSON(json): ContractModel {
+    public fromJSON(json, addresses): ContractModel {
+        this.addresses = addresses;
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
         let contract = new ContractModel();
         for (const prop in json) {
             if (contract.hasOwnProperty(prop)) {
-                contract[prop] = json[prop];
-            }
-            console.log('Contract Property:', prop, 'Value:', json[prop]);
-        }
-        if (typeof contract.contractdata !== 'undefined' && typeof contract.contractdata.metadata !== 'undefined') {
-            if (contract.contractdata.metadata !== null) {
-                contract.name = JSON.parse(contract.contractdata.metadata).title;
-                // contract.expiry = moment.unix(contract.contractdata.expiry).format('DD-MM-YYYY');
+                contract[prop] = JSON.parse(JSON.stringify(json[prop]));
             }
         }
+        // If contractdata object is present, move all members to root
+        if (typeof contract.contractdata !== 'undefined') {
+            for (const contractdataProp in contract.contractdata) {
+                if (contract.hasOwnProperty(contractdataProp)) {
+                    contract[contractdataProp] = JSON.parse(JSON.stringify(json[contractdataProp]));
+                }
+            }
+            delete contract.contractdata;
+        }
+
         // Parties
-        if (typeof contract.contractdata.parties !== 'undefined' && contract.contractdata.parties !== null) {
-            const partyCount = contract.contractdata.parties.shift();
-            _.each(contract.contractdata.parties, (partyJson) => {
-                this.addParty(contract, this.partyService.fromJSON(partyJson));
+        if (typeof contract.parties !== 'undefined' && contract.parties !== null) {
+            if (typeof contract.parties[0] === 'number') {
+                contract.parties.shift();
+            }
+            contract.payors = '';
+            contract.payees = '';
+            contract.__completed = 1;
+            contract.status = 'Completed';
+            _.each(contract.parties, (partyJson, partyIndex) => {
+                if (typeof partyJson !== 'number') {
+                    contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
+                    if (contract.parties[partyIndex].payList.length > 0) {
+                        _.each(contract.parties[partyIndex].payList, (payListItem) => {
+                            contract.payors += payListItem.quantity.toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
+                        });
+                    }
+                    if (contract.parties[partyIndex].receiveList.length > 0) {
+                        _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
+                            contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                        });
+                    }
+                    contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
+                }
+                if (contract.parties[partyIndex].signature === '') {
+                    contract.__completed = 0;
+                    contract.status = 'Pending';
+                }
             });
-            delete contract.contractdata.parties;
+            contract.payors = contract.payors.substr(0, contract.payors.length - 1);
+            contract.payees = contract.payees.substr(0, contract.payees.length - 1);
+            contract.name = contract.__address;
+            contract.issuingaddress_label = this.getAddressLabel(contract.issuingaddress);
+            contract.fromaddr_label = this.getAddressLabel(contract.fromaddr);
+            contract.toaddr_label = this.getAddressLabel(contract.toaddr);
+
         }
 
         // Authorisations
-        if (typeof contract.contractdata.authorisations !== 'undefined' && contract.contractdata.authorisations !== null) {
-            _.each(contract.contractdata.authorisations, (authorisationJson) => {
-                this.addAuthorisation(contract, this.authorisationService.fromJSON(authorisationJson));
+        if (typeof contract.authorisations !== 'undefined' && contract.authorisations !== null) {
+            _.each(contract.authorisations, (authorisationJson, authorisationIndex) => {
+                contract.authorisations[authorisationIndex] = this.authorisationService.fromJSON(authorisationJson);
             });
-            delete contract.contractdata.authorisations;
         }
 
         // Parameters
-        if (typeof contract.contractdata.parameters !== 'undefined' && contract.contractdata.parameters !== null) {
-            _.each(contract.contractdata.parameters, (parameterJson, parameterKey) => {
-                this.addParameter(contract, this.parameterItemService.fromJSON(parameterJson, parameterKey));
+        if (typeof contract.parameters !== 'undefined' && contract.parameters !== null) {
+            _.each(contract.parameters, (parameterJson, parameterKey) => {
+                contract.parameters[parameterKey] = this.parameterItemService.fromJSON(parameterJson, parameterKey);
             });
-            delete contract.contractdata.parameters;
         }
 
         // Encumbrances
-        if (typeof contract.contractdata.addencumbrances !== 'undefined' && contract.contractdata.addencumbrances !== null) {
-            _.each(contract.contractdata.addencumbrances, (encumbranceJson) => {
-                this.addEncumbrance(contract, this.encumbranceService.fromJSON(encumbranceJson));
+        if (typeof contract.addencumbrances !== 'undefined' && contract.addencumbrances !== null) {
+            _.each(contract.addencumbrances, (encumbranceJson, encumbranceIndex) => {
+                contract.addencumbrances[encumbranceIndex] = this.encumbranceService.fromJSON(encumbranceJson);
             });
-            delete contract.contractdata.addencumbrances;
         }
 
-        for (const prop in contract.contractdata) {
-            if (contract.hasOwnProperty(prop)) {
-                console.log(prop, ' = ', contract.contractdata[prop]);
-                contract[prop] = contract.contractdata[prop];
-            }
-        }
-
-
-
-        contract.function = contract.contractdata.__function;
-        delete contract.contractdata;
-
-        contract.complete = true;
+        contract.address = contract.__address;
+        contract.function = contract.__function;
+        contract.completed = contract.__completed != 0;
+        contract.timeevent = contract.__timeevent;
         return contract;
     }
 
@@ -129,23 +154,22 @@ export class ContractService {
                 typeof contract[contractDataFields[index]] !== 'undefined'
             ) {
                 contractJsonObject.contractdata[contractDataFields[index]] = this.convertSubModels(contract[contractDataFields[index]]);
-                // delete contract[contractDataFields[index]];
             } else {
                 contractJsonObject.contractdata[contractDataFields[index]] = contract[contractDataFields[index]];
             }
         }
 
-        // for (let contractField in contract) {
-        //     if (contractDataFields.indexOf(contractField) === -1) {
-        //         contractJsonObject[contractField] = contract[contractField];
-        //     }
-        // }
         if (typeof contract.function !== 'undefined') {
             contractJsonObject.contractdata.__function = contract.function;
             delete contractJsonObject.contractdata.function;
         }
 
+        contractJsonObject.contractdata.metadata = '{}';
+
         delete contractJsonObject.events;
+
+        // TODO: Fix this in DVP Component!
+        contractJsonObject.contractdata.parameters['nav'][2] = 0;
 
         return JSON.stringify(contractJsonObject);
     }
@@ -184,7 +208,7 @@ export class ContractService {
                     jsonArray.push(this.authorisationService.toJSON(subModel));
                     break;
                 case 'ParameterItemModel':
-                    jsonArray = {}
+                    jsonArray = {};
                     jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
                     break;
                 case 'PartyModel':
@@ -199,5 +223,19 @@ export class ContractService {
             }
         });
         return jsonArray;
+    }
+
+    public getAddressLabel(address: string) {
+        if (typeof this.addresses[address] !== 'undefined') {
+            return this.addresses[address].label;
+        }
+        return address;
+    }
+
+    public debugLog() {
+        for (let i = 0; i < arguments.length; i++) {
+            arguments[i] = JSON.parse(JSON.stringify(arguments[i]));
+        }
+        console.log.apply(this, arguments);
     }
 }
