@@ -1,6 +1,7 @@
-import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import * as _ from 'lodash';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
 
-export class ShareCharacteristicMandatory {
+export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     maximumNumDecimal: FormItem = {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',

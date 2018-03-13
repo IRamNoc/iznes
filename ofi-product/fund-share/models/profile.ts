@@ -1,6 +1,6 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, DynamicFormsValidator} from '@setl/core-dynamic-forms';
 
-export class ShareProfileMandatory {
+export class ShareProfileMandatory extends DynamicFormsValidator {
     investorProfile: FormItem = {
         type: FormItemType.list,
         label: 'Investor Profile',

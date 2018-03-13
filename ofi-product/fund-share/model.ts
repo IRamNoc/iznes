@@ -52,6 +52,11 @@ export class FundShare {
 
     constructor() {}
 
+    isValid(): boolean {
+        return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
+            this.fees.mandatory.isValid() && this.keyFacts.mandatory.isValid() && this.profile.mandatory.isValid();
+    }
+
     getRequest(): FundShareRequestResponse {
         return {
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),

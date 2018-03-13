@@ -1,6 +1,11 @@
 :host {
     clr-tabs {
         margin-bottom: 20px;
+
+        button .required {
+            color: red;
+            font-size: 18px;
+        }
     }
     clr-tab-content {
         &.outer {
@@ -12,7 +17,6 @@
     }
     .row.actions {
         border-bottom: 1px solid #DDD;
-        border-radius: 4px;
         margin: 0 0 20px;
         padding: 0 0 20px;
         width: calc(100% - 20px);

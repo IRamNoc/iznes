@@ -1,6 +1,6 @@
-import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
 
-export class ShareKeyFactsMandatory {
+export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     fundShareName: FormItem = {
         type: FormItemType.text,
         label: 'Full Share Name',
@@ -100,7 +100,7 @@ export class ShareKeyFactsMandatory {
     master: FormItem = {
         type: FormItemType.text,
         label: 'Master',
-        required: false,
+        required: true,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined) || val[0].id !== 'master';
@@ -109,7 +109,7 @@ export class ShareKeyFactsMandatory {
     feeder: FormItem = {
         type: FormItemType.text,
         label: 'Feeder',
-        required: false,
+        required: true,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined) || val[0].id !== 'feeder';
@@ -152,7 +152,7 @@ export class ShareKeyFactsMandatory {
     couponType: FormItem = {
         type: FormItemType.list,
         label: 'Coupon type',
-        required: false,
+        required: true,
         listItems: [
             { id: 'interest', text: 'Interest' },
             { id: 'capital-gain', text: 'Capital gain' },
@@ -165,7 +165,7 @@ export class ShareKeyFactsMandatory {
     freqOfDistributionDeclaration: FormItem = {
         type: FormItemType.list,
         label: 'Frequency Of Distribution Declaration',
-        required: false,
+        required: true,
         listItems: [
             { id: 'daily', text: 'Daily' },
             { id: 'twice-a-week', text: 'Twice a week' },

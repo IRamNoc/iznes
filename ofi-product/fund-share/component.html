@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-umbrella"></i> <span>Create a new Fund Share</span></h1>
+    <h1><i class="fa fa-umbrella"></i> <span>Add new Fund Share</span></h1>
 </div>
 
 <clr-tabs>
@@ -14,14 +14,17 @@
                     <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <button type="button" class="btn btn-default action-button save" (click)="test()">Create</button>
+                    <button type="button" class="btn btn-primary action-button save" (click)="test()" [disabled]="!model.isValid()">
+                        <i class="fa fa-save"></i>
+                        <span>Add new Fund Share</span>
+                    </button>
                 </div>
             </div>
 
             <clr-tabs>
                 <clr-tab>
                     <button clrTabLink id="tabKeyFactsButton">
-                        <span>Key Facts</span>
+                        <span>Key Facts <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span></span>
                     </button>
                     <clr-tab-content>
                         <h3>Key Facts: Main Information</h3>
@@ -34,7 +37,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCharacteristicsButton">
-                        <span>Characteristics</span>
+                        <span>Characteristics <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span></span>
                     </button>
                     <clr-tab-content>
                         <h3>Characteristics: Main Information</h3>
@@ -47,7 +50,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCalendarButton">
-                        <span>Calendar</span>
+                        <span>Calendar <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span></span>
                     </button>
                     <clr-tab-content>
                         <h3>Calendar: Main Information</h3>
@@ -57,7 +60,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabFeesButton">
-                        <span>Fees</span>
+                        <span>Fees <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span></span>
                     </button>
                     <clr-tab-content>
                         <h3>Fees: Main Information</h3>
@@ -70,7 +73,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabFeesButton">
-                        <span>Profile</span>
+                        <span>Profile <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span></span>
                     </button>
                     <clr-tab-content>
                         <h3>Profile: Main Information</h3>
@@ -146,7 +149,10 @@
                     <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <button type="button" class="btn btn-default action-button save" (click)="test()">Create</button>
+                    <button type="button" class="btn btn-primary action-button save" (click)="test()" [disabled]="!model.isValid()">
+                        <i class="fa fa-save"></i>
+                        <span>Add new Fund Share</span>
+                    </button>
                 </div>
             </div>
 

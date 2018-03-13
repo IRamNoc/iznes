@@ -1,7 +1,7 @@
-import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
 import { FormStyle } from '@angular/common';
 
-export class ShareFeesMandatory {
+export class ShareFeesMandatory extends DynamicFormsValidator {
     maxManagementFee: FormItem = {
         type: FormItemType.number,
         label: 'Management Fee Maximum',

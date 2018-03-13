@@ -1,6 +1,6 @@
-import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
 
-export class ShareCalendarMandatory {
+export class ShareCalendarMandatory extends DynamicFormsValidator {
     tradeDay: FormItem = {
         type: FormItemType.list,
         label: 'Trade Date',
