@@ -53,8 +53,8 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
-        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        navigateToDropdown("TopBarMenu");
+        navigateToPageByID("TopBarMyAccount");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
@@ -65,16 +65,16 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        navigateToDropdown("TopBarMenu");
+        navigateToPageByID("TopBarMyAccount");
         //Manually check title is not displayed inside text field
     }
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdownXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[1]");
-        navigateToPageXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/clr-dropdown/div[2]/a");
+        navigateToDropdown("TopBarMenu");
+        navigateToPageByID("TopBarMyAccount");
         //Manually check asterisks are displayed next to title
     }
 
@@ -423,14 +423,11 @@ public class OpenCSDGeneralAcceptanceTest {
             fail(e.getMessage());
         }
         Thread.sleep(750);
-        WebElement signInPassword2 = driver.findElement(By.id("displayName"));
-        wait.until(visibilityOf(signInPassword2));
-
+        wait.until(visibilityOf(driver.findElement(By.id("displayName"))));
         WebElement signInPassword = driver.findElement(By.id("i0118"));
         signInPassword.sendKeys("Sphericals1057!");
         try {
             driver.findElement(By.id("idSIButton9")).click();
-            Thread.sleep(15000);
         }catch (Error e){
             fail();
         }
