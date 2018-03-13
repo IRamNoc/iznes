@@ -8,151 +8,202 @@
             <span>Fund Share</span>
         </button>
         <clr-tab-content class="outer">
-            
-            <div class="form-group row actions">
-                <div class="col-sm-6">
-                    <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
-                </div>
-                <div class="col-sm-6 text-right">
-                    <button type="button" class="btn btn-primary action-button save" (click)="test()" [disabled]="!model.isValid()">
-                        <i class="fa fa-save"></i>
-                        <span>Add new Fund Share</span>
-                    </button>
+
+            <div class="step-one">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <section class="form-block">
+                                <div class="form-group">
+                                    <label class="control-label" mltag="txt_">Is this Share part of an existing Fund?</label>
+                                    <ng-select id="selectFund"
+                                        [items]="[]"
+                                        [allowClear]="true"
+                                        placeholder=""
+                                        [formControl]=""
+                                        [required]="">
+                                    </ng-select>
+                                    <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
+                                        mltag="txt_">
+                                        Continue
+                                    </button>
+                                    <span>- or -</span>
+                                    <button type="button" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund"
+                                        mltag="txt_">
+                                        Add a new Fund
+                                    </button>
+                                </div>
+                            </section>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <clr-tabs>
-                <clr-tab>
-                    <button clrTabLink id="tabKeyFactsButton">
-                        <span>Key Facts <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span></span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Key Facts: Main Information</h3>
-                        <app-dynamic-form [model]="model.keyFacts.mandatory"></app-dynamic-form>
-
-                        <h3>Key Facts: Optional Information</h3>
-                        <app-dynamic-form [model]="model.keyFacts.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabCharacteristicsButton">
-                        <span>Characteristics <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span></span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Characteristics: Main Information</h3>
-                        <app-dynamic-form [model]="model.characteristic.mandatory"></app-dynamic-form>
-
-                        <h3>Characteristics: Optional Information</h3>
-                        <app-dynamic-form [model]="model.characteristic.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabCalendarButton">
-                        <span>Calendar <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span></span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Calendar: Main Information</h3>
-                        <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Fees <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span></span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Fees: Main Information</h3>
-                        <app-dynamic-form [model]="model.fees.mandatory"></app-dynamic-form>
-
-                        <h3>Fees: Optional Information</h3>
-                        <app-dynamic-form [model]="model.fees.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Profile <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span></span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Profile: Main Information</h3>
-                        <app-dynamic-form [model]="model.profile.mandatory"></app-dynamic-form>
-
-                        <h3>Profile: Optional Information</h3>
-                        <app-dynamic-form [model]="model.profile.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Taxation</span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Taxation: Optional Information</h3>
-                        <app-dynamic-form [model]="model.taxation.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Representation</span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Representation: Optional Information</h3>
-                        <app-dynamic-form [model]="model.representation.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Listing</span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Listing: Optional Information</h3>
-                        <app-dynamic-form [model]="model.listing.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>PRIIP</span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>PRRIP: Optional Information</h3>
-                        <app-dynamic-form [model]="model.priip.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Solvency II</span>
-                    </button>
-                    <clr-tab-content>
-                        <h3>Solvency II: Optional Information</h3>
-                        <app-dynamic-form [model]="model.solvency.optional"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-
-                <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Documents</span>
-                    </button>
-                    <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
-                    </clr-tab-content>
-                </clr-tab>
-            </clr-tabs>
-
-            <div class="form-group row actions bottom">
-                <div class="col-sm-6">
-                    <button type="button" class="btn btn-default action-button cancel" (click)="test()">Cancel</button>
+            
+            <div class="step-two" *ngIf="true === false">
+                <div class="form-group row actions">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-default action-button cancel" id="cancelFundShareTop"
+                            (click)="test()">Cancel</button>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
+                            (click)="test()" [disabled]="!model.isValid()">
+                            <i class="fa fa-save"></i>
+                            <span>Add new Fund Share</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="col-sm-6 text-right">
-                    <button type="button" class="btn btn-primary action-button save" (click)="test()" [disabled]="!model.isValid()">
-                        <i class="fa fa-save"></i>
-                        <span>Add new Fund Share</span>
-                    </button>
+
+                <clr-tabs>
+                    <clr-tab>
+                        <button clrTabLink id="tabKeyFactsButton">
+                            <span>
+                                Key Facts
+                                <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
+                            </span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Key Facts: Main Information</h3>
+                            <app-dynamic-form [model]="model.keyFacts.mandatory"></app-dynamic-form>
+
+                            <h3>Key Facts: Optional Information</h3>
+                            <app-dynamic-form [model]="model.keyFacts.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabCharacteristicsButton">
+                            <span>
+                                Characteristics
+                                <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
+                            </span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Characteristics: Main Information</h3>
+                            <app-dynamic-form [model]="model.characteristic.mandatory"></app-dynamic-form>
+
+                            <h3>Characteristics: Optional Information</h3>
+                            <app-dynamic-form [model]="model.characteristic.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabCalendarButton">
+                            <span>
+                                Calendar
+                                <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span>
+                            </span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Calendar: Main Information</h3>
+                            <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>
+                                Fees
+                                <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
+                            </span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Fees: Main Information</h3>
+                            <app-dynamic-form [model]="model.fees.mandatory"></app-dynamic-form>
+
+                            <h3>Fees: Optional Information</h3>
+                            <app-dynamic-form [model]="model.fees.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>
+                                Profile
+                                <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
+                            </span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Profile: Main Information</h3>
+                            <app-dynamic-form [model]="model.profile.mandatory"></app-dynamic-form>
+
+                            <h3>Profile: Optional Information</h3>
+                            <app-dynamic-form [model]="model.profile.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>Taxation</span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Taxation: Optional Information</h3>
+                            <app-dynamic-form [model]="model.taxation.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>Representation</span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Representation: Optional Information</h3>
+                            <app-dynamic-form [model]="model.representation.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>Listing</span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Listing: Optional Information</h3>
+                            <app-dynamic-form [model]="model.listing.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>PRIIP</span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>PRRIP: Optional Information</h3>
+                            <app-dynamic-form [model]="model.priip.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>Solvency II</span>
+                        </button>
+                        <clr-tab-content>
+                            <h3>Solvency II: Optional Information</h3>
+                            <app-dynamic-form [model]="model.solvency.optional"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+
+                    <clr-tab>
+                        <button clrTabLink id="tabFeesButton">
+                            <span>Documents</span>
+                        </button>
+                        <clr-tab-content>
+                            <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        </clr-tab-content>
+                    </clr-tab>
+                </clr-tabs>
+
+                <div class="form-group row actions bottom">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-default action-button cancel" id="cancelFundShareBottom"
+                            (click)="test()">Cancel</button>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
+                            (click)="test()" [disabled]="!model.isValid()">
+                            <i class="fa fa-save"></i>
+                            <span>Add new Fund Share</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

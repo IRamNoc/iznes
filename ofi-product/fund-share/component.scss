@@ -1,4 +1,24 @@
 :host {
+    .step-one {
+        button {
+            height: 40px;
+            line-height: 40px;
+            margin-bottom: 0;
+            margin-top: 0;
+
+            &.btn-primary {
+                margin-left: 10px;
+            }
+        }
+
+        button + span {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 10px;
+        }
+    }
+
+
     clr-tabs {
         margin-bottom: 20px;
 
