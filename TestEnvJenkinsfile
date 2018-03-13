@@ -8,7 +8,9 @@ node {
         stage('Deploy Membership-db to Test Environment') {
             node {
                 sh '''
-                            ssh root@139.162.213.130 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db &&
+                            
+                            ssh root@139.162.213.130 ln -s /usr/local/bin/flyway-4.2.0/flyway flyway && 
+                            rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db &&
                             rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@139.162.213.130:/var/membership-db &&
                             cd /var/membership-db/deploy/ && ./updatedb iznes \\&&  '''
             }

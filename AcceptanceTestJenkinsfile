@@ -16,10 +16,6 @@ timestamps {
             }
         }
 
-        stage('Clear down database') {
-            sh 'ssh -tt root@uk-lon-li-006.opencsd.io \'cd /var/membership-db/deploy/ && ./cleanblockchain \''
-            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/project/iznes/baseDB && ./testBoxDeploy.sh \''
-        }
         stage('Check Out Tests') {
             checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
                       doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
