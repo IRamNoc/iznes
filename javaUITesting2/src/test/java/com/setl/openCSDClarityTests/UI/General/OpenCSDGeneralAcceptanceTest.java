@@ -53,8 +53,8 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
-        navigateToDropdown("TopBarMenu");
-        navigateToPageByID("TopBarMyAccount");
+        navigateToDropdown("topBarMenu");
+        navigateToPageByID("topBarMyAccount");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
@@ -65,16 +65,16 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("TopBarMenu");
-        navigateToPageByID("TopBarMyAccount");
+        navigateToDropdown("topBarMenu");
+        navigateToPageByID("topBarMyAccount");
         //Manually check title is not displayed inside text field
     }
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("TopBarMenu");
-        navigateToPageByID("TopBarMyAccount");
+        navigateToDropdown("topBarMenu");
+        navigateToPageByID("topBarMyAccount");
         //Manually check asterisks are displayed next to title
     }
 
