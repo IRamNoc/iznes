@@ -21,6 +21,7 @@ import java.io.IOException;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -181,7 +182,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldSeperateThousandsWithSpaces() throws IOException, InterruptedException {
+    public void shouldSeparateThousandsWithSpaces() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
@@ -191,7 +192,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldSeperateDecimalPlacesWithPoint() throws IOException, InterruptedException {
+    public void shouldSeparateDecimalPlacesWithPoint() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
@@ -279,9 +280,12 @@ public class OpenCSDGeneralAcceptanceTest {
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
-        enterAllUserDetails("JordanInvestor7", "password");
+        String[] userDetails = generateRandomUserDetails();
+        String newUserName = userDetails[0];
+        enterAllUserDetails(newUserName, password);
         logout();
-        loginAndVerifySuccessAdmin("JordanInvestor7", "password");
+        loginAndVerifySuccessAdmin(newUserName, password);
+
 //        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
 //        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
 //        try {
@@ -301,7 +305,7 @@ public class OpenCSDGeneralAcceptanceTest {
     public static void enterAllUserDetails(String username, String password) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
         enterManageUserUsername(username);
-        enterManageUserEmail(username + "@setl.io");
+        enterManageUserEmail(username +"@setl.io");
         selectInvestorOnManageUserAccountDropdown();
         selectInvestorOnManageUserUserDropdown();
         enterManageUserPassword(password);
