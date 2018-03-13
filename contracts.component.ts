@@ -142,7 +142,7 @@ export class ContractsComponent implements OnInit, OnChanges {
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 party: [
-                    index - 1,
+                    contract.parties[index - 1].partyIdentifier,
                     '',
                     ''
                 ],
@@ -153,6 +153,7 @@ export class ContractsComponent implements OnInit, OnChanges {
             },
             contractaddress: contract.address
         });
+
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
@@ -189,7 +190,7 @@ export class ContractsComponent implements OnInit, OnChanges {
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 party: [
-                    index - 1,
+                    contract.parties[index - 1].partyIdentifier,
                     '',
                     ''
                 ],

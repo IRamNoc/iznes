@@ -62,6 +62,8 @@ export class ContractService {
             }
             contract.payors = '';
             contract.payees = '';
+            contract.__completed = 1;
+            contract.status = 'Completed';
             _.each(contract.parties, (partyJson, partyIndex) => {
                 if (typeof partyJson !== 'number') {
                     contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
@@ -77,6 +79,10 @@ export class ContractService {
                     }
                     contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
                 }
+                if (contract.parties[partyIndex].signature === '') {
+                    contract.__completed = 0;
+                    contract.status = 'Pending';
+                }
             });
             contract.payors = contract.payors.substr(0, contract.payors.length - 1);
             contract.payees = contract.payees.substr(0, contract.payees.length - 1);
@@ -84,7 +90,7 @@ export class ContractService {
             contract.issuingaddress_label = this.getAddressLabel(contract.issuingaddress);
             contract.fromaddr_label = this.getAddressLabel(contract.fromaddr);
             contract.toaddr_label = this.getAddressLabel(contract.toaddr);
-            contract.status = 'Pending';
+
         }
 
         // Authorisations
