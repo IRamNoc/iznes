@@ -133,21 +133,20 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.fundList = fundListImu.reduce((result, item) => {
             result.push({
-                id: item.get('shareId', 0),
-                isin: item.getIn(['metaData', 'isin'], ''),
-                shareName: item.getIn(['metaData', 'shareName'], ''),
-                assetClass: item.getIn(['metaData', 'assetClass'], ''),
-                assetManager: item.getIn(['managementCompany'], ''),
-                srri: item.getIn(['metaData', 'srri'], ''),
-                sri: item.getIn(['metaData', 'fundSri'], ''),
-                currency: item.getIn(['metaData', 'shareCurrency'], ''),
-                nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
-                subscriptionDate: item.getIn(['metaData', 'subscriptionCutOff'], ''),
-                redemptionDate: item.getIn(['metaData', 'redemptionCutOff'], '')
+                id: item.get('fundShareId', 0),
+                isin: item.get('isin', ''),
+                shareName: item.get('fundShareName', ''),
+                assetClass: '',
+                assetManager: item.get('managementCompany', ''),
+                srri: '',
+                sri:  '',
+                currency: item.get('shareClassCurrency', ''),
+                nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
+                subscriptionDate: item.get('subscriptionCutOffTime', ''),
+                redemptionDate: item.get('redemptionCutOffTime', '')
             });
             return result;
         }, []);
-
         this.tabsControl = immutableHelper.copy(this.tabsControl);
 
         this._changeDetectorRef.markForCheck();
