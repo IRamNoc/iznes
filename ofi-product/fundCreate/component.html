@@ -299,8 +299,13 @@
 
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label" for="managementCompanyID">Management Company</label>
-                                    <input type="text" name="managementCompanyID" id="managementCompanyID" formControlName="managementCompanyID" />
-                                    <span class="field-error">Field is required</span>
+                                    <ng-select id="managementCompanyID"
+                                               [items]="managementCompanyItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['managementCompanyID']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">Field is required</span>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">

@@ -5,7 +5,10 @@ import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import {NgRedux, select} from '@angular-redux/store';
+import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 
 @Component({
     templateUrl: './component.html',
@@ -39,6 +42,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
     investmentManagerItems = [];
     principalPromoterItems = [];
     payingAgentItems = [];
+    managementCompanyItems = [];
 
     // Locale
     language = 'fr';
@@ -63,14 +67,23 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         locale: this.language
     };
 
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessList$;
+
     unSubscribe: Subject<any> = new Subject();
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private fundService: OfiFundService,
+        private umbrellaService: OfiUmbrellaFundService,
+        private ofiManagementCompanyService: OfiManagementCompanyService,
+        private ngRedux: NgRedux<any>,
         @Inject('fund-items') fundItems,
     ) {
+
+        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
+        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
 
         this.fundItems = fundItems.fundItems;
         this.enums = fundItems.enums;
@@ -122,7 +135,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             'openOrCloseEnded': [null, Validators.required],
             'fiscalYearEnd': [null, Validators.required],
             'isFundOfFund': [null, Validators.required],
-            'managementCompanyID': [null, Validators.required],
+            'managementCompanyID': [[], Validators.required],
             'fundAdministrator': [[], Validators.required],
             'custodianBank': [[], Validators.required],
             'investmentManager': [[]],
@@ -259,6 +272,21 @@ export class FundCreateComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['cppiMultiplier'].setValue(null);
                 }
             });
+
+        this.managementCompanyAccessList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                const values =  _.values(d);
+                if (!values.length) {
+                    return [];
+                }
+                this.managementCompanyItems = values.map((item) => {
+                    return {
+                        id: item.companyID,
+                        text: item.companyName,
+                    };
+                });
+            });
     }
 
     getEuDirectiveType() {
@@ -314,6 +342,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
             principalPromoter: _.get(this.fundForm.controls['principalPromoter'].value, ['0', 'id'], null),
             payingAgent: _.get(this.fundForm.controls['payingAgent'].value, ['0', 'id'], null),
+            managementCompanyID:  _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
         }, ['AuMFund', 'AuMFundDate']);
 
         this.fundService.iznCreateFund(payload);

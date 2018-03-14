@@ -11,12 +11,19 @@ import fundItems from '../fundConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 const fundServiceSpy = jasmine.createSpyObj('OfiFundService', ['iznCreateFund']);
+const OfiUmbrellaFundServiceSpy = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
+const OfiManagementCompanyServiceSpy = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
+const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 import {FundCreateComponent} from './component';
 
 import {Directive, Input} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import {OfiUmbrellaFundService} from '../../ofi-req-services/ofi-product/umbrella-fund/service';
+import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import {NgRedux} from '@angular-redux/store';
+import {of} from 'rxjs/observable/of';
 
 // Stub for routerLink
 @Directive({
@@ -61,6 +68,9 @@ describe('FundCreateComponent', () => {
                 { provide: 'fund-items', useValue: fundItems },
                 { provide: Router, useValue: routerSpy },
                 { provide: OfiFundService, useValue: fundServiceSpy },
+                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceSpy },
+                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceSpy },
+                { provide: NgRedux, useValue: ngReduxSpy },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -70,6 +80,7 @@ describe('FundCreateComponent', () => {
         fixture = TestBed.createComponent(FundCreateComponent);
 
         comp = fixture.componentInstance;
+        comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
 
         tick();
         fixture.detectChanges();
@@ -549,7 +560,7 @@ describe('FundCreateComponent', () => {
                 openOrCloseEnded: '0',
                 fiscalYearEnd: '2017-02',
                 isFundOfFund: '0',
-                managementCompanyID: '1',
+                managementCompanyID: [{ id: '0', text: 'test management company' }],
                 fundAdministrator: [{ id : '1', text: 'Fund Admin 1' }],
                 custodianBank: [{ id : '1', text: 'Custodian Bank 1' }],
                 investmentManager: null,
@@ -605,6 +616,7 @@ describe('FundCreateComponent', () => {
                 fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
                 fundAdministrator: testPayload.fundAdministrator[0].id,
                 custodianBank: testPayload.custodianBank[0].id,
+                managementCompanyID: testPayload.managementCompanyID[0].id,
             }, ['AuMFund', 'AuMFundDate']));
 
             expect(fundServiceSpy.iznCreateFund).toHaveBeenCalledTimes(1);
