@@ -18,13 +18,15 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
-import {FundComponent as FundCreateComponent} from './fund/component';
+import {FundCreateComponent} from './fundCreate/component';
+import {FundEditComponent} from './fundEdit/component';
+
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
 import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 
 /* fundItems config ( should be served by backend TT ) */
-import fundItems from './fund/config';
+import fundItems from './fundConfig';
 
 /* Am Dashboard service. */
 @NgModule({
@@ -32,6 +34,7 @@ import fundItems from './fund/config';
         ProductHomeComponent,
         UmbrellaFundComponent,
         FundCreateComponent,
+        FundEditComponent,
     ],
     exports: [
         ProductHomeComponent,

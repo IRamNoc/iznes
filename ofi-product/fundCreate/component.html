@@ -59,7 +59,7 @@
                             </div>
                         </section>
 
-                        <div class="row" *ngIf="!isFundFormVisible">
+                        <div class="row">
                             <div class="form-group col-sm-12 submit-container">
                                 <button type="button" class="btn btn-default" (click)="onClickBack()">Cancel</button>
                                 <button id="submitUmbrella" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">Next</button>
@@ -83,12 +83,12 @@
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label">Fund Structure</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="fundStructure" id="fundStructure1" formControlName="fundStructure" value="SINGLE">
-                                        <label for="fundStructure1">Single fund Structure</label>
+                                        <input type="radio" name="isFundStructure" id="isFundStructure1" formControlName="isFundStructure" value="{{enums.isFundStructure.FUND}}">
+                                        <label for="isFundStructure1">Single fund Structure</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="fundStructure" id="fundStructure2" formControlName="fundStructure" value="UMBRELLA">
-                                        <label for="fundStructure2">Fund Umbrella Structure</label>
+                                        <input type="radio" name="isFundStructure" id="isFundStructure2" formControlName="isFundStructure" value="{{enums.isFundStructure.UMBRELLA}}">
+                                        <label for="isFundStructure2">Fund Umbrella Structure</label>
                                     </div>
                                 </div>
                             </div>
@@ -100,9 +100,9 @@
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <div *ngIf="fundForm.controls['fundStructure'].value === 'UMBRELLA'" class="required-field">
-                                        <label class="control-label" for="umbrellaName">Umbrella Name</label>
-                                        <input type="text" name="umbrellaName" id="umbrellaName" formControlName="umbrellaName"/>
+                                    <div *ngIf="fundForm.controls['isFundStructure'].value === enums.isFundStructure.UMBRELLA.toString()" class="required-field">
+                                        <label class="control-label" for="umbrellaFundID">Umbrella Name</label>
+                                        <input type="text" name="umbrellaFundID" id="umbrellaFundID" formControlName="umbrellaFundID"/>
                                         <span class="field-error">Field is required</span>
                                     </div>
                                 </div>
@@ -126,38 +126,38 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="lei">Legal Entity Identifier (LEI)</label>
-                                    <input type="text" name="lei" id="lei" formControlName="lei" />
-                                    <span *ngIf="fundForm.controls['lei'].touched && fundForm.controls['lei'].hasError('pattern')" class="field-error">Field should be 20 characters length</span>
+                                    <label class="control-label" for="legalEntityIdentifier">Legal Entity Identifier (LEI)</label>
+                                    <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" />
+                                    <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error">Field should be 20 characters length</span>
 
                                 </div>
                                 </div>
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="registeredOfficeName">Name of the Registered Office of the Fund</label>
-                                    <input type="text" name="registeredOfficeName" id="registeredOfficeName" formControlName="registeredOfficeName" />
+                                    <label class="control-label" for="registerOffice">Name of the Registered Office of the Fund</label>
+                                    <input type="text" name="registerOffice" id="registerOffice" formControlName="registerOffice" />
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="registeredOfficeAddress">Address of the registered Office of the Fund</label>
-                                    <input type="text" name="registeredOfficeAddress" id="registeredOfficeAddress" formControlName="registeredOfficeAddress" />
+                                    <label class="control-label" for="registerOfficeAddress">Address of the register Office of the Fund</label>
+                                    <input type="text" name="registerOfficeAddress" id="registerOfficeAddress" formControlName="registerOfficeAddress" />
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
                                     <div>
-                                        <label class="control-label" for="fundDomicile">Fund Domicile (country)</label>
-                                        <ng-select id="fundDomicile"
-                                                   [items]="fundDomicileItems"
+                                        <label class="control-label" for="domicile">Fund Domicile (country)</label>
+                                        <ng-select id="domicile"
+                                                   [items]="domicileItems"
                                                    [allowClear]="true"
                                                    placeholder="Select"
-                                                   [formControl]="fundForm.controls['fundDomicile']">
+                                                   [formControl]="fundForm.controls['domicile']">
                                         </ng-select>
-                                        <span class="field-error" *ngIf="fundForm.controls['fundDomicile'].hasError('required') && fundForm.controls['fundDomicile'].touched">Field is required</span>
+                                        <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">Field is required</span>
                                     </div>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
-                                    <div *ngIf="homeCountryLegalTypeItems.length">
+                                    <div *ngIf="isHomeCountryLegalTypeVisible()">
                                         <label class="control-label" for="homeCountryLegalType">Home Country Legal Type of Fund</label>
                                         <ng-select id="homeCountryLegalType"
                                                    [items]="homeCountryLegalTypeItems"
@@ -173,37 +173,37 @@
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label">Is EU Directive Relevant?</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isEuDirectiveRelevant" id="isEuDirectiveRelevant1" formControlName="isEuDirectiveRelevant" value="YES">
-                                        <label for="isEuDirectiveRelevant1">Yes</label>
+                                        <input type="radio" name="isEuDirective" id="isEuDirective1" formControlName="isEuDirective" value="{{enums.isEuDirective.YES}}">
+                                        <label for="isEuDirective1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isEuDirectiveRelevant" id="isEuDirectiveRelevant2" formControlName="isEuDirectiveRelevant" value="NO">
-                                        <label for="isEuDirectiveRelevant2">No</label>
+                                        <input type="radio" name="isEuDirective" id="isEuDirective2" formControlName="isEuDirective" value="{{enums.isEuDirective.NO}}">
+                                        <label for="isEuDirective2">No</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="fundForm.controls['isEuDirectiveRelevant'].value === 'YES'">
+                            <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
                                 <div class="form-group required-field col-sm-6">
-                                    <label class="control-label" for="euDirectiveType">Type of EU Directive</label>
-                                    <ng-select id="euDirectiveType"
-                                               [items]="isEuDirectiveRelevantItems"
+                                    <label class="control-label" for="typeOfEuDirective">Type of EU Directive</label>
+                                    <ng-select id="typeOfEuDirective"
+                                               [items]="typeOfEuDirectiveItems"
                                                [allowClear]="true"
                                                placeholder="Select"
-                                               [formControl]="fundForm.controls['euDirectiveType']">
+                                               [formControl]="fundForm.controls['typeOfEuDirective']">
                                     </ng-select>
-                                    <span class="field-error" *ngIf="fundForm.controls['euDirectiveType'].hasError('required') && fundForm.controls['euDirectiveType'].touched">Field is required</span>
+                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">Field is required</span>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
-                                    <div *ngIf="fundForm.controls['isEuDirectiveRelevant'].value === 'YES' && getEuDirectiveType() == 'UCITS'">
-                                        <label class="control-label" for="UCITSVersion">UCITS Version</label>
-                                        <ng-select id="UCITSVersion"
-                                                   [items]="UCITSVersionItems"
+                                    <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
+                                        <label class="control-label" for="ucitsVersion">UCITS Version</label>
+                                        <ng-select id="ucitsVersion"
+                                                   [items]="ucitsVersionItems"
                                                    [allowClear]="true"
                                                    placeholder="Select"
-                                                   [formControl]="fundForm.controls['UCITSVersion']">
+                                                   [formControl]="fundForm.controls['ucitsVersion']">
                                         </ng-select>
-                                        <span class="field-error" *ngIf="fundForm.controls['UCITSVersion'].hasError('required') && fundForm.controls['UCITSVersion'].touched">Field is required</span>
+                                        <span class="field-error" *ngIf="fundForm.controls['ucitsVersion'].hasError('required') && fundForm.controls['ucitsVersion'].touched">Field is required</span>
                                     </div>
                                 </div>
                             </div>
@@ -211,19 +211,19 @@
                             <div class="row">
                                 <div class="form-group required-field col-sm-6">
                                     <div>
-                                        <label class="control-label" for="fundLegalForm">Legal Form of the Fund</label>
-                                        <ng-select id="fundLegalForm"
-                                                   [items]="fundLegalFormItems"
+                                        <label class="control-label" for="legalForm">Legal Form of the Fund</label>
+                                        <ng-select id="legalForm"
+                                                   [items]="legalFormItems"
                                                    [allowClear]="true"
                                                    placeholder="Select"
-                                                   [formControl]="fundForm.controls['fundLegalForm']">
+                                                   [formControl]="fundForm.controls['legalForm']">
                                         </ng-select>
-                                        <span class="field-error" *ngIf="fundForm.controls['fundLegalForm'].hasError('required') && fundForm.controls['fundLegalForm'].touched">Field is required</span>
+                                        <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">Field is required</span>
                                     </div>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
-                                    <div *ngIf="fundForm.controls['fundLegalForm'].value.length">
+                                    <div *ngIf="fundForm.controls['legalForm'].value.length">
                                         <label class="control-label" for="nationalNomenclatureOfLegalForm">National Nomenclature of Legal Fund</label>
                                         <ng-select id="nationalNomenclatureOfLegalForm"
                                                    [items]="nationalNomenclatureOfLegalFormItems"
@@ -245,10 +245,10 @@
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="fundLaunchDate">Fund Launch Date (YYYY-MM-DD)</label>
+                                    <label class="control-label" for="fundLaunchate">Fund Launch Date (YYYY-MM-DD)</label>
                                     <div class="input-group">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="fundLaunchDate" formControlName="fundLaunchDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                        <input id="fundLaunchate" formControlName="fundLaunchate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
                                     </div>
                                     <div *ngIf="false" class="text-danger">User error feedback</div>
                                 </div>
@@ -267,12 +267,12 @@
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label">Open-ended or Close-ended Fund Structure</label>
                                     <div class="radio-inline">
-                                        <input type="radio"  name="fundStructureType" id="fundStructureType1">
-                                        <label for="fundStructureType1">Open-ended</label>
+                                        <input type="radio"  name="openOrCloseEnded" id="openOrCloseEnded1" formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.OPEN_ENDED}}">
+                                        <label for="openOrCloseEnded1">Open-ended</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio"  name="fundStructureType" id="fundStructureType2">
-                                        <label for="fundStructureType2">Close-ended</label>
+                                        <input type="radio"  name="openOrCloseEnded" id="openOrCloseEnded2" formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.CLOSE_ENDED}}">
+                                        <label for="openOrCloseEnded2">Close-ended</label>
                                     </div>
                                 </div>
 
@@ -288,46 +288,71 @@
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label">Is Fund of Funds</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="fundOfFunds" id="fundOfFunds1" formControlName="fundOfFunds" value="true">
-                                        <label for="fundOfFunds1">Yes</label>
+                                        <input type="radio" name="isFundOfFund" id="isFundOfFund1" formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}">
+                                        <label for="isFundOfFund1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="fundOfFunds" id="fundOfFunds2" formControlName="fundOfFunds" value="false">
-                                        <label for="fundOfFunds2">No</label>
+                                        <input type="radio" name="isFundOfFund" id="isFundOfFund2" formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}">
+                                        <label for="isFundOfFund2">No</label>
                                     </div>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
-                                    <label class="control-label" for="managementCompany">Management Company</label>
-                                    <input type="text" name="managementCompany" id="managementCompany" formControlName="managementCompany" />
+                                    <label class="control-label" for="managementCompanyID">Management Company</label>
+                                    <input type="text" name="managementCompanyID" id="managementCompanyID" formControlName="managementCompanyID" />
                                     <span class="field-error">Field is required</span>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
-                                    <label class="control-label" for="fundAdmin">Fund Administrator</label>
-                                    <input type="text" name="fundAdmin" id="fundAdmin" formControlName="fundAdmin" />
-                                    <span class="field-error">Field is required</span>
+                                    <label class="control-label" for="fundAdministrator">Fund Administrator</label>
+                                    <ng-select id="fundAdministrator"
+                                               [items]="fundAdministratorItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['fundAdministrator']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministrator'].hasError('required') && fundForm.controls['fundAdministrator'].touched">Field is required</span>
                                 </div>
 
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label" for="custodianBank">Custodian Bank</label>
-                                    <input type="text" name="custodianBank" id="custodianBank" formControlName="custodianBank" />
-                                    <span class="field-error">Field is required</span>
+                                    <ng-select id="custodianBank"
+                                               [items]="custodianBankItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['custodianBank']">
+                                    </ng-select>
+                                    <span class="field-error" *ngIf="fundForm.controls['custodianBank'].hasError('required') && fundForm.controls['custodianBank'].touched">Field is required</span>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label" for="investmentManager">Investment Manager</label>
-                                    <input type="text" name="investmentManager" id="investmentManager" formControlName="investmentManager" />
+                                    <ng-select id="investmentManager"
+                                               [items]="investmentManagerItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['investmentManager']">
+                                    </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label" for="principalPromoter">Principal Promoter</label>
-                                    <input type="text" name="principalPromoter" id="principalPromoter" formControlName="principalPromoter" />
+                                    <ng-select id="principalPromoter"
+                                               [items]="principalPromoterItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['principalPromoter']">
+                                    </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label" for="payingAgent">Paying Agent</label>
-                                    <input type="text" name="payingAgent" id="payingAgent" formControlName="payingAgent" />
+                                    <ng-select id="payingAgent"
+                                               [items]="payingAgentItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['payingAgent']">
+                                    </ng-select>
                                 </div>
 
                                 <div class="form-group col-sm-6">
@@ -335,13 +360,13 @@
                                     <input type="text" name="fundManagers" id="fundManagers" formControlName="fundManagers" />
                                 </div>
 
-                                <div class="form-group required-field col-sm-6" *ngIf="isTransfertAgentVisible()">
-                                    <label class="control-label" for="transfertAgent">Transfert Agent</label>
-                                    <input type="text" name="transfertAgent" id="transfertAgent" formControlName="transfertAgent" />
+                                <div class="form-group required-field col-sm-6" *ngIf="isTransferAgentActive()">
+                                    <label class="control-label" for="transferAgent">Transfer Agent</label>
+                                    <input type="text" name="transferAgent" id="transferAgent" formControlName="transferAgent" />
                                     <span class="field-error">Field is required</span>
                                 </div>
 
-                                <div class="form-group required-field col-sm-6" *ngIf="isCentralizingAgentVisible()">
+                                <div class="form-group required-field col-sm-6" *ngIf="isCentralizingAgentActive()">
                                     <label class="control-label" for="centralizingAgent">Centralizing Agent</label>
                                     <input type="text" name="centralizingAgent" id="centralizingAgent" formControlName="centralizingAgent" />
                                     <span class="field-error">Field is required</span>
@@ -350,12 +375,12 @@
                                 <div class="form-group required-field col-sm-6">
                                     <label class="control-label">Is Dedicated Fund</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="dedicatedFund" id="dedicatedFund1" formControlName="dedicatedFund" value="true">
-                                        <label for="dedicatedFund1">Yes</label>
+                                        <input type="radio" name="isDedicatedFund" id="isDedicatedFund1" formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.YES}}">
+                                        <label for="isDedicatedFund1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="dedicatedFund" id="dedicatedFund2" formControlName="dedicatedFund" value="false">
-                                        <label for="dedicatedFund2">No</label>
+                                        <input type="radio" name="isDedicatedFund" id="isDedicatedFund2" formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.NO}}">
+                                        <label for="isDedicatedFund2">No</label>
                                     </div>
                                 </div>
 
@@ -380,8 +405,8 @@
                         <section class="form-block">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="giin">Global Intermediary Identification Number (GIIN)</label>
-                                    <input type="text" name="giin" id="giin" formControlName="giin" />
+                                    <label class="control-label" for="globalItermediaryIdentification">Global Intermediary Identification Number (GIIN)</label>
+                                    <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification" formControlName="globalItermediaryIdentification" />
                                 </div>
 
                                 <div class="form-group col-sm-6">
@@ -442,12 +467,12 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has Embedded Derivatives</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives1" formControlName="hasEmbeddedDerivatives" value="YES">
-                                        <label for="hasEmbeddedDerivatives1">Yes</label>
+                                        <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective1" formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.YES}}">
+                                        <label for="hasEmbeddedDirective1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasEmbeddedDerivatives" id="hasEmbeddedDerivatives2" formControlName="hasEmbeddedDerivatives" value="NO">
-                                        <label for="hasEmbeddedDerivatives2">No</label>
+                                        <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective2" formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.NO}}">
+                                        <label for="hasEmbeddedDirective2">No</label>
                                     </div>
                                 </div>
                             </div>
@@ -455,16 +480,16 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has Capital Preservation</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation1" formControlName="hasCapitalPreservation" value="YES">
+                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation1" formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.YES}}">
                                         <label for="hasCapitalPreservation1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation2" formControlName="hasCapitalPreservation" value="NO">
+                                        <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation2" formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.NO}}">
                                         <label for="hasCapitalPreservation2">No</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value == 'YES'">
+                            <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value == enums.hasCapitalPreservation.YES.toString()">
                                 <div class="form-group col-sm-6">
                                     <label class="control-label" for="capitalPreservationLevel">Capital Preservation Level</label>
                                     <input type="number" name="capitalPreservationLevel" id="capitalPreservationLevel" formControlName="capitalPreservationLevel" />
@@ -472,24 +497,29 @@
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label" for="capitalPreservationPeriod">Capital Preservation Period</label>
-                                    <input type="text" name="capitalPreservationPeriod" id="capitalPreservationPeriod" formControlName="capitalPreservationPeriod" />
+                                    <ng-select id="capitalPreservationPeriod"
+                                               [items]="capitalPreservationPeriodItems"
+                                               [allowClear]="true"
+                                               placeholder="Select"
+                                               [formControl]="fundForm.controls['capitalPreservationPeriod']">
+                                    </ng-select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has CPPI</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasCppi" id="hasCppi1" formControlName="hasCppi" value="YES">
+                                        <input type="radio" name="hasCppi" id="hasCppi1" formControlName="hasCppi" value="{{enums.hasCppi.YES}}">
                                         <label for="hasCppi1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasCppi" id="hasCppi2" formControlName="hasCppi" value="NO">
+                                        <input type="radio" name="hasCppi" id="hasCppi2" formControlName="hasCppi" value="{{enums.hasCppi.NO}}">
                                         <label for="hasCppi2">No</label>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <div *ngIf="fundForm.controls['hasCppi'].value === 'YES'">
+                                    <div *ngIf="fundForm.controls['hasCppi'].value === enums.hasCppi.YES.toString()">
                                         <label class="control-label" for="cppiMultiplier">CPPI Multiplier</label>
                                         <input type="number" name="cppiMultiplier" id="cppiMultiplier" formControlName="cppiMultiplier" />
                                     </div>
@@ -498,11 +528,11 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has Hedge Fund Strategy</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy1" formControlName="hasHedgeFundStrategy" value="YES">
+                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy1" formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.YES}}">
                                         <label for="hasHedgeFundStrategy1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy2" formControlName="hasHedgeFundStrategy" value="NO">
+                                        <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy2" formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.NO}}">
                                         <label for="hasHedgeFundStrategy2">No</label>
                                     </div>
                                 </div>
@@ -510,11 +540,11 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Is Leveraged</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isLeveraged" id="isLeveraged1" formControlName="isLeveraged" value="YES">
+                                        <input type="radio" name="isLeveraged" id="isLeveraged1" formControlName="isLeveraged" value="{{enums.isLeveraged.YES}}">
                                         <label for="isLeveraged1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isLeveraged" id="isLeveraged2" formControlName="isLeveraged" value="NO">
+                                        <input type="radio" name="isLeveraged" id="isLeveraged2" formControlName="isLeveraged" value="{{enums.isLeveraged.NO}}">
                                         <label for="isLeveraged2">No</label>
                                     </div>
                                 </div>
@@ -522,35 +552,35 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has 130/30 Strategy</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="has130/30Strategy" id="has130/30Strategy1" formControlName="has130/30Strategy" value="YES">
-                                        <label for="has130/30Strategy1">Yes</label>
+                                        <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy1" formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.YES}}">
+                                        <label for="has130Or30Strategy1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="has130/30Strategy" id="has130/30Strategy2" formControlName="has130/30Strategy" value="NO">
-                                        <label for="has130/30Strategy2">No</label>
+                                        <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy2" formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.NO}}">
+                                        <label for="has130Or30Strategy2">No</label>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Is Fund Targeting Environmental or Social Objectives (EOS)</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos1" formControlName="isFundTargetingEos" value="YES">
-                                        <label for="isFundTargetingEos1">Yes</label>
+                                        <input type="radio" name="isfundTargetingEos" id="isfundTargetingEos1" formControlName="isfundTargetingEos" value="{{enums.isfundTargetingEos.YES}}">
+                                        <label for="isfundTargetingEos1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos2" formControlName="isFundTargetingEos" value="NO">
-                                        <label for="isFundTargetingEos2">No</label>
+                                        <input type="radio" name="isfundTargetingEos" id="isfundTargetingEos2" formControlName="isfundTargetingEos" value="{{enums.isfundTargetingEos.NO}}">
+                                        <label for="isfundTargetingEos2">No</label>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Is Fund Targeting Socially Responsible Investment (SRI)</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri1" formControlName="isFundTargetingSri" value="YES">
+                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri1" formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.YES}}">
                                         <label for="isFundTargetingSri1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri2" formControlName="isFundTargetingSri" value="NO">
+                                        <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri2" formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.NO}}">
                                         <label for="isFundTargetingSri2">No</label>
                                     </div>
                                 </div>
@@ -558,11 +588,11 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Is Passive Fund</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isPassiveFund" id="isPassiveFund1" formControlName="isPassiveFund" value="YES">
+                                        <input type="radio" name="isPassiveFund" id="isPassiveFund1" formControlName="isPassiveFund" value="{{enums.isPassiveFund.YES}}">
                                         <label for="isPassiveFund1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="isPassiveFund" id="isPassiveFund2" formControlName="isPassiveFund" value="NO">
+                                        <input type="radio" name="isPassiveFund" id="isPassiveFund2" formControlName="isPassiveFund" value="{{enums.isPassiveFund.NO}}">
                                         <label for="isPassiveFund2">No</label>
                                     </div>
                                 </div>
@@ -570,23 +600,23 @@
                                 <div class="form-group col-sm-6">
                                     <label class="control-label">Has Security Lending</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasSecurityLending" id="hasSecurityLending1" formControlName="hasSecurityLending" value="YES">
-                                        <label for="hasSecurityLending1">Yes</label>
+                                        <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending1" formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.YES}}">
+                                        <label for="hasSecurityiesLending1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasSecurityLending" id="hasSecurityLending2" formControlName="hasSecurityLending" value="NO">
-                                        <label for="hasSecurityLending2">No</label>
+                                        <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending2" formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.NO}}">
+                                        <label for="hasSecurityiesLending2">No</label>
                                     </div>
                                 </div>
 
                                 <div class="form-group checkbox-container col-sm-6">
                                     <label class="control-label">Has Swap</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasSwap" id="hasSwap1" formControlName="hasSwap" value="YES">
+                                        <input type="radio" name="hasSwap" id="hasSwap1" formControlName="hasSwap" value="{{enums.hasSwap.YES}}">
                                         <label for="hasSwap1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasSwap" id="hasSwap2" formControlName="hasSwap" value="NO">
+                                        <input type="radio" name="hasSwap" id="hasSwap2" formControlName="hasSwap" value="{{enums.hasSwap.NO}}">
                                         <label for="hasSwap2">No</label>
                                     </div>
                                 </div>
@@ -594,11 +624,11 @@
                                 <div class="form-group checkbox-container col-sm-6">
                                     <label class="control-label">Has Duration Hedge</label>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge1" formControlName="hasDurationHedge" value="YES">
+                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge1" formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.YES}}">
                                         <label for="hasDurationHedge1">Yes</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge2" formControlName="hasDurationHedge" value="NO">
+                                        <input type="radio" name="hasDurationHedge" id="hasDurationHedge2" formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.NO}}">
                                         <label for="hasDurationHedge2">No</label>
                                     </div>
                                 </div>
