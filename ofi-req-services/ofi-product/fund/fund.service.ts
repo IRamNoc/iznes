@@ -4,8 +4,25 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {FundRequestMessageBody, HistoryRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody, UpdateFundShareRequestBody, SaveFundHistoryRequestBody} from './fund.service.model';
-import {setRequestedFund, clearRequestedFund, SET_FUND_LIST, SET_FUND_SHARE_LIST} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
+import {
+    FundRequestMessageBody,
+    HistoryRequestMessageBody,
+    FundShareRequestMessageBody,
+    SaveFundRequestBody,
+    UpdateFundRequestBody,
+    SaveFundShareRequestBody,
+    UpdateFundShareRequestBody,
+    SaveFundHistoryRequestBody,
+    CreateFundRequestBody,
+    // UpdateFund_RequestBody,
+    Fund
+} from './fund.service.model';
+import {
+    setRequestedFund,
+    clearRequestedFund,
+    SET_FUND_LIST,
+    SET_FUND_SHARE_LIST
+} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
 
 interface FundData {
     fundID?: any;
@@ -38,7 +55,7 @@ export class OfiFundService {
     @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     accountId = 0;
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
@@ -185,4 +202,48 @@ export class OfiFundService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    /**
+     * new Umbrellas/Funds/Shares module
+     */
+    iznCreateFund(payload: Fund) {
+        const messageBody: CreateFundRequestBody = {
+            RequestName: 'izncreatefund',
+            token: this.memberSocketService.token,
+            ...payload,
+        };
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
+    }
+    buildRequest(options) {
+        return new Promise((resolve, reject) => {
+            /* Dispatch the request. */
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    options.successActions || [],
+                    options.failActions || [],
+                    options.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
+
+    // updateFund_(payload: Fund) {
+    //     const messageBody: UpdateFund_RequestBody = {
+    //         RequestName: 'iznupdatefund',
+    //         token: this.memberSocketService.token,
+    //         ...payload,
+    //     };
+    //
+    //     return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    // }
+
 }

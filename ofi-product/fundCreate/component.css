@@ -1,0 +1,73 @@
+h3 {
+    margin-bottom: 12px;
+}
+
+.field-error {
+    color: red;
+    height: 0;
+    margin-top: -8px !important;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.btn-container p {
+    align-self: center;
+    margin-right: 30px;
+}
+
+.btn-container a {
+    margin-bottom: 10px;
+}
+
+.umbrella-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.umbrella-container p {
+    margin-bottom: 10px;
+}
+
+.umbrella-container .form-group {
+    width: 50%;
+    align-self: flex-end;
+}
+
+.submit-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.submit-container button {
+    width: 150px;
+    margin: 10px 10px;
+}
+
+clr-tree-node div.row > div {
+    height: 82px;
+}
+
+form .form-group>.checkbox {
+    margin-left: 24px;
+}
+
+form .form-group>.radio-inline {
+    margin-left: 24px;
+    width: initial;
+}
+
+.checkbox label:first-child {
+    padding-left: 0;
+}
+
+.radio-inline label:after {
+    content: '';
+}

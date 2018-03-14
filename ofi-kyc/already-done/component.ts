@@ -56,6 +56,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
+
         route.params.subscribe((p => this.investorStatus = p['status']));
         this.kycDoneForm = fb.group({
             opt: ['', Validators.required],
