@@ -24,7 +24,7 @@ interface UpdatePdfFileHash {
 export class PdfService {
     private token: string =  null;
     private userId: string = null;
-    private walletId: string = null;
+    public walletId: string = null;
     public baseUrl: string = null;
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
