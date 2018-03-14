@@ -27,8 +27,8 @@ describe('MyPdfService', () => {
 
     it('should call createMemberNodeSagaRequest when calling getPdfRequest', inject([PdfService], (service: PdfService) => {
         spyOn(utilsCommon, 'createMemberNodeSagaRequest');
-        service.walletId = 1;
-        service.getPdfRequest({});
+        service.walletId = '1';
+        service.getPdfRequest({pdfID:null});
         expect(utilsCommon.createMemberNodeSagaRequest).toHaveBeenCalled();
     }));
 
