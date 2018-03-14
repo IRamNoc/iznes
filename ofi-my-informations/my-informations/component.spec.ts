@@ -49,6 +49,7 @@ describe('kyc-my-informations', () => {
                 phoneCode: '+33',
                 phoneNumber: '',
             },
+            amCompanyName: '',
             companyName: '',
             phoneCode: '+33',
             phoneNumber: '',
