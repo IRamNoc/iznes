@@ -4,11 +4,14 @@ import {Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
+import {NgRedux, select} from '@angular-redux/store';
+import {ToasterService} from 'angular2-toaster';
+
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
-import {NgRedux, select} from '@angular-redux/store';
-import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+
 
 @Component({
     templateUrl: './component.html',
@@ -79,6 +82,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         private umbrellaService: OfiUmbrellaFundService,
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private ngRedux: NgRedux<any>,
+        private toasterService: ToasterService,
         @Inject('fund-items') fundItems,
     ) {
 
@@ -345,7 +349,16 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             managementCompanyID:  _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
         }, ['AuMFund', 'AuMFundDate']);
 
-        this.fundService.iznCreateFund(payload);
+        this.fundService.iznCreateFund(payload)
+            .then(() => {
+                this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully created.`);
+                this.router.navigate(['product-module', 'home']);
+                return;
+            })
+            .catch(() => {
+                this.toasterService.pop('error', 'Failed to save the fund.');
+                return;
+            });
     }
 
     onClickBack() {
