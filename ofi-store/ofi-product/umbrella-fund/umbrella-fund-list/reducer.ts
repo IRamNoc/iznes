@@ -17,10 +17,13 @@ export const UmbrellaFundListReducer = function (state: UmbrellaFundListState = 
 
             const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
-            return Object.assign({}, state, {
-                umbrellaFundList
-            });
+            if (ufdata.Status !== 'Fail') {
+                const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
+                return Object.assign({}, state, {
+                    umbrellaFundList
+                });
+            }
+            return state;
 
         case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
             return handleSetRequested(state, action);
