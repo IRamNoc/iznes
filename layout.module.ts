@@ -30,6 +30,8 @@ import {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.c
 import {UiTextComponent} from './layouts/ui-form/components/text/text.component';
 import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
+import {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';
+
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -93,7 +95,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiLayout1Component,
         UiLayout2Component,
         UiTextComponent,
-        UiExpandableComponent
+        UiExpandableComponent,
+        UiDatagridExpandComponent
     ],
     exports: [
         /* Directives. */
@@ -123,7 +126,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiLayout1Component,
         UiLayout2Component,
         UiTextComponent,
-        UiExpandableComponent
+        UiExpandableComponent,
+        UiDatagridExpandComponent
     ],
     providers: [
         /* Services. */

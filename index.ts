@@ -27,3 +27,4 @@ export {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.c
 export {UiTextComponent} from './layouts/ui-form/components/text/text.component';
 export {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
+export {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';

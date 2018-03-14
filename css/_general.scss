@@ -611,11 +611,11 @@ h3 {
     button {
         margin-right: 0;
     }
-    .fa-chevron-down {
+    .fa-chevron-right {
         transform: rotate(0deg);
         transition: transform .5s;
-        &.reverse {
-            transform: rotate(-180deg);
+        &.rotate {
+            transform: rotate(90deg);
         }
     }
 }
@@ -646,8 +646,9 @@ clr-tab-content {
 
     .well {
         background: white;
-        border: 0px solid #e6e6e6;
-        border-radius: 10px;
+        border: 0px;
+        border-bottom: 1px dashed #e6e6e6;
+        border-radius: 0px;
         padding: 0px;
         margin: 0px;
         overflow: auto;
@@ -655,6 +656,18 @@ clr-tab-content {
 
     .well .row.panel-header {
         padding: 0px;
+    }
+
+    .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
+    }
+
+    .well .row .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
     }
 
     .panel-header {
@@ -668,19 +681,19 @@ clr-tab-content {
             margin-right: 0;
         }
 
-        .fa-chevron-down {
+        .fa-chevron-right {
             transform: rotate(0deg);
             transition: transform .5s;
 
             &
-            .reverse {
-                transform: rotate(-180deg);
+            .rotate {
+                transform: rotate(90deg);
             }
 
         }
     }
     .panel-body {
-        padding-left: 12px;
+        padding-left: 0px;
         opacity: 1;
         height: auto;
         overflow: hidden;
@@ -693,6 +706,12 @@ clr-tab-content {
             transition: opacity .5s linear;
         }
 
+    }
+
+    .well .row .well {
+        margin-left: 30px;
+        margin-top: 20px;
+        margin-bottom:10px;
     }
 
 }

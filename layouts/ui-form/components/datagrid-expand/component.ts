@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2016 VMware, Inc. All Rights Reserved.
- * This software is released under MIT license.
- * The full license information can be found in LICENSE in the root directory of this project.
- */
-
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {ConfirmationService, SagaHelper} from '@setl/utils';
@@ -30,7 +24,7 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SetlDemoDatagridComponent implements OnInit, OnDestroy {
+export class UiDatagridExpandComponent implements OnInit, OnDestroy {
 
     searchForm: FormGroup;
 
