@@ -1,5 +1,9 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-umbrella"></i> <span>Add new Fund Share</span></h1>
+    <h1>
+        <i class="fa fa-umbrella"></i>
+        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+        <span mltag="txt_" [hidden]="!isUpdate()">View Fund Share</span>
+    </h1>
 </div>
 
 <clr-tabs>
@@ -10,14 +14,14 @@
         <clr-tab-content class="outer">
             <div class="form-group row actions">
                 <div class="col-sm-6">
-                    <button type="button" class="btn btn-default action-button cancel" id="cancelFundShareTop"
-                        (click)="test()">Cancel</button>
+                    <a href="/#/product-module/home" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</a>
                 </div>
                 <div class="col-sm-6 text-right">
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
-                        (click)="test()" [disabled]="!model.isValid()">
+                        (click)="save()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
-                        <span>Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
                     </button>
                 </div>
             </div>
@@ -162,14 +166,14 @@
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-6">
-                    <button type="button" class="btn btn-default action-button cancel" id="cancelFundShareBottom"
-                        (click)="test()">Cancel</button>
+                    <a href="/#/product-module/home" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</a>
                 </div>
                 <div class="col-sm-6 text-right">
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
-                        (click)="test()" [disabled]="!model.isValid()">
+                        (click)="save()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
-                        <span>Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
                     </button>
                 </div>
             </div>

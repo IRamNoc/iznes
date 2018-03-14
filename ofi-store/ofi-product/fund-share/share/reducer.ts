@@ -8,7 +8,7 @@ import * as actions from './actions';
 import {OfiFundShare, OfiFundShareState, CurrentRequest} from './model';
 
 const initialState: OfiFundShareState = {
-    FundShare: {},
+    fundShare: {},
     requestedFundShare: false,
     currentRequest: {}
 };

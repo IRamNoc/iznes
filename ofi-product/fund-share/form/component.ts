@@ -9,7 +9,7 @@ import {
     setRequestedFundShare,
     getOfiFundShareCurrentRequest,
     OfiFundShare
-} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
+} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share/share';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {FundShare, FundShareMode} from '../model';
 
@@ -30,8 +30,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'share', 'requested']) fundShareRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'share', 'fundShare']) fundShareOb: Observable<any>;
 
     constructor(private route: ActivatedRoute,
         private redux: NgRedux<any>,

@@ -60,15 +60,18 @@ import {
 } from './fund-share-list';
 
 import {
-    OfiFundShareState,
-    OfiFundShareReducer,
-    SET_FUND_SHARE,
-    SET_REQUESTED_FUND_SHARE,
-    CLEAR_REQUESTED_FUND_SHARE,
+    OfiFundShareGroupReducer,
+    OfiFundShareGroupState,
     OfiFundShare,
+    SET_FUND_SHARE,
     setRequestedFundShare,
     clearRequestedFundShare,
-    getOfiFundShareCurrentRequest
+    OfiFundShareSelectedFundReducer,
+    OfiFundShareSelectedFundState,
+    OfiFundShareSelectedFund,
+    SET_FUND_SHARE_SELECTED_FUND,
+    setRequestedFundShareSelectedFund,
+    clearRequestedFundShareSelectedFund
  } from './fund-share';
 
 export {
@@ -107,7 +110,6 @@ export {
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
     getOfiNavLatestCurrentRequest,
-
     // Fund Share List
     OfiFundShareListState,
     OfiFundShareListReducer,
@@ -116,16 +118,19 @@ export {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
     clearRequestedAmAllFundShare,
-    // Fund Share
-    OfiFundShareReducer,
-    OfiFundShareState,
-    SET_FUND_SHARE,
-    SET_REQUESTED_FUND_SHARE,
-    CLEAR_REQUESTED_FUND_SHARE,
+    // FUND SHARE
+    OfiFundShareGroupReducer,
+    OfiFundShareGroupState,
     OfiFundShare,
+    SET_FUND_SHARE,
     setRequestedFundShare,
     clearRequestedFundShare,
-    getOfiFundShareCurrentRequest
+    OfiFundShareSelectedFundReducer,
+    OfiFundShareSelectedFundState,
+    OfiFundShareSelectedFund,
+    SET_FUND_SHARE_SELECTED_FUND,
+    setRequestedFundShareSelectedFund,
+    clearRequestedFundShareSelectedFund
 };
 
 export interface OfiProductState {
@@ -133,7 +138,7 @@ export interface OfiProductState {
     ofiSicav: SicavState;
     ofiFund: FundState;
     ofiFundShareList: OfiFundShareListState;
-    ofiFundShare: OfiFundShareState;
+    ofiFundShare: OfiFundShareGroupState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
 }
@@ -143,7 +148,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
     ofiFundShareList: OfiFundShareListReducer,
-    ofiFundShare: OfiFundShareReducer,
+    ofiFundShare: OfiFundShareGroupReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer
 });
