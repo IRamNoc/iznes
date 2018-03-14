@@ -20,3 +20,9 @@ export const RESET_AUTH_LOGIN_DETAIL = `${name}/RESET_AUTH_LOGIN_DETAIL`;
  * @type {string}
  */
 export const SET_NEW_PASSWORD = `${name}/SET_NEW_PASSWORD`;
+
+/**
+ * Set Must Change Password boolean flag
+ * @type {string}
+ */
+export const CLEAR_MUST_CHANGE_PASSWORD = `${name}/CLEAR_MUST_CHANGE_PASSWORD`;

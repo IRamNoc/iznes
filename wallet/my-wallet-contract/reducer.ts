@@ -1,15 +1,18 @@
 import {Action} from 'redux';
 import {MyWalletContractState} from './model';
 import {
+    SET_CONTRACT_LIST,
     CLEAR_CONTRACT_NEED_HANDLE,
     SET_LAST_CREATED_CONTRACT_DETAIL,
-    UPDATE_LAST_CREATED_CONTRACT_DETAIL
+    UPDATE_LAST_CREATED_CONTRACT_DETAIL, SET_UPDATED_CONTRACT_LIST
 } from './actions';
 import * as _ from 'lodash';
 import {immutableHelper} from '@setl/utils';
+import {ContractModel} from '@setl/core-contracts/models';
 
 const initialState: MyWalletContractState = {
-    contractList: {},
+    contractList: [],
+    updatedContractList: [],
     lastCreated: {
         txHash: '',
         contractAddress: '',
@@ -24,6 +27,12 @@ export const MyWalletContractReducer = function (state: MyWalletContractState = 
                                                  action: Action): MyWalletContractState {
 
     switch (action.type) {
+        case SET_CONTRACT_LIST:
+            return handleSetContractList(state, action);
+
+        case SET_UPDATED_CONTRACT_LIST:
+            return handleSetUpdatedContractList(state, action);
+
         case SET_LAST_CREATED_CONTRACT_DETAIL:
             return handleSetLastCreatedContractDetail(state, action);
 
@@ -37,6 +46,26 @@ export const MyWalletContractReducer = function (state: MyWalletContractState = 
             return state;
     }
 };
+
+function handleSetUpdatedContractList(state: MyWalletContractState, action: any): MyWalletContractState  {
+    console.log('UPDATED CONTRACT ACTION CALLED:', action);
+    const updatedContractList = _.get(action, 'updatedContracts.Data.contracts', []);
+    return Object.assign({}, state, {
+        updatedContractList
+    });
+}
+
+function handleSetContractList(state: MyWalletContractState, action: any): MyWalletContractState {
+    const contractList = [
+        {
+            contractData: _.get(action, 'payload[1].data', []),
+            requested: false
+        }
+    ];
+    return Object.assign({}, state, {
+       contractList
+    });
+}
 
 function handleSetLastCreatedContractDetail(state: MyWalletContractState, action: any): MyWalletContractState {
     const contractData = _.get(action, 'data[1].data', {});

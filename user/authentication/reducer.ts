@@ -8,7 +8,8 @@ const initialState: AuthenticationState = {
     apiKey: '',
     useTwoFactor: 0,
     isLogin: false,
-    defaultHomePage: '/home'
+    defaultHomePage: '/home',
+    mustChangePassword: false,
 };
 
 export const AuthenticationReducer = function (state: AuthenticationState = initialState, action: Action) {
@@ -19,13 +20,18 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             const apiKey = _.get(loginedData, 'apiKey', '');
             const useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
             const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
+            let mustChangePassword = _.get(loginedData, 'mustChangePassword', false);
+            if (mustChangePassword === 0 || mustChangePassword === 1) {
+                mustChangePassword = (mustChangePassword === 1);
+            }
 
             const newState = Object.assign({}, state, {
                 token,
                 apiKey,
                 useTwoFactor,
                 isLogin: true,
-                defaultHomePage
+                defaultHomePage,
+                mustChangePassword,
             });
 
             return newState;
@@ -45,6 +51,12 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             });
 
             return newTokenState;
+
+        case AuthenticationAction.CLEAR_MUST_CHANGE_PASSWORD:
+            mustChangePassword = false;
+            return Object.assign({}, state, {
+                mustChangePassword
+            });
 
         default:
             return state;

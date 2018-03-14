@@ -1,5 +1,5 @@
 export interface ContractDetail {
-    constractData: any;
+    contractData: any;
     requested: boolean;
 }
 
@@ -20,6 +20,7 @@ export interface LastContractDetail {
 
 export interface MyWalletContractState {
     contractList: ContractList;
+    updatedContractList: any;
     lastCreated: LastContractDetail;
 }
 

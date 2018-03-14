@@ -2,6 +2,24 @@ import {name} from './__init__';
 import {kAction} from '@setl/utils/common';
 import {ActionCreator, Action} from 'redux';
 
+export const SET_CONTRACT_LIST = `${name}/SET_CONTRACT_LIST`;
+interface SetContractList extends Action {
+    data: any;
+}
+export const setContractList: ActionCreator<SetContractList> = (data) => ({
+   type: SET_CONTRACT_LIST,
+   data
+});
+
+export const SET_UPDATED_CONTRACT_LIST = `${name}/SET_UPDATED_CONTRACT_LIST`;
+interface UpdatedContracts extends Action {
+    updatedContracts: any;
+}
+export const setUpdatedContractList: ActionCreator<UpdatedContracts> = (updatedContracts) => ({
+    type: SET_UPDATED_CONTRACT_LIST,
+    updatedContracts
+});
+
 /**
  * Update last created contract
  * @type {string}
