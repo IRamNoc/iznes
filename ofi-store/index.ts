@@ -25,7 +25,9 @@ import {
     OfiProductState,
     SET_FUND_LIST,
     SET_MANAGEMENT_COMPANY_LIST,
-    SET_SICAV_LIST
+    SET_SICAV_LIST,
+    OfiFundShare,
+    SET_FUND_SHARE
 } from "./ofi-product";
 /*
  Ofi Orders
@@ -132,7 +134,16 @@ export {
     setRequestedNavLatest,
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
-    getOfiNavLatestCurrentRequest
+    getOfiNavLatestCurrentRequest,
+    // FUND SHARE LIST
+    SET_AM_ALL_FUND_SHARE_LIST,
+    setRequestedAmAllFundShare,
+    clearRequestedAmAllFundShare,
+    // FUND SHARE
+    OfiFundShare,
+    SET_FUND_SHARE,
+    setRequestedFundShare,
+    clearRequestedFundShare,
 } from './ofi-product';
 
 

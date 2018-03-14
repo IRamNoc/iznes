@@ -50,12 +50,26 @@ import {
 } from './nav';
 
 import {
-   OfiFundShareState,
-   OfiFundShareReducer,
+   OfiFundShareListState,
+   OfiFundShareListReducer,
    SET_AM_ALL_FUND_SHARE_LIST,
    SET_REQUESTED_AM_All_FUND_SHARE,
-   CLEAR_REQUESTED_AM_All_FUND_SHARE
-} from './fundshare';
+   CLEAR_REQUESTED_AM_All_FUND_SHARE,
+   setRequestedAmAllFundShare,
+   clearRequestedAmAllFundShare
+} from './fund-share-list';
+
+import {
+    OfiFundShareState,
+    OfiFundShareReducer,
+    SET_FUND_SHARE,
+    SET_REQUESTED_FUND_SHARE,
+    CLEAR_REQUESTED_FUND_SHARE,
+    OfiFundShare,
+    setRequestedFundShare,
+    clearRequestedFundShare,
+    getOfiFundShareCurrentRequest
+ } from './fund-share';
 
 export {
     ManagementCompanyState,
@@ -94,16 +108,31 @@ export {
     ofiSetCurrentNavLatestRequest,
     getOfiNavLatestCurrentRequest,
 
-    // Fund Share
+    // Fund Share List
+    OfiFundShareListState,
+    OfiFundShareListReducer,
     SET_REQUESTED_AM_All_FUND_SHARE,
     CLEAR_REQUESTED_AM_All_FUND_SHARE,
-    SET_AM_ALL_FUND_SHARE_LIST
+    SET_AM_ALL_FUND_SHARE_LIST,
+    setRequestedAmAllFundShare,
+    clearRequestedAmAllFundShare,
+    // Fund Share
+    OfiFundShareReducer,
+    OfiFundShareState,
+    SET_FUND_SHARE,
+    SET_REQUESTED_FUND_SHARE,
+    CLEAR_REQUESTED_FUND_SHARE,
+    OfiFundShare,
+    setRequestedFundShare,
+    clearRequestedFundShare,
+    getOfiFundShareCurrentRequest
 };
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
     ofiFund: FundState;
+    ofiFundShareList: OfiFundShareListState;
     ofiFundShare: OfiFundShareState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
@@ -113,6 +142,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
+    ofiFundShareList: OfiFundShareListReducer,
     ofiFundShare: OfiFundShareReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer

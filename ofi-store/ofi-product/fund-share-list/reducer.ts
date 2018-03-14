@@ -5,9 +5,9 @@ import {immutableHelper} from '@setl/utils';
 
 import * as actions from './actions';
 
-import {AllFundShareDetail, OfiFundShareState} from './model';
+import {AllFundShareDetail, OfiFundShareListState} from './model';
 
-const initialState: OfiFundShareState = {
+const initialState: OfiFundShareListState = {
     amAllFundShareList: {},
     requestedAmAllFundShareList: false
 };
@@ -19,7 +19,7 @@ const initialState: OfiFundShareState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundShareReducer = function (state: OfiFundShareState = initialState, action: Action): OfiFundShareState {
+export const OfiFundShareListReducer = function (state: OfiFundShareListState = initialState, action: Action): OfiFundShareListState {
     switch (action.type) {
         case actions.SET_AM_ALL_FUND_SHARE_LIST:
             return handleSetOfiNavFundsList(state, action);
@@ -40,9 +40,9 @@ export const OfiFundShareReducer = function (state: OfiFundShareState = initialS
  *
  * @param state
  * @param action
- * @return {OfiFundShareState}
+ * @return {OfiFundShareListState}
  */
-function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): OfiFundShareState {
+function handleSetOfiNavFundsList(state: OfiFundShareListState, action: Action): OfiFundShareListState {
     const fundShareListData = _.get(action, 'payload[1].Data', []);
     let amAllFundShareList: { [shareId: string]: AllFundShareDetail } = {};
     try {
@@ -79,7 +79,7 @@ function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): Ofi
  * @param state
  * @return {OfiFundShareState}
  */
-function toggleAmAllFundShareListRequested(state: OfiFundShareState, requestedAmAllFundShareList): OfiFundShareState {
+function toggleAmAllFundShareListRequested(state: OfiFundShareListState, requestedAmAllFundShareList): OfiFundShareListState {
 
     return Object.assign({}, state, {
         requestedAmAllFundShareList

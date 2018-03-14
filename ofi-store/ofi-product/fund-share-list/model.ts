@@ -13,7 +13,7 @@ export interface AllFundShareDetail {
    fundShareStatus: FundShareStatus;
 }
 
-export interface OfiFundShareState {
+export interface OfiFundShareListState {
     amAllFundShareList: {
         [shareId: string]: AllFundShareDetail
     };

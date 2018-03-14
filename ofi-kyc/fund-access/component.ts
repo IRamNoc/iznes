@@ -11,7 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 import {mDateHelper, immutableHelper} from '@setl/utils';
 import {Observable} from 'rxjs/Observable';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
-import {AllFundShareDetail} from '../../ofi-store/ofi-product/fundshare/model';
+import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
 
 @Component({
@@ -43,8 +43,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedAmAllFundShareList']) requestedAmAllFundShareListOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'amAllFundShareList']) amAllFundShareListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedAmAllFundShareList']) requestedAmAllFundShareListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'amAllFundShareList']) amAllFundShareListOb: Observable<any>;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
