@@ -58,8 +58,8 @@ const orderBook = {
     ]
 };
 const fundHoldings = {
-    label: 'Fund Holidings',
-    label_txt: 'txt_fundholidings',
+    label: 'Fund Holdings',
+    label_txt: 'txt_fundholdings',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-asset-manager-dashboard',
     router_link: '/asset-management/fund-holdings'
