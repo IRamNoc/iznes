@@ -22,7 +22,19 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         lastName: '',
     };
 
-    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
+    public userInfoExtended = {
+        email: '',
+        firstName: '',
+        lastName: '',
+        invitedBy: {
+            companyName: ''
+        },
+        companyName: '',
+        phoneCode: '',
+        phoneNumber: ''
+    };
+
+    @select(['user', 'myDetail']) myDetail: any;
 
     constructor(
         private _ngRedux: NgRedux<any>,
@@ -35,15 +47,27 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.kycMyInformations.subscribe((d) => {
+        this.myDetail.subscribe((d) => {
             this.userInfo = {
                 firstName: d.firstName,
                 lastName: d.lastName,
             };
+
+            this.userInfoExtended = {
+                email: d.emailAddress,
+                firstName: d.firstName,
+                lastName: d.lastName,
+                invitedBy: {
+                    companyName: '',
+                },
+                companyName: d.companyName,
+                phoneCode: d.phoneCode,
+                phoneNumber: d.phoneNumber
+            };
         });
     }
 
-    saveUserInformations(userInformations: KycMyInformations) {
+    saveUserInformations(userInformations) {
         const user = {
             displayName: '',
             firstName: userInformations.firstName,
