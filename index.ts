@@ -24,7 +24,8 @@ export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/
  */
 export {ProductHomeComponent} from './ofi-product/home/component';
 export {UmbrellaFundComponent} from './ofi-product/umbrella-fund/component';
-export {FundShareComponent} from './ofi-product/fund-share/component';
+export {FundShareComponent} from './ofi-product/fund-share/form/component';
+export {AddNewFundShareComponent} from './ofi-product/fund-share/add-new/component';
 /**
  * Nav
  */

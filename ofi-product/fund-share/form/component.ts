@@ -1,6 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
-import {FundShare} from './model';
+import {FundShare} from '../model';
 
 @Component({
     styleUrls: ['./component.scss'],

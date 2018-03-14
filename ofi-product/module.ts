@@ -18,7 +18,8 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
-import {FundShareComponent} from './fund-share/component';
+import {FundShareComponent} from './fund-share/form/component';
+import {AddNewFundShareComponent} from './fund-share/add-new/component';
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
@@ -28,12 +29,14 @@ import {ChartsModule} from 'ng2-charts';
     declarations: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent
+        FundShareComponent,
+        AddNewFundShareComponent
     ],
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundShareComponent
+        FundShareComponent,
+        AddNewFundShareComponent
     ],
     imports: [
         CommonModule,
