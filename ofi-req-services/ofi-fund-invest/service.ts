@@ -12,7 +12,7 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
-import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
+import {setRequestedFundAccessMy, clearRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
 
 @Injectable()
 export class OfiFundInvestService {
@@ -26,12 +26,12 @@ export class OfiFundInvestService {
      * @param ofiFundInvestService
      * @param ngRedux
      */
-    static defaultRequestFunAccessMy(ofiFundInvestService: OfiFundInvestService, ngRedux: NgRedux<any>) {
+    static defaultRequestFunAccessMy(ofiFundInvestService: OfiFundInvestService, ngRedux: NgRedux<any>, walletId: number) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedFundAccessMy());
 
         // Request the list.
-        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy();
+        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy(walletId);
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_ACCESS_MY],
@@ -41,10 +41,18 @@ export class OfiFundInvestService {
         ));
     }
 
-    requestFundAccessMy(): any {
+    static resetRequested(ngRedux: NgRedux<any>){
+        return new Promise((resolve,reject)=>{
+            ngRedux.dispatch(clearRequestedFundAccessMy());
+            resolve();
+        });
+    }
+
+    requestFundAccessMy(walletId: number): any {
         const messageBody: RequetFundAccessMy = {
             RequestName: 'getfundaccessmy',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
+            walletId: walletId
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

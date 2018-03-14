@@ -30,6 +30,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     fundList: Array<any>;
 
+    connectedWalletId: number;
+
     // production or not
     production: boolean;
 
@@ -38,6 +40,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
@@ -56,7 +59,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.setInitialTabs();
 
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+            OfiFundInvestService.resetRequested(this._ngRedux).then(() => {this.requestMyFundAccess(false);});
+        }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
@@ -66,6 +72,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         }));
+
     }
 
     setInitialTabs() {
@@ -111,7 +118,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      */
     requestMyFundAccess(requested): void {
         if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux);
+            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux, this.connectedWalletId);
         }
     }
 
