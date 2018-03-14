@@ -12,7 +12,8 @@ import {
     RequestWalletHoldingMessageBody,
     WalletInstrumentRequestMessageBody,
     RequestContractByAddressBody,
-    RequestTransactionHistoryBody
+    RequestTransactionHistoryBody,
+    RequestContractsByWalletBody
 } from './walletnode-request.service.model';
 import * as _ from 'lodash';
 
@@ -134,6 +135,21 @@ export class WalletNodeRequestService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
+    /**
+     * Request Contracts by Wallet
+     *
+     * @param {object} requestData {walletId}
+     *
+     * @returns {any}
+     */
+    requestContractsByWallet(requestData: any): any {
+        const messageBody: RequestContractsByWalletBody = {
+            topic: 'contract',
+            walletid: _.get(requestData, 'walletId', 0)
+        };
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
+    }
+
     walletCommitToContract(requestData: any) {
         let messageBody: any = {
             topic: 'cocom',
@@ -143,6 +159,8 @@ export class WalletNodeRequestService {
             contractdata: _.get(requestData, 'contractdata', 0),
             contractaddress: _.get(requestData, 'contractaddress', 0),
         };
+
+        console.log('Message Body:', messageBody);
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }

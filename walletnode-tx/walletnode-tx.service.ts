@@ -66,6 +66,12 @@ interface CreateContract {
     contractData: any;
 }
 
+interface GetContracts {
+    token: string;
+    walletId: string;
+    contractaddr: string;
+}
+
 @Injectable()
 export class WalletnodeTxService {
 
@@ -165,5 +171,4 @@ export class WalletnodeTxService {
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
-
 }

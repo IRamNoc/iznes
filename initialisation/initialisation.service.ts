@@ -6,10 +6,12 @@ import {
 } from '../index';
 import {
     clearRequestedAllInstruments, clearRequestedWalletAddresses, clearRequestedWalletHolding,
-    clearRequestedWalletInstrument, clearRequestedWalletIssuer, clearRequestedWalletLabel, SET_ACCOUNT_LIST,
+    clearRequestedWalletInstrument, clearRequestedWalletIssuer, clearRequestedWalletLabel,
+    clearContractNeedHandle, SET_ACCOUNT_LIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_ALL_INSTRUMENTS_LIST, SET_MANAGED_WALLETS, SET_MY_CHAIN_ACCESS,
     SET_MY_INSTRUMENTS_LIST, SET_OWN_WALLETS, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST, SET_USER_DETAILS,
     SET_WALLET_ADDRESSES, SET_WALLET_DIRECTORY, SET_WALLET_HOLDING, SET_WALLET_TO_RELATIONSHIP,
+    setUpdatedContractList,
     setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
     updateLastCreatedRegisterIssuerDetail
 } from '@setl/core-store';
@@ -344,7 +346,10 @@ export class InitialisationService {
 
         // clear (set to false) the state of requested all instruments
         ngRedux.dispatch(clearRequestedAllInstruments());
-    }
+
+        // clear (set to false) the state of contract need handle
+        ngRedux.dispatch(clearContractNeedHandle());
+        }
 
     /**
      * Using 'block' update from wallet node.
@@ -379,7 +384,7 @@ export class InitialisationService {
      */
     static updatedWalletNodeTxStateWithBlockChange(ngRedux: NgRedux<any>, data) {
         ngRedux.dispatch(updateLastCreatedContractDetail(data));
-
+        ngRedux.dispatch(setUpdatedContractList(data));
     }
 
     /**

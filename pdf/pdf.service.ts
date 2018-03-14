@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {select, NgRedux} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import * as utilsCommon from '@setl/utils/common';
 import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
 import * as _ from 'lodash';
 
@@ -38,16 +38,16 @@ export class PdfService {
         this.token = this.memberSocketService.token;
         if (this.getConnectedWallet) {
             this.getConnectedWallet.subscribe(
-                (data) => {
+                (function (data) {
                     this.walletId = data;
-                }
+                }).bind(this)
             );
         }
         if (this.getUser) {
             this.getUser.subscribe(
-                (data) => {
+                (function (data) {
                     this.userId = data;
-                }
+                }).bind(this)
             );
         }
     }
@@ -61,7 +61,7 @@ export class PdfService {
                 type: _.get(requestData, 'type', null),
                 metadata: _.get(requestData, 'metadata', null)
             };
-            return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+            return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
         }
     }
 
@@ -101,7 +101,7 @@ export class PdfService {
                 walletID: this.walletId,
                 pdfID: _.get(requestData, 'pdfID', null)
             };
-            return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+            return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
         }
     }
 

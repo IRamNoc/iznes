@@ -41,3 +41,7 @@ export interface RequestTransactionHistoryBody extends WalletNodeMessageBody {
     classid: string;
     pagenum: number;
 }
+
+export interface RequestContractsByWalletBody extends WalletNodeMessageBody {
+    walletid: number;
+}
