@@ -3,6 +3,7 @@ export {MyWalletContractReducer} from './reducer';
 export {MyWalletContractState} from './model';
 export {
     setContractList,
+    setUpdatedContractList,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
     clearContractNeedHandle

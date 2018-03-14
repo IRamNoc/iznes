@@ -11,6 +11,15 @@ export const setContractList: ActionCreator<SetContractList> = (data) => ({
    data
 });
 
+export const SET_UPDATED_CONTRACT_LIST = `${name}/SET_UPDATED_CONTRACT_LIST`;
+interface UpdatedContracts extends Action {
+    updatedContracts: any;
+}
+export const setUpdatedContractList: ActionCreator<UpdatedContracts> = (updatedContracts) => ({
+    type: SET_UPDATED_CONTRACT_LIST,
+    updatedContracts
+});
+
 /**
  * Update last created contract
  * @type {string}

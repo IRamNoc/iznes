@@ -63,6 +63,7 @@ export {
     setRequestedWalletHolding,
     clearRequestedWalletHolding,
     setContractList,
+    setUpdatedContractList,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
     clearContractNeedHandle,
