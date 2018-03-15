@@ -47,7 +47,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -67,7 +67,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contentEquals("My informations:"));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My informations:"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -78,8 +78,6 @@ public class OpenCSDMyAccountAcceptanceTest {
 
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isDisplayed());
         assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
-        assertTrue(driver.findElement(By.id("btnKycClose")).isEnabled());
-        assertFalse(driver.findElement(By.id("btnKycSubmit")).isEnabled());
     }
 
     @Test
@@ -103,9 +101,13 @@ public class OpenCSDMyAccountAcceptanceTest {
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
 
+        driver.findElement(By.id("kyc_additionnal_email")).clear();
         driver.findElement(By.id("kyc_additionnal_email")).sendKeys(email);
+        driver.findElement(By.id("kyc_additionnal_firstName")).clear();
         driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys(firstName);
+        driver.findElement(By.id("kyc_additionnal_lastName")).clear();
         driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys(lastName);
+        driver.findElement(By.id("kyc_additionnal_companyName")).clear();
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
 
         try {
@@ -115,6 +117,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+        driver.findElement(By.id("kyc_additionnal_phoneNumber")).clear();
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
         assertTrue(driver.findElement(By.id("btnKycClose")).isEnabled());
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isEnabled());
@@ -153,7 +156,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contentEquals("My informations:"));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My informations:" ));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -165,9 +168,6 @@ public class OpenCSDMyAccountAcceptanceTest {
 
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isDisplayed());
         assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
-        assertTrue(driver.findElement(By.id("btnKycClose")).isEnabled());
-        assertFalse(driver.findElement(By.id("btnKycSubmit")).isEnabled());
-
     }
 
 }
