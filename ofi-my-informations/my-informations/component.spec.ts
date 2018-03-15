@@ -6,8 +6,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from '@setl/utils/index';
 import { NgReduxModule } from '@angular-redux/store';
 import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
-import {detectChanges} from '@angular/core/src/render3';
 
 describe('kyc-my-informations', () => {
 
@@ -60,7 +58,7 @@ describe('kyc-my-informations', () => {
         comp.header = 'header';
         comp.icon = 'user';
         comp.subTitle = 'subTitle';
-        comp.userInfo = Observable.of(fakeUser);
+        comp.userInfo = fakeUser;
     });
 
     describe('structure', () => {
