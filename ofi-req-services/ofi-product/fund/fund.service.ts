@@ -15,14 +15,18 @@ import {
     SaveFundHistoryRequestBody,
     CreateFundRequestBody,
     // UpdateFund_RequestBody,
-    Fund
+    Fund,
+    IznesFundRequestMessageBody
 } from './fund.service.model';
 import {
     setRequestedFund,
     clearRequestedFund,
+    setRequestedIznesFunds,
+    clearRequestedIznesFunds,
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
+import {GET_IZN_FUND_LIST} from '../../../ofi-store/ofi-product/fund/fund-list';
 
 interface FundData {
     fundID?: any;
@@ -83,6 +87,20 @@ export class OfiFundService {
         ));
     }
 
+    static defaultRequestIznesFundList(ofiFundService: OfiFundService, ngRedux: NgRedux<any>) {
+        ngRedux.dispatch(setRequestedIznesFunds());
+
+        // Request the list.
+        const asyncTaskPipe = ofiFundService.requestIznesFundList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_IZN_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     myAccountId(accountId) {
         this.accountId = accountId;
     }
@@ -92,6 +110,20 @@ export class OfiFundService {
             RequestName: 'getfunds',
             token: this.memberSocketService.token,
             accountId: this.accountId
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Get the list of iznes funds
+     *
+     * @returns {any}
+     */
+    requestIznesFundList(): any {
+        const messageBody: IznesFundRequestMessageBody = {
+            RequestName: 'izngetfundlist',
+            token: this.memberSocketService.token
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
