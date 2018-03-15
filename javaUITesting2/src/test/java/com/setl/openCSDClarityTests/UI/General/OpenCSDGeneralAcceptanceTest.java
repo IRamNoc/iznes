@@ -411,7 +411,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldLoginToOffice365() throws IOException, InterruptedException{
-        LoginToOutlook("test@test@setl.io", "Sphericals1057!");
+        LoginToOutlook("test@setl.io", "Sphericals1057!");
     }
 
     public static void LoginToOutlook(String email, String password) throws InterruptedException {
@@ -426,14 +426,25 @@ public class OpenCSDGeneralAcceptanceTest {
         }catch (Exception e){
             fail(e.getMessage());
         }
-        Thread.sleep(750);
+        Thread.sleep(850);
         wait.until(visibilityOf(driver.findElement(By.id("displayName"))));
         WebElement signInPassword = driver.findElement(By.id("i0118"));
         signInPassword.sendKeys(password);
         try {
             driver.findElement(By.id("idSIButton9")).click();
         }catch (Error e){
-            fail();
+            fail(e.getMessage());
+        }
+        try {
+            driver.findElement(By.id("idSIButton9")).click();
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+        Thread.sleep(2000);
+        try {
+            driver.findElement(By.id("ShellMail_link")).click();
+        }catch (Error e){
+            fail(e.getMessage());
         }
     }
 
