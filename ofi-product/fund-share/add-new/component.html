@@ -8,21 +8,21 @@
             <span>Fund Share</span>
         </button>
         <clr-tab-content class="outer">
-            <div class="row">
+            <div class="row" *ngIf="newFundShareForm">
                 <div class="col-sm-12">
-                    <form>
+                    <form [formGroup]="newFundShareForm">
                         <section class="form-block">
                             <div class="form-group">
                                 <label class="control-label" mltag="txt_">Is this Share part of an existing Fund?</label>
                                 <ng-select id="selectFund"
-                                    [items]="[]"
+                                    [items]="fundListItems"
                                     [allowClear]="true"
                                     placeholder=""
-                                    [formControl]=""
-                                    [required]="">
+                                    [formControl]="newFundShareForm.controls['fund']"
+                                    [required]="true">
                                 </ng-select>
                                 <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
-                                    mltag="txt_">
+                                    mltag="txt_" (click)="selectFund()" [disabled]="!isValid()">
                                     Continue
                                 </button>
                                 <span>- or -</span>

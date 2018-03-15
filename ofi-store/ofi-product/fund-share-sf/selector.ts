@@ -4,9 +4,9 @@ import {OfiState} from '../../../index';
 
 const getOfiState = (state): OfiState => state.ofi;
 
-export const getOfiFundShareSelectedFundCurrentRequest = createSelector(
+export const getOfiFundShareSelectedFund = createSelector(
     getOfiState,
     (state: OfiState) => {
-        return state.ofiProduct.ofiFundShare.ofiSelectedFund.currentRequest;
+        return state.ofiProduct.ofiFundShareSelectedFund.currentFundId;
     }
 );

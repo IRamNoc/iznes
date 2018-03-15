@@ -44,7 +44,7 @@ export class OfiFundShareService {
     }
 
     /**
-     * Request all fund share for the asset manager, not just for under particular fund.
+     * Request fund share
      * @return {any}
      */
     requestFundShare(requestData): any {
