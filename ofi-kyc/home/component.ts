@@ -77,6 +77,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['kyc-my-informations'] = this.kycMyInformations.subscribe((d) => {
             /* Assign list to a property. */
             this.userInfo = d;
+            this._changeDetectorRef.detectChanges();
         });
 
         /* fetch backend for existing data to pre fill the form */

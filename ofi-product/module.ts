@@ -14,6 +14,7 @@ import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
 
+
 /* Multilingual coolness. */
 import {MultilingualModule} from '@setl/multilingual';
 
@@ -38,9 +39,11 @@ import fundItems from './fundConfig';
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
+        FundCreateComponent,
     ],
     imports: [
         CommonModule,
+        RouterModule,
         ReactiveFormsModule,
         BrowserModule,
         FormsModule,
@@ -51,8 +54,11 @@ import fundItems from './fundConfig';
         SetlPipesModule,
         MultilingualModule,
         ChartsModule,
+        OfiKYCModule,
     ],
-    providers: []
+    providers: [
+        { provide: 'fund-items', useValue: fundItems },
+    ]
 })
 
 export class OfiAmProductHomeModule {
