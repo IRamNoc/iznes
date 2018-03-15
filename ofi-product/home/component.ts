@@ -226,7 +226,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName);
+        this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
         this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
@@ -413,7 +413,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
      */
     private formatDate(formatString: string, dateObj: Date) {
         /* Return if we're missing a param. */
-        if (!formatString || !dateObj) return false;
+        if (!formatString || !dateObj) {
+            return false;
+        }
 
         /* Return the formatted string. */
         return formatString
