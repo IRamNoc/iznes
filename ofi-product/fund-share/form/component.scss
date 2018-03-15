@@ -21,6 +21,8 @@
         padding: 0 0 20px;
         width: calc(100% - 20px);
 
+        .btn { margin: 0; }
+
         &.bottom {
             border-bottom: none;
             border-top: 1px dotted #DDD;

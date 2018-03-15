@@ -12,7 +12,8 @@ import {
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list';
 import {
     getOfiFundShareSelectedFund,
-    ofiSetCurrentFundShareSelectedFund
+    ofiSetCurrentFundShareSelectedFund,
+    ofiClearCurrentFundShareSelectedFund
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
@@ -45,6 +46,8 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initForm();
         this.initSubscriptions();
+
+        this.redux.dispatch(ofiClearCurrentFundShareSelectedFund());
     }
 
     private initForm(): void {
@@ -102,7 +105,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     selectFund(): void {
         if(!this.isValid) return;
-        
+
         const selectedFundId = this.newFundShareForm.value.fund[0].id;
 
         this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(selectedFundId));

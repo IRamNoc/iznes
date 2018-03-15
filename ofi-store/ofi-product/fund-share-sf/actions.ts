@@ -7,6 +7,9 @@ import {kAction} from '@setl/utils/common';
  */
 export const OFI_SET_CURRENT_FUND_SHARE_SF = `${name}/OFI_SET_CURRENT_FUND_SHARE_SF`;
 
+export const OFI_CLEAR_CURRENT_FUND_SHARE_SF = `${name}/OFI_CLEAR_CURRENT_FUND_SHARE_SF`;
+export const ofiClearCurrentFundShareSelectedFund = kAction(OFI_CLEAR_CURRENT_FUND_SHARE_SF);
+
 interface OfiSetCurrentFundShareSelectedFund extends Action {
     currentFundId: number;
 }

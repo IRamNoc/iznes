@@ -23,13 +23,16 @@ export const OfiFundShareSelectedFundReducer = function (state: OfiFundShareSele
         case actions.OFI_SET_CURRENT_FUND_SHARE_SF:
             return handleSetFundShareSelectedFund(state, action);
 
+        case actions.OFI_CLEAR_CURRENT_FUND_SHARE_SF:
+            return handleClearFundShareSelectedFund(state, action);
+
         default:
             return state;
     }
 };
 
 /**
- * Handle set am all fund share list
+ * Handle set fund share selected fund
  *
  * @param state
  * @param action
@@ -40,5 +43,18 @@ function handleSetFundShareSelectedFund(state: OfiFundShareSelectedFundState, ac
 
     return Object.assign({}, state, {
         currentFundId
+    });
+}
+
+/**
+ * Handle clear fund share selected fund
+ *
+ * @param state
+ * @param action
+ * @return {OfiFundShareState}
+ */
+function handleClearFundShareSelectedFund(state: OfiFundShareSelectedFundState, action: Action): OfiFundShareSelectedFundState {
+    return Object.assign({}, state, {
+        currentFundId: null
     });
 }
