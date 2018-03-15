@@ -1,8 +1,10 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement} from '@angular/core';
+import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import * as _ from 'lodash';
 
+import {NgRedux} from '@angular-redux/store';
+import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
@@ -10,20 +12,35 @@ import {ClarityModule} from '@clr/angular';
 import fundItems from '../fundConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-const fundServiceSpy = jasmine.createSpyObj('OfiFundService', ['iznCreateFund']);
 const OfiUmbrellaFundServiceSpy = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
 const OfiManagementCompanyServiceSpy = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
-import {FundCreateComponent} from './component';
 
-import {Directive, Input} from '@angular/core';
+import {FundCreateComponent} from './component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
-import {OfiUmbrellaFundService} from '../../ofi-req-services/ofi-product/umbrella-fund/service';
-import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
-import {NgRedux} from '@angular-redux/store';
-import {of} from 'rxjs/observable/of';
+import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+
+const iznCreateFund = jasmine.createSpy('iznCreateFund')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+        resolve();
+    })
+    );
+const fundServiceSpy = {
+    iznCreateFund: iznCreateFund,
+};
+
+
+const toasterServiceMock = {
+    pop: () => {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+};
 
 // Stub for routerLink
 @Directive({
@@ -71,6 +88,7 @@ describe('FundCreateComponent', () => {
                 { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceSpy },
                 { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceSpy },
                 { provide: NgRedux, useValue: ngReduxSpy },
+                { provide: ToasterService, useValue: toasterServiceMock }
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -599,9 +617,6 @@ describe('FundCreateComponent', () => {
 
             comp.fundForm.setValue(testPayload);
 
-            // tick();
-            // fixture.detectChanges();
-
             const submitEl = fixture.debugElement.query(By.css('#submitfund'));
             submitEl.triggerEventHandler('click', null);
             comp.submitFundForm();
@@ -619,9 +634,8 @@ describe('FundCreateComponent', () => {
                 managementCompanyID: testPayload.managementCompanyID[0].id,
             }, ['AuMFund', 'AuMFundDate']));
 
-            expect(fundServiceSpy.iznCreateFund).toHaveBeenCalledTimes(1);
-            expect(fundServiceSpy.iznCreateFund).toHaveBeenCalledWith(expectedResult);
-
+            expect(iznCreateFund).toHaveBeenCalledTimes(1);
+            expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
         }));
     });
 });
