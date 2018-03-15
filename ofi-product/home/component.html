@@ -7,7 +7,7 @@
 <!-- Main content. -->
 <div class="wrapper wrapper-content">
     <p>
-        Here are all the Shares / Funds and Umbrella funds that were created by [AM to replace].<br>
+        Here are all the Shares / Funds and Umbrella funds that were created by {{amManagementCompany}}.<br>
         You can also add a new share, a new fund, a new umbrella fund:
     </p>
 </div>
@@ -27,7 +27,11 @@
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
             <div class="mb-1" *ngIf="panel.title === 'Shares'">
-                Display only active Shares <label class="switch"><input type="checkbox" class="form-control" id="switchActiveShares" [(ngModel)]="showOnlyActive"><span class="slider round"></span></label>
+                Display only active Shares
+                <label class="switch">
+                    <input type="checkbox" class="form-control" id="switchActiveShares" (click)="handleShareToggleClick()">
+                    <span class="slider round"></span>
+                </label>
             </div>
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'column.dataSource'" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
