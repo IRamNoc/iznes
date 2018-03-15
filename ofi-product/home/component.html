@@ -29,7 +29,12 @@
             <div class="mb-1" *ngIf="panel.title === 'Shares'">
                 Display only active Shares
                 <label class="switch">
-                    <input type="checkbox" class="form-control" id="switchActiveShares" (click)="handleShareToggleClick()">
+                    <input type="checkbox"
+                           class="form-control"
+                           id="switchActiveShares"
+                           [ngModel]="showOnlyActive"
+                           (click)="handleShareToggleClick()"/>
+
                     <span class="slider round"></span>
                 </label>
             </div>
