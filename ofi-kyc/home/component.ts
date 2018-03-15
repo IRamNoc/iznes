@@ -86,7 +86,16 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
-        this.userInfo = userInformations;
+
+        this.userInfo = {
+            ...this.userInfo,
+            email: userInformations.email,
+            firstName: userInformations.firstName,
+            lastName: userInformations.lastName,
+            phoneCode: userInformations.phoneCode,
+            phoneNumber: userInformations.phoneNumber,
+            companyName: userInformations.companyName,
+        };
 
         const listImu = fromJS([
             {id: 'dropdown-user'},

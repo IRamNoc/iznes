@@ -118,13 +118,13 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         if (!this.additionnalForm.controls.phoneCode.value) {
             this.switchPhoneCode();
         }
-        this.additionnalForm.controls.email.setValue(userInfo.email);
-        this.additionnalForm.controls.firstName.setValue(userInfo.firstName);
-        this.additionnalForm.controls.lastName.setValue(userInfo.lastName);
-        this.additionnalForm.controls.invitedBy.setValue(userInfo.invitedBy.companyName);
-        this.additionnalForm.controls.companyName.setValue(userInfo.companyName);
-        this.additionnalForm.controls.phoneCode.setValue(this.getPhoneCode(userInfo.phoneCode));
-        this.additionnalForm.controls.phoneNumber.setValue(userInfo.phoneNumber);
+        this.additionnalForm.controls['email'].setValue(userInfo.email);
+        this.additionnalForm.controls['firstName'].setValue(userInfo.firstName);
+        this.additionnalForm.controls['lastName'].setValue(userInfo.lastName);
+        this.additionnalForm.controls['invitedBy'].setValue(userInfo.invitedBy.companyName);
+        this.additionnalForm.controls['companyName'].setValue(userInfo.companyName);
+        this.additionnalForm.controls['phoneCode'].setValue(this.getPhoneCode(userInfo.phoneCode));
+        this.additionnalForm.controls['phoneNumber'].setValue(userInfo.phoneNumber);
     }
 
     isPopUpMode() {
