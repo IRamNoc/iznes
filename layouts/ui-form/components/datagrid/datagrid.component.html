@@ -3,8 +3,10 @@
 </div>
 
 <div class="padding">
-    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' : '[+] show info panes' }}</a>
-    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form/components/forms.'"></app-ui-info-pane>
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes"
+                      [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form/components/forms.'"></app-ui-info-pane>
 </div>
 
 <clr-tabs>
@@ -14,6 +16,9 @@
         </button>
 
         <clr-tab-content *clrIfActive>
+
+            <p>More about <a href="">DataGrid with Buttons see here</a></p>
+
             <clr-datagrid #dataGrid>
                 <clr-dg-column mltag="txt_ui_column1">Column 1</clr-dg-column>
                 <clr-dg-column mltag="txt_ui_column2">Column 2</clr-dg-column>
@@ -23,15 +28,12 @@
                     <clr-dg-cell>{{item.value1}}</clr-dg-cell>
                     <clr-dg-cell>{{item.value2}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <div class="btn-group btn-sm">
-                            <button id="edit" (click)="dataGridEdit()" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_ui_edit">Edit</span>
-                            </button>
+                        <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                            mltag="txt_ui_edit">Delete</span></button>
 
-                            <button id="delete" (click)="dataGridDelete()" class="btn">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_ui_delete">Delete</span>
-                            </button>
-                        </div>
+                        <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span
+                            mltag="txt_ui_edit">Edit</span></button>
+
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -41,7 +43,8 @@
                 </clr-dg-footer>
             </clr-datagrid>
 
-            <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Actions should be right aligned in the table and be on the far right.'"></app-ui-info-pane>
+            <app-ui-info-pane [hidden]="!showInfoPanes"
+                              [message]="'Actions should be right aligned in the table and be on the far right.'"></app-ui-info-pane>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

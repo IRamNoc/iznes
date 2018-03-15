@@ -278,7 +278,7 @@ span.fr-counter {
 }
 
 .hr-line-dashed {
-    border-top: 1px dashed #e7eaec;
+    border-top: 1px dashed #e6e6e6;
     color: #fff;
     background-color: #fff;
     height: 1px;
@@ -287,7 +287,7 @@ span.fr-counter {
 
 hr.dashed {
     border: none;
-    border-top: 1px dashed #e8e8e8;
+    border-top: 1px dashed #e6e6e6;
 }
 
 .icon-btn {
@@ -547,3 +547,171 @@ app-login .modal-body {
     width: 14rem;
 }
 
+.content-area p {
+    margin-top: 0px;
+    margin-bottom: 0.5rem;
+    font-size: 13px;
+}
+
+h1 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 22px;
+    color: #383d48;
+}
+
+h2 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 18px;
+    color: #383d48;
+}
+
+h3 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #383d48;
+}
+
+.well {
+    background: white;
+    border-radius: 3px;
+    padding: 0px;
+    margin: 20px;
+    overflow: auto;
+    border: 1px solid #dce1eb;
+}
+
+.well .row.panel-header {
+    padding: 10px;
+}
+
+.well .row, .well .row.hidden {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.well .row.panel-body {
+    padding: 10px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-top: 1px solid gainsboro;
+}
+
+.well .row.panel-body.hidden {
+    padding: 0px
+}
+
+.panel-header {
+    a {
+        color: black;
+        line-height: 48px;
+    }
+    button {
+        margin-right: 0;
+    }
+    .fa-chevron-right {
+        transform: rotate(0deg);
+        transition: transform .5s;
+        &.rotate {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.panel-body {
+    opacity: 1;
+    height: auto;
+    overflow: hidden;
+    transition: opacity .5s linear;
+    &.hidden {
+        opacity: 0;
+        height: 0;
+    }
+}
+
+.well .row.panel-header a i {
+    float: left;
+    margin-top: 18px;
+    font-size: 12px;
+}
+
+.well .row.panel-header a h2 {
+    float: left;
+    padding-left: 10px;
+}
+
+clr-tab-content {
+
+    .well {
+        background: white;
+        border: 0px;
+        border-bottom: 1px dashed #e6e6e6;
+        border-radius: 0px;
+        padding: 0px;
+        margin: 0px;
+        overflow: auto;
+    }
+
+    .well .row.panel-header {
+        padding: 0px;
+    }
+
+    .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
+    }
+
+    .well .row .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
+    }
+
+    .panel-header {
+
+        a {
+            color: black;
+            line-height: 48px;
+        }
+
+        button {
+            margin-right: 0;
+        }
+
+        .fa-chevron-right {
+            transform: rotate(0deg);
+            transition: transform .5s;
+
+            &
+            .rotate {
+                transform: rotate(90deg);
+            }
+
+        }
+    }
+    .panel-body {
+        padding-left: 0px;
+        opacity: 1;
+        height: auto;
+        overflow: hidden;
+        transition: opacity .5s linear;
+
+        &
+        .hidden {
+            opacity: 0;
+            height: 0;
+            transition: opacity .5s linear;
+        }
+
+    }
+
+    .well .row .well {
+        margin-left: 30px;
+        margin-top: 20px;
+        margin-bottom:10px;
+    }
+
+}

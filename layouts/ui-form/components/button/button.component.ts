@@ -1,37 +1,38 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 @Component({
-    selector: 'app-ui-layouts-datagrid',
-    templateUrl: './datagrid.component.html',
+    selector: 'app-ui-layouts-button',
+    templateUrl: './button.component.html',
     styles: [`
         .padding {
             padding: 0 20px 20px;
         }
+
         .toggle-info-panes {
             display: block;
             padding-bottom: 10px;
             text-decoration: none;
 
-            &:before, &:after { text-decoration: none; }
+        &
+        :before,
+
+        &
+        :after {
+            text-decoration: none;
+        }
+
         }`
     ]
 })
-export class UiDataGridComponent {
+export class UiButtonComponent {
 
-    showInfoPanes: boolean = true;
+    public showInfoPanes: boolean = true;
 
     // mock data
     mockDataGridItems: any[];
 
     constructor() {
         this.initMocks();
-    }
-
-    toggleInfoPanes(event: Event): void {
-        event.preventDefault();
-
-        this.showInfoPanes = !this.showInfoPanes;
     }
 
     // mock data
@@ -69,13 +70,9 @@ export class UiDataGridComponent {
         }];
     }
 
-    // datagrid-expand
-    dataGridEdit(): void {
-        console.log('Edit data grid item function here');
-    }
+    toggleInfoPanes(event: Event): void {
+        event.preventDefault();
 
-    dataGridDelete(): void {
-        console.log('Delete data grid item function here');
+        this.showInfoPanes = !this.showInfoPanes;
     }
-
 }
