@@ -20,4 +20,12 @@ export const clearRequestedAmAllFundShare = kAction(CLEAR_REQUESTED_AM_All_FUND_
  */
 export const SET_AM_ALL_FUND_SHARE_LIST = `${name}/SET_AM_ALL_FUND_SHARE_LIST`;
 
+/**
+ * Iznes fund shares' actions
+ */
+export const SET_REQUESTED_IZN_SHARES = `${name}/SET_REQUESTED_IZN_SHARES`;
+export const setRequestedIznesShares = kAction(SET_REQUESTED_IZN_SHARES);
+export const CLEAR_REQUESTED_IZN_SHARES = `${name}/CLEAR_REQUESTED_IZN_SHARES`;
+export const clearRequestedIznesShares = kAction(CLEAR_REQUESTED_IZN_SHARES);
+export const GET_IZN_SHARES_LIST = `${name}/GET_IZN_SHARES_LIST`;
 
