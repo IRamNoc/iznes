@@ -2,7 +2,7 @@ import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {InitialisationService, MyUserService, WalletnodeChannelService} from '@setl/core-req-services';
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
-import {ToasterService} from 'angular2-toaster';
+import {ToasterService, ToasterConfig} from 'angular2-toaster';
 import {NgRedux} from '@angular-redux/store';
 import 'rxjs/add/operator/throttleTime';
 
@@ -17,7 +17,9 @@ import {setLanguage, setMenuShown} from '@setl/core-store';
 export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
     users: Array<object>;
-    public toasterconfig: any;
+    public toasterconfig: any = new ToasterConfig({
+        positionClass: 'toast-bottom-right'
+    });
     jasperoAlertoptions: any = {
         overlay: true,
         overlayClickToClose: true,
@@ -44,7 +46,7 @@ export class AppComponent implements AfterViewInit, OnInit {
                 private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
     }
 
-    ngOnInit(){
+    ngOnInit() {
 
         this.memberSocketService.disconnectCallback = () => {
             this.toasterService.pop('error', 'Member node connection disconnected');
