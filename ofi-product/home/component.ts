@@ -6,6 +6,9 @@ import {Subscription} from 'rxjs/Subscription';
 import {select, NgRedux} from '@angular-redux/store';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 
+/* Services */
+import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterService} from 'angular2-toaster';
@@ -27,12 +30,11 @@ import * as math from 'mathjs';
 export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Public properties. */
-    tables = {
-        'shares':[],
-        'funds': [],
-        'ufunds': [],
-        'waiting': [],
-    };
+
+    umbrellaFundList = [];
+    fundList = [];
+    shareList = [];
+
     columns = {
         'shareName': {
             label: 'Share name',
@@ -51,7 +53,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         'managementCompany': {
             label: 'Management company',
-            dataSource: 'managementCompany',
+            dataSource: 'managementCompanyID',
             sortable: true,
         },
         'typeOfshare': {
@@ -66,12 +68,12 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         'lei': {
             label: 'LEI',
-            dataSource: 'lei',
+            dataSource: 'legalEntityIdentifier',
             sortable: true,
         },
         'country': {
             label: 'Country',
-            dataSource: 'country',
+            dataSource: 'domicile',
             sortable: true,
         },
         'lawStatus': {
@@ -90,9 +92,10 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
             sortable: true,
         },
         'uFundName': {
-            label: 'Umbrealla fund name',
-            dataSource: 'uFundName',
+            label: 'Umbrella fund name',
+            dataSource: 'umbrellaFundName',
             sortable: true,
+            link: '/product-module/umbrella-fund/:umbrellaFundID',
         },
         'uFundCurrency': {
             label: 'Currency of the Umbrella fund',
@@ -147,6 +150,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 type: 'share',
             },
             open: true,
+            data: this.shareList,
         },
         {
             title: 'Funds',
@@ -165,6 +169,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 type: 'fund',
             },
             open: true,
+            data: this.fundList,
         },
         {
             title: 'Umbrella funds',
@@ -173,7 +178,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.columns['lei'],
                 this.columns['managementCompany'],
                 this.columns['country'],
-                this.columns['uFundCurrency'],
+                // this.columns['uFundCurrency'],
             ],
             action: {
                 title: 'Add new Umbrella fund',
@@ -181,6 +186,7 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 type: 'ufund',
             },
             open: true,
+            data: this.umbrellaFundList,
         },
         // {
         //     title: 'Shares, Funds & Umbrella funds waiting for your validation (modification not yet published to Investors on Iznes)',
@@ -199,19 +205,23 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     showOnlyActive = true;
 
     /* Private properties. */
-    private subscriptions: any = {};
+    subscriptions: Array<Subscription> = [];
 
     /* Redux observables. */
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
 
     constructor(
-        private ngRedux: NgRedux<any>,
+        private _ngRedux: NgRedux<any>,
         private _changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
         private _route: ActivatedRoute,
         private _router: Router,
         private _numberConverterService: NumberConverterService,
+        private _ofiUmbrellaFundService: OfiUmbrellaFundService,
     ) {
-
+        this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
+        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
     }
 
     public ngOnInit() {
@@ -222,28 +232,72 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
+    getUmbrellaFundRequested(requested): void {
+        if (!requested) {
+            OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+        }
+    }
+
+    getUmbrellaFundList(list) {
+        const listImu = fromJS(list);
+
+        this.umbrellaFundList = listImu.reduce((result, item) => {
+
+            result.push({
+                umbrellaFundID: item.get('umbrellaFundID', 0),
+                umbrellaFundName: item.get('umbrellaFundName', ''),
+                registerOffice: item.get('registerOffice', ''),
+                registerOfficeAddress: item.get('registerOfficeAddress', ''),
+                legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
+                domicile: item.get('domicile', 0),
+                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
+                managementCompanyID: item.get('managementCompanyID', 0),
+                fundAdministratorID: item.get('fundAdministratorID', 0),
+                custodianBankID: item.get('custodianBankID', 0),
+                investmentManagerID: item.get('investmentManagerID', 0),
+                investmentAdvisorID: item.get('investmentAdvisorID', 0),
+                payingAgentID: item.get('payingAgentID', 0),
+                transferAgentID: item.get('transferAgentID', 0),
+                centralisingAgentID: item.get('centralisingAgentID', 0),
+                giin: item.get('giin', 0),
+                delegateManagementCompanyID: item.get('delegateManagementCompanyID', 0),
+                auditorID: item.get('auditorID', 0),
+                taxAuditorID: item.get('taxAuditorID', 0),
+                principlePromoterID: item.get('principlePromoterID', 0),
+                legalAdvisorID: item.get('legalAdvisorID', 0),
+                directors: item.get('directors', ''),
+            });
+
+            return result;
+        }, []);
+
+        this.panelDefs[2].data = this.umbrellaFundList;
+
+        this._changeDetectorRef.markForCheck();
+    }
+
     addForm(type) {
         switch (type) {
             case 'share':
                 this._router.navigateByUrl('/product-module/share');
                 break;
             case 'fund':
-                this._router.navigateByUrl('/product-module/fund');
+                this._router.navigateByUrl('/product-module/fund/create');
                 break;
             case 'ufund':
-                this._router.navigateByUrl('/product-module/umbrella-fund');
+                this._router.navigateByUrl('/product-module/umbrella-fund/0');
                 break;
         }
     }
 
     buildLink(column, row) {
-        let ret = column.link;
+        let dest = column.link;
         column.link.match(/:\w+/g).forEach((match) => {
             const key = match.substring(1);
             const regex = new RegExp(match);
-            ret = ret.replace(regex, row[key]);
+            dest = dest.replace(regex, row[key]);
         });
-        return ret;
+        this._router.navigateByUrl(dest);
     }
 
     /**
@@ -292,9 +346,8 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Detach the change detector on destroy. */
         this._changeDetectorRef.detach();
 
-        /* Unsunscribe Observables. */
-        for (let key in this.subscriptions) {
-            this.subscriptions[key].unsubscribe();
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
         }
     }
 

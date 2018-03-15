@@ -43,7 +43,10 @@ export class TextInputListComponent implements OnInit {
     }
 
     getContentKeys() {
-        return Object.keys(this.content) || [];
+        if (!this.content) {
+            return [];
+        }
+        return Object.keys(this.content);
     }
 
 }

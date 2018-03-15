@@ -44,8 +44,10 @@ div.radio-inline.opt-btn-element {
     width: 150px;
 }
 
-app-text-input-list {
+.text-input-list {
     width: 100%;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
 }
 
 .highlight {

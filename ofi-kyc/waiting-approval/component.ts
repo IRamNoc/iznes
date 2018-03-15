@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {MessageKycConfig, MessagesService} from '@setl/core-messages';
+import {mDateHelper} from '@setl/utils';
 import {InvestorModel} from './model';
 
 enum Statuses {
@@ -27,6 +28,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     statuses: Array<object>;
     isRejectModalDisplayed: boolean;
     language: string;
+    userDetail: any;
     investor: InvestorModel;
     kycId: number;
     initialStatusId: number;
@@ -41,6 +43,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObs;
+    @select(['user', 'myDetail']) userDetailObs;
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
 
@@ -71,6 +74,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.statusId = null;
         this.amKycList = [];
         this.amCompanyName = '';
+        this.userDetail = {};
 
         // Get the parameter passed to URL
         this.route.params.subscribe((params) => {
@@ -85,6 +89,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscriptions.push(this.requestLanguageObs.subscribe((language) => this.getLanguage(language)));
+        this.subscriptions.push(this.userDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
         this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
         this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
     }
@@ -131,6 +136,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.language = language;
     }
 
+    getUserDetail(userDetail) {
+        this.userDetail = userDetail;
+    }
+
     setAmKycListRequested(requested) {
         if (!requested) {
             OfiKycService.defaultRequestAmKycList(this.kycService, this.redux);
@@ -140,10 +149,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     getAmKycList(amKycList: any) {
         if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
-            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ?
-                `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
 
-            const approvalDateRequest = '';
+            const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber)
+                ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
+
+            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD hh:mm:ss');
+            const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
 
             this.investor = {
                 'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
@@ -209,14 +220,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     onAskMoreInfoKyc() {
+        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber)
+            ? `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
+
         const payload = {
             kycID: this.kycId,
             investorEmail: this.investor.email.value,
             investorFirstName: this.investor.firstName.value,
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
-            amEmail: '',
-            amPhoneNumber: '',
+            amEmail: this.userDetail.emailAddress,
+            amPhoneNumber: phoneNumber,
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
             lang: this.language
         };
@@ -248,7 +262,6 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             /* Send action message to investor */
             this.sendActionMessageToInvestor(result[1].Data[0].investorWalletID);
-
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -287,14 +300,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     handleRejectButtonClick() {
         this.isRejectModalDisplayed = false;
 
+        const phoneNumber = (this.userDetail.phoneCode && this.userDetail.phoneNumber)
+            ? `${this.userDetail.phoneCode} ${this.userDetail.phoneNumber}` : '';
+
         const payload = {
             kycID: this.kycId,
             investorEmail: this.investor.email.value,
             investorFirstName: this.investor.firstName.value,
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
-            amEmail: '',
-            amPhoneNumber: '',
+            amEmail: this.userDetail.emailAddress,
+            amPhoneNumber: phoneNumber,
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
             lang: this.language
         };

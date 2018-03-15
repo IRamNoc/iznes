@@ -19,6 +19,12 @@ import {
 } from './fund';
 
 import {
+    UmbrellaFundState,
+    UmbrellaFundReducer,
+    SET_UMBRELLA_FUND_LIST,
+} from './umbrella-fund';
+
+import {
     OfiManageNavState,
     OfiManageNavReducer,
     // LIST
@@ -64,9 +70,14 @@ export {
     SicavState,
     SicavReducer,
     SET_SICAV_LIST,
+    // FUNDS
     FundState,
     FundReducer,
     SET_FUND_LIST,
+    // UMBRELLA FUNDS
+    UmbrellaFundState,
+    UmbrellaFundReducer,
+    SET_UMBRELLA_FUND_LIST,
     // LIST
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
@@ -104,6 +115,7 @@ export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
     ofiFund: FundState;
+    ofiUmbrellaFund: UmbrellaFundState;
     ofiFundShare: OfiFundShareState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
@@ -113,6 +125,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
+    ofiUmbrellaFund: UmbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer

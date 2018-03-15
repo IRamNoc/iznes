@@ -46,7 +46,7 @@
                     Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
                 </p>
                 <p>
-                    A message was sent to {{amDetails.companyName.value}}.", asking them yo confirm this information.
+                    A message was sent to {{amDetails.companyName.value}}, asking them to confirm this information.
                 </p>
                 <p>
                     Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
@@ -54,11 +54,13 @@
             </section>
 
             <section class="form-block">
-                <app-text-input-list
-                        [title]="'Info: Details of your Asset Management company'"
-                        [content]="amDetails"
-                        [additionnalText]="'You can contact your asset manager directly.'"
-                ></app-text-input-list>
+                <div class="text-input-list">
+                    <app-text-input-list
+                            [title]="'Info: Details of your Asset Management company'"
+                            [content]="amDetails"
+                            [additionnalText]="'You can contact your asset manager directly.'"
+                    ></app-text-input-list>
+                </div>
              </section>
         </clr-tab-content>
     </clr-tab>

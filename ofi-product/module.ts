@@ -10,6 +10,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ClarityModule} from '@clr/angular';
 import {SetlPipesModule, DpDatePickerModule, SetlDirectivesModule} from '@setl/utils';
 import {SelectModule} from 'ng2-select';
+import {RouterModule} from '@angular/router';
 
 /* Multilingual coolness. */
 import {MultilingualModule} from '@setl/multilingual';
@@ -17,22 +18,30 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
+import {FundCreateComponent} from './fundCreate/component';
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
+import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
+
+/* fundItems config ( should be served by backend TT ) */
+import fundItems from './fundConfig';
 
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
         ProductHomeComponent,
         UmbrellaFundComponent,
+        FundCreateComponent,
     ],
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
+        FundCreateComponent,
     ],
     imports: [
         CommonModule,
+        RouterModule,
         ReactiveFormsModule,
         BrowserModule,
         FormsModule,
@@ -43,8 +52,11 @@ import {ChartsModule} from 'ng2-charts';
         SetlPipesModule,
         MultilingualModule,
         ChartsModule,
+        OfiKYCModule,
     ],
-    providers: []
+    providers: [
+        { provide: 'fund-items', useValue: fundItems },
+    ]
 })
 
 export class OfiAmProductHomeModule {

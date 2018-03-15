@@ -38,54 +38,54 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div>
-                                        <input type="text" id="uf_lei" class="form-control" formControlName="lei" maxlength="20">
+                                        <input type="text" id="uf_lei" class="form-control" formControlName="legalEntityIdentifier" maxlength="20">
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['lei'].hasError('required') && umbrellaFundForm.controls['lei'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required') && umbrellaFundForm.controls['legalEntityIdentifier'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label for="uf_nameRegistredOffice">
+                                    <label for="uf_registerOffice">
                                         <span>Name of the Registred Office of the Umbrella Fund</span>
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div>
-                                        <input type="text" id="uf_nameRegistredOffice" class="form-control" formControlName="nameRegistredOffice">
+                                        <input type="text" id="uf_registerOffice" class="form-control" formControlName="registerOffice">
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['nameRegistredOffice'].hasError('required') && umbrellaFundForm.controls['nameRegistredOffice'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['registerOffice'].hasError('required') && umbrellaFundForm.controls['registerOffice'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="uf_addressRegistredOffice">
+                                    <label for="uf_registerOfficeAddress">
                                         <span>Address of the Registred Office of the Umbrella Fund</span>
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div>
-                                        <input type="text" id="uf_addressRegistredOffice" class="form-control" formControlName="addressRegistredOffice">
+                                        <input type="text" id="uf_registerOfficeAddress" class="form-control" formControlName="registerOfficeAddress">
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['addressRegistredOffice'].hasError('required') && umbrellaFundForm.controls['addressRegistredOffice'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddress'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label for="uf_country">
+                                    <label for="uf_domicile">
                                         <span>Umbrella Fund Domicile (country)</span>
                                         <div class="mandatory text-danger">*</div>
                                     </label>
-                                    <div id="uf_country">
-                                        <ng-select [items]="countries" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" formControlName="country"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['country'].hasError('required') && umbrellaFundForm.controls['country'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div id="uf_domicile">
+                                        <ng-select [items]="countries" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" formControlName="domicile"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="uf_creationDate">
+                                    <label for="uf_umbrellaFundCreationDate">
                                         <span>Umbrella Fund Creation Date</span>
                                         <div class="mandatory text-danger">*</div>
                                     </label>
-                                    <div class="input-group">
+                                    <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="uf_creationDate" formControlName="creationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate"/>
+                                        <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['creationDate'].hasError('required') && umbrellaFundForm.controls['creationDate'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -94,10 +94,10 @@
                                         <span>Management Company</span>
                                         <div class="mandatory text-danger">*</div>
                                     </label>
-                                    <div>
-                                        <input type="text" id="uf_managementCompany" class="form-control" formControlName="managementCompany">
+                                    <div id="uf_managementCompany">
+                                        <ng-select [items]="managementCompanyList" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="managementCompanyID"></ng-select>
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['managementCompany'].hasError('required') && umbrellaFundForm.controls['managementCompany'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="uf_fundAdministrator">
@@ -105,8 +105,8 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div id="uf_fundAdministrator">
-                                        <ng-select [items]="fundAdminOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="fundAdministrator"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['fundAdministrator'].hasError('required') && umbrellaFundForm.controls['fundAdministrator'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="fundAdminOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="fundAdministratorID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -117,8 +117,8 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div id="uf_custodian">
-                                        <ng-select [items]="custodianBankOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="custodian"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['custodian'].hasError('required') && umbrellaFundForm.controls['custodian'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="custodianBankOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="custodianBankID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -127,8 +127,8 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div id="uf_investmentManager">
-                                        <ng-select [items]="investmentManagerOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="investmentManager"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['investmentManager'].hasError('required') && umbrellaFundForm.controls['investmentManager'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="investmentManagerOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="investmentManagerID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['investmentManagerID'].hasError('required') && umbrellaFundForm.controls['investmentManagerID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -139,8 +139,8 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div id="uf_investmentAdvisor">
-                                        <ng-select [items]="investmentAdvisorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="investmentAdvisor"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['investmentAdvisor'].hasError('required') && umbrellaFundForm.controls['investmentAdvisor'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="investmentAdvisorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="investmentAdvisorID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -149,8 +149,8 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div id="uf_payingAgent">
-                                        <ng-select [items]="payingagentOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="payingAgent"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['payingAgent'].hasError('required') && umbrellaFundForm.controls['payingAgent'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="payingagentOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="payingAgentID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['payingAgentID'].hasError('required') && umbrellaFundForm.controls['payingAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -162,19 +162,19 @@
                                             <div class="mandatory text-danger">*</div>
                                         </label>
                                         <div>
-                                            <input type="text" id="uf_transferAgent" class="form-control" formControlName="transferAgent">
+                                            <input type="text" id="uf_transferAgent" class="form-control" formControlName="transferAgentID">
                                         </div>
-                                        <div *ngIf="umbrellaFundForm.controls['transferAgent'].hasError('required') && umbrellaFundForm.controls['transferAgent'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <div *ngIf="umbrellaFundForm.controls['transferAgentID'].hasError('required') && umbrellaFundForm.controls['transferAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                     <div *ngIf="showCentralizingAgent">
                                         <label for="uf_centralizingAgent">
-                                            <span>Centralizing Agent</span>
+                                            <span>Centralising Agent</span>
                                             <div class="mandatory text-danger">*</div>
                                         </label>
                                         <div>
-                                            <input type="text" id="uf_centralizingAgent" class="form-control" formControlName="centralizingAgent">
+                                            <input type="text" id="uf_centralizingAgent" class="form-control" formControlName="centralisingAgentID">
                                         </div>
-                                        <div *ngIf="umbrellaFundForm.controls['centralizingAgent'].hasError('required') && umbrellaFundForm.controls['centralizingAgent'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <div *ngIf="umbrellaFundForm.controls['centralisingAgentID'].hasError('required') && umbrellaFundForm.controls['centralisingAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -208,10 +208,10 @@
                                         <span>Delegated Management Company</span>
                                         <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
-                                    <div>
-                                        <input type="text" id="uf_delegatedManagementCompany" class="form-control" formControlName="delegatedManagementCompany">
+                                    <div id="uf_delegatedManagementCompany">
+                                        <ng-select [items]="managementCompanyList" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="delegatedManagementCompanyID"></ng-select>
                                     </div>
-                                    <div *ngIf="umbrellaFundForm.controls['delegatedManagementCompany'].hasError('required') && umbrellaFundForm.controls['delegatedManagementCompany'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                    <div *ngIf="umbrellaFundForm.controls['delegatedManagementCompanyID'].hasError('required') && umbrellaFundForm.controls['delegatedManagementCompanyID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -221,18 +221,18 @@
                                         <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
                                     <div id="uf_auditor">
-                                        <ng-select [items]="auditorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="auditor"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['auditor'].hasError('required') && umbrellaFundForm.controls['auditor'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="auditorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="auditorID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['auditorID'].hasError('required') && umbrellaFundForm.controls['auditorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="uf_taxAuditor">
                                         <span>Tax Auditor</span>
-                                        <div class="mandatory text-danger">*</div>
+                                        <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
                                     <div id="uf_taxAuditor">
-                                        <ng-select [items]="taxAuditorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="taxAuditor"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['taxAuditor'].hasError('required') && umbrellaFundForm.controls['taxAuditor'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="taxAuditorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="taxAuditorID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['taxAuditorID'].hasError('required') && umbrellaFundForm.controls['taxAuditorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -243,18 +243,18 @@
                                         <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
                                     <div id="uf_principalPromoter">
-                                        <ng-select [items]="principalPromoterOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="principalPromoter"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['principalPromoter'].hasError('required') && umbrellaFundForm.controls['principalPromoter'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="principalPromoterOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="principlePromoterID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['principlePromoterID'].hasError('required') && umbrellaFundForm.controls['principlePromoterID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="uf_legalAdvisor">
                                         <span>Legal Advisor</span>
-                                        <div class="mandatory text-danger">*</div>
+                                        <!--<div class="mandatory text-danger">*</div>-->
                                     </label>
                                     <div id="uf_legalAdvisor">
-                                        <ng-select [items]="legalAdvisorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="legalAdvisor"></ng-select>
-                                        <div *ngIf="umbrellaFundForm.controls['legalAdvisor'].hasError('required') && umbrellaFundForm.controls['legalAdvisor'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                                        <ng-select [items]="legalAdvisorOptions" [allowClear]="true" mltag="txt_select" placeholder="Select" formControlName="legalAdvisorID"></ng-select>
+                                        <div *ngIf="umbrellaFundForm.controls['legalAdvisorID'].hasError('required') && umbrellaFundForm.controls['legalAdvisorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -277,7 +277,7 @@
                     <br>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="ufBtnResetForm" *ngIf="!editForm" type="button" class="btn btn-info" (click)="cancel()">Cancel</button>
+                            <button id="ufBtnResetForm" type="button" class="btn btn-info" (click)="cancel()">Cancel</button>
                             <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
                                 <div *ngIf="!editForm; else editUfFBtSubmit">
                                     <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>

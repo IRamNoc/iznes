@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1>
+    <h1 id="pageTitle">
         <i class="fa fa-ellipsis-h"></i>
         <span mltag="txt_netassetvalue">Net asset value</span>
     </h1>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="form-group col-sm-4">
                             <label class="control-label">&nbsp;</label>
-                            <div class="input-group">
+                            <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
                                 <input id="navDatePicker" name="searchDate" placeholder="Choose a date" mltag="txt_chooseadate"
                                     formControlName="date"
@@ -121,7 +121,7 @@
 
             <div class="row">
                 <div class="form-group offset-sm-9 col-sm-3 text-right export-nav">
-                    <button class="btn btn-primary" (click)="exportCSV()">Export List as CSV</button>
+                    <button class="btn btn-primary" id="exportNavList" (click)="exportCSV()">Export List as CSV</button>
                 </div>
             </div>
         </clr-tab-content>
