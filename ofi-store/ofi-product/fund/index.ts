@@ -5,6 +5,7 @@ import {
     FundListReducer,
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
+    GET_IZN_FUND_LIST
 } from './fund-list';
 
 export {
@@ -12,6 +13,7 @@ export {
     FundListReducer,
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
+    GET_IZN_FUND_LIST
 };
 
 export interface FundState {
