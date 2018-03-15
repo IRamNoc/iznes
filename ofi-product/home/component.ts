@@ -1,24 +1,22 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Inject} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
-import {select, NgRedux} from '@angular-redux/store';
-import {ActivatedRoute, Router, Params} from '@angular/router';
+import {NgRedux, select} from '@angular-redux/store';
+import {ActivatedRoute, Router} from '@angular/router';
 
 /* Services */
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ToasterService} from 'angular2-toaster';
-
-/* Models */
 
 /* Utils. */
-import {APP_CONFIG, AppConfig, SagaHelper, NumberConverterService, commonHelper} from '@setl/utils';
-import {Observable} from 'rxjs/Observable';
-import * as math from 'mathjs';
+import {NumberConverterService} from '@setl/utils';
+import {OfiFundService} from '../../ofi-req-services/ofi-product/fund/fund.service';
+import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
+
+/* Models */
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -27,13 +25,13 @@ import * as math from 'mathjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class ProductHomeComponent implements OnInit, OnDestroy {
     /* Public properties. */
-
-    umbrellaFundList = [];
+    amManagementCompany: string;
     fundList = [];
     shareList = [];
+    umbrellaFundList = [];
+    showOnlyActive = true;
 
     columns = {
         'shareName': {
@@ -202,34 +200,103 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         // },
     ];
 
-    showOnlyActive = true;
-
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
 
     /* Redux observables. */
+    @select(['user', 'myDetail']) userDetailObs;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedFundListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'iznShareList']) shareListObs;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
 
-    constructor(
-        private _ngRedux: NgRedux<any>,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private _route: ActivatedRoute,
-        private _router: Router,
-        private _numberConverterService: NumberConverterService,
-        private _ofiUmbrellaFundService: OfiUmbrellaFundService,
-    ) {
+    constructor(private _ngRedux: NgRedux<any>,
+                private _changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private _route: ActivatedRoute,
+                private _router: Router,
+                private _numberConverterService: NumberConverterService,
+                private _ofiFundService: OfiFundService,
+                private _ofiFundShareService: OfiFundShareService,
+                private _ofiUmbrellaFundService: OfiUmbrellaFundService) {
+
+        this.amManagementCompany = '';
+    }
+
+    ngOnInit() {
+        this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName);
+        this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
+        this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
+        this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+        this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
     }
 
-    public ngOnInit() {
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this._changeDetectorRef.detach();
 
+        this.subscriptions.forEach((subscription: Subscription) => {
+            subscription.unsubscribe();
+        });
     }
 
-    public ngAfterViewInit() {
+    requestFundList(requested): void {
+        if (!requested) {
+            OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+        }
+    }
 
+    getFundList(funds: any): void {
+        const fundList = [];
+
+        if (funds.length > 0) {
+            funds.map((fund) => {
+                fundList.push({
+                    fundName: fund.fundName,
+                    lei: fund.lei,
+                    managementCompany: fund.managementCompanyName,
+                    country: fund.domicile,
+                    lawStatus: fund.legalForm,
+                    umbrellaFund: fund.umbrellaFundName,
+                    fundCurrency: fund.fundCurrency,
+                });
+            });
+        }
+
+        this.fundList = fundList;
+        this.panelDefs[1].data = this.fundList;
+        this._changeDetectorRef.markForCheck();
+    }
+
+    requestShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
+        }
+    }
+
+    getShareList(shares): void {
+        const shareList = [];
+
+        if (shares.length > 0) {
+            shares.map((share) => {
+                shareList.push({
+                    shareName: share.fundShareName,
+                    fundName: share.fundName,
+                    isin: share.isin,
+                    managementCompany: share.managementCompanyName,
+                    typeOfShare: share.shareClassCode,
+                    status: ''
+                });
+            });
+        }
+
+        this.shareList = shareList;
+        this.panelDefs[0].data = this.shareList;
+        this._changeDetectorRef.markForCheck();
     }
 
     getUmbrellaFundRequested(requested): void {
@@ -242,7 +309,6 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const listImu = fromJS(list);
 
         this.umbrellaFundList = listImu.reduce((result, item) => {
-
             result.push({
                 umbrellaFundID: item.get('umbrellaFundID', 0),
                 umbrellaFundName: item.get('umbrellaFundName', ''),
@@ -276,6 +342,14 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
+    handleShareToggleClick() {
+        this.showOnlyActive = !this.showOnlyActive;
+
+        // TODO: filter shares based on the status
+
+        this._changeDetectorRef.markForCheck();
+    }
+
     addForm(type) {
         switch (type) {
             case 'share':
@@ -298,6 +372,27 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
             dest = dest.replace(regex, row[key]);
         });
         this._router.navigateByUrl(dest);
+    }
+
+    /**
+     * Show Success Message
+     * ------------------
+     * Shows an success popup.
+     *
+     * @param  {message} string - the string to be shown in the message.
+     * @return {void}
+     */
+    showSuccess(message) {
+        /* Show the message. */
+        this.alertsService.create('success', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-success">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
     /**
@@ -329,8 +424,14 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
             .replace('hh', this.numPad(dateObj.getHours()))
             .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
             .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+            .replace('ss', this.numPad(dateObj.getSeconds()));
     }
+
+    /**
+     * ===============
+     * Alert Functions
+     * ===============
+     */
 
     /**
      * Num Pad
@@ -341,21 +442,6 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private numPad(num) {
         return num < 10 ? '0' + num : num;
     }
-
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
-
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
-    }
-
-    /**
-     * ===============
-     * Alert Functions
-     * ===============
-     */
 
     /**
      * Show Error Message
@@ -393,27 +479,6 @@ export class ProductHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                   <tbody>
                       <tr>
                           <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
                       </tr>
                   </tbody>
               </table>
