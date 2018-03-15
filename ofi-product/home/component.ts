@@ -4,13 +4,10 @@ import {fromJS} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
-
 /* Services */
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 /* Utils. */
 import {NumberConverterService} from '@setl/utils';
 import {OfiFundService} from '../../ofi-req-services/ofi-product/fund/fund.service';
@@ -31,6 +28,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     fundList = [];
     shareList = [];
     umbrellaFundList = [];
+    filteredShareList = [];
     showOnlyActive = true;
 
     columns = {
@@ -289,13 +287,14 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     isin: share.isin,
                     managementCompany: share.managementCompanyName,
                     typeOfShare: share.shareClassCode,
-                    status: ''
+                    status: share.shareClassInvestmentStatus
                 });
             });
         }
 
         this.shareList = shareList;
-        this.panelDefs[0].data = this.shareList;
+        this.filteredShareList = shareList.map(share => share.status !== 5);
+        this.panelDefs[0].data = this.filteredShareList;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -345,8 +344,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     handleShareToggleClick() {
         this.showOnlyActive = !this.showOnlyActive;
 
-        // TODO: filter shares based on the status
+        this.filteredShareList = this.shareList.filter((share) => {
+            return (!this.showOnlyActive) ? share.status === 5 : share.status !== 5;
+        });
 
+        this.panelDefs[0].data = this.filteredShareList;
         this._changeDetectorRef.markForCheck();
     }
 
