@@ -440,12 +440,8 @@ public class OpenCSDGeneralAcceptanceTest {
         }catch (Error e){
             fail(e.getMessage());
         }
-        Thread.sleep(2000);
-        try {
-            driver.findElement(By.id("ShellMail_link")).click();
-        }catch (Error e){
-            fail(e.getMessage());
-        }
+        wait.until(elementToBeClickable(driver.findElement(By.id("ShellMail_link"))));
+        driver.findElement(By.id("ShellMail_link")).click();
     }
 
 
