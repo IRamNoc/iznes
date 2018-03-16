@@ -1,6 +1,7 @@
 import {Action} from 'redux';
 import {MyWalletContractState} from './model';
 import {
+    UPDATE_CONTRACT,
     SET_CONTRACT_LIST,
     CLEAR_CONTRACT_NEED_HANDLE,
     SET_LAST_CREATED_CONTRACT_DETAIL,
@@ -27,6 +28,9 @@ export const MyWalletContractReducer = function (state: MyWalletContractState = 
                                                  action: Action): MyWalletContractState {
 
     switch (action.type) {
+        case UPDATE_CONTRACT:
+            return handleUpdateContract(state, action);
+
         case SET_CONTRACT_LIST:
             return handleSetContractList(state, action);
 
@@ -47,9 +51,25 @@ export const MyWalletContractReducer = function (state: MyWalletContractState = 
     }
 };
 
+function handleUpdateContract(state: MyWalletContractState, action: any):  MyWalletContractState{
+    const contractList = state.contractList;
+    _.each(_.get(action, 'payload[1].data', []), (contract) => {
+        if (contract.__address === action.payload[1].request.address) {
+            _.each(contractList[0].contractData, (stateContract, contractKey) => {
+                if (stateContract.__address === contract.__address) {
+                    contractList[0].contractData[contractKey] = contract;
+                }
+            });
+        }
+    });
+    return Object.assign({}, state, {
+        contractList
+    });
+}
+
 function handleSetUpdatedContractList(state: MyWalletContractState, action: any): MyWalletContractState  {
     console.log('UPDATED CONTRACT ACTION CALLED:', action);
-    const updatedContractList = _.get(action, 'updatedContracts.Data.contracts', []);
+    let updatedContractList = _.get(action, 'updatedContracts.Data.contracts', []);
     return Object.assign({}, state, {
         updatedContractList
     });

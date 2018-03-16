@@ -2,6 +2,16 @@ import {name} from './__init__';
 import {kAction} from '@setl/utils/common';
 import {ActionCreator, Action} from 'redux';
 
+export const UPDATE_CONTRACT = `${name}/UPDATE_CONTRACT`;
+interface UpdateContract extends Action {
+    contractData: any;
+}
+
+export const updateContract: ActionCreator<UpdateContract> = (data) => ({
+    type: UPDATE_CONTRACT,
+    contractData: data
+});
+
 export const SET_CONTRACT_LIST = `${name}/SET_CONTRACT_LIST`;
 interface SetContractList extends Action {
     data: any;
