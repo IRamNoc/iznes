@@ -1,4 +1,5 @@
 export interface OfiFundShare {
+    accountId?: number;
     fundShareID?: number;
     fundShareName: string;
     fundID: number;
