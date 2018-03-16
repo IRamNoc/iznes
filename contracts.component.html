@@ -37,7 +37,7 @@
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <div class="btn-group btn-sm" style="float:right">
-                        <button id="edit-{{contract.address}}" (click)="handleView(i)" class="btn">
+                        <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn">
                             <i class="fa fa-search"></i> <span mltag="txt_view">View</span>
                         </button>
                     </div>
@@ -89,7 +89,8 @@
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                        <span *ngIf="party.signature == ''">
+                        <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
+                        <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress">
                             <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn">
                                 <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
                             </button>
