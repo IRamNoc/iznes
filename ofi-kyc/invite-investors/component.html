@@ -73,25 +73,3 @@
         </section>
     </form>
 </div>
-
-<!--CUSTOM TEXT MODALS-->
-<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-    <h3 class="modal-title" *ngIf="emailSent">Success!</h3>
-    <div class="modal-body text-center" [ngStyle]="{'padding-bottom':'0'}" *ngIf="emailSent">
-        <i class="fa fa-check fa-3x text-success"></i>
-        <div class="kycEmailList">
-            <p><b>An invitation email to IZNES was sent to:</b></p>
-            <br>
-            <div class="kycEachEmail" *ngFor="let email of emailList">
-                {{email}}
-            </div>
-        </div>
-        <br><br>
-        <!--This pop-up will automatically close in {{countdown}} seconds.-->
-        <!--<br><br>-->
-        <button id="btnKycCloseModal" class="btn btn-info" type="button" (click)="closeModal()">
-            <span mltag="txt_close">Close</span>
-        </button>
-        <br><br>
-    </div>
-</clr-modal>
