@@ -211,10 +211,14 @@ public class OpenCSDGeneralAcceptanceTest {
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
-        WebElement popupSuccess = driver.findElement(By.className("modal-header"));
-        wait.until(visibilityOf(popupSuccess));
+        try {
+            WebElement popupSuccess = driver.findElement(By.className("jaspero__dialog-title"));
+            wait.until(visibilityOf(popupSuccess));
+        }catch (Error e){
+            fail(e.getMessage());
+        }
         try{
-            String success = driver.findElement(By.className("modal-title")).getText();
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
             assertTrue(success.equals("Success!"));
         }catch (Exception e){
             fail("success message did not match : " + e.getMessage());
