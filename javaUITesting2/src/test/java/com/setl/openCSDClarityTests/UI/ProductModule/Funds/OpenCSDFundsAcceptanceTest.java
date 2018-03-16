@@ -20,7 +20,9 @@ import java.util.Date;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -357,6 +359,15 @@ public class OpenCSDFundsAcceptanceTest {
         return strDate;
 
     }
+
+    public void clickID(String id) {
+        try {
+            driver.findElement(By.id(id)).click();
+        } catch (Exception e) {
+            fail(id + "not present");
+        }
+    }
+
     @Test
     public void shouldNotAcceptFundWithQuantityLowerThan0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
@@ -386,4 +397,93 @@ public class OpenCSDFundsAcceptanceTest {
 
          */
     }
+
+    @Test
+    public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToPage("asset-manager-dashboard");
+        WebElement FundTitle = driver.findElement(By.id("fund-share-label"));
+        assertTrue(FundTitle.getText().equals("Please select a fund share in this list"));
+    }
+
+    @Test
+    public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
+    }
+
+    @Test
+    public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.255555", "1.25556");
+    }
+
+    @Test
+    public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.2", "1.2000");
+    }
+
+    @Test
+    public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.25555", "1.2556");
+    }
+
+    @Test
+    public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.2", "1.20");
+    }
+
+    @Test
+    public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.255", "1.25");
+    }
+
+    @Test
+    public void shouldSeparateThousandsWithSpaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
+    }
+
+    @Test
+    public void shouldSeparateDecimalPlacesWithPoint() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
 }
