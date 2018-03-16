@@ -19,6 +19,7 @@ import java.io.IOException;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.clickForgottenPassword;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
 import static org.junit.Assert.assertFalse;
@@ -49,7 +50,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -111,6 +112,19 @@ public class OpenCSDMyAccountAcceptanceTest {
         logout();
         clickForgottenPassword("user1@setl.io");
         //Manually assert that email has been received
+    }
+
+    @Test
+    public void shouldCreateUserAndLoginUsingEmailAddress() throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        String userDetails [] = generateRandomUserDetails();
+        createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
+        logout();
+        loginAndVerifySuccess(userDetails[0], "alex01");
+        logout();
+        loginAndVerifySuccess(userDetails[1], "alex01");
     }
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
