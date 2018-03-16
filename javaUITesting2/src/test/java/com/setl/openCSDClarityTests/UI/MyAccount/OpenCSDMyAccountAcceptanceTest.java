@@ -19,6 +19,8 @@ import java.io.IOException;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.clickForgottenPassword;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -97,6 +99,18 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
         populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689", false);
+    }
+
+    @Test
+    @Ignore("Broken while work is being done for this section of the site.")
+    public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        createUserAndVerifySuccess("Jordan", "user1@setl.io", "alex01");
+        logout();
+        clickForgottenPassword("user1@setl.io");
+        //Manually assert that email has been received
     }
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {

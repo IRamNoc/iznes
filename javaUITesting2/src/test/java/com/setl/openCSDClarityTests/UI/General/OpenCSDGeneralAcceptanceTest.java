@@ -80,7 +80,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am",  "trb2017");
         driver.navigate().refresh();
         checkAlert();
     }
@@ -114,94 +114,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToPage("asset-manager-dashboard");
-        WebElement FundTitle = driver.findElement(By.id("fund-share-label"));
-        assertTrue(FundTitle.getText().equals("Please select a fund share in this list"));
-    }
-
-    @Test
-    public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
-    }
-
-    @Test
-    public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.255555", "1.25556");
-    }
-
-    @Test
-    public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minInitSubscription_0_0", "1.2", "1.2000");
-    }
-
-    @Test
-    public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minInitSubscription_0_0", "1.25555", "1.2556");
-    }
-
-    @Test
-    public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.2", "1.20");
-    }
-
-    @Test
-    public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.255", "1.25");
-    }
-
-    @Test
-    public void shouldSeparateThousandsWithSpaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
-    }
-
-    @Test
-    public void shouldSeparateDecimalPlacesWithPoint() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/fund");
-        clickID("fakeNewFundBtn");
-        clickID("tabfundShareNav_Characteristic_0_0");
-        fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
-    }
-
-    @Test
     public void shouldHaveIZNESlogoOnLoginPage() throws IOException, InterruptedException {
         navigateToLoginPage();
         try {
@@ -221,86 +133,6 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("IZNES was not present in sub-heading");
         }
     }
-
-    @Test
-    public void shouldSendMessageToWallet() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
-        try {
-            Thread.sleep(5000);
-            logout();
-        } catch (Error e) {
-            fail("logout button was not clickable");
-        }
-        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67a");
-    }
-
-    @Test
-    public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage", "Please fill out all fields");
-    }
-
-    @Test
-    public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
-    }
-
-    @Test
-    public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
-    }
-
-    @Test
-    @Ignore("Broken while work is being done for this section of the site.")
-    public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
-        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
-        navigateToDropdown("menu-user-administration");
-        navigateToPageByID("menu-user-admin-users");
-        createUserAndVerifySuccess("Jordan", "user1@setl.io", "alex01");
-        logout();
-        clickForgottenPassword("user1@setl.io");
-        //Manually assert that email has been received
-    }
-
-    @Test
-    public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        driver.findElement(By.id("dropdown-user")).click();
-        try {
-            driver.findElement(By.id("top-menu-invite-investors")).click();
-        }catch (Exception e){
-            fail("FAILED : " + e.getMessage());
-        }
-    }
-
-    @Test
-    public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToAddUser();
-        String[] userDetails = generateRandomUserDetails();
-        String newUserName = userDetails[0];
-        enterAllUserDetails(newUserName, password);
-        logout();
-        loginAndVerifySuccessAdmin(newUserName, password);
-
-//        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
-//        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
-//        try {
-//            driver.findElement(By.id("btnKycSubmit")).click();
-//        }catch (Exception e){
-//            fail("FAILED : " +e.getMessage());
-//        }
-//        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-//        WebElement KYCPopups = wait.until(elementToBeClickable(By.id("addInfo-ok-button")));
-//        WebElement KYCPopup = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-my-informations/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3"));
-//        assertTrue(KYCPopup.getText().equals("MY INFORMATION"));
-//        KYCPopups.click();
-    }
-
-
 
     public static void enterAllUserDetails(String username, String password) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
@@ -359,34 +191,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
     public static void clickManageUserSubmit(){
         driver.findElement(By.id("new-user-submit")).click();
-    }
-
-    @Test
-    public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "Jordan", "Miller");
-    }
-
-    @Test
-    public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "", "Miller");
-    }
-
-    @Test
-    public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "Jordan", "");
-    }
-
-    @Test
-    public void shouldNotInviteAnInvestorWithoutEmail() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "trb2017");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestorExpectingFailed("", "Jordan", "Miller");
     }
 
     @Test
