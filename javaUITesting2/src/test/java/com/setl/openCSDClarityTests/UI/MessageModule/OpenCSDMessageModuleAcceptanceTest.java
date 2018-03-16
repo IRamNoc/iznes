@@ -59,7 +59,7 @@ public class OpenCSDMessageModuleAcceptanceTest {
     @Test
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        sendMessageToSelectedWallet("investor", "c5bg67a", "TextMessage", "Your message has been sent!");
+        sendMessageToSelectedWallet("investor", "Please Respond", "Hello Investor, please send me all your money", "Your message has been sent!");
         try {
             Thread.sleep(5000);
             logout();

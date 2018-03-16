@@ -70,7 +70,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My informations:"));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -121,6 +121,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
+        Thread.sleep(500);
         logout();
         loginAndVerifySuccess(userDetails[0], "alex01");
         logout();
@@ -184,7 +185,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My informations:" ));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:" ));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());

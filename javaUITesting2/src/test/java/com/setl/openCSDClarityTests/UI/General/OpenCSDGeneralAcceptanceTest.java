@@ -429,6 +429,7 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("new-user-username")).sendKeys(username);
 
     }
+
     public static void enterManageUserEmail(String email){
         driver.findElement(By.id("new-user-email")).sendKeys(email);
     }
@@ -436,6 +437,7 @@ public class OpenCSDGeneralAcceptanceTest {
     public static void enterManageUserPassword(String password){
         driver.findElement(By.id("new-user-password")).sendKeys(password);
     }
+
     public static void enterManageUserPasswordRepeat(String password){
         driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
     }
@@ -458,6 +460,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail(e.getMessage());
         }
     }
+
     public static void clickManageUserSubmit(){
         driver.findElement(By.id("new-user-submit")).click();
     }
