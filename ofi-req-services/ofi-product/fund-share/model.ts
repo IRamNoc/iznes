@@ -12,9 +12,9 @@ export interface InvestorFundAccessRequestBody extends MemberNodeMessageBody {
 export interface FundShareRequestBody extends MemberNodeMessageBody {
     token: string;
     fundShareID: number;
- }
+}
 
- export interface FundShareSelectedFundRequestBody extends MemberNodeMessageBody {
+export interface CreateFundShareRequestData extends MemberNodeMessageBody {
     token: string;
     fundID: number;
- }
+}

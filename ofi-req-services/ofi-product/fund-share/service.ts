@@ -8,7 +8,8 @@ import {createMemberNodeSagaRequest, createMemberNodeRequest} from '@setl/utils/
 import {
     AmAllFundShareListRequestBody,
     InvestorFundAccessRequestBody,
-    FundShareRequestBody
+    FundShareRequestBody,
+    CreateFundShareRequestData
 } from './model';
 import {
     SET_FUND_SHARE,
@@ -95,6 +96,37 @@ export class OfiFundShareService {
             token: this.memberSocketService.token,
             investorWalletId: requestData.investorWalletId
         };
+        console.log('this is the request', messageBody);
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    static defaultCreateFundShare(ofiFundService: OfiFundShareService,
+        ngRedux: NgRedux<any>,
+        requestData,
+        successCallback: (data) => void,
+        errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.createFundShare(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE],
+            [],
+            asyncTaskPipe,
+            {},
+            successCallback,
+            errorCallback
+        ));
+    }
+    /**
+     * Create a new Fund Share
+     * @return {any}
+     */
+    createFundShare(requestData): any {
+        const messageBody = requestData;
+        messageBody.RequestName = 'iznescreatefundshare';
+        messageBody.token = this.memberSocketService.token;
+
         console.log('this is the request', messageBody);
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
