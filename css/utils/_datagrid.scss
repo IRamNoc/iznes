@@ -88,3 +88,67 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 .datagrid .datagrid-column .datagrid-column-title {
     font-weight: normal;
 }
+
+.additionalInfos {
+    width: 100%;
+    margin: 20px 30px 20px 0;
+    font-size: 12px;
+}
+
+.additionalInfos table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.additionalInfos td, .additionalInfos th {
+    border-bottom: 1px solid #dddddd;
+    text-align: left;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.additionalInfos table tr:nth-child(odd) {
+    background: transparent;
+}
+
+.additionalInfos table tr:nth-child(even) {
+    background: transparent;
+}
+
+.column-toggle--action::after {
+    content: " Show/hide fields" !important;
+}
+
+.datagrid .datagrid-body .datagrid-row .datagrid-cell {
+    line-height: 24px;
+    padding: 8px;
+    font-size: 12px;
+}
+
+.datagrid .datagrid-expandable-caret .datagrid-expandable-caret-icon {
+    margin-top: 0px;
+}
+
+.clr-dg-pagination {
+    min-width: 180px;
+}
+
+// expandable
+
+.expandable {
+    .datagrid clr-dg-row:nth-child(even) {
+        background: white !important;
+    }
+
+    .datagrid .datagrid-expandable-caret .datagrid-expandable-caret-button {
+        height: 16px;
+        width: 25px;
+    }
+
+    .datagrid .datagrid-body .datagrid-row .datagrid-row-detail.datagrid-container {
+        padding-top: 0;
+        border-top: 1px dashed #e0e0e0 !important;
+        background: #f6f6f6;
+    }
+}

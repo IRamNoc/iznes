@@ -13,7 +13,7 @@
     </form>
     <div class="header-actions">
 
-        <clr-dropdown class="user-profile" appClicked>
+        <clr-dropdown class="user-profile" id="topBarMenu" appClicked>
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
@@ -21,7 +21,7 @@
             </div>
 
             <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account']" clrDropdownItem mltag="txt_myaccount">My Account</a>
+                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem mltag="txt_myaccount">My Account</a>
             </div>
         </clr-dropdown>
 

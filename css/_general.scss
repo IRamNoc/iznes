@@ -611,11 +611,11 @@ h3 {
     button {
         margin-right: 0;
     }
-    .fa-chevron-down {
+    .fa-chevron-right {
         transform: rotate(0deg);
         transition: transform .5s;
-        &.reverse {
-            transform: rotate(-180deg);
+        &.rotate {
+            transform: rotate(90deg);
         }
     }
 }
@@ -642,55 +642,76 @@ h3 {
     padding-left: 10px;
 }
 
-.btn {
-    padding-left: 18px;
-    padding-right: 18px;
-}
+clr-tab-content {
 
-.btn.btn-orange {
-    background-color: #ffb100;
-    color: #fff;
-    border-color: #ffb100;
-}
+    .well {
+        background: white;
+        border: 0px;
+        border-bottom: 1px dashed #e6e6e6;
+        border-radius: 0px;
+        padding: 0px;
+        margin: 0px;
+        overflow: auto;
+    }
 
-.btn.btn-sm {
-    line-height: calc(1rem - 1px);
-    letter-spacing: 0px;
-    font-size: 11px;
-    font-weight: normal;
-    height: 1rem;
-    margin: 0px;
-    padding: 0px;
-    padding-left: 12px;
-    padding-right: 12px;
-}
+    .well .row.panel-header {
+        padding: 0px;
+    }
 
-clr-dg-cell .btn-danger {
-    border-color: rgba(230, 39, 0, 0.75) !important;
-    background-color: rgba(230, 39, 0, 0.15) !important;
-    color: #c10e0e !important;
-}
+    .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
+    }
 
-clr-dg-cell .btn-success {
-    border-color: #62a420 !important;
-    background-color: rgba(98, 164, 32, 0.20) !important;
-    color: #437b0a !important;
-}
+    .well .row .well .row .well {
+        border: 0px;
+        border-top: 1px dashed #e6e6e6;
+        border-radius: 0px;
+    }
 
-clr-dg-cell .btn-orange {
-    background-color: rgba(255, 177, 0, 0.18) !important;
-    color: #d48506 !important;
-    border-color: #ffb100 !important;
-}
+    .panel-header {
 
-clr-dg-cell .btn-primary {
-    border-color: #6BC6FA !important;
-    background-color: rgba(107, 198, 250, 0.21) !important;
-    color: #38a2de !important;
-}
+        a {
+            color: black;
+            line-height: 48px;
+        }
 
-.datagrid .datagrid-body .datagrid-row .datagrid-cell {
-    line-height: 24px;
-    padding: 8px;
-    font-size: 12px;
+        button {
+            margin-right: 0;
+        }
+
+        .fa-chevron-right {
+            transform: rotate(0deg);
+            transition: transform .5s;
+
+            &
+            .rotate {
+                transform: rotate(90deg);
+            }
+
+        }
+    }
+    .panel-body {
+        padding-left: 0px;
+        opacity: 1;
+        height: auto;
+        overflow: hidden;
+        transition: opacity .5s linear;
+
+        &
+        .hidden {
+            opacity: 0;
+            height: 0;
+            transition: opacity .5s linear;
+        }
+
+    }
+
+    .well .row .well {
+        margin-left: 30px;
+        margin-top: 20px;
+        margin-bottom:10px;
+    }
+
 }

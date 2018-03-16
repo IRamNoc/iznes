@@ -13,6 +13,7 @@ import {HomeComponent} from './home/home.component';
 import {FormElementsComponent} from './ui-elements/form-elements.component';
 import {UiInfoPaneComponent} from './layouts/ui-form/info-pane/info-pane.component';
 import {UiTabsComponent} from './layouts/ui-form/components/tabs/tabs.component';
+import {UiDynamicTabsComponent} from './layouts/ui-form/components/dynamic-tabs/dynamic-tabs.component';
 import {UiFormsComponent} from './layouts/ui-form/components/forms/forms.component';
 import {UiDropdownsComponent} from './layouts/ui-form/components/dropdowns/dropdowns.component';
 import {UiDataGridComponent} from './layouts/ui-form/components/datagrid/datagrid.component';
@@ -27,7 +28,9 @@ import {UiIconsComponent} from './layouts/ui-form/components/icons/icons.compone
 import {UiLayout1Component} from './layouts/ui-form/components/layout1/layout1.component';
 import {UiLayout2Component} from './layouts/ui-form/components/layout2/layout2.component';
 import {UiTextComponent} from './layouts/ui-form/components/text/text.component';
+import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
+import {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';
 
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
@@ -78,6 +81,7 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         FormElementsComponent,
         UiInfoPaneComponent,
         UiTabsComponent,
+        UiDynamicTabsComponent,
         UiFormsComponent,
         UiDropdownsComponent,
         UiDataGridComponent,
@@ -90,7 +94,9 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent,
+        UiDatagridExpandComponent
     ],
     exports: [
         /* Directives. */
@@ -119,7 +125,9 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiIconsComponent,
         UiLayout1Component,
         UiLayout2Component,
-        UiTextComponent
+        UiTextComponent,
+        UiExpandableComponent,
+        UiDatagridExpandComponent
     ],
     providers: [
         /* Services. */
