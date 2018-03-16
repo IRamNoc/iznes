@@ -6,6 +6,7 @@ import {immutableHelper} from '@setl/utils';
 import {select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ToasterService} from 'angular2-toaster';
 
 @Component({
     selector: 'app-invite-investors',
@@ -27,7 +28,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _location: Location,
                 private alertsService: AlertsService,
-                private _ofiKycService: OfiKycService) {
+                private _ofiKycService: OfiKycService,
+                private _toasterService: ToasterService) {
+
         this.invitationForm = this._fb.group({
             investors: this._fb.array([])
         });
@@ -92,21 +95,48 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
      * @param formValues
      */
     save(formValues): void {
+        const requestData = constructInvitationRequest(formValues, this.language);
+
+        this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
+            const emailAddressList = response[1].Data[0].existingEmailAddresses;
+            const validEmailList = [];
+            const invalidEmailList = [];
+
+            formValues.investors.map(investor => {
+                if (emailAddressList.indexOf(investor.email) === -1) {
+                    // Email addresses which are not linked to a user account
+                    validEmailList.push(investor.email);
+                } else {
+                    // Email addresses which are already linked to a user account
+                    invalidEmailList.push(investor.email);
+                }
+            });
+
+            this.displayInvitationSuccessModal(validEmailList);
+            this.displayExistingEmailAddressToaster(invalidEmailList);
+            this.resetForm(formValues);
+            this.markForCheck();
+        });
+    }
+
+    displayInvitationSuccessModal(emails: Array<string>): void {
         let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
 
-        for (const inv of formValues.investors) {
-            message += '<tr><td>' + inv.email + '</td></tr>';
+        for (const email of emails) {
+            message += '<tr><td>' + email + '</td></tr>';
         }
 
         message += '</tbody></table>';
 
         this.alertsService.create('success', message);
+    }
 
-        const requestData = constructInvitationRequest(formValues, this.language);
-
-        this._ofiKycService.sendInvestInvitations(requestData).then(() => {
-            this.resetForm(formValues);
-            this.markForCheck();
+    displayExistingEmailAddressToaster(invalidEmailAddressList: Array<string>) {
+        invalidEmailAddressList.map((emailAddress) => {
+            this._toasterService.pop(
+                'warning',
+                `A user has already created an account with this following email address "${emailAddress}".`
+            );
         });
     }
 
