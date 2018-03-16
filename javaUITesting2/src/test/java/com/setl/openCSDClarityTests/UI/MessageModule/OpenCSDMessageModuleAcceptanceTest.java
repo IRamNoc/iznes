@@ -20,7 +20,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWallet;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWalletWithoutRecipient;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.verifyMessageHasBeenReceived;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
