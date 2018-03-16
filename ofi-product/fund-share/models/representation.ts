@@ -1,4 +1,5 @@
 import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import * as E from '../FundShareEnum';
 
 export class ShareRepresentationOptional {
     hasCountryRepresentative: FormItem = {
@@ -26,10 +27,10 @@ export class ShareRepresentationOptional {
         label: 'Home Country Restrictions',
         required: false,
         listItems: [
-            { id: 'no', text: 'No' },
-            { id: 'specialized-investment-fund', text: 'Specialized investment fund (LU)' },
-            { id: 'restricted-authorised-cis', text: 'Restricted authorised CIS (SG)' },
-            { id: 'fund-for-qualified-investors', text: 'Fund for qualified investors (CH)' }
+            { id: E.HomeCountryRestrictionEnum.No, text: 'No' },
+            { id: E.HomeCountryRestrictionEnum.Specialized, text: 'Specialized investment fund (LU)' },
+            { id: E.HomeCountryRestrictionEnum.Restricted, text: 'Restricted authorised CIS (SG)' },
+            { id: E.HomeCountryRestrictionEnum.Fund, text: 'Fund for qualified investors (CH)' }
         ]
     }
     countryName: FormItem = {

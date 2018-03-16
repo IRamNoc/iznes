@@ -1,4 +1,5 @@
 import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import * as E from '../FundShareEnum';
 
 export class SharePRIIPOptional {
     hasCreditRisk: FormItem = {
@@ -8,15 +9,15 @@ export class SharePRIIPOptional {
     }
     creditRiskMeasure: FormItem = {
         type: FormItemType.list,
-        label: 'PRIIP Credit Risk Measure ',
+        label: 'PRIIP Credit Risk Measure',
         required: false,
         listItems: [
-            { id: '1', text: '1' },
-            { id: '2', text: '2' },
-            { id: '3', text: '3' },
-            { id: '4', text: '4' },
-            { id: '5', text: '5' },
-            { id: '6', text: '6' }
+            { id: E.RiskIndicatorEnum.One, text: '1' },
+            { id: E.RiskIndicatorEnum.Two, text: '2' },
+            { id: E.RiskIndicatorEnum.Three, text: '3' },
+            { id: E.RiskIndicatorEnum.Four, text: '4' },
+            { id: E.RiskIndicatorEnum.Five, text: '5' },
+            { id: E.RiskIndicatorEnum.Six, text: '6' }
         ]
     }
     marketRiskMeasure: FormItem = {
@@ -24,13 +25,13 @@ export class SharePRIIPOptional {
         label: 'PRIIP Market Risk Measure – MRM',
         required: false,
         listItems: [
-            { id: '1', text: '1' },
-            { id: '2', text: '2' },
-            { id: '3', text: '3' },
-            { id: '4', text: '4' },
-            { id: '5', text: '5' },
-            { id: '6', text: '6' },
-            { id: '7', text: '7' }
+            { id: E.RiskIndicatorEnum.One, text: '1' },
+            { id: E.RiskIndicatorEnum.Two, text: '2' },
+            { id: E.RiskIndicatorEnum.Three, text: '3' },
+            { id: E.RiskIndicatorEnum.Four, text: '4' },
+            { id: E.RiskIndicatorEnum.Five, text: '5' },
+            { id: E.RiskIndicatorEnum.Six, text: '6' },
+            { id: E.RiskIndicatorEnum.Seven, text: '7' }
         ]
     }
     liquidityRisk: FormItem = {
@@ -38,9 +39,9 @@ export class SharePRIIPOptional {
         label: 'PRIIP Liquidity Risk',
         required: false,
         listItems: [
-            { id: 'M', text: 'M' },
-            { id: 'I', text: 'I' },
-            { id: 'L', text: 'L' }
+            { id: E.LiquidityRiskEnum.M, text: 'M' },
+            { id: E.LiquidityRiskEnum.I, text: 'I' },
+            { id: E.LiquidityRiskEnum.L, text: 'L' }
         ]
     }
     summaryRiskIndicator: FormItem = {
@@ -48,13 +49,13 @@ export class SharePRIIPOptional {
         label: 'PRIIP Summary Risk Indicator',
         required: false,
         listItems: [
-            { id: '1', text: '1' },
-            { id: '2', text: '2' },
-            { id: '3', text: '3' },
-            { id: '4', text: '4' },
-            { id: '5', text: '5' },
-            { id: '6', text: '6' },
-            { id: '7', text: '7' }
+            { id: E.RiskIndicatorEnum.One, text: '1' },
+            { id: E.RiskIndicatorEnum.Two, text: '2' },
+            { id: E.RiskIndicatorEnum.Three, text: '3' },
+            { id: E.RiskIndicatorEnum.Four, text: '4' },
+            { id: E.RiskIndicatorEnum.Five, text: '5' },
+            { id: E.RiskIndicatorEnum.Six, text: '6' },
+            { id: E.RiskIndicatorEnum.Seven, text: '7' }
         ]
     }
     possibleMaximumLoss: FormItem = {
@@ -82,10 +83,10 @@ export class SharePRIIPOptional {
         label: 'PRIIP Category',
         required: false,
         listItems: [
-            { id: '1', text: '1' },
-            { id: '2', text: '2' },
-            { id: '3', text: '3' },
-            { id: '4', text: '4' }
+            { id: E.PRIIPCategoryEnum.One, text: '1' },
+            { id: E.PRIIPCategoryEnum.Two, text: '2' },
+            { id: E.PRIIPCategoryEnum.Three, text: '3' },
+            { id: E.PRIIPCategoryEnum.Four, text: '4' }
         ]
     }
     numberOfObservedReturns: FormItem = {
@@ -153,12 +154,12 @@ export class SharePRIIPOptional {
         label: 'PRIIP Investment Amount',
         required: false,
         listItems: [
-            { id: '1000', text: '1000' },
-            { id: '10000', text: '10000' },
-            { id: '50000', text: '50000' },
-            { id: '100000', text: '100000' },
-            { id: '200000', text: '200000' },
-            { id: '1000000', text: '1000000' }
+            { id: E.InvestmentAmountEnum.OneThousand, text: '1000' },
+            { id: E.InvestmentAmountEnum.TenThousand, text: '10000' },
+            { id: E.InvestmentAmountEnum.FiftyThousand, text: '50000' },
+            { id: E.InvestmentAmountEnum.OneHundredThousand, text: '100000' },
+            { id: E.InvestmentAmountEnum.TwoHundredThousand, text: '200000' },
+            { id: E.InvestmentAmountEnum.OneMillion, text: '1000000' }
         ]
     }
     return1YStressScenario: FormItem = {

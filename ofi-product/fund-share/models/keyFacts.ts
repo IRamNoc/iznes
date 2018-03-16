@@ -1,4 +1,5 @@
 import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
+import * as E from '../FundShareEnum';
 
 export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     fundShareName: FormItem = {
@@ -16,11 +17,11 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Class Code',
         required: true,
         listItems: [
-            { id: 'class-a', text: 'Class A' },
-            { id: 'class-c', text: 'Class C' },
-            { id: 'class-d', text: 'Class D' },
-            { id: 'class-r', text: 'Class R' },
-            { id: 'class-i', text: 'Class I' }
+            { id: E.ClassCodeEnum.ClassA, text: 'Class A' },
+            { id: E.ClassCodeEnum.ClassC, text: 'Class C' },
+            { id: E.ClassCodeEnum.ClassD, text: 'Class D' },
+            { id: E.ClassCodeEnum.ClassR, text: 'Class R' },
+            { id: E.ClassCodeEnum.ClassI, text: 'Class I' }
         ]
     }
     shareClassCurrency: FormItem = {
@@ -28,9 +29,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Class Currency',
         required: true,
         listItems: [
-            { id: 'EUR', text: 'EUR' },
-            { id: 'GBP', text: 'GBP' },
-            { id: 'USD', text: 'USD' }
+            { id: E.CurrencyEnum.EUR, text: 'EUR' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' },
+            { id: E.CurrencyEnum.USD, text: 'USD' }
         ]
     }
     subscriptionStartDate: FormItem = {
@@ -49,11 +50,11 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Class Investment Status',
         required: true,
         listItems: [
-            { id: 'open', text: 'Open' },
-            { id: 'soft-closed', text: 'Soft closed' },
-            { id: 'hard-Closed', text: 'Hard Closed' },
-            { id: 'closed-for-redemption', text: 'Closed for redemption' },
-            { id: 'closed-for-subscription-redemption', text: 'Closed for subscription and redemption' }
+            { id: E.InvestmentStatusEnum.Open, text: 'Open' },
+            { id: E.InvestmentStatusEnum.SoftClosed, text: 'Soft closed' },
+            { id: E.InvestmentStatusEnum.HardClosed, text: 'Hard Closed' },
+            { id: E.InvestmentStatusEnum.ClosedRedemption, text: 'Closed for redemption' },
+            { id: E.InvestmentStatusEnum.ClosedSubscriptionRedemption, text: 'Closed for subscription and redemption' }
         ]
     }
     aumClass: FormItem = {
@@ -91,9 +92,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Status',
         required: true,
         listItems: [
-            { id: 'master', text: 'Master' },
-            { id: 'feeder', text: 'Feeder' },
-            { id: 'na', text: 'N/A' }
+            { id: E.StatusEnum.Master, text: 'Master' },
+            { id: E.StatusEnum.Feeder, text: 'Feeder' },
+            { id: E.StatusEnum.NA, text: 'N/A' }
         ]
     }
     // conditional - status
@@ -103,7 +104,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
-            return (val == undefined) || val[0].id !== 'master';
+            return (val == undefined) || val.id !== E.StatusEnum.Master;
         }
     }
     feeder: FormItem = {
@@ -112,7 +113,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
-            return (val == undefined) || val[0].id !== 'feeder';
+            return (val == undefined) || val.id !== E.StatusEnum.Feeder;
         }
     }
     valuationFrequency: FormItem = {
@@ -120,16 +121,16 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Valuation Frequency',
         required: true,
         listItems: [
-            { id: 'daily', text: 'Daily' },
-            { id: 'twice-a-week', text: 'Twice a week' },
-            { id: 'weekly', text: 'Weekly' },
-            { id: 'twicea-a-month', text: 'Twice a month' },
-            { id: 'monthly', text: 'Monthly' },
-            { id: 'quarterly', text: 'Quarterly' },
-            { id: 'twice-a-year', text: 'Twice a Year' },
-            { id: 'annually', text: 'Annually' },
-            { id: 'at-least-annualy', text: 'At least Annualy' },
-            { id: 'other', text: 'Other' }
+            { id: E.ValuationFrequencyEnum.Daily, text: 'Daily' },
+            { id: E.ValuationFrequencyEnum.TwiceAWeek, text: 'Twice a week' },
+            { id: E.ValuationFrequencyEnum.Weekly, text: 'Weekly' },
+            { id: E.ValuationFrequencyEnum.TwiceAMonth, text: 'Twice a month' },
+            { id: E.ValuationFrequencyEnum.Monthly, text: 'Monthly' },
+            { id: E.ValuationFrequencyEnum.Quarterly, text: 'Quarterly' },
+            { id: E.ValuationFrequencyEnum.TwiceAYear, text: 'Twice a Year' },
+            { id: E.ValuationFrequencyEnum.Annually, text: 'Annually' },
+            { id: E.ValuationFrequencyEnum.AtLeastAnnualy, text: 'At least Annualy' },
+            { id: E.ValuationFrequencyEnum.Other, text: 'Other' }
         ],
         style: [FormItemStyle.BreakOnBefore]
     }
@@ -138,8 +139,8 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Historic or Forward Pricing',
         required: true,
         listItems: [
-            { id: 'historic', text: 'Historic' },
-            { id: 'forward', text: 'Forward' }
+            { id: E.PricingTypeEnum.Historic, text: 'Historic' },
+            { id: E.PricingTypeEnum.Forward, text: 'Forward' }
         ]
     }
     hasCoupon: FormItem = {
@@ -154,9 +155,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Coupon type',
         required: true,
         listItems: [
-            { id: 'interest', text: 'Interest' },
-            { id: 'capital-gain', text: 'Capital gain' },
-            { id: 'interest-capital-gain', text: 'Interest & Capital gain' }
+            { id: E.CouponTypeEnum.Interest, text: 'Interest' },
+            { id: E.CouponTypeEnum.CapitalGain, text: 'Capital gain' },
+            { id: E.CouponTypeEnum.InterestCapitalGain, text: 'Interest & Capital gain' }
         ],
         hidden: () => {
             return this.hasCoupon.value() !== true;
@@ -167,14 +168,14 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Frequency Of Distribution Declaration',
         required: true,
         listItems: [
-            { id: 'daily', text: 'Daily' },
-            { id: 'twice-a-week', text: 'Twice a week' },
-            { id: 'weekly', text: 'Weekly' },
-            { id: 'twice-a-month', text: 'Twice a month' },
-            { id: 'monthly', text: 'Monthly' },
-            { id: 'quartely', text: 'Quartely' },
-            { id: 'twice-a-year', text: 'Twice a year' },
-            { id: 'annually', text: 'Annually' }
+            { id: E.FrequencyOfDistributionDeclarationEnum.Daily, text: 'Daily' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.TwiceAWeek, text: 'Twice a week' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.Weekly, text: 'Weekly' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.TwiceAMonth, text: 'Twice a month' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.Monthly, text: 'Monthly' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.Quartely, text: 'Quartely' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.TwiceAYear, text: 'Twice a year' },
+            { id: E.FrequencyOfDistributionDeclarationEnum.Annually, text: 'Annually' }
         ],
         hidden: () => {
             return this.hasCoupon.value() !== true;
@@ -243,16 +244,16 @@ export class ShareKeyFactsOptional {
         label: 'Asset Class',
         required: false,
         listItems: [
-            { id: 'alternatives', text: 'Alternatives' },
-            { id: 'bonds', text: 'Bonds' },
-            { id: 'commodities', text: 'Commodities' },
-            { id: 'convertibles', text: 'Convertibles' },
-            { id: 'diversified', text: 'Diversified' },
-            { id: 'equities', text: 'Equities' },
-            { id: 'money-market', text: 'Money Market' },
-            { id: 'options', text: 'Options' },
-            { id: 'private-equity', text: 'Private Equity' },
-            { id: 'real-estate', text: 'Real Estate' }
+            { id: E.AssetClassEnum.Alternatives, text: 'Alternatives' },
+            { id: E.AssetClassEnum.Bonds, text: 'Bonds' },
+            { id: E.AssetClassEnum.Commodities, text: 'Commodities' },
+            { id: E.AssetClassEnum.Convertibles, text: 'Convertibles' },
+            { id: E.AssetClassEnum.Diversified, text: 'Diversified' },
+            { id: E.AssetClassEnum.Equities, text: 'Equities' },
+            { id: E.AssetClassEnum.MoneyMarket, text: 'Money Market' },
+            { id: E.AssetClassEnum.Options, text: 'Options' },
+            { id: E.AssetClassEnum.PrivateEquity, text: 'Private Equity' },
+            { id: E.AssetClassEnum.RealEstate, text: 'Real Estate' }
         ]
     }
     geographicalArea: FormItem = {
@@ -260,20 +261,20 @@ export class ShareKeyFactsOptional {
         label: 'Geographical Area',
         required: false,
         listItems: [
-            { id: 'asia', text: 'Asia' },
-            { id: 'asia-ex-japan', text: 'Asia Ex Japan' },
-            { id: 'asia-pacific-ex-japan', text: 'Asia Pacific Ex Japan' },
-            { id: 'asia-em', text: 'Asia EM' },
-            { id: 'europe', text: 'Europe' },
-            { id: 'europe-ex-uk', text: 'Europe Ex UK' },
-            { id: 'europe-em', text: 'Europe EM' },
-            { id: 'europe-euro', text: 'Europe Euro' },
-            { id: 'global', text: 'Global' },
-            { id: 'global-em', text: 'Global EM' },
-            { id: 'latin-america-em', text: 'Latin America EM' },
-            { id: 'middle-east-africa-em', text: 'Middle East & Africa EM' },
-            { id: 'united-kingdom', text: 'United Kingdom' },
-            { id: 'usa', text: 'USA' }
+            { id: E.GeographicalAreaEnum.Asia, text: 'Asia' },
+            { id: E.GeographicalAreaEnum.AsiaExJapan, text: 'Asia Ex Japan' },
+            { id: E.GeographicalAreaEnum.AsiaPacificExJapan, text: 'Asia Pacific Ex Japan' },
+            { id: E.GeographicalAreaEnum.AsiaEM, text: 'Asia EM' },
+            { id: E.GeographicalAreaEnum.Europe, text: 'Europe' },
+            { id: E.GeographicalAreaEnum.EuropeExUK, text: 'Europe Ex UK' },
+            { id: E.GeographicalAreaEnum.EuropeEM, text: 'Europe EM' },
+            { id: E.GeographicalAreaEnum.EuropeEuro, text: 'Europe Euro' },
+            { id: E.GeographicalAreaEnum.Global, text: 'Global' },
+            { id: E.GeographicalAreaEnum.GlobalEM, text: 'Global EM' },
+            { id: E.GeographicalAreaEnum.LatinAmericaEM, text: 'Latin America EM' },
+            { id: E.GeographicalAreaEnum.MiddleEastAfricaEM, text: 'Middle East & Africa EM' },
+            { id: E.GeographicalAreaEnum.UnitedKingdom, text: 'United Kingdom' },
+            { id: E.GeographicalAreaEnum.USA, text: 'USA' }
         ]
     }
     srri: FormItem = {
@@ -291,9 +292,9 @@ export class ShareKeyFactsOptional {
         label: 'Share Class NAV Hedge',
         required: false,
         listItems: [
-            { id: 'no', text: 'No' },
-            { id: 'yes-nav-hedge', text: 'Yes, 100% NAV Hedge' },
-            { id: 'yes-residual-hedge', text: 'Yes, residual hedge' }
+            { id: E.NavHedgeEnum.No, text: 'No' },
+            { id: E.NavHedgeEnum.YesNav, text: 'Yes, 100% NAV Hedge' },
+            { id: E.NavHedgeEnum.YesResidual, text: 'Yes, residual hedge' }
         ]
     }
     distributionPolicy: FormItem = {
@@ -301,9 +302,9 @@ export class ShareKeyFactsOptional {
         label: 'Share Class Distribution Policy',
         required: false,
         listItems: [
-            {id: 'accumulating', text: 'Accumulating' },
-            {id: 'distributing', text: 'Distributing' },
-            {id: 'accumulating-distributing', text: 'Accumulating & distributing' }
+            { id: E.DistributionPolicyEnum.Accumulating, text: 'Accumulating' },
+            { id: E.DistributionPolicyEnum.Distributing, text: 'Distributing' },
+            { id: E.DistributionPolicyEnum.Both, text: 'Accumulating & distributing' }
         ]
     }
     lifecycle: FormItem = {
@@ -311,13 +312,13 @@ export class ShareKeyFactsOptional {
         label: 'Share Class Lifecycle',
         required: false,
         listItems: [
-            { id: 'projected', text: 'Projected' },
-            { id: 'to-be-launched', text: 'To be launched' },
-            { id: 'offering-period', text: 'Offering period' },
-            { id: 'active', text: 'Active' },
-            { id: 'dormant', text: 'Dormant' },
-            { id: 'in-liquidation', text: 'In liquidation' },
-            { id: 'terminated', text: 'Terminated' }
+            { id: E.LifecycleEnum.Projected, text: 'Projected' },
+            { id: E.LifecycleEnum.ToBeLaunched, text: 'To be launched' },
+            { id: E.LifecycleEnum.OfferingPeriod, text: 'Offering period' },
+            { id: E.LifecycleEnum.Active, text: 'Active' },
+            { id: E.LifecycleEnum.Dormant, text: 'Dormant' },
+            { id: E.LifecycleEnum.InLiquidation, text: 'In liquidation' },
+            { id: E.LifecycleEnum.Terminated, text: 'Terminated' }
         ]
     }
     isClassUCITSEligible: FormItem = {
@@ -358,9 +359,9 @@ export class ShareKeyFactsOptional {
         label: 'Index Currency',
         required: false,
         listItems: [
-            { id: 'EUR', text: 'EUR' },
-            { id: 'GBP', text: 'GBP' },
-            { id: 'USD', text: 'USD' }
+            { id: E.CurrencyEnum.EUR, text: 'EUR' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' },
+            { id: E.CurrencyEnum.USD, text: 'USD' }
         ],
         hidden: () => {
             return this.isETF.value() !== true;
@@ -371,10 +372,10 @@ export class ShareKeyFactsOptional {
         label: 'Index Type',
         required: false,
         listItems: [
-            { id: 'price', text: 'Price' },
-            { id: 'performance', text: 'Performance' },
-            { id: 'perfomance-net-dividends', text: 'Perfomance net dividends' },
-            { id: 'performance-gross-dividends', text: 'Performance gross dividends' }
+            { id: E.IndexTypeEnum.Price, text: 'Price' },
+            { id: E.IndexTypeEnum.Performance, text: 'Performance' },
+            { id: E.IndexTypeEnum.PerformanceNetDividends, text: 'Perfomance net dividends' },
+            { id: E.IndexTypeEnum.PerformanceGrossDividends, text: 'Performance gross dividends' }
         ],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
@@ -427,9 +428,9 @@ export class ShareKeyFactsOptional {
         label: 'Replication Methodology First Level',
         required: false,
         listItems: [
-            { id: 'physical', text: 'Physical' },
-            { id: 'synthetical', text: 'Synthetical' },
-            { id: 'others', text: 'Others' }
+            { id: E.ReplicationFirstLevelEnum.Physical, text: 'Physical' },
+            { id: E.ReplicationFirstLevelEnum.Synthetical, text: 'Synthetical' },
+            { id: E.ReplicationFirstLevelEnum.Others, text: 'Others' }
         ],
         hidden: () => {
             return this.isETF.value() !== true;
@@ -440,13 +441,13 @@ export class ShareKeyFactsOptional {
         label: 'Replication Methodology Second Level',
         required: false,
         listItems: [
-            { id: 'full', text: 'Full' },
-            { id: 'optimized-equities-sampled-bonds', text: 'Optimized (equities) – Sampled (bonds)' },
-            { id: 'physical-backed', text: 'Physical backed' },
-            { id: 'unfunded-swap', text: 'Unfunded swap' },
-            { id: 'funded-swap', text: 'Funded swap' },
-            { id: 'combination-unfunded-and-funded-swap', text: 'Combination unfunded and funded swap' },
-            { id: 'futures', text: 'Futures' }
+            { id: E.ReplicationSecondLevelEnum.Full, text: 'Full' },
+            { id: E.ReplicationSecondLevelEnum.Optimized, text: 'Optimized (equities) – Sampled (bonds)' },
+            { id: E.ReplicationSecondLevelEnum.PhysicalBacked, text: 'Physical backed' },
+            { id: E.ReplicationSecondLevelEnum.UnfundedSwap, text: 'Unfunded swap' },
+            { id: E.ReplicationSecondLevelEnum.FundedSwap, text: 'Funded swap' },
+            { id: E.ReplicationSecondLevelEnum.Combination, text: 'Combination unfunded and funded swap' },
+            { id: E.ReplicationSecondLevelEnum.Futures, text: 'Futures' }
         ],
         hidden: () => {
             return this.isETF.value() !== true;

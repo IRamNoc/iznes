@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
-                        (click)="save()" [disabled]="!model.isValid()">
+                        (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
                         <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
                         <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
@@ -170,7 +170,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
-                        (click)="save()" [disabled]="!model.isValid()">
+                        (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
                         <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
                         <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>

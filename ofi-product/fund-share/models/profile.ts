@@ -1,4 +1,5 @@
 import {FormItem, FormItemType, DynamicFormsValidator} from '@setl/core-dynamic-forms';
+import * as E from '../FundShareEnum';
 
 export class ShareProfileMandatory extends DynamicFormsValidator {
     investorProfile: FormItem = {
@@ -6,9 +7,9 @@ export class ShareProfileMandatory extends DynamicFormsValidator {
         label: 'Investor Profile',
         required: true,
         listItems: [
-            { id: 'all-investors', text: 'All investors' },
-            { id: 'professional-investors', text: 'Professional investors' },
-            { id: 'eligible-counterparties', text: 'Eligible Counterparties' }
+            { id: E.InvestorProfileEnum.AllInvestors, text: 'All investors' },
+            { id: E.InvestorProfileEnum.ProfessionalInvestors, text: 'Professional investors' },
+            { id: E.InvestorProfileEnum.EligibleCounterparties, text: 'Eligible Counterparties' }
         ]
     }
 }
@@ -119,10 +120,10 @@ export class ShareProfileOptional {
         label: 'Eligible For Execution Only Distribution',
         required: false,
         listItems: [
-            { id: 'retail', text: 'Retail' },
-            { id: 'professional', text: 'Professional' },
-            { id: 'both', text: 'Both' },
-            { id: 'neither', text: 'Neither' }
+            { id: E.ProfileEligibilityEnum.Retail, text: 'Retail' },
+            { id: E.ProfileEligibilityEnum.Professional, text: 'Professional' },
+            { id: E.ProfileEligibilityEnum.Both, text: 'Both' },
+            { id: E.ProfileEligibilityEnum.Neither, text: 'Neither' }
         ]
     }
     executionOnlyWithAppropriatenessTest: FormItem = {
@@ -130,10 +131,10 @@ export class ShareProfileOptional {
         label: 'Eligible For Execution Only With Appropriateness Test',
         required: false,
         listItems: [
-            { id: 'retail', text: 'Retail' },
-            { id: 'professional', text: 'Professional' },
-            { id: 'both', text: 'Both' },
-            { id: 'neither', text: 'Neither' }
+            { id: E.ProfileEligibilityEnum.Retail, text: 'Retail' },
+            { id: E.ProfileEligibilityEnum.Professional, text: 'Professional' },
+            { id: E.ProfileEligibilityEnum.Both, text: 'Both' },
+            { id: E.ProfileEligibilityEnum.Neither, text: 'Neither' }
         ]
     }
     advisedRetailDistribution: FormItem = {
@@ -141,10 +142,10 @@ export class ShareProfileOptional {
         label: 'Eligible For Advised Retail Distribution',
         required: false,
         listItems: [
-            { id: 'retail', text: 'Retail' },
-            { id: 'professional', text: 'Professional' },
-            { id: 'both', text: 'Both' },
-            { id: 'neither', text: 'Neither' }
+            { id: E.ProfileEligibilityEnum.Retail, text: 'Retail' },
+            { id: E.ProfileEligibilityEnum.Professional, text: 'Professional' },
+            { id: E.ProfileEligibilityEnum.Both, text: 'Both' },
+            { id: E.ProfileEligibilityEnum.Neither, text: 'Neither' }
         ]
     }
     portfolioManagement: FormItem = {
@@ -152,10 +153,10 @@ export class ShareProfileOptional {
         label: 'Eligible For Portfolio Management',
         required: false,
         listItems: [
-            { id: 'retail', text: 'Retail' },
-            { id: 'professional', text: 'Professional' },
-            { id: 'both', text: 'Both' },
-            { id: 'neither', text: 'Neither' }
+            { id: E.ProfileEligibilityEnum.Retail, text: 'Retail' },
+            { id: E.ProfileEligibilityEnum.Professional, text: 'Professional' },
+            { id: E.ProfileEligibilityEnum.Both, text: 'Both' },
+            { id: E.ProfileEligibilityEnum.Neither, text: 'Neither' }
         ]
     }
 }

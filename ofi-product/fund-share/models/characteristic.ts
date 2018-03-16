@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
+import * as E from '../FundShareEnum';
 
 export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     maximumNumDecimal: FormItem = {
@@ -13,9 +14,9 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         label: 'Subscription Category',
         required: true,
         listItems: [
-            { id: 'shares', text: 'Shares' },
-            { id: 'amount', text: 'Amount' },
-            { id: 'shares-and-amount', text: 'Shares and Amount' }
+            { id: E.SubscriptionCategoryEnum.Shares, text: 'Shares' },
+            { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
+            { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' }
         ],
         style: [FormItemStyle.BreakOnAfter]
     }
@@ -24,14 +25,14 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         label: 'Currency of Subscription',
         required: true,
         listItems: [
-            { id: 'EUR', text: 'EUR' },
-            { id: 'GBP', text: 'GBP' },
-            { id: 'USD', text: 'USD' }
+            { id: E.CurrencyEnum.EUR, text: 'EUR' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' },
+            { id: E.CurrencyEnum.USD, text: 'USD' }
         ],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minInitialSubscriptionInShare: FormItem = {
@@ -40,7 +41,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minInitialSubscriptionInAmount: FormItem = {
@@ -49,7 +50,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minSubsequentSubscriptionInShare: FormItem = {
@@ -58,7 +59,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minSubsequentSubscriptionInAmount: FormItem = {
@@ -67,7 +68,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     redemptionCategory: FormItem = {
@@ -75,9 +76,9 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         label: 'Redemption Category',
         required: true,
         listItems: [
-            { id: 'shares', text: 'Shares' },
-            { id: 'amount', text: 'Amount' },
-            { id: 'shares-and-amount', text: 'Shares and Amount' }
+            { id: E.SubscriptionCategoryEnum.Shares, text: 'Shares' },
+            { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
+            { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' }
         ],
         style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter]
     }
@@ -86,14 +87,14 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         label: 'Currency of Redemption',
         required: true,
         listItems: [
-            { id: 'EUR', text: 'EUR' },
-            { id: 'GBP', text: 'GBP' },
-            { id: 'USD', text: 'USD' }
+            { id: E.CurrencyEnum.EUR, text: 'EUR' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' },
+            { id: E.CurrencyEnum.USD, text: 'USD' }
         ],
         style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minInitialRedemptionInShare: FormItem = {
@@ -102,7 +103,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minInitialRedemptionInAmount: FormItem = {
@@ -111,7 +112,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minSubsequentRedemptionInShare: FormItem = {
@@ -120,7 +121,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || ['shares', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
     minSubsequentRedemptionInAmount: FormItem = {
@@ -129,7 +130,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || ['amount', 'shares-and-amount'].indexOf(val[0].id) == -1;
+            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         }
     }
 }
@@ -140,10 +141,10 @@ export class ShareCharacteristicOptional {
         label: 'Portfolio Currency Hedge',
         required: false,
         listItems: [
-            { id: 'no-hedge', text: 'No Hedge' },
-            { id: 'full-portfolio-hedge', text: 'Full Portfolio Hedge' },
-            { id: 'currency-overlay', text: 'Currency overlay' },
-            { id: 'partial-hedge', text: 'Partial Hedge' }
+            { id: E.CurrencyHedgeEnum.NoHedge, text: 'No Hedge' },
+            { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
+            { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
+            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' }
         ]
     }
 }

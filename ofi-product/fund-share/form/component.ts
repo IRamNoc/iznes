@@ -14,8 +14,12 @@ import {
     getOfiFundShareSelectedFund,
     ofiSetCurrentFundShareSelectedFund
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
+import {
+    
+} from '@setl/core-useradmin';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {FundShare, FundShareMode} from '../model';
+import {FundShareTestData} from './TestData';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -26,7 +30,7 @@ import {FundShare, FundShareMode} from '../model';
 
 export class FundShareComponent implements OnInit, OnDestroy {
 
-    model: FundShare = new FundShare();
+    model: FundShare = FundShareTestData.generate(new FundShare());
     mode: FundShareMode = FundShareMode.Create;
 
     private fundShare: OfiFundShare;
@@ -36,6 +40,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
+    @select(['user', 'myDetail', 'accountId']) accountIdOb: Observable<any>;
 
     constructor(private route: ActivatedRoute,
         private redux: NgRedux<any>,
@@ -62,6 +67,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundShareOb.subscribe(navFund => {
             this.updateFundShare(navFund);
         }));
+
+        this.subscriptionsArray.push(this.accountIdOb.subscribe(accountId => this.model.accountId = accountId));
     }
 
     /**
@@ -88,6 +95,16 @@ export class FundShareComponent implements OnInit, OnDestroy {
         if(this.fundShare) this.redux.dispatch(setRequestedFundShare());
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    saveFundShare(): void {
+        this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
+        
+        OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+            this.redux,
+            this.model.getRequest(),
+            (data) => { console.log(data)},
+            (e) => { console.log(e)});
     }
 
     isCreate(): boolean {

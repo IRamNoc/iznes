@@ -1,4 +1,5 @@
 import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import * as E from '../FundShareEnum';
 
 export class ShareTaxationOptional {
     tisTidReporting: FormItem = {
@@ -6,10 +7,10 @@ export class ShareTaxationOptional {
         label: 'TIS And TID Reporting',
         required: false,
         listItems: [
-            { id: 'yes-both', text: 'Yes, for both TIS and TID' },
-            { id: 'tis', text: 'Only for TIS' },
-            { id: 'tid', text: 'Only for TID' },
-            { id: 'no-both', text: 'No, for both TIS and TID' }
+            { id: E.TISTIDReportingEnum.YesBoth, text: 'Yes, for both TIS and TID' },
+            { id: E.TISTIDReportingEnum.TIS, text: 'Only for TIS' },
+            { id: E.TISTIDReportingEnum.TID, text: 'Only for TID' },
+            { id: E.TISTIDReportingEnum.NoBoth, text: 'No, for both TIS and TID' }
         ]
     }
     hasDailyDeliveryOfInterimProfit: FormItem = {
@@ -77,33 +78,33 @@ export class ShareTaxationOptional {
         label: 'FATCA Status V2',
         required: false,
         listItems: [
-            { id: 'sponsored-ffi', text: 'Sponsored FFI' },
-            { id: 'certified-deemed-compliant-nonregistering-local-bank', text: 'Certified deemed-compliant nonregistering local bank' },
-            { id: 'certified-deemed-compliant-ffi-with-only-low-value-accounts', text: 'Certified deemed-compliant FFI with only low-value accounts' },
-            { id: 'certified-deemed-compliant-sponsored-closely-held-investment-vehicle', text: 'Certified deemed-compliant sponsored, closely held investment vehicle' },
-            { id: 'certified-deemed-compliant-limited-life-debt-investment-entity', text: 'Certified deemed-compliant limited life debt investment entity' },
-            { id: 'certain-investment-entities-that-do-not-maintain-financial-accounts', text: 'Certain investment entities that do not maintain financial accounts' },
-            { id: 'owner-documented-ffi', text: 'Owner-documented FFI' },
-            { id: 'restricted-distributor', text: 'Restricted distributor' },
-            { id: 'nonreporting-iga-ffi', text: 'Nonreporting IGA FFI' },
-            { id: 'foreign-government-government-of-a-us-possession-or-foreign-central-bank-of-issue', text: 'Foreign government, government of a U.S. possession, or foreign central bank of issue' },
-            { id: 'international-organization', text: 'International organization' },
-            { id: 'exempt-retirement-plans', text: 'Exempt retirement plans' },
-            { id: 'entity-wholly-owned-by-exempt-beneficial-owners', text: 'Entity wholly owned by exempt beneficial owners' },
-            { id: 'territory-financial-institution', text: 'Territory financial institution' },
-            { id: 'excepted-nonfinancial-group-entity', text: 'Excepted nonfinancial group entity' },
-            { id: 'excepted-nonfinancial-start-up company', text: 'Excepted nonfinancial start-up company' },
-            { id: 'excepted-nonfinancial-entity-in-liquidation-or-bankruptcy', text: 'Excepted nonfinancial entity in liquidation or bankruptcy' },
-            { id: '501c-organization', text: '501(c) organization' },
-            { id: 'nonprofit-organization', text: 'Nonprofit organization' },
-            { id: 'publicly-traded-nffe', text: 'Publicly traded NFFE or NFFE affiliate of a publicly traded corporation' },
-            { id: 'excepted-territory-nffe', text: 'Excepted territory NFFE' },
-            { id: 'active-nffe', text: 'Active NFFE' },
-            { id: 'passive-nffe', text: 'Passive NFFE' },
-            { id: 'excepted-inter-affiliate-ffi', text: 'Excepted inter-affiliate FFI' },
-            { id: 'direct-reporting-nffe', text: 'Direct reporting NFFE' },
-            { id: 'sponsored-direct-reporting-nffe', text: 'Sponsored direct reporting NFFE' },
-            { id: 'account-that-is-not-a-financial-account', text: 'Account that is not a financial account' }
+            { id: E.FatcaStatusV2Enum.SponsoredFFI, text: 'Sponsored FFI' },
+            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantNonRegisteringLocalBank, text: 'Certified deemed-compliant nonregistering local bank' },
+            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantFFILowValueAccounts, text: 'Certified deemed-compliant FFI with only low-value accounts' },
+            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantSponsoredCloselyHeldInvestment, text: 'Certified deemed-compliant sponsored, closely held investment vehicle' },
+            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantLimitedLifeDebtInvestmentEntity, text: 'Certified deemed-compliant limited life debt investment entity' },
+            { id: E.FatcaStatusV2Enum.CertainInvestmentEntitiesThatDoNotMaintainFinancialAccounts, text: 'Certain investment entities that do not maintain financial accounts' },
+            { id: E.FatcaStatusV2Enum.OwnerDocumentedFFI, text: 'Owner-documented FFI' },
+            { id: E.FatcaStatusV2Enum.RestrictedDistributor, text: 'Restricted distributor' },
+            { id: E.FatcaStatusV2Enum.NonreportingIGAFFI, text: 'Nonreporting IGA FFI' },
+            { id: E.FatcaStatusV2Enum.ForeignGovernment, text: 'Foreign government, government of a U.S. possession, or foreign central bank of issue' },
+            { id: E.FatcaStatusV2Enum.InternationalOrganization, text: 'International organization' },
+            { id: E.FatcaStatusV2Enum.ExemptRetirementPlans, text: 'Exempt retirement plans' },
+            { id: E.FatcaStatusV2Enum.EntityWhollyOwned, text: 'Entity wholly owned by exempt beneficial owners' },
+            { id: E.FatcaStatusV2Enum.TerritoryFinancialInstitution, text: 'Territory financial institution' },
+            { id: E.FatcaStatusV2Enum.ExceptedNonfinancialGroupEntity, text: 'Excepted nonfinancial group entity' },
+            { id: E.FatcaStatusV2Enum.ExceptedNonfinancialStartupCompany, text: 'Excepted nonfinancial start-up company' },
+            { id: E.FatcaStatusV2Enum.ExceptedNonfinancialEntityInLiquidationOrBankruptcy, text: 'Excepted nonfinancial entity in liquidation or bankruptcy' },
+            { id: E.FatcaStatusV2Enum.FiveHundredOneCOrganisation, text: '501(c) organization' },
+            { id: E.FatcaStatusV2Enum.NonprofitOrganization, text: 'Nonprofit organization' },
+            { id: E.FatcaStatusV2Enum.PubliclyTradedNFFEOrNFFEAffiliateOfAPubliclyTradedCorporation, text: 'Publicly traded NFFE or NFFE affiliate of a publicly traded corporation' },
+            { id: E.FatcaStatusV2Enum.ExceptedTerritoryNFFE, text: 'Excepted territory NFFE' },
+            { id: E.FatcaStatusV2Enum.ActiveNFFE, text: 'Active NFFE' },
+            { id: E.FatcaStatusV2Enum.PassiveNFFE, text: 'Passive NFFE' },
+            { id: E.FatcaStatusV2Enum.ExceptedInterAffiliateFFI, text: 'Excepted inter-affiliate FFI' },
+            { id: E.FatcaStatusV2Enum.DirectReportingNFFE, text: 'Direct reporting NFFE' },
+            { id: E.FatcaStatusV2Enum.SponsoredDirectReportingNFFE, text: 'Sponsored direct reporting NFFE' },
+            { id: E.FatcaStatusV2Enum.NotAFinancialAccount, text: 'Account that is not a financial account' }
         ]
     }
     isSubjectToFATCAWithholdingTaxation: FormItem = {

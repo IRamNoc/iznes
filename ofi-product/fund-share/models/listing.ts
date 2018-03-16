@@ -1,4 +1,5 @@
 import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import * as E from '../FundShareEnum';
 
 export class ShareListingOptional {
     bloombergCodeOfListing: FormItem = {
@@ -58,10 +59,10 @@ export class ShareListingOptional {
         label: 'Status Of Listing',
         required: false,
         listItems: [
-            { id: 'planned', text: 'Planned' },
-            { id: 'active', text: 'Active' },
-            { id: 'suspended', text: 'Suspended' },
-            { id: 'delisted', text: 'Delisted' }
+            { id: E.ListingStatus.Planned, text: 'Planned' },
+            { id: E.ListingStatus.Active, text: 'Active' },
+            { id: E.ListingStatus.Suspended, text: 'Suspended' },
+            { id: E.ListingStatus.Delisted, text: 'Delisted' }
         ]
     }
 }

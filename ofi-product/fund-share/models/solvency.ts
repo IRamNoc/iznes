@@ -1,4 +1,5 @@
 import {FormItem, FormItemType, FormItemStyle} from '@setl/core-dynamic-forms/DynamicForm';
+import * as E from '../FundShareEnum';
 
 export class ShareSolvencyOptional {
     mifidSecuritiesClassification: FormItem = {
@@ -6,9 +7,9 @@ export class ShareSolvencyOptional {
         label: 'MiFID Securities Classification',
         required: false,
         listItems: [
-            { id: 'Non-complex instrument', text: 'Non-complex instrument' },
-            { id: 'Complex instrument', text: 'Complex instrument' },
-            { id: 'Others', text: 'Others' }
+            { id: E.MIFIDSecuritiesClassificationEnum.NonComplex, text: 'Non-complex instrument' },
+            { id: E.MIFIDSecuritiesClassificationEnum.Complex, text: 'Complex instrument' },
+            { id: E.MIFIDSecuritiesClassificationEnum.Others, text: 'Others' }
         ],
         style: [FormItemStyle.BreakOnAfter]
     }
@@ -17,12 +18,12 @@ export class ShareSolvencyOptional {
         label: 'EFAMA Main EFC Category',
         required: false,
         listItems: [
-            { id: 'Equity', text: 'Equity' },
-            { id: 'Bond', text: 'Bond' },
-            { id: 'Multi-Asset', text: 'Multi-Asset' },
-            { id: 'Money Market', text: 'Money Market' },
-            { id: 'ARIS', text: 'ARIS' },
-            { id: 'Other', text: 'Other' }
+            { id: E.EfamaMainEFCCategoryEnum.Equity, text: 'Equity' },
+            { id: E.EfamaMainEFCCategoryEnum.Bond, text: 'Bond' },
+            { id: E.EfamaMainEFCCategoryEnum.MultiAsset, text: 'Multi-Asset' },
+            { id: E.EfamaMainEFCCategoryEnum.MoneyMarket, text: 'Money Market' },
+            { id: E.EfamaMainEFCCategoryEnum.ARIS, text: 'ARIS' },
+            { id: E.EfamaMainEFCCategoryEnum.Other, text: 'Other' }
         ]
     }
     efamaActiveEFCClassification: FormItem = {
