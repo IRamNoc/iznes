@@ -1,5 +1,8 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject,
+    OnInit
+} from '@angular/core';
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
 import {Subpanel} from './models';
@@ -14,12 +17,14 @@ import {Observable} from 'rxjs/Observable';
 
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 
+import {immutableHelper} from '@setl/utils';
+
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiAmDocumentsComponent implements OnDestroy {
+export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
     appConfig: AppConfig;
     hasFilledAdditionnalInfos = false;
@@ -38,7 +43,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,) {
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
     }
 
@@ -53,8 +58,9 @@ export class OfiAmDocumentsComponent implements OnDestroy {
     }
 
     updateTable(tableData) {
+        const tableDataCopy = immutableHelper.copy(tableData);
 
-        let columns = {
+        const columns = {
             1: {
                 label: 'Status',
                 dataSource: 'status',
@@ -115,7 +121,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
             }
         };
 
-        let tables = {
+        const tables = {
             '1': [],
             '-1': [],
             '2': [],
@@ -124,14 +130,14 @@ export class OfiAmDocumentsComponent implements OnDestroy {
             'all': []
         };
 
-        let replaceStatus = {
+        const replaceStatus = {
             '1': 'To Review',
             '-1': 'Accepted',
             '2': 'Waiting for more info',
             '-2': 'Refused'
         };
 
-        tableData.forEach((row) => {
+        tableDataCopy.forEach((row) => {
             const rowStatus = row['status'];
 
             row['status'] = replaceStatus[rowStatus];

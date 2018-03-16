@@ -5,6 +5,7 @@ import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {immutableHelper} from '@setl/utils';
 import {select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 @Component({
     selector: 'app-invite-investors',
@@ -15,10 +16,7 @@ import {Subscription} from 'rxjs/Subscription';
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
-    showModal: boolean;
-    emailSent: boolean;
     language: string;
-    emailList = [];
 
     /* Observables */
     @select(['user', 'siteSettings', 'language']) languageObs;
@@ -28,11 +26,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     constructor(private _fb: FormBuilder,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _location: Location,
+                private alertsService: AlertsService,
                 private _ofiKycService: OfiKycService) {
-
-        this.showModal = false;
-        this.emailSent = false;
-
         this.invitationForm = this._fb.group({
             investors: this._fb.array([])
         });
@@ -97,18 +92,20 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
      * @param formValues
      */
     save(formValues): void {
+        let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
+
         for (const inv of formValues.investors) {
-            if (this.emailList.indexOf(inv.email) === -1) {
-                this.emailList.push(inv.email);
-            }
+            message += '<tr><td>' + inv.email + '</td></tr>';
         }
+
+        message += '</tbody></table>';
+
+        this.alertsService.create('success', message);
 
         const requestData = constructInvitationRequest(formValues, this.language);
 
         this._ofiKycService.sendInvestInvitations(requestData).then(() => {
             this.resetForm(formValues);
-            this.emailSent = true;
-            this.showModal = true;
             this.markForCheck();
         });
     }
@@ -120,12 +117,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             }
         }
         this.invitationForm.reset();
-    }
-
-    closeModal() {
-        this.showModal = false;
-        this.emailList = [];
-        this.markForCheck();
     }
 
     goBack() {
