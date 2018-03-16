@@ -3,6 +3,7 @@ import {AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
+import {LoginGuardService} from "./login-guard.service";
 import * as _ from 'lodash';
 // Internals
 import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils';
@@ -86,6 +87,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
+                private loginGuardService: LoginGuardService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -156,6 +158,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         window.onbeforeunload = null;
 
+        console.log(this.router);
+
     }
 
     ngAfterViewInit() {
@@ -199,9 +203,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             {},
             () => {
-                if (localStorage.getItem('redirect') !== null) {
-                    this.router.navigateByUrl(localStorage.getItem('redirect'));
-                    localStorage.removeItem('redirect');
+                if (this.loginGuardService.redirect != ''){
+                    this.router.navigateByUrl(this.loginGuardService.redirect);
+                    this.loginGuardService.redirect = '';
                 }
             },
             // Fail to login

@@ -16,6 +16,7 @@ import {Subscription} from 'rxjs/Subscription';
 @Injectable()
 export class LoginGuardService implements CanActivate {
     isLogin: boolean;
+    redirect: string;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -39,7 +40,7 @@ export class LoginGuardService implements CanActivate {
                 state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
         if (!this.isLogin) {
-            if (typeof(Storage) !== 'undefined') localStorage.setItem('redirect', state['url']);
+            this.redirect = state['url'];
             this.toasterService.pop('warning', 'Session Expired!');
             this.router.navigateByUrl('');
         } else {
