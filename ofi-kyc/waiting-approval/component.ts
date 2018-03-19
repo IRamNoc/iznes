@@ -205,7 +205,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 if (this.initialStatusId === Statuses.waitingApproval) {
                     this.isRejectModalDisplayed = true;
                 } else {
-                    this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+                    this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
                 }
                 break;
 
@@ -241,7 +241,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
             }
         });
     }
@@ -266,7 +266,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
             }
         });
     }
@@ -321,7 +321,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail' && data.Message === 'Permission Denied') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s intention now');
+                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
             }
         });
     }
