@@ -61,6 +61,7 @@ import {
     MyWalletContractState,
     MyWalletContractReducer,
 
+    updateContract,
     setContractList,
     setUpdatedContractList,
     setLastCreatedContractDetail,
@@ -131,6 +132,7 @@ export {
 };
 
 export {
+    updateContract,
     setContractList,
     setUpdatedContractList,
     setLastCreatedContractDetail,

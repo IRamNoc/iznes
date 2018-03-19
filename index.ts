@@ -62,6 +62,7 @@ export {
     SET_ISSUE_HOLDING,
     setRequestedWalletHolding,
     clearRequestedWalletHolding,
+    updateContract,
     setContractList,
     setUpdatedContractList,
     setLastCreatedContractDetail,
