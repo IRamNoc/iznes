@@ -623,7 +623,6 @@ h3 {
 .panel-body {
     opacity: 1;
     height: auto;
-    overflow: hidden;
     transition: opacity .5s linear;
     &.hidden {
         opacity: 0;
@@ -696,7 +695,6 @@ clr-tab-content {
         padding-left: 0px;
         opacity: 1;
         height: auto;
-        overflow: hidden;
         transition: opacity .5s linear;
 
         &
@@ -711,7 +709,7 @@ clr-tab-content {
     .well .row .well {
         margin-left: 30px;
         margin-top: 20px;
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 
 }
