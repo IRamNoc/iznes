@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {TabControl, Tab} from '@setl/core-balances/tabs';
 import * as _ from 'lodash';
 import {ContractModel} from '@setl/core-contracts/models';
-import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
+import {SET_CONTRACT_LIST, UPDATE_CONTRACT} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 
 @Component({
@@ -41,6 +41,8 @@ export class ContractsComponent implements OnInit, OnChanges {
 
     @select(['wallet', 'myWalletContract', 'contractList']) getContractList;
 
+    @select(['wallet', 'myWalletContract', 'updatedContractList']) updateContractList;
+
     /**
      * Constructor
      */
@@ -54,6 +56,57 @@ export class ContractsComponent implements OnInit, OnChanges {
                        @Inject(APP_CONFIG) private appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.token = this.memberSocketService.token;
+        if (this.updateContractList) {
+            this.updateContractList.subscribe(
+                (data) => {
+                    if (this.walletId === '0' || this.walletId === null) {
+                        this.walletId = '5';
+                    }
+                    const asyncTaskPipe = this.walletNodeRequestService.requestContractsByWallet({
+                        walletId: this.walletId
+                    });
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [SET_CONTRACT_LIST],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        () => {
+                            this.changeDetectorRef.markForCheck();
+                        },
+                        () => {
+                        }
+                    ));
+                    /*_.each(data, (contractAddress) => {
+                        const asyncTaskPipe = this.walletNodeRequestService.requestContractByAddress({
+                            walletId: this.walletId,
+                            address: contractAddress
+                        });
+
+                        this.ngRedux.dispatch(SagaHelper.runAsync(
+                            [UPDATE_CONTRACT],
+                            [],
+                            asyncTaskPipe,
+                            {},
+                            (data) => {
+                                this.contracts = [];
+                                _.each(data[1].data, (contract) => {
+                                    contract = this.contractService.fromJSON(contract, this.addresses);
+                                    this.contracts.push(contract);
+                                    if (contract.address === data[1].request.address) {
+                                        this.contract = contract;
+                                    }
+                                });
+                                this.changeDetectorRef.detectChanges();
+                            },
+                            (error) => {
+                                console.log('ERROR:');
+                                console.log(error);
+                            }
+                        ));
+                    });*/
+                }
+            );
+        }
         if (this.getUser) {
             this.getUser.subscribe(
                 (data) => {
@@ -84,10 +137,12 @@ export class ContractsComponent implements OnInit, OnChanges {
                                         asyncTaskPipe,
                                         {},
                                         () => {
+                                            this.changeDetectorRef.markForCheck();
                                         },
                                         () => {
                                         }
                                     ));
+                                    resolve();
                                 },
                                 (error) => {
                                     reject(error);
@@ -109,6 +164,13 @@ export class ContractsComponent implements OnInit, OnChanges {
             _.each(data, (contract) => {
                 this.contract = this.contractService.fromJSON(contract[0], this.addresses);
                 this.contracts.push(this.contract);
+                if (this.tabs) {
+                    const tab = this.tabs.find(this.findTab(this.contract.__address, 'contractDetails'));
+
+                    if (tab) {
+                        tab.data.contract = this.contract;
+                    }
+                }
             });
             this.contractFields = [];
             for (const prop in this.contract) {
@@ -117,6 +179,7 @@ export class ContractsComponent implements OnInit, OnChanges {
             this.changeDetectorRef.markForCheck();
         }));
     }
+
 
     public commitAuthorisation(index: number, contract: ContractModel): void {
         index++;
@@ -207,6 +270,7 @@ export class ContractsComponent implements OnInit, OnChanges {
             asyncTaskPipe,
             {},
             () => {
+                this.showAlert('Committing to Contract', 'success');
             },
             () => {
             }
@@ -220,15 +284,12 @@ export class ContractsComponent implements OnInit, OnChanges {
      *
      * @return {void}
      */
-    public handleView(index: number): void {
-        if (this.tabControl.activate(this.findTab(this.contracts[index].__address, 'contractDetails'))) {
+    public handleView(contract): void {
+        if (this.tabControl.activate(this.findTab(contract.__address, 'contractDetails'))) {
             return;
         }
 
         /* Push the edit tab into the array. */
-        const contract = this.contracts[index];
-
-        /* And also pre-fill the form... let's sort some of the data out. */
         this.tabControl.new({
             title: '<i class="fa fa-th-list"></i> ' + contract.name,
             icon: 'th-list',
