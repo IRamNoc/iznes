@@ -44,6 +44,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     lang: string;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
+    @select(['user', 'myDetail']) myDetails$;
     private unsubscribe: Subject<any> = new Subject();
 
     constructor(private fb: FormBuilder,
@@ -67,12 +68,6 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         this.myInfos$
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
-                const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
-
-                this.investorDetails.email = d.email;
-                this.investorDetails.phoneNumber = phoneNumber;
-                this.investorDetails.companyName = d.companyName;
-
                 this.amDetails.firstName.value = d.invitedBy.firstName;
                 this.amDetails.lastName.value = d.invitedBy.lastName;
                 this.amDetails.email.value = d.invitedBy.email;
@@ -81,6 +76,15 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
+            });
+        this.myDetails$
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
+
+                this.investorDetails.email = d.emailAddress;
+                this.investorDetails.phoneNumber = phoneNumber;
+                this.investorDetails.companyName = d.companyName;
             });
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
