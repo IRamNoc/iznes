@@ -36,6 +36,7 @@ import * as _ from 'lodash';
 import {ClarityModule} from '@clr/angular';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import {LoginGuardService} from './login-guard.service';
 
 const environment = {
     logoID: '',
@@ -78,7 +79,8 @@ describe('SetlLoginComComponent', () => {
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
-                }
+                },
+                LoginGuardService
             ]
         })
             .compileComponents();
