@@ -726,7 +726,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }).then((response) => {
                 /* Overwrite the old permissions, to allow diffing. */
                 console.log('updated user group wallet permissions.', response);
-                thisTab['oldGroupWalletAccess'] = newWalletAccess;
+                thisTab['oldGroupWalletAccess'] = newGroupWalletAccess;
             }).catch((error) => {
                 console.log('error updating user group wallet permissions.', error);
                 this.showError('Failed to update this user\'s group wallet permissions.');

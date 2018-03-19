@@ -565,7 +565,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = this.newAddGroupFormgroup();
+        this.tabsControl[tabid].formControl = this._persistService.refreshState('useradmin/newGroup', this.newAddGroupFormgroup('clear'));
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
