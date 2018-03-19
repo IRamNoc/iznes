@@ -185,6 +185,20 @@ public class LoginAndNavigationHelper {
       }
     }
 
+    public static void loginAndVerifySuccessKYC(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+      Thread.sleep(1500);
+      try {
+        driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed();
+      }catch (Exception e){
+        fail("Page heading was not present " + e.getMessage());
+      }
+    }
+
     public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
