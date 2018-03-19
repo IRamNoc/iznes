@@ -21,6 +21,14 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
+    public static void navigateTo365Page() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.get("https://www.office.com/");
+        WebElement page_heading = driver.findElement(By.id("hero-header"));
+        wait.until(visibilityOf(page_heading));
+
+    }
+
     public static void navigateToPage2(String pageHref) throws InterruptedException {
       Thread.sleep(750);
       try {
@@ -43,6 +51,15 @@ public class LoginAndNavigationHelper {
         Thread.sleep(750);
         try {
             driver.findElement(By.id("menu-" + pageHref)).click();
+        }catch (Error e){
+            fail(pageHref + "page not present");
+        }
+    }
+
+    public static void navigateToPageXpath(String pageHref) throws InterruptedException {
+        Thread.sleep(750);
+        try {
+            driver.findElement(By.xpath(pageHref)).click();
         }catch (Error e){
             fail(pageHref + "page not present");
         }
@@ -176,7 +193,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("menu-account-module")).isDisplayed();
+        driver.findElement(By.id("ofi-homepage")).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
@@ -204,6 +221,15 @@ public class LoginAndNavigationHelper {
       driver.findElement(By.id(dropdownID)).click();
     }catch (Error e){
       System.out.println(dropdownID + "not present");
+      fail();
+    }
+  }
+  public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
+    Thread.sleep(1500);
+    try {
+      driver.findElement(By.xpath(dropdownXpath)).click();
+    }catch (Error e){
+      System.out.println(dropdownXpath + "not present");
       fail();
     }
   }

@@ -6,37 +6,40 @@ node {
     timestamps {
 
         stage('Deploy Membership-db to Test Environment') {
-            node {
-                sh '''
-                            ssh root@172.104.147.135 rsync -avzhm --stats /var/membership-db /var/ofi_backups/membership-db &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@172.104.147.135:/var/membership-db'''
+
+                        sh 'ssh -t root@172.104.147.135 rm -f flyway \\&&'
+                        sh 'ssh -t root@172.104.147.135 ln -s /usr/local/bin/flyway-4.2.0/flyway flyway \\&&'
+                        sh 'ssh -t root@172.104.147.135 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db \\&&'
+                        sh 'rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@172.104.147.135:/var/membership-db \\&&'
+                        sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/  ; bash &&  ./updatedb iznes \\&& \''
+
             }
-        }
+
 
         stage('Deploy Frontend to Staging Environment') {
-            node {
+
                 sh '''
                         ssh root@172.104.147.135 rsync -avzhm --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
                         rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  root@172.104.147.135:/var/www_setltestnet'''
 
             }
-        }
+
         stage('Deploy Backend to Staging Environment') {
-            node {
+
                 sh '''
                         ssh root@172.104.147.135  rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
                         rsync -avhm --stats --exclude 'config.json' /var/lib/jenkins/Deploy/backend/*  root@172.104.147.135:/var/phpapps/backend'''
             }
-        }
+
 
 
         stage('Deploy French Fund Daemon to Staging Environment') {
-            node {
+
                 sh '''
                             ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
                             rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
             }
-        }
+
 
         stage('Update Dependencies') {
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
@@ -48,7 +51,7 @@ node {
 
 
         stage('Deploy Blockchain jars to Test Environment') {
-            node {
+
                 sh '''
                         rsync -avhmp --stats /var/lib/jenkins/Deploy/blockchain/scripts/*  root@172.104.147.135: &&
                         ssh -t root@172.104.147.135 \'cd /root ; bash &&  ./stop_blockchain.sh \'
@@ -61,7 +64,7 @@ node {
                         ssh -t root@172.104.147.135 \'cd /root ; bash && ./start_blockchain.sh \''''
 
             }
-        }
+
 
         stage('Restart Node Server') {
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps ; bash && supervisorctl restart node_server\''
@@ -70,7 +73,7 @@ node {
         stage('Check node server is running') {
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
         }
-
     }
 }
+
 
