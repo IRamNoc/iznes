@@ -3,7 +3,7 @@ import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {InitialisationService} from '../initialisation/initialisation.service';
-import {SagaHelper} from "../../utils";
+import {SagaHelper} from '@setl/utils';
 import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 
