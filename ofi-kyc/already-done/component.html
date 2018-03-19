@@ -12,17 +12,17 @@
         <clr-tab-content *clrIfActive>
             <h3>Let's start with the mandatory administrative part: the KYC</h3>
 
-            <section *ngIf="investorStatus == 'confirmation'" class="form-block confirm-container">
+            <section *ngIf="investorStatus == 'confirmation' || investorStatus == 'waiting-for-more-info' " class="form-block confirm-container">
                 <h3>KYC & client folder</h3>
                 <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
                 <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
                     <div class="form-group opt-btn-container">
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt">
+                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorStatus == 'waiting-for-more-info'">
                             <label for="opt-yes">Yes</label>
                         </div>
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt">
+                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorStatus == 'waiting-for-more-info'"  [attr.disabled]="investorStatus == 'waiting-for-more-info'">
                             <label for="opt-no">No</label>
                         </div>
                         <div class="opt-btn-context">

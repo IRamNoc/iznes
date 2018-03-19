@@ -9,6 +9,7 @@ import 'rxjs/add/operator/takeUntil';
 import {Endpoints} from '../config';
 import {MyUserService} from '@setl/core-req-services';
 import {ToasterService} from 'angular2-toaster';
+import {immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-ofi-kyc-already-done',
@@ -57,7 +58,10 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
 
-        route.params.subscribe((p => this.investorStatus = p['status']));
+        route.params.subscribe((p => {
+            this.investorStatus = p['status'];
+            this.showModal = this.investorStatus === 'waiting-for-more-info';
+        }));
         this.kycDoneForm = fb.group({
             opt: ['', Validators.required],
         });
@@ -65,7 +69,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.myInfos$
-            .takeUntil(this.unsubscribe)
+            // .takeUntil(this.unsubscribe)
             .subscribe((d) => {
                 const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
 
@@ -81,7 +85,13 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
+
+                this.amDetails = immutableHelper.copy(this.amDetails);
+
             });
+
+        /* fetch backend for existing data to pre fill the form */
+        this.ofiKycService.fetchInvestor();
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
     }
