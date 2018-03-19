@@ -212,7 +212,7 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 isRead: thisMessageDetail.get('isRead'),
                 isActed: thisMessageDetail.get('isActed'),
                 content: content,
-                action: null,
+                action: {type: null},
                 isDecrypted: false
             };
         }
@@ -240,6 +240,8 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                     content = atob(decryptedObject.general);
                     action = decryptedObject.action;
                 }
+
+                if (action == 'null') action = {type: null};
 
                 return Object.assign({}, thisMessageDetail, {
                     content, action, isDecrypted
