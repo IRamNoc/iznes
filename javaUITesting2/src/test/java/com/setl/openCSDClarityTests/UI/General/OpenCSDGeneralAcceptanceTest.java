@@ -183,10 +183,10 @@ public class OpenCSDGeneralAcceptanceTest {
         }catch (Error e){
             fail(e.getMessage());
         }
-        wait.until(elementToBeClickable(driver.findElement(By.id("ShellMail_link"))));
-        driver.findElement(By.id("ShellMail_link")).click();
+        WebElement shellMail = driver.findElement(By.id("ShellMail_link"));
+        wait.until(elementToBeClickable(shellMail));
+        shellMail.click();
     }
-
 
     public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
