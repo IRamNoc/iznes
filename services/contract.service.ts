@@ -69,12 +69,16 @@ export class ContractService {
                     contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
                     if (contract.parties[partyIndex].payList.length > 0) {
                         _.each(contract.parties[partyIndex].payList, (payListItem) => {
-                            contract.payors += payListItem.quantity.toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
+                            if (payListItem.quantity !== 'undefined') {
+                                contract.payors += payListItem.quantity.toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
+                            }
                         });
                     }
                     if (contract.parties[partyIndex].receiveList.length > 0) {
-                        _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
-                            contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                        _.eac(contract.parties[partyIndex].receiveList, (receiveListItem) => {
+                            if (typeof contact.payout !== 'undefined') {
+                                contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                            `]`
                         });
                     }
                     contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
