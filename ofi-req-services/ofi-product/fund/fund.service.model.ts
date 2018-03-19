@@ -150,8 +150,12 @@ export interface Fund {
 
 export interface CreateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
-
 }
+
+export interface IznesFundRequestMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
+
 //
 // export interface UpdateFund_RequestBody extends MemberNodeMessageBody, Fund {
 //     token: any;

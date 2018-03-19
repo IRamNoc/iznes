@@ -375,22 +375,6 @@ export const fundItems = {
             id: '0',
             text: 'none'
         },
-        {
-            id: '1',
-            text: 'umbrella 1'
-        },
-        {
-            id: '2',
-            text: 'umbrella 2'
-        },
-        {
-            id: '3',
-            text: 'umbrella 3'
-        },
-        {
-            id: '4',
-            text: 'umbrella 4'
-        },
     ],
     typeOfEuDirectiveItems: [
         {

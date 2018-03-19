@@ -1,17 +1,15 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest, createMemberNodeRequest} from '@setl/utils/common';
+import {SagaHelper} from '@setl/utils';
+import {NgRedux} from '@angular-redux/store';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {
-    AmAllFundShareListRequestBody,
-    InvestorFundAccessRequestBody
-} from './model';
+import {AmAllFundShareListRequestBody, InvestorFundAccessRequestBody, IznesShareListRequestMessageBody} from './model';
 import {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
-    clearRequestedAmAllFundShare
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST
 } from '../../../ofi-store/ofi-product/fundshare/actions';
 
 export interface RequestInvestorFundAccessData {
@@ -39,6 +37,22 @@ export class OfiFundShareService {
         ));
     }
 
+    static defaultRequestIznesShareList(ofiShareService: OfiFundShareService, ngRedux: NgRedux<any>) {
+        ngRedux.dispatch(setRequestedIznesShares());
+
+        // Request the list.
+        const asyncTaskPipe = ofiShareService.requestIznesShareList();
+
+        ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [GET_IZN_SHARES_LIST],
+                [],
+                asyncTaskPipe,
+                {},
+            )
+        );
+    }
+
     /**
      * Request all fund share for the asset manager, not just for under particular fund.
      * @return {any}
@@ -46,6 +60,15 @@ export class OfiFundShareService {
     requestAmAllFundShareList(): any {
         const messageBody: AmAllFundShareListRequestBody = {
             RequestName: 'getfundstatus',
+            token: this.memberSocketService.token
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestIznesShareList() {
+        const messageBody: IznesShareListRequestMessageBody = {
+            RequestName: 'izngetfundsharelist',
             token: this.memberSocketService.token
         };
 

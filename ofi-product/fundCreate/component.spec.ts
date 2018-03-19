@@ -3,6 +3,7 @@ import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import * as _ from 'lodash';
 
+
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
@@ -99,6 +100,36 @@ describe('FundCreateComponent', () => {
 
         comp = fixture.componentInstance;
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
+        comp.umbrellaList = {
+            7: {
+                umbrellaFundID: 7,
+                umbrellaFundName: 'test',
+                registerOffice: '4',
+                registerOfficeAddress: 'sdΩ',
+                legalEntityIdentifier: '`xzcd',
+                domicile: 'frfr',
+                umbrellaFundCreationDate: '2017-01-010:0: 00',
+                managementCompanyID: 24,
+                fundAdministratorID: 0,
+                custodianBankID: 0,
+                investmentManagerID: 0,
+                investmentAdvisorID: 0,
+                payingAgentID: 0,
+                transferAgentID: 0,
+                centralisingAgentID: 0,
+                giin: '43453',
+                delegatedManagementCompanyID: 0,
+                auditorID: 0,
+                taxAuditorID: 0,
+                principlePromoterID: 0,
+                legalAdvisorID: 0,
+                directors: '0'
+            },
+        };
+        comp.umbrellaItems = [
+            { id: '0', text: 'none' },
+            { id: 7, text: 'test' },
+        ];
 
         tick();
         fixture.detectChanges();
@@ -137,7 +168,7 @@ describe('FundCreateComponent', () => {
     describe('interface', () => {
         it('should display 3 read-only inputs with umbrella informations', fakeAsync(() => {
             const value = comp.umbrellaItems[1];
-            comp.umbrellaForm.controls['umbrellaFund'].setValue([value]);
+            comp.umbrellaControl.setValue([value]);
 
             tick();
             fixture.detectChanges();
@@ -180,58 +211,57 @@ describe('FundCreateComponent', () => {
 
         it('should display the fund creation form', fakeAsync(() => {
             const value = comp.umbrellaItems[1];
-            comp.umbrellaForm.controls['umbrellaFund'].setValue([value]);
+            comp.umbrellaControl.setValue([value]);
 
             comp.submitUmbrellaForm();
             tick();
             fixture.detectChanges();
 
-            const formGroupEls = fixture.debugElement.queryAllNodes(By.css('form div.form-group'));
-            expect(formGroupEls.length).toEqual(30);
+            const formGroupEls = fixture.debugElement.queryAllNodes(By.css('clr-tree-node:nth-of-type(n+1) div.form-group'));
+            expect(formGroupEls.length).toEqual(31);
         }));
 
         describe('conditionnal inputs', () => {
 
             beforeEach(fakeAsync(() => {
                 const value = comp.umbrellaItems[1];
-                comp.umbrellaForm.controls['umbrellaFund'].setValue([value]);
+                comp.umbrellaControl.setValue([value]);
 
                 comp.submitUmbrellaForm();
                 tick();
                 fixture.detectChanges();
 
-                const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'))[1];
-                caretEl.triggerEventHandler('click', null);
+                const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'));
+                caretEl[caretEl.length - 1].triggerEventHandler('click', null);
             }));
 
             describe('umbrellaFundID', () => {
                 it('should display the umbrellaFundID input', fakeAsync(() => {
+                    const value1 = comp.umbrellaItems[0];
+                    comp.umbrellaControl.setValue([value1]);
+                    tick();
+                    fixture.detectChanges();
+
                     const umbrellaBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
                     expect(umbrellaBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['isFundStructure'].setValue(comp.enums.isFundStructure.UMBRELLA.toString());
+
+                    const value2 = comp.umbrellaItems[1];
+                    comp.umbrellaControl.setValue([value2]);
                     tick();
                     fixture.detectChanges();
                     const umbrellaAfterEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
                     expect(umbrellaAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the umbrellaFundID input', () => {
+                it('should not display the umbrellaFundID input', fakeAsync(() => {
+                    const value1 = comp.umbrellaItems[0];
+                    comp.umbrellaControl.setValue([value1]);
+                    tick();
+                    fixture.detectChanges();
                     const umbrellaEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
                     expect(umbrellaEls.length).toEqual(0);
-                });
-
-                it('should clear the umbrellaFundID value on isFundStructure set to \'FUND\'', fakeAsync(() => {
-                    const testValue = 'test test test';
-                    comp.fundForm.controls['umbrellaFundID'].setValue(testValue);
-                    tick();
-                    fixture.detectChanges();
-                    expect(comp.fundForm.controls['umbrellaFundID'].value).toEqual(testValue);
-
-                    comp.fundForm.controls['isFundStructure'].setValue(comp.enums.isFundStructure.FUND.toString());
-                    tick();
-                    fixture.detectChanges();
-                    expect(comp.fundForm.controls['umbrellaFundID'].value).toBeNull();
                 }));
+
             });
 
             describe('typeOfEuDirective', () => {
@@ -547,7 +577,7 @@ describe('FundCreateComponent', () => {
         it('should call fundService.createFund', fakeAsync(() => {
 
             const value = comp.umbrellaItems[1];
-            comp.umbrellaForm.controls['umbrellaFund'].setValue([value]);
+            comp.umbrellaControl.setValue([value]);
 
             comp.submitUmbrellaForm();
             tick();
@@ -557,8 +587,7 @@ describe('FundCreateComponent', () => {
             caretEl.triggerEventHandler('click', null);
 
             const testPayload = {
-                isFundStructure: '0',
-                umbrellaFundID: null,
+                isFundStructure: '1',
                 fundName: 'test',
                 AuMFund: 'test',
                 AuMFundDate: '2017-02-02',
@@ -569,7 +598,7 @@ describe('FundCreateComponent', () => {
                 isEuDirective: '0',
                 typeOfEuDirective: null,
                 ucitsVersion: null,
-                legalForm: [{ id: '0', text: 'Contractual Fund', }],
+                legalForm: [{ id: '0', text: 'Contractual Fund' }],
                 nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
                 homeCountryLegalType: null,
                 fundCreationDate: null,
@@ -632,6 +661,7 @@ describe('FundCreateComponent', () => {
                 fundAdministrator: testPayload.fundAdministrator[0].id,
                 custodianBank: testPayload.custodianBank[0].id,
                 managementCompanyID: testPayload.managementCompanyID[0].id,
+                umbrellaFundID: comp.umbrellaControl.value[0].id,
             }, ['AuMFund', 'AuMFundDate']));
 
             expect(iznCreateFund).toHaveBeenCalledTimes(1);

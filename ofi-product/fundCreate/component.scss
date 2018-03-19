@@ -1,0 +1,83 @@
+.fundCreateComponent {
+    h3 {
+        margin-bottom: 12px;
+    }
+
+    .field-error {
+        color: red;
+        height: 0;
+        margin-top: -8px !important;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        p {
+            align-self: center;
+            margin-right: 30px;
+        }
+        a {
+            margin-bottom: 10px;
+        }
+    }
+
+    .umbrella-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p {
+            margin-bottom: 10px;
+        }
+        .form-group {
+            width: 50%;
+            align-self: flex-end;
+        }
+    }
+
+    .submit-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        button {
+            width: 150px;
+            margin: 10px 10px;
+        }
+    }
+
+    clr-tree-node {
+        div.row > div {
+            height: 82px;
+        }
+        &.overflow div[style] {
+            overflow-y: visible !important;
+        }
+    }
+
+    form .form-group > .checkbox {
+        margin-left: 24px;
+    }
+
+    form .form-group > .radio-inline {
+        margin-left: 24px;
+        width: initial;
+    }
+
+    .checkbox label:first-child {
+        padding-left: 0;
+    }
+
+    .radio-inline label:after {
+        content: '';
+    }
+
+    .umbrellaEditForm input {
+      background-color: #eceeef !important;
+    }
+
+    form .form-group > input[disabled] {
+      background-color: #eceeef;
+    }
+}
