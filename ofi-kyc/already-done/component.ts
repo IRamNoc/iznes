@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -53,6 +53,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 private ofiKycService: OfiKycService,
                 private myUserService: MyUserService,
                 private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
@@ -87,6 +88,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
 
                 this.amDetails = immutableHelper.copy(this.amDetails);
+
+                this.changeDetectorRef.markForCheck();
 
             });
 
