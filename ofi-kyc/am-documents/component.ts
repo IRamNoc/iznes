@@ -157,7 +157,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 data: tables[1]
             },
             {
-                title: 'Accepted KYC Requests',
+                title: 'Accepted - Funds Access Authorizations',
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: false,
                 data: tables[-1]
@@ -169,7 +169,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 data: tables[2]
             },
             {
-                title: 'Rejected Requests',
+                title: 'Rejected',
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables[-2]
