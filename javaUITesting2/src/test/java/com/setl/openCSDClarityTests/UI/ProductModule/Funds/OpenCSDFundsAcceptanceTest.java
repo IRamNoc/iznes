@@ -19,11 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -55,8 +54,53 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-        //loginAndVerifySuccess(adminuser, adminuserPassword);
+        loginAndVerifySuccess("am", "trb2017");
     }
+
+    @Test
+    public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        validatePageLayout();
+    }
+
+    private void validatePageLayout() {
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
+        assertTrue(isElementPresent(By.id("am-product-home")));
+        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/div")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
+        assertTrue(isElementPresent(By.id("switchActiveShares")));
+        assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
+
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contentEquals("Shares"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contentEquals("Add new Share"));
+
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contentEquals("Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contentEquals("Add new Fund"));
+
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[5]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[5]/div[1]/div[1]")).getText().contentEquals("Umbrella Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[5]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[5]/div[1]/div[2]")).getText().contentEquals("Add new Umbrella Fund"));
+
+
+
+        }
+
+        private void closeShares(){
+            driver.findElement(By.cssSelector("i.fa.fa-chevron-down.reverse")).click();
+            assertTrue(isElementPresent(By.id("switchActiveShares")));
+
+        }
 
     @Test
     @Ignore
@@ -65,7 +109,7 @@ public class OpenCSDFundsAcceptanceTest {
         int rounded = (int) Math.round(value);
         JavascriptExecutor jse = (JavascriptExecutor)driver;
 
-        loginAndVerifySuccess("am", "alex01");
+        loginAndVerifySuccess("am", "trb2017");
         System.out.println(rounded);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-fund");
