@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -9,6 +9,7 @@ import 'rxjs/add/operator/takeUntil';
 import {Endpoints} from '../config';
 import {MyUserService} from '@setl/core-req-services';
 import {ToasterService} from 'angular2-toaster';
+import {immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-ofi-kyc-already-done',
@@ -44,6 +45,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     lang: string;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myInfos$;
+    @select(['user', 'myDetail']) myDetails$;
     private unsubscribe: Subject<any> = new Subject();
 
     constructor(private fb: FormBuilder,
@@ -52,12 +54,16 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 private ofiKycService: OfiKycService,
                 private myUserService: MyUserService,
                 private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
 
-        route.params.subscribe((p => this.investorStatus = p['status']));
+        route.params.subscribe((p => {
+            this.investorStatus = p['status'];
+            this.showModal = this.investorStatus === 'waiting-for-more-info';
+        }));
         this.kycDoneForm = fb.group({
             opt: ['', Validators.required],
         });
@@ -65,14 +71,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.myInfos$
-            .takeUntil(this.unsubscribe)
+            // .takeUntil(this.unsubscribe)
             .subscribe((d) => {
-                const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
-
-                this.investorDetails.email = d.email;
-                this.investorDetails.phoneNumber = phoneNumber;
-                this.investorDetails.companyName = d.companyName;
-
                 this.amDetails.firstName.value = d.invitedBy.firstName;
                 this.amDetails.lastName.value = d.invitedBy.lastName;
                 this.amDetails.email.value = d.invitedBy.email;
@@ -81,7 +81,24 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;
+
+                this.amDetails = immutableHelper.copy(this.amDetails);
+
+                this.changeDetectorRef.markForCheck();
+
             });
+        this.myDetails$
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
+
+                this.investorDetails.email = d.emailAddress;
+                this.investorDetails.phoneNumber = phoneNumber;
+                this.investorDetails.companyName = d.companyName;
+            });
+
+        /* fetch backend for existing data to pre fill the form */
+        this.ofiKycService.fetchInvestor();
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
     }

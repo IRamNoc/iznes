@@ -72,6 +72,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             displayName: '',
             firstName: userInformations.firstName,
             lastName: userInformations.lastName,
+            email: userInformations.email,
             mobilePhone: '',
             addressPrefix: '',
             address1: '',
