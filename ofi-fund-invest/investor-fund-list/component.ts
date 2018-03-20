@@ -60,10 +60,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
+            if (this.connectedWalletId !== 0) {
+                this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
+                    (requested) => this.requestMyFundAccess(requested)));
+            }
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-        this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
-            (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
             (fundShareAccessList) => this.updateFundList(fundShareAccessList)));
 
@@ -138,7 +140,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 assetClass: '',
                 assetManager: item.get('managementCompany', ''),
                 srri: '',
-                sri:  '',
+                sri: '',
                 currency: item.get('shareClassCurrency', ''),
                 nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
                 subscriptionDate: item.get('subscriptionCutOffTime', ''),
