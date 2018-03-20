@@ -176,7 +176,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             {
                 title: 'Started by your clients',
-                columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
+                columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables['invited']
             },
