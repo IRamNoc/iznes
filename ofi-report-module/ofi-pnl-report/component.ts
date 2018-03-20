@@ -118,7 +118,6 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         // List of observable subscription.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
-            OfiFundInvestService.resetRequested(this._ngRedux).then(() => {this.requestMyFundAccess(false);});
         }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));

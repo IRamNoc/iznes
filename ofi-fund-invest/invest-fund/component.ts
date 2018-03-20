@@ -26,7 +26,7 @@ import {setRequestedWalletAddresses} from '@setl/core-store';
 @Component({
     selector: 'app-invest-fund',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         InvestFundFormService
@@ -317,7 +317,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         };
 
 
-        console.log('metadata',this.metaData);
+        console.log('metadata', this.metaData);
 
     }
 

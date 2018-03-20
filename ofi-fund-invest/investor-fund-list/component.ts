@@ -35,8 +35,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     // production or not
     production: boolean;
 
-    connectedWalletId: number;
-
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
@@ -46,7 +44,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _memberService: MemberService,
@@ -65,10 +62,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             this.connectedWalletId = connected;
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
-            OfiFundInvestService.resetRequested(this._ngRedux).then(() => {this.requestMyFundAccess(false);});
-        }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
