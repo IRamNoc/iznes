@@ -125,7 +125,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         logout();
         loginAndVerifySuccess(userDetails[0], "alex01");
         logout();
-        loginAndVerifySuccess(userDetails[1], "alex01");
+        loginAndVerifySuccess(userDetails[0], "alex01");
     }
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
