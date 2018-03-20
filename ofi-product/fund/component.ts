@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
@@ -11,6 +11,7 @@ import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fu
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {typeOfEuDirective} from '../fundConfig';
 
 interface UmbrellaItem {
     auditorID: number;
@@ -41,25 +42,34 @@ interface UmbrellaList {
     [key: string]: UmbrellaItem;
 }
 
+interface FundList {
+    [key: string]: any;
+}
+
 @Component({
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class FundCreateComponent implements OnInit, OnDestroy {
+export class FundComponent implements OnInit, OnDestroy {
 
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
+    param: string;
 
-    // select inputs data
+    // local copy of config
     fundItems: any;
     enums: any;
-    umbrellaList: UmbrellaList;
 
+    // local copy of the state
+    umbrellaList: UmbrellaList;
+    fundList: FundList;
+
+    // select items
     domicileItems = [];
     umbrellaItems = [];
     typeOfEuDirectiveItems = [];
-    ucitsVersionItems = [];
+    UcitsVersionItems = [];
     legalFormItems = [];
     nationalNomenclatureOfLegalFormItems = [];
     homeCountryLegalTypeItems = [];
@@ -76,6 +86,8 @@ export class FundCreateComponent implements OnInit, OnDestroy {
     principalPromoterItems = [];
     payingAgentItems = [];
     managementCompanyItems = [];
+    transferAgentItems = [];
+    centralizingAgentItems = [];
 
     // Locale
     language = 'fr';
@@ -103,7 +115,8 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         locale: this.language
     };
 
-    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) requestedOfiUmbrellaFundList$;
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessList$;
 
     unSubscribe: Subject<any> = new Subject();
@@ -116,8 +129,10 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
+        private route: ActivatedRoute,
         @Inject('fund-items') fundItems,
     ) {
+
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
         OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
@@ -128,7 +143,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         this.domicileItems = this.fundItems.domicileItems;
         this.umbrellaItems = this.fundItems.umbrellaItems;
         this.typeOfEuDirectiveItems = this.fundItems.typeOfEuDirectiveItems;
-        this.ucitsVersionItems = this.fundItems.UCITSVersionItems;
+        this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
         this.fundCurrencyItems = this.fundItems.fundCurrencyItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
@@ -142,6 +157,8 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         this.investmentManagerItems = this.fundItems.investmentManagerItems;
         this.principalPromoterItems = this.fundItems.principalPromoterItems;
         this.payingAgentItems = this.fundItems.payingAgentItems;
+        this.transferAgentItems = this.fundItems.transferAgentItems;
+        this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
 
         this.umbrellaForm = fb.group({
             'umbrellaFundName': {value: 'nem', disabled: true},
@@ -187,7 +204,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             'domicile': [[], Validators.required],
             'isEuDirective': [null, Validators.required],
             'typeOfEuDirective': [[]],
-            'ucitsVersion': [[]],
+            'UcitsVersion': [[]],
             'legalForm': [[], Validators.required],
             'nationalNomenclatureOfLegalForm': [[], Validators.required],
             'homeCountryLegalType': [[]],
@@ -204,8 +221,8 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             'principalPromoter': [[]],
             'payingAgent': [[]],
             'fundManagers': [null],
-            'transferAgent': [''],
-            'centralizingAgent': [''],
+            'transferAgent': [[]],
+            'centralizingAgent': [[]],
             'isDedicatedFund': [null, Validators.required],
             'portfolioCurrencyHedge': [[], Validators.required],
 
@@ -226,7 +243,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             'hasHedgeFundStrategy': [null],
             'isLeveraged': [null],
             'has130Or30Strategy': [null],
-            'isfundTargetingEos': [null],
+            'isFundTargetingEos': [null],
             'isFundTargetingSri': [null],
             'isPassiveFund': [null],
             'hasSecurityiesLending': [null],
@@ -294,8 +311,8 @@ export class FundCreateComponent implements OnInit, OnDestroy {
         this.fundForm.controls['domicile'].valueChanges
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                this.fundForm.controls['transferAgent'].setValue(null);
-                this.fundForm.controls['centralizingAgent'].setValue(null);
+                this.fundForm.controls['transferAgent'].setValue([]);
+                this.fundForm.controls['centralizingAgent'].setValue([]);
                 this.fundForm.controls['homeCountryLegalType'].setValue([]);
 
                 if (this.isTransferAgentActive()) {
@@ -334,10 +351,10 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
                 if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
-                    this.fundForm.controls['ucitsVersion'].setValue([]);
-                    this.fundForm.controls['ucitsVersion'].clearValidators();
+                    this.fundForm.controls['UcitsVersion'].setValue([]);
+                    this.fundForm.controls['UcitsVersion'].clearValidators();
                 } else {
-                    this.fundForm.controls['ucitsVersion'].setValidators(Validators.required);
+                    this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
                 }
             });
 
@@ -372,7 +389,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.requestedOfiUmbrellaFundList$
+        this.umbrellaFundList$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
                 const values =  _.values(d);
@@ -388,9 +405,15 @@ export class FundCreateComponent implements OnInit, OnDestroy {
 
                 this.umbrellaList = d;
                 this.umbrellaItems = _.uniq([
-                    ...this.umbrellaItems,
+                    ...this.fundItems.umbrellaItems,
                     ...newItems,
                 ]);
+            });
+
+        this.fundList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                this.fundList = d;
             });
 
         this.managementCompanyAccessList$
@@ -407,6 +430,18 @@ export class FundCreateComponent implements OnInit, OnDestroy {
                     };
                 });
             });
+    }
+
+    static getListItem(value: string, list: any[]): any[] {
+        if (value === null) {
+            return [];
+        }
+
+        const item = _.find(list, { id: value });
+        if (!item) {
+            return [];
+        }
+        return [item];
     }
 
     getEuDirectiveType() {
@@ -438,7 +473,56 @@ export class FundCreateComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.route.params
+            .takeUntil(this.unSubscribe)
+            .subscribe((params) => {
+                this.param = params.id;
 
+                if (params.id === 'new') {
+                    return;
+                } else if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
+                    this.umbrellaControl.setValue([{
+                        id: this.fundList[params.id].umbrellaFundID,
+                        text: this.fundList[params.id].umbrellaFundName,
+                    }]);
+                    const fund = _.omit(this.fundList[params.id], ['fundID', 'umbrellaFundID', 'umbrellaFundName', 'companyName']);
+
+                    this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
+                    this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
+
+                    this.fundForm.setValue({
+                        ...fund,
+                        AuMFund: null,
+                        AuMFundDate: null,
+                        domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
+                        typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
+                        UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
+                        legalForm: FundComponent.getListItem(fund.legalForm, this.legalFormItems),
+                        nationalNomenclatureOfLegalForm: FundComponent.getListItem(fund.nationalNomenclatureOfLegalForm, this.nationalNomenclatureOfLegalFormItems),
+                        homeCountryLegalType: FundComponent.getListItem(fund.homeCountryLegalType, this.homeCountryLegalTypeItems),
+                        fundCurrency: FundComponent.getListItem(fund.fundCurrency, this.fundCurrencyItems),
+                        managementCompanyID: FundComponent.getListItem(fund.managementCompanyID, this.managementCompanyItems),
+                        fundAdministrator: FundComponent.getListItem(fund.fundAdministrator, this.fundAdministratorItems),
+                        custodianBank: FundComponent.getListItem(fund.custodianBank, this.custodianBankItems),
+                        investmentManager: FundComponent.getListItem(fund.investmentManager, this.investmentManagerItems),
+                        principalPromoter: FundComponent.getListItem(fund.principalPromoter, this.principalPromoterItems),
+                        payingAgent: FundComponent.getListItem(fund.payingAgent, this.payingAgentItems),
+                        portfolioCurrencyHedge: FundComponent.getListItem(fund.portfolioCurrencyHedge, this.portfolioCurrencyHedgeItems),
+                        investmentAdvisor: FundComponent.getListItem(fund.investmentAdvisor, this.investmentAdvisorItems),
+                        auditor: FundComponent.getListItem(fund.auditor, this.auditorItems),
+                        taxAuditor: FundComponent.getListItem(fund.taxAuditor, this.taxAuditorItems),
+                        legalAdvisor: FundComponent.getListItem(fund.legalAdvisor, this.legalAdvisorItems),
+                        capitalPreservationPeriod: FundComponent.getListItem(fund.capitalPreservationPeriod, this.capitalPreservationPeriodItems),
+                        transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
+                        centralizingAgent: FundComponent.getListItem(fund.centralizingAgent, this.centralizingAgentItems),
+                    });
+                    this.viewMode = 'FUND';
+                    return;
+                } else {
+                    this.router.navigate(['product-module', 'fund', 'new']);
+                    return;
+                }
+            });
     }
 
     // forms
@@ -451,7 +535,7 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             ...this.fundForm.getRawValue(),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
-            ucitsVersion: _.get(this.fundForm.controls['ucitsVersion'].value, ['0', 'id'], null),
+            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
             legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
             nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
             homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
@@ -469,18 +553,36 @@ export class FundCreateComponent implements OnInit, OnDestroy {
             payingAgent: _.get(this.fundForm.controls['payingAgent'].value, ['0', 'id'], null),
             managementCompanyID:  _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
             umbrellaFundID:  _.get(this.umbrellaControl.value, ['0', 'id'], null),
+            transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
+            centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
+            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
         }, ['AuMFund', 'AuMFundDate']);
 
-        this.fundService.iznCreateFund(payload)
-            .then(() => {
-                this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully created.`);
-                this.router.navigate(['product-module', 'home']);
-                return;
-            })
-            .catch(() => {
-                this.toasterService.pop('error', 'Failed to save the fund.');
-                return;
-            });
+        if (this.param === 'new') {
+            this.fundService.iznCreateFund(payload)
+                .then(() => {
+                    this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully created.`);
+                    OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                    this.router.navigate(['product-module', 'home']);
+                    return;
+                })
+                .catch(() => {
+                    this.toasterService.pop('error', 'Failed to create the fund.');
+                    return;
+                });
+        } else {
+            this.fundService.iznUpdateFund(this.param, payload)
+                .then(() => {
+                    this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully updated.`);
+                    OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                    this.router.navigate(['product-module', 'home']);
+                    return;
+                })
+                .catch(() => {
+                    this.toasterService.pop('error', 'Failed to update the fund.');
+                    return;
+                });
+        }
     }
 
     onClickBack() {
