@@ -2,12 +2,13 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {Location} from '@angular/common';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {MessageKycConfig, MessagesService} from '@setl/core-messages';
 import {mDateHelper} from '@setl/utils';
 import {InvestorModel} from './model';
+import {ToasterService} from 'angular2-toaster';
 
 enum Statuses {
     waitingApproval = 1,
@@ -66,6 +67,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private redux: NgRedux<any>,
                 private route: ActivatedRoute,
                 private alertsService: AlertsService,
+                private toast: ToasterService,
+                private _router: Router,
                 private messagesService: MessagesService) {
 
         this.isRejectModalDisplayed = false;
@@ -204,6 +207,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             case Statuses.rejected:
                 if (this.initialStatusId === Statuses.waitingApproval) {
                     this.isRejectModalDisplayed = true;
+                    this.toast.pop('success', 'An email has been sent to ' + this.userDetail.companyName + ' in order to make them aware of their rejection.');
                 } else {
                     this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
                 }
@@ -217,6 +221,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 this.onApproveKyc();
                 break;
         }
+        this._router.navigateByUrl('/kyc-am-documents');
+
     }
 
     onAskMoreInfoKyc() {
@@ -236,7 +242,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         };
 
         this.kycService.askMoreInfo(payload).then(() => {
-            this.showSuccessAlert('The KYC request has been successfully updated and requires more information from the investor');
+            //this.showSuccessAlert('The KYC request has been successfully updated and requires more information from the investor');
+            this.toast.pop('success', 'An email has been sent to ' + this.userDetail.companyName + ' in order to ask for more information.');
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -258,7 +265,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
-            this.showSuccessAlert('The KYC request has been successfully approved');
+            //this.showSuccessAlert('The KYC request has been successfully approved');
+
+            this.toast.pop('success', 'The KYC request has been successfully approved.');
 
             /* Send action message to investor */
             this.sendActionMessageToInvestor(result[1].Data[0].investorWalletID);
@@ -314,9 +323,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
             lang: this.language
         };
-
+      
         this.kycService.reject(payload).then(() => {
-            this.showSuccessAlert('The KYC request has been successfully rejected');
+            //this.showSuccessAlert('The KYC request has been successfully rejected');
+            this.toast.pop('success', 'The KYC request has been successfully rejected.');
         }).catch((error) => {
             const data = error[1].Data[0];
 
