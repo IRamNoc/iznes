@@ -16,8 +16,7 @@ import {MultilingualModule} from '@setl/multilingual';
 /* Components. */
 import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
-import {FundCreateComponent} from './fundCreate/component';
-// import {FundEditComponent} from './fundEdit/component';
+import {FundComponent} from './fund/component';
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
@@ -32,13 +31,12 @@ import fundItems from './fundConfig';
     declarations: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundCreateComponent,
-        // FundEditComponent,
+        FundComponent,
     ],
     exports: [
         ProductHomeComponent,
         UmbrellaFundComponent,
-        FundCreateComponent,
+        FundComponent,
     ],
     imports: [
         CommonModule,
