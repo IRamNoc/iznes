@@ -93,6 +93,17 @@ public class SetUp {
     public static final String Member = "4";
     public static final String StandardUser = "5";
 
+
+    //Datagrid Headings - Shares
+    public static final String[] sharesHeadings = new String[]{"Share name", "Fund name", "ISIN", "Management company", "Type of share", "Status (close or open?)"};
+
+    //Datagrid Headings - Funds
+    public static final String[] fundsHeadings = new String[]{"Fund name", "LEI", "Management company", "Country", "Law status", "Umbrella fund (to which the fund belongs)", "Currency of the fund"};
+
+    //Datagrid Headings - Umbrella Funds
+    public static final String[] umbrellaFundsHeadings = new String[]{"Umbrella fund name", "LEI", "Management company", "Country"};
+
+
     public static final String SweetAlert = ".sweet-alert.showSweetAlert.visible p";
     public static final String SweetAlertHeader = ".sweet-alert.showSweetAlert.visible>h2";
     public static final Dimension Screen =  new Dimension(1920, 1200);
@@ -159,7 +170,7 @@ public class SetUp {
             options.addArguments("enable-automation");
             options.addArguments("test-type=browser");
             options.addArguments("disable-plugins");
-            options.addArguments("--headless");
+            //options.addArguments("--headless");
             options.addArguments("--disable-gpu");
             prefs.put("credentials_enable_service", false);
             prefs.put("profile.default_content_settings.popups", 0);
