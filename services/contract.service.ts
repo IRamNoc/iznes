@@ -75,7 +75,7 @@ export class ContractService {
                         });
                     }
                     if (contract.parties[partyIndex].receiveList.length > 0) {
-                        _.eac(contract.parties[partyIndex].receiveList, (receiveListItem) => {
+                        _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
                             if (typeof receiveListItem.quantity !== 'undefined') {
                                 contract.payees += (+receiveListItem.quantity).toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
                             }
