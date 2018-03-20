@@ -8,7 +8,6 @@ import {
 } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {NgRedux, select} from '@angular-redux/store';
-import {getAuthentication} from '@setl/core-store';
 import {ToasterService} from 'angular2-toaster';
 import {MyUserService} from '@setl/core-req-services';
 import {Subscription} from 'rxjs/Subscription';
@@ -16,7 +15,7 @@ import {Subscription} from 'rxjs/Subscription';
 @Injectable()
 export class LoginGuardService implements CanActivate {
     isLogin: boolean;
-    redirect: string;
+    redirect = '';
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
