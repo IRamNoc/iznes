@@ -1,9 +1,10 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {fromJS} from 'immutable';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {fromJS, OrderedMap} from 'immutable';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
+import * as _ from 'lodash';
 /* Services */
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 /* Alert service. */
@@ -31,6 +32,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     filteredShareList = [];
     showOnlyActive = true;
 
+    fundCurrencyItems = [];
+
     columns = {
         'shareName': {
             label: 'Share name',
@@ -41,6 +44,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             label: 'Fund name',
             dataSource: 'fundName',
             sortable: true,
+        },
+        'fFundName': {
+            label: 'Fund name',
+            dataSource: 'fundName',
+            sortable: true,
+            link: '/product-module/fund/:fundID',
         },
         'isin': {
             label: 'ISIN',
@@ -151,7 +160,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         {
             title: 'Funds',
             columns: [
-                this.columns['fundName'],
+                this.columns['fFundName'],
                 this.columns['lei'],
                 this.columns['managementCompany'],
                 this.columns['country'],
@@ -218,8 +227,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _ofiFundService: OfiFundService,
                 private _ofiFundShareService: OfiFundShareService,
-                private _ofiUmbrellaFundService: OfiUmbrellaFundService) {
-
+                private _ofiUmbrellaFundService: OfiUmbrellaFundService,
+                @Inject('fund-items') fundItems,
+    ) {
+        this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
         this.amManagementCompany = '';
     }
 
@@ -250,17 +261,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     getFundList(funds: any): void {
         const fundList = [];
-
-        if (funds.length > 0) {
-            funds.map((fund) => {
+        if (_.values(funds).length > 0) {
+            _.values(funds).map((fund) => {
                 fundList.push({
+                    fundID: fund.fundID,
                     fundName: fund.fundName,
-                    lei: fund.lei,
-                    managementCompany: fund.managementCompanyName,
-                    country: fund.domicile,
+                    legalEntityIdentifier: fund.legalEntityIdentifier,
+                    managementCompanyID: fund.managementCompanyID,
+                    domicile: fund.domicile,
                     lawStatus: fund.legalForm,
-                    umbrellaFund: fund.umbrellaFundName,
-                    fundCurrency: fund.fundCurrency,
+                    umbrellaFundName: fund.umbrellaFundName,
+                    fundCurrency: _.find(this.fundCurrencyItems, { id: fund.fundCurrency }).text,
                 });
             });
         }
@@ -358,7 +369,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this._router.navigateByUrl('/product-module/share');
                 break;
             case 'fund':
-                this._router.navigateByUrl('/product-module/fund/create');
+                this._router.navigateByUrl('/product-module/fund/new');
                 break;
             case 'ufund':
                 this._router.navigateByUrl('/product-module/umbrella-fund/0');
