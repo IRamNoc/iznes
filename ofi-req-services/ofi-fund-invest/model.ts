@@ -7,6 +7,7 @@ export enum ArrangementType {
 
 export interface RequetFundAccessMy extends MemberNodeMessageBody {
     token: string;
+    walletid: number;
 }
 
 export interface AddArrangementRequestBody extends MemberNodeMessageBody {

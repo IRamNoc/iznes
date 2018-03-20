@@ -26,12 +26,12 @@ export class OfiFundInvestService {
      * @param ofiFundInvestService
      * @param ngRedux
      */
-    static defaultRequestFunAccessMy(ofiFundInvestService: OfiFundInvestService, ngRedux: NgRedux<any>) {
+    static defaultRequestFunAccessMy(ofiFundInvestService: OfiFundInvestService, ngRedux: NgRedux<any>, walletId: number) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedFundAccessMy());
 
         // Request the list.
-        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy();
+        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy({walletId});
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_ACCESS_MY],
@@ -41,10 +41,11 @@ export class OfiFundInvestService {
         ));
     }
 
-    requestFundAccessMy(): any {
+    requestFundAccessMy(requestData: {walletId: number}): any {
         const messageBody: RequetFundAccessMy = {
-            RequestName: 'getfundaccessmy',
-            token: this.memberSocketService.token
+            RequestName: 'izngetmyfundshareaccesslist',
+            token: this.memberSocketService.token,
+            walletid: requestData.walletId || 0
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
