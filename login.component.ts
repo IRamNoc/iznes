@@ -203,10 +203,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             {},
             () => {
-                if (this.loginGuardService.redirect != ''){
-                    this.router.navigateByUrl(this.loginGuardService.redirect);
-                    this.loginGuardService.redirect = '';
-                }
             },
             // Fail to login
             (data) => {
@@ -220,8 +216,15 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
-            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            this.router.navigateByUrl(redirect);
+
+            // Redirect to the page it was in the url
+            if (this.loginGuardService.redirect !== '') {
+                this.router.navigateByUrl(this.loginGuardService.redirect);
+                this.loginGuardService.redirect = '';
+            }else {
+                const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+                this.router.navigateByUrl(redirect);
+            }
 
             this.isLogin = true;
 
@@ -251,7 +254,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { 'mismatch': true };
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
     }
 
     toggleShowPasswords(num) {
@@ -397,6 +400,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
+        this.alertsService.create(type, msg, {buttonMessage: 'Please try again to log in'});
     }
 }
