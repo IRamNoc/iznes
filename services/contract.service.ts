@@ -70,14 +70,14 @@ export class ContractService {
                     if (contract.parties[partyIndex].payList.length > 0) {
                         _.each(contract.parties[partyIndex].payList, (payListItem) => {
                             if (typeof payListItem.quantity !== 'undefined') {
-                                contract.payors += payListItem.quantity.toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
+                                contract.payors +=  (+payListItem.quantity).toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
                             }
                         });
                     }
                     if (contract.parties[partyIndex].receiveList.length > 0) {
                         _.eac(contract.parties[partyIndex].receiveList, (receiveListItem) => {
                             if (typeof receiveListItem.quantity !== 'undefined') {
-                                contract.payees += receiveListItem.quantity.toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                                contract.payees += (+receiveListItem.quantity).toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
                             }
                         });
                     }
