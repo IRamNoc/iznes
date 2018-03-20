@@ -1,5 +1,8 @@
 // Vendor
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+
+import {fromJS} from 'immutable';
+
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -12,8 +15,6 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {NumberConverterService} from '@setl/utils';
 import {OfiFundService} from '../../ofi-req-services/ofi-product/fund/fund.service';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
-
-import {fromJS} from 'immutable';
 
 /* Models */
 
@@ -230,7 +231,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _ofiFundService: OfiFundService,
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiUmbrellaFundService: OfiUmbrellaFundService,
-                @Inject('fund-items') fundItems,) {
+                @Inject('fund-items') fundItems) {
         this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
         this.countryItems = fundItems.fundItems.domicileItems;
         this.amManagementCompany = '';
