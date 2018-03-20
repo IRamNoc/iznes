@@ -2,7 +2,7 @@ import {Action} from 'redux';
 import * as FundActions from './actions';
 import {FundDetail, FundListState, IznesFundDetail} from './model';
 import * as _ from 'lodash';
-import {fromJS, Map, OrderedMap} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 const initialState: FundListState = {
     fundList: {},
@@ -132,75 +132,56 @@ function clearSetIznesFundsRequested(state: FundListState): FundListState {
 
 function handleGetIznesFunds(state: FundListState, action: Action): any {
     const data = _.get(action, 'payload[1].Data', []);
-    let iznFundList = OrderedMap();
 
-    data.map((fund) => {
+    const iznFundList = data.reduce((sum, fund) => {
         const fundData: IznesFundDetail = {
-            fundName: fund.fundName,
-            isFundStructure: fund.isFundStructure,
-            umbrellaFundID: fund.umbrellaFundID,
-            umbrellaFundName: fund.umbrellaFundName,
-            lei: fund.legalEntityIdentifier,
-            registerOffice: fund.registerOffice,
-            registerOfficeAddress: fund.registerOfficeAddress,
-            domicile: fund.domicile,
-            isEuDirective: fund.isEuDirective,
-            typeOfEuDirective: fund.typeOfEuDirective,
-            uitsVersion: fund.UcitsVersion,
-            legalForm: fund.legalForm,
-            nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm,
-            homeCountryLegalType: fund.homeCountryLegalType,
-            fundCreationDate: fund.fundCreationDate,
-            fundLaunchate: fund.fundLaunchate,
-            fundCurrency: fund.fundCurrency,
-            openOrCloseEnded: fund.openOrCloseEnded,
-            fiscalYearEnd: fund.fiscalYearEnd,
-            isFundOfFund: fund.isFundOfFund,
-            managementCompanyID: fund.managementCompanyID,
-            managementCompanyName: fund.managementCompanyName,
-            fundAdministrator: fund.fundAdministrator,
-            custodianBank: fund.custodianBank,
-            investmentManager: fund.investmentManager,
-            principalPromoter: fund.principalPromoter,
-            payingAgent: fund.payingAgent,
-            fundManagers: fund.fundManagers,
-            transferAgent: fund.transferAgent,
-            centralizingAgent: fund.centralizingAgent,
-            isDedicatedFund: fund.isDedicatedFund,
-            portfolioCurrencyHedge: fund.portfolioCurrencyHedge,
-            globalItermediaryIdentification: fund.globalItermediaryIdentification,
-            delegatedManagementCompany: fund.delegatedManagementCompany,
-            investmentAdvisor: fund.investmentAdvisor,
-            auditor: fund.auditor,
-            taxAuditor: fund.taxAuditor,
-            legalAdvisor: fund.legalAdvisor,
-            directors: fund.directors,
-            pocket: fund.pocket,
-            hasEmbeddedDirective: fund.hasEmbeddedDirective,
-            hasCapitalPreservation: fund.hasCapitalPreservation,
-            capitalPreservationLevel: fund.capitalPreservationLevel,
-            capitalPreservationPeriod: fund.capitalPreservationPeriod,
-            hasCppi: fund.hasCppi,
-            cppiMultiplier: fund.cppiMultiplier,
-            hasHedgeFundStrategy: fund.hasHedgeFundStrategy,
-            isLeveraged: fund.isLeveraged,
-            has130Or30Strategy: fund.has130Or30Strategy,
-            isFundTargetingEos: fund.isFundTargetingEos,
-            isFundTargetingSri: fund.isFundTargetingSri,
-            isPassiveFund: fund.isPassiveFund,
-            hasSecurityiesLending: fund.hasSecurityiesLending,
-            hasSwap: fund.hasSwap,
-            hasDurationHedge: fund.hasDurationHedge,
-            investmentObjective: fund.investmentObjective
+            ..._.omit(fund, ['Status']),
+            homeCountryLegalType: fund.homeCountryLegalType !== null && fund.homeCountryLegalType.toString(),
+            typeOfEuDirective: fund.typeOfEuDirective !== null && fund.typeOfEuDirective.toString(),
+            isFundStructure: fund.isFundStructure !== null && fund.isFundStructure.toString(),
+            isEuDirective: fund.isEuDirective !== null && fund.isEuDirective.toString(),
+            UcitsVersion: fund.UcitsVersion !== null && fund.UcitsVersion.toString(),
+            legalForm: fund.legalForm !== null && fund.legalForm.toString(),
+            fundCurrency: fund.fundCurrency !== null && fund.fundCurrency.toString(),
+            nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm !== null && fund.nationalNomenclatureOfLegalForm.toString(),
+            openOrCloseEnded: fund.openOrCloseEnded !== null && fund.openOrCloseEnded.toString(),
+            isFundOfFund: fund.isFundOfFund !== null && fund.isFundOfFund.toString(),
+            fundAdministrator: fund.fundAdministrator !== null && fund.fundAdministrator.toString(),
+            custodianBank: fund.custodianBank !== null && fund.custodianBank.toString(),
+            investmentManager: fund.investmentManager !== null && fund.investmentManager.toString(),
+            principalPromoter: fund.principalPromoter !== null && fund.principalPromoter.toString(),
+            payingAgent: fund.payingAgent !== null && fund.payingAgent.toString(),
+            transferAgent: fund.transferAgent !== null && fund.transferAgent.toString(),
+            centralizingAgent: fund.centralizingAgent !== null && fund.centralizingAgent.toString(),
+            isDedicatedFund: fund.isDedicatedFund !== null && fund.isDedicatedFund.toString(),
+            portfolioCurrencyHedge: fund.portfolioCurrencyHedge !== null && fund.portfolioCurrencyHedge.toString(),
+            investmentAdvisor: fund.investmentAdvisor !== null && fund.investmentAdvisor.toString(),
+            auditor: fund.auditor !== null && fund.auditor.toString(),
+            taxAuditor: fund.taxAuditor !== null && fund.taxAuditor.toString(),
+            legalAdvisor: fund.legalAdvisor !== null && fund.legalAdvisor.toString(),
+            hasEmbeddedDirective: fund.hasEmbeddedDirective !== null && fund.hasEmbeddedDirective.toString(),
+            hasCapitalPreservation: fund.hasCapitalPreservation !== null && fund.hasCapitalPreservation.toString(),
+            capitalPreservationPeriod: fund.capitalPreservationPeriod !== null && fund.capitalPreservationPeriod.toString(),
+            hasCppi: fund.hasCppi !== null && fund.hasCppi.toString(),
+            hasHedgeFundStrategy: fund.hasHedgeFundStrategy !== null && fund.hasHedgeFundStrategy.toString(),
+            isLeveraged: fund.isLeveraged !== null && fund.isLeveraged.toString(),
+            has130Or30Strategy: fund.has130Or30Strategy !== null && fund.has130Or30Strategy.toString(),
+            isFundTargetingEos: fund.isFundTargetingEos !== null && fund.isFundTargetingEos.toString(),
+            isFundTargetingSri: fund.isFundTargetingSri !== null && fund.isFundTargetingSri.toString(),
+            isPassiveFund: fund.isPassiveFund !== null && fund.isPassiveFund.toString(),
+            hasSecurityiesLending: fund.hasSecurityiesLending !== null && fund.hasSecurityiesLending.toString(),
+            hasSwap: fund.hasSwap !== null && fund.hasSwap.toString(),
+            hasDurationHedge: fund.hasDurationHedge !== null && fund.hasDurationHedge.toString(),
+            fiscalYearEnd: fund.fiscalYearEnd !== null && fund.fiscalYearEnd.substr(0, 7),
         };
+        return {
+            ...sum,
+            [fund.fundID]: fundData
+        };
+    }, {});
 
-        iznFundList = iznFundList.set(fund.fundID, fundData);
-    });
-
-    // TODO: to remove when it goes live
-    console.log('handleGetIznesFunds (fundList): ', iznFundList);
-
-    return Object.assign({}, state, {
-        iznFundList
-    });
+    return {
+        ...state,
+        iznFundList,
+    };
 }

@@ -13,8 +13,8 @@ import {
     SaveFundShareRequestBody,
     UpdateFundShareRequestBody,
     SaveFundHistoryRequestBody,
-    CreateFundRequestBody,
-    // UpdateFund_RequestBody,
+    IznesCreateFundRequestBody,
+    IznesUpdateFundRequestBody,
     Fund,
     IznesFundRequestMessageBody
 } from './fund.service.model';
@@ -239,7 +239,7 @@ export class OfiFundService {
      * new Umbrellas/Funds/Shares module
      */
     iznCreateFund(payload: Fund) {
-        const messageBody: CreateFundRequestBody = {
+        const messageBody: IznesCreateFundRequestBody = {
             RequestName: 'izncreatefund',
             token: this.memberSocketService.token,
             ...payload,
@@ -268,14 +268,17 @@ export class OfiFundService {
         });
     }
 
-    // updateFund_(payload: Fund) {
-    //     const messageBody: UpdateFund_RequestBody = {
-    //         RequestName: 'iznupdatefund',
-    //         token: this.memberSocketService.token,
-    //         ...payload,
-    //     };
-    //
-    //     return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    // }
+    iznUpdateFund(id: string, payload: Fund) {
+        const messageBody: IznesUpdateFundRequestBody = {
+            RequestName: 'iznupdatefund',
+            token: this.memberSocketService.token,
+            fundID: id,
+            ...payload,
+        };
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
+    }
 
 }

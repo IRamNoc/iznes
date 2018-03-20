@@ -1,9 +1,12 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+
 import {fromJS} from 'immutable';
+
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
+import * as _ from 'lodash';
 /* Services */
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 /* Alert service. */
@@ -31,6 +34,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     filteredShareList = [];
     showOnlyActive = true;
 
+    fundCurrencyItems = [];
+    countryItems = [];
+
     columns = {
         'shareName': {
             label: 'Share name',
@@ -41,6 +47,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             label: 'Fund name',
             dataSource: 'fundName',
             sortable: true,
+        },
+        'fFundName': {
+            label: 'Fund name',
+            dataSource: 'fundName',
+            sortable: true,
+            link: '/product-module/fund/:fundID',
         },
         'isin': {
             label: 'ISIN',
@@ -151,7 +163,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         {
             title: 'Funds',
             columns: [
-                this.columns['fundName'],
+                this.columns['fFundName'],
                 this.columns['lei'],
                 this.columns['managementCompany'],
                 this.columns['country'],
@@ -218,8 +230,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _ofiFundService: OfiFundService,
                 private _ofiFundShareService: OfiFundShareService,
-                private _ofiUmbrellaFundService: OfiUmbrellaFundService) {
-
+                private _ofiUmbrellaFundService: OfiUmbrellaFundService,
+                @Inject('fund-items') fundItems) {
+        this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
+        this.countryItems = fundItems.fundItems.domicileItems;
         this.amManagementCompany = '';
     }
 
@@ -250,17 +264,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     getFundList(funds: any): void {
         const fundList = [];
-
-        if (funds.length > 0) {
-            funds.map((fund) => {
+        if (_.values(funds).length > 0) {
+            _.values(funds).map((fund) => {
                 fundList.push({
+                    fundID: fund.fundID,
                     fundName: fund.fundName,
-                    lei: fund.lei,
-                    managementCompany: fund.managementCompanyName,
-                    country: fund.domicile,
+                    legalEntityIdentifier: fund.legalEntityIdentifier,
+                    managementCompanyID: fund.managementCompanyID,
+                    domicile: fund.domicile,
                     lawStatus: fund.legalForm,
-                    umbrellaFund: fund.umbrellaFundName,
-                    fundCurrency: fund.fundCurrency,
+                    umbrellaFundName: fund.umbrellaFundName,
+                    fundCurrency: _.find(this.fundCurrencyItems, { id: fund.fundCurrency }).text,
                 });
             });
         }
@@ -304,40 +318,43 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    getUmbrellaFundList(list) {
-        const listImu = fromJS(list);
+    getUmbrellaFundList(umbrellaFunds) {
+        const data = fromJS(umbrellaFunds).toArray();
+        const umbrellaFundList = [];
 
-        this.umbrellaFundList = listImu.reduce((result, item) => {
-            result.push({
-                umbrellaFundID: item.get('umbrellaFundID', 0),
-                umbrellaFundName: item.get('umbrellaFundName', ''),
-                registerOffice: item.get('registerOffice', ''),
-                registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
-                domicile: item.get('domicile', 0),
-                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
-                managementCompanyID: item.get('managementCompanyID', 0),
-                fundAdministratorID: item.get('fundAdministratorID', 0),
-                custodianBankID: item.get('custodianBankID', 0),
-                investmentManagerID: item.get('investmentManagerID', 0),
-                investmentAdvisorID: item.get('investmentAdvisorID', 0),
-                payingAgentID: item.get('payingAgentID', 0),
-                transferAgentID: item.get('transferAgentID', 0),
-                centralisingAgentID: item.get('centralisingAgentID', 0),
-                giin: item.get('giin', 0),
-                delegateManagementCompanyID: item.get('delegateManagementCompanyID', 0),
-                auditorID: item.get('auditorID', 0),
-                taxAuditorID: item.get('taxAuditorID', 0),
-                principlePromoterID: item.get('principlePromoterID', 0),
-                legalAdvisorID: item.get('legalAdvisorID', 0),
-                directors: item.get('directors', ''),
+        if (data.length > 0) {
+            data.map((item) => {
+                const domicile = this.countryItems.filter(country => country.id === item.get('domicile'));
+
+                umbrellaFundList.push({
+                    umbrellaFundID: item.get('umbrellaFundID', 0),
+                    umbrellaFundName: item.get('umbrellaFundName', ''),
+                    registerOffice: item.get('registerOffice', ''),
+                    registerOfficeAddress: item.get('registerOfficeAddress', ''),
+                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
+                    domicile: (domicile.length > 0) ? domicile[0].text : '',
+                    umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
+                    managementCompanyID: item.get('managementCompanyID', 0),
+                    fundAdministratorID: item.get('fundAdministratorID', 0),
+                    custodianBankID: item.get('custodianBankID', 0),
+                    investmentManagerID: item.get('investmentManagerID', 0),
+                    investmentAdvisorID: item.get('investmentAdvisorID', 0),
+                    payingAgentID: item.get('payingAgentID', 0),
+                    transferAgentID: item.get('transferAgentID', 0),
+                    centralisingAgentID: item.get('centralisingAgentID', 0),
+                    giin: item.get('giin', 0),
+                    delegateManagementCompanyID: item.get('delegateManagementCompanyID', 0),
+                    auditorID: item.get('auditorID', 0),
+                    taxAuditorID: item.get('taxAuditorID', 0),
+                    principlePromoterID: item.get('principlePromoterID', 0),
+                    legalAdvisorID: item.get('legalAdvisorID', 0),
+                    directors: item.get('directors', ''),
+                });
             });
+        }
 
-            return result;
-        }, []);
-
+        this.umbrellaFundList = umbrellaFundList;
         this.panelDefs[2].data = this.umbrellaFundList;
-
         this._changeDetectorRef.markForCheck();
     }
 
@@ -358,7 +375,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this._router.navigateByUrl('/product-module/share');
                 break;
             case 'fund':
-                this._router.navigateByUrl('/product-module/fund/create');
+                this._router.navigateByUrl('/product-module/fund/new');
                 break;
             case 'ufund':
                 this._router.navigateByUrl('/product-module/umbrella-fund/0');

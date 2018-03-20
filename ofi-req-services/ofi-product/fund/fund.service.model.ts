@@ -12,7 +12,7 @@ import {
     hasHedgeFundStrategy,
     isLeveraged,
     has130_30Strategy,
-    isfundTargetingEos,
+    isFundTargetingEos,
     isFundTargetingSri,
     isPassiveFund,
     hasSecurityiesLending,
@@ -139,7 +139,7 @@ export interface Fund {
     hasHedgeFundStrategy: hasHedgeFundStrategy;
     isLeveraged: isLeveraged;
     has130Or30Strategy: has130_30Strategy;
-    isfundTargetingEos: isfundTargetingEos;
+    isFundTargetingEos: isFundTargetingEos;
     isFundTargetingSri: isFundTargetingSri;
     isPassiveFund: isPassiveFund;
     hasSecurityiesLending: hasSecurityiesLending;
@@ -148,7 +148,7 @@ export interface Fund {
     investmentObjective: string;
 }
 
-export interface CreateFundRequestBody extends MemberNodeMessageBody, Fund {
+export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
 }
 
@@ -156,8 +156,8 @@ export interface IznesFundRequestMessageBody extends MemberNodeMessageBody {
     token: string;
 }
 
-//
-// export interface UpdateFund_RequestBody extends MemberNodeMessageBody, Fund {
-//     token: any;
-//
-// }
+
+export interface IznesUpdateFundRequestBody extends MemberNodeMessageBody, Fund {
+    token: any;
+    fundID: string;
+}
