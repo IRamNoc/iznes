@@ -5,21 +5,28 @@
 </div>
 
 <!-- Main content. -->
-<div class="wrapper wrapper-content">
+<section class="subtitle">
     <p>
         Here are all the Shares / Funds and Umbrella funds that were created by {{amManagementCompany}}.<br>
-        You can also add a new share, a new fund, a new umbrella fund:
+        You can also add a new share, a new fund or a new umbrella fund:
     </p>
-</div>
+</section>
 
 <div class="well" *ngFor="let panel of panelDefs">
     <!-- Panel header -->
     <div class="row panel-header">
-        <div class="col-xs-9" (click)="panel.open = !panel.open; $event.preventDefault();">
-            <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i> {{panel.title}}
+        <div class="col-xs-6">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2> {{panel.title}}</h2>
+            </a>
         </div>
-        <div class="col-xs-3 text-right">
-            <button *ngIf="panel.action" class="btn btn-default action-button" (click)="addForm(panel.action.type)"><i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}</button>
+
+        <div class="col-xs-6 text-right">
+            <button *ngIf="panel.action" class="btn btn-primary action-button" (click)="addForm(panel.action.type)">
+                <i class="fa fa-{{panel.action.icon}}"></i>
+                {{panel.action.title}}
+            </button>
         </div>
     </div>
 
