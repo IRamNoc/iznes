@@ -140,9 +140,75 @@ public class OpenCSDKYCModuleAcceptanceTest {
         verifySaveButtonIsDisabled();
     }
 
+    @Test
+    public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
+        assertTrue(header.equals("Welcome to IZNES"));
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "");
+        verifySaveButtonIsDisabled();
+    }
+
+    @Test
+    public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
+        assertTrue(header.equals("Welcome to IZNES"));
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+    }
+
+    @Test
+    public void shouldDisplayPopupMyInformationWhenKYCSaved() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    @Test
+    public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        driver.findElement(By.id("opt-no")).click();
+        driver.findElement(By.id("btnKycSubmit")).click();
+        String modalHeader = driver.findElement(By.className("modal-title")).getText();
+        assertTrue(modalHeader.equals("CONFIRMATION SCREEN"));
+        try {
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[2]/button")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    @Test
+    public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    @Test
+    public void shouldReceiveActionMessageFromInvestorIfCaseYES() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    @Test
+    public void shouldAllowInvestorToGoBackToPreviousKYCStep() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
     public static void fillKYCTopFields(String email, String firstname, String lastname) throws IOException, InterruptedException{
+        driver.findElement(By.id("kyc_additionnal_email")).clear();
         driver.findElement(By.id("kyc_additionnal_email")).sendKeys(email);
+        driver.findElement(By.id("kyc_additionnal_firstName")).clear();
         driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys(firstname);
+        driver.findElement(By.id("kyc_additionnal_lastName")).clear();
         driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys(lastname);
     }
 
@@ -179,54 +245,5 @@ public class OpenCSDKYCModuleAcceptanceTest {
             fail("FAILED : " + e.getMessage());
         }
     }
-
-    @Test
-    public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
-        assertTrue(header.equals("Welcome to IZNES"));
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "");
-        verifySaveButtonIsDisabled();
-    }
-
-    @Test
-    public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
-        assertTrue(header.equals("Welcome to IZNES"));
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
-    }
-
-    @Test
-    public void shouldDisplayPopupMyInformationWhenKYCSaved() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldReceiveActionMessageFromInvestorIfCaseYES() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldAllowInvestorToGoBackToPreviousKYCStep() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
 }
+
