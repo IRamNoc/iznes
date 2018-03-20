@@ -23,12 +23,13 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     investorStatus: string;
     kycDoneForm: FormGroup;
     showModal = false;
+    investorAnsweredNo = false;
     amDetails = {
-        firstName: { value: '', label: 'First name' },
-        lastName: { value: '', label: 'Last name' },
-        email: { value: '', label: 'Email' },
-        phone: { value: '', label: 'Phone number' },
-        companyName: { value: '', label: 'AM Company name' },
+        firstName: {value: '', label: 'First name'},
+        lastName: {value: '', label: 'Last name'},
+        email: {value: '', label: 'Email'},
+        phone: {value: '', label: 'Phone number'},
+        companyName: {value: '', label: 'AM Company name'},
     };
 
     investorDetails = {
@@ -62,7 +63,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
         route.params.subscribe((p => {
             this.investorStatus = p['status'];
-            this.showModal = this.investorStatus === 'waiting-for-more-info';
+            this.investorAnsweredNo = this.investorStatus === 'waiting-for-more-info';
+            this.showModal = this.investorAnsweredNo;
         }));
         this.kycDoneForm = fb.group({
             opt: ['', Validators.required],
@@ -71,7 +73,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.myInfos$
-            // .takeUntil(this.unsubscribe)
+        // .takeUntil(this.unsubscribe)
             .subscribe((d) => {
                 this.amDetails.firstName.value = d.invitedBy.firstName;
                 this.amDetails.lastName.value = d.invitedBy.lastName;
@@ -127,6 +129,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
             this.router.navigate(['new-investor', 'already-done', 'waiting-for-validation']);
         } else {
             this.showModal = true;
+            this.investorAnsweredNo = true;
 
             this.sendNewKycBody = Object.assign({}, this.sendNewKycBody, {
                 selectedChoice: false,
