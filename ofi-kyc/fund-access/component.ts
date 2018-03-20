@@ -75,17 +75,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             }
         });
 
-        // this.investorData = {
-        //     kycID: 1,
-        //     investorWalletID: 6,
-        //     companyName: 'Test Company',
-        //     firstName: 'Tester',
-        //     lastName: 'McTest',
-        //     email: 't.mctest@comp.com',
-        //     telephoneNumber: '01247889568',
-        //     approvalDate: '2018-02-28'
-        // };
-
         // test data.
         this.tableData = [];
 
@@ -175,30 +164,30 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             Promise.all(promises).then(() => {
                 this.toasterService.pop('success', 'Share Permissions Saved');
 
-                // let recipientsArr = [this.investorData['investorWalletID']];
-                // let subjectStr = this.amCompany + ' has approved your application - You can invest!';
-                //
-                // let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>Good news: you are now authorised to start trading on IZNES.';
-                // if (shareArray['add'].length > 0) {
-                //     bodyStr += '<br><br>You have been authorised to access the following shares:';
-                //     Object.keys(emailArray['add']).forEach((key) => {
-                //         bodyStr += '<br><br>' + key;
-                //         emailArray['add'][key].forEach((row) => {
-                //             bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                //         });
-                //     });
-                // }
-                // if (shareArray['remove'].length > 0) {
-                //     bodyStr += '<br><br>Access to the following shares has been removed:';
-                //     Object.keys(emailArray['remove']).forEach((key) => {
-                //         bodyStr += '<br><br>' + key;
-                //         emailArray['remove'][key].forEach((row) => {
-                //             bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                //         });
-                //     });
-                // }
-                // bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a> [link needs ammending]<br><br>Thank you,<br><br>The IZNES team.';
-                // this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
+                let recipientsArr = [this.investorData['investorWalletID']];
+                let subjectStr = this.amCompany + ' has approved your application - You can invest!';
+
+                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>Good news: you are now authorised to start trading on IZNES.';
+                if (shareArray['add'].length > 0) {
+                    bodyStr += '<br><br>You have been authorised to access the following shares:';
+                    Object.keys(emailArray['add']).forEach((key) => {
+                        bodyStr += '<br><br>' + key;
+                        emailArray['add'][key].forEach((row) => {
+                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
+                        });
+                    });
+                }
+                if (shareArray['remove'].length > 0) {
+                    bodyStr += '<br><br>Access to the following shares has been removed:';
+                    Object.keys(emailArray['remove']).forEach((key) => {
+                        bodyStr += '<br><br>' + key;
+                        emailArray['remove'][key].forEach((row) => {
+                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
+                        });
+                    });
+                }
+                bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a><br><br>Thank you,<br><br>The IZNES team.';
+                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
     }

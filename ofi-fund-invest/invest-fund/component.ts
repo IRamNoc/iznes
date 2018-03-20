@@ -105,6 +105,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     form: FormGroup;
     quantity: FormControl;
     grossAmount: FormControl;
+    feeAmount: FormControl;
+    netAmount: FormControl;
     address: FormControl;
 
     addressSelected: any;
@@ -117,6 +119,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     subPortfolio;
     addressListObj;
+
+    panels = {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: true
+    };
 
     set actionBy(value) {
         this._actionBy = value;
@@ -160,12 +171,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         this.quantity = new FormControl(0, [Validators.required, numberValidator]);
         this.grossAmount = new FormControl(0, [Validators.required, numberValidator]);
+        this.feeAmount = new FormControl(0, [Validators.required, numberValidator]);
+        this.netAmount = new FormControl(0, [Validators.required, numberValidator]);
         this.address = new FormControl('', [Validators.required]);
 
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
             grossAmount: this.grossAmount,
+            feeAmount: this.feeAmount,
+            netAmount: this.netAmount,
             comment: new FormControl('', Validators.maxLength(100)),
             address: this.address,
             cutoffDate: this.cutoffDate,
@@ -300,6 +315,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             decimalisation,
             decimalisationNumber
         };
+
+
+        console.log('metadata',this.metaData);
 
     }
 

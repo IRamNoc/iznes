@@ -12,7 +12,7 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
-import {setRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
+import {setRequestedFundAccessMy, clearRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
 
 @Injectable()
 export class OfiFundInvestService {
@@ -45,7 +45,7 @@ export class OfiFundInvestService {
         const messageBody: RequetFundAccessMy = {
             RequestName: 'izngetmyfundshareaccesslist',
             token: this.memberSocketService.token,
-            walletid: requestData.walletId || 0
+            walletId: requestData.walletId || 0
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

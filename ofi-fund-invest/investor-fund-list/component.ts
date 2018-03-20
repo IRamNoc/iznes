@@ -30,6 +30,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     fundList: Array<any>;
 
+    connectedWalletId: number;
+
     // production or not
     production: boolean;
 
@@ -40,6 +42,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
@@ -62,7 +65,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             this.connectedWalletId = connected;
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+            OfiFundInvestService.resetRequested(this._ngRedux).then(() => {this.requestMyFundAccess(false);});
+        }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
@@ -72,6 +78,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         }));
+
     }
 
     setInitialTabs() {
@@ -132,21 +139,20 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.fundList = fundListImu.reduce((result, item) => {
             result.push({
-                id: item.get('shareId', 0),
-                isin: item.getIn(['metaData', 'isin'], ''),
-                shareName: item.getIn(['metaData', 'shareName'], ''),
-                assetClass: item.getIn(['metaData', 'assetClass'], ''),
-                assetManager: item.getIn(['managementCompany'], ''),
-                srri: item.getIn(['metaData', 'srri'], ''),
-                sri: item.getIn(['metaData', 'fundSri'], ''),
-                currency: item.getIn(['metaData', 'shareCurrency'], ''),
-                nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
-                subscriptionDate: item.getIn(['metaData', 'subscriptionCutOff'], ''),
-                redemptionDate: item.getIn(['metaData', 'redemptionCutOff'], '')
+                id: item.get('fundShareId', 0),
+                isin: item.get('isin', ''),
+                shareName: item.get('fundShareName', ''),
+                assetClass: '',
+                assetManager: item.get('managementCompany', ''),
+                srri: '',
+                sri:  '',
+                currency: item.get('shareClassCurrency', ''),
+                nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
+                subscriptionDate: item.get('subscriptionCutOffTime', ''),
+                redemptionDate: item.get('redemptionCutOffTime', '')
             });
             return result;
         }, []);
-
         this.tabsControl = immutableHelper.copy(this.tabsControl);
 
         this._changeDetectorRef.markForCheck();

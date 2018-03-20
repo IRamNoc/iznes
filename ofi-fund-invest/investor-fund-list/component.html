@@ -34,26 +34,18 @@
     <!--list of fund tab-->
     <ng-template #listOfFundsTab>
         <div class="panel-body">
-
-            <!--<div class="search">-->
-                <!--<span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>-->
-                <!--<input type="form-control text" placeholder="Search Shares" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';" (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch">-->
-                <!--<button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn"><i class="fa fa-search"></i></button>-->
-                <!--<i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>-->
-            <!--</div>-->
-
             <div class="message_list_menu">
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>ISIN <span class="column-label"></span></clr-dg-column>                                       <!--(sortable & searchable) -->
-                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>Share Name <span class="column-label"></span></clr-dg-column>                            <!--(sortable & searchable) -->
-                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>Asset Class <span class="column-label"></span></clr-dg-column>                          <!--(sortable) -->
-                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>Asset Manager <span class="column-label"></span></clr-dg-column>                      <!--(sortable & searchable) -->
-                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>SRRI <span class="column-label"></span></clr-dg-column>                                       <!--(sortable) -->
-                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>SRI <span class="column-label"></span></clr-dg-column>                                         <!--(sortable) -->
-                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>Share Currency <span class="column-label"></span></clr-dg-column>                         <!--(sortable) -->
-                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>Last NAV <span class="column-label"></span></clr-dg-column>                                    <!--(sortable & searchable) -->
-                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>Subscription Cut-off Date <span class="column-label"></span></clr-dg-column>      <!--(sortable & searchable) -->
-                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>Redemption Cut-off Date <span class="column-label"></span></clr-dg-column>          <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>ISIN <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>Share Name <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>Asset Class <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>Asset Manager <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>SRRI <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>SRI <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>Share Currency <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>Last NAV <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>Subscription Cut-off Date <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>Redemption Cut-off Date <span class="column-label"></span></clr-dg-column>
                     <clr-dg-column mltag="txt_actions" style="min-width: 190px;">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">

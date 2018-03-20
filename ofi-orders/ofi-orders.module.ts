@@ -1,10 +1,10 @@
 /* Core/Angular imports. */
-import {NgModule} from "@angular/core";
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SelectModule} from '@setl/utils';
+import {SelectModule, DpDatePickerModule, SetlDirectivesModule} from '@setl/utils';
 import {RouterModule} from '@angular/router';
 
 /* Pipes. */
@@ -16,6 +16,7 @@ import {ClarityModule} from '@clr/angular';
 /* Components. */
 import {ManageOrdersComponent} from './manage-orders/manage-orders.component';
 import {MyOrdersComponent} from './my-orders/my-orders.component';
+import {PlaceOrdersComponent} from './place-orders/place-orders.component';
 
 /* Services. */
 import {OfiOrdersService} from '../ofi-req-services/ofi-orders/service';
@@ -28,10 +29,12 @@ import {MultilingualModule} from '@setl/multilingual';
     declarations: [
         ManageOrdersComponent,
         MyOrdersComponent,
+        PlaceOrdersComponent
     ],
     exports: [
         ManageOrdersComponent,
         MyOrdersComponent,
+        PlaceOrdersComponent
     ],
     imports: [
         CommonModule,
@@ -42,7 +45,9 @@ import {MultilingualModule} from '@setl/multilingual';
         SelectModule,
         SetlPipesModule,
         MultilingualModule,
-        RouterModule
+        RouterModule,
+        DpDatePickerModule,
+        SetlDirectivesModule
     ],
     providers: [
         OfiOrdersService

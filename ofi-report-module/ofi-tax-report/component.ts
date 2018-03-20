@@ -144,13 +144,14 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
         this.sharePriceList = {};
 
         // List of observable subscription.
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+            OfiFundInvestService.resetRequested(this._ngRedux).then(() => {this.requestMyFundAccess(false);});
+        }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
             (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.updateSharePrice(shareData);
-        }));
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
         }));
         this.subscriptionsArray.push(this.clientTxListRequestedOb.subscribe(requested => this.requestClientTx(requested)));
         this.subscriptionsArray.push(this.clientTxListOb.subscribe(clientTxList => {
@@ -370,7 +371,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
      */
     requestMyFundAccess(requested): void {
         if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux);
+            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux, this.connectedWalletId);
         }
     }
 

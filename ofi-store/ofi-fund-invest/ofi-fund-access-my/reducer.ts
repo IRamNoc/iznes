@@ -61,12 +61,12 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
         }
 
         const shareId = item.get('shareID', 0);
-        let metaData = {};
-        try {
-            metaData = JSON.parse(atob(item.get('metadata', '')));
-        } catch (e) {
-            metaData = {};
-        }
+        // let metaData = {};
+        // try {
+        //     metaData = JSON.parse(atob(item.get('metadata', '')));
+        // } catch (e) {
+        //     metaData = {};
+        // }
 
         const price = item.get('price', 0);
 
@@ -75,18 +75,74 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             return result;
         }
 
+        // result.fundShareAccessList[shareId] = {
+        //     shareId,
+        //     issuer: item.get('issuer', ''),
+        //     shareName: item.get('shareName', ''),
+        //     entryFee: item.get('entryFee', 0),
+        //     exitFee: item.get('exitFee', 0),
+        //     shareStatus: item.get('fundStatus', 0),
+        //     metaData: metaData,
+        //     userStatus: item.get('userStatus', 0),
+        //     fundId,
+        //     managementCompany: item.get('companyName', ''),
+        //     price: item.get('price', 0)
+        // };
+
         result.fundShareAccessList[shareId] = {
             shareId,
-            issuer: item.get('issuer', ''),
-            shareName: item.get('shareName', ''),
+            fundShareID: item.get('fundShareID', 0),
+            fundShareName: item.get('fundShareName', ''),
+            fundID: item.get('fundID', 0),
+            isin: item.get('isin', 0),
+            shareClassCode: item.get('shareClassCode', 0),
+            shareClassInvestmentStatus: item.get('shareClassInvestmentStatus', 0),
+            shareClassCurrency: item.get('shareClassCurrency', 0),
+            valuationFrequency: item.get('valuationFrequency', 0),
+            historicOrForwardPricing: item.get('historicOrForwardPricing', 0),
+            hasCoupon: item.get('hasCoupon', 0),
+            couponType: item.get('couponType', 0),
+            freqOfDistributionDeclaration: item.get('freqOfDistributionDeclaration', 0),
+            maximumNumDecimal: item.get('maximumNumDecimal', 0),
+            subscriptionCategory: item.get('subscriptionCategory', 0),
+            subscriptionCurrency: item.get('subscriptionCurrency', 0),
+            minInitialSubscriptionInShare: item.get('minInitialSubscriptionInShare', 0),
+            minInitialSubscriptionInAmount: item.get('minInitialSubscriptionInAmount', 0),
+            minSubsequentSubscriptionInShare: item.get('minSubsequentSubscriptionInShare', 0),
+            minSubsequentSubscriptionInAmount: item.get('minSubsequentSubscriptionInAmount', 0),
+            redemptionCategory: item.get('redemptionCategory', 0),
+            redemptionCurrency: item.get('redemptionCurrency', 0),
+            minInitialRedemptionInShare: item.get('minInitialRedemptionInShare', 0),
+            minInitialRedemptionInAmount: item.get('minInitialRedemptionInAmount', 0),
+            minSubsequentRedemptionInShare: item.get('minSubsequentRedemptionInShare', 0),
+            minSubsequentRedemptionInAmount: item.get('minSubsequentRedemptionInAmount', 0),
+            portfolioCurrencyHedge: item.get('portfolioCurrencyHedge', 0),
+            tradeDay: item.get('tradeDay', 0),
+            subscriptionCutOffTime: item.get('subscriptionCutOffTime', 0),
+            subscriptionCutOffTimeZone: item.get('subscriptionCutOffTimeZone', 0),
+            subscriptionSettlementPeriod: item.get('subscriptionSettlementPeriod', 0),
+            redemptionCutOffTime: item.get('redemptionCutOffTime', 0),
+            redemptionCutOffTimeZone: item.get('redemptionCutOffTimeZone', 0),
+            redemptionSettlementPeriod: item.get('redemptionSettlementPeriod', 0),
+            subscriptionRedemptionCalendar: item.get('subscriptionRedemptionCalendar', 0),
+            maxManagementFee: item.get('maxManagementFee', 0),
+            maxSubscriptionFee: item.get('maxSubscriptionFee', 0),
+            maxRedemptionFee: item.get('maxRedemptionFee', 0),
+            investorProfile: item.get('investorProfile', 0),
+            keyFactOptionalData: item.get('keyFactOptionalData', 0),
+            characteristicOptionalData: item.get('characteristicOptionalData', 0),
+            calendarOptionalData: item.get('calendarOptionalData', 0),
+            profileOptionalData: item.get('profileOptionalData', 0),
+            priipOptionalData: item.get('priipOptionalData', 0),
+            listingOptionalData: item.get('listingOptionalData', 0),
+            taxationOptionalData: item.get('taxationOptionalData', 0),
+            solvencyIIOptionalData: item.get('solvencyIIOptionalData', 0),
+            representationOptionalData: item.get('representationOptionalData', 0),
             entryFee: item.get('entryFee', 0),
             exitFee: item.get('exitFee', 0),
-            shareStatus: item.get('fundStatus', 0),
-            metaData: metaData,
-            userStatus: item.get('userStatus', 0),
-            fundId,
-            managementCompany: item.get('companyName', ''),
-            price: item.get('price', 0)
+            fundName: item.get('fundName', 0),
+            price: item.get('price', 0),
+            companyName: item.get('companyName', 0)
         };
 
         return result;
