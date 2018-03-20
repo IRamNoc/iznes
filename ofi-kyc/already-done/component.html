@@ -31,10 +31,10 @@
                         </div>
                     </div>
                     <div>
-                        <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()">
+                        <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()" [attr.disabled]="investorAnsweredNo ? '' : null ">
                             <span>Back</span>
                         </button>
-                        <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid">
+                        <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid" [attr.disabled]="investorAnsweredNo ? '' : null ">
                             <span mltag="txt_validate">Validate</span>
                         </button>
                     </div>
