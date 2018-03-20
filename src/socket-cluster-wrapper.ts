@@ -50,7 +50,8 @@ export class SocketClusterWrapper {
         this.socketClusterOption = {
             port: this.port,
             hostname: this.hostName,
-            path: '/' + this.route
+            path: '/' + this.route,
+            ackTimeout: 20000 // increased to 20 from 10 to allow for longer request times
         };
 
         // The socketcluster connection instance.
