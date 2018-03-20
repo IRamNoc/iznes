@@ -74,7 +74,7 @@ export enum has130_30Strategy {
     YES,
 }
 
-export enum isfundTargetingEos {
+export enum isFundTargetingEos {
     NO,
     YES,
 }
@@ -117,7 +117,7 @@ export const enums = {
     hasHedgeFundStrategy,
     isLeveraged,
     has130_30Strategy,
-    isfundTargetingEos,
+    isFundTargetingEos,
     isFundTargetingSri,
     isPassiveFund,
     hasSecurityiesLending,
@@ -824,7 +824,17 @@ export const fundItems = {
         { id : '6', text: 'Quarterly' },
         { id : '7', text: 'Twice a year' },
         { id : '8', text: 'Annually' },
-    ]
+    ],
+    transferAgentItems: [
+        { id : '1', text: 'transfer agent 1' },
+        { id : '2', text: 'transfer agent 2' },
+        { id : '3', text: 'transfer agent 3' },
+    ],
+    centralizingAgentItems: [
+        { id : '1', text: 'centralizing agent 1' },
+        { id : '2', text: 'centralizing agent 2' },
+        { id : '3', text: 'centralizing agent 3' },
+    ],
 };
 
 export default {

@@ -2,22 +2,23 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import * as _ from 'lodash';
+import {of} from 'rxjs/observable/of';
 
 
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
 import {ClarityModule} from '@clr/angular';
 import fundItems from '../fundConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-const OfiUmbrellaFundServiceSpy = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
-const OfiManagementCompanyServiceSpy = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
+const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
+const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
-import {FundCreateComponent} from './component';
+import {FundComponent} from './component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
@@ -27,13 +28,22 @@ import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-pr
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
     .and.returnValue(
         new Promise((resolve, reject) => {
-        resolve();
-    })
+            resolve();
+        })
     );
 const fundServiceSpy = {
     iznCreateFund: iznCreateFund,
 };
-
+const activatedRouteStub = {
+    params: of({
+        id: 'new',
+    }),
+    setParams: (id: string) => {
+        this.params = of({
+            id: id,
+        });
+    }
+};
 
 const toasterServiceMock = {
     pop: () => {
@@ -57,10 +67,10 @@ class RouterLinkStubDirective {
     }
 }
 
-describe('FundCreateComponent', () => {
+describe('FundComponent', () => {
 
-    let comp:    FundCreateComponent;
-    let fixture: ComponentFixture<FundCreateComponent>;
+    let comp:    FundComponent;
+    let fixture: ComponentFixture<FundComponent>;
     let de:      DebugElement;
     let el:      HTMLElement;
 
@@ -71,7 +81,7 @@ describe('FundCreateComponent', () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
-                FundCreateComponent,
+                FundComponent,
                 RouterLinkStubDirective,
             ],
             imports: [
@@ -86,19 +96,21 @@ describe('FundCreateComponent', () => {
                 { provide: 'fund-items', useValue: fundItems },
                 { provide: Router, useValue: routerSpy },
                 { provide: OfiFundService, useValue: fundServiceSpy },
-                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceSpy },
-                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceSpy },
+                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
+                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
                 { provide: NgRedux, useValue: ngReduxSpy },
-                { provide: ToasterService, useValue: toasterServiceMock }
+                { provide: ToasterService, useValue: toasterServiceMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
 
     beforeEach(fakeAsync(() => {
-        fixture = TestBed.createComponent(FundCreateComponent);
+        fixture = TestBed.createComponent(FundComponent);
 
         comp = fixture.componentInstance;
+        activatedRouteStub.setParams('new');
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
@@ -192,7 +204,7 @@ describe('FundCreateComponent', () => {
 
             anchorEl.triggerEventHandler('click', null);
 
-            expect(routerLinks[0].navigatedTo).toEqual('/product-module/umbrella-fund');
+            expect(routerLinks[0].navigatedTo).toEqual('/product-module/umbrella-fund/0');
         });
 
         it('should enable the next button', fakeAsync(() => {
@@ -298,14 +310,14 @@ describe('FundCreateComponent', () => {
             });
 
             describe('ucitsVersion', () => {
-                it('should display the ucitsVersion input', fakeAsync(() => {
-                    const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
+                it('should display the UcitsVersion input', fakeAsync(() => {
+                    const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
                     expect(ucitsVersionBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.UCITS, text: 'ucits' }]);
                     tick();
                     fixture.detectChanges();
-                    const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
+                    const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
                     expect(ucitsVersionAfterEls.length).toEqual(1);
                 }));
 
@@ -320,36 +332,36 @@ describe('FundCreateComponent', () => {
                     expect(ucitsVersionAfterEls.length).toEqual(0);
                 }));
 
-                it('should clear the ucitsVersion value on isEuDirective set to \'NO\'', fakeAsync(() => {
+                it('should clear the UcitsVersion value on isEuDirective set to \'NO\'', fakeAsync(() => {
                     const testValue = {
                         id: 3,
                         text: 'ucits III',
                     };
-                    comp.fundForm.controls['ucitsVersion'].setValue(testValue);
+                    comp.fundForm.controls['UcitsVersion'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual(testValue);
 
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.NO.toString());
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual([]);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual([]);
                 }));
 
-                it('should clear the ucitsVersion value on typeOfEuDirective not set to \'ucits\'', fakeAsync(() => {
+                it('should clear the UcitsVersion value on typeOfEuDirective not set to \'ucits\'', fakeAsync(() => {
                     const testValue = {
                         id: 3,
                         text: 'ucits III',
                     };
-                    comp.fundForm.controls['ucitsVersion'].setValue(testValue);
+                    comp.fundForm.controls['UcitsVersion'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual(testValue);
 
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.Other, text: 'Other' }]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual([]);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual([]);
                 }));
             });
 
@@ -389,33 +401,33 @@ describe('FundCreateComponent', () => {
             });
 
             describe('transferAgent', () => {
-                it('should display the transferAgent input when fundDomicile is set to \'IE\'', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should display the transferAgent select when fundDomicile is set to \'IE\'', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'IE', text: 'Ireland'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should display the transferAgent input when fundDomicile is set to \'LU\'', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should display the transferAgent select when fundDomicile is set to \'LU\'', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'LU', text: 'Luxembourg'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the transferAgent input', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should not display the transferAgent select', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(0);
                 }));
 
@@ -429,28 +441,28 @@ describe('FundCreateComponent', () => {
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['transferAgent'].value).toBeNull();
+                    expect(comp.fundForm.controls['transferAgent'].value).toEqual([]);
                 }));
             });
 
             describe('centralizingAgent', () => {
-                it('should display the centralizingAgent input when fundDomicile is set to \'FR\'', fakeAsync(() => {
-                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                it('should display the centralizingAgent select when fundDomicile is set to \'FR\'', fakeAsync(() => {
+                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'FR', text: 'France'}]);
                     tick();
                     fixture.detectChanges();
-                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the centralizingAgent input', fakeAsync(() => {
-                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                it('should not display the centralizingAgent select', fakeAsync(() => {
+                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentAfterEls.length).toEqual(0);
                 }));
 
@@ -464,7 +476,7 @@ describe('FundCreateComponent', () => {
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['centralizingAgent'].value).toBeNull();
+                    expect(comp.fundForm.controls['centralizingAgent'].value).toEqual([]);
                 }));
             });
 
@@ -597,7 +609,7 @@ describe('FundCreateComponent', () => {
                 domicile: [{id: 'AF', text: 'Afghanistan'}],
                 isEuDirective: '0',
                 typeOfEuDirective: null,
-                ucitsVersion: null,
+                UcitsVersion: null,
                 legalForm: [{ id: '0', text: 'Contractual Fund' }],
                 nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
                 homeCountryLegalType: null,
@@ -635,7 +647,7 @@ describe('FundCreateComponent', () => {
                 hasHedgeFundStrategy: null,
                 isLeveraged: null,
                 has130Or30Strategy: null,
-                isfundTargetingEos: null,
+                isFundTargetingEos: null,
                 isFundTargetingSri: null,
                 isPassiveFund: null,
                 hasSecurityiesLending: null,
