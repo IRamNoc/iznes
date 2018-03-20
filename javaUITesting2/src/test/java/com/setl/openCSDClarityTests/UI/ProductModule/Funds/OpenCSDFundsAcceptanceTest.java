@@ -123,8 +123,6 @@ public class OpenCSDFundsAcceptanceTest {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(fundsHeadings[5]));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText().contentEquals(fundsHeadings[6]));
-
-
     }
 
     private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
@@ -138,9 +136,6 @@ public class OpenCSDFundsAcceptanceTest {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
-
-
-
     }
 
     private void validatePageLayout() {
@@ -168,15 +163,11 @@ public class OpenCSDFundsAcceptanceTest {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")).getText().contentEquals("Add new Umbrella fund"));
-
-
-
         }
 
         private void closeShares(){
             driver.findElement(By.cssSelector("i.fa.fa-chevron-down.reverse")).click();
             assertTrue(isElementPresent(By.id("switchActiveShares")));
-
         }
 
     @Test
@@ -207,8 +198,6 @@ public class OpenCSDFundsAcceptanceTest {
             System.out.println("dropdown not visible");
             fail();
         }
-
-        //////////
 
         driver.findElement(By.id("isin_0_0")).sendKeys("TestISIN" + GetCurrentTimeStamp());
         driver.findElement(By.id("shareName_0_0")).sendKeys("TestShare");
@@ -261,10 +250,7 @@ public class OpenCSDFundsAcceptanceTest {
             fail();
         }
 
-        ////////////
         driver.findElement(By.id("tabfundShareNav_Services_0_0")).click();
-        ////////////
-
         driver.findElement(By.cssSelector("#assetManagementCompany_0_0 .ui-select-placeholder")).click();
         try {
             driver.findElement(By.cssSelector("#assetManagementCompany_0_0 .dropdown-item")).click();

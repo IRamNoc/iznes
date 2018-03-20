@@ -177,6 +177,7 @@ public class SetUp {
             prefs.put("password_manager_enabled", false);
 
             driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
             driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
 
         }

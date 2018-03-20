@@ -141,13 +141,17 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     public static void fillKYCTopFields(String email, String firstname, String lastname) throws IOException, InterruptedException{
+        driver.findElement(By.id("kyc_additionnal_email")).clear();
         driver.findElement(By.id("kyc_additionnal_email")).sendKeys(email);
+        driver.findElement(By.id("kyc_additionnal_firstName")).clear();
         driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys(firstname);
+        driver.findElement(By.id("kyc_additionnal_lastName")).clear();
         driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys(lastname);
     }
 
     public static void fillKYCLowerFields(String companyName, String phoneNumber) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("kyc_additionnal_companyName")).clear();
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
         driver.findElement(By.id("kyc_additionnal_phoneCode")).click();
         WebElement phoneCode = driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/ul/li[1]/div/a"));
