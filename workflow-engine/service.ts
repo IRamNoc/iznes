@@ -112,4 +112,13 @@ export class CoreWorkflowEngineService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    walletNodeQuery(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-chain-msg',
+            token: this.memberSocketService.token,
+            data: request
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
 }
