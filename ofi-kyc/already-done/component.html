@@ -18,11 +18,11 @@
                 <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
                     <div class="form-group opt-btn-container">
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorStatus == 'waiting-for-more-info'? '' : null ">
+                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorAnsweredNo ? '' : null ">
                             <label for="opt-yes">Yes</label>
                         </div>
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorStatus == 'waiting-for-more-info'"  [attr.disabled]="investorStatus == 'waiting-for-more-info'? '' : null ">
+                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo"  [attr.disabled]=" investorAnsweredNo ? '' : null ">
                             <label for="opt-no">No</label>
                         </div>
                         <div class="opt-btn-context">
