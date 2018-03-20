@@ -3,7 +3,6 @@ package com.setl.openCSDClarityTests.UI.KYCModule;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
 import org.junit.Rule;
