@@ -36,6 +36,8 @@ export class OfiFundShareService {
         // Request the list.
         const asyncTaskPipe = ofiFundService.requestFundShare(requestData);
 
+        console.log('asyncTaskPipe 1', asyncTaskPipe);
+
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_SHARE],
             [],
@@ -109,13 +111,15 @@ export class OfiFundShareService {
 
         const asyncTaskPipe = ofiFundService.createFundShare(requestData);
 
+        console.log('asyncTaskPipe', asyncTaskPipe);
+
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_SHARE],
             [],
             asyncTaskPipe,
             {},
-            successCallback,
-            errorCallback
+            (data) => successCallback(data),
+            (e) => errorCallback(e)
         ));
     }
     /**
@@ -123,13 +127,14 @@ export class OfiFundShareService {
      * @return {any}
      */
     createFundShare(requestData): any {
-        const messageBody = requestData;
-        messageBody.RequestName = 'iznescreatefundshare';
-        messageBody.token = this.memberSocketService.token;
+        let messageBody = {
+            RequestName: 'iznescreatefundshare',
+            token: this.memberSocketService.token
+        }
 
-        console.log('this is the request', messageBody);
+        messageBody = Object.assign(requestData, messageBody);
 
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }

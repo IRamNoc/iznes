@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import {FundShare, FundShareMode} from '../model';
 import * as E from '../FundShareEnum';
 
@@ -9,10 +10,10 @@ export class FundShareTestData {
         model.keyFacts.mandatory.aumClassDate.preset = '2018-04-01';
         (model.keyFacts.mandatory.couponType.preset as any) = [{id: E.CouponTypeEnum.Interest, text: 'Interest' }];
         (model.keyFacts.mandatory.freqOfDistributionDeclaration.preset as any) = [{id: E.FrequencyOfDistributionDeclarationEnum.Daily, text: 'Daily' }];
-        model.keyFacts.mandatory.fundShareName.preset = `Test Fund Share - 1`;
+        model.keyFacts.mandatory.fundShareName.preset = `Test Fund Share - ${moment().unix().toString()}`;
         model.keyFacts.mandatory.hasCoupon.preset = true;
         (model.keyFacts.mandatory.historicOrForwardPricing.preset as any) = [{id: E.PricingTypeEnum.Historic, text: 'Historic' }];
-        model.keyFacts.mandatory.isin.preset = `00000001`;
+        model.keyFacts.mandatory.isin.preset = moment().unix().toString();
         model.keyFacts.mandatory.launchDate.preset = '2018-04-01';
         model.keyFacts.mandatory.master.preset = 'master';
         model.keyFacts.mandatory.nosClass.preset = 1;
