@@ -627,6 +627,7 @@ h3 {
     &.hidden {
         opacity: 0;
         height: 0;
+        display: none;
     }
 }
 
@@ -661,12 +662,14 @@ clr-tab-content {
         border: 0px;
         border-top: 1px dashed #e6e6e6;
         border-radius: 0px;
+        width: 100%;
     }
 
     .well .row .well .row .well {
         border: 0px;
         border-top: 1px dashed #e6e6e6;
         border-radius: 0px;
+        width: 100%;
     }
 
     .panel-header {
@@ -702,6 +705,7 @@ clr-tab-content {
             opacity: 0;
             height: 0;
             transition: opacity .5s linear;
+            display: none;
         }
 
     }
