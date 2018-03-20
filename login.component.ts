@@ -221,11 +221,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             if (this.loginGuardService.redirect !== '') {
                 this.router.navigateByUrl(this.loginGuardService.redirect);
                 this.loginGuardService.redirect = '';
-                return true;
+            }else {
+                const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+                this.router.navigateByUrl(redirect);
             }
-
-            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            this.router.navigateByUrl(redirect);
 
             this.isLogin = true;
 
