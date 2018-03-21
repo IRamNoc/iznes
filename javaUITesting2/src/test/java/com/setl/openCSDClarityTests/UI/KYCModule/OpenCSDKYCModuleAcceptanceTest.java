@@ -103,6 +103,14 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestor("testops080@setl.io", "TestUser", "One");
+        logout();
+    }
+
+    @Test
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
