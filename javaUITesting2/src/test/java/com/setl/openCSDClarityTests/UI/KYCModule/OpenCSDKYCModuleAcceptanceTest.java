@@ -21,6 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.password;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -179,15 +180,23 @@ public class OpenCSDKYCModuleAcceptanceTest {
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
-        driver.findElement(By.id("opt-no")).click();
-        driver.findElement(By.id("btnKycSubmit")).click();
-        String modalHeader = driver.findElement(By.className("modal-title")).getText();
-        assertTrue(modalHeader.equals("CONFIRMATION SCREEN"));
+        selectOptionAndSubmitKYC("no");
+    }
+
+    @Test
+    public void shouldNotBeAskedToEnterKycAfterFillingItOutOnce() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("no");
+        logout();
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
         try {
-            Thread.sleep(2000);
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[2]/button")).click();
+            String headingKYC = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/section[1]/h3")).getText();
+            assertFalse(headingKYC.equals("KYC & client folder"));
         }catch (Exception e){
-            fail(e.getMessage());
+            fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
         }
     }
 
@@ -209,6 +218,19 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldAllowInvestorToGoBackToPreviousKYCStep() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
+        driver.findElement(By.id("opt-" + option)).click();
+        driver.findElement(By.id("btnKycSubmit")).click();
+        String modalHeader = driver.findElement(By.className("modal-title")).getText();
+        assertTrue(modalHeader.equals("CONFIRMATION SCREEN"));
+        try {
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[2]/button")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 
     public static void fillKYCTopFields(String email, String firstname, String lastname) throws IOException, InterruptedException{
