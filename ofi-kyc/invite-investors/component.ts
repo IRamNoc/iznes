@@ -104,16 +104,22 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
             formValues.investors.map(investor => {
                 if (emailAddressList.indexOf(investor.email) === -1) {
-                    // Email addresses which are not linked to a user account
                     validEmailList.push(investor.email);
                 } else {
-                    // Email addresses which are already linked to a user account
                     invalidEmailList.push(investor.email);
                 }
             });
 
-            this.displayInvitationSuccessModal(validEmailList);
-            this.displayExistingEmailAddressToaster(invalidEmailList);
+            // Email addresses which are not linked to a user account
+            if (validEmailList.length > 0) {
+                this.displayInvitationSuccessModal(validEmailList);
+            }
+
+            // Email addresses which are already linked to a user account
+            if (invalidEmailList.length > 0) {
+                this.displayExistingEmailAddressToaster(invalidEmailList);
+            }
+
             this.resetForm(formValues);
             this.markForCheck();
         });
