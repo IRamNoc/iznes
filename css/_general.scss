@@ -662,14 +662,14 @@ clr-tab-content {
         border: 0px;
         border-top: 1px dashed #e6e6e6;
         border-radius: 0px;
-        width: 100%;
+        width: calc(100% - 20px);
     }
 
     .well .row .well .row .well {
         border: 0px;
         border-top: 1px dashed #e6e6e6;
         border-radius: 0px;
-        width: 100%;
+        width: calc(100% - 20px);
     }
 
     .panel-header {
