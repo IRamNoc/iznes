@@ -13,15 +13,18 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <span>
+            <span style="padding: 20px;">
                 Please confirm here if this KYC documents have been previously filled up by your client {{investor.companyName.value}}, and have been approved by {{amCompanyName}}
             </span>
 
             <!-- Investor informations block -->
-            <app-text-input-list [title]="'Professional Investor:'" [content]="investor"></app-text-input-list>
+            <app-text-input-list [title]="'Professional Investor Details'" [content]="investor"></app-text-input-list>
+
+            <div class="hr-line-dashed"></div>
 
             <!-- Waiting for approval form -->
-            <div class="blockRounded">
+            <div style="padding: 20px;">
+                <h2>KYC Documents Confirmation</h2>
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
                         <p><b>Please confirm that you validate your client's KYC documents:</b></p>
