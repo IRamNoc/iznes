@@ -76,47 +76,47 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             3: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             4: {
                 label: 'Date KYC started',
-                dataSource: 'kycDate',
+                dataSource: 'dateEntered',
                 sortable: true,
             },
             5: {
                 label: 'Date of approval',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             6: {
                 label: 'Validated by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             7: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             8: {
                 label: 'Reviewed by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             9: {
                 label: 'Date of rejection',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             10: {
                 label: 'Rejected by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             11: {
                 label: 'Date of latest modification',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             }
         };
