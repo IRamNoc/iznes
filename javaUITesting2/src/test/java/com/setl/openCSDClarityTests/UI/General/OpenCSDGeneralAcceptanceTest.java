@@ -207,7 +207,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname) {
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
@@ -225,7 +225,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(success.equals("Success!"));
+            assertTrue(success.equals(expectedResult));
         } catch (Exception e) {
             fail("success message did not match : " + e.getMessage());
         }

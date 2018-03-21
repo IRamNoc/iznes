@@ -5,6 +5,7 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -100,14 +101,22 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "Jordan", "Miller");
+        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
+    }
+
+    @Test
+    @Ignore("Currently given a toaster, plans to change to a modal")
+    public void shouldNotInviteAnInvestorIfUsedEmail() throws IOException, InterruptedException{
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Failed!");
     }
 
     @Test
     public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("testops080@setl.io", "TestUser", "One");
+        inviteAnInvestor("testops080@setl.io", "TestUser", "One", "Success!");
         logout();
     }
 
@@ -115,14 +124,14 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "", "Miller");
+        inviteAnInvestor("testops082@setl.io", "", "Miller", "Success!");
     }
 
     @Test
     public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("User1@setl.io", "Jordan", "");
+        inviteAnInvestor("testops083@setl.io", "Jordan", "", "Success!");
     }
 
     @Test
@@ -191,33 +200,50 @@ public class OpenCSDKYCModuleAcceptanceTest {
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("no");
         logout();
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        try {
-            String headingKYC = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/section[1]/h3")).getText();
-            assertFalse(headingKYC.equals("KYC & client folder"));
-        }catch (Exception e){
-            fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
-        }
+        loginCompleteKYC("testops002@setl.io", "alex01");
     }
 
     @Test
     public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("no");
+        logout();
+        loginAndVerifySuccessKYC("am", "trb2017");
+        try {
+            driver.findElement(By.id("top-menu-kyc-documents")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")).click();
     }
 
     @Test
     public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("yes");
+        logout();
     }
 
     @Test
     public void shouldReceiveActionMessageFromInvestorIfCaseYES() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        //loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
     }
 
     @Test
     public void shouldAllowInvestorToGoBackToPreviousKYCStep() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        //loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+    }
+
+    @Test
+    public void shouldTakeAMToFundAuthPageAfterAcceptingKYC() throws IOException, InterruptedException {
+
     }
 
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
