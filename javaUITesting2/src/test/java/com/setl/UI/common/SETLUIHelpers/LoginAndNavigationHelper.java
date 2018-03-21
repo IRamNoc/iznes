@@ -8,9 +8,7 @@ import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
@@ -197,6 +195,20 @@ public class LoginAndNavigationHelper {
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
+    }
+    public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+        Thread.sleep(1500);
+        try {
+            String headingKYC = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3")).getText();
+            assertFalse(headingKYC.equals("CONFIRMATION SCREEN"));
+        }catch (Exception e){
+            fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
+        }
     }
 
     public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
