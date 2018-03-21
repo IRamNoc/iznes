@@ -25,6 +25,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     /* Public properties. */
     investorData = {};
+    investor = {};
     tableData = [];
     access = {};
     showModal = false;
@@ -74,20 +75,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 this.kycId = Number(params.kycId);
             }
         });
-
-        // this.investorData = {
-        //     kycID: 1,
-        //     investorWalletID: 6,
-        //     companyName: 'Test Company',
-        //     firstName: 'Tester',
-        //     lastName: 'McTest',
-        //     email: 't.mctest@comp.com',
-        //     telephoneNumber: '01247889568',
-        //     approvalDate: '2018-02-28'
-        // };
-
-        // test data.
-        this.tableData = [];
 
         this.access = {};
 
@@ -175,30 +162,30 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             Promise.all(promises).then(() => {
                 this.toasterService.pop('success', 'Share Permissions Saved');
 
-                // let recipientsArr = [this.investorData['investorWalletID']];
-                // let subjectStr = this.amCompany + ' has approved your application - You can invest!';
-                //
-                // let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>Good news: you are now authorised to start trading on IZNES.';
-                // if (shareArray['add'].length > 0) {
-                //     bodyStr += '<br><br>You have been authorised to access the following shares:';
-                //     Object.keys(emailArray['add']).forEach((key) => {
-                //         bodyStr += '<br><br>' + key;
-                //         emailArray['add'][key].forEach((row) => {
-                //             bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                //         });
-                //     });
-                // }
-                // if (shareArray['remove'].length > 0) {
-                //     bodyStr += '<br><br>Access to the following shares has been removed:';
-                //     Object.keys(emailArray['remove']).forEach((key) => {
-                //         bodyStr += '<br><br>' + key;
-                //         emailArray['remove'][key].forEach((row) => {
-                //             bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                //         });
-                //     });
-                // }
-                // bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a> [link needs ammending]<br><br>Thank you,<br><br>The IZNES team.';
-                // this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
+                let recipientsArr = [this.investorData['investorWalletID']];
+                let subjectStr = this.amCompany + ' has approved your application - You can invest!';
+
+                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>Good news: you are now authorised to start trading on IZNES.';
+                if (shareArray['add'].length > 0) {
+                    bodyStr += '<br><br>You have been authorised to access the following shares:';
+                    Object.keys(emailArray['add']).forEach((key) => {
+                        bodyStr += '<br><br>' + key;
+                        emailArray['add'][key].forEach((row) => {
+                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
+                        });
+                    });
+                }
+                if (shareArray['remove'].length > 0) {
+                    bodyStr += '<br><br>Access to the following shares has been removed:';
+                    Object.keys(emailArray['remove']).forEach((key) => {
+                        bodyStr += '<br><br>' + key;
+                        emailArray['remove'][key].forEach((row) => {
+                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
+                        });
+                    });
+                }
+                bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a> [link needs ammending]<br><br>Thank you,<br><br>The IZNES team.';
+                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
     }
@@ -227,10 +214,17 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 'approvalDate': approvalDateRequest
             };
 
+            this.investor = {
+                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
+                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest },
+                'firstName': { label: 'First name:', value: kyc.investorFirstName },
+                'lastName': { label: 'Last name:', value: kyc.investorLastName },
+                'email': { label: 'Email address:', value: kyc.investorEmail },
+                'phoneNumber': { label: 'Phone number:', value: phoneNumber }
+            };
+
             this.amCompany = kyc.companyName;
             this.investorWalletId = kyc.investorWalletID;
-
-            console.log('this.investorData: ',this.investorData);
 
             // Get the fund access for investor walletID and render it.
             this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
