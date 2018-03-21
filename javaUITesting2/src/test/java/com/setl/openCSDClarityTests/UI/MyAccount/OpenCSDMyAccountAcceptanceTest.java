@@ -50,7 +50,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -103,14 +103,15 @@ public class OpenCSDMyAccountAcceptanceTest {
     }
 
     @Test
-    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
-        createUserAndVerifySuccess("Jordan", "user1@setl.io", "alex01");
+        String userDetails [] = generateRandomUserDetails();
+        createUserAndVerifySuccess(userDetails[0], "testops081@setl.io", "alex01");
+        Thread.sleep(500);
         logout();
-        clickForgottenPassword("user1@setl.io");
+        clickForgottenPassword("testops081@setl.io");
         //Manually assert that email has been received
     }
 
@@ -125,7 +126,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         logout();
         loginAndVerifySuccess(userDetails[0], "alex01");
         logout();
-        loginAndVerifySuccess(userDetails[0], "alex01");
+        loginAndVerifySuccess(userDetails[1], "alex01");
     }
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
