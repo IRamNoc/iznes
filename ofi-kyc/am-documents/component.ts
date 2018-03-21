@@ -134,7 +134,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '1': 'To Review',
             '-1': 'Accepted',
             '2': 'Waiting for more info',
-            '-2': 'Refused'
+            '-2': 'Rejected'
         };
 
         tableDataCopy.forEach((row) => {
