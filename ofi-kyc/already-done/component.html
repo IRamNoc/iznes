@@ -1,6 +1,8 @@
 <div class="header-breadcrumbs">
-    <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
-    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i> <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
+    <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i>
+        <span>Welcome to {{appConfig.platform}}</span></h1>
+    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>
+        <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
 </div>
 
 <clr-tabs>
@@ -22,12 +24,15 @@
                             <label for="opt-yes">Yes</label>
                         </div>
                         <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo"  [attr.disabled]=" investorAnsweredNo ? '' : null ">
+                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo" [attr.disabled]=" investorAnsweredNo ? '' : null ">
                             <label for="opt-no">No</label>
                         </div>
-                        <div class="opt-btn-context">
+                        <div *ngIf="!investorAnsweredNo" class="opt-btn-context">
                             <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
                             <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
+                        </div>
+                        <div *ngIf="investorAnsweredNo">
+                            <p>Fill out your KYC documents, the AM will approve them & you'll be able to place orders on IZNES.</p>
                         </div>
                     </div>
                     <div>
@@ -56,12 +61,12 @@
             <section class="form-block">
                 <div class="text-input-list">
                     <app-text-input-list
-                            [title]="'Info: Details of your Asset Management company'"
-                            [content]="amDetails"
-                            [additionnalText]="'You can contact your asset manager directly.'"
+                        [title]="'Info: Details of your Asset Management company'"
+                        [content]="amDetails"
+                        [additionnalText]="'You can contact your asset manager directly.'"
                     ></app-text-input-list>
                 </div>
-             </section>
+            </section>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
