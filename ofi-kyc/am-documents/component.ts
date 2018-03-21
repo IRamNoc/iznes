@@ -71,7 +71,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             2: {
                 label: 'Company Name',
-                dataSource: 'companyName',
+                dataSource: 'investorCompanyName',
                 sortable: true,
             },
             3: {
