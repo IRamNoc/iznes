@@ -21,6 +21,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         firstName: '',
         lastName: '',
     };
+    userType: string;
 
     public userInfoExtended = {
         email: '',
@@ -64,6 +65,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 phoneCode: d.phoneCode,
                 phoneNumber: d.phoneNumber
             };
+
+            this.userType = d.userType;
         });
     }
 

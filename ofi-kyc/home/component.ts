@@ -48,7 +48,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         phoneCode: '',
         phoneNumber: '',
         amManagementCompanyID: 0,
-        invitationToken: '',
+        invitationToken: ''
     };
 
     /* Private properties. */
@@ -96,7 +96,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             lastName: userInformations.lastName,
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
-            companyName: userInformations.companyName,
+            companyName: userInformations.companyName
         };
 
         const listImu = fromJS([
