@@ -183,7 +183,7 @@ public class LoginAndNavigationHelper {
       }
     }
 
-    public static void loginAndVerifySuccessKYC(String username, String password) throws InterruptedException, IOException{
+    public static void loginAndVerifySuccessKYC(String username, String password, String headingID) throws InterruptedException, IOException{
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
@@ -191,7 +191,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed();
+        driver.findElement(By.id("ofi-welcome-" + headingID)).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
@@ -227,6 +227,7 @@ public class LoginAndNavigationHelper {
 
     public static void logout() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        Thread.sleep(2000);
         try {
             driver.findElement(By.id("dropdown-settings")).click();
         }catch (Exception e){
