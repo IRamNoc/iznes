@@ -31,9 +31,31 @@ const iznCreateFund = jasmine.createSpy('iznCreateFund')
             resolve();
         })
     );
+const iznUpdateFund = jasmine.createSpy('iznUpdateFund')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
+const defaultRequestIznesFundList = jasmine.createSpy('defaultRequestIznesFundList')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
+const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
 const fundServiceSpy = {
     iznCreateFund: iznCreateFund,
+    iznUpdateFund: iznUpdateFund,
+    defaultRequestIznesFundList: defaultRequestIznesFundList,
+    requestIznesFundList: requestIznesFundList,
 };
+
 const activatedRouteStub = {
     params: of({
         id: 'new',
@@ -45,12 +67,14 @@ const activatedRouteStub = {
     }
 };
 
-const toasterServiceMock = {
-    pop: () => {
-        return new Promise((resolve, reject) => {
+const pop = jasmine.createSpy('pop')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
             resolve();
-        });
-    }
+        })
+    );
+const toasterServiceMock = {
+    pop: pop,
 };
 
 // Stub for routerLink
@@ -222,15 +246,24 @@ describe('FundComponent', () => {
         }));
 
         it('should display the fund creation form', fakeAsync(() => {
-            const value = comp.umbrellaItems[1];
+            const value = comp.umbrellaItems[0];
             comp.umbrellaControl.setValue([value]);
 
             comp.submitUmbrellaForm();
             tick();
             fixture.detectChanges();
 
-            const formGroupEls = fixture.debugElement.queryAllNodes(By.css('clr-tree-node:nth-of-type(n+1) div.form-group'));
-            expect(formGroupEls.length).toEqual(31);
+            // Fund Main Informations
+            const formGroupMainEls = fixture.debugElement.queryAllNodes(
+                By.css('form.fundForm > .well + .well .well:first-child div.form-group')
+            );
+            expect(formGroupMainEls.length).toEqual(27);
+
+            // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
+            const formGroupOptionEls = fixture.debugElement.queryAllNodes(
+                By.css('form.fundForm > .well + .well .well:last-child div.form-group')
+            );
+            expect(formGroupOptionEls.length).toEqual(22);
         }));
 
         describe('conditionnal inputs', () => {
@@ -243,8 +276,6 @@ describe('FundComponent', () => {
                 tick();
                 fixture.detectChanges();
 
-                const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'));
-                caretEl[caretEl.length - 1].triggerEventHandler('click', null);
             }));
 
             describe('umbrellaFundID', () => {
@@ -586,17 +617,7 @@ describe('FundComponent', () => {
             });
         });
 
-        it('should call fundService.createFund', fakeAsync(() => {
-
-            const value = comp.umbrellaItems[1];
-            comp.umbrellaControl.setValue([value]);
-
-            comp.submitUmbrellaForm();
-            tick();
-            fixture.detectChanges();
-
-            const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'))[1];
-            caretEl.triggerEventHandler('click', null);
+        describe('create mode', () => {
 
             const testPayload = {
                 isFundStructure: '1',
@@ -656,28 +677,164 @@ describe('FundComponent', () => {
                 investmentObjective: null
             };
 
-            comp.fundForm.setValue(testPayload);
+            beforeEach(fakeAsync(() => {
+                const value = comp.umbrellaItems[0];
+                comp.umbrellaControl.setValue([value]);
+                comp.viewMode = 'FUND';
 
-            const submitEl = fixture.debugElement.query(By.css('#submitfund'));
-            submitEl.triggerEventHandler('click', null);
-            comp.submitFundForm();
+                tick();
+                fixture.detectChanges();
 
-            const expectedResult: Fund = Object(_.omit({
-                ...testPayload,
-                domicile: testPayload.domicile[0].id,
-                legalForm: testPayload.legalForm[0].id,
-                nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                fundCurrency: testPayload.fundCurrency[0].id,
-                portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                fundAdministrator: testPayload.fundAdministrator[0].id,
-                custodianBank: testPayload.custodianBank[0].id,
-                managementCompanyID: testPayload.managementCompanyID[0].id,
-                umbrellaFundID: comp.umbrellaControl.value[0].id,
-            }, ['AuMFund', 'AuMFundDate']));
+                comp.fundForm.setValue(testPayload);
+            }));
 
-            expect(iznCreateFund).toHaveBeenCalledTimes(1);
-            expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
-        }));
+            afterEach(() => {
+                iznCreateFund.calls.reset();
+                pop.calls.reset();
+            });
+
+            it('should call fundService.createFund', fakeAsync(() => {
+
+                const expectedResult: Fund = Object(_.omit({
+                    ...testPayload,
+                    domicile: testPayload.domicile[0].id,
+                    legalForm: testPayload.legalForm[0].id,
+                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                    fundCurrency: testPayload.fundCurrency[0].id,
+                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                    fundAdministrator: testPayload.fundAdministrator[0].id,
+                    custodianBank: testPayload.custodianBank[0].id,
+                    managementCompanyID: testPayload.managementCompanyID[0].id,
+                    umbrellaFundID: comp.umbrellaControl.value[0].id,
+                }, ['AuMFund', 'AuMFundDate']));
+                comp.submitFundForm();
+
+                expect(iznCreateFund).toHaveBeenCalledTimes(1);
+                expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
+            }));
+
+            it('should fire the toaster service with a success message', fakeAsync(() => {
+                const expectedResult = [
+                    'success',
+                    `${testPayload.fundName} has been successfully created.`
+                ];
+                comp.submitFundForm();
+                tick();
+
+                expect(pop).toHaveBeenCalledTimes(1);
+                expect(pop).toHaveBeenCalledWith(...expectedResult);
+            }));
+        });
+
+        describe('edit mode', () => {
+            const testPayload = {
+                isFundStructure: '1',
+                fundName: 'test',
+                AuMFund: 'test',
+                AuMFundDate: '2017-02-02',
+                legalEntityIdentifier: null,
+                registerOffice: null,
+                registerOfficeAddress: null,
+                domicile: [{id: 'AF', text: 'Afghanistan'}],
+                isEuDirective: '0',
+                typeOfEuDirective: null,
+                UcitsVersion: null,
+                legalForm: [{ id: '0', text: 'Contractual Fund' }],
+                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
+                homeCountryLegalType: null,
+                fundCreationDate: null,
+                fundLaunchate: null,
+                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
+                openOrCloseEnded: '0',
+                fiscalYearEnd: '2017-02',
+                isFundOfFund: '0',
+                managementCompanyID: [{ id: '0', text: 'test management company' }],
+                fundAdministrator: [{ id : '1', text: 'Fund Admin 1' }],
+                custodianBank: [{ id : '1', text: 'Custodian Bank 1' }],
+                investmentManager: null,
+                principalPromoter: null,
+                payingAgent: null,
+                fundManagers: null,
+                transferAgent: null,
+                centralizingAgent: null,
+                isDedicatedFund: '0',
+                portfolioCurrencyHedge: [{ id : '1', text: 'No Hedge' }],
+                globalItermediaryIdentification: null,
+                delegatedManagementCompany: null,
+                investmentAdvisor: null,
+                auditor: null,
+                taxAuditor: null,
+                legalAdvisor: null,
+                directors: null,
+                pocket: null,
+                hasEmbeddedDirective: null,
+                hasCapitalPreservation: null,
+                capitalPreservationLevel: null,
+                capitalPreservationPeriod: null,
+                hasCppi: null,
+                cppiMultiplier: null,
+                hasHedgeFundStrategy: null,
+                isLeveraged: null,
+                has130Or30Strategy: null,
+                isFundTargetingEos: null,
+                isFundTargetingSri: null,
+                isPassiveFund: null,
+                hasSecurityiesLending: null,
+                hasSwap: null,
+                hasDurationHedge: null,
+                investmentObjective: null
+            };
+
+            beforeEach(fakeAsync(() => {
+                const value = comp.umbrellaItems[0];
+                comp.umbrellaControl.setValue([value]);
+                comp.viewMode = 'FUND';
+                comp.param = '9';
+
+                tick();
+                fixture.detectChanges();
+
+                comp.fundForm.setValue(testPayload);
+            }));
+
+            afterEach(() => {
+                iznUpdateFund.calls.reset();
+                pop.calls.reset();
+            });
+
+            it('should call fundService.updateFund', fakeAsync(() => {
+
+                const expectedResult: Fund = Object(_.omit({
+                    ...testPayload,
+                    domicile: testPayload.domicile[0].id,
+                    legalForm: testPayload.legalForm[0].id,
+                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                    fundCurrency: testPayload.fundCurrency[0].id,
+                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                    fundAdministrator: testPayload.fundAdministrator[0].id,
+                    custodianBank: testPayload.custodianBank[0].id,
+                    managementCompanyID: testPayload.managementCompanyID[0].id,
+                    umbrellaFundID: comp.umbrellaControl.value[0].id,
+                }, ['AuMFund', 'AuMFundDate']));
+                comp.submitFundForm();
+
+                expect(iznUpdateFund).toHaveBeenCalledTimes(1);
+                expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
+            }));
+
+            it('should fire the toaster service with a success message', fakeAsync(() => {
+                const expectedResult = [
+                    'success',
+                    `${testPayload.fundName} has been successfully updated.`
+                ];
+                comp.submitFundForm();
+                tick();
+
+                expect(pop).toHaveBeenCalledTimes(1);
+                expect(pop).toHaveBeenCalledWith(...expectedResult);
+            }));
+        });
     });
 });

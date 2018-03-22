@@ -187,30 +187,17 @@
                                 </div>
                             </div>
 
-                            <div class="row" *ngIf="showTransferAgent || showCentralizingAgent">
-                                <div class="form-group required-field col-sm-6">
-                                    <div *ngIf="showTransferAgent">
-                                        <label for="uf_transferAgent" class="control-label">Transfer Agent</label>
-                                        <input type="text" id="uf_transferAgent" formControlName="transferAgentID">
+                            <!-- TODO: Implement data once we have a proper definition of what these two fields must have -->
+                            <div *ngIf="showTransferAgent" class="form-group required-field col-sm-6">
+                                <label for="uf_transferAgent" class="control-label">Transfer Agent</label>
+                                <input type="number" id="uf_transferAgent" formControlName="transferAgentID">
+                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                            </div>
 
-                                        <div *ngIf="umbrellaFundForm.controls['transferAgentID'].hasError('required') && umbrellaFundForm.controls['transferAgentID'].touched"
-                                             class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                                        </div>
-                                    </div>
-
-                                    <div *ngIf="showCentralizingAgent">
-                                        <label for="uf_centralizingAgent" class="control-label">
-                                            Centralising Agent
-                                        </label>
-
-                                        <input type="text" id="uf_centralizingAgent"
-                                               formControlName="centralisingAgentID">
-
-                                        <div *ngIf="umbrellaFundForm.controls['centralisingAgentID'].hasError('required') && umbrellaFundForm.controls['centralisingAgentID'].touched"
-                                             class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                                        </div>
-                                    </div>
-                                </div>
+                            <div *ngIf="showCentralizingAgent" class="form-group required-field col-sm-6">
+                                <label for="uf_centralizingAgent" class="control-label">Centralising Agent</label>
+                                <input type="number" id="uf_centralizingAgent" formControlName="centralisingAgentID">
+                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
                             </div>
 
                             <!-- Leave it for the case for being able to display dropdowns' content -->
