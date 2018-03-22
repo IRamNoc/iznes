@@ -27,6 +27,7 @@ import {
 interface TabState {
     detail: boolean;
     password: boolean;
+    api: boolean;
 }
 
 @Component({
@@ -445,7 +446,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.tabStates = {
             detail: true,
-            password: false
+            password: false,
+            api: false
         };
 
         this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
