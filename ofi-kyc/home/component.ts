@@ -15,6 +15,7 @@ import {Router} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils/index';
+import {Endpoints} from '../config';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -24,6 +25,7 @@ import {SagaHelper} from '@setl/utils/index';
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     appConfig: AppConfig;
+    endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
 
     /* Public properties. */
@@ -41,6 +43,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneNumber: '',
         },
         companyName: '',
+        amCompanyName: '',
         phoneCode: '',
         phoneNumber: '',
         amManagementCompanyID: 0,
@@ -60,9 +63,11 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private router: Router,
                 private ofiKycService: OfiKycService,
                 private myUserService: MyUserService,
+                @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
+        this.endpointsConfig = endpoints;
     }
 
     ngAfterViewInit() {
@@ -72,6 +77,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['kyc-my-informations'] = this.kycMyInformations.subscribe((d) => {
             /* Assign list to a property. */
             this.userInfo = d;
+            this._changeDetectorRef.detectChanges();
         });
 
         /* fetch backend for existing data to pre fill the form */
@@ -80,7 +86,16 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
-        this.userInfo = userInformations;
+
+        this.userInfo = {
+            ...this.userInfo,
+            email: userInformations.email,
+            firstName: userInformations.firstName,
+            lastName: userInformations.lastName,
+            phoneCode: userInformations.phoneCode,
+            phoneNumber: userInformations.phoneNumber,
+            companyName: userInformations.companyName,
+        };
 
         const listImu = fromJS([
             {id: 'dropdown-user'},
@@ -109,6 +124,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
+            defaultHomePage: this.endpointsConfig.alreadyDoneConfirmation,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(

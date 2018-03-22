@@ -19,6 +19,12 @@ import {
 } from './fund';
 
 import {
+    UmbrellaFundState,
+    UmbrellaFundReducer,
+    SET_UMBRELLA_FUND_LIST,
+} from './umbrella-fund';
+
+import {
     OfiManageNavState,
     OfiManageNavReducer,
     // LIST
@@ -50,13 +56,15 @@ import {
 } from './nav';
 
 import {
-   OfiFundShareListState,
-   OfiFundShareListReducer,
-   SET_AM_ALL_FUND_SHARE_LIST,
-   SET_REQUESTED_AM_All_FUND_SHARE,
-   CLEAR_REQUESTED_AM_All_FUND_SHARE,
-   setRequestedAmAllFundShare,
-   clearRequestedAmAllFundShare
+    OfiFundShareListState,
+    OfiFundShareListReducer,
+    SET_AM_ALL_FUND_SHARE_LIST,
+    SET_REQUESTED_AM_All_FUND_SHARE,
+    CLEAR_REQUESTED_AM_All_FUND_SHARE,
+    setRequestedAmAllFundShare,
+    clearRequestedAmAllFundShare,
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST
 } from './fund-share-list';
 
 import {
@@ -83,9 +91,14 @@ export {
     SicavState,
     SicavReducer,
     SET_SICAV_LIST,
+    // FUNDS
     FundState,
     FundReducer,
     SET_FUND_LIST,
+    // UMBRELLA FUNDS
+    UmbrellaFundState,
+    UmbrellaFundReducer,
+    SET_UMBRELLA_FUND_LIST,
     // LIST
     SET_NAV_FUNDS_LIST,
     setRequestedNavFundsList,
@@ -120,6 +133,8 @@ export {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
     clearRequestedAmAllFundShare,
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST,
     // FUND SHARE
     OfiFundShare,
     SET_FUND_SHARE,
@@ -139,6 +154,7 @@ export interface OfiProductState {
     ofiSicav: SicavState;
     ofiFund: FundState;
     ofiFundShareList: OfiFundShareListState;
+    ofiUmbrellaFund: UmbrellaFundState;
     ofiFundShare: OfiFundShareState;
     ofiFundShareSelectedFund: OfiFundShareSelectedFundState;
     ofiManageNav: OfiManageNavState;
@@ -150,6 +166,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
     ofiFundShareList: OfiFundShareListReducer,
+    ofiUmbrellaFund: UmbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
     ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,

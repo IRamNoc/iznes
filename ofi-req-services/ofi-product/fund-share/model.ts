@@ -18,3 +18,6 @@ export interface CreateFundShareRequestData extends MemberNodeMessageBody {
     token: string;
     fundID: number;
 }
+export interface IznesShareListRequestMessageBody extends MemberNodeMessageBody {
+    token: string;
+}

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list-ul"></i> <span mltag="txt_listoffunds">List of funds</span></h1>
+    <h1><i class="fa fa-list"></i> <span mltag="txt_listoffunds">Place an Order</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -34,44 +34,58 @@
     <!--list of fund tab-->
     <ng-template #listOfFundsTab>
         <div class="panel-body">
-            <clr-datagrid>
-                <clr-dg-column mltag="txt_actions" style="min-width: 190px;">Actions</clr-dg-column>
-                <clr-dg-column mltag="txt_assetmanager">Asset manager</clr-dg-column>
-                <clr-dg-column mltag="txt_fundname" style="min-width: 200px;">Fund name</clr-dg-column>
-                <clr-dg-column mltag="txt_nav">NAV</clr-dg-column>
-                <clr-dg-column mltag="txt_currency">Currency</clr-dg-column>
-                <clr-dg-column mltag="txt_assetclass">Asset class</clr-dg-column>
-                <clr-dg-column mltag="txt_subclassofasset">Sub class of asset</clr-dg-column>
-                <clr-dg-column mltag="txt_geographicalarea">Geographical area</clr-dg-column>
 
+            <!--<div class="search">-->
+                <!--<span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' "><i class="fa fa-search"></i> {{search}} <i class="fa fa-times"></i></a></span>-->
+                <!--<input type="form-control text" placeholder="Search Shares" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';" (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch">-->
+                <!--<button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn"><i class="fa fa-search"></i></button>-->
+                <!--<i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>-->
+            <!--</div>-->
 
-                <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button class="btn text-primary" (click)="handleSubscribe(i)">
-                                <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
-                            <button class="btn text-success" (click)="handleRedeem(i)">
-                                <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
-                        </div>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{fund.assetManager}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span class="text_small">{{ fund.isin }}</span><br/>
-                        <a class="text-primary fake-link" (click)="handleView(i)">{{fund.fundName}}</a>
-                    </clr-dg-cell>
-                    <clr-dg-cell>€ {{fund.nav | moneyValue: 2}}</clr-dg-cell>
-                    <clr-dg-cell>{{fund.currency}}</clr-dg-cell>
-                    <clr-dg-cell>{{fund.mainClass}}</clr-dg-cell>
-                    <clr-dg-cell>{{fund.subClass}}</clr-dg-cell>
-                    <clr-dg-cell>{{fund.geographic}}</clr-dg-cell>
-                </clr-dg-row>
+            <div class="message_list_menu">
+                <clr-datagrid>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>ISIN <span class="column-label"></span></clr-dg-column>                                       <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>Share Name <span class="column-label"></span></clr-dg-column>                            <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>Asset Class <span class="column-label"></span></clr-dg-column>                          <!--(sortable) -->
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>Asset Manager <span class="column-label"></span></clr-dg-column>                      <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>SRRI <span class="column-label"></span></clr-dg-column>                                       <!--(sortable) -->
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>SRI <span class="column-label"></span></clr-dg-column>                                         <!--(sortable) -->
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>Share Currency <span class="column-label"></span></clr-dg-column>                         <!--(sortable) -->
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>Last NAV <span class="column-label"></span></clr-dg-column>                                    <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>Subscription Cut-off Date <span class="column-label"></span></clr-dg-column>      <!--(sortable & searchable) -->
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>Redemption Cut-off Date <span class="column-label"></span></clr-dg-column>          <!--(sortable & searchable) -->
+                    <clr-dg-column mltag="txt_actions" style="min-width: 190px;">Actions</clr-dg-column>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+                    <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
+                        <clr-dg-cell>{{fund['isin']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['shareName']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetClass']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetManager']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['srri']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['sri']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['currency']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['nav']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['subscriptionDate']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['redemptionDate']}}</clr-dg-cell>
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button class="btn text-green" (click)="handleSubscribe(i)">
+                                    <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
+                                <button class="btn text-red" (click)="handleRedeem(i)">
+                                    <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
+                                <button class="btn text-yellow" (click)="handleBuySell(i)">
+                                    <i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>
+                            </div>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </div>
+
         </div>
     </ng-template>
 </div>
-

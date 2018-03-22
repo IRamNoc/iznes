@@ -26,6 +26,7 @@ export {ProductHomeComponent} from './ofi-product/home/component';
 export {UmbrellaFundComponent} from './ofi-product/umbrella-fund/component';
 export {FundShareComponent} from './ofi-product/fund-share/form/component';
 export {AddNewFundShareComponent} from './ofi-product/fund-share/add-new/component';
+export {FundComponent} from './ofi-product/fund/component';
 /**
  * Nav
  */

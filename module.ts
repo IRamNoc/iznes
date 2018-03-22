@@ -41,6 +41,7 @@ import {CoreDynamicFormsModule} from '@setl/core-dynamic-forms';
         OfiCorpActionsModule
     ],
     declarations: [
+
     ],
     providers: [OfiPostTxService]
 })

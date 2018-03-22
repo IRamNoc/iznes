@@ -57,15 +57,16 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.model = new FundShare();
 
         this.initSubscriptions();
-        
-        this.redux.dispatch(clearRequestedFundShare());
 
         this.configureFormForMode();
+
+        this.redux.dispatch(clearRequestedFundShare());
     }
 
     private initSubscriptions(): void {
         this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
-            this.fundShareId = params.get('shareId') as any;
+            const fundShareId = params.get('shareId') as any;
+            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
 
             if(this.fundShareId != undefined) {
                 this.mode = FundShareMode.Update;
@@ -80,7 +81,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
         }));
         this.subscriptionsArray.push(this.fundShareOb.subscribe(fundShare => {
-            this.updateFundShare(fundShare);
+            if(this.fundShareId === fundShare.fundShareID) this.updateFundShare(fundShare);
         }));
 
         this.subscriptionsArray.push(this.accountIdOb.subscribe(accountId => this.model.accountId = accountId));
@@ -150,26 +151,23 @@ export class FundShareComponent implements OnInit, OnDestroy {
             overlayClickToClose: false
         });
         
-        const method = this.mode === FundShareMode.Create ?
-            OfiFundShareService.defaultCreateFundShare :
-            OfiFundShareService.defaultUpdateFundShare;
-
-        const successCallback = this.mode === FundShareMode.Create ?
-            this.onCreateSuccess :
-            this.onUpdateSuccess;
-
-        const errorCallback = this.mode === FundShareMode.Create ?
-            this.onCreateError :
-            this.onUpdateError;
-        
-        method(this.ofiFundShareService,
-            this.redux,
-            this.model.getRequest(),
-            (data) => successCallback(data[1]),
-            (e) => errorCallback(e[1].Data[0]));
+        if(this.mode === FundShareMode.Create) {
+            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+                this.redux,
+                this.model.getRequest(),
+                (data) => this.onCreateSuccess(data[1]),
+                (e) => this.onCreateError(e[1].Data[0]));
+        } else {
+            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
+                this.redux,
+                this.model.getRequest(),
+                (data) => this.onUpdateSuccess(data[1]),
+                (e) => this.onUpdateError(e[1].Data[0]));
+        }
     }
 
     private onCreateSuccess(data): void {
+        if(data.Data.Status === "Fail") this.onCreateError(data.Data);
         console.log('onCreateSuccess',data);
         this.router.navigateByUrl(`product-module/fund-share/${data.Data.fundShareID}?new`);
     }

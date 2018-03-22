@@ -63,10 +63,10 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
     try {
         navFundsList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
             const metadata = JSON.parse(item.get('metadata', {}));
-            const currency = metadata.shareCurrency[0].id;
+            const currency = metadata.shareCurrency[0] ? metadata.shareCurrency[0].id : '';
             const navDate = item.get('navDate', '');
-            const nextValuationDateRaw = metadata.valuationFrequency[0].id;
-            const nextValuationDate = getNextValuationDate(nextValuationDateRaw, navDate);
+            const nextValuationDateRaw = metadata.valuationFrequency[0] ? metadata.valuationFrequency[0].id : '';
+            const nextValuationDate = metadata.valuationFrequency[0] ? getNextValuationDate(nextValuationDateRaw, navDate) : 'N/A';
 
             result.push({
                 shareId: item.get('shareId', 0),

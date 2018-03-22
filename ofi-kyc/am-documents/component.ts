@@ -1,5 +1,8 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject,
+    OnInit
+} from '@angular/core';
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
 import {Subpanel} from './models';
@@ -14,12 +17,14 @@ import {Observable} from 'rxjs/Observable';
 
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 
+import {immutableHelper} from '@setl/utils';
+
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiAmDocumentsComponent implements OnDestroy {
+export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
     appConfig: AppConfig;
     hasFilledAdditionnalInfos = false;
@@ -38,7 +43,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,) {
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
     }
 
@@ -53,8 +58,9 @@ export class OfiAmDocumentsComponent implements OnDestroy {
     }
 
     updateTable(tableData) {
+        const tableDataCopy = immutableHelper.copy(tableData);
 
-        let columns = {
+        const columns = {
             1: {
                 label: 'Status',
                 dataSource: 'status',
@@ -65,57 +71,57 @@ export class OfiAmDocumentsComponent implements OnDestroy {
             },
             2: {
                 label: 'Company Name',
-                dataSource: 'companyName',
+                dataSource: 'investorCompanyName',
                 sortable: true,
             },
             3: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             4: {
                 label: 'Date KYC started',
-                dataSource: 'kycDate',
+                dataSource: 'dateEntered',
                 sortable: true,
             },
             5: {
                 label: 'Date of approval',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             6: {
                 label: 'Validated by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             7: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             8: {
                 label: 'Reviewed by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             9: {
                 label: 'Date of rejection',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             10: {
                 label: 'Rejected by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             11: {
                 label: 'Date of latest modification',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             }
         };
 
-        let tables = {
+        const tables = {
             '1': [],
             '-1': [],
             '2': [],
@@ -124,14 +130,14 @@ export class OfiAmDocumentsComponent implements OnDestroy {
             'all': []
         };
 
-        let replaceStatus = {
+        const replaceStatus = {
             '1': 'To Review',
             '-1': 'Accepted',
             '2': 'Waiting for more info',
-            '-2': 'Refused'
+            '-2': 'Rejected'
         };
 
-        tableData.forEach((row) => {
+        tableDataCopy.forEach((row) => {
             const rowStatus = row['status'];
 
             row['status'] = replaceStatus[rowStatus];
@@ -151,7 +157,7 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 data: tables[1]
             },
             {
-                title: 'Accepted KYC Requests',
+                title: 'Accepted - Funds Access Authorizations',
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: false,
                 data: tables[-1]
@@ -163,14 +169,14 @@ export class OfiAmDocumentsComponent implements OnDestroy {
                 data: tables[2]
             },
             {
-                title: 'Rejected Requests',
+                title: 'Rejected',
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables[-2]
             },
             {
                 title: 'Started by your clients',
-                columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
+                columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables['invited']
             },

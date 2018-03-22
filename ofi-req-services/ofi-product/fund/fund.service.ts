@@ -4,8 +4,29 @@ import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {FundRequestMessageBody, HistoryRequestMessageBody, FundShareRequestMessageBody, SaveFundRequestBody, UpdateFundRequestBody, SaveFundShareRequestBody, UpdateFundShareRequestBody, SaveFundHistoryRequestBody} from './fund.service.model';
-import {setRequestedFund, clearRequestedFund, SET_FUND_LIST, SET_FUND_SHARE_LIST} from '../../../ofi-store/ofi-product/fund/fund-list/actions';
+import {
+    FundRequestMessageBody,
+    HistoryRequestMessageBody,
+    FundShareRequestMessageBody,
+    SaveFundRequestBody,
+    UpdateFundRequestBody,
+    SaveFundShareRequestBody,
+    UpdateFundShareRequestBody,
+    SaveFundHistoryRequestBody,
+    IznesCreateFundRequestBody,
+    IznesUpdateFundRequestBody,
+    Fund,
+    IznesFundRequestMessageBody
+} from './fund.service.model';
+import {
+    setRequestedFund,
+    clearRequestedFund,
+    setRequestedIznesFunds,
+    clearRequestedIznesFunds,
+    SET_FUND_LIST,
+    SET_FUND_SHARE_LIST
+} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
+import {GET_IZN_FUND_LIST} from '../../../ofi-store/ofi-product/fund/fund-list';
 
 interface FundData {
     fundID?: any;
@@ -38,7 +59,7 @@ export class OfiFundService {
     @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     accountId = 0;
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
@@ -66,6 +87,20 @@ export class OfiFundService {
         ));
     }
 
+    static defaultRequestIznesFundList(ofiFundService: OfiFundService, ngRedux: NgRedux<any>) {
+        ngRedux.dispatch(setRequestedIznesFunds());
+
+        // Request the list.
+        const asyncTaskPipe = ofiFundService.requestIznesFundList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_IZN_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     myAccountId(accountId) {
         this.accountId = accountId;
     }
@@ -75,6 +110,20 @@ export class OfiFundService {
             RequestName: 'getfunds',
             token: this.memberSocketService.token,
             accountId: this.accountId
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Get the list of iznes funds
+     *
+     * @returns {any}
+     */
+    requestIznesFundList(): any {
+        const messageBody: IznesFundRequestMessageBody = {
+            RequestName: 'izngetfundlist',
+            token: this.memberSocketService.token
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -185,4 +234,51 @@ export class OfiFundService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    /**
+     * new Umbrellas/Funds/Shares module
+     */
+    iznCreateFund(payload: Fund) {
+        const messageBody: IznesCreateFundRequestBody = {
+            RequestName: 'izncreatefund',
+            token: this.memberSocketService.token,
+            ...payload,
+        };
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
+    }
+    buildRequest(options) {
+        return new Promise((resolve, reject) => {
+            /* Dispatch the request. */
+            this.ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    options.successActions || [],
+                    options.failActions || [],
+                    options.taskPipe,
+                    {},
+                    (response) => {
+                        resolve(response);
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                )
+            );
+        });
+    }
+
+    iznUpdateFund(id: string, payload: Fund) {
+        const messageBody: IznesUpdateFundRequestBody = {
+            RequestName: 'iznupdatefund',
+            token: this.memberSocketService.token,
+            fundID: id,
+            ...payload,
+        };
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        });
+    }
+
 }

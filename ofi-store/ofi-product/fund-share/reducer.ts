@@ -9,7 +9,7 @@ import {OfiFundShare, OfiFundShareState, CurrentRequest} from './model';
 
 const initialState: OfiFundShareState = {
     fundShare: {},
-    requestedFundShare: false,
+    requested: false,
     currentRequest: {}
 };
 

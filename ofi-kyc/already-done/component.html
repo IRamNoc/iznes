@@ -1,65 +1,75 @@
 <div class="header-breadcrumbs">
-    <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i> <span>Welcome to {{appConfig.platform}}</span></h1>
-    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i> <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
+    <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i>
+        <span id="ofi-welcome-kyc">Welcome to {{appConfig.platform}}</span></h1>
+    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>
+        <span>KYC documents - Awaiting confirmation from: {{amDetails.companyName.value}}</span></h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> <span>Standard Form</span>
+            <i class="fa fa-bars"></i> <span>KYC Already Done?</span>
         </button>
 
         <clr-tab-content *clrIfActive>
-            <h3>Let's start with the mandatory administrative part: the KYC</h3>
+            <div style="padding: 20px;">
+                <section *ngIf="investorStatus == 'confirmation' || investorStatus == 'waiting-for-more-info' " class="form-block">
+                    <span style="font-weight: 13px;">Let's start with the mandatory administrative part: the KYC</span>
+                    <h2>KYC & client folder</h2>
+                    <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
+                    <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group opt-btn-container">
+                            <div class="radio-inline opt-btn-element">
+                                <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorAnsweredNo ? '' : null ">
+                                <label for="opt-yes">Yes</label>
+                            </div>
+                            <div class="radio-inline opt-btn-element">
+                                <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo" [attr.disabled]=" investorAnsweredNo ? '' : null ">
+                                <label for="opt-no">No</label>
+                            </div>
+                            <div *ngIf="!investorAnsweredNo" class="opt-btn-context">
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
+                            </div>
+                            <div *ngIf="investorAnsweredNo">
+                                <p>Fill out your KYC documents, the AM will approve them & you'll be able to place orders on IZNES.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()" [attr.disabled]="investorAnsweredNo ? '' : null ">
+                                <span>Back</span>
+                            </button>
+                            <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid" [attr.disabled]="investorAnsweredNo ? '' : null ">
+                                <span mltag="txt_validate">Validate</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
 
-            <section *ngIf="investorStatus == 'confirmation'" class="form-block confirm-container">
-                <h3>KYC & client folder</h3>
-                <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
-                <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
-                    <div class="form-group opt-btn-container">
-                        <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt">
-                            <label for="opt-yes">Yes</label>
-                        </div>
-                        <div class="radio-inline opt-btn-element">
-                            <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt">
-                            <label for="opt-no">No</label>
-                        </div>
-                        <div class="opt-btn-context">
-                            <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
-                            <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()">
-                            <span>Back</span>
-                        </button>
-                        <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid">
-                            <span mltag="txt_validate">Validate</span>
-                        </button>
-                    </div>
-                </form>
-            </section>
+                <section *ngIf="investorStatus == 'waiting-for-validation'">
+                    <p>
+                        Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
+                    </p>
+                    <p>
+                        A message was sent to {{amDetails.companyName.value}}, asking them to confirm this information.
+                    </p>
+                    <p>
+                        Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
+                    </p>
+                </section>
+            </div>
 
-            <section *ngIf="investorStatus == 'waiting-for-validation'" class="confirmed-container">
-                <p>
-                    Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
-                </p>
-                <p>
-                    A message was sent to {{amDetails.companyName.value}}.", asking them yo confirm this information.
-                </p>
-                <p>
-                    Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
-                </p>
-            </section>
+            <div class="hr-line-dashed"></div>
 
             <section class="form-block">
-                <app-text-input-list
+                <!--<div class="text-input-list">-->
+                    <app-text-input-list
                         [title]="'Info: Details of your Asset Management company'"
                         [content]="amDetails"
                         [additionnalText]="'You can contact your asset manager directly.'"
-                ></app-text-input-list>
-             </section>
+                    ></app-text-input-list>
+                <!--</div>-->
+            </section>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
@@ -76,7 +86,7 @@
         </p>
         <br>
         <p class="highlight">
-            Once they will have reviewed your KYC, you can close this confirmation screen, selects Yes and validates. A notification will be sent to the {{amDetails.companyName.value}}.
+            Once they will have reviewed your KYC, you can close this confirmation screen, selects Yes and validates. A notification will be sent to {{amDetails.companyName.value}}.
         </p>
         <br>
         <button class="btn btn-primary" type="button" (click)="closeModal()">

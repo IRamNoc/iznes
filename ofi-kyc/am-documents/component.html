@@ -1,6 +1,6 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-align-left"></i> <span>KYC</span></h1>
+    <h1><i class="fa fa-align-left"></i> <span>KYC Documents</span></h1>
 </div>
 
 <!-- Main content. -->
@@ -29,12 +29,11 @@
                             {{row[dataCol.dataSource]}}
                         </a>
                         <span *ngIf="!dataCol.hasLink">
-                            {{row[dataCol.dataSource]}}
+                            {{row[dataCol.dataSource]}}<ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
                         </span>
                     </clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
-
         </div>
     </div>
 </div>

@@ -13,6 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
+import {isInRootDir} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -80,7 +81,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa fa-th-list',
-                        text: 'List'
+                        text: 'Shares Available'
                     },
                     fundShareId: -1,
                     fundShareData: {},
@@ -124,19 +125,19 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         const fundListImu = fromJS(fundList);
 
         this.fundList = fundListImu.reduce((result, item) => {
-
             result.push({
                 id: item.get('shareId', 0),
-                assetManager: item.getIn(['managementCompany'], ''),
                 isin: item.getIn(['metaData', 'isin'], ''),
-                fundName: item.getIn(['shareName'], ''),
+                shareName: item.getIn(['metaData', 'shareName'], ''),
+                assetClass: item.getIn(['metaData', 'assetClass'], ''),
+                assetManager: item.getIn(['managementCompany'], ''),
+                srri: item.getIn(['metaData', 'srri'], ''),
+                sri: item.getIn(['metaData', 'fundSri'], ''),
+                currency: item.getIn(['metaData', 'shareCurrency'], ''),
                 nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
-                currency: item.getIn(['metaData', 'portfolioCurrency', '0', 'text'], ''),
-                mainClass: item.getIn(['metaData', 'assetClass', '0', 'text'], ''),
-                subClass: item.getIn(['metaData', 'subAssetClass', '0', 'text'], ''),
-                geographic: item.getIn(['metaData', 'geographicalArea', '0', 'text'], '')
+                subscriptionDate: item.getIn(['metaData', 'subscriptionCutOff'], ''),
+                redemptionDate: item.getIn(['metaData', 'redemptionCutOff'], '')
             });
-
             return result;
         }, []);
 
@@ -182,7 +183,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             title: {
                 icon: 'fa-sign-in',
                 text: fundShareName,
-                colorClass: 'text-primary'
+                colorClass: 'text-green-title'
             },
             fundShareId: fundShareId,
             fundShareData: fundShareData,
@@ -219,11 +220,49 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             title: {
                 icon: 'fa-sign-out',
                 text: fundShareName,
-                colorClass: 'text-success'
+                colorClass: 'text-red-title'
             },
             fundShareId: fundShareId,
             fundShareData: fundShareData,
             actionType: 'redeem',
+            active: false,
+            formData: {}
+        })
+        ;
+
+        // Activate the new tab.
+        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+    }
+
+    /**
+     * Handle buy/sell button is click in the list of funds.
+     * @param index
+     */
+    handleBuySell(index: number): void {
+        /* Check if the tab is already open. */
+        let i;
+        for (i = 0; i < this.tabsControl.length; i++) {
+            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'buysell')) {
+                this._router.navigateByUrl(`/list-of-funds/${i}`);
+
+                return;
+            }
+        }
+
+        /* Push the edit tab into the array. */
+        const fundShareId = _.get(this.fundList, [index, 'id'], 0);
+        const fundShareData = _.get(this.fundListObj, [fundShareId], {});
+        const fundShareName = _.get(fundShareData, ['shareName'], '');
+
+        this.tabsControl.push({
+            title: {
+                icon: 'fa-sign-out',
+                text: fundShareName,
+                colorClass: 'text-yellow-title'
+            },
+            fundShareId: fundShareId,
+            fundShareData: fundShareData,
+            actionType: 'buysell',
             active: false,
             formData: {}
         })
@@ -293,6 +332,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     }
 
     updateFormData(tabId: number, formValue: any): void {
-        this.tabsControl[tabId].formData = formValue;
+        if (this.tabsControl[tabId] != null) {
+            this.tabsControl[tabId].formData = formValue;
+        }
     }
 }

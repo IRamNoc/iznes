@@ -40,7 +40,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     @Input() header: string;
     @Input() subTitle: string;
     @Input() viewMode: ViewMode;
-    @Input() userInfo: Observable<KycMyInformations>;
     @Output() onClose = new EventEmitter<void>();
     @Output() onSubmit = new EventEmitter<KycMyInformations>();
 
@@ -113,22 +112,19 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+    }
 
+    @Input() set userInfo(userInfo) {
         if (!this.additionnalForm.controls.phoneCode.value) {
             this.switchPhoneCode();
         }
-        // form data listeners
-        this.subscriptions.push(
-             this.userInfo.subscribe((d: KycMyInformations) => {
-                 this.additionnalForm.controls.email.setValue(d.email);
-                 this.additionnalForm.controls.firstName.setValue(d.firstName);
-                 this.additionnalForm.controls.lastName.setValue(d.lastName);
-                 this.additionnalForm.controls.invitedBy.setValue(d.invitedBy.companyName);
-                 this.additionnalForm.controls.companyName.setValue(d.companyName);
-                 this.additionnalForm.controls.phoneCode.setValue(this.getPhoneCode(d.phoneCode));
-                 this.additionnalForm.controls.phoneNumber.setValue(d.phoneNumber);
-             })
-        );
+        this.additionnalForm.controls['email'].setValue(userInfo.email);
+        this.additionnalForm.controls['firstName'].setValue(userInfo.firstName);
+        this.additionnalForm.controls['lastName'].setValue(userInfo.lastName);
+        this.additionnalForm.controls['invitedBy'].setValue(userInfo.invitedBy.companyName);
+        this.additionnalForm.controls['companyName'].setValue(userInfo.companyName);
+        this.additionnalForm.controls['phoneCode'].setValue(this.getPhoneCode(userInfo.phoneCode));
+        this.additionnalForm.controls['phoneNumber'].setValue(userInfo.phoneNumber);
     }
 
     isPopUpMode() {

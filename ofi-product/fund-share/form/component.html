@@ -6,7 +6,7 @@
     </h1>
 </div>
 
-<clr-tabs *ngIf="model.fundID">
+<clr-tabs *ngIf="model.fundID || isCreate()">
     <clr-tab>
         <button clrTabLink id="tabFundShareButton">
             <span>Fund Share</span>

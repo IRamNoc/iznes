@@ -33,7 +33,6 @@ export function AmKycListReducer(state: AmKycListState = initialState,
 function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListState {
     const amKycListData = _.get(action, 'payload[1].Data', []);
     let amKycList: AmKycListState[] = [];
-
     try {
         amKycList = immutableHelper.reduce(amKycListData, (result, item) => {
             result.push({
@@ -56,7 +55,8 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 companyName: item.get('companyName', 0),
                 isInvited: item.get('isInvited', 0),
                 invitedID: item.get('invitedID', 0),
-                status: item.get('kycStatus', 0)
+                status: item.get('kycStatus', 0),
+                dateEntered: item.get('dateEntered', 0)
             });
 
             return result;

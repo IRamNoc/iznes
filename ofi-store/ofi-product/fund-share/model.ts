@@ -57,7 +57,7 @@ export interface OfiFundShareState {
     fundShare: {
         [shareId: string]: OfiFundShare
     };
-    requestedFundShare: boolean;
+    requested: boolean;
     currentRequest: CurrentRequest;
 }
  

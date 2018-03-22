@@ -139,6 +139,8 @@ export {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
     clearRequestedAmAllFundShare,
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST,
     // FUND SHARE
     OfiFundShare,
     SET_FUND_SHARE,

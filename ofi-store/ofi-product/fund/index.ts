@@ -6,7 +6,8 @@ import {
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
     setRequestedFund,
-    clearRequestedFund
+    clearRequestedFund,
+    GET_IZN_FUND_LIST
 } from './fund-list';
 
 export {
@@ -15,7 +16,8 @@ export {
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
     setRequestedFund,
-    clearRequestedFund
+    clearRequestedFund,
+    GET_IZN_FUND_LIST
 };
 
 export interface FundState {

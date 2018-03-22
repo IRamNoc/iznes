@@ -54,6 +54,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: "0", text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
+        {id: 5, text: 'Sell/Buy'},
     ];
 
     /* Public Properties */
@@ -62,7 +63,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
-    private ordersList: Array<any> = [];
+    ordersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
     private connectedWalletId: any = 0;
