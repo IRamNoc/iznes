@@ -110,40 +110,29 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 }
             });
 
-            // Email addresses which are not linked to a user account
-            if (validEmailList.length > 0) {
-                this.displayInvitationSuccessModal(validEmailList);
-            }
-
-            // Email addresses which are already linked to a user account
-            if (invalidEmailList.length > 0) {
-                this.displayExistingEmailAddressToaster(invalidEmailList);
-            }
-
+            this.displayInvitationModal(validEmailList, invalidEmailList);
             this.resetForm(formValues);
             this.markForCheck();
         });
     }
 
-    displayInvitationSuccessModal(emails: Array<string>): void {
-        let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
-
-        for (const email of emails) {
-            message += '<tr><td>' + email + '</td></tr>';
+    displayInvitationModal(emails: Array<string>, invalidEmails: Array<string>): void {
+        let message = '';
+        if (emails.length > 0) {
+            message += '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
+            for (const email of emails) {
+                message += '<tr><td>' + email + '</td></tr>';
+            }
+            message += '</tbody></table>';
         }
-
-        message += '</tbody></table>';
-
-        this.alertsService.create('success', message);
-    }
-
-    displayExistingEmailAddressToaster(invalidEmailAddressList: Array<string>) {
-        invalidEmailAddressList.map((emailAddress) => {
-            this._toasterService.pop(
-                'warning',
-                `A user has already created an account with this following email address "${emailAddress}".`
-            );
-        });
+        if (invalidEmails.length > 0){
+            message += '<br><br><p><b>A user has already created an account with the following email addresses:</b></p><table class="table grid"><tbody>';
+            for (const email of invalidEmails) {
+                message += '<tr><td>' + email + '</td></tr>';
+            }
+            message += '</tbody></table>';
+        }
+        this.alertsService.create((emails.length > 0 ? 'success' : 'warning'), message);
     }
 
     resetForm(formObj) {
