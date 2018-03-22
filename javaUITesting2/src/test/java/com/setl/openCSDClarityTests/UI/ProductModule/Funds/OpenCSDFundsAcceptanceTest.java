@@ -90,83 +90,83 @@ public class OpenCSDFundsAcceptanceTest {
     }
 
     private void validateSharesDataGridHeadings(String [] sharesHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(sharesHeadings[0]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(sharesHeadings[1]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(sharesHeadings[2]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(sharesHeadings[3]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(sharesHeadings[4]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(sharesHeadings[5]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(sharesHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(sharesHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(sharesHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(sharesHeadings[3]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(sharesHeadings[4]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(sharesHeadings[5]));
     }
 
     private void validateFundsDataGridHeadings (String [] fundsHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(fundsHeadings[0]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(fundsHeadings[1]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(fundsHeadings[2]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(fundsHeadings[3]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(fundsHeadings[4]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(fundsHeadings[5]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText().contentEquals(fundsHeadings[6]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(fundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(fundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(fundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(fundsHeadings[3]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(fundsHeadings[4]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(fundsHeadings[5]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText().contentEquals(fundsHeadings[6]));
     }
 
     private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
     }
 
     private void validatePageLayout() {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
         assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/div")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[1]/h1/span")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
         assertTrue(isElementPresent(By.id("switchActiveShares")));
         assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contentEquals("Shares"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contentEquals("Add new Share"));
+
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contentEquals("Shares"));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contentEquals("Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contentEquals("Add new Share"));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contentEquals("Add new Fund"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contentEquals("Funds"));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contentEquals("Umbrella funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contentEquals("Add new Fund"));
-
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[1]")).getText().contentEquals("Umbrella funds"));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")).getText().contentEquals("Add new Umbrella fund"));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contentEquals("Add new Umbrella fund"));
         }
 
         private void closeShares(){
-            driver.findElement(By.cssSelector("i.fa.fa-chevron-down.reverse")).click();
+            driver.findElement(By.cssSelector("i.fa.fa-chevron-right.reverse")).click();
             assertTrue(isElementPresent(By.id("switchActiveShares")));
         }
 

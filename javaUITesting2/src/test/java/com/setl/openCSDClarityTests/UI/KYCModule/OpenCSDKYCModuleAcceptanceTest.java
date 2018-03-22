@@ -117,7 +117,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
         inviteAnInvestor("testops080@setl.io", "TestUser", "One", "Success!");
-        logout();
     }
 
     @Test
@@ -143,14 +142,14 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldShowKYCLandingPageOnFirstLoginAsInvestor() throws IOException, InterruptedException{
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "additionnal");
         //assert title equals Welcome To Iznes
         //assert subtitle equals Lets start with KYC
     }
 
     @Test
     public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "additionnal");
         String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
         assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -160,7 +159,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "additionnal");
         String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
         assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -170,8 +169,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "additionnal");
+        String header = driver.findElement(By.id("ofi-welcome-kyc")).getText();
         assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
@@ -180,50 +179,50 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupMyInformationWhenKYCSaved() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops002@setl.io", "alex01", "additionnal");
     }
 
     @Test
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
+        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "kyc");
+        //fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        //fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        //saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("no");
     }
 
     @Test
     public void shouldNotBeAskedToEnterKycAfterFillingItOutOnce() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
-        selectOptionAndSubmitKYC("no");
-        logout();
-        loginCompleteKYC("testops002@setl.io", "alex01");
+        //loginAndVerifySuccessKYC("testops002@setl.io", "alex01");
+        //fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        //fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+        //saveKYCAndVerifySuccessPageOne();
+        //selectOptionAndSubmitKYC("no");
+        //logout();
+        loginCompleteKYC("testops001@setl.io", "alex01");
     }
 
     @Test
     public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
-        selectOptionAndSubmitKYC("no");
-        logout();
-        loginAndVerifySuccessKYC("am", "trb2017");
+//        loginAndVerifySuccessKYC("testops002@setl.io", "alex01");
+//        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+//        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
+//        saveKYCAndVerifySuccessPageOne();
+//        selectOptionAndSubmitKYC("no");
+//        logout();
+        loginAndVerifySuccessKYC("am", "trb2017", "kyc");
         try {
             driver.findElement(By.id("top-menu-kyc-documents")).click();
         }catch (Exception e){
             fail(e.getMessage());
         }
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")).click();
+        //assert kyc is awaiting approval
     }
 
     @Test
     public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
+        loginAndVerifySuccessKYC("testops002@setl.io", "alex01", "kyc");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
