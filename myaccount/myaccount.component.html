@@ -217,5 +217,41 @@
                 </section>
             </clr-tab-content>
         </clr-tab>
+        <clr-tab>
+            <button clrTabLink clrTabLinkId="link3">
+                <i class="fa fa-terminal"></i>
+                <span mltag="txt_api">API</span></button>
+            <clr-tab-content *clrIfActive="tabStates.api">
+                <form class="form-vertical">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" class="form-control" [value]="userId" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Wallet ID</label>
+                                <input type="text" class="form-control" [value]="connectedWalletId" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>API Key</label>
+                                <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey" readonly>
+                                <input *ngIf="!showApiKey" type="text" class="form-control mono" [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)" readonly>
+                                <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i class="fa fa-eye"></i> show</span>
+                                <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i class="fa fa-eye-slash"></i> hide</span>
+                                &nbsp;
+                                <span (click)="handleCopyApiKey($event)" class="click"><i class="fa fa-files-o"></i> <span *ngIf="copied" class="text-success">copied!</span><span *ngIf="!copied">copy</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </clr-tab-content>
+        </clr-tab>
     </clr-tabs>
 </div>

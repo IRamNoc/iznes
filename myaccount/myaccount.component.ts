@@ -304,6 +304,11 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     memorableAnswer: AbstractControl;
     profileText: AbstractControl;
 
+    userId: number;
+    connectedWalletId: number;
+    apiKey: string;
+    copied = false;
+
     oldPassword: AbstractControl;
     password: AbstractControl;
     passwordConfirm: AbstractControl;
@@ -313,7 +318,9 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     public showPasswords = false;
 
     @select(['user', 'myDetail']) getUserDetails;
+    @select(['user', 'authentication']) authentication$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -445,6 +452,14 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             const tabId = _.get(params, 'tabname', 'detail');
             this.setTabActive(tabId);
         }));
+
+        this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
+            this.apiKey = auth.apiKey;
+        }));
+
+        this.subscriptionsArray.push(this.connectedWalletId$.subscribe((id) => {
+            this.connectedWalletId = id;
+        }));
     }
 
     setTabActive(tabId: string) {
@@ -552,6 +567,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         if (userDetails.memorableQuestion) this.memorableQuestion.setValue(userDetails.memorableQuestion);
         if (userDetails.memorableAnswer) this.memorableAnswer.setValue(userDetails.memorableAnswer);
         if (userDetails.profileText) this.profileText.setValue(userDetails.profileText);
+        this.userId = userDetails.userId;
     }
 
     submitDetails(formValues) {
@@ -590,4 +606,18 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         );
     }
 
+    handleCopyApiKey(event) {
+        var textArea = document.createElement('textarea');
+        textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
+        document.body.appendChild(textArea);
+        textArea.value = this.apiKey;
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        this.copied = true;
+        setTimeout(() => {
+            this.copied = false;
+            this.changeDetectorRef.markForCheck();
+        }, 500);
+    }
 }
