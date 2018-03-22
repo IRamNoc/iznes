@@ -27,6 +27,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
+    userType: string;
 
     /* Public properties. */
     public showModal = false;
@@ -68,6 +69,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
+        this.userType = '46';
     }
 
     ngAfterViewInit() {
