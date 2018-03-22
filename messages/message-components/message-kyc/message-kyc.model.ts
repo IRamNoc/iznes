@@ -6,4 +6,5 @@ export class MessageKycConfig {
     investorPhoneNumber: string;
     amFirstName: string;
     amCompanyName: string;
+    lang: string;
 }
