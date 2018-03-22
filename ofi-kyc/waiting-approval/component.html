@@ -117,22 +117,18 @@
 
 <!-- Reject modal -->
 <clr-modal [(clrModalOpen)]="isRejectModalDisplayed" [clrModalClosable]="false">
-    <div class="modal-title">
-        <h4 class="modal-title-text">
-            <span class="ml_translated">Confirm rejection?</span>
-        </h4>
-    </div>
+    <h3 class=" modal-title">Confirm rejection?</h3>
 
     <div class="modal-body text-center">
+        <p><i class="fa fa-question fa-4x danger-color"></i></p>
         <p>Are you sure you want to reject this client's application?</p>
-        <p><i class="fa fa-question modal-icon text-muted text-danger"></i></p>
         <p>You can also ask more information to this client in the previous page</p>
     </div>
 
-    <div class="modal-footer text-center">
-        <button type="button"
-                id="backApprovalPageButton"
-                class="btn btn-outline-info"
+    <div class="modal-footer">
+        <button id="backApprovalPageButton"
+                type="button"
+                class="btn btn-outline"
                 (click)="handleModalCloseButtonClick()">
             Back to approval page
         </button>
