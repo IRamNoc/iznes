@@ -30,3 +30,7 @@
 .statusLabel {
     flex-grow: 1;
 }
+
+.danger-color {
+    color: #d9534f;
+}
