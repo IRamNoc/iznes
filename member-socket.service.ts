@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SocketClusterWrapper} from '@setl/socketcluster-wrapper';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class MemberSocketService {
@@ -13,6 +14,7 @@ export class MemberSocketService {
     private hostname = 'localhost';
     private port = 9788;
     private path = 'db';
+    private reconnectSubject = new Subject<boolean>();
 
     constructor() {
     }
@@ -56,6 +58,7 @@ export class MemberSocketService {
         this.socket.connectCallback = () => {
             if (this.socket.connectTries > 1) {
                 this.reconnectCallback();
+                this.reconnectSubject.next(true);
             }
             return true;
         };
@@ -79,5 +82,8 @@ export class MemberSocketService {
         });
     }
 
+    getReconnectStatus() {
+        return this.reconnectSubject.asObservable();
+    }
 
 }
