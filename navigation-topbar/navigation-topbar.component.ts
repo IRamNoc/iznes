@@ -9,7 +9,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import { MenuItem } from '@setl/utils';
+import {MenuItem} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
     clearRequestedMailInitial,
@@ -40,6 +40,7 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
+import {MemberSocketService} from '@setl/websocket-service';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -77,7 +78,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
     @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
-
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
 
     constructor(private ngRedux: NgRedux<any>,
@@ -90,6 +90,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private multilingualService: MultilingualService,
+                private memberSocketService: MemberSocketService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -132,8 +133,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
             const myAuthenData = getAuthentication(newState);
             const myDetail = getMyDetail(newState);
-            const { userId } = myDetail;
-            const { apiKey } = myAuthenData;
+            const {userId} = myDetail;
+            const {apiKey} = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
@@ -184,6 +185,10 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             }[userType];
             this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
         }));
+
+        // When membernode reconnect. trigger wallet select.
+        this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() =>
+            this.selected(this.selectedWalletId)));
     }
 
     ngAfterViewInit() {
@@ -282,7 +287,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
     }
 
     controlMenu() {
