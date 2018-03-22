@@ -14,7 +14,7 @@ node {
 
                 sh 'rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/* root@139.162.213.130:/var/membership-db'
 
-                sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes \''
+                sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ ; bash && ./cleanblockchain iznes \''
             }
 
         stage('Deploy Frontend to Test Environment') {
