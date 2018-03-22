@@ -260,7 +260,10 @@ export class FundComponent implements OnInit, OnDestroy {
             'pocket': [null],
             'hasEmbeddedDirective': [null],
             'hasCapitalPreservation': [null],
-            'capitalPreservationLevel': [null],
+            'capitalPreservationLevel': [null, Validators.compose([
+                Validators.min(0),
+                Validators.max(100),
+            ])],
             'capitalPreservationPeriod': [null],
             'hasCppi': [null],
             'cppiMultiplier': [null],
