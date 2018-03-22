@@ -12,7 +12,6 @@ node {
                         sh 'ssh -t root@172.104.147.135 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db \\&&'
                         sh 'rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/*  root@172.104.147.135:/var/membership-db'
                         sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/  ; bash &&  ./updatedb iznes \\&& \''
-                        sh 'ssh -tt root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./cleanblockchain \''
 
             }
 
