@@ -13,15 +13,18 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <span>
+            <span style="padding: 20px;">
                 Please confirm here if this KYC documents have been previously filled up by your client {{investor.companyName.value}}, and have been approved by {{amCompanyName}}
             </span>
 
             <!-- Investor informations block -->
-            <app-text-input-list [title]="'Professional Investor:'" [content]="investor"></app-text-input-list>
+            <app-text-input-list [title]="'Professional Investor Details'" [content]="investor"></app-text-input-list>
+
+            <div class="hr-line-dashed"></div>
 
             <!-- Waiting for approval form -->
-            <div class="blockRounded">
+            <div style="padding: 20px;">
+                <h2>KYC Documents Confirmation</h2>
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
                         <p><b>Please confirm that you validate your client's KYC documents:</b></p>
@@ -114,22 +117,18 @@
 
 <!-- Reject modal -->
 <clr-modal [(clrModalOpen)]="isRejectModalDisplayed" [clrModalClosable]="false">
-    <div class="modal-title">
-        <h4 class="modal-title-text">
-            <span class="ml_translated">Confirm rejection?</span>
-        </h4>
-    </div>
+    <h3 class=" modal-title">Confirm rejection?</h3>
 
     <div class="modal-body text-center">
+        <p><i class="fa fa-question fa-4x danger-color"></i></p>
         <p>Are you sure you want to reject this client's application?</p>
-        <p><i class="fa fa-question modal-icon text-muted text-danger"></i></p>
         <p>You can also ask more information to this client in the previous page</p>
     </div>
 
-    <div class="modal-footer text-center">
-        <button type="button"
-                id="backApprovalPageButton"
-                class="btn btn-outline-info"
+    <div class="modal-footer">
+        <button id="backApprovalPageButton"
+                type="button"
+                class="btn btn-outline"
                 (click)="handleModalCloseButtonClick()">
             Back to approval page
         </button>

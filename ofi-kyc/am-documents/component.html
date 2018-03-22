@@ -29,12 +29,11 @@
                             {{row[dataCol.dataSource]}}
                         </a>
                         <span *ngIf="!dataCol.hasLink">
-                            {{row[dataCol.dataSource]}}
+                            {{row[dataCol.dataSource]}}<ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
                         </span>
                     </clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
-
         </div>
     </div>
 </div>

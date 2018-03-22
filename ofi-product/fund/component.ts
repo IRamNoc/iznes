@@ -53,6 +53,30 @@ interface FundList {
 })
 export class FundComponent implements OnInit, OnDestroy {
 
+    panels = {
+        0: {
+            open: true,
+            0: {
+                open: true,
+            },
+            1: {
+                open: false,
+            },
+            2: {
+                open: false,
+            },
+        },
+        1: {
+            open: true,
+            0: {
+                open: true,
+            },
+            1: {
+                open: false,
+            },
+        },
+    };
+
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
     param: string;
@@ -236,7 +260,10 @@ export class FundComponent implements OnInit, OnDestroy {
             'pocket': [null],
             'hasEmbeddedDirective': [null],
             'hasCapitalPreservation': [null],
-            'capitalPreservationLevel': [null],
+            'capitalPreservationLevel': [null, Validators.compose([
+                Validators.min(0),
+                Validators.max(100),
+            ])],
             'capitalPreservationPeriod': [null],
             'hasCppi': [null],
             'cppiMultiplier': [null],
@@ -448,6 +475,7 @@ export class FundComponent implements OnInit, OnDestroy {
         return _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], false);
     }
 
+    // Returns true if an umbrella item has been selected
     isUmbrellaSelected() {
         const umb = _.get(this.umbrellaEditForm.controls['umbrellaFund'].value, ['0', 'id'], false);
         return umb !== false && umb !== '0';

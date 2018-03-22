@@ -25,6 +25,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     /* Public properties. */
     investorData = {};
+    investor = {};
     tableData = [];
     access = {};
     showModal = false;
@@ -186,7 +187,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                         });
                     });
                 }
-                bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a><br><br>Thank you,<br><br>The IZNES team.';
+                bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a> [link needs ammending]<br><br>Thank you,<br><br>The IZNES team.';
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
@@ -216,10 +217,17 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 'approvalDate': approvalDateRequest
             };
 
+            this.investor = {
+                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
+                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest },
+                'firstName': { label: 'First name:', value: kyc.investorFirstName },
+                'lastName': { label: 'Last name:', value: kyc.investorLastName },
+                'email': { label: 'Email address:', value: kyc.investorEmail },
+                'phoneNumber': { label: 'Phone number:', value: phoneNumber }
+            };
+
             this.amCompany = kyc.companyName;
             this.investorWalletId = kyc.investorWalletID;
-
-            console.log('this.investorData: ',this.investorData);
 
             // Get the fund access for investor walletID and render it.
             this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
