@@ -18,9 +18,14 @@ export const CLEAR_REQUESTED_FUND_SHARE = `${name}/CLEAR_REQUESTED_FUND_SHARE`;
 export const clearRequestedFundShare = kAction(CLEAR_REQUESTED_FUND_SHARE);
 
 /**
- *  Set fund share list
+ *  Set fund share
  */
 export const SET_FUND_SHARE = `${name}/SET_FUND_SHARE`;
+
+/**
+ *  Update fund share
+ */
+export const UPDATE_FUND_SHARE = `${name}/UPDATE_FUND_SHARE`;
 
 /**
  * Set request

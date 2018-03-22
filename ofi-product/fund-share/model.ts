@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 
-import {FormItem, FormItemDropdown} from '@setl/core-dynamic-forms';
+import {FormItem, FormItemDropdown, FormItemType} from '@setl/core-dynamic-forms';
 import {OfiFundShare} from '@ofi/ofi-main';
+import * as FundShareEnum from './FundShareEnum';
 import {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './models/characteristic';
 import {ShareCalendarMandatory, ShareCalendarOptional} from './models/calendar';
 import {ShareFeesMandatory, ShareFeesOptional} from './models/fees';
@@ -114,6 +115,59 @@ export class FundShare {
         }
     }
 
+    setFundShare(fundShare: OfiFundShare): void {
+        this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
+        this.keyFacts.mandatory.isin.preset = fundShare.isin;
+        this.setListItemPreset(this.keyFacts.mandatory.shareClassCode, fundShare.shareClassCode);
+        this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
+        this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
+        this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
+        this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
+        this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
+        this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
+        this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
+        this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
+        this.characteristic.mandatory.minInitialSubscriptionInShare.preset = fundShare.minInitialSubscriptionInShare;
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = fundShare.minInitialSubscriptionInAmount;
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset = fundShare.minSubsequentSubscriptionInAmount;
+        this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
+        this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
+        this.characteristic.mandatory.minInitialRedemptionInShare.preset = fundShare.minInitialRedemptionInShare;
+        this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
+        this.setListItemPreset(this.characteristic.optional.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+        this.setListItemPreset(this.calendar.mandatory.tradeDay, fundShare.tradeDay);
+        this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
+        this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
+        this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);
+        this.calendar.mandatory.redemptionCutOffTime.preset = fundShare.redemptionCutOffTime;
+        this.setListItemPreset(this.calendar.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
+        this.setListItemPreset(this.calendar.mandatory.redemptionSettlementPeriod, fundShare.redemptionSettlementPeriod);
+        this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
+        this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
+        this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
+        this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
+        this.setListItemPreset(this.profile.mandatory.investorProfile, fundShare.investorProfile);
+        
+        this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
+        this.applyOptionalData((this.characteristic.optional as any), JSON.parse(fundShare.characteristicOptionalData));
+        this.applyOptionalData((this.calendar.optional as any), JSON.parse(fundShare.calendarOptionalData));
+        this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
+        this.applyOptionalData((this.priip.optional as any), JSON.parse(fundShare.priipOptionalData));
+        this.applyOptionalData((this.listing.optional as any), JSON.parse(fundShare.listingOptionalData));
+        this.applyOptionalData((this.taxation.optional as any), JSON.parse(fundShare.taxationOptionalData));
+        this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
+        this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
+        
+        this.fundID = fundShare.fundID;
+
+        (this.keyFacts.mandatory.status.preset as any) = [{ id: FundShareEnum.StatusEnum.Master, text: 'Master' }]
+    }
+
     private generateJSONString(model): string {
         const json = {};
 
@@ -122,6 +176,27 @@ export class FundShare {
         });
 
         return JSON.stringify(json);
+    }
+
+    private applyOptionalData(target: { [key: string]: FormItem }, optionalData: { [key: string]: any }): void {
+        _.forEach(optionalData, (val: any, index: string) => {
+            this.applyValueToExistingFormItem(target[index], val);
+        });
+    }
+
+    private applyValueToExistingFormItem(field: FormItem, value: any): void {
+        if(field.type === FormItemType.list) {
+            this.setListItemPreset(field, value);
+        } else {
+            field.preset = value;
+        }
+    }
+
+    private setListItemPreset(field: FormItem, value: any): void {
+        if(value == undefined) return;
+        (field.preset as any) = [_.find(field.listItems, (item) => {
+            return item.id == value;
+        })];
     }
 }
 

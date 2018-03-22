@@ -26,39 +26,7 @@ export interface RequestInvestorFundAccessData {
 @Injectable()
 export class OfiFundShareService {
 
-    constructor(private memberSocketService: MemberSocketService) {
-    }
-
-    static defaultRequestFundShare(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>, requestData) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedFundShare());
-
-        // Request the list.
-        const asyncTaskPipe = ofiFundService.requestFundShare(requestData);
-
-        console.log('asyncTaskPipe 1', asyncTaskPipe);
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_FUND_SHARE],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
-    }
-
-    /**
-     * Request fund share
-     * @return {any}
-     */
-    requestFundShare(requestData): any {
-        const messageBody: FundShareRequestBody = {
-            RequestName: 'getfundstatus',
-            token: this.memberSocketService.token,
-            fundShareID: _.get(requestData, 'fundShareID')
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
+    constructor(private memberSocketService: MemberSocketService) {}
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
@@ -103,6 +71,10 @@ export class OfiFundShareService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
+    /**
+     * Create a new Fund Share
+     * @return {any}
+     */
     static defaultCreateFundShare(ofiFundService: OfiFundShareService,
         ngRedux: NgRedux<any>,
         requestData,
@@ -110,8 +82,6 @@ export class OfiFundShareService {
         errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.createFundShare(requestData);
-
-        console.log('asyncTaskPipe', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_SHARE],
@@ -122,13 +92,72 @@ export class OfiFundShareService {
             (e) => errorCallback(e)
         ));
     }
-    /**
-     * Create a new Fund Share
-     * @return {any}
-     */
+    
     createFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznescreatefundshare',
+            token: this.memberSocketService.token
+        }
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Request fund share
+     * @return {any}
+     */
+    static defaultRequestFundShare(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>, requestData) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedFundShare());
+
+        // Request the list.
+        const asyncTaskPipe = ofiFundService.requestFundShare(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    requestFundShare(requestData): any {
+        const messageBody: FundShareRequestBody = {
+            RequestName: 'iznesgetfundshare',
+            token: this.memberSocketService.token,
+            fundShareID: _.get(requestData, 'fundShareID')
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Update Fund Share
+     * @return {any}
+     */
+    static defaultUpdateFundShare(ofiFundService: OfiFundShareService,
+        ngRedux: NgRedux<any>,
+        requestData,
+        successCallback: (data) => void,
+        errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.updateFundShare(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE],
+            [],
+            asyncTaskPipe,
+            {},
+            (data) => successCallback(data),
+            (e) => errorCallback(e)
+        ));
+    }
+    
+    updateFundShare(requestData): any {
+        let messageBody = {
+            RequestName: 'iznesupdatefundshare',
             token: this.memberSocketService.token
         }
 

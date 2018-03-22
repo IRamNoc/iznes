@@ -20,6 +20,7 @@ import {
     
 } from '@setl/core-useradmin';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
 import {FundShare, FundShareMode} from '../model';
 import {FundShareTestData} from './TestData';
 
@@ -32,10 +33,9 @@ import {FundShareTestData} from './TestData';
 
 export class FundShareComponent implements OnInit, OnDestroy {
 
-    model: FundShare = FundShareTestData.generate(new FundShare());
+    model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
-    private fundShare: OfiFundShare;
     private fundShareId: number;
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
@@ -50,30 +50,61 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private alerts: AlertsService,
         private confirmationService: ConfirmationService,
-        private ofiFundShareService: OfiFundShareService) {}
+        private ofiFundShareService: OfiFundShareService,
+        private ofiFundService: OfiFundService) {}
 
     ngOnInit() {
+        this.model = new FundShare();
+
         this.initSubscriptions();
         
         this.redux.dispatch(clearRequestedFundShare());
+
+        this.configureFormForMode();
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.route.params.subscribe(params => {
-            this.fundShareId = params['shareId'];
+        this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
+            this.fundShareId = params.get('shareId') as any;
 
             if(this.fundShareId != undefined) {
                 this.mode = FundShareMode.Update;
             }
+
+            if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
+        }));
+        this.subscriptionsArray.push(this.route.queryParamMap.subscribe(params => {
+            if(params.get('new') != undefined) this.showNewFundShareAlert();
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
-            this.requestFundShare(requested);
+            if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
         }));
-        this.subscriptionsArray.push(this.fundShareOb.subscribe(navFund => {
-            this.updateFundShare(navFund);
+        this.subscriptionsArray.push(this.fundShareOb.subscribe(fundShare => {
+            this.updateFundShare(fundShare);
         }));
 
         this.subscriptionsArray.push(this.accountIdOb.subscribe(accountId => this.model.accountId = accountId));
+    }
+
+    private configureFormForMode(): void {
+        if(this.mode === FundShareMode.Update) {
+            this.model.keyFacts.mandatory.fundShareName.disabled = true;
+            this.model.keyFacts.mandatory.isin.disabled = true;
+        } else {
+            this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
+        }
+    }
+
+    private showNewFundShareAlert(): void {
+        this.alerts.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-info">Fund Share Successfully Created.</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
     /**
@@ -85,6 +116,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         if(requested) return;
 
         const requestData = getOfiFundShareCurrentRequest(this.redux.getState());
+        requestData.fundShareID = this.fundShareId;
 
         OfiFundShareService.defaultRequestFundShare(this.ofiFundShareService, this.redux, requestData);
     }
@@ -95,9 +127,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShare(fundShare: any): void {
-        this.fundShare = fundShare ? fundShare[0] : undefined;
+        if((!fundShare) || !fundShare.fundShareID) return;
 
-        if(this.fundShare) this.redux.dispatch(setRequestedFundShare());
+        this.model.setFundShare(fundShare);
+
+        if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
 
         this.changeDetectorRef.markForCheck();
     }
@@ -115,36 +149,65 @@ export class FundShareComponent implements OnInit, OnDestroy {
             showCloseButton: false,
             overlayClickToClose: false
         });
-
-        this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
         
-        OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+        const method = this.mode === FundShareMode.Create ?
+            OfiFundShareService.defaultCreateFundShare :
+            OfiFundShareService.defaultUpdateFundShare;
+
+        const successCallback = this.mode === FundShareMode.Create ?
+            this.onCreateSuccess :
+            this.onUpdateSuccess;
+
+        const errorCallback = this.mode === FundShareMode.Create ?
+            this.onCreateError :
+            this.onUpdateError;
+        
+        method(this.ofiFundShareService,
             this.redux,
             this.model.getRequest(),
-            (data) => this.onSaveSuccess(data[1].Data[0]),
-            (e) => this.onSaveError(e[1].Data[0]));
+            (data) => successCallback(data[1]),
+            (e) => errorCallback(e[1].Data[0]));
     }
 
-    private onSaveSuccess(data): void {
-        console.log('onSaveSuccess',data);
-        this.alerts.create('success', `
+    private onCreateSuccess(data): void {
+        console.log('onCreateSuccess',data);
+        this.router.navigateByUrl(`product-module/fund-share/${data.Data.fundShareID}?new`);
+    }
+
+    private onCreateError(e): void {
+        console.log('onCreateError',e);
+        this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-info">Fund Share Successfully Created.</td>
+                        <td class="text-center text-danger">There was an issue creating a Fund Share.<br />
+                        ${e.Message}</td>
                     </tr>
                 </tbody>
             </table>
         `);
     }
 
-    private onSaveError(e): void {
-        console.log('onSaveError',e);
+    private onUpdateSuccess(data): void {
+        console.log('onUpdateSuccess',data);
+        this.alerts.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">Fund Share successfully updated.</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+    private onUpdateError(e): void {
+        console.log('onUpdateError',e);
         this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">There was an issue creating a Fund Share.<br />
+                        <td class="text-center text-danger">There was an issue updating the Fund Share.<br />
                         ${e.Message}</td>
                     </tr>
                 </tbody>

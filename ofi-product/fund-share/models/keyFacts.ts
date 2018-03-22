@@ -104,7 +104,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
-            return (val == undefined) || val.id !== E.StatusEnum.Master;
+            return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Master;
         }
     }
     feeder: FormItem = {
@@ -113,7 +113,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
-            return (val == undefined) || val.id !== E.StatusEnum.Feeder;
+            return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Feeder;
         }
     }
     valuationFrequency: FormItem = {

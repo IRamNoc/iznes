@@ -23,7 +23,10 @@ const initialState: OfiFundShareState = {
 export const OfiFundShareReducer = function (state: OfiFundShareState = initialState, action: Action): OfiFundShareState {
     switch (action.type) {
         case actions.SET_FUND_SHARE:
-            return handleSetOfiNavFundsList(state, action);
+            return handleSetOfiFundShare(state, action);
+        
+        case actions.UPDATE_FUND_SHARE:
+            return handleSetOfiFundShare(state, action);
 
         case actions.SET_REQUESTED_FUND_SHARE:
             return toggleFundShareRequested(state, true);
@@ -37,13 +40,13 @@ export const OfiFundShareReducer = function (state: OfiFundShareState = initialS
 };
 
 /**
- * Handle set am all fund share list
+ * Handle set fund share
  *
  * @param state
  * @param action
  * @return {OfiFundShareState}
  */
-function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): OfiFundShareState {
+function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFundShareState {
     const fundShareData = _.get(action, 'payload[1].Data', []);
     let fundShare: { [shareId: string]: OfiFundShare } = {};
     try {
@@ -54,7 +57,7 @@ function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): Ofi
                 throw new Error('ShareId should not be zero');
             }
 
-            result[shareId] = {
+            result = {
                 fundShareID: shareId,
                 fundShareName: item.get('fundShareName', ''),
                 fundID: item.get('fundID', ''),
