@@ -1,3 +1,5 @@
+import sun.plugin2.message.ReleaseRemoteObjectMessage
+
 group 'javaUITesting2'
 version '1.0-SNAPSHOT'
 
@@ -15,7 +17,7 @@ buildscript {
 
 
 ext.junitVersion = '4.12'
-ext.seleniumVersion = '3.9.1'
+ext.seleniumVersion = 'RELEASE'
 
 repositories {
     maven { url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/" }
@@ -30,6 +32,7 @@ dependencies {
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:seleniumVersion
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-api', version:seleniumVersion
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:seleniumVersion
+    compile 'org.seleniumhq.selenium:selenium-chrome-driver:RELEASE'
     compile group: 'io.setl', name: 'websocket-client',     version: '1.0.14-SNAPSHOT'
     compile group: 'io.setl', name: 'restapi-client',  version: '1.0.8-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.2'
