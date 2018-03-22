@@ -21,49 +21,40 @@
 
         <!-- KYC investor yes -->
         <div *ngSwitchCase="'kycInvestorYes'">
-            <p class="padding">Hello {{config.amFirstName}},</p>
-
-            <p class="padding">{{config.investorCompanyName}} answered <b>"Yes"</b> to the question:</p>
-            <p class="padding">"Did you already fill up your KYC documents with {{config.amCompanyName}}?"</p>
-
-            <p class="padding">
-                Please click on the following link to "Approve", "Reject" or "Ask more information" in regards to
-                {{config.investorCompanyName}}'s KYC documents.
-            </p>
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+            <p class="padding">{{messageBody.line3}}</p>
 
             <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
-                Go to the page "Approve / Reject / Ask for more information"
+                {{messageBody.buttonLabel}}
             </button>
 
-            <p class="padding">Thank you,</p>
-            <p class="padding">The IZNES team.</p>
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
         </div>
 
         <!-- KYC investor no -->
         <div *ngSwitchCase="'kycInvestorNo'">
-            <p class="padding">Hello {{config.amFirstName}},</p>
-            <p class="padding">{{config.investorCompanyName}} answered <b>"No"</b> to the question:</p>
-            <p class="padding">"Did you already fill up your KYC documents with {{config.amCompanyName}}?"</p>
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
 
             <ul class="padding">
-                Here are {{config.investorCompanyName}}'s contact details in order to help them complete their KYC
-                documents:
+                {{messageBody.line3}}
 
-                <li>Email address: {{config.investorEmail}}</li>
-                <li>Phone number: {{config.investorPhoneNumber}}</li>
+                <li>{{messageBody.email}}</li>
+                <li>{{messageBody.phoneNumber}}</li>
             </ul>
 
-            <p class="padding">
-                Please click on the following link to "Approve", "Reject" or "Ask more information" once
-                {{config.investorCompanyName}}'s KYC documents are fully completed.
-            </p>
+            <p class="padding">{{messageBody.line4}}</p>
 
             <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
-                Go to the page "Approve / Reject / Ask for more information"
+                {{messageBody.buttonLabel}}
             </button>
 
-            <p class="padding">Thank you,</p>
-            <p class="padding">The IZNES team.</p>
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
         </div>
     </div>
 </ng-container>
