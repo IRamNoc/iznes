@@ -79,7 +79,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.amDetails.lastName.value = d.invitedBy.lastName;
                 this.amDetails.email.value = d.invitedBy.email;
                 this.amDetails.phone.value = `${d.invitedBy.phoneCode} ${d.invitedBy.phoneNumber}`;
-                this.amDetails.companyName.value = d.invitedBy.companyName;
+                this.amDetails.companyName.value = d.amCompanyName;
 
                 this.sendNewKycBody.invitationToken = d.invitationToken;
                 this.sendNewKycBody.amManagementCompanyID = d.amManagementCompanyID;

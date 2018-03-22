@@ -19,6 +19,7 @@ export interface AmKycDetail {
     isInvited: boolean;
     invitedID: number;
     status: string;
+    dateEntered: string;
 }
 
 export interface AmKycListState {
