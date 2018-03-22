@@ -4,6 +4,7 @@
     [subTitle]="'Here are the data concerning me on ' + appConfig.platform"
     [userInfo]="userInfoExtended"
     [viewMode]="'POPUP'"
+    [type]="userType"
     (onSubmit)="saveUserInformations($event)"
     (onClose)="closeUserInformations()"
 ></app-my-informations>

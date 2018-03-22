@@ -40,6 +40,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     @Input() header: string;
     @Input() subTitle: string;
     @Input() viewMode: ViewMode;
+    @Input() type: string;
     @Output() onClose = new EventEmitter<void>();
     @Output() onSubmit = new EventEmitter<KycMyInformations>();
 
