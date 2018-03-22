@@ -29,3 +29,7 @@
 .phone-input-container > div:nth-child(1) {
     width: 90%;
 }
+
+.hide-input{
+    display:none;
+}
