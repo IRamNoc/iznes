@@ -16,6 +16,7 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.selectNewPageToNavigat
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForLinkText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static junit.framework.TestCase.assertEquals;
+import static org.apache.commons.lang3.RandomStringUtils.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -109,7 +110,7 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomUserDetails() {
-        String str = RandomStringUtils.randomAlphabetic(10);
+        String str = randomAlphabetic(10);
         String userName = "Test_User_" + str;
         String emailAddress = userName + "@" + str + ".com";
         return new String[] {userName, emailAddress};

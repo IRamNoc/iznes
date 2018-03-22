@@ -8,9 +8,7 @@ import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
@@ -19,6 +17,14 @@ public class LoginAndNavigationHelper {
     public static void navigateToLoginPage() throws InterruptedException {
         driver.get(baseUrl);
         waitForLoginPageToLoad();
+    }
+
+    public static void navigateTo365Page() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.get("https://www.office.com/");
+        WebElement page_heading = driver.findElement(By.id("hero-header"));
+        wait.until(visibilityOf(page_heading));
+
     }
 
     public static void navigateToPage2(String pageHref) throws InterruptedException {
@@ -43,6 +49,15 @@ public class LoginAndNavigationHelper {
         Thread.sleep(750);
         try {
             driver.findElement(By.id("menu-" + pageHref)).click();
+        }catch (Error e){
+            fail(pageHref + "page not present");
+        }
+    }
+
+    public static void navigateToPageXpath(String pageHref) throws InterruptedException {
+        Thread.sleep(750);
+        try {
+            driver.findElement(By.xpath(pageHref)).click();
         }catch (Error e){
             fail(pageHref + "page not present");
         }
@@ -168,6 +183,34 @@ public class LoginAndNavigationHelper {
       }
     }
 
+    public static void loginAndVerifySuccessKYC(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+      Thread.sleep(1500);
+      try {
+        driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed();
+      }catch (Exception e){
+        fail("Page heading was not present " + e.getMessage());
+      }
+    }
+    public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+        Thread.sleep(1500);
+        try {
+            String headingKYC = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3")).getText();
+            assertFalse(headingKYC.equals("CONFIRMATION SCREEN"));
+        }catch (Exception e){
+            fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
+        }
+    }
+
     public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
@@ -176,7 +219,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("menu-account-module")).isDisplayed();
+        driver.findElement(By.id("ofi-homepage")).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
@@ -204,6 +247,15 @@ public class LoginAndNavigationHelper {
       driver.findElement(By.id(dropdownID)).click();
     }catch (Error e){
       System.out.println(dropdownID + "not present");
+      fail();
+    }
+  }
+  public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
+    Thread.sleep(1500);
+    try {
+      driver.findElement(By.xpath(dropdownXpath)).click();
+    }catch (Error e){
+      System.out.println(dropdownXpath + "not present");
       fail();
     }
   }

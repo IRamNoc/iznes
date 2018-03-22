@@ -35,21 +35,6 @@ const listOfFunds = {
     element_id: 'menu-list-of-fund',
     router_link: '/list-of-funds/0'
 };
-const accountModule = {
-    label: 'Account Module',
-    label_txt: 'txt_accountmodule',
-    icon_class: 'fa fa-user',
-    element_id: 'menu-account-module',
-    children: [
-        {
-            label: 'My Account',
-            label_txt: 'txt_myaccount',
-            icon_class: 'fa fa-user',
-            element_id: 'menu-my-account',
-            router_link: '/account/my-account/detail'
-        }
-    ]
-};
 const orderBook = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
@@ -73,8 +58,8 @@ const orderBook = {
     ]
 };
 const fundHoldings = {
-    label: 'Fund Holidings',
-    label_txt: 'txt_fundholidings',
+    label: 'Fund Holdings',
+    label_txt: 'txt_fundholdings',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-asset-manager-dashboard',
     router_link: '/asset-management/fund-holdings'
@@ -386,7 +371,6 @@ export const menuSpec: MenuSpec = {
             dashboard,
             subPortfolio,
             messages,
-            accountModule,
             orderBook,
             {
                 label: 'Reports',
@@ -403,7 +387,6 @@ export const menuSpec: MenuSpec = {
             home,
             fundHoldings,
             messages,
-            accountModule,
             {
                 label: 'Product Module',
                 label_txt: 'txt_productmodule',
@@ -433,7 +416,6 @@ export const menuSpec: MenuSpec = {
         valuer: [
             home,
             messages,
-            accountModule,
             {
                 label: 'Product Module',
                 label_txt: 'txt_productmodule',
@@ -459,21 +441,18 @@ export const menuSpec: MenuSpec = {
             home,
             fundHoldings,
             messages,
-            accountModule,
             listOfFunds,
         ],
         cac: [
             home,
             fundHoldings,
             messages,
-            accountModule,
             listOfFunds,
         ],
         registrar: [
             home,
             fundHoldings,
             messages,
-            accountModule,
             {
                 label: 'Product Module',
                 label_txt: 'txt_productmodule',
@@ -509,7 +488,6 @@ export const menuSpec: MenuSpec = {
             }
         ],
         system_admin: [
-            accountModule,
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
@@ -548,7 +526,6 @@ export const menuSpec: MenuSpec = {
             chainAdmin,
         ],
         chain_admin: [
-            accountModule,
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
@@ -602,7 +579,6 @@ export const menuSpec: MenuSpec = {
             },
         ],
         member_user: [
-            accountModule,
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
@@ -638,7 +614,6 @@ export const menuSpec: MenuSpec = {
             }
         ],
         standard_user: [
-            accountModule,
             messages,
             subPortfolio,
             assetServicing,

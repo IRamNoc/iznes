@@ -48,7 +48,7 @@ import {
 } from '@setl/core-useradmin';
 /* Product */
 import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
-import {ProductHomeComponent, UmbrellaFundComponent, FundShareComponent, AddNewFundShareComponent} from '@ofi/ofi-main';
+import {ProductHomeComponent, UmbrellaFundComponent, FundShareComponent, AddNewFundShareComponent, FundComponent} from '@ofi/ofi-main';
 /* Corporate Actions Components */
 import {
     CreateResolutionComponent,
@@ -222,7 +222,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'umbrella-fund',
+                        path: 'umbrella-fund/:id',
                         component: UmbrellaFundComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -239,7 +239,12 @@ export const ROUTES: Routes = [
                     {
                         path: 'fund-share',
                         component: FundShareComponent,
-                        canActivate: [LoginGuardService],
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'fund/:id',
+                        component: FundComponent,
+                        canActivate: [LoginGuardService]
                     },
                     {
                         path: 'fund',

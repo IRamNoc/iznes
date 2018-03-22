@@ -19,9 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
+import static org.junit.Assert.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -39,22 +40,135 @@ public class OpenCSDFundsAcceptanceTest {
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
+
+
     @Before
     public void setUp() throws Exception {
         testSetUp();
-        createFundViaApi();
+
         screenshotRule.setDriver(driver);
     }
 
-    private void createFundViaApi() {
 
+
+    @Test
+    public void shouldLandOnLoginPage() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+    }
+
+    @Test
+    public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        validatePageLayout();
+    }
+
+    @Test
+    public void shouldSeeCorrectHeadingsForShares() throws InterruptedException, IOException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        validateSharesDataGridHeadings(sharesHeadings);
 
     }
 
     @Test
-    public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-        //loginAndVerifySuccess(adminuser, adminuserPassword);
+    public void shouldSeeCorrectHeadingsForFunds() throws InterruptedException, IOException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        validateFundsDataGridHeadings(fundsHeadings);
     }
+
+    @Test
+    public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
+    }
+
+    private void validateSharesDataGridHeadings(String [] sharesHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(sharesHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(sharesHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(sharesHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(sharesHeadings[3]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(sharesHeadings[4]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(sharesHeadings[5]));
+    }
+
+    private void validateFundsDataGridHeadings (String [] fundsHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(fundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(fundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(fundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(fundsHeadings[3]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText().contentEquals(fundsHeadings[4]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/button")).getText().contentEquals(fundsHeadings[5]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText().contentEquals(fundsHeadings[6]));
+    }
+
+    private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
+    }
+
+    private void validatePageLayout() {
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
+        assertTrue(isElementPresent(By.id("am-product-home")));
+        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
+        assertTrue(isElementPresent(By.id("switchActiveShares")));
+        assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contentEquals("Shares"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contentEquals("Add new Share"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contentEquals("Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contentEquals("Add new Fund"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[1]")).getText().contentEquals("Umbrella funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-down.reverse")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[5]/div[1]/div[2]")).getText().contentEquals("Add new Umbrella fund"));
+        }
+
+        private void closeShares(){
+            driver.findElement(By.cssSelector("i.fa.fa-chevron-down.reverse")).click();
+            assertTrue(isElementPresent(By.id("switchActiveShares")));
+        }
 
     @Test
     @Ignore
@@ -63,7 +177,7 @@ public class OpenCSDFundsAcceptanceTest {
         int rounded = (int) Math.round(value);
         JavascriptExecutor jse = (JavascriptExecutor)driver;
 
-        loginAndVerifySuccess("am", "alex01");
+        loginAndVerifySuccess("am", "trb2017");
         System.out.println(rounded);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-fund");
@@ -84,8 +198,6 @@ public class OpenCSDFundsAcceptanceTest {
             System.out.println("dropdown not visible");
             fail();
         }
-
-        //////////
 
         driver.findElement(By.id("isin_0_0")).sendKeys("TestISIN" + GetCurrentTimeStamp());
         driver.findElement(By.id("shareName_0_0")).sendKeys("TestShare");
@@ -138,10 +250,7 @@ public class OpenCSDFundsAcceptanceTest {
             fail();
         }
 
-        ////////////
         driver.findElement(By.id("tabfundShareNav_Services_0_0")).click();
-        ////////////
-
         driver.findElement(By.cssSelector("#assetManagementCompany_0_0 .ui-select-placeholder")).click();
         try {
             driver.findElement(By.cssSelector("#assetManagementCompany_0_0 .dropdown-item")).click();
@@ -357,11 +466,20 @@ public class OpenCSDFundsAcceptanceTest {
         return strDate;
 
     }
+
+    public void clickID(String id) {
+        try {
+            driver.findElement(By.id(id)).click();
+        } catch (Exception e) {
+            fail(id + "not present");
+        }
+    }
+
     @Test
     public void shouldNotAcceptFundWithQuantityLowerThan0() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
-        navigateToDropdown("menu-account-module");
-        navigateToPage("my-account");
+        navigateToDropdown("topBarMenu");
+        navigateToPageByID("topBarMyAccount");
         try {
             driver.findElement(By.cssSelector("#udDisplayName")).sendKeys("helloworld");
         }catch (Error e){
@@ -386,4 +504,93 @@ public class OpenCSDFundsAcceptanceTest {
 
          */
     }
+
+    @Test
+    public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToPage("asset-manager-dashboard");
+        WebElement FundTitle = driver.findElement(By.id("fund-share-label"));
+        assertTrue(FundTitle.getText().equals("Please select a fund share in this list"));
+    }
+
+    @Test
+    public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.2", "1.20000");
+    }
+
+    @Test
+    public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minsubscriptionUnits_0_0", "1.255555", "1.25556");
+    }
+
+    @Test
+    public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.2", "1.2000");
+    }
+
+    @Test
+    public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1.25555", "1.2556");
+    }
+
+    @Test
+    public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.2", "1.20");
+    }
+
+    @Test
+    public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("fundInitialEstimatedNav_0_0", "1.255", "1.25");
+    }
+
+    @Test
+    public void shouldSeparateThousandsWithSpaces() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "1000000", "1 000 000.0000");
+    }
+
+    @Test
+    public void shouldSeparateDecimalPlacesWithPoint() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage2("product-module/fund");
+        clickID("fakeNewFundBtn");
+        clickID("tabfundShareNav_Characteristic_0_0");
+        fundCheckRoundingUp("minInitSubscription_0_0", "2000000", "2 000 000.0000");
+    }
+
 }
