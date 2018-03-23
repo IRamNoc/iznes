@@ -298,7 +298,7 @@ const profileMyInfo = {
     label_txt: 'txt_my_information',
     icon_class: '',
     element_id: 'top-menu-my-info',
-    router_link: '/profile/my-informations'
+    router_link: '/profile/my-information'
 };
 
 const kycDocuments = {
