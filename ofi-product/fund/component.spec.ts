@@ -2,22 +2,23 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import * as _ from 'lodash';
+import {of} from 'rxjs/observable/of';
 
 
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
 import {ClarityModule} from '@clr/angular';
 import fundItems from '../fundConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-const OfiUmbrellaFundServiceSpy = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
-const OfiManagementCompanyServiceSpy = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
+const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
+const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
-import {FundCreateComponent} from './component';
+import {FundComponent} from './component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
@@ -27,20 +28,53 @@ import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-pr
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
     .and.returnValue(
         new Promise((resolve, reject) => {
-        resolve();
-    })
+            resolve();
+        })
+    );
+const iznUpdateFund = jasmine.createSpy('iznUpdateFund')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
+const defaultRequestIznesFundList = jasmine.createSpy('defaultRequestIznesFundList')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
+const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
     );
 const fundServiceSpy = {
     iznCreateFund: iznCreateFund,
+    iznUpdateFund: iznUpdateFund,
+    defaultRequestIznesFundList: defaultRequestIznesFundList,
+    requestIznesFundList: requestIznesFundList,
 };
 
-
-const toasterServiceMock = {
-    pop: () => {
-        return new Promise((resolve, reject) => {
-            resolve();
+const activatedRouteStub = {
+    params: of({
+        id: 'new',
+    }),
+    setParams: (id: string) => {
+        this.params = of({
+            id: id,
         });
     }
+};
+
+const pop = jasmine.createSpy('pop')
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        })
+    );
+const toasterServiceMock = {
+    pop: pop,
 };
 
 // Stub for routerLink
@@ -57,10 +91,10 @@ class RouterLinkStubDirective {
     }
 }
 
-describe('FundCreateComponent', () => {
+describe('FundComponent', () => {
 
-    let comp:    FundCreateComponent;
-    let fixture: ComponentFixture<FundCreateComponent>;
+    let comp:    FundComponent;
+    let fixture: ComponentFixture<FundComponent>;
     let de:      DebugElement;
     let el:      HTMLElement;
 
@@ -71,7 +105,7 @@ describe('FundCreateComponent', () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
-                FundCreateComponent,
+                FundComponent,
                 RouterLinkStubDirective,
             ],
             imports: [
@@ -86,19 +120,21 @@ describe('FundCreateComponent', () => {
                 { provide: 'fund-items', useValue: fundItems },
                 { provide: Router, useValue: routerSpy },
                 { provide: OfiFundService, useValue: fundServiceSpy },
-                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceSpy },
-                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceSpy },
+                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
+                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
                 { provide: NgRedux, useValue: ngReduxSpy },
-                { provide: ToasterService, useValue: toasterServiceMock }
+                { provide: ToasterService, useValue: toasterServiceMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
 
     beforeEach(fakeAsync(() => {
-        fixture = TestBed.createComponent(FundCreateComponent);
+        fixture = TestBed.createComponent(FundComponent);
 
         comp = fixture.componentInstance;
+        activatedRouteStub.setParams('new');
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
@@ -192,7 +228,7 @@ describe('FundCreateComponent', () => {
 
             anchorEl.triggerEventHandler('click', null);
 
-            expect(routerLinks[0].navigatedTo).toEqual('/product-module/umbrella-fund');
+            expect(routerLinks[0].navigatedTo).toEqual('/product-module/umbrella-fund/0');
         });
 
         it('should enable the next button', fakeAsync(() => {
@@ -210,15 +246,24 @@ describe('FundCreateComponent', () => {
         }));
 
         it('should display the fund creation form', fakeAsync(() => {
-            const value = comp.umbrellaItems[1];
+            const value = comp.umbrellaItems[0];
             comp.umbrellaControl.setValue([value]);
 
             comp.submitUmbrellaForm();
             tick();
             fixture.detectChanges();
 
-            const formGroupEls = fixture.debugElement.queryAllNodes(By.css('clr-tree-node:nth-of-type(n+1) div.form-group'));
-            expect(formGroupEls.length).toEqual(31);
+            // Fund Main Informations
+            const formGroupMainEls = fixture.debugElement.queryAllNodes(
+                By.css('form.fundForm > .well + .well .well:first-child div.form-group')
+            );
+            expect(formGroupMainEls.length).toEqual(27);
+
+            // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
+            const formGroupOptionEls = fixture.debugElement.queryAllNodes(
+                By.css('form.fundForm > .well + .well .well:last-child div.form-group')
+            );
+            expect(formGroupOptionEls.length).toEqual(22);
         }));
 
         describe('conditionnal inputs', () => {
@@ -231,8 +276,6 @@ describe('FundCreateComponent', () => {
                 tick();
                 fixture.detectChanges();
 
-                const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'));
-                caretEl[caretEl.length - 1].triggerEventHandler('click', null);
             }));
 
             describe('umbrellaFundID', () => {
@@ -298,14 +341,14 @@ describe('FundCreateComponent', () => {
             });
 
             describe('ucitsVersion', () => {
-                it('should display the ucitsVersion input', fakeAsync(() => {
-                    const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
+                it('should display the UcitsVersion input', fakeAsync(() => {
+                    const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
                     expect(ucitsVersionBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.UCITS, text: 'ucits' }]);
                     tick();
                     fixture.detectChanges();
-                    const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
+                    const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
                     expect(ucitsVersionAfterEls.length).toEqual(1);
                 }));
 
@@ -320,36 +363,36 @@ describe('FundCreateComponent', () => {
                     expect(ucitsVersionAfterEls.length).toEqual(0);
                 }));
 
-                it('should clear the ucitsVersion value on isEuDirective set to \'NO\'', fakeAsync(() => {
+                it('should clear the UcitsVersion value on isEuDirective set to \'NO\'', fakeAsync(() => {
                     const testValue = {
                         id: 3,
                         text: 'ucits III',
                     };
-                    comp.fundForm.controls['ucitsVersion'].setValue(testValue);
+                    comp.fundForm.controls['UcitsVersion'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual(testValue);
 
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.NO.toString());
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual([]);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual([]);
                 }));
 
-                it('should clear the ucitsVersion value on typeOfEuDirective not set to \'ucits\'', fakeAsync(() => {
+                it('should clear the UcitsVersion value on typeOfEuDirective not set to \'ucits\'', fakeAsync(() => {
                     const testValue = {
                         id: 3,
                         text: 'ucits III',
                     };
-                    comp.fundForm.controls['ucitsVersion'].setValue(testValue);
+                    comp.fundForm.controls['UcitsVersion'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual(testValue);
 
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.Other, text: 'Other' }]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['ucitsVersion'].value).toEqual([]);
+                    expect(comp.fundForm.controls['UcitsVersion'].value).toEqual([]);
                 }));
             });
 
@@ -389,33 +432,33 @@ describe('FundCreateComponent', () => {
             });
 
             describe('transferAgent', () => {
-                it('should display the transferAgent input when fundDomicile is set to \'IE\'', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should display the transferAgent select when fundDomicile is set to \'IE\'', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'IE', text: 'Ireland'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should display the transferAgent input when fundDomicile is set to \'LU\'', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should display the transferAgent select when fundDomicile is set to \'LU\'', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'LU', text: 'Luxembourg'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the transferAgent input', fakeAsync(() => {
-                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                it('should not display the transferAgent select', fakeAsync(() => {
+                    const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#transferAgent'));
+                    const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentAfterEls.length).toEqual(0);
                 }));
 
@@ -429,28 +472,28 @@ describe('FundCreateComponent', () => {
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['transferAgent'].value).toBeNull();
+                    expect(comp.fundForm.controls['transferAgent'].value).toEqual([]);
                 }));
             });
 
             describe('centralizingAgent', () => {
-                it('should display the centralizingAgent input when fundDomicile is set to \'FR\'', fakeAsync(() => {
-                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                it('should display the centralizingAgent select when fundDomicile is set to \'FR\'', fakeAsync(() => {
+                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'FR', text: 'France'}]);
                     tick();
                     fixture.detectChanges();
-                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentAfterEls.length).toEqual(1);
                 }));
 
-                it('should not display the centralizingAgent input', fakeAsync(() => {
-                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                it('should not display the centralizingAgent select', fakeAsync(() => {
+                    const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('input#centralizingAgent'));
+                    const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentAfterEls.length).toEqual(0);
                 }));
 
@@ -464,7 +507,7 @@ describe('FundCreateComponent', () => {
                     comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['centralizingAgent'].value).toBeNull();
+                    expect(comp.fundForm.controls['centralizingAgent'].value).toEqual([]);
                 }));
             });
 
@@ -574,17 +617,7 @@ describe('FundCreateComponent', () => {
             });
         });
 
-        it('should call fundService.createFund', fakeAsync(() => {
-
-            const value = comp.umbrellaItems[1];
-            comp.umbrellaControl.setValue([value]);
-
-            comp.submitUmbrellaForm();
-            tick();
-            fixture.detectChanges();
-
-            const caretEl = fixture.debugElement.queryAll(By.css('button.clr-treenode-caret'))[1];
-            caretEl.triggerEventHandler('click', null);
+        describe('create mode', () => {
 
             const testPayload = {
                 isFundStructure: '1',
@@ -597,7 +630,7 @@ describe('FundCreateComponent', () => {
                 domicile: [{id: 'AF', text: 'Afghanistan'}],
                 isEuDirective: '0',
                 typeOfEuDirective: null,
-                ucitsVersion: null,
+                UcitsVersion: null,
                 legalForm: [{ id: '0', text: 'Contractual Fund' }],
                 nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
                 homeCountryLegalType: null,
@@ -635,7 +668,7 @@ describe('FundCreateComponent', () => {
                 hasHedgeFundStrategy: null,
                 isLeveraged: null,
                 has130Or30Strategy: null,
-                isfundTargetingEos: null,
+                isFundTargetingEos: null,
                 isFundTargetingSri: null,
                 isPassiveFund: null,
                 hasSecurityiesLending: null,
@@ -644,28 +677,164 @@ describe('FundCreateComponent', () => {
                 investmentObjective: null
             };
 
-            comp.fundForm.setValue(testPayload);
+            beforeEach(fakeAsync(() => {
+                const value = comp.umbrellaItems[0];
+                comp.umbrellaControl.setValue([value]);
+                comp.viewMode = 'FUND';
 
-            const submitEl = fixture.debugElement.query(By.css('#submitfund'));
-            submitEl.triggerEventHandler('click', null);
-            comp.submitFundForm();
+                tick();
+                fixture.detectChanges();
 
-            const expectedResult: Fund = Object(_.omit({
-                ...testPayload,
-                domicile: testPayload.domicile[0].id,
-                legalForm: testPayload.legalForm[0].id,
-                nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                fundCurrency: testPayload.fundCurrency[0].id,
-                portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                fundAdministrator: testPayload.fundAdministrator[0].id,
-                custodianBank: testPayload.custodianBank[0].id,
-                managementCompanyID: testPayload.managementCompanyID[0].id,
-                umbrellaFundID: comp.umbrellaControl.value[0].id,
-            }, ['AuMFund', 'AuMFundDate']));
+                comp.fundForm.setValue(testPayload);
+            }));
 
-            expect(iznCreateFund).toHaveBeenCalledTimes(1);
-            expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
-        }));
+            afterEach(() => {
+                iznCreateFund.calls.reset();
+                pop.calls.reset();
+            });
+
+            it('should call fundService.createFund', fakeAsync(() => {
+
+                const expectedResult: Fund = Object(_.omit({
+                    ...testPayload,
+                    domicile: testPayload.domicile[0].id,
+                    legalForm: testPayload.legalForm[0].id,
+                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                    fundCurrency: testPayload.fundCurrency[0].id,
+                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                    fundAdministrator: testPayload.fundAdministrator[0].id,
+                    custodianBank: testPayload.custodianBank[0].id,
+                    managementCompanyID: testPayload.managementCompanyID[0].id,
+                    umbrellaFundID: comp.umbrellaControl.value[0].id,
+                }, ['AuMFund', 'AuMFundDate']));
+                comp.submitFundForm();
+
+                expect(iznCreateFund).toHaveBeenCalledTimes(1);
+                expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
+            }));
+
+            it('should fire the toaster service with a success message', fakeAsync(() => {
+                const expectedResult = [
+                    'success',
+                    `${testPayload.fundName} has been successfully created.`
+                ];
+                comp.submitFundForm();
+                tick();
+
+                expect(pop).toHaveBeenCalledTimes(1);
+                expect(pop).toHaveBeenCalledWith(...expectedResult);
+            }));
+        });
+
+        describe('edit mode', () => {
+            const testPayload = {
+                isFundStructure: '1',
+                fundName: 'test',
+                AuMFund: 'test',
+                AuMFundDate: '2017-02-02',
+                legalEntityIdentifier: null,
+                registerOffice: null,
+                registerOfficeAddress: null,
+                domicile: [{id: 'AF', text: 'Afghanistan'}],
+                isEuDirective: '0',
+                typeOfEuDirective: null,
+                UcitsVersion: null,
+                legalForm: [{ id: '0', text: 'Contractual Fund' }],
+                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
+                homeCountryLegalType: null,
+                fundCreationDate: null,
+                fundLaunchate: null,
+                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
+                openOrCloseEnded: '0',
+                fiscalYearEnd: '2017-02',
+                isFundOfFund: '0',
+                managementCompanyID: [{ id: '0', text: 'test management company' }],
+                fundAdministrator: [{ id : '1', text: 'Fund Admin 1' }],
+                custodianBank: [{ id : '1', text: 'Custodian Bank 1' }],
+                investmentManager: null,
+                principalPromoter: null,
+                payingAgent: null,
+                fundManagers: null,
+                transferAgent: null,
+                centralizingAgent: null,
+                isDedicatedFund: '0',
+                portfolioCurrencyHedge: [{ id : '1', text: 'No Hedge' }],
+                globalItermediaryIdentification: null,
+                delegatedManagementCompany: null,
+                investmentAdvisor: null,
+                auditor: null,
+                taxAuditor: null,
+                legalAdvisor: null,
+                directors: null,
+                pocket: null,
+                hasEmbeddedDirective: null,
+                hasCapitalPreservation: null,
+                capitalPreservationLevel: null,
+                capitalPreservationPeriod: null,
+                hasCppi: null,
+                cppiMultiplier: null,
+                hasHedgeFundStrategy: null,
+                isLeveraged: null,
+                has130Or30Strategy: null,
+                isFundTargetingEos: null,
+                isFundTargetingSri: null,
+                isPassiveFund: null,
+                hasSecurityiesLending: null,
+                hasSwap: null,
+                hasDurationHedge: null,
+                investmentObjective: null
+            };
+
+            beforeEach(fakeAsync(() => {
+                const value = comp.umbrellaItems[0];
+                comp.umbrellaControl.setValue([value]);
+                comp.viewMode = 'FUND';
+                comp.param = '9';
+
+                tick();
+                fixture.detectChanges();
+
+                comp.fundForm.setValue(testPayload);
+            }));
+
+            afterEach(() => {
+                iznUpdateFund.calls.reset();
+                pop.calls.reset();
+            });
+
+            it('should call fundService.updateFund', fakeAsync(() => {
+
+                const expectedResult: Fund = Object(_.omit({
+                    ...testPayload,
+                    domicile: testPayload.domicile[0].id,
+                    legalForm: testPayload.legalForm[0].id,
+                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                    fundCurrency: testPayload.fundCurrency[0].id,
+                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                    fundAdministrator: testPayload.fundAdministrator[0].id,
+                    custodianBank: testPayload.custodianBank[0].id,
+                    managementCompanyID: testPayload.managementCompanyID[0].id,
+                    umbrellaFundID: comp.umbrellaControl.value[0].id,
+                }, ['AuMFund', 'AuMFundDate']));
+                comp.submitFundForm();
+
+                expect(iznUpdateFund).toHaveBeenCalledTimes(1);
+                expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
+            }));
+
+            it('should fire the toaster service with a success message', fakeAsync(() => {
+                const expectedResult = [
+                    'success',
+                    `${testPayload.fundName} has been successfully updated.`
+                ];
+                comp.submitFundForm();
+                tick();
+
+                expect(pop).toHaveBeenCalledTimes(1);
+                expect(pop).toHaveBeenCalledWith(...expectedResult);
+            }));
+        });
     });
 });

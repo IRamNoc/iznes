@@ -71,52 +71,52 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             2: {
                 label: 'Company Name',
-                dataSource: 'companyName',
+                dataSource: 'investorCompanyName',
                 sortable: true,
             },
             3: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             4: {
                 label: 'Date KYC started',
-                dataSource: 'kycDate',
+                dataSource: 'dateEntered',
                 sortable: true,
             },
             5: {
                 label: 'Date of approval',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             6: {
                 label: 'Validated by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             7: {
                 label: 'Date of latest modification by the investor',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             8: {
                 label: 'Reviewed by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             9: {
                 label: 'Date of rejection',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             },
             10: {
                 label: 'Rejected by',
-                dataSource: 'reviewBy',
+                dataSource: 'amFirstName',
                 sortable: true,
             },
             11: {
                 label: 'Date of latest modification',
-                dataSource: 'actionDate',
+                dataSource: 'lastUpdated',
                 sortable: true,
             }
         };
@@ -134,7 +134,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '1': 'To Review',
             '-1': 'Accepted',
             '2': 'Waiting for more info',
-            '-2': 'Refused'
+            '-2': 'Rejected'
         };
 
         tableDataCopy.forEach((row) => {
@@ -157,7 +157,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 data: tables[1]
             },
             {
-                title: 'Accepted KYC Requests',
+                title: 'Accepted - Funds Access Authorizations',
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: false,
                 data: tables[-1]
@@ -169,14 +169,14 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 data: tables[2]
             },
             {
-                title: 'Rejected Requests',
+                title: 'Rejected',
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables[-2]
             },
             {
                 title: 'Started by your clients',
-                columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
+                columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables['invited']
             },

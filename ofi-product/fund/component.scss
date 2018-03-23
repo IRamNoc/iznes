@@ -1,0 +1,48 @@
+.fundCreateComponent {
+
+    form.fundForm, form.umbrellaForm, form.umbrellaEditForm {
+        width: 100%;
+        .panel-body .form-group:last-child .dropdown-menu {
+            position: inherit;
+        }
+    }
+
+    .field-error {
+        color: red;
+        height: 0;
+        margin-top: -8px !important;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        p {
+            height: 1.5rem;
+            line-height: 1.5rem;
+            margin-right: 30px;
+            margin-bottom: 0;
+        }
+        a {
+            margin: 0;
+        }
+    }
+
+    form .form-group > .checkbox {
+        margin-left: 24px;
+    }
+
+    form .form-group > .radio-inline {
+        margin-left: 24px;
+        width: initial;
+    }
+
+    .checkbox label:first-child {
+        padding-left: 0;
+    }
+
+    .radio-inline label:after {
+        content: '';
+    }
+
+}
