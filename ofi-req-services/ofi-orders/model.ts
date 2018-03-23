@@ -15,6 +15,23 @@ export interface OfiRequestArrangements extends OfiMemberNodeBody {
     arrangementType: string;
 }
 
+export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
+    token: string;
+    shareName?: any;
+    status?: any;
+    orderType?: any;
+    isin?: any;
+    orderID?: any;
+    currency?: any;
+    quantity?: any;
+    amountWithCost?: any;
+    dateSearchField?: any;
+    fromDate?: any;
+    toDate?: any;
+    pageSize?: any;
+    rowOffSet?: any;
+}
+
 export interface OfiUpdateArrangement extends OfiMemberNodeBody {
     arrangementId: string | number;
     walletId: string | number;

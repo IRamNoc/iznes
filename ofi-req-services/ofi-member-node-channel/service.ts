@@ -12,7 +12,8 @@ import {
     ofiClearRequestedManageOrder,
     clearRequestedFundAccessMy,
     ofiClearRequestedIssuedAssets,
-    clearRequestedCollectiveArchive
+    clearRequestedCollectiveArchive,
+    ofiSetNewOrderManageOrder,
 } from '../../ofi-store';
 
 /* Service class. */
@@ -84,6 +85,10 @@ export class OfiMemberNodeChannelService {
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
+                break;
+
+            case 'izncreateorderbyinvestor':
+                this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
                 break;
         }
     }

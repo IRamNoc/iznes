@@ -25,3 +25,7 @@
     text-align: left;
     padding: 10px;
 }
+
+.datagrid-host{
+    height: auto !important;
+}
