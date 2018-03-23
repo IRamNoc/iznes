@@ -27,7 +27,7 @@ describe('kyc-my-informations', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiMyInformationsComponent);
 
         comp = fixture.componentInstance;
@@ -59,7 +59,11 @@ describe('kyc-my-informations', () => {
         comp.icon = 'user';
         comp.subTitle = 'subTitle';
         comp.userInfo = fakeUser;
-    });
+        comp.type = '46';
+
+        tick();
+        fixture.detectChanges();
+    }));
 
     describe('structure', () => {
         it('should render a form with 4 inputs', () => {
