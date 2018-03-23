@@ -52,7 +52,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -170,7 +170,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "additionnal");
-        String header = driver.findElement(By.id("ofi-welcome-kyc")).getText();
+        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
         assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
@@ -184,11 +184,12 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "alex01", "kyc");
+        loginKYCConfirmationScreen("testops001@setl.io", "alex01");
         //fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         //fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         //saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("no");
+        selectOptionNoValidatePopup();
     }
 
     @Test
@@ -210,7 +211,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 //        saveKYCAndVerifySuccessPageOne();
 //        selectOptionAndSubmitKYC("no");
 //        logout();
-        loginAndVerifySuccessKYC("am", "trb2017", "kyc");
+        loginAndVerifySuccess("am", "trb2017");
         try {
             driver.findElement(By.id("top-menu-kyc-documents")).click();
         }catch (Exception e){
@@ -222,7 +223,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops002@setl.io", "alex01", "kyc");
+        loginAndVerifySuccessKYC("testops002@setl.io", "alex01", "additionnal");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
@@ -248,6 +249,9 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
         driver.findElement(By.id("opt-" + option)).click();
         driver.findElement(By.id("btnKycSubmit")).click();
+    }
+
+    public static void selectOptionNoValidatePopup() {
         String modalHeader = driver.findElement(By.className("modal-title")).getText();
         assertTrue(modalHeader.equals("CONFIRMATION SCREEN"));
         try {
