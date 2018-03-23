@@ -27,7 +27,7 @@ describe('kyc-my-informations', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiMyInformationsComponent);
 
         comp = fixture.componentInstance;
@@ -59,14 +59,18 @@ describe('kyc-my-informations', () => {
         comp.icon = 'user';
         comp.subTitle = 'subTitle';
         comp.userInfo = fakeUser;
-    });
+        comp.type = '46';
+
+        tick();
+        fixture.detectChanges();
+    }));
 
     describe('structure', () => {
-        it('should render a form with 4 inputs', () => {
+        it('should render a form with 6 inputs', () => {
             expect(de.name).toBe('form');
 
             const inputs: DebugNode[] = fixture.debugElement.queryAllNodes(By.css('input'));
-            expect(inputs.length).toBe(4);
+            expect(inputs.length).toBe(6);
             expect(fixture.debugElement.queryAllNodes(By.css('#kyc_additionnal_email')).length).toBe(1);
             expect(fixture.debugElement.queryAllNodes(By.css('#kyc_additionnal_invitedBy')).length).toBe(1);
         });

@@ -1,6 +1,5 @@
 /* Core/Angular imports. */
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     OnInit,
@@ -17,7 +16,6 @@ import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
 
 export enum ViewMode {
     PAGE = 'PAGE',
@@ -28,7 +26,6 @@ export enum ViewMode {
     selector: 'app-my-informations',
     styleUrls: ['./component.css'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class OfiMyInformationsComponent implements OnInit, OnDestroy {
@@ -52,7 +49,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    // @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations;
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _ngRedux: NgRedux<any>,
