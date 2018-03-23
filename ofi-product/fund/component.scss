@@ -1,24 +1,10 @@
 .fundCreateComponent {
 
     form.fundForm, form.umbrellaForm, form.umbrellaEditForm {
-        padding: 0 !important;
-        margin: 0 auto !important;
         width: 100%;
-        div.well, div.well .row .well {
-            outline: none;
-        }
         .panel-body .form-group:last-child .dropdown-menu {
             position: inherit;
         }
-    }
-
-    .fundForm .well {
-        background: #fff;
-        border-radius: 3px;
-        padding: 0;
-        margin: 20px;
-        overflow: auto;
-        border: 1px solid #dce1eb;
     }
 
     .field-error {
@@ -42,17 +28,6 @@
         }
     }
 
-    .submit-container {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        button {
-            width: 150px;
-            margin: 10px 10px;
-        }
-    }
-
     form .form-group > .checkbox {
         margin-left: 24px;
     }
@@ -70,11 +45,4 @@
         content: '';
     }
 
-    .umbrellaEditForm input {
-      background-color: #eceeef !important;
-    }
-
-    form .form-group > input[disabled] {
-      background-color: #eceeef;
-    }
 }
