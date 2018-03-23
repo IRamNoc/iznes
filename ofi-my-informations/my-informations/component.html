@@ -21,7 +21,7 @@
                         <div *ngIf="additionnalForm.controls['email'].hasError('required') && additionnalForm.controls['email'].dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="text-danger">Email not valid!</div>
                     </div>
-                    <div class="form-group col-sm-6" [class.hide-input]="type != 46">
+                    <div class="form-group col-sm-6">
                         <label for="kyc_additionnal_invitedBy">
                             <span>Invited by:</span>
                         </label>
