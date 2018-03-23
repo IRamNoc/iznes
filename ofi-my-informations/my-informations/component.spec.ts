@@ -66,11 +66,11 @@ describe('kyc-my-informations', () => {
     }));
 
     describe('structure', () => {
-        it('should render a form with 4 inputs', () => {
+        it('should render a form with 6 inputs', () => {
             expect(de.name).toBe('form');
 
             const inputs: DebugNode[] = fixture.debugElement.queryAllNodes(By.css('input'));
-            expect(inputs.length).toBe(4);
+            expect(inputs.length).toBe(6);
             expect(fixture.debugElement.queryAllNodes(By.css('#kyc_additionnal_email')).length).toBe(1);
             expect(fixture.debugElement.queryAllNodes(By.css('#kyc_additionnal_invitedBy')).length).toBe(1);
         });
