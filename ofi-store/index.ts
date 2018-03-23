@@ -67,8 +67,12 @@ export {
 
 export {
     /* Manage orders */
-    getOfiManageOrderList,
+    // getOfiManageOrderList,
     OFI_SET_MANAGE_ORDER_LIST,
+    ofiClearRequestedManageOrder,
+    ofiSetRequestedManageOrder,
+    ofiClearNewOrderManageOrder,
+    ofiSetNewOrderManageOrder,
     ofiManageOrderActions,
 
     /* Home orders */
@@ -76,8 +80,6 @@ export {
     OFI_SET_HOME_ORDER_LIST,
     ofiSetRequestedHomeOrder,
     ofiClearRequestedHomeOrder,
-    ofiClearRequestedManageOrder,
-    ofiSetRequestedManageOrder,
 
     /* Home orders buffer */
     OFI_SET_HOME_ORDER_BUFFER,

@@ -3,6 +3,8 @@
         <span mltag="txt_orderbook">Order Book</span> - {{ connectedWalletName }}</h1>
 </div>
 
+<button type="button" class="btn btn-info" (click)="placeFakeOrder()">Place a fake Order</button>
+
 <div class="wrapper wrapper-content">
 
     <clr-tabs *ngIf="tabsControl.length">
@@ -30,15 +32,15 @@
     <ng-template #staticOrdersList>
         <div class="panel-body">
 
-            <form id="search-orders-form">
+            <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form">
                 <div class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-sm-4">
                             <label>
-                                <span mltag="txt_fundname">Fund Name</span>
+                                <span mltag="txt_sharename">Share Name</span>
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-fundname" type="text" placeholder="Fund Name" mltag="txt_fundname" style="margin-top: 6px"/>
+                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename" style="margin-top: 6px"/>
                                 <button (click)="requestSearch()"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
@@ -52,8 +54,6 @@
                                     class="fluid-width"
                                     [items]="orderStatuses"
                                     [allowClear]="true"
-                                    (selected)="getOrdersBySearch(false, $event)"
-                                    (removed)="getOrdersBySearch(false, $event)"
                                     [formControl]="tabsControl[0].searchForm.controls['status']"
                                     placeholder="Status"
                                     mltag="txt_status"></ng-select>
@@ -69,8 +69,6 @@
                                     class="fluid-width"
                                     [items]="orderTypes"
                                     [allowClear]="true"
-                                    (selected)="getOrdersBySearch()"
-                                    (removed)="getOrdersBySearch()"
                                     [formControl]="tabsControl[0].searchForm.controls['type']"
                                     placeholder="Type"
                                     mltag="txt_type"></ng-select>
@@ -79,13 +77,13 @@
                     </div>
                 </div>
 
-                <clr-datagrid #ordersDataGrid>
+                <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Order Ref</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'orderType'">
+                    <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Order Type</span>
                         </ng-container>
@@ -100,7 +98,7 @@
                             <span>ISIN</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'">
+                    <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Share Name</span>
                         </ng-container>
@@ -155,7 +153,7 @@
                             <span>Settlement Date</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'status'">
+                    <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Status</span>
                         </ng-container>
@@ -173,74 +171,93 @@
                     <!--<clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>-->
                     <!--<clr-dg-column style="min-width: 100px;"><span mltag="txt_status">Status</span></clr-dg-column>-->
 
-                    <clr-dg-row *clrDgItems="let order of ordersList">
+                    <clr-dg-row *ngFor="let order of ordersList; let i = index">
                         <clr-dg-cell>
                             <!-- orderRef -->
-                            Yo
+                            {{order.orderID}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderType -->
-                            Yo
+                            {{showOrderType(i)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- investor -->
-                            Yo
+                            {{showInvestor(i)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- isin -->
-                            Yo
+                            {{order.isin}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- shareName -->
-                            Yo
+                            {{order.fundShareName}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- assetManagementCompany -->
-                            Yo
+                            {{showManagementCompany(i)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- shareCurrency -->
-                            Yo
+                            {{showCurrency(i)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- quantity -->
-                            Yo
+                            {{order.quantity}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- latestNAV -->
-                            Yo
+                            {{order.estimatedPrice}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- grossAmount -->
-                            Yo
+                            {{order.amountWithCost}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- feesAmount -->
-                            Yo
+                            {{order.feePercentage * order.amountWithCost}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- navDate -->
-                            Yo
+                            {{order.valuationDate | date:'shortDate'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderDate -->
-                            Yo
+                            ???
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- cutOffDate -->
-                            Yo
+                            {{order.cutoffDate | date:'shortDate'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- settlementDate -->
-                            Yo
+                            {{order.settlementDate | date:'shortDate'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- status -->
-                            Yo
+                            <span *ngIf="order.orderStatus == -3" class="label">
+                                <span mltag="txt_all">All</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == 1" class="label label-warning">
+                                <span mltag="txt_initiated">Initiated</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == 2" class="label label-info">
+                                <span mltag="txt_waitingfornav">Waiting NAV</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == 3" class="label label-info">
+                                <span mltag="txt_waitingforsettlement">Waiting settlement</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == -1" class="label label-success">
+                                <span mltag="txt_ordersettled">Settled</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == 6" class="label label-error">
+                                <span mltag="txt_unpaid">Unpaid</span>
+                            </span>
+                            <span *ngIf="order.orderStatus == 0" class="label label-error">
+                                <span mltag="txt_cancelled">Cancelled</span>
+                            </span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Actions -->
-                            <button type="button" class="btn btn-info">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-info">Cancel</button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -254,10 +271,10 @@
                                         <th>NAV Date</th>
                                     </tr>
                                     <tr>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
+                                        <td>{{showManagementCompany(i)}}</td>
+                                        <td>{{order.estimatedPrice}}</td>
+                                        <td>{{order.feePercentage * order.amountWithCost}}</td>
+                                        <td>{{order.valuationDate | date:'shortDate'}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -369,8 +386,8 @@
                                 </button>
                             </clr-dg-column-toggle-button>
                         </clr-dg-column-toggle>
-                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                        <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
+                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+                        <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
             </form>
