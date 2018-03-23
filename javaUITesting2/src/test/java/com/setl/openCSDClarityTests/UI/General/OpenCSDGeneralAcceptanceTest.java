@@ -22,6 +22,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -80,7 +81,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am",  "trb2017");
+        loginAndVerifySuccess("am", "trb2017");
         driver.navigate().refresh();
         checkAlert();
     }
@@ -114,7 +115,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldHaveIZNESlogoOnLoginPage() throws IOException, InterruptedException {
+    public void shouldHaveIZNESlogoOnLoginPage() throws InterruptedException {
         navigateToLoginPage();
         try {
             driver.findElement(By.id("logo-iznes")).isDisplayed();
@@ -124,7 +125,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldHaveIZNESinSubHeadingOnLoginPage() throws IOException, InterruptedException {
+    public void shouldHaveIZNESinSubHeadingOnLoginPage() throws InterruptedException {
         navigateToLoginPage();
         try {
             String subHeadingText = driver.findElement(By.className("login-subheading")).getText();
@@ -135,109 +136,186 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException{
+    public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
     @Test
-    public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException{
+    public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
     @Test
-    public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException{
+    public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "trb2017");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
     @Test
-    public void shouldLoginToOffice365() throws IOException, InterruptedException{
+    public void shouldLoginToOffice365() throws InterruptedException {
         LoginToOutlook("test@setl.io", "Sphericals1057!");
     }
 
+    @Test
+    public void shouldDisplayFirstnameInMyInformationScreen() throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        String userDetails [] = generateUserDetails();
+        createUserAndVerifySuccess(userDetails[0], "testops085@setl.io", "alex01");
+        Thread.sleep(500);
+        logout();
+        Thread.sleep(750);
+        loginAndUpdateMyAccount("Test_User_85","alex01", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_85", "alex01", "Jordan", "Miller");
+    }
+
+    public static String[] generateUserDetails() {
+        String userName = "Test_User_85";
+        String emailAddress = "testops085@setl.io";
+        return new String[] {userName, emailAddress};
+    }
+
+    public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(username, password);
+        try {
+            driver.findElement(By.id("topBarMenu")).click();
+        }catch (Exception e) {
+            fail(e.getMessage());
+        }
+        driver.findElement(By.id("topBarMyAccount")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("udDisplayName")).clear();
+        driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
+        driver.findElement(By.id("udFirstName")).clear();
+        driver.findElement(By.id("udFirstName")).sendKeys(firstname);
+        driver.findElement(By.id("udLastName")).clear();
+        driver.findElement(By.id("udLastName")).sendKeys(lastname);
+        driver.findElement(By.id("udMobilePhone")).clear();
+        driver.findElement(By.id("udMobilePhone")).sendKeys("07956701992");
+        driver.findElement(By.id("udAddress1")).clear();
+        driver.findElement(By.id("udAddress1")).sendKeys("postal");
+        driver.findElement(By.id("udAddress3")).clear();
+        driver.findElement(By.id("udAddress3")).sendKeys("town");
+        driver.findElement(By.id("udPostalCode")).clear();
+        driver.findElement(By.id("udPostalCode")).sendKeys("code");
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+        Thread.sleep(500);
+        driver.findElement(By.id("udSubmit")).click();
+        try {
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(success.equals("Success!"));
+        } catch (Exception e) {
+            fail("success message did not match : " + e.getMessage());
+        }
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        logout();
+    }
+
+    public static void loginAndAssertMyInfomation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(username, password);
+        driver.findElement(By.id("dropdown-user")).click();
+        try{
+            driver.findElement(By.id("top-menu-my-info")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        String firstnameMyInfo = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
+        assertTrue(firstnameMyInfo.equals(firstname));
+        String lastnameMyInfo = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
+        assertTrue(lastnameMyInfo.equals(lastname));
+    }
+
     public static void LoginToOutlook(String email, String password) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         navigateTo365Page();
         driver.findElement(By.className("msame_Header_name")).click();
         WebElement signInEmail = driver.findElement(By.id("i0116"));
         wait.until(visibilityOf(signInEmail));
         signInEmail.sendKeys(email);
-        try{
+        try {
             driver.findElement(By.id("idSIButton9")).click();
-        }catch (Exception e){
-            fail(e.getMessage());
+        } catch (Exception e1) {
+            fail(e1.getMessage());
         }
         Thread.sleep(850);
-        wait.until(visibilityOf(driver.findElement(By.id("displayName"))));
+        WebElement displayName = driver.findElement(By.id("displayName"));
+        wait.until(visibilityOf(displayName));
         WebElement signInPassword = driver.findElement(By.id("i0118"));
         signInPassword.sendKeys(password);
         try {
             driver.findElement(By.id("idSIButton9")).click();
-        }catch (Error e){
-            fail(e.getMessage());
+        } catch (Exception e2) {
+            fail(e2.getMessage());
         }
         try {
             driver.findElement(By.id("idSIButton9")).click();
-        }catch (Error e){
-            fail(e.getMessage());
+        } catch (Exception e3) {
+            fail(e3.getMessage());
         }
+        Thread.sleep(850);
+
         WebElement shellMail = driver.findElement(By.id("ShellMail_link"));
+        wait.until(visibilityOf(shellMail));
         wait.until(elementToBeClickable(shellMail));
         shellMail.click();
+
     }
 
-    public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) throws IOException, InterruptedException{
+    public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id(toplevelID)).click();
         WebElement profileDropdown = driver.findElement(By.id(itemID));
         wait.until(visibilityOf(profileDropdown));
         driver.findElement(By.id(itemID)).click();
-        try{
+        try {
             assertTrue(driver.findElement(By.id(headingID)).isDisplayed());
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname) throws IOException, InterruptedException{
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
             driver.findElement(By.id("btnKycSubmit")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
         try {
             WebElement popupSuccess = driver.findElement(By.className("jaspero__dialog-title"));
             wait.until(visibilityOf(popupSuccess));
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
-        try{
+        try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(success.equals("Success!"));
-        }catch (Exception e){
+            assertTrue(success.equals(expectedResult));
+        } catch (Exception e) {
             fail("success message did not match : " + e.getMessage());
         }
     }
 
-    public static void inviteAnInvestorExpectingFailed(String email, String firstname, String lastname) throws IOException, InterruptedException{
+    public static void inviteAnInvestorExpectingFailed(String email, String firstname, String lastname) {
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
-               String test = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
+            String test = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
             assertTrue(test.equals("true"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void createUserAndVerifySuccess(String username, String email, String password) throws IOException, InterruptedException{
+    public static void createUserAndVerifySuccess(String username, String email, String password) {
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
         driver.findElement(By.id("new-user-email")).sendKeys(email);
@@ -249,27 +327,27 @@ public class OpenCSDGeneralAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement jasperoPopup = driver.findElement(By.className("jaspero__dialog-title"));
         wait.until(visibilityOf(jasperoPopup));
-        try{
+        try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
             assertTrue(success.equals("Success!"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("success message did not match : " + e.getMessage());
         }
         try {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Could not close alert : " + e.getMessage());
         }
     }
 
-    public static void clickForgottenPassword(String email) throws IOException, InterruptedException{
+    public static void clickForgottenPassword(String email) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement forgottenPassword = driver.findElement(By.id("forgotten-password-link"));
         wait.until(visibilityOf(forgottenPassword));
         try {
             driver.findElement(By.id("forgotten-password-link")).click();
             driver.findElement(By.xpath("//*[@id=\"forgotten-password-link\"]")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("could not click forgotten password link " + e.getMessage());
         }
         driver.findElement(By.id("fp-email-field")).sendKeys(email);
@@ -295,45 +373,45 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectManageUserAccountDropdown(){
+    public static void selectManageUserAccountDropdown() {
         driver.findElement(By.id("new-user-account-select")).click();
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void selectManageUserUserDropdown(){
+    public static void selectManageUserUserDropdown() {
         driver.findElement(By.id("new-user-usertype-select")).click();
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void selectInvestorOnManageUserAccountDropdown(){
+    public static void selectInvestorOnManageUserAccountDropdown() {
         driver.findElement(By.id("new-user-account-select")).click();
         driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void selectInvestorOnManageUserUserDropdown(){
+    public static void selectInvestorOnManageUserUserDropdown() {
         driver.findElement(By.id("new-user-usertype-select")).click();
         driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/div/input")).sendKeys("investor");
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
     }
 
-    public static void sendMessageToSelectedWalletWithoutRecipient (String subject, String message, String toasterMessage) throws InterruptedException {
+    public static void sendMessageToSelectedWalletWithoutRecipient(String subject, String message, String toasterMessage) throws InterruptedException {
         navigateToPageByID("menu-messages");
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesSubject")).sendKeys(subject);
@@ -344,10 +422,10 @@ public class OpenCSDGeneralAcceptanceTest {
         String JasperoModel = driver.findElement(By.className("toast-title")).getText();
         try {
             assertTrue(JasperoModel.equals(toasterMessage));
-            }catch (Error e){
+        } catch (Error e) {
             fail("toaster message did not match");
-            }
         }
+    }
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
@@ -366,7 +444,7 @@ public class OpenCSDGeneralAcceptanceTest {
         assertTrue(unitsField.equals(expected));
     }
 
-    public static void assertFalseIdDisplayed(String element, String value){
+    public static void assertFalseIdDisplayed(String element, String value) {
         WebElement displayedElement = driver.findElement(By.id(value));
         assertFalse(displayedElement.isDisplayed());
     }
@@ -404,9 +482,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void enterAllUserDetails(String username, String password) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         enterManageUserUsername(username);
-        enterManageUserEmail(username +"@setl.io");
+        enterManageUserEmail(username + "@setl.io");
         selectInvestorOnManageUserAccountDropdown();
         selectInvestorOnManageUserUserDropdown();
         enterManageUserPassword(password);
@@ -419,49 +497,49 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(2000);
         try {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
         Thread.sleep(2000);
     }
 
-    public static void enterManageUserUsername(String username){
+    public static void enterManageUserUsername(String username) {
         driver.findElement(By.id("new-user-username")).sendKeys(username);
 
     }
 
-    public static void enterManageUserEmail(String email){
+    public static void enterManageUserEmail(String email) {
         driver.findElement(By.id("new-user-email")).sendKeys(email);
     }
 
-    public static void enterManageUserPassword(String password){
+    public static void enterManageUserPassword(String password) {
         driver.findElement(By.id("new-user-password")).sendKeys(password);
     }
 
-    public static void enterManageUserPasswordRepeat(String password){
+    public static void enterManageUserPasswordRepeat(String password) {
         driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
     }
 
-    public static void navigateToAddUser() throws IOException, InterruptedException {
+    public static void navigateToAddUser() {
         driver.findElement(By.id("menu-user-administration")).click();
-        WebDriverWait wait = new WebDriverWait(driver , timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement dropdownItem = driver.findElement(By.id("menu-user-admin-users"));
         wait.until(visibilityOf(dropdownItem));
-        try{
+        try {
             driver.findElement(By.id("menu-user-admin-users")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
         WebElement tabItem = driver.findElement(By.id("user-tab-1"));
         wait.until(visibilityOf(tabItem));
         try {
             driver.findElement(By.id("user-tab-1")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-    public static void clickManageUserSubmit(){
+    public static void clickManageUserSubmit() {
         driver.findElement(By.id("new-user-submit")).click();
     }
 }

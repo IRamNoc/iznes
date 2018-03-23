@@ -15,24 +15,26 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.io.IOException;
+import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.LoginToOutlook;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.clickForgottenPassword;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 
-
 public class OpenCSDMyAccountAcceptanceTest {
+
+    static Connection conn = null;
 
     public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
 
@@ -43,7 +45,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     static String testusername = "TestUserNullInfo";
     static String testpassword = "Testpass123";
 
-    JavascriptExecutor jse = (JavascriptExecutor)driver;
+    JavascriptExecutor jse = (JavascriptExecutor) driver;
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -58,6 +60,11 @@ public class OpenCSDMyAccountAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+    }
+
+    @Test
+    public void deleteUser() throws IOException, InterruptedException, SQLException {
+        deleteUserFromDB(username, password, "testops088@setl.io");
     }
 
     @Test
@@ -89,7 +96,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689", true);
+        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL", "224", "235689", true);
     }
 
 
@@ -99,18 +106,20 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL","224", "235689", false);
+        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL", "224", "235689", false);
     }
 
     @Test
-    @Ignore("Broken while work is being done for this section of the site.")
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
-        createUserAndVerifySuccess("Jordan", "user1@setl.io", "alex01");
+        String userDetails[] = generateRandomUserDetails();
+        createUserAndVerifySuccess(userDetails[0], "testops088@setl.io", "alex01");
+        Thread.sleep(500);
         logout();
-        clickForgottenPassword("user1@setl.io");
+        clickForgottenPassword("testops088@setl.io");
+        LoginToOutlook("test@setl.io", "Sphericals1057!");
         //Manually assert that email has been received
     }
 
@@ -119,7 +128,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
-        String userDetails [] = generateRandomUserDetails();
+        String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
         Thread.sleep(500);
         logout();
@@ -153,18 +162,18 @@ public class OpenCSDMyAccountAcceptanceTest {
         String msgText = null;
         String btnToClick = null;
 
-        if(save == false)
-        { msgText = null;
-                btnToClick = "btnKycClose";
-        }else {
+        if (save == false) {
+            msgText = null;
+            btnToClick = "btnKycClose";
+        } else {
             msgText = "Saved changes";
             btnToClick = "btnKycSubmit";
         }
 
         driver.findElement(By.id(btnToClick)).click();
-        if (btnToClick == "btnKycClose"){
-                assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
-        }else {
+        if (btnToClick == "btnKycClose") {
+            assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
+        } else {
             try {
                 assertTrue(driver.findElement(By.className("toast-title")).isDisplayed());
             } catch (Error et) {
@@ -185,7 +194,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:" ));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -199,4 +208,42 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
     }
 
+    private void deleteUserFromDB(String DBUsername, String DBPassword, String email) throws SQLException {
+        conn = DriverManager .getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblUsers where emailAddress = " + "\"" + email + "\"");
+            int rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                stmt.executeUpdate("DELETE FROM setlnet.tblUsers WHERE emailAddress = " + "\"" + email + "\"");
+                rs.beforeFirst();
+            }
+
+            conn.close();
+            stmt.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            conn.close();
+            stmt.close();
+            rs.close();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+
 }
+
+
