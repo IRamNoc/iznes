@@ -15,6 +15,7 @@ export interface SaveUserDetailsRequestBody extends MemberNodeMessageBody {
     displayName?: string;
     firstName?: string;
     lastName?: string;
+    email?: string;
     mobilePhone?: string;
     addressPrefix?: string;
     address1?: string;
