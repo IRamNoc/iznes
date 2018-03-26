@@ -298,13 +298,13 @@ const profileMyInfo = {
     label_txt: 'txt_my_information',
     icon_class: '',
     element_id: 'top-menu-my-info',
-    router_link: '/profile/my-informations'
+    router_link: '/profile/my-information'
 };
 
 const kycDocuments = {
     label: 'KYC Documents',
     label_txt: 'txt_kyc_documents',
-    icon_class: 'fa fa-file',
+    icon_class: 'fa fa-align-left',
     element_id: 'top-menu-kyc-documents',
     router_link: '/kyc-am-documents'
 };
