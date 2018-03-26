@@ -83,9 +83,9 @@
                     </clr-dg-cell>
                     <clr-dg-cell>{{party.sigAddress_label}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span mltag="txt_pay">Pay</span> {{contract.payors}}
-                        <span> - </span>
-                        <span mltag="txt_receive">Receive</span> {{contract.payees}}
+                        <span *ngIf="contract.payors[i] !== undefined" mltag="txt_pay">Pay</span> {{contract.payors[i]}}
+                        <span *ngIf="contract.payors[i] !== undefined && contract.payees[i] !== undefined"> - </span>
+                        <span *ngIf="contract.payees[i] !== undefined" mltag="txt_receive">Receive</span> {{contract.payees[i]}}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
@@ -111,11 +111,6 @@
                         <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
                     </clr-dg-cell>
                     <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span mltag="txt_pay">Pay</span> {{contract.payors}}
-                        <span> - </span>
-                        <span mltag="txt_receive">Receive</span> {{contract.payees}}
-                    </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
                         <span *ngIf="authorisation.signature == ''">

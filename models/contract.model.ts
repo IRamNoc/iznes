@@ -41,8 +41,7 @@ export class ContractModel {
     public __completed: number = 0;
     // Additional Fields
     public name: string = '';
-    public payors: string = '';
-    public payees: string = '';
-
+    public payors: Array<any> = new Array();
+    public payees: Array<any> = new Array();
 }
 

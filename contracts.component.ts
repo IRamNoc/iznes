@@ -204,11 +204,6 @@ export class ContractsComponent implements OnInit, OnChanges {
                 contractfunction: contract.function + '_commit',
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
-                party: [
-                    contract.parties[index - 1].partyIdentifier,
-                    '',
-                    ''
-                ],
                 parties: contractJson.parties,
                 commitment: commitment,
                 receive: receive,
