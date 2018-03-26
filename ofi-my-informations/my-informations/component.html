@@ -21,7 +21,7 @@
                         <div *ngIf="additionnalForm.controls['email'].hasError('required') && additionnalForm.controls['email'].dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="text-danger">Email not valid!</div>
                     </div>
-                    <div *ngIf="type == 46" class="form-group col-sm-6">
+                    <div class="form-group col-sm-6">
                         <label for="kyc_additionnal_invitedBy">
                             <span>Invited by:</span>
                         </label>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <ng-container *ngIf="type != 46">
+                <ng-container *ngIf="type != '46'">
                     <div class="row">
                         <div class="form-group required-field col-sm-6" [ngStyle]="{'height':'35px'}">
                             <label for="kyc_additionnal_companyName">
@@ -80,7 +80,7 @@
                     </div>
                 </ng-container>
             </div>
-            <ng-container *ngIf="type == 46">
+            <ng-container *ngIf="type == '46'">
                 <h5><b>I am a professional investor from:</b></h5>
                 <div class="blockRounded">
                     <div class="row">

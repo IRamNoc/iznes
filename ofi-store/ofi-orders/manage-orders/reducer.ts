@@ -1,27 +1,37 @@
 /* Core/Redux imports. */
 import {Action} from 'redux';
-import * as _ from 'lodash';
 
 /* Local types. */
-import {ManageOrders} from './';
+import {ManageOrders, ManageOrderDetails} from './model';
 import * as ofiManageOrdersActions from './actions';
-import {SET_ALL_TABS} from './actions';
+import * as _ from 'lodash';
 import {immutableHelper} from '@setl/utils';
+import {List, fromJS, Map} from 'immutable';
 
 /* Initial state. */
 const initialState: ManageOrders = {
-    orderList: [],
+    orderList: {},
     requested: false,
+    newOrder: false,
     openedTabs: []
 };
 
 /* Reducer. */
-export const OfiManageOrderListReducer = function (state: ManageOrders = initialState,
-                                                   action: Action) {
+export const OfiManageOrderListReducer = function (state: ManageOrders = initialState, action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
         case ofiManageOrdersActions.OFI_SET_MANAGE_ORDER_LIST:
-            return ofiSetOrderList(state, action);
+            // return ofiSetOrderList(state, action);
+
+            const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+            if (data.Status !== 'Fail') {
+                const orderList = formatManageOrderDataResponse(data);
+                return Object.assign({}, state, {
+                    orderList
+                });
+            }
+            return state;
 
         case ofiManageOrdersActions.OFI_SET_REQUESTED_MANAGE_ORDER:
             return toggleRequestState(state, true);
@@ -29,13 +39,69 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
         case ofiManageOrdersActions.OFI_CLEAR_REQUESTED_MANAGE_ORDER:
             return toggleRequestState(state, false);
 
-        case SET_ALL_TABS:
+        case ofiManageOrdersActions.OFI_SET_NEW_ORDER_MANAGE_ORDER:
+            return toggleNewOrderState(state, true);
+
+        case ofiManageOrdersActions.OFI_CLEAR_NEW_ORDER_MANAGE_ORDER:
+            console.log('OFI_CLEAR_NEW_ORDER_MANAGE_ORDER in REDUCER');
+            return toggleNewOrderState(state, false);
+
+        case ofiManageOrdersActions.SET_ALL_TABS:
             return handleSetAllTabs(action, state);
 
         /* Default. */
         default:
             return state;
     }
+};
+
+function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDetails> {
+    const rawDataList = fromJS(rawData);
+
+    const manageOrdersList = Map(rawDataList.reduce(
+        function (result, item) {
+            result[item.get('orderID')] = {
+                amAddress: item.get('amAddress'),
+                amCompanyID: item.get('amCompanyID'),
+                amWalletID: item.get('amWalletID'),
+                amountWithCost: item.get('amountWithCost'),
+                byAmountOrQuantity: item.get('byAmountOrQuantity'),
+                canceledBy: item.get('canceledBy'),
+                contractAddr: item.get('contractAddr'),
+                contractExpiryTs: item.get('contractAddr'),
+                contractStartTs: item.get('contractStartTs'),
+                currency: item.get('currency'),
+                cutoffDate: item.get('cutoffDate'),
+                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
+                estimatedPrice: item.get('estimatedPrice'),
+                estimatedQuantity: item.get('estimatedQuantity'),
+                feePercentage: item.get('feePercentage'),
+                fundShareID: item.get('fundShareID'),
+                fundShareName: item.get('fundShareName'),
+                iban: item.get('iban'),
+                investorAddress: item.get('investorAddress'),
+                investorWalletID: item.get('investorWalletID'),
+                isin: item.get('isin'),
+                label: item.get('label'),
+                navEntered: item.get('navEntered'),
+                orderID: item.get('orderID'),
+                orderNote: item.get('orderNote'),
+                orderStatus: item.get('orderStatus'),
+                orderType: item.get('orderType'),
+                investorIban: item.get('investorIban'),
+                orderFundShareID: item.get('orderFundShareID'),
+                platFormFee: item.get('platFormFee'),
+                price: item.get('price'),
+                quantity: item.get('quantity'),
+                settlementDate: item.get('settlementDate'),
+                totalResult: item.get('totalResult'),
+                valuationDate: item.get('valuationDate'),
+            };
+            return result;
+        },
+        {}));
+
+    return manageOrdersList.toJS();
 }
 
 /**
@@ -78,6 +144,11 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
  */
 function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
     return Object.assign({}, state, {requested});
+}
+
+function toggleNewOrderState(state: ManageOrders, newOrder: boolean): ManageOrders {
+    console.log('toggleNewOrderState', newOrder);
+    return Object.assign({}, state, {newOrder});
 }
 
 /**

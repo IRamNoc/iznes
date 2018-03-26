@@ -2,12 +2,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Location } from '@angular/common';
 import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
-
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
 import {SagaHelper} from '@setl/utils/index';
 import {MyUserService} from '@setl/core-req-services/index';
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -22,32 +22,33 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         lastName: '',
     };
     userType: string;
-
-    public userInfoExtended = {
+    
+    public userInfoExtended: any = {
         email: '',
         firstName: '',
         lastName: '',
-        invitedBy: {
-            companyName: ''
-        },
+        amCompanyName: '',
         companyName: '',
         phoneCode: '',
         phoneNumber: ''
     };
 
     @select(['user', 'myDetail']) myDetail: any;
+    @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
         private _ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private location: Location,
         private myUserService: MyUserService,
+        private ofiKycService: OfiKycService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
     }
 
     ngOnInit() {
+        this.ofiKycService.fetchInvestor();
         this.myDetail.subscribe((d) => {
             this.userInfo = {
                 firstName: d.firstName,
@@ -58,15 +59,15 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 email: d.emailAddress,
                 firstName: d.firstName,
                 lastName: d.lastName,
-                invitedBy: {
-                    companyName: '',
-                },
                 companyName: d.companyName,
                 phoneCode: d.phoneCode,
                 phoneNumber: d.phoneNumber
             };
 
             this.userType = d.userType;
+        });
+        this.myKyc.subscribe((d) => {
+            this.userInfoExtended.amCompanyName = d.amCompanyName;
         });
     }
 

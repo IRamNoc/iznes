@@ -10,9 +10,10 @@ import {OfiCollectiveArchiveReducer, OfiCollectiveArchiveState} from "./collecti
 
 export {
     OFI_SET_MANAGE_ORDER_LIST,
-    getOfiManageOrderList,
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
+    ofiClearNewOrderManageOrder,
+    ofiSetNewOrderManageOrder,
     ofiManageOrderActions
 } from './manage-orders';
 
