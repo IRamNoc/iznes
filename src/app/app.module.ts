@@ -56,7 +56,6 @@ import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 import {CoreWorkflowEngineModule} from '@setl/core-wfe';
 import {SetlLayoutModule} from '@setl/core-layout';
-import {SetlDemoModule} from '@setl/demo';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -133,7 +132,6 @@ export function memberSocketServiceFactory() {
         CoreWorkflowEngineModule,
         T2sModule,
         SetlLayoutModule,
-        SetlDemoModule,
     ],
     providers: [
         {

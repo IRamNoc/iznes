@@ -3,7 +3,6 @@ import {Routes} from '@angular/router';
 import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
 /* Components. */
 import {SetlMyAccountComponent} from '@setl/core-account';
-import {SetlDemoDatagridComponent} from '@setl/demo';
 /**
  * Login Guard service
  */
@@ -541,16 +540,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'client/:kycId',
                         component: OfiWaitingApprovalComponent,
-                    }
-                ]
-            },
-            {
-                path: 'demo',
-                children: [
-                    {
-                        path: 'datagrid',
-                        component: SetlDemoDatagridComponent,
-                        canActivate: [LoginGuardService],
                     }
                 ]
             },
