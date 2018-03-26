@@ -58,9 +58,11 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
 function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDetails> {
     const rawDataList = fromJS(rawData);
 
+    let i = 0;
+
     const manageOrdersList = Map(rawDataList.reduce(
         function (result, item) {
-            result[item.get('orderID')] = {
+            result[i] = {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amWalletID: item.get('amWalletID'),
@@ -97,6 +99,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 totalResult: item.get('totalResult'),
                 valuationDate: item.get('valuationDate'),
             };
+            i++;
             return result;
         },
         {}));
