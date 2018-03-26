@@ -67,7 +67,7 @@ const fundHoldings = {
 const manageOrders = {
     label: 'Manage Orders',
     label_txt: 'txt_manageorders',
-    icon_class: 'fa fa-pencil',
+    icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
     router_link: '/manage-orders/0'
 };
@@ -304,7 +304,7 @@ const profileMyInfo = {
 const kycDocuments = {
     label: 'KYC Documents',
     label_txt: 'txt_kyc_documents',
-    icon_class: 'fa fa-file',
+    icon_class: 'fa fa-align-left',
     element_id: 'top-menu-kyc-documents',
     router_link: '/kyc-am-documents'
 };
