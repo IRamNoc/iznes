@@ -22,6 +22,7 @@ const initialState: MyDetailState = {
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
 
     let newState = {};
+    let emailAddress = '';
 
     switch (action.type) {
         case MyDetailActions.LOGIN_REQUEST:
@@ -31,7 +32,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
 
             const loginedData = _.get(action, 'payload[1].Data[0]', {});
             const username = _.get(loginedData, 'UserName', '');
-            const emailAddress = _.get(loginedData, 'EMailAddress', '');
+            emailAddress = _.get(loginedData, 'EMailAddress', '');
             const userId = _.get(loginedData, 'UserID', 0);
             const lastLogin = _.get(loginedData, 'last_login', '');
             const userType = _.get(loginedData, 'userType', '');
@@ -61,6 +62,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const displayName = _.get(userDetailsData, 'displayName', '');
             const firstName = _.get(userDetailsData, 'firstName', '');
             const lastName = _.get(userDetailsData, 'lastName', '');
+            emailAddress = _.get(userDetailsData, 'emailAddress', '');
             const mobilePhone = _.get(userDetailsData, 'mobilePhone', '');
             const addressPrefix = _.get(userDetailsData, 'addressPrefix', '');
             const address1 = _.get(userDetailsData, 'address1', '');
@@ -80,6 +82,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 displayName,
                 firstName,
                 lastName,
+                emailAddress,
                 mobilePhone,
                 addressPrefix,
                 address1,
