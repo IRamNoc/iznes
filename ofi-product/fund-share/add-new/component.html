@@ -6,8 +6,10 @@
     <clr-tab>
         <button clrTabLink id="tabFundShareButton"><span>Select Fund</span></button>
         <clr-tab-content class="outer">
+            <h3>Please enter following information to create a new Fund Share:</h3>
+
             <div class="row" *ngIf="newFundShareForm">
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                     <form [formGroup]="newFundShareForm">
                         <section class="form-block">
                             <div class="form-group">
@@ -19,17 +21,39 @@
                                     [formControl]="newFundShareForm.controls['fund']"
                                     [required]="true">
                                 </ng-select>
-                                <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
-                                    mltag="txt_" (click)="selectFund()" [disabled]="!isValid()">
-                                    Continue
-                                </button>
-                                <span>- or -</span>
+                                
+                            </div>
+                        </section>
+                    </form>
+                </div>
+                <div class="col-sm-6">
+                    <section class="form-block">
+                        <div class="form-group alt-option">
+                            <label class="control-label">&nbsp;</label>
+                            <div>
+                                <span>or</span>
                                 <a href="/#/product-module/fund" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund"
                                     mltag="txt_">
                                     Add a new Fund
                                 </a>
                             </div>
-                        </section>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <form>
+                        <div class="form-group">
+                            <a href="/#/product-module/home" class="btn btn-default" id="buttonBack"
+                                mltag="txt_">
+                                Back
+                            </a>
+                            <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
+                                mltag="txt_" (click)="selectFund()" [disabled]="!isValid()">
+                                Next
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
