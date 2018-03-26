@@ -8,7 +8,7 @@ import {fromJS} from 'immutable';
 
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
-import {immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
 
 /* Ofi Orders request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
@@ -103,11 +103,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 4, text: 'Redemption'},
     ];
     dateTypes: Array<SelectedItem> = [
-        {id: 'orderDate', text: 'orderDate'},
-        {id: 'cutOffDate', text: 'cutOffDate'},
-        {id: 'navDate', text: 'navDate'},
-        {id: 'settlementDate', text: 'settlementDate'},
-        {id: 'valuationDate', text: 'valuationDate'},
+        {id: 'orderDate', text: 'OrderDate'},
+        {id: 'cutOffDate', text: 'CutOffDate'},
+        {id: 'navDate', text: 'NAVDate'},
+        {id: 'settlementDate', text: 'SettlementDate'},
     ];
 
     currencyList = [
@@ -169,7 +168,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private mcService: OfiManagementCompanyService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                // private _confirmationService: ConfirmationService,
+                private alerts: AlertsService,
+                private _confirmationService: ConfirmationService
                 // private _blockchainContractService: BlockchainContractService,
                 // public _numberConverterService: NumberConverterService,
     ) {
@@ -400,6 +400,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 label: item.get('label'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
+                orderDate: item.get('orderDate'),
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
@@ -511,6 +512,44 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tabsControl = openedTabs;
     }
 
+    cancelOrder(index) {
+        let confMessage = '';
+        if (this.ordersList[index].orderType === 3) {
+            confMessage += 'Subscription ';
+        }
+        if (this.ordersList[index].orderType === 4) {
+            confMessage += 'Redemption ';
+        }
+        confMessage += this.ordersList[index].orderID;
+        this.showConfirmationAlert(confMessage, index);
+    }
+
+    showConfirmationAlert(confMessage, index): void {
+        this._confirmationService.create(
+            '<span>Confirmation</span>',
+            '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
+            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'success'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+                    orderID: this.ordersList[index].orderID,
+                });
+
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        console.log('cancel order success', data); // success
+                        this.loading = true;
+                        this.getAmOrdersList();
+                    },
+                    (data) => {
+                        console.log('Error: ', data);
+                    })
+                );
+            }
+        });
+    }
+
     exportOrders() {
 
         console.log('EXPORT ORDERS TO CSV');
@@ -572,7 +611,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if ((this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id)) {
             const tmpDateSearchField = (this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id) ? this.tabsControl[0].searchForm.get('dateType').value[0].id : null;
             const tmpFromDate = (this.tabsControl[0].searchForm.get('fromDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('fromDate').value))) ? this.tabsControl[0].searchForm.get('fromDate').value : null;
-            const tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
+            let tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
+            if (tmpFromDate !== null && tmpToDate !== null) {
+                let toDate = new Date(this.tabsControl[0].searchForm.get('toDate').value);
+                toDate.setDate(toDate.getDate() + 1);
+                tmpToDate = toDate.toISOString().substring(0, 10);
+            }
             if (tmpDateSearchField !== null && tmpFromDate !== null && tmpToDate !== null) {
                 this.dataGridParams.dateSearchField = tmpDateSearchField;
                 this.dataGridParams.fromDate = tmpFromDate;

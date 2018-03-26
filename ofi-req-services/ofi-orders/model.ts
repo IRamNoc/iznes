@@ -39,6 +39,11 @@ export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
     data: any;
 }
 
+export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
+    token: string;
+    orderID: any;
+}
+
 export interface OfiUpdateArrangement extends OfiMemberNodeBody {
     arrangementId: string | number;
     walletId: string | number;

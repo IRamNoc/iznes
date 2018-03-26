@@ -87,6 +87,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 label: item.get('label'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
+                orderDate: item.get('orderDate'),
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),

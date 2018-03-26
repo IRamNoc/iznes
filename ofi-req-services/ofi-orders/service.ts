@@ -29,6 +29,7 @@ import {
     OfiMemberNodeBody,
     OfiAmOrdersRequestBody,
     OfiAmExportOrdersRequestBody,
+    OfiCancelOrderRequestBody,
     OfiRequestArrangements,
     OfiUpdateArrangement,
     OfiGetContractByOrder,
@@ -53,8 +54,12 @@ interface ManageOrdersData {
     sortOrder?: string;
 }
 
-interface ManageExportOrdersData {
+interface ExportOrdersData {
     data: any;
+}
+
+interface CancelOrderData {
+    orderID: number;
 }
 
 @Injectable()
@@ -138,12 +143,23 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestExportOrders(data: ManageExportOrdersData): any {
+    requestExportOrders(data: ExportOrdersData): any {
 
         const messageBody: OfiAmExportOrdersRequestBody = {
             RequestName: 'iznexportorders',
             token: this.memberSocketService.token,
             data: data.data,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestCancelOrderByAM(data: CancelOrderData): any {
+
+        const messageBody: OfiCancelOrderRequestBody = {
+            RequestName: 'izncancelorderbyam',
+            token: this.memberSocketService.token,
+            orderID: data.orderID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
