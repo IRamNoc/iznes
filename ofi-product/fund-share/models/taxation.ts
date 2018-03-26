@@ -1,4 +1,4 @@
-import {FormItem, FormItemType} from '@setl/core-dynamic-forms/DynamicForm';
+import {FormItem, FormItemType} from '@setl/utils';
 import * as E from '../FundShareEnum';
 
 export class ShareTaxationOptional {

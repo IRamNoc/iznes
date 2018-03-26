@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import {FormItem, FormItemDropdown, FormItemType} from '@setl/core-dynamic-forms';
+import {FormItem, FormItemDropdown, FormItemType} from '@setl/utils';
 import {OfiFundShare} from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
 import {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './models/characteristic';

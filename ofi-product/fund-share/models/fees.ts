@@ -1,4 +1,4 @@
-import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
 import { FormStyle } from '@angular/common';
 
 export class ShareFeesMandatory extends DynamicFormsValidator {

@@ -6,9 +6,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
-import {DpDatePickerModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
+import {DpDatePickerModule, SetlDirectivesModule, SetlPipesModule, DynamicFormsModule} from '@setl/utils';
 import {SelectModule} from 'ng2-select';
-import {CoreDynamicFormsModule} from '@setl/core-dynamic-forms';
 import {RouterModule} from '@angular/router';
 
 /* Multilingual coolness. */
@@ -58,8 +57,8 @@ import fundItems from './fundConfig';
         SetlPipesModule,
         MultilingualModule,
         ChartsModule,
-        CoreDynamicFormsModule,
-        OfiKYCModule
+        OfiKYCModule,
+        DynamicFormsModule
     ],
     providers: [
         { provide: 'fund-items', useValue: fundItems },

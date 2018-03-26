@@ -1,4 +1,4 @@
-import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/core-dynamic-forms';
+import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
 import * as E from '../FundShareEnum';
 
 export class ShareKeyFactsMandatory extends DynamicFormsValidator {
