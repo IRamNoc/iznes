@@ -25,3 +25,5 @@ export {walletHelper, WalletTxHelper, immutableHelper, mDateHelper, commonHelper
 
 export {APP_CONFIG} from './appConfig/appConfig';
 export {AppConfig, MenuSpec, MenuItem} from './appConfig/appConfig.model';
+
+export {FormItem, FormItemDropdown, FormItemStyle, FormItemType, DynamicFormsModule, DynamicFormsValidator } from './components/dynamic-forms';
