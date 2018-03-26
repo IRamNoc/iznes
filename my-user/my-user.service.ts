@@ -30,6 +30,7 @@ interface UserDetailsData {
     displayName?: string;
     firstName?: string;
     lastName?: string;
+    email?: string;
     mobilePhone?: string;
     addressPrefix?: string;
     address1?: string;
