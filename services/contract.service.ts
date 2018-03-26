@@ -60,24 +60,28 @@ export class ContractService {
             if (typeof contract.parties[0] === 'number') {
                 contract.parties.shift();
             }
-            contract.payors = '';
-            contract.payees = '';
+            contract.payors = [];
+            contract.payees = [];
             contract.__completed = 1;
             contract.status = 'Completed';
             _.each(contract.parties, (partyJson, partyIndex) => {
                 if (typeof partyJson !== 'number') {
                     contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
                     if (contract.parties[partyIndex].payList.length > 0) {
+                        contract.payors[partyIndex] = '';
                         _.each(contract.parties[partyIndex].payList, (payListItem) => {
                             if (typeof payListItem.quantity !== 'undefined') {
-                                contract.payors +=  (+payListItem.quantity).toFixed(2) + ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
+                                contract.payors[partyIndex] += (+payListItem.quantity).toFixed(2) +
+                                    ' ' + payListItem.assetId + ' | ' + payListItem.namespace;
                             }
                         });
                     }
                     if (contract.parties[partyIndex].receiveList.length > 0) {
+                        contract.payees[partyIndex] = '';
                         _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
                             if (typeof receiveListItem.quantity !== 'undefined') {
-                                contract.payees += (+receiveListItem.quantity).toFixed(2) + ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                                contract.payees[partyIndex] += (+receiveListItem.quantity).toFixed(2) +
+                                    ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
                             }
                         });
                     }
@@ -88,8 +92,6 @@ export class ContractService {
                     contract.status = 'Pending';
                 }
             });
-            contract.payors = contract.payors.substr(0, contract.payors.length - 1);
-            contract.payees = contract.payees.substr(0, contract.payees.length - 1);
             contract.name = contract.__address;
             contract.issuingaddress_label = this.getAddressLabel(contract.issuingaddress);
             contract.fromaddr_label = this.getAddressLabel(contract.fromaddr);
