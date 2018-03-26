@@ -39,8 +39,10 @@ import {
     WalletNodeRequestService,
     WalletnodeTxService
 } from '@setl/core-req-services';
+
 /* Routes. */
 import {ROUTES} from './app.routes';
+
 /* SETL Modules. */
 import {SetlMessagesModule} from '@setl/core-messages';
 import {SetlAccountModule} from '@setl/core-account';
@@ -54,6 +56,7 @@ import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 import {CoreWorkflowEngineModule} from '@setl/core-wfe';
 import {SetlLayoutModule} from '@setl/core-layout';
+
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
 import {OfiMainModule} from '@ofi/ofi-main';
