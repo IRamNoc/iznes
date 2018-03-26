@@ -7,24 +7,24 @@
     user-select: none;
 }
 
-.additionalInfos {
-    width: 100%;
-    border-radius: 3px;
-    border: 1px solid #dddddd;
-    padding: 10px;
-    background-color: #f0f0f0;
-    margin: 20px 10px 20px 0;
-}
-.additionalInfos table {
-    border-collapse: collapse;
-    width: 100%;
-}
+/*.additionalInfos {*/
+    /*width: 100%;*/
+    /*border-radius: 3px;*/
+    /*border: 1px solid #dddddd;*/
+    /*padding: 10px;*/
+    /*background-color: #f0f0f0;*/
+    /*margin: 20px 10px 20px 0;*/
+/*}*/
+/*.additionalInfos table {*/
+    /*border-collapse: collapse;*/
+    /*width: 100%;*/
+/*}*/
 
-.additionalInfos td, .additionalInfos th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 10px;
-}
+/*.additionalInfos td, .additionalInfos th {*/
+    /*border: 1px solid #dddddd;*/
+    /*text-align: left;*/
+    /*padding: 10px;*/
+/*}*/
 
 .datagrid-host{
     height: auto !important;

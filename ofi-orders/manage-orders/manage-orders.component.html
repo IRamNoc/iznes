@@ -90,7 +90,7 @@
                         <div class="row panel-body" [class.hidden]="!isOptionalFilters">
                             <div class="form-group col-sm-4">
                                 <label>
-                                    <span mltag="txt_type">Type</span>
+                                    <span>Date Type</span>
                                 </label>
                                 <div>
                                     <ng-select
@@ -105,7 +105,7 @@
                             </div>
                             <div class="form-group col-sm-4">
                                 <label for="orders-search-from-date">
-                                    <span mltag="txt_fromdate">From date</span>
+                                    <span>From date</span>
                                 </label>
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
@@ -115,7 +115,7 @@
                             </div>
                             <div class="form-group col-sm-4">
                                 <label for="orders-search-to-date">
-                                    <span mltag="txt_sharename">To date</span>
+                                    <span>To date</span>
                                 </label>
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
@@ -274,16 +274,16 @@
                             {{order.feePercentage * order.amountWithCost}}
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- navDate -->
-                            {{order.valuationDate | date:'shortDate'}}
-                        </clr-dg-cell>
-                        <clr-dg-cell>
                             <!-- orderDate -->
-                            ???
+                            {{order.orderDate | date:'shortDate'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- cutOffDate -->
                             {{order.cutoffDate | date:'shortDate'}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <!-- NAVDate -->
+                            {{order.valuationDate | date:'shortDate'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- settlementDate -->
@@ -314,7 +314,7 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Actions -->
-                            <button type="button" class="btn btn-sm btn-info">Cancel</button>
+                            <button type="button" *ngIf="order.orderStatus == 1" (click)="cancelOrder(i)" class="btn btn-sm btn-info">Cancel</button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
