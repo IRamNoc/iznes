@@ -6,9 +6,12 @@ export interface OfiFundShare {
     isin: string;
     shareClassCode: number;
     shareClassInvestmentStatus: number;
+    subscriptionStartDate: string;
+    launchDate: string;
     shareClassCurrency: number;
     valuationFrequency: number;
     historicOrForwardPricing: number;
+    status: string;
     hasCoupon: number;
     couponType: number;
     freqOfDistributionDeclaration: number;

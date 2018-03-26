@@ -71,12 +71,15 @@ export class FundShare {
             isin: this.keyFacts.mandatory.isin.value(),
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value()[0].id,
             shareClassInvestmentStatus: this.keyFacts.mandatory.shareClassInvestmentStatus.value()[0].id,
+            subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
+            launchDate: this.keyFacts.mandatory.launchDate.value(),
             shareClassCurrency: this.keyFacts.mandatory.shareClassCurrency.value()[0].id,
             valuationFrequency: this.keyFacts.mandatory.valuationFrequency.value()[0].id,
             historicOrForwardPricing: this.keyFacts.mandatory.historicOrForwardPricing.value()[0].id,
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
             couponType: this.keyFacts.mandatory.couponType.value()[0].id,
             freqOfDistributionDeclaration: this.keyFacts.mandatory.freqOfDistributionDeclaration.value()[0].id,
+            status: this.keyFacts.mandatory.status.value()[0].id,
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.characteristic.mandatory.subscriptionCategory.value()[0].id,
             subscriptionCurrency: this.characteristic.mandatory.subscriptionCurrency.value()[0].id,
@@ -120,12 +123,15 @@ export class FundShare {
         this.keyFacts.mandatory.isin.preset = fundShare.isin;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCode, fundShare.shareClassCode);
         this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
+        this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
+        this.keyFacts.mandatory.launchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
+        this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -164,8 +170,6 @@ export class FundShare {
         this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
         
         this.fundID = fundShare.fundID;
-
-        (this.keyFacts.mandatory.status.preset as any) = [{ id: FundShareEnum.StatusEnum.Master, text: 'Master' }]
     }
 
     private generateJSONString(model): string {
