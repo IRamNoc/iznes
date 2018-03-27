@@ -179,7 +179,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             return;
         }
         console.log('onCreateSuccess',data);
-        this.router.navigateByUrl(`product-module/fund-share/${data.fundShareID}?new`);
+        this.router.navigateByUrl(`product-module/home`);
     }
 
     private onCreateError(e): void {

@@ -35,7 +35,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     private subscriptionsArray: Subscription[] = [];
 
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) fundListRequestedOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'fundList']) fundListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
