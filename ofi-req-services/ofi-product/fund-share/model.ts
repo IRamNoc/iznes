@@ -9,6 +9,15 @@ export interface InvestorFundAccessRequestBody extends MemberNodeMessageBody {
     investorWalletId: number;
 }
 
+export interface FundShareRequestBody extends MemberNodeMessageBody {
+    token: string;
+    fundShareID: number;
+}
+
+export interface CreateFundShareRequestData extends MemberNodeMessageBody {
+    token: string;
+    fundID: number;
+}
 export interface IznesShareListRequestMessageBody extends MemberNodeMessageBody {
     token: string;
 }

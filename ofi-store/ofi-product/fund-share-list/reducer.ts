@@ -4,10 +4,10 @@ import {immutableHelper} from '@setl/utils';
 
 import * as actions from './actions';
 
-import {AllFundShareDetail, IznesShareDetail, OfiFundShareState} from './model';
+import {AllFundShareDetail, IznesShareDetail, OfiFundShareListState} from './model';
 import {OrderedMap} from 'immutable';
 
-const initialState: OfiFundShareState = {
+const initialState: OfiFundShareListState = {
     amAllFundShareList: {},
     requestedAmAllFundShareList: false,
     iznShareList: {},
@@ -21,7 +21,7 @@ const initialState: OfiFundShareState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundShareReducer = function (state: OfiFundShareState = initialState, action: Action): OfiFundShareState {
+export const OfiFundShareListReducer = function (state: OfiFundShareListState = initialState, action: Action): OfiFundShareListState {
     switch (action.type) {
         case actions.SET_AM_ALL_FUND_SHARE_LIST:
             return handleSetOfiNavFundsList(state, action);
@@ -51,9 +51,9 @@ export const OfiFundShareReducer = function (state: OfiFundShareState = initialS
  *
  * @param state
  * @param action
- * @return {OfiFundShareState}
+ * @return {OfiFundShareListState}
  */
-function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): OfiFundShareState {
+function handleSetOfiNavFundsList(state: OfiFundShareListState, action: Action): OfiFundShareListState {
     const fundShareListData = _.get(action, 'payload[1].Data', []);
     let amAllFundShareList: { [shareId: string]: AllFundShareDetail } = {};
     try {
@@ -90,31 +90,32 @@ function handleSetOfiNavFundsList(state: OfiFundShareState, action: Action): Ofi
  * @param state
  * @return {OfiFundShareState}
  */
-function toggleAmAllFundShareListRequested(state: OfiFundShareState, requestedAmAllFundShareList): OfiFundShareState {
+function toggleAmAllFundShareListRequested(state: OfiFundShareListState, requestedAmAllFundShareList): OfiFundShareListState {
 
     return Object.assign({}, state, {
         requestedAmAllFundShareList
     });
 }
 
-function handleSetIznesShareListRequested(state: OfiFundShareState) {
+function handleSetIznesShareListRequested(state: OfiFundShareListState) {
     return Object.assign({}, state, {
         requestedIznesShare: true
     });
 }
 
-function handleClearIznesShareListRequested(state: OfiFundShareState) {
+function handleClearIznesShareListRequested(state: OfiFundShareListState) {
     return Object.assign({}, state, {
         requestedIznesShare: false
     });
 }
 
-function handleGetIznesShareList(state: OfiFundShareState, action: Action) {
+function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
     const data = _.get(action, 'payload[1].Data', []);
     let iznShareList = OrderedMap();
 
     data.map((share) => {
         const shareData: IznesShareDetail = {
+            fundShareID: share.fundShareID,
             fundShareName: share.fundShareName,
             fundID: share.fundID,
             isin: share.isin,
@@ -163,6 +164,8 @@ function handleGetIznesShareList(state: OfiFundShareState, action: Action) {
             representationOptionalData: share.representationOptionalData,
             fundName: share.fundName,
             umbrellaFundID: share.umbrellaFundID,
+            managementCompanyName: share.managementCompanyName,
+            managementCompanyId: share.managementCompanyID
         };
 
         iznShareList = iznShareList.set(share.fundShareID, shareData);
