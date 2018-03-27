@@ -5,6 +5,8 @@ import {
     FundListReducer,
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
+    setRequestedFund,
+    clearRequestedFund,
     GET_IZN_FUND_LIST
 } from './fund-list';
 
@@ -13,6 +15,8 @@ export {
     FundListReducer,
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST,
+    setRequestedFund,
+    clearRequestedFund,
     GET_IZN_FUND_LIST
 };
 

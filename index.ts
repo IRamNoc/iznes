@@ -24,6 +24,8 @@ export {OfiMyInformationsComponent} from './ofi-my-informations/my-informations/
  */
 export {ProductHomeComponent} from './ofi-product/home/component';
 export {UmbrellaFundComponent} from './ofi-product/umbrella-fund/component';
+export {FundShareComponent} from './ofi-product/fund-share/form/component';
+export {AddNewFundShareComponent} from './ofi-product/fund-share/add-new/component';
 export {FundComponent} from './ofi-product/fund/component';
 /**
  * Nav
@@ -52,7 +54,8 @@ export {OfiWalletnodeChannelService} from './ofi-req-services/ofi-walletnode-cha
  */
 export {
     OfiReducer,
-    OfiState
+    OfiState,
+    OfiFundShare
 } from './ofi-store';
 
 
