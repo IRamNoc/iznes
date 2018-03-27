@@ -131,7 +131,7 @@ export function memberSocketServiceFactory() {
         ConnectionsModule,
         CoreWorkflowEngineModule,
         T2sModule,
-        SetlLayoutModule,
+        SetlLayoutModule
     ],
     providers: [
         {
