@@ -30,6 +30,18 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     toDate?: any;
     pageSize?: any;
     rowOffSet?: any;
+    sortByField?: any;
+    sortOrder?: any;
+}
+
+export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
+    token: string;
+    data: any;
+}
+
+export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
+    token: string;
+    orderID: any;
 }
 
 export interface OfiUpdateArrangement extends OfiMemberNodeBody {
