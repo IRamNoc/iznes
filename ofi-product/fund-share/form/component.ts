@@ -37,6 +37,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     mode: FundShareMode = FundShareMode.Create;
 
     private fundShareId: number;
+    private isNewFundShare: boolean = false;
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
 
@@ -75,7 +76,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
         }));
         this.subscriptionsArray.push(this.route.queryParamMap.subscribe(params => {
-            if(params.get('new') != undefined) this.showNewFundShareAlert();
+            // this.isNewFundShare = (params.get('new') != undefined) ? true : false;
+
+            // if(this.isNewFundShare) this.showNewFundShareAlert();
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
@@ -93,6 +96,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.keyFacts.mandatory.isin.disabled = true;
         } else {
             this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
+
+            if(this.model.fundID == undefined) {
+                this.router.navigateByUrl(`product-module/fund-share/new`);
+            }
         }
     }
 
@@ -134,7 +141,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
 
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     }
 
     saveFundShare(): void {
@@ -155,7 +162,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
                 this.redux,
                 this.model.getRequest(),
-                (data) => this.onCreateSuccess(data[1]),
+                (data) => this.onCreateSuccess(data[1].Data),
                 (e) => this.onCreateError(e[1].Data[0]));
         } else {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
@@ -167,9 +174,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onCreateSuccess(data): void {
-        if(data.Data.Status === "Fail") this.onCreateError(data.Data);
+        if(data.Status === "Fail") {
+            this.onCreateError(data);
+            return;
+        }
         console.log('onCreateSuccess',data);
-        this.router.navigateByUrl(`product-module/fund-share/${data.Data.fundShareID}?new`);
+        this.router.navigateByUrl(`product-module/fund-share/${data.fundShareID}?new`);
     }
 
     private onCreateError(e): void {

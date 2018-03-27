@@ -41,6 +41,11 @@ export interface OfiFundShare {
     maxSubscriptionFee: number;
     maxRedemptionFee: number;
     investorProfile: number;
+    mifiidChargesOngoing: number;
+    mifiidChargesOneOff: number;
+    mifiidTransactionCosts: number;
+    mifiidServicesCosts: number;
+    mifiidIncidentalCosts: number;
     keyFactOptionalData: string;
     characteristicOptionalData: string;
     calendarOptionalData: string;
