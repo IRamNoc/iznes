@@ -112,10 +112,7 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
     subscriptionRedemptionCalendar: FormItem = {
         type: FormItemType.number,
         label: 'Calendar of subscription/redemption',
-        required: true,
-        listItems: [
-            { id: '?', text: '?' }
-        ]
+        required: true
     } // 1
 }
 
@@ -123,6 +120,6 @@ export class ShareCalendarOptional extends DynamicFormsValidator {
     holidayManagement: FormItem = {
         type: FormItemType.text,
         label: 'Holiday management',
-        required: true
+        required: false
     } // 1
 }

@@ -29,73 +29,73 @@ export class ShareSolvencyOptional {
     efamaActiveEFCClassification: FormItem = {
         type: FormItemType.text,
         label: 'EFAMA Active EFC Classification',
-        required: true
+        required: false
     }
     hasTripartiteReport: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Tripartite Report',
-        required: true
+        required: false
     }
     lastTripartiteReportDate: FormItem = {
         type: FormItemType.date,
         label: 'Last Tripartite Report Date',
-        required: true
+        required: false
     }
     interestRateUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Interest Rate Up',
-        required: true
+        required: false
     } // 1
     interestRateDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Interest Rate Down',
-        required: true
+        required: false
     } // 1
     equityTypeI: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Equity Type I',
-        required: true
+        required: false
     }; // 1
     equityTypeII: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Equity Type II',
-        required: true
+        required: false
     } // 1
     property: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Property',
-        required: true
+        required: false
     } // 1
     spreadBonds: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Spread Bonds',
-        required: true
+        required: false
     } // 1
     spreadStructured: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Spread Structured',
-        required: true,
+        required: false,
         style: [FormItemStyle.BreakOnAfter]
     } // 1
     spreadDerivativesUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Spread Derivatives Up',
-        required: true
+        required: false
     } // 1
     spreadDerivativesDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Spread Derivatives Down',
-        required: true
+        required: false
     } // 1
     fxUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market FX Up',
-        required: true
+        required: false
     } // 1
     fxDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market FX Down',
-        required: true
+        required: false
     } // 1
 
 }
