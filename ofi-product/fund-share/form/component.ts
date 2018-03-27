@@ -22,7 +22,7 @@ import {
 } from '@setl/core-useradmin';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
-import {FundShare, FundShareMode} from '../model';
+import {FundShare, FundShareMode, PanelData} from '../model';
 import {FundShareTestData} from './TestData';
 
 @Component({
@@ -41,6 +41,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private isNewFundShare: boolean = false;
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
+    private panels: {[key: string]: any} = new PanelData();
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
@@ -223,6 +224,16 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     isUpdate(): boolean {
         return this.mode === FundShareMode.Update;
+    }
+
+    openPanel(obj: {[key: string]: any}, $event): void {
+        $event.preventDefault();
+
+        obj.open = !obj.open;
+    }
+
+    isPanelOpen(obj: {[key: string]: any}): boolean {
+        return obj.open;
     }
 
     ngOnDestroy() {

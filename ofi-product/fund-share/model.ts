@@ -14,6 +14,8 @@ import {ShareRepresentationOptional} from './models/representation';
 import {ShareSolvencyOptional} from './models/solvency';
 import {ShareTaxationOptional} from './models/taxation';
 
+export {PanelData} from './models/panelData';
+
 export class FundShare {
     fundID: number;
     accountId: number;
