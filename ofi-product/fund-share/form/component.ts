@@ -4,6 +4,7 @@ import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ToasterService} from 'angular2-toaster';
 import {ConfirmationService} from '@setl/utils';
 
 import {
@@ -50,6 +51,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private alerts: AlertsService,
+        private toaster: ToasterService,
         private confirmationService: ConfirmationService,
         private ofiFundShareService: OfiFundShareService,
         private ofiFundService: OfiFundService) {}
@@ -75,11 +77,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
             if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
         }));
-        this.subscriptionsArray.push(this.route.queryParamMap.subscribe(params => {
-            // this.isNewFundShare = (params.get('new') != undefined) ? true : false;
-
-            // if(this.isNewFundShare) this.showNewFundShareAlert();
-        }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
         }));
@@ -101,18 +98,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.router.navigateByUrl(`product-module/fund-share/new`);
             }
         }
-    }
-
-    private showNewFundShareAlert(): void {
-        this.alerts.create('success', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-info">Fund Share Successfully Created.</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     /**
@@ -178,12 +163,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.onCreateError(data);
             return;
         }
-        console.log('onCreateSuccess',data);
+        this.toaster.pop('success', data.fundShareName + ' has been successfully creates');
         this.router.navigateByUrl(`product-module/home`);
     }
 
     private onCreateError(e): void {
-        console.log('onCreateError',e);
         this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
@@ -197,7 +181,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data): void {
-        console.log('onUpdateSuccess',data);
         this.alerts.create('success', `
             <table class="table grid">
                 <tbody>
@@ -210,7 +193,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateError(e): void {
-        console.log('onUpdateError',e);
         this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
