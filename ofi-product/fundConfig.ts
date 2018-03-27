@@ -13,9 +13,9 @@ const unitTrustItems = [ // Unit Trust / Unit Investment Trust (UIT)
 ];
 
 export enum typeOfEuDirective {
-    UCITS = 1,
-    AIF,
-    Other,
+    UCITS = '0',
+    AIF = '1',
+    Other = '2',
 }
 
 
@@ -392,19 +392,19 @@ export const fundItems = {
     ],
     UCITSVersionItems: [
         {
-            id: 3,
+            id: '3',
             text: 'UCITS III',
         },
         {
-            id: 4,
+            id: '4',
             text: 'UCITS IV',
         },
         {
-            id: 5,
+            id: '5',
             text: 'UCITS V',
         },
         {
-            id: 6,
+            id: '6',
             text: 'UCITS VI',
         },
     ],
