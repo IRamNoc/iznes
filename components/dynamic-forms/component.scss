@@ -1,0 +1,18 @@
+:host {
+    .toggle-switch label {
+        margin-left: -0.75em;
+    }
+    .break-on-before {
+        left: -1px;
+        margin-left: 1px;
+
+        + div:not(.break-on-before) {
+            margin-left: -1px;
+        }
+    }
+    .break-on-after {
+        flex: 0 1 50%;
+        margin-right: 10px;
+        max-width: initial;
+    }
+}
