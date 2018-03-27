@@ -152,6 +152,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this.columns['status'],
             ],
             action: {
+                id: 'new-share-btn',
                 title: 'Add new Share',
                 icon: 'plus',
                 type: 'share',
@@ -173,6 +174,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this.columns['fundCurrency'],
             ],
             action: {
+                id: 'new-fund-btn',
                 title: 'Add new Fund',
                 icon: 'plus',
                 type: 'fund',
@@ -192,6 +194,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 // this.columns['uFundCurrency'],
             ],
             action: {
+                id: 'new-umbrella-fund-btn',
                 title: 'Add new Umbrella fund',
                 icon: 'plus',
                 type: 'ufund',
