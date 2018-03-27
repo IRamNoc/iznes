@@ -47,6 +47,8 @@ interface SelectedItem {
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    unknownValue = '???';
+
     searchForm: FormGroup;
 
     /* Datagrid server driven */
@@ -81,9 +83,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Tabs Control array */
     tabsControl: Array<any> = [];
+    orderID = 0;
 
     /* expandable div */
     isOptionalFilters = false;
+    clientInformation = true;
+    clientDetailsInformation = true;
+    generalInvestmentInformation = true;
+    mifid = true;
+    productInformation = true;
+    datesInformation = true;
+    orderInformation = true;
 
     /* Ui Lists. */
     orderStatuses: Array<SelectedItem> = [
@@ -421,6 +431,40 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.total = this.ordersList[0].totalResult;
             this.lastPage = Math.ceil(this.total / this.itemPerPage);
             this.loading = false;
+
+            this.subscriptions.push(this.route.params.subscribe(params => {
+                this.orderID = params['tabid'];
+                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+                    const order = this.ordersList.find(elmt => {
+                        if (elmt.orderID.toString() === this.orderID.toString()) {
+                            return elmt;
+                        }
+                    });
+                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                        this.tabsControl[0].active = false;
+                        let tabTitle = '';
+                        if (order.orderType === 3) tabTitle += 'Subscription: ';
+                        if (order.orderType === 4) tabTitle += 'Redemption: ';
+                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+
+                        this.tabsControl.push(
+                            {
+                                'title': {
+                                    'icon': 'fa-shopping-basket',
+                                    'text': tabTitle,
+                                },
+                                'orderId': this.orderID,
+                                'active': true,
+                                orderData: order,
+                            }
+                        );
+                    }
+                } else {
+                    if (this.tabsControl.length > 1) {
+                        this.tabsControl.splice(1, this.tabsControl.length - 1);
+                    }
+                }
+            }));
         } else {
             this.total = 0;
             this.lastPage = 0;
@@ -520,7 +564,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.ordersList[index].orderType === 4) {
             confMessage += 'Redemption ';
         }
-        confMessage += this.ordersList[index].orderID;
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 5);
         this.showConfirmationAlert(confMessage, index);
     }
 
@@ -727,8 +771,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ));
     }
 
-    showOrderType(index) {
-        const obj = this.orderTypes.find(o => o.id === this.ordersList[index].orderType);
+    showTypes(order) {
+        const obj = this.orderTypes.find(o => o.id === order.orderType);
         if (obj !== undefined) {
             return obj.text;
         } else {
@@ -736,16 +780,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    showInvestor(index) {
-        if (this.walletDirectory[this.ordersList[index].investorWalletID] && this.walletDirectory[this.ordersList[index].investorWalletID].walletName) {
-            return this.walletDirectory[this.ordersList[index].investorWalletID].walletName;
+    showInvestor(order) {
+        if (this.walletDirectory[order.investorWalletID] && this.walletDirectory[order.investorWalletID].walletName) {
+            return this.walletDirectory[order.investorWalletID].walletName;
         } else {
             return 'Error!';
         }
     }
 
-    showManagementCompany(index) {
-        const obj = this.managementCompanyList.find(o => o.companyID === this.ordersList[index].amCompanyID);
+    showManagementCompany(order) {
+        const obj = this.managementCompanyList.find(o => o.companyID === order.amCompanyID);
         if (obj !== undefined) {
             return obj.companyName;
         } else {
@@ -753,8 +797,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    showCurrency(index) {
-        const obj = this.currencyList.find(o => o.id === this.ordersList[index].currency);
+    showCurrency(order) {
+        const obj = this.currencyList.find(o => o.id === order.currency);
         if (obj !== undefined) {
             return obj.label;
         } else {
@@ -762,12 +806,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    showStatus(index) {
-        if (this.orderStatuses[this.ordersList[index].orderStatus] && this.orderStatuses[this.ordersList[index].orderStatus].text) {
-            return this.orderStatuses[this.ordersList[index].orderStatus].text;
+    showStatus(order) {
+        if (this.orderStatuses[order.orderStatus] && this.orderStatuses[order.orderStatus].text) {
+            return this.orderStatuses[order.orderStatus].text;
         } else {
             return 'Error!';
         }
+    }
+
+    buildLink(order, index) {
+        const dest = 'manage-orders/' + order.orderID;
+        this.router.navigateByUrl(dest);
     }
 
     /**
