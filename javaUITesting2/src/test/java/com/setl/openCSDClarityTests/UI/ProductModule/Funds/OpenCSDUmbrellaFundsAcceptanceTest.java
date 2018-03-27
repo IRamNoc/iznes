@@ -83,6 +83,110 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToPage("product-home");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
+    @Test
+    public void shouldCreateAnUmbrellaFund() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
+        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+    }
+
+    @Test
+    public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
+        searchAndSelectTopDropdown("uf_domicile", "France");
+        submitUmbrellaFund();
+    }
+
+    @Test
+    public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
+        searchAndSelectTopDropdown("uf_domicile", "Luxembourg");
+        submitUmbrellaFund();
+    }
+
+    @Test
+    public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "trb2017");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
+        searchAndSelectTopDropdown("uf_domicile", "Ireland");
+        submitUmbrellaFund();
+    }
+
+    @Test
+    public void shouldDisplayCreatedUmbrellaFundInFundsTable(){
+
+    }
+
+    @Test
+    public void shouldNotCreateFundWithoutFieldEntered(){
+
+    }
+
+    private void submitUmbrellaFund() throws InterruptedException {
+        try {
+            driver.findElement(By.id("mcBtnSubmitForm")).click();
+        }catch (Exception e){
+            fail("Save button was not clicked. " + e.getMessage());
+        }
+    }
+
+    private void fillUmbrellaDetailsNotCountry(String fundName){
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
+        driver.findElement(By.id("uf_lei")).sendKeys("testLei");
+        driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
+        driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
+        selectTopDropdown("uf_managementCompany");
+        selectTopDropdown("uf_custodian");
+        selectTopDropdown("uf_investmentAdvisor");
+        selectTopDropdown("uf_fundAdministrator");
+        selectTopDropdown("uf_investmentManager");
+        selectTopDropdown("uf_payingAgent");
+    }
+
+    private void selectAddUmbrellaFund(){
+        driver.findElement(By.id("new-umbrella-fund-btn")).click();
+        try{
+            String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
+            assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
+        }catch (Exception e){
+            fail("Page heading text was not correct : " + e.getMessage());
+        }
+    }
+
+    private void selectTopDropdown(String dropdownID){
+        driver.findElement(By.id(dropdownID)).click();
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
+
+    private void searchAndSelectTopDropdown(String dropdownID, String search){
+        driver.findElement(By.id(dropdownID)).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/input")).sendKeys(search);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2018-04-27");
+    }
 
     private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div")));
