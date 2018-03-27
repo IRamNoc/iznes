@@ -142,12 +142,6 @@ export const ROUTES: Routes = [
                 redirectTo: '/messages/inbox'
             },
             {
-                path: 'core-home',
-                component: HomeComponent,
-                canActivate: [LoginGuardService],
-                data: { state: 'home' }
-            },
-            {
                 path: 'account',
                 children: [
                     {
@@ -192,7 +186,7 @@ export const ROUTES: Routes = [
                 path: 'profile',
                 children: [
                     {
-                        path: 'my-informations',
+                        path: 'my-information',
                         component: OfiProfileMyInformationsComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -568,4 +562,3 @@ export const ROUTES: Routes = [
         canActivate: [LoginGuardService]
     }
 ];
-

@@ -64,7 +64,7 @@ public class OpenCSDMyAccountAcceptanceTest {
 
     @Test
     public void deleteUser() throws IOException, InterruptedException, SQLException {
-        deleteUserFromDB(username, password, "testops081@setl.io");
+        deleteUserFromDB(username, password, "testops088@setl.io");
     }
 
     @Test
@@ -115,10 +115,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops081@setl.io", "alex01");
+        createUserAndVerifySuccess(userDetails[0], "testops088@setl.io", "alex01");
         Thread.sleep(500);
         logout();
-        clickForgottenPassword("testops081@setl.io");
+        clickForgottenPassword("testops088@setl.io");
         LoginToOutlook("test@setl.io", "Sphericals1057!");
         //Manually assert that email has been received
     }

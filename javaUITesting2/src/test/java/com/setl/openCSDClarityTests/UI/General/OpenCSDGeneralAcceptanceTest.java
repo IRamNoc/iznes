@@ -22,6 +22,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -153,9 +154,80 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-
     public void shouldLoginToOffice365() throws InterruptedException {
         LoginToOutlook("test@setl.io", "Sphericals1057!");
+    }
+
+    @Test
+    public void shouldDisplayFirstnameInMyInformationScreen() throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        String userDetails [] = generateUserDetails();
+        createUserAndVerifySuccess(userDetails[0], "testops085@setl.io", "alex01");
+        Thread.sleep(500);
+        logout();
+        Thread.sleep(750);
+        loginAndUpdateMyAccount("Test_User_85","alex01", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_85", "alex01", "Jordan", "Miller");
+    }
+
+    public static String[] generateUserDetails() {
+        String userName = "Test_User_85";
+        String emailAddress = "testops085@setl.io";
+        return new String[] {userName, emailAddress};
+    }
+
+    public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(username, password);
+        try {
+            driver.findElement(By.id("topBarMenu")).click();
+        }catch (Exception e) {
+            fail(e.getMessage());
+        }
+        driver.findElement(By.id("topBarMyAccount")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("udDisplayName")).clear();
+        driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
+        driver.findElement(By.id("udFirstName")).clear();
+        driver.findElement(By.id("udFirstName")).sendKeys(firstname);
+        driver.findElement(By.id("udLastName")).clear();
+        driver.findElement(By.id("udLastName")).sendKeys(lastname);
+        driver.findElement(By.id("udMobilePhone")).clear();
+        driver.findElement(By.id("udMobilePhone")).sendKeys("07956701992");
+        driver.findElement(By.id("udAddress1")).clear();
+        driver.findElement(By.id("udAddress1")).sendKeys("postal");
+        driver.findElement(By.id("udAddress3")).clear();
+        driver.findElement(By.id("udAddress3")).sendKeys("town");
+        driver.findElement(By.id("udPostalCode")).clear();
+        driver.findElement(By.id("udPostalCode")).sendKeys("code");
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+        Thread.sleep(500);
+        driver.findElement(By.id("udSubmit")).click();
+        try {
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(success.equals("Success!"));
+        } catch (Exception e) {
+            fail("success message did not match : " + e.getMessage());
+        }
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        logout();
+    }
+
+    public static void loginAndAssertMyInfomation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+        loginAndVerifySuccessAdmin(username, password);
+        driver.findElement(By.id("dropdown-user")).click();
+        try{
+            driver.findElement(By.id("top-menu-my-info")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        String firstnameMyInfo = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
+        assertTrue(firstnameMyInfo.equals(firstname));
+        String lastnameMyInfo = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
+        assertTrue(lastnameMyInfo.equals(lastname));
     }
 
     public static void LoginToOutlook(String email, String password) throws InterruptedException {

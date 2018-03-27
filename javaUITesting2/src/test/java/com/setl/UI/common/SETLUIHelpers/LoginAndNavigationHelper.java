@@ -204,11 +204,19 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
         Thread.sleep(1500);
         try {
-            String headingKYC = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-kyc-already-done/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3")).getText();
-            assertFalse(headingKYC.equals("CONFIRMATION SCREEN"));
+            String headingKYC = driver.findElement(By.className("modal-title")).getText();
+            assertTrue(headingKYC.equals("CONFIRMATION SCREEN"));
         }catch (Exception e){
             fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
         }
+    }
+    public static void loginKYCConfirmationScreen(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+        Thread.sleep(1500);
     }
 
     public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
