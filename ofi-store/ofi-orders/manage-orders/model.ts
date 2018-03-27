@@ -33,6 +33,7 @@ export interface ManageOrderDetails {
     label: any;
     navEntered: any;
     orderID: any;
+    orderDate: any;
     orderNote: any;
     orderStatus: any;
     orderType: any;

@@ -28,6 +28,8 @@ import {
 import {
     OfiMemberNodeBody,
     OfiAmOrdersRequestBody,
+    OfiAmExportOrdersRequestBody,
+    OfiCancelOrderRequestBody,
     OfiRequestArrangements,
     OfiUpdateArrangement,
     OfiGetContractByOrder,
@@ -35,19 +37,29 @@ import {
 } from './model';
 
 interface ManageOrdersData {
-    shareName?: any;
-    status?: any;
-    orderType?: any;
+    shareName?: string;
+    status?: number;
+    orderType?: number;
     isin?: any;
-    orderID?: any;
-    currency?: any;
-    quantity?: any;
-    amountWithCost?: any;
-    dateSearchField?: any;
-    fromDate?: any;
-    toDate?: any;
-    pageSize?: any;
-    rowOffSet?: any;
+    orderID?: number;
+    currency?: number;
+    quantity?: number;
+    amountWithCost?: number;
+    dateSearchField?: string;
+    fromDate?: string;
+    toDate?: string;
+    pageSize?: number;
+    rowOffSet?: number;
+    sortByField?: string;
+    sortOrder?: string;
+}
+
+interface ExportOrdersData {
+    data: any;
+}
+
+interface CancelOrderData {
+    orderID: number;
 }
 
 @Injectable()
@@ -83,8 +95,10 @@ export class OfiOrdersService {
 
         // Request the list.
         const asyncTaskPipe = ofiOrdersService.requestManageOrdersList({
-            pageSize: 5,
+            pageSize: 10,
             rowOffSet: 0,
+            sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
+            sortOrder: 'desc', // asc / desc
         });
 
         ngRedux.dispatch(SagaHelper.runAsync(
@@ -121,7 +135,31 @@ export class OfiOrdersService {
             fromDate: data.fromDate,
             toDate: data.toDate,
             pageSize: data.pageSize,
-            rowOffSet: data.rowOffSet * data.pageSize,
+            rowOffSet: (data.rowOffSet * data.pageSize),
+            sortByField: data.sortByField,
+            sortOrder: data.sortOrder,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestExportOrders(data: ExportOrdersData): any {
+
+        const messageBody: OfiAmExportOrdersRequestBody = {
+            RequestName: 'iznexportorders',
+            token: this.memberSocketService.token,
+            data: data.data,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestCancelOrderByAM(data: CancelOrderData): any {
+
+        const messageBody: OfiCancelOrderRequestBody = {
+            RequestName: 'izncancelorderbyam',
+            token: this.memberSocketService.token,
+            orderID: data.orderID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
