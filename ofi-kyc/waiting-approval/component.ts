@@ -10,7 +10,6 @@ import {mDateHelper, SagaHelper} from '@setl/utils';
 import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
-import {WalletState} from "../../../../setl_modules/core-redux-store/wallet/index";
 
 enum Statuses {
     waitingApproval = 1,
