@@ -19,7 +19,9 @@
             <span *ngIf="editForm && umbrellaFund">
                 Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
             </span>
-
+            <span id="new-fund-text-span" *ngIf="!editForm">
+                Please fill up the following information to create a new Umbrella Fund
+            </span>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">
