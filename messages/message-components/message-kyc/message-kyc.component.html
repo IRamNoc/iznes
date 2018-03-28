@@ -2,21 +2,23 @@
     <div [ngSwitch]="config.type">
         <!-- KYC approved -->
         <div *ngSwitchCase="'kycApproved'">
-            <p class="padding">Hello {{config.investorFirstName}},</p>
+            <p class="padding"><span mltag="txt_hello">Hello</span> {{config.investorFirstName}},</p>
 
             <p class="padding">
-                We have the pleasure to inform you that {{config.amCompanyName}} approved the KYC documents pertaining
-                to {{config.investorCompanyName}}.
+                <span mltag="txt_wehavethepleasuretoinformyouth66f22600c6">We have the pleasure to inform you that</span> {{config.amCompanyName}} <span mltag="txt_approvedthekycdocumentspertain0de3204a14">approved the KYC documents pertaining
+                to</span> {{config.investorCompanyName}}.
             </p>
 
             <p class="padding">
-                {{config.amCompanyName}} will shortly enable you to access funds’ shares, in order for your company to
+                {{config.amCompanyName}} <span mltag="txt_willshortlyenableyoutoaccessfue630933a91">will shortly enable you to access funds’ shares, in order for your company to
                 be able to
                 invest on the IZNES platform.
+
+                </span>
             </p>
 
-            <p class="padding">Thank you,</p>
-            <p class="padding">The IZNES team.</p>
+            <p class="padding" mltag="txt_thankyou">Thank you,</p>
+            <p class="padding" mltag="txt_theiznesteam">The IZNES team.</p>
         </div>
 
         <!-- KYC investor yes -->

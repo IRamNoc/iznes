@@ -28,32 +28,39 @@
 
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isModalDisplayed">
-    <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
+    <h3 class="modal-title" mltag="txt_selectthesubportfolioaddressyof47ba6704a">Select the subportfolio address you want to bind to this connection</h3>
     <div class="modal-body">
         <ng-select
                 id="accept-subportfolio-addr-link"
                 [items]="addressList"
-                [allowClear]=true
+                [allowClear]="true"
                 placeholder="Select a sub-portfolio"
-                [formControl]="formGroup.controls['selectedAddress']">
+                [formControl]="formGroup.controls['selectedAddress']"
+                mltag="txt_selectasubportfolio">
         </ng-select>
         <span class="mandatory-field">*</span>
-        <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched"
-             class="text-danger">This field is required
+        <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
+            This field is required
         </div>
     </div>
 
     <div class="modal-footer">
-        <button type="button"
+        <button
+                type="button"
                 id="accept-connection-cancel-btn"
                 class="btn btn-outline"
-                (click)="handleAcceptButtonClick(false)">
+                (click)="handleAcceptButtonClick(false)"
+                mltag="txt_cancel"
+        >
             Cancel
         </button>
-        <button type="button"
+        <button
+                type="button"
                 id="accept-connection-submit-btn"
                 class="btn btn-primary"
-                (click)="handleAcceptButtonClick(true)">
+                (click)="handleAcceptButtonClick(true)"
+                mltag="txt_submit"
+        >
             Submit
         </button>
     </div>
