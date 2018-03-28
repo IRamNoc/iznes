@@ -90,6 +90,34 @@ public class DatabaseHelper {
         stmt.close();
 
     }
+
+    public static void deleteUserFromDB(String DBUsername, String DBPassword, String email) throws SQLException {
+        conn = DriverManager .getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblUsers where emailAddress = " + "\"" + email + "\"");
+            int rows = 0;
+
+            // check there is only one result( there should be!! )
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+                stmt.executeUpdate("DELETE FROM setlnet.tblUsers WHERE emailAddress = " + "\"" + email + "\"");
+                rs.beforeFirst();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
 }
 
 

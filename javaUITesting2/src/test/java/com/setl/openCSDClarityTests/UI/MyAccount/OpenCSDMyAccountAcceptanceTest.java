@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.*;
 
+import static SETLAPIHelpers.DatabaseHelper.deleteUserFromDB;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -207,43 +208,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isDisplayed());
         assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
     }
-
-    private void deleteUserFromDB(String DBUsername, String DBPassword, String email) throws SQLException {
-        conn = DriverManager .getConnection(connectionString, DBUsername, DBPassword);
-
-        //for the query
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-
-        try {
-            rs = stmt.executeQuery("select * from setlnet.tblUsers where emailAddress = " + "\"" + email + "\"");
-            int rows = 0;
-
-            // check there is only one result( there should be!! )
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-                stmt.executeUpdate("DELETE FROM setlnet.tblUsers WHERE emailAddress = " + "\"" + email + "\"");
-                rs.beforeFirst();
-            }
-
-            conn.close();
-            stmt.close();
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            conn.close();
-            stmt.close();
-            rs.close();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
-    }
-
-
 }
 
 
