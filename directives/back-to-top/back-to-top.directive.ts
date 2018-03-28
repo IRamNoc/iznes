@@ -5,6 +5,7 @@ import { Directive, ElementRef, Renderer2, ViewChild, HostListener } from '@angu
 })
 export class BackToTopDirective {
 
+    target = null;
     isScroll = false;
 
     constructor(
@@ -26,10 +27,10 @@ export class BackToTopDirective {
         }
     }
 
-    @HostListener('document:mouseup')
-    public onMouseUp() {
+    @HostListener('document:mouseup', ['$event']) onMouseUp(event: MouseEvent) {
         const divBackToTop = this.el.nativeElement.querySelector('.backToTop');
-        if (divBackToTop && this.isScroll) {
+        this.target = event.target;
+        if (this.target && this.target.getAttribute('allowBackToTop') && divBackToTop && this.isScroll){
             this.isScroll = false;
             this.renderer.setStyle(divBackToTop, 'opacity', 0);
             this.el.nativeElement.scrollTop = 0;
