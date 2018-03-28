@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Manage Groups</h1>
+    <h1><i class="fa fa-users"></i> <span mltag="txt_managegroups">Manage Groups</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -10,23 +10,23 @@
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
-                    <ng-container
-                        *ngTemplateOutlet="staticGroupList"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticGroupList">
+
+                    </ng-container>
                 </ng-container>
 
                 <!-- User add tab. -->
                 <ng-container *ngIf="id === 1">
-                    <ng-container
-                        *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                    </ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
-                    <ng-container
-                        *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
+
+                    </ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -41,23 +41,23 @@
                 <clr-dg-column mltag="txt_groupname">Group Name</clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_grouptype">Group Type</span>
-                    <clr-dg-string-filter [clrDgStringFilter]="typeFilter"
-                    ></clr-dg-string-filter>
+                    <clr-dg-string-filter [clrDgStringFilter]="typeFilter">
+                    </clr-dg-string-filter>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let group of allGroupList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
-                          <button (click)="handleEdit(group.index)" class="btn"><i class="fa fa-pencil-square-o"></i><span mltag="txt_edit">Edit</span></button>
-                          <button (click)="handleDelete(group.index)" class="btn"><i class="fa fa-trash-o"></i><span mltag="txt_delete">Delete</span></button>
+                            <button (click)="handleEdit(group.index)" class="btn"><i class="fa fa-pencil-square-o"></i><span mltag="txt_edit">Edit</span></button>
+                            <button (click)="handleDelete(group.index)" class="btn"><i class="fa fa-trash-o"></i><span mltag="txt_delete">Delete</span></button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
                     <clr-dg-cell>{{group.category[0].text}}</clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -97,12 +97,12 @@
                                 <span mltag="txt_grouptype">Group Type</span>
                             </label>
                             <ng-select
-                                [items]="groupTypes"
-                                [allowClear]="true"
-                                mltag="txt_choosegrouptag"
-                                placeholder="Choose Group Tag"
-                                [formControl]="formControl.controls['type']">
-                            </ng-select>
+                                    [items]="groupTypes"
+                                    [allowClear]="true"
+                                    placeholder="Choose Group Tag"
+                                    [formControl]="formControl.controls['type']"
+                                    mltag="txt_choosegrouptag"
+                            ></ng-select>
                         </div>
                     </div>
 
@@ -110,20 +110,23 @@
                         Permissions grids,
                         1 - group or 2 - transactional.
                     -->
-                    <div
-                    *ngIf="formControl.value.type[0]"
-                    [ngSwitch]="formControl.value.type[0].id">
 
-                        <setl-permission-grid *ngSwitchCase="'0'"
-                            [permissionAreas]="filteredAdminAreaList"
-                            [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
+
+
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+
+                        <setl-permission-grid
+                                *ngSwitchCase="'0'"
+                                [permissionAreas]="filteredAdminAreaList"
+                                [permissionLevels]="permissionLevelsList"
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid *ngSwitchCase="'1'"
-                            [permissionAreas]="filteredTxAreaList"
-                            [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
+                        <setl-permission-grid
+                                *ngSwitchCase="'1'"
+                                [permissionAreas]="filteredTxAreaList"
+                                [permissionLevels]="permissionLevelsList"
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                     </div>
@@ -133,7 +136,11 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
-                            <button (click)="clearNewGroup(tabid, $event)" class="btn btn-secondary" mltag="txt_clear">
+                            <button
+                                    (click)="clearNewGroup(tabid, $event)"
+                                    class="btn btn-secondary"
+                                    mltag="txt_clear"
+                            >
                                 Clear
                             </button>
                         </div>
@@ -180,13 +187,12 @@
                                 control in the handleEdit function.
                             -->
                             <ng-select
-                                [items]="groupTypes"
-                                [allowClear]="true"
-                                mltag="txt_choosegrouptype"
-                                placeholder="Choose Group Tag..."
-                                [disabled]="true"
-                                [formControl]="formControl.controls['type']">
-                            </ng-select>
+                                    [items]="groupTypes"
+                                    [allowClear]="true"
+                                    placeholder="Choose Group Tag..."
+                                    [disabled]="true" [formControl]="formControl.controls['type']"
+                                    mltag="txt_choosegrouptag"
+                            ></ng-select>
                         </div>
                     </div>
 
@@ -194,22 +200,23 @@
                         Permissions grids,
                         1 - group or 2 - transactional.
                     -->
-                    <div
-                    *ngIf="formControl.value.type[0]"
-                    [ngSwitch]="formControl.value.type[0].id">
 
-                        <setl-permission-grid *ngSwitchCase="'0'"
-                            [initData]="permissionsEmitter"
-                            [permissionAreas]="filteredAdminAreaList"
-                            [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+
+                        <setl-permission-grid
+                                *ngSwitchCase="'0'"
+                                [initData]="permissionsEmitter"
+                                [permissionAreas]="filteredAdminAreaList"
+                                [permissionLevels]="permissionLevelsList"
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid *ngSwitchCase="'1'"
-                            [initData]="permissionsEmitter"
-                            [permissionAreas]="filteredTxAreaList"
-                            [permissionLevels]="permissionLevelsList"
-                            (updateEvent)="formControl.controls['permissions'].patchValue($event)"
+                        <setl-permission-grid
+                                *ngSwitchCase="'1'"
+                                [initData]="permissionsEmitter"
+                                [permissionAreas]="filteredTxAreaList"
+                                [permissionLevels]="permissionLevelsList"
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
                     </div>
@@ -236,24 +243,24 @@
                 <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span></button>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
-                      <span mltag="txt_administrative">Administrative</span>
+                        <span mltag="txt_administrative">Administrative</span>
                         <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-              <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span></button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                      <span mltag="txt_transactional">Transactional</span>
+                        <span mltag="txt_transactional">Transactional</span>
                         <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-              <button clrTabLink><i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></button>
+                <button clrTabLink><i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body" mltag="txt_wallets">
                         Wallets
@@ -262,7 +269,7 @@
             </clr-tab>
 
             <clr-tab>
-              <button clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></button>
+                <button clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body" mltag="txt_chains">
                         Chains
@@ -276,11 +283,11 @@
     <ng-template #accessAdminSubTabs>
         <clr-tabs>
             <clr-tab>
-              <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
+                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <select>
-                            <option value="" mltag="txt_selectAnOption">Select An Option</option>
+                            <option value="" mltag="txt_selectanoption">Select An Option</option>
                             <option value="1" mltag="txt_group1">Group 1</option>
                             <option value="2" mltag="txt_group2">Group 2</option>
                         </select>
@@ -289,7 +296,7 @@
             </clr-tab>
 
             <clr-tab>
-              <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_individual">Individual</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_individual">Individual</span></button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <!--big grid thing needs to be here...-->
@@ -305,18 +312,18 @@
             <clr-tab>
                 <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        1
+                    <div class="panel-body"><span mltag="txt_1">1</span>
+
                         <select>
-                          <option value="" mltag="txt_selectAnOption">Select An Option</option>
-                          <option value="1" mltag="txt_group1">Group 1</option>
-                          <option value="2" mltag="txt_group2">Group 2</option>
-                        </select>
-                        2
+                            <option value="" mltag="txt_selectanoption">Select An Option</option>
+                            <option value="1" mltag="txt_group1">Group 1</option>
+                            <option value="2" mltag="txt_group2">Group 2</option>
+                        </select><span mltag="txt_2">2</span>
+
                         <select>
-                          <option value="" mltag="txt_selectAnOption">Select An Option</option>
-                          <option value="1" mltag="txt_group1">Group 1</option>
-                          <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="" mltag="txt_selectanoption">Select An Option</option>
+                            <option value="1" mltag="txt_group1">Group 1</option>
+                            <option value="2" mltag="txt_group2">Group 2</option>
                         </select>
                     </div>
                 </clr-tab-content>
@@ -327,9 +334,9 @@
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <select>
-                          <option value="" mltag="txt_selectAnOption">Select An Option</option>
-                          <option value="1" mltag="txt_group1">Group 1</option>
-                          <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="" mltag="txt_selectanoption">Select An Option</option>
+                            <option value="1" mltag="txt_group1">Group 1</option>
+                            <option value="2" mltag="txt_group2">Group 2</option>
                         </select>
                         <!--big grid thing again...-->
                     </div>

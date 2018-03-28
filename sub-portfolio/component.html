@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> Sub-portfolio</h1>
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -10,9 +10,9 @@
             <clr-tab-content *clrIfActive="true">
                 <!-- Address list tab. -->
                 <ng-container>
-                    <ng-container
-                        *ngTemplateOutlet="addressListTab"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="addressListTab">
+
+                    </ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -26,19 +26,19 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_sub_portfolio_name">Sub-portfolio Name</span>
+                                <span class="ml_translated" mltag="txt_subportfolioname">Sub-portfolio Name</span>
                             </label>
                             <div>
-                                <input type="text" #portfolioName placeholder="Sub-portfolio name" class="form-control mlp_translated" mltag="txt_sub_portfolio_name">
+                                <input type="text" #portfolioName placeholder="Sub-portfolio name" class="form-control mlp_translated" mltag="txt_subportfolioname">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_sub_portfolio_iban">Sub-portfolio IBAN</span>
+                                <span class="ml_translated" mltag="txt_subportfolioiban">Sub-portfolio IBAN</span>
                             </label>
                             <div>
-                                <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN" class="form-control mlp_translated" mltag="txt_sub_portfolio_iban">
+                                <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN" class="form-control mlp_translated" mltag="txt_subportfolioiban">
                             </div>
                         </div>
 
@@ -57,8 +57,8 @@
             <clr-datagrid>
                 <clr-dg-column><span mltag="txt_actions">Actions</span></clr-dg-column>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon><span mltag="txt_subportfolio">Sub-portfolio</span> <span class="column-label"></span></clr-dg-column>
-                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon><span mltag="txt_iban" class="clr-sort-label">IBAN</span> <span class="column-label"></span></clr-dg-column>
-                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon><span mltag="txt_blockchainaddressidentifier" class="clr-sort-label">Blockchain address identifier</span> <span class="column-label"></span></clr-dg-column>
+                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon><span class="clr-sort-label" mltag="txt_iban">IBAN</span> <span class="column-label"></span></clr-dg-column>
+                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon><span class="clr-sort-label" mltag="txt_blockchainaddressidentifier">Blockchain address identifier</span> <span class="column-label"></span></clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
                     <clr-dg-cell>
@@ -75,15 +75,18 @@
 
                     <clr-dg-cell>
                         <span *ngIf="!address.editing">
-                        {{address.label}}
+                            {{address.label}}
                         </span>
                         <div *ngIf="address.editing">
 
                             <form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)" style="padding: 0">
                                 <input type="text" [value]="address.label" #subportfolio style="width: inherit">
-                                <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
-                                   type="submit"
-                                   (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"></i>
+                                <i
+                                        class="fa fa-floppy-o icon-btn"
+                                        aria-hidden="true"
+                                        type="submit"
+                                        (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"
+                                ></i>
                             </form>
                         </div>
                     </clr-dg-cell>
@@ -91,15 +94,18 @@
                     <clr-dg-cell>
 
                         <span *ngIf="!address.editing">
-                        {{address.iban}}
+                            {{address.iban}}
                         </span>
                         <div *ngIf="address.editing">
 
                             <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)" style="padding: 0">
                                 <input type="text" [value]="address.iban" #iban style="width: inherit">
-                                <i class="fa fa-floppy-o icon-btn" aria-hidden="true"
-                                   type="submit"
-                                   (click)="handleUpdateLabel(address.label, address.address, iban.value)"></i>
+                                <i
+                                        class="fa fa-floppy-o icon-btn"
+                                        aria-hidden="true"
+                                        type="submit"
+                                        (click)="handleUpdateLabel(address.label, address.address, iban.value)"
+                                ></i>
                             </form>
                         </div>
                     </clr-dg-cell>
