@@ -54,6 +54,9 @@ export class MoneyValuePipe implements PipeTransform {
         if (typeof value !== 'number') {
             value = Number(value);
         }
+        if (value === '' || value === null) {
+            value = 0;
+        }
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
             // console.log('transform', value, fractionSize);
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
