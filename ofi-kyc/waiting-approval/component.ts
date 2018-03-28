@@ -10,6 +10,7 @@ import {mDateHelper, SagaHelper} from '@setl/utils';
 import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
+import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 
 enum Statuses {
     waitingApproval = 1,
@@ -239,9 +240,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
             lang: this.language
         };
-
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
         this.kycService.askMoreInfo(payload).then(() => {
             this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
+            this.setAmKycListRequested(true);
             this._router.navigateByUrl('/kyc-am-documents');
         }).catch((error) => {
             const data = error[1].Data[0];
@@ -262,6 +266,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             lang: this.language
         };
 
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
         this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
             this.toast.pop('success', 'The KYC request has been successfully approved.');
@@ -272,6 +279,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         }).then((walletId) => {
             /* Send action message to investor */
             this.sendActionMessageToInvestor(walletId);
+            this.setAmKycListRequested(true);
 
             /* Redirect to fund access page when the kyc is being approved */
             this._router.navigate(['fund-access', this.kycId]);
@@ -341,8 +349,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             lang: this.language
         };
 
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
+
         this.kycService.reject(payload).then(() => {
             this.toast.pop('success', 'The KYC request has been successfully rejected.');
+            this.setAmKycListRequested(true);
             this._router.navigateByUrl('/kyc-am-documents');
         }).catch((error) => {
             const data = error[1].Data[0];
