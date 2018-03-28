@@ -55,7 +55,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
     panels = {
         0: {
-            open: true,
+            open: false,
             0: {
                 open: true,
             },
