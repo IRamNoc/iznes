@@ -49,6 +49,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 '49': 'cac',
                 '50': 'registrar',
                 '60': 't2s',
+                '65': 'rooster_operator',
             }[userType];
             if (!userTypeStr) {
                 console.warn('Navigation Render: Missing user type!');
