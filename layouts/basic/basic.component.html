@@ -82,7 +82,7 @@
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
-                <main class="content-area" [ngClass]="{'menuHideContent': menuShown === 0}">
+                <main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}">
                     <!--
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
@@ -92,6 +92,8 @@
                             <router-outlet #o="outlet"></router-outlet>
                         </div>
                     </div>
+
+                    <div id="backtotop" class="backToTop"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></div>
 
                 </main>
             </div>
