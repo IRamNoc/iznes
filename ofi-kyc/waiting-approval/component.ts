@@ -241,7 +241,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         };
 
         this.kycService.askMoreInfo(payload).then(() => {
-            this.toast.pop('success', 'An email has been sent to ' + this.userDetail.companyName + ' in order to ask for more information.');
+            this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
             this._router.navigateByUrl('/kyc-am-documents');
         }).catch((error) => {
             const data = error[1].Data[0];
@@ -266,7 +266,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
             this.toast.pop('success', 'The KYC request has been successfully approved.');
 
-            InitialisationService.requestWalletDirectory(this.redux,this.walletsService);
+            InitialisationService.requestWalletDirectory(this.redux, this.walletsService);
 
             return this.updateWallets(result[1].Data[0].investorWalletID);
         }).then((walletId) => {
