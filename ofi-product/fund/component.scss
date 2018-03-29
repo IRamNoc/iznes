@@ -1,12 +1,5 @@
 .fundCreateComponent {
 
-    form.fundForm, form.umbrellaForm, form.umbrellaEditForm {
-        width: 100%;
-        .panel-body .form-group:last-child .dropdown-menu {
-            position: inherit;
-        }
-    }
-
     .field-error {
         color: red;
         height: 0;
