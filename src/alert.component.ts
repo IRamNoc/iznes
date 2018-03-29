@@ -8,8 +8,12 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"></div>
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
 
-            <div class="jaspero__dialog-title">
-                {{type}}!
+            <div *ngIf="incomingData.titleMessage" class="jaspero__dialog-title">
+                {{incomingData.titleMessage}}
+            </div>
+
+            <div *ngIf="!incomingData.titleMessage" class="jaspero__dialog-title">
+                {{type}}!!
             </div>
 
             <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
@@ -105,7 +109,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         .jaspero__dialog {
             min-width: 300px;
             max-width: 500px;
-            max-height: 50%;
+            max-height: 100%;
             display: -ms-flexbox;
             display: flex;
             -ms-flex-flow: column;
@@ -264,6 +268,7 @@ export class AlertComponent implements OnInit {
     @HostBinding('class') type: AlertType;
 
     incomingData: any = {
+        titleMessage: false,
         message: '',
         overlay: true,
         overlayClickToClose: true,

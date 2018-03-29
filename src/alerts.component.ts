@@ -66,6 +66,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
             }
 
             let inputProviders = [
+                    {key: 'titleMessage', value: alert.titleMessage},
                     {key: 'message', value: alert.message},
                     {key: 'type', value: alert.type},
                     ...settingsFinalAsArray
