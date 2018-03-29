@@ -9,8 +9,8 @@ export class AlertsService {
     alert$: Subject<AlertEmit> = new Subject();
     update$: Subject<UpdateEmit> = new Subject();
 
-    create(type: AlertType, message: string, settingsOverrides: AlertSettings = {}) {
-        this.alert$.next({type: type, message: message, override: settingsOverrides});
+    create(type: AlertType, message: string, settingsOverrides: AlertSettings = {}, titleMessage: string | boolean  = false) {
+        this.alert$.next({type: type, message: message, titleMessage, override: settingsOverrides});
     }
 
     updateView(type, message: string) {
