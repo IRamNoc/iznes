@@ -53,12 +53,12 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldLandOnLoginPage() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
     }
 
     @Test
     public void shouldSeeCorrectHeadingsForShares() throws InterruptedException, IOException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         validateSharesDataGridHeadings(sharesHeadings);
@@ -67,7 +67,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldSeeCorrectHeadingsForFunds() throws InterruptedException, IOException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         validateFundsDataGridHeadings(fundsHeadings);
@@ -121,7 +121,7 @@ public class OpenCSDFundsAcceptanceTest {
         int rounded = (int) Math.round(value);
         JavascriptExecutor jse = (JavascriptExecutor)driver;
 
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         System.out.println(rounded);
         navigateToDropdown("menu-product-module");
         navigateToPage("product-fund");
@@ -421,7 +421,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldNotAcceptFundWithQuantityLowerThan0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         try {
@@ -451,7 +451,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldChangeFundShareTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToPage("asset-manager-dashboard");
         WebElement FundTitle = driver.findElement(By.id("fund-share-label"));
         assertTrue(FundTitle.getText().equals("Please select a fund share in this list"));
@@ -459,7 +459,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllQuantitiesUnder5DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -469,7 +469,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllQuantitiesOver5DecimalPlacesTo5DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -479,7 +479,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllAmountsUnder4DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -489,7 +489,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllAmountsOver4DecimalPlacesTo4DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -499,7 +499,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllNAVUnder2DecimalPlacesToNearest0() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -509,7 +509,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldRoundAllNAVOver2DecimalPlacesTo2DecimalPlaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -519,7 +519,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldSeparateThousandsWithSpaces() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
@@ -529,7 +529,7 @@ public class OpenCSDFundsAcceptanceTest {
 
     @Test
     public void shouldSeparateDecimalPlacesWithPoint() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/fund");
         clickID("fakeNewFundBtn");
