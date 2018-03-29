@@ -119,23 +119,38 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initStatuses(): void {
-        this.statuses = [
-            {
-                id: 'reject',
-                label: 'Reject',
-                value: Statuses.rejected
-            },
-            {
-                id: 'askForMoreInfo',
-                label: 'Ask for more info',
-                value: Statuses.askMoreInfo
-            },
-            {
-                id: 'accept',
-                label: 'Accept',
-                value: Statuses.approved
-            }
-        ];
+        if (this.initialStatusId == -2){
+            this.statuses = [
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }else{
+            this.statuses = [
+                {
+                    id: 'reject',
+                    label: 'Reject',
+                    value: Statuses.rejected
+                },
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }
     }
 
     getLanguage(language: string): void {
@@ -172,6 +187,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             };
 
             this.initialStatusId = kyc.status;
+            this.initStatuses();
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
 
@@ -208,11 +224,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
             case Statuses.rejected:
-                if (this.initialStatusId === Statuses.waitingApproval) {
-                    this.isRejectModalDisplayed = true;
-                } else {
-                    this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
-                }
+                this.isRejectModalDisplayed = true;
                 break;
 
             case Statuses.askMoreInfo:
