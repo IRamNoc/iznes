@@ -261,7 +261,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptionsArray.push(this.umbrellaFundForm.controls['domicile'].valueChanges.subscribe((form) => this.processFormChanges(form)));
 
         // language
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((d) => this.getLanguage(d)));
         this.subscriptionsArray.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptionsArray.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
         this.subscriptionsArray.push(this.requestedOfiManagementCompanyListOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
@@ -275,20 +275,16 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    getLanguage(requested): void {
-        if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
+    getLanguage(language): void {
+        if (!language) {
+            return;
         }
+
+        this.language = language.substr(0, 2);
+        this.configDate = {
+            ...this.configDate,
+            locale: this.language,
+        };
     }
 
     getUmbrellaFundRequested(requested): void {
