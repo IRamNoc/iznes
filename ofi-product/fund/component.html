@@ -19,19 +19,28 @@
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="select">
+                                <label class="control-label" for="fund-umbrellaControl-select-1">
                                     <span mltag="txt_isthisfundpartofanumbrellafundc57e8acae4">Is this Fund part of an Umbrella Fund?</span>
                                 </label>
-                                <ng-select id="select" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund name" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafundname3c6014113f">
-
-
-
-
-                                </ng-select>
+                                <ng-select
+                                        id="fund-umbrellaControl-select-1"
+                                        [items]="umbrellaItems"
+                                        [allowClear]="false"
+                                        placeholder="Select or type an Umbrella Fund name"
+                                        [formControl]="umbrellaControl"
+                                        mltag="txt_selectortypeanumbrellafundname3c6014113f"
+                                ></ng-select>
                             </div>
                             <div class="form-group col-sm-6 btn-container">
                                 <p mltag="txt_or">or</p>
-                                <a class="btn btn-default" routerLink="/product-module/umbrella-fund/0" mltag="txt_addanewumbrellafund">Add a new Umbrella Fund</a>
+                                <a
+                                        id="fund-add-new-umbrella-btn"
+                                        class="btn btn-default"
+                                        routerLink="/product-module/umbrella-fund/0"
+                                        mltag="txt_addanewumbrellafund"
+                                >
+                                    Add a new Umbrella Fund
+                                </a>
                             </div>
                         </div>
 
@@ -62,8 +71,8 @@
 
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
-                                <button type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
-                                <button id="submitUmbrella" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid" mltag="txt_next">Next</button>
+                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
+                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid" mltag="txt_next">Next</button>
                             </div>
                         </div>
 
@@ -115,16 +124,17 @@
                                     <section class="form-block">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="select">
+                                                <label class="control-label" for="fund-umbrellaControl-select-2">
                                                     <span mltag="txt_clickheretoselectanotherumbrel79cad3aa48">Click here to select another Umbrella Fund for this Fund</span>
                                                 </label>
-                                                <ng-select id="umbrellaFund" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafund">
-
-
-
-
-
-                                                </ng-select>
+                                                <ng-select
+                                                        id="fund-umbrellaControl-select-2"
+                                                        [items]="umbrellaItems"
+                                                        [allowClear]="false"
+                                                        placeholder="Select or type an Umbrella Fund"
+                                                        [formControl]="umbrellaControl"
+                                                        mltag="txt_selectortypeanumbrellafund"
+                                                ></ng-select>
                                             </div>
                                         </div>
                                     </section>
@@ -980,8 +990,8 @@
                 <br>
 
                 <div class="form-group col-sm-6">
-                    <button id="cancelfund" type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
-                    <button id="submitfund" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
+                    <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
+                    <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
                         <span>
                             <i class="fa fa-save"></i>
                             <span>{{param === 'new' ? 'Save' : 'Update'}}</span>
