@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-users"><i class="fa fa-users"></i> Manage User</h1>
+    <h1 id="manage-users"><i class="fa fa-users"></i> <span mltag="txt_manageuser">Manage User</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -12,23 +12,23 @@
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
-                    <ng-container
-                            *ngTemplateOutlet="staticUserListTab"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticUserListTab">
+
+                    </ng-container>
                 </ng-container>
 
                 <!-- User add tab. -->
                 <ng-container *ngIf="id === 1">
-                    <ng-container
-                            *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                    </ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
-                    <ng-container
-                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                    </ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -59,12 +59,12 @@
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="disabled">Disabled</span>
+                        <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="txt_disabled">Disabled</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -113,8 +113,9 @@
                                     [allowClear]="true"
                                     placeholder="Select Type"
                                     [formControl]="formControl.controls['accountType']"
-                                    (selected)="setFormAccountId( tabid, $event )">
-                            </ng-select>
+                                    (selected)="setFormAccountId( tabid, $event )"
+                                    mltag="txt_selecttype"
+                            ></ng-select>
                         </div>
                     </div>
 
@@ -127,10 +128,10 @@
                                     id="new-user-usertype-select"
                                     [items]="userTypes"
                                     [allowClear]="true"
-                                    mltag="txt_selecttype"
                                     placeholder="Select Type"
-                                    [formControl]="formControl.controls['userType']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['userType']"
+                                    mltag="txt_selecttype"
+                            ></ng-select>
                         </div>
                     </div>
 
@@ -141,7 +142,7 @@
                             </label>
                             <div>
                                 <input id="new-user-password" type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
-                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passworddoesnotmatch">Password does not match</div>
                             </div>
                         </div>
 
@@ -151,7 +152,7 @@
                             </label>
                             <div>
                                 <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passwordsdonotmatch">Password does not match</div>
+                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passworddoesnotmatch">Password does not match</div>
                             </div>
                         </div>
                     </div>
@@ -159,7 +160,7 @@
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
+                                <span class="ml" mltag="txt_accs">Accès</span>
                             </label>
                             <div>
                                 <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
@@ -190,7 +191,7 @@
                                 <span class="ml_translated" mltag="txt_username">Username</span>
                             </label>
                             <div>
-                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username" readonly="readonly">
+                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" readonly="readonly" mltag="txt_username">
                             </div>
                         </div>
 
@@ -215,8 +216,9 @@
                                     [allowClear]="true"
                                     placeholder="Select Type"
                                     [formControl]="formControl.controls['accountType']"
-                                    (selected)="setFormAccountId( tabid, $event )">
-                            </ng-select>
+                                    (selected)="setFormAccountId( tabid, $event )"
+                                    mltag="txt_selecttype"
+                            ></ng-select>
                         </div>
                     </div>
 
@@ -230,15 +232,16 @@
                                     [items]="userTypes"
                                     [allowClear]="true"
                                     placeholder="Select Type"
-                                    [formControl]="formControl.controls['userType']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['userType']"
+                                    mltag="txt_selecttype"
+                            ></ng-select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span class="ml" mltag="txt_access">Accès</span>
+                                <span class="ml" mltag="txt_accs">Accès</span>
                             </label>
                             <div>
                                 <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
@@ -251,7 +254,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
                                 Close
                             </button>
                         </div>
@@ -265,52 +268,52 @@
     <ng-template #accessAdminTabs let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> Administrative</a>
+                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span></a>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        Administrative Groups
+                    <div class="panel-body"><span mltag="txt_administrativegroups">Administrative Groups</span>
+
                         <ng-select
                                 [items]="filteredAdminGroupsList"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['adminGroups']">
-                        </ng-select>
+                                [formControl]="formControl.controls['adminGroups']"
+                                mltag="txt_selecttype"
+                        ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-user"></i> Transactional</a>
+                <a clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span></a>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        Group in Chain
+                    <div class="panel-body"><span mltag="txt_groupinchain">Group in Chain</span>
+
                         <ng-select
                                 [items]="filteredChainList"
                                 [allowClear]="true"
-                                mltag="txt_selectachains"
                                 placeholder="Select Chain"
-                                (selected)="setFormChainId(tabid, $event)">
-                        </ng-select>
+                                (selected)="setFormChainId(tabid, $event)"
+                                mltag="txt_selectchain"
+                        ></ng-select>
+                        <span mltag="txt_transactionalgroups">Transactional Groups</span>
 
-                        Transactional Groups
                         <ng-select
                                 [items]="tabsControl[tabid].filteredTxList"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                mltag="txt_selecttype"
                                 placeholder="Select Type"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['txGroups']">
-                        </ng-select>
+                                [formControl]="formControl.controls['txGroups']"
+                                mltag="txt_selecttype"
+                        ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-briefcase"></i> Wallets</a>
+                <a clrTabLink><i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="m-b-10">
@@ -320,11 +323,11 @@
                                     (selected)="addedWalletSelection(1, tabid, $event)"
                                     [multiple]="true"
                                     [allowClear]="true"
-                                    mltag="txt_choosewallets"
                                     placeholder="Choose Wallets"
                                     [containerWidth]="'100%'"
-                                    [formControl]="formControl.controls['walletsFull']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['walletsFull']"
+                                    mltag="txt_choosewallets"
+                            ></ng-select>
                         </div>
 
                         <div class="m-b-10">
@@ -334,39 +337,39 @@
                                     (selected)="addedWalletSelection(0, tabid, $event)"
                                     [multiple]="true"
                                     [allowClear]="true"
-                                    mltag="txt_choosewallets"
                                     placeholder="Choose Wallets"
                                     [containerWidth]="'100%'"
-                                    [formControl]="formControl.controls['walletsRead']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['walletsRead']"
+                                    mltag="txt_choosewallets"
+                            ></ng-select>
                         </div>
 
                         <div class="m-b-10">
-                            <span mltag="txt_group_wallet_permission_full">Group Wallet Permission (Full Access)</span>
+                            <span mltag="txt_groupwalletpermissionfullaccesb031c8a683">Group Wallet Permission (Full Access)</span>
                             <ng-select
                                     [items]="accountTypes"
                                     (selected)="addedGroupWalletSelection(1, tabid, $event)"
                                     [multiple]="true"
                                     [allowClear]="true"
-                                    mltag="txt_choose_accounts"
                                     placeholder="Choose Accounts"
                                     [containerWidth]="'100%'"
-                                    [formControl]="formControl.controls['groupWalletsFull']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['groupWalletsFull']"
+                                    mltag="txt_chooseaccounts"
+                            ></ng-select>
                         </div>
 
                         <div>
-                            <span mltag="txt_group_wallet_permission_read">Group Wallet Permission (Read only)</span>
+                            <span mltag="txt_groupwalletpermissionreadonly">Group Wallet Permission (Read only)</span>
                             <ng-select
                                     [items]="accountTypes"
                                     (selected)="addedGroupWalletSelection(0, tabid, $event)"
                                     [multiple]="true"
                                     [allowClear]="true"
-                                    mltag="txt_choose_accounts"
                                     placeholder="Choose Accounts"
                                     [containerWidth]="'100%'"
-                                    [formControl]="formControl.controls['groupWalletsRead']">
-                            </ng-select>
+                                    [formControl]="formControl.controls['groupWalletsRead']"
+                                    mltag="txt_chooseaccounts"
+                            ></ng-select>
                         </div>
                     </div>
                 </clr-tab-content>
@@ -381,11 +384,11 @@
                                 [items]="filteredChainList"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                mltag="txt_choosechain"
                                 placeholder="Choose Chains..."
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['chainAccess']">
-                        </ng-select>
+                                [formControl]="formControl.controls['chainAccess']"
+                                mltag="txt_choosechains"
+                        ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
