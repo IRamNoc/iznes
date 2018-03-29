@@ -695,7 +695,8 @@ clr-tab-content {
         border-radius: 0px;
         padding: 0px;
         margin: 0px;
-        overflow: auto;
+        //overflow: auto;
+        overflow: visible;
     }
 
     .well .row.panel-header {
