@@ -70,7 +70,7 @@ public class OpenCSDMyAccountAcceptanceTest {
 
     @Test
     public void shouldSeeCorrectFieldsOnMyInformationPage() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
@@ -93,7 +93,7 @@ public class OpenCSDMyAccountAcceptanceTest {
 
     @Test
     public void shouldSaveDataOnMyInformationPage() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
@@ -103,7 +103,7 @@ public class OpenCSDMyAccountAcceptanceTest {
 
     @Test
     public void shouldNotSaveDataOnMyInformationPageWhenCancelled() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
@@ -116,7 +116,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops088@setl.io", "alex01");
+        createUserAndVerifySuccess(userDetails[0], "testops088@setl.io", "asdasd");
         Thread.sleep(500);
         logout();
         clickForgottenPassword("testops088@setl.io");

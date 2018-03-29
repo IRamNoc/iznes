@@ -65,7 +65,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check title is not displayed inside text field
@@ -73,7 +73,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check asterisks are displayed next to title
@@ -81,14 +81,14 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         driver.navigate().refresh();
         checkAlert();
     }
 
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
     }
 
@@ -109,7 +109,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToPage("messages");
         assertButtonIsNotPresent("messagesworkflow");
     }
@@ -137,19 +137,19 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
     @Test
     public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
     @Test
     public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
     }
 
@@ -164,7 +164,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops085@setl.io", "alex01");
+        createUserAndVerifySuccess(userDetails[0], "testops063@setl.io", "asdasd");
         Thread.sleep(500);
         logout();
         Thread.sleep(750);
@@ -173,8 +173,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static String[] generateUserDetails() {
-        String userName = "Test_User_85";
-        String emailAddress = "testops085@setl.io";
+        String userName = "Test_User_063";
+        String emailAddress = "testops063@setl.io";
         return new String[] {userName, emailAddress};
     }
 
@@ -317,7 +317,9 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void createUserAndVerifySuccess(String username, String email, String password) {
         driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).clear();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
+        driver.findElement(By.id("new-user-email")).clear();
         driver.findElement(By.id("new-user-email")).sendKeys(email);
         selectManageUserAccountDropdown();
         selectManageUserUserDropdown();
