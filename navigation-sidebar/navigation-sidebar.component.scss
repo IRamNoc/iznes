@@ -20,3 +20,26 @@ label[menu-dropdown] + ul.nav-list.active {
     transform: translateX(-8px) translateY(7px);
     transition-duration: 0.3s;
 }
+
+.fakeLink{
+    color: #9ea0af;
+    font-weight: 600;
+    margin: 0;
+    padding: 12px 20px;
+    font-size: 13px;
+    display: inline-block;
+    width: 100%;
+}
+
+.fakeLinkChild{
+    color: #9ea0af;
+    font-weight: 600;
+    margin: 0;
+    padding: 12px 20px;
+    font-size: 13px;
+    display: inline-block;
+    width: 100%;
+    padding-left: 30px;
+    line-height: .666667rem;
+}
+

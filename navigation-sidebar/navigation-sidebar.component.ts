@@ -16,10 +16,12 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     menuJson: any;
     menuParent = [];
     menuParentOpen: string;
+    disableMenu: boolean;
 
     private subscription: any;
 
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
+    @select(['user', 'authentication', 'defaultHomePage']) defaultHomePage;
 
     constructor(private router: Router,
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
@@ -73,6 +75,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         this.inboxUnread.subscribe(
             (unreadMessages) => {
                 this.unreadMessages = unreadMessages;
+            }
+        );
+        this.defaultHomePage.subscribe(
+            (homePage) => {
+                this.disableMenu = (homePage != null && homePage != '/home');
             }
         );
     }
