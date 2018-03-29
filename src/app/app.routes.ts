@@ -481,7 +481,7 @@ export const ROUTES: Routes = [
                     {
                         path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
-                        component: MyOrdersComponent,
+                        component: ManageOrdersComponent,
                     }
                 ]
             },
