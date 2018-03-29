@@ -2,6 +2,56 @@ import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@set
 import * as E from '../FundShareEnum';
 
 export class ShareCalendarMandatory extends DynamicFormsValidator {
+    subscriptionTradeCyclePeriod: FormItem = {
+        type: FormItemType.number,
+        label: 'Subscription Trade Cycle Period',
+        required: true
+    }
+    numberOfPossibleSubscriptionsWithinPeriod: FormItem = {
+        type: FormItemType.number,
+        label: 'Number Of Possible Subscriptions Within Period',
+        required: true
+    }
+    weeklySubscriptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Weekly Subscription Dealing Days',
+        required: true
+    }
+    monthlySubscriptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Monthly Subscription Dealing Days',
+        required: true
+    }
+    yearlySubscriptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Yearly Subscription Dealing Days',
+        required: true
+    }
+    redemptionTradeCyclePeriod: FormItem = {
+        type: FormItemType.number,
+        label: 'Redemption Trade Cycle Period',
+        required: true
+    }
+    numberOfPossibleRedemptionsWithinPeriod: FormItem = {
+        type: FormItemType.number,
+        label: 'Number Of Possible Redemptions Within Period',
+        required: true
+    }
+    weeklyRedemptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Weekly Redemption Dealing Days',
+        required: true
+    }
+    monthlyRedemptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Monthly Redemption Dealing Days',
+        required: true
+    }
+    yearlyRedemptionDealingDays: FormItem = {
+        type: FormItemType.number,
+        label: 'Yearly Redemption Dealing Days',
+        required: true
+    }
     subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
