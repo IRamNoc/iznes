@@ -13,7 +13,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             </div>
 
             <div *ngIf="!incomingData.titleMessage" class="jaspero__dialog-title">
-                {{type}}!!
+                {{type}}!
             </div>
 
             <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
