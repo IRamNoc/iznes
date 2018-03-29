@@ -51,6 +51,9 @@ export class MoneyValuePipe implements PipeTransform {
     // }
 
     transform(value: any, fractionSize: number = 2): any {
+        if (typeof value !== 'number') {
+            value = Number(value);
+        }
         if (value === '' || value === null) {
             value = 0;
         }
