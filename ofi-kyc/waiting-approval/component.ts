@@ -10,6 +10,7 @@ import {mDateHelper, SagaHelper} from '@setl/utils';
 import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
+import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 
 enum Statuses {
     waitingApproval = 1,
@@ -118,23 +119,38 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initStatuses(): void {
-        this.statuses = [
-            {
-                id: 'reject',
-                label: 'Reject',
-                value: Statuses.rejected
-            },
-            {
-                id: 'askForMoreInfo',
-                label: 'Ask for more info',
-                value: Statuses.askMoreInfo
-            },
-            {
-                id: 'accept',
-                label: 'Accept',
-                value: Statuses.approved
-            }
-        ];
+        if (this.initialStatusId == -2){
+            this.statuses = [
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }else{
+            this.statuses = [
+                {
+                    id: 'reject',
+                    label: 'Reject',
+                    value: Statuses.rejected
+                },
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }
     }
 
     getLanguage(language: string): void {
@@ -171,6 +187,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             };
 
             this.initialStatusId = kyc.status;
+            this.initStatuses();
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
 
@@ -207,11 +224,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
             case Statuses.rejected:
-                if (this.initialStatusId === Statuses.waitingApproval) {
-                    this.isRejectModalDisplayed = true;
-                } else {
-                    this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
-                }
+                this.isRejectModalDisplayed = true;
                 break;
 
             case Statuses.askMoreInfo:
@@ -239,9 +252,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
             lang: this.language
         };
-
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
         this.kycService.askMoreInfo(payload).then(() => {
-            this.toast.pop('success', 'An email has been sent to ' + this.userDetail.companyName + ' in order to ask for more information.');
+            this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
+            this.setAmKycListRequested(true);
             this._router.navigateByUrl('/kyc-am-documents');
         }).catch((error) => {
             const data = error[1].Data[0];
@@ -262,16 +278,20 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             lang: this.language
         };
 
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
         this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
             this.toast.pop('success', 'The KYC request has been successfully approved.');
 
-            InitialisationService.requestWalletDirectory(this.redux,this.walletsService);
+            InitialisationService.requestWalletDirectory(this.redux, this.walletsService);
 
             return this.updateWallets(result[1].Data[0].investorWalletID);
         }).then((walletId) => {
             /* Send action message to investor */
             this.sendActionMessageToInvestor(walletId);
+            this.setAmKycListRequested(true);
 
             /* Redirect to fund access page when the kyc is being approved */
             this._router.navigate(['fund-access', this.kycId]);
@@ -341,8 +361,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             lang: this.language
         };
 
+        this.redux.dispatch({
+            type: CLEAR_REQUESTED
+        });
+
         this.kycService.reject(payload).then(() => {
             this.toast.pop('success', 'The KYC request has been successfully rejected.');
+            this.setAmKycListRequested(true);
             this._router.navigateByUrl('/kyc-am-documents');
         }).catch((error) => {
             const data = error[1].Data[0];

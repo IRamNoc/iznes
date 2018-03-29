@@ -75,7 +75,7 @@
                              *ngIf="waitingApprovalFormGroup.controls['status'].value !== APPROVED_STATUS">
 
                             <!-- Reject -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS"
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2"
                                       id="rejectText"
                                       class="form-control"
                                       placeholder="Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform."
