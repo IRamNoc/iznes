@@ -2,19 +2,6 @@ import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@set
 import * as E from '../FundShareEnum';
 
 export class ShareCalendarMandatory extends DynamicFormsValidator {
-    tradeDay: FormItem = {
-        type: FormItemType.list,
-        label: 'Trade Date',
-        required: true,
-        listItems: [
-            { id: E.BusinessDaysEnum.One, text: '1' },
-            { id: E.BusinessDaysEnum.Two, text: '2' },
-            { id: E.BusinessDaysEnum.Three, text: '3' },
-            { id: E.BusinessDaysEnum.Four, text: '4' },
-            { id: E.BusinessDaysEnum.Five, text: '5' }
-        ],
-        style: [FormItemStyle.BreakOnAfter]
-    }
     subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
