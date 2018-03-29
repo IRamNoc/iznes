@@ -4,11 +4,10 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, DpDatePickerModule, SetlDirectivesModule} from '@setl/utils';
 import {RouterModule} from '@angular/router';
 
-/* Pipes. */
-import {SetlPipesModule} from '@setl/utils';
+/* Utils */
+import {SelectModule, DpDatePickerModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
 
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
@@ -43,6 +42,8 @@ import {MultilingualModule} from '@setl/multilingual';
         FormsModule,
         ClarityModule,
         SelectModule,
+        DpDatePickerModule,
+        SetlDirectivesModule,
         SetlPipesModule,
         MultilingualModule,
         RouterModule,

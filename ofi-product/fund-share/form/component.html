@@ -1,0 +1,340 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-umbrella"></i>
+        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+        <span mltag="txt_" [hidden]="!isUpdate()">View Fund Share</span>
+    </h1>
+</div>
+
+<clr-tabs *ngIf="model.fundID || isCreate()">
+    <clr-tab>
+        <button clrTabLink id="tabFundShareButton">
+            <span>Fund Share</span>
+        </button>
+        <clr-tab-content class="outer">
+            <div class="form-group row actions">
+                <div class="col-sm-6">
+                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
+                        (click)="saveFundShare()" [disabled]="!model.isValid()">
+                        <i class="fa fa-save"></i>
+                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
+                    </button>
+                </div>
+            </div>
+
+            <clr-tabs>
+                <clr-tab>
+                    <button clrTabLink id="tabKeyFactsButton">
+                        <span>
+                            Key Facts
+                            <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
+                        </span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['keyFacts'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].mandatory)"></i>
+                                        <h2 id="toggleKeyFactsMandatory" mltag="txt_">Key Facts: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['keyFacts'].mandatory)">
+                                <app-dynamic-form [model]="model.keyFacts.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['keyFacts'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].optional)"></i>
+                                        <h2 id="toggleKeyFactsOptional" mltag="txt_">Key Facts: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['keyFacts'].optional)">
+                                <app-dynamic-form [model]="model.keyFacts.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCharacteristicsButton">
+                        <span>
+                            Characteristics
+                            <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
+                        </span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['characteristic'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].mandatory)"></i>
+                                        <h2 id="toggleCharacteristicMandatory" mltag="txt_">Characteristics: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['characteristic'].mandatory)">
+                                <app-dynamic-form [model]="model.characteristic.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['characteristic'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].optional)"></i>
+                                        <h2 id="toggleCharacteristicOptional" mltag="txt_">Characteristics: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['characteristic'].optional)">
+                                <app-dynamic-form [model]="model.characteristic.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCalendarButton">
+                        <span>
+                            Calendar
+                            <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span>
+                        </span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
+                                        <h2 id="toggleCalendarMandatory" mltag="txt_">Calendar: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
+                                <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['calendar'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].optional)"></i>
+                                        <h2 id="toggleCalendarOptional" mltag="txt_">Calendar: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].optional)">
+                                <app-dynamic-form [model]="model.calendar.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>
+                            Fees
+                            <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
+                        </span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['fees'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].mandatory)"></i>
+                                        <h2 id="toggleFeesMandatory" mltag="txt_">Fees: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fees'].mandatory)">
+                                <app-dynamic-form [model]="model.fees.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['fees'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].optional)"></i>
+                                        <h2 id="toggleFeesOptional" mltag="txt_">Fees: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fees'].optional)">
+                                <app-dynamic-form [model]="model.fees.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>
+                            Profile
+                            <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
+                        </span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['profile'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].mandatory)"></i>
+                                        <h2 id="toggleProfileMandatory" mltag="txt_">Profile: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['profile'].mandatory)">
+                                <app-dynamic-form [model]="model.profile.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['profile'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].optional)"></i>
+                                        <h2 id="toggleProfileOptional" mltag="txt_">Profile: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['profile'].optional)">
+                                <app-dynamic-form [model]="model.profile.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Taxation</span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['taxation'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['taxation'].optional)"></i>
+                                        <h2 id="toggleTaxationOptional" mltag="txt_">Taxation: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['taxation'].optional)">
+                                <app-dynamic-form [model]="model.taxation.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Representation</span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['representation'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['representation'].optional)"></i>
+                                        <h2 id="toggleRepresentationOptional" mltag="txt_">Representation: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['representation'].optional)">
+                                <app-dynamic-form [model]="model.representation.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Listing</span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['listing'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['listing'].optional)"></i>
+                                        <h2 id="toggleListingOptional" mltag="txt_">Listing: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['listing'].optional)">
+                                <app-dynamic-form [model]="model.listing.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>PRIIP</span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['priip'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['priip'].optional)"></i>
+                                        <h2 id="togglePriipOptional" mltag="txt_">PRRIP: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['priip'].optional)">
+                                <app-dynamic-form [model]="model.priip.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Solvency II</span>
+                    </button>
+                    <clr-tab-content>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['solvency'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['solvency'].optional)"></i>
+                                        <h2 id="toggleSolvencyOptional" mltag="txt_">Solvency II: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['solvency'].optional)">
+                                <app-dynamic-form [model]="model.solvency.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">
+                        <span>Documents</span>
+                    </button>
+                    <clr-tab-content>
+                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                    </clr-tab-content>
+                </clr-tab>
+            </clr-tabs>
+
+            <div class="form-group row actions bottom">
+                <div class="col-sm-6">
+                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
+                        (click)="saveFundShare()" [disabled]="!model.isValid()">
+                        <i class="fa fa-save"></i>
+                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
+                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
+                    </button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

@@ -4,6 +4,7 @@
         [header]="'Welcome to ' + appConfig.platform"
         [subTitle]="'Please provide a bit information:'"
         [viewMode]="'PAGE'"
+        [type]="userType"
         [userInfo]="userInfo"
         (onSubmit)="openMyInformationsModal($event)"
     ></app-my-informations>

@@ -509,10 +509,17 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (params.id === 'new') {
                     return;
                 } else if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
-                    this.umbrellaControl.setValue([{
-                        id: this.fundList[params.id].umbrellaFundID,
-                        text: this.fundList[params.id].umbrellaFundName,
-                    }]);
+                    if (this.fundList[params.id].umbrellaFundID) {
+                        this.umbrellaControl.setValue([{
+                            id: this.fundList[params.id].umbrellaFundID,
+                            text: this.fundList[params.id].umbrellaFundName,
+                        }]);
+                    } else {
+                        this.umbrellaControl.setValue([
+                            this.umbrellaItems[0],
+                        ]);
+                    }
+
                     const fund = _.omit(this.fundList[params.id], ['fundID', 'umbrellaFundID', 'umbrellaFundName', 'companyName']);
 
                     this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];

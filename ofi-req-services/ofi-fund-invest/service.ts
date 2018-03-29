@@ -118,9 +118,4 @@ export class OfiFundInvestService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
-
-
-
-
 }

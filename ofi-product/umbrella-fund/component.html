@@ -1,10 +1,10 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-umbrella"></i>
-        <span *ngIf="!editForm; else editTitle"> Add a New Umbrella Fund</span>
+        <span *ngIf="!editForm; else editTitle" id="add-fund-title"> Add a New Umbrella Fund</span>
 
         <ng-template #editTitle>
-            <span *ngIf="umbrellaFund">Umbrella fund: {{umbrellaFund[0].umbrellaFundName}}</span>
+            <span *ngIf="umbrellaFund" id="edit-fund-title">Umbrella fund: {{umbrellaFund[0].umbrellaFundName}}</span>
         </ng-template>
     </h1>
 </div>
@@ -19,7 +19,9 @@
             <span *ngIf="editForm && umbrellaFund">
                 Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
             </span>
-
+            <span id="new-fund-text-span" *ngIf="!editForm">
+                Please fill up the following information to create a new Umbrella Fund
+            </span>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">

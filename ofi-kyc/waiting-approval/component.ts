@@ -6,9 +6,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {MessageKycConfig, MessagesService} from '@setl/core-messages';
-import {mDateHelper} from '@setl/utils';
+import {mDateHelper, SagaHelper} from '@setl/utils';
 import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
+import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
 
 enum Statuses {
     waitingApproval = 1,
@@ -69,6 +70,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private toast: ToasterService,
                 private _router: Router,
+                private walletsService: MyWalletsService,
                 private messagesService: MessagesService) {
 
         this.isRejectModalDisplayed = false;
@@ -264,8 +266,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
             this.toast.pop('success', 'The KYC request has been successfully approved.');
 
+            InitialisationService.requestWalletDirectory(this.redux,this.walletsService);
+
+            return this.updateWallets(result[1].Data[0].investorWalletID);
+        }).then((walletId) => {
             /* Send action message to investor */
-            this.sendActionMessageToInvestor(result[1].Data[0].investorWalletID);
+            this.sendActionMessageToInvestor(walletId);
 
             /* Redirect to fund access page when the kyc is being approved */
             this._router.navigate(['fund-access', this.kycId]);
@@ -276,6 +282,19 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
             }
         });
+    }
+
+    updateWallets(walletId){
+        return new Promise((resolve, reject)=>{
+            const asyncTaskPipes = this.walletsService.requestWalletDirectory();
+            this.redux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipes,
+                {},
+                ()=>{resolve(walletId);}
+            ));
+        })
     }
 
     sendActionMessageToInvestor(investorWalletId: number) {

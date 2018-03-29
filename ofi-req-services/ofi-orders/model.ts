@@ -15,6 +15,35 @@ export interface OfiRequestArrangements extends OfiMemberNodeBody {
     arrangementType: string;
 }
 
+export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
+    token: string;
+    shareName?: any;
+    status?: any;
+    orderType?: any;
+    isin?: any;
+    orderID?: any;
+    currency?: any;
+    quantity?: any;
+    amountWithCost?: any;
+    dateSearchField?: any;
+    fromDate?: any;
+    toDate?: any;
+    pageSize?: any;
+    rowOffSet?: any;
+    sortByField?: any;
+    sortOrder?: any;
+}
+
+export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
+    token: string;
+    data: any;
+}
+
+export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
+    token: string;
+    orderID: any;
+}
+
 export interface OfiUpdateArrangement extends OfiMemberNodeBody {
     arrangementId: string | number;
     walletId: string | number;
@@ -30,4 +59,17 @@ export interface OfiGetContractByOrder extends OfiMemberNodeBody {
 
 export interface OfiGetArrangementCollectiveArchive extends MemberNodeMessageBody {
     token: string;
+}
+
+export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
+    token: string;
+    shareisin: string;
+    portfolioid: number;
+    subportfolio: string;
+    datebby: string;
+    datevalue: string;
+    ordertype: string;
+    orderby: string;
+    ordervalue: number;
+    comment: string;
 }

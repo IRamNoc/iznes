@@ -106,9 +106,11 @@
                                                 {{row['isin']}}
                                             </clr-dg-cell>
                                             <clr-dg-cell>
-                                                <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
-                                                    <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
-                                                </span>
+                                                <ng-container *ngIf="access[row['id']]">
+                                                    <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
+                                                        <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
+                                                    </span>
+                                                </ng-container>
                                             </clr-dg-cell>
                                         </clr-dg-row>
                                     </clr-datagrid>

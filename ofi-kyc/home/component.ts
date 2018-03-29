@@ -27,6 +27,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
+    userType: string;
 
     /* Public properties. */
     public showModal = false;
@@ -47,7 +48,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         phoneCode: '',
         phoneNumber: '',
         amManagementCompanyID: 0,
-        invitationToken: '',
+        invitationToken: ''
     };
 
     /* Private properties. */
@@ -68,6 +69,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
+        this.userType = '46';
     }
 
     ngAfterViewInit() {
@@ -94,7 +96,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             lastName: userInformations.lastName,
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
-            companyName: userInformations.companyName,
+            companyName: userInformations.companyName
         };
 
         const listImu = fromJS([

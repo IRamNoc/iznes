@@ -131,7 +131,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         for (const email of emails) {
             message += '<tr><td>' + email + '</td></tr>';
         }
-
         message += '</tbody></table>';
 
         this.alertsService.create('success', message);

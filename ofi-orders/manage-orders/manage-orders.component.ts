@@ -1,29 +1,34 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
-import {NgRedux, select} from "@angular-redux/store";
-import {Unsubscribe} from "redux";
-import {FormControl, FormGroup} from "@angular/forms";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+
+import {NgRedux, select} from '@angular-redux/store';
+import {Unsubscribe} from 'redux';
+import {fromJS} from 'immutable';
+
 /* Services. */
-import {WalletNodeRequestService} from "@setl/core-req-services";
-import {
-    BlockchainContractService,
-    ConfirmationService,
-    immutableHelper,
-    NumberConverterService,
-    commonHelper
-} from "@setl/utils";
+import {WalletNodeRequestService} from '@setl/core-req-services';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+
+/* Ofi Orders request service. */
+import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+
 /* Ofi Corp Actions request service. */
-import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
-/* Ofi Corp Actions request service. */
-import {OfiCorpActionService} from "../../ofi-req-services/ofi-corp-actions/service";
+import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+
+/* Ofi Management Company request service. */
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+
 /* Alerts and confirms. */
-import {AlertsService} from "@setl/jaspero-ng2-alerts";
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+
 /* Ofi Store stuff. */
-import {getOfiManageOrderList, getOfiUserIssuedAssets, ofiSetRequestedManageOrder} from "../../ofi-store";
+import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import * as _ from 'lodash';
-import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
+
+/* Clarity */
+import {ClrDatagridStateInterface} from '@clr/angular';
 
 /* Types. */
 interface SelectedItem {
@@ -38,27 +43,97 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
+
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    unknownValue = '???';
+
+    searchForm: FormGroup;
+
+    /* Datagrid server driven */
+    total: number;
+    itemPerPage = 10;
+    dataGridParams = {
+        shareName: null,
+        status: null,
+        orderType: null,
+        pageSize: this.itemPerPage,
+        rowOffSet: 0,
+        sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
+        sortOrder: 'desc', // asc / desc
+        dateSearchField: null,
+        fromDate: null,
+        toDate: null,
+    };
+    lastPage: number;
+    loading = true;
+
+    // Locale
+    language = 'fr';
+
+    // Datepicker config
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language
+    };
+
     /* Tabs Control array */
-    public tabsControl: Array<any> = [];
+    tabsControl: Array<any> = [];
+    orderID = 0;
+
+    /* expandable div */
+    isOptionalFilters = false;
+    clientInformation = true;
+    clientDetailsInformation = true;
+    generalInvestmentInformation = true;
+    mifid = true;
+    productInformation = true;
+    datesInformation = true;
+    orderInformation = true;
 
     /* Ui Lists. */
-    public orderStatuses: Array<SelectedItem> = [
+    orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id: 4, text: 'Precentralised'},
-        {id: 5, text: 'Centralised'},
         {id: 1, text: 'Initiated'},
-        {id: 2, text: 'Waiting for NAV'},
-        {id: 3, text: 'Waiting for Settlement'},
-        {id: -1, text: 'Order settled'},
-        {id: "0", text: 'Cancelled'},
+        {id: 2, text: 'Waiting NAV'},
+        {id: 3, text: 'Waiting Settlement'},
+        {id: -1, text: 'Settled'},
+        // {id: 4, text: 'Precentralised'},
+        // {id: 5, text: 'Centralised'},
+        {id: 6, text: 'Unpaid'},
+        {id: 0, text: 'Cancelled'},
     ];
-    public orderTypes: Array<SelectedItem> = [
-        {id: "0", text: 'All'},
+    orderTypes: Array<SelectedItem> = [
+        {id: 0, text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
+    ];
+    dateTypes: Array<SelectedItem> = [
+        {id: 'orderDate', text: 'OrderDate'},
+        {id: 'cutOffDate', text: 'CutOffDate'},
+        {id: 'navDate', text: 'NAVDate'},
+        {id: 'settlementDate', text: 'SettlementDate'},
+    ];
+
+    currencyList = [
+        {id : 0, code: 'EUR', label: 'Euro'},
+        {id : 1, code: 'USD', label: 'US Dollar'},
+        {id : 2, code: 'GBP', label: 'Pound Sterling'},
+        {id : 3, code: 'CHF', label: 'Swiss Franc'},
+        {id : 4, code: 'JPY', label: 'Yen'},
+        {id : 5, code: 'AUD', label: 'Australian Dollar'},
+        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
+        {id : 7, code: 'SEK', label: 'Swedish Krona'},
+        {id : 8, code: 'ZAR', label: 'Rand'},
+        {id : 9, code: 'RUB', label: 'Russian Ruble'},
+        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
+        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
+        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
+        {id : 13, code: 'PLN', label: 'Zloty'},
     ];
 
     /* Public Properties */
@@ -70,103 +145,129 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ordersList: Array<any> = [];
     private myDetails: any = {};
     private myWallets: any = [];
-    userAssetList: Array<any> = [];
+    private walletDirectory: any = [];
     private connectedWalletId: any = 0;
+    private managementCompanyList: any = [];
+
+    userAssetList: Array<any> = [];
     private requestedSearch: any;
     private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.
 
     /* Observables. */
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) ordersListOb: any;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOb: any;
-    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
-    @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListObj;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyObj;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListObj;
+    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
+    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
+    // @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
 
     constructor(private ofiOrdersService: OfiOrdersService,
-                private ofiCorpActionService: OfiCorpActionService,
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private walletNodeRequestService: WalletNodeRequestService,
-                private _confirmationService: ConfirmationService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _blockchainContractService: BlockchainContractService,
-                public _numberConverterService: NumberConverterService) {
+                private _fb: FormBuilder,
+                private mcService: OfiManagementCompanyService,
+                private ofiCorpActionService: OfiCorpActionService,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private alerts: AlertsService,
+                private _confirmationService: ConfirmationService
+                // private _blockchainContractService: BlockchainContractService,
+                // public _numberConverterService: NumberConverterService,
+    ) {
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+
+        this.subscriptions.push(this.requestedOfiManagementCompanyObj.subscribe((requested) => this.getManagementCompanyRequested(requested)));
+        this.subscriptions.push(this.OfiManagementCompanyListObj.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
+        this.subscriptions['walletDirectory'] = this.walletDirectoryOb.subscribe((walletDirectory) => { this.walletDirectory = walletDirectory; });
+
+        this.subscriptions.push(this.requestedOfiAmOrdersObj.subscribe((requested) => this.getAmOrdersRequested(requested)));
+        this.subscriptions.push(this.OfiAmOrdersListObj.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+        this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newOrder) => this.getAmOrdersNewOrder(newOrder)));
+
+        this.createForm();
+
+        this.setInitialTabs();
     }
 
     ngOnInit() {
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.changeDetectorRef.markForCheck();
+
         /* State. */
-        let state = this.ngRedux.getState();
+        // const state = this.ngRedux.getState();
 
-        this.setInitialTabs();
+        // /* Ok, let's check that we have the orders list, if not... */
+        // if (!getOfiManageOrderList(state).length) {
+        //     /* ...request using the defaults in the form. */
+        //     this.getOrdersBySearch();
+        // }
 
-        /* Ok, let's check that we have the orders list, if not... */
-        if (!getOfiManageOrderList(state).length) {
-            /* ...request using the defaults in the form. */
-            this.getOrdersBySearch();
-        }
-
-        /* Subscribe for the order filter. */
-        this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
-            /* Check if we have a filter set. */
-            console.log(' | preset filter: ', filter);
-            this.handlePresetFilter(filter);
-
-            /* Detect changes. */
-            this.changeDetectorRef.detectChanges();
-        });
-
-        this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
-            const tabId = _.get(params, 'tabid', 0);
-            this.setTabActive(tabId);
-        });
+        // /* Subscribe for the order filter. */
+        // this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
+        //     /* Check if we have a filter set. */
+        //     console.log(' | preset filter: ', filter);
+        //     this.handlePresetFilter(filter);
+        //
+        //     /* Detect changes. */
+        //     this.changeDetectorRef.detectChanges();
+        // });
+        //
+        // this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
+        //     const tabId = _.get(params, 'tabid', 0);
+        //     this.setTabActive(tabId);
+        // });
     }
 
     ngAfterViewInit() {
         /* Do observable subscriptions here. */
         const state = this.ngRedux.getState();
 
-        /* Orders list. */
-        this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
-            /* Subscribe and set the orders list. */
-
-            const orderListNew = immutableHelper.copy(orderList);
-
-            this.ordersList = orderListNew.map((order) => {
-                /* Pointer. */
-                let fixed = order;
-
-                /* Fix dates. */
-                fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
-                fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
-                fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
-
-                fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
-
-                let metaData = immutableHelper.copy(order.metaData);
-
-                metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
-                metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
-
-                metaData.total = math.round(metaData.units * fixed.price, 2);
-
-                fixed.metaData = metaData;
-
-                /* Return. */
-                return fixed;
-            });
-
-            /* Detect Changes. */
-            this.changeDetectorRef.detectChanges();
-        });
-
-        this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
-            this.getOrdersBySearch(requested);
-        });
+        // /* Orders list. */
+        // this.subscriptions['orders-list'] = this.ordersListOb.subscribe((orderList) => {
+        //     /* Subscribe and set the orders list. */
+        //
+        //     const orderListNew = immutableHelper.copy(orderList);
+        //
+        //     this.ordersList = orderListNew.map((order) => {
+        //         /* Pointer. */
+        //         let fixed = order;
+        //
+        //         /* Fix dates. */
+        //         fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
+        //         fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
+        //         fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
+        //
+        //         fixed.price = this._numberConverterService.toFrontEnd(fixed.price);
+        //
+        //         let metaData = immutableHelper.copy(order.metaData);
+        //
+        //         metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
+        //         metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
+        //
+        //         metaData.total = math.round(metaData.units * fixed.price, 2);
+        //
+        //         fixed.metaData = metaData;
+        //
+        //         /* Return. */
+        //         return fixed;
+        //     });
+        //
+        //     /* Detect Changes. */
+        //     this.changeDetectorRef.detectChanges();
+        // });
+        //
+        // this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
+        //     this.getOrdersBySearch(requested);
+        // });
 
         /* Subscribe for this user's details. */
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
@@ -192,37 +293,243 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateWalletConnection();
         });
 
-        /* Subscribe for the user issued asset list. */
-        this.subscriptions['user-issued-assets'] = this.userAssetListOb.subscribe((list) => {
-            /* Assign list to a property. */
-            this.userAssetList = list;
+        // /* Subscribe for the user issued asset list. */
+        // this.subscriptions['user-issued-assets'] = this.userAssetListOb.subscribe((list) => {
+        //     /* Assign list to a property. */
+        //     this.userAssetList = list;
+        // });
+        //
+        // /* Subscribe for the order buffer. */
+        // this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
+        //     /* Check if we have an Id. */
+        //     setTimeout(() => {
+        //         if (orderId !== -1 && this.ordersList.length) {
+        //             /* If we do, then hande the viewing of it. */
+        //             this.handleViewOrder(orderId);
+        //
+        //             this.ofiOrdersService.resetOrderBuffer();
+        //         }
+        //     }, 100);
+        // });
+
+        // /* Check if we need to request the user issued assets. */
+        // let userIssuedAssetsList = getOfiUserIssuedAssets(state);
+        // if (!userIssuedAssetsList.length) {
+        //     /* If the list is empty, request it. */
+        //     this.ofiCorpActionService.getUserIssuedAssets().then(() => {
+        //         /* Redux subscription handles setting the property. */
+        //         this.changeDetectorRef.detectChanges();
+        //     }).catch((error) => {
+        //         /* Handle error. */
+        //         console.warn('Failed to get your issued assets: ', error);
+        //     });
+        // }
+    }
+
+    createForm() {
+        this.searchForm = this._fb.group({
+            sharename: [
+                '',
+            ],
+            status: [
+                '',
+            ],
+            type: [
+                '',
+            ],
+            dateType: [
+                '',
+            ],
+            fromDate: [
+                '',
+            ],
+            toDate: [
+                '',
+            ],
         });
+    }
 
-        /* Subscribe for the order buffer. */
-        this.subscriptions['order-buffer'] = this.orderBufferOb.subscribe((orderId) => {
-            /* Check if we have an Id. */
-            setTimeout(() => {
-                if (orderId !== -1 && this.ordersList.length) {
-                    /* If we do, then hande the viewing of it. */
-                    this.handleViewOrder(orderId);
-
-                    this.ofiOrdersService.resetOrderBuffer();
-                }
-            }, 100);
-        });
-
-        /* Check if we need to request the user issued assets. */
-        let userIssuedAssetsList = getOfiUserIssuedAssets(state);
-        if (!userIssuedAssetsList.length) {
-            /* If the list is empty, request it. */
-            this.ofiCorpActionService.getUserIssuedAssets().then(() => {
-                /* Redux subscription handles setting the property. */
-                this.changeDetectorRef.detectChanges();
-            }).catch((error) => {
-                /* Handle error. */
-                console.warn('Failed to get your issued assets: ', error);
-            });
+    getLanguage(requested): void {
+        if (requested) {
+            switch (requested) {
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
+            }
         }
+    }
+
+    getAmOrdersRequested(requested): void {
+        if (!requested) {
+            OfiOrdersService.setNewOrder(false, this.ngRedux);
+            OfiOrdersService.defaultRequestManageOrdersList(this.ofiOrdersService, this.ngRedux);
+        }
+    }
+
+    getAmOrdersNewOrder(newOrder): void {
+        if (newOrder) {
+            this.loading = true;
+            this.getAmOrdersList();
+            this.changeDetectorRef.markForCheck();
+        }
+    }
+
+    getAmOrdersListFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.ordersList = listImu.reduce((result, item) => {
+
+            result.push({
+                amAddress: item.get('amAddress'),
+                amCompanyID: item.get('amCompanyID'),
+                amWalletID: item.get('amWalletID'),
+                amountWithCost: item.get('amountWithCost'),
+                byAmountOrQuantity: item.get('byAmountOrQuantity'),
+                canceledBy: item.get('canceledBy'),
+                contractAddr: item.get('contractAddr'),
+                contractExpiryTs: item.get('contractAddr'),
+                contractStartTs: item.get('contractStartTs'),
+                currency: item.get('currency'),
+                cutoffDate: item.get('cutoffDate'),
+                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
+                estimatedPrice: item.get('estimatedPrice'),
+                estimatedQuantity: item.get('estimatedQuantity'),
+                feePercentage: item.get('feePercentage'),
+                fundShareID: item.get('fundShareID'),
+                fundShareName: item.get('fundShareName'),
+                iban: item.get('iban'),
+                investorAddress: item.get('investorAddress'),
+                investorWalletID: item.get('investorWalletID'),
+                isin: item.get('isin'),
+                label: item.get('label'),
+                navEntered: item.get('navEntered'),
+                orderID: item.get('orderID'),
+                orderDate: item.get('orderDate'),
+                orderNote: item.get('orderNote'),
+                orderStatus: item.get('orderStatus'),
+                orderType: item.get('orderType'),
+                investorIban: item.get('investorIban'),
+                orderFundShareID: item.get('orderFundShareID'),
+                platFormFee: item.get('platFormFee'),
+                price: item.get('price'),
+                quantity: item.get('quantity'),
+                settlementDate: item.get('settlementDate'),
+                totalResult: item.get('totalResult'),
+                valuationDate: item.get('valuationDate'),
+            });
+
+            return result;
+        }, []);
+
+        if (this.ordersList.length > 0) {
+            this.total = this.ordersList[0].totalResult;
+            this.lastPage = Math.ceil(this.total / this.itemPerPage);
+            this.loading = false;
+
+            this.subscriptions.push(this.route.params.subscribe(params => {
+                this.orderID = params['tabid'];
+                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+                    const order = this.ordersList.find(elmt => {
+                        if (elmt.orderID.toString() === this.orderID.toString()) {
+                            return elmt;
+                        }
+                    });
+                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                        this.tabsControl[0].active = false;
+                        let tabTitle = '';
+                        if (order.orderType === 3) tabTitle += 'Subscription: ';
+                        if (order.orderType === 4) tabTitle += 'Redemption: ';
+                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+
+                        this.tabsControl.push(
+                            {
+                                'title': {
+                                    'icon': 'fa-shopping-basket',
+                                    'text': tabTitle,
+                                },
+                                'orderId': this.orderID,
+                                'active': true,
+                                orderData: order,
+                            }
+                        );
+                    }
+                } else {
+                    if (this.tabsControl.length > 1) {
+                        this.tabsControl.splice(1, this.tabsControl.length - 1);
+                    }
+                }
+            }));
+        } else {
+            this.total = 0;
+            this.lastPage = 0;
+            this.loading = false;
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getManagementCompanyRequested(requested): void {
+        // console.log('requested', requested);
+        if (!requested) {
+            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.mcService, this.ngRedux);
+        }
+    }
+
+    getManagementCompanyListFromRedux(managementCompanyList) {
+        const managementCompanyListImu = fromJS(managementCompanyList);
+
+        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
+
+            result.push({
+                companyID: item.get('companyID', 0),
+                companyName: item.get('companyName', ''),
+                country: item.get('country', ''),
+                addressPrefix: item.get('addressPrefix', ''),
+                postalAddressLine1: item.get('postalAddressLine1', ''),
+                postalAddressLine2: item.get('postalAddressLine2', ''),
+                city: item.get('city', ''),
+                stateArea: item.get('stateArea', ''),
+                postalCode: item.get('postalCode', ''),
+                taxResidence: item.get('taxResidence', ''),
+                registrationNum: item.get('registrationNum', ''),
+                supervisoryAuthority: item.get('supervisoryAuthority', ''),
+                numSiretOrSiren: item.get('numSiretOrSiren', ''),
+                creationDate: item.get('creationDate', ''),
+                shareCapital: item.get('shareCapital', 0),
+                commercialContact: item.get('commercialContact', ''),
+                operationalContact: item.get('operationalContact', ''),
+                directorContact: item.get('directorContact', ''),
+                lei: item.get('lei', ''),
+                bic: item.get('bic', ''),
+                giinCode: item.get('giinCode', ''),
+                logoName: item.get('logoName', ''),
+                logoURL: item.get('logoURL', '')
+            });
+
+            return result;
+        }, []);
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    placeFakeOrder() {
+        const asyncTaskPipe = this.ofiOrdersService.placeFakeOrder();
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('save success fake order', data); // success
+            },
+            (data) => {
+                console.log('Error: ', data);
+            })
+        );
     }
 
     setInitialTabs() {
@@ -230,17 +537,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // Get opened tabs from redux store.
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
-        if (_.isEmpty(openedTabs)) {
+        if (openedTabs.length === 0) {
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    "title": {
-                        "icon": "fa fa-th-list",
-                        "text": "List"
+                    'title': {
+                        'icon': 'fa fa-th-list',
+                        'text': 'List'
                     },
-                    "orderId": -1,
-                    "searchForm": this.newSearchFormGroup(),
-                    "active": true
+                    'orderId': -1,
+                    'searchForm': this.searchForm,
+                    'active': true
                 }
             ];
             return true;
@@ -249,56 +556,319 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tabsControl = openedTabs;
     }
 
+    cancelOrder(index) {
+        let confMessage = '';
+        if (this.ordersList[index].orderType === 3) {
+            confMessage += 'Subscription ';
+        }
+        if (this.ordersList[index].orderType === 4) {
+            confMessage += 'Redemption ';
+        }
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 5);
+        this.showConfirmationAlert(confMessage, index);
+    }
+
+    showConfirmationAlert(confMessage, index): void {
+        this._confirmationService.create(
+            '<span>Confirmation</span>',
+            '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
+            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'success'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+                    orderID: this.ordersList[index].orderID,
+                });
+
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        console.log('cancel order success', data); // success
+                        this.loading = true;
+                        this.getAmOrdersList();
+                    },
+                    (data) => {
+                        console.log('Error: ', data);
+                    })
+                );
+            }
+        });
+    }
+
+    exportOrders() {
+
+        console.log('EXPORT ORDERS TO CSV');
+
+        // const asyncTaskPipe = this.ofiOrdersService.requestExportOrders({
+        //     data: this.ordersList
+        // });
+        //
+        // this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        //     asyncTaskPipe,
+        //     (data) => {
+        //         console.log('export data success', data); // success
+        //     },
+        //     (data) => {
+        //         console.log('Error: ', data);
+        //     })
+        // );
+
+        // call procedure iznexportorders
+
+        // data : ordersList
+
+        // orderRef: 'Order Ref',
+        // orderType: 'Order Type',
+        // isin: 'ISIN',
+        // shareName: 'Share Name',
+        // amCompanyName: 'Asset Management Company',
+        // currency: 'Share Currency',
+        // quantity: 'Quantity',
+        // latestNav: 'Latest NAV',
+        // grossAmount: 'Gross Amount',
+        // feesAmount: 'Fees Amount',
+        // orderDate: 'Order Date',
+        // cutOffDate: 'Cut-off Date',
+        // navDate: 'NAV Date',
+        // settlementDate: 'Settlement Date',
+        // status: 'Status'
+    }
+
+    requestSearch(form) {
+
+        const tmpDataGridParams = {
+            shareName: this.dataGridParams.shareName,
+            status: this.dataGridParams.status,
+            orderType: this.dataGridParams.orderType,
+            pageSize: this.dataGridParams.pageSize,
+            rowOffSet: this.dataGridParams.rowOffSet,
+            sortByField: this.dataGridParams.sortByField,
+            sortOrder: this.dataGridParams.sortOrder,
+            dateSearchField: this.dataGridParams.dateSearchField,
+            fromDate: this.dataGridParams.fromDate,
+            toDate: this.dataGridParams.toDate,
+        };
+
+        this.dataGridParams.shareName = (this.tabsControl[0].searchForm.get('sharename').value !== '' && this.tabsControl[0].searchForm.get('sharename').value.length > 2) ? this.tabsControl[0].searchForm.get('sharename').value : null;
+        this.dataGridParams.status = (this.tabsControl[0].searchForm.get('status').value && this.tabsControl[0].searchForm.get('status').value[0] && this.tabsControl[0].searchForm.get('status').value[0].id) ? this.tabsControl[0].searchForm.get('status').value[0].id : null;
+        this.dataGridParams.orderType = (this.tabsControl[0].searchForm.get('type').value && this.tabsControl[0].searchForm.get('type').value[0] && this.tabsControl[0].searchForm.get('type').value[0].id) ? this.tabsControl[0].searchForm.get('type').value[0].id : null;
+        // date filters
+        if ((this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id)) {
+            const tmpDateSearchField = (this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id) ? this.tabsControl[0].searchForm.get('dateType').value[0].id : null;
+            const tmpFromDate = (this.tabsControl[0].searchForm.get('fromDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('fromDate').value))) ? this.tabsControl[0].searchForm.get('fromDate').value : null;
+            let tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
+            if (tmpFromDate !== null && tmpToDate !== null) {
+                let toDate = new Date(this.tabsControl[0].searchForm.get('toDate').value);
+                toDate.setDate(toDate.getDate() + 1);
+                tmpToDate = toDate.toISOString().substring(0, 10);
+            }
+            if (tmpDateSearchField !== null && tmpFromDate !== null && tmpToDate !== null) {
+                this.dataGridParams.dateSearchField = tmpDateSearchField;
+                this.dataGridParams.fromDate = tmpFromDate;
+                this.dataGridParams.toDate = tmpToDate;
+            }
+        } else {
+            this.dataGridParams.dateSearchField = null;
+            this.dataGridParams.fromDate = null;
+            this.dataGridParams.toDate = null;
+        }
+
+        if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
+            this.getAmOrdersList();
+        }
+    }
+
+    refresh(state: ClrDatagridStateInterface) {
+        let filters: {[prop: string]: any[]} = {};
+        if (state.filters) {
+            for (const filter of state.filters) {
+                const {property, value} = <{property: string, value: string}>filter;
+                filters[property] = [value];
+            }
+        }
+
+        // console.log('state page', state.page);
+        // console.log('page asked', state.page.from);
+        // console.log('sort', state.sort);
+        // console.log('raw filters', state.filters);
+        // console.log('map filters', filters);
+
+        const tmpDataGridParams = {
+            shareName: this.dataGridParams.shareName,
+            status: this.dataGridParams.status,
+            orderType: this.dataGridParams.orderType,
+            pageSize: this.dataGridParams.pageSize,
+            rowOffSet: this.dataGridParams.rowOffSet,
+            sortByField: this.dataGridParams.sortByField,
+            sortOrder: this.dataGridParams.sortOrder,
+            dateSearchField: this.dataGridParams.dateSearchField,
+            fromDate: this.dataGridParams.fromDate,
+            toDate: this.dataGridParams.toDate,
+        };
+
+        if (state.sort) {
+            switch (state.sort.by) {
+                // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
+                case 'orderRef':
+                    this.dataGridParams.sortByField = 'orderId';
+                    break;
+                case 'orderType':
+                    this.dataGridParams.sortByField = 'orderType';
+                    break;
+                case 'isin':
+                    this.dataGridParams.sortByField = 'isin';
+                    break;
+                case 'shareName':
+                    this.dataGridParams.sortByField = 'shareName';
+                    break;
+                case 'shareCurrency':
+                    this.dataGridParams.sortByField = 'currency';
+                    break;
+                case 'quantity':
+                    this.dataGridParams.sortByField = 'quantity';
+                    break;
+                case 'grossAmount':
+                    this.dataGridParams.sortByField = 'amountWithCost';
+                    break;
+                case 'orderDate':
+                    this.dataGridParams.sortByField = 'orderDate';
+                    break;
+                case 'cutOffDate':
+                    this.dataGridParams.sortByField = 'cutoffDate';
+                    break;
+                case 'settlementDate':
+                    this.dataGridParams.sortByField = 'settlementDate';
+                    break;
+                case 'orderStatus':
+                    this.dataGridParams.sortByField = 'orderStatus';
+                    break;
+            }
+            this.dataGridParams.sortOrder = (!state.sort.reverse) ? 'asc' : 'desc';
+        }
+
+        this.dataGridParams.pageSize =  this.itemPerPage;
+        this.dataGridParams.rowOffSet = (state.page.from / this.itemPerPage);
+        // this.loading = false; // temp debug
+
+        // send request only if changes
+        if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
+            this.loading = true;
+            this.getAmOrdersList();
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getAmOrdersList() {
+        console.log('dataGridParams', this.dataGridParams);
+
+        const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    showTypes(order) {
+        const obj = this.orderTypes.find(o => o.id === order.orderType);
+        if (obj !== undefined) {
+            return obj.text;
+        } else {
+            return 'Error!';
+        }
+    }
+
+    showInvestor(order) {
+        if (this.walletDirectory[order.investorWalletID] && this.walletDirectory[order.investorWalletID].walletName) {
+            return this.walletDirectory[order.investorWalletID].walletName;
+        } else {
+            return 'Error!';
+        }
+    }
+
+    showManagementCompany(order) {
+        const obj = this.managementCompanyList.find(o => o.companyID === order.amCompanyID);
+        if (obj !== undefined) {
+            return obj.companyName;
+        } else {
+            return 'Error!';
+        }
+    }
+
+    showCurrency(order) {
+        const obj = this.currencyList.find(o => o.id === order.currency);
+        if (obj !== undefined) {
+            return obj.label;
+        } else {
+            return 'Error!';
+        }
+    }
+
+    showStatus(order) {
+        if (this.orderStatuses[order.orderStatus] && this.orderStatuses[order.orderStatus].text) {
+            return this.orderStatuses[order.orderStatus].text;
+        } else {
+            return 'Error!';
+        }
+    }
+
+    buildLink(order, index) {
+        const dest = 'manage-orders/' + order.orderID;
+        this.router.navigateByUrl(dest);
+    }
+
     /**
      * Handle Preset Filter
      * @param filter
      */
-    private handlePresetFilter(filter: string): void {
-        if (filter != '') {
-            /* If we do, then let's patch the form value... */
-            console.log(' | preset filter: ', filter);
-            this.tabsControl[0].searchForm.controls['status'].patchValue(
-                this.getStatusByName(filter) // resolve the status
-            );
-
-            /* Detect changes. */
-            this.changeDetectorRef.detectChanges();
-
-            /* ...also, reset the filter... */
-            this.ofiOrdersService.resetOrderFilter();
-
-            /* ...and update the view. */
-            this.getOrdersBySearch();
-        }
-
-        /* Detect changes. */
-        this.changeDetectorRef.detectChanges();
-
-        /* Return. */
-        return;
-    }
+    // private handlePresetFilter(filter: string): void {
+    //     if (filter !== '') {
+    //         /* If we do, then let's patch the form value... */
+    //         console.log(' | preset filter: ', filter);
+    //         this.tabsControl[0].searchForm.controls['status'].patchValue(
+    //             this.getStatusByName(filter) // resolve the status
+    //         );
+    //
+    //         /* Detect changes. */
+    //         this.changeDetectorRef.detectChanges();
+    //
+    //         /* ...also, reset the filter... */
+    //         this.ofiOrdersService.resetOrderFilter();
+    //
+    //         /* ...and update the view. */
+    //         this.getOrdersBySearch();
+    //     }
+    //
+    //     /* Detect changes. */
+    //     this.changeDetectorRef.detectChanges();
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * getStatusByName
      * @param requestedName
      */
-    public getStatusByName(requestedName: string): Array<SelectedItem> {
-        /* Variables. */
-        let finds = [];
-
-        /* Let's see if we can find the status. */
-        let status: any;
-        for (status of this.orderStatuses) {
-            if (status.text.toLowerCase() == requestedName) {
-                finds.push(status);
-                break;
-            }
-        }
-
-        /* Return. */
-        console.log(finds);
-        return finds;
-    }
+    // public getStatusByName(requestedName: string): Array<SelectedItem> {
+    //     /* Variables. */
+    //     let finds = [];
+    //
+    //     /* Let's see if we can find the status. */
+    //     let status: any;
+    //     for (status of this.orderStatuses) {
+    //         if (status.text.toLowerCase() == requestedName) {
+    //             finds.push(status);
+    //             break;
+    //         }
+    //     }
+    //
+    //     /* Return. */
+    //     console.log(finds);
+    //     return finds;
+    // }
 
     /**
      * Handle View Order
@@ -307,52 +877,52 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleViewOrder(orderId: number): void {
-        /* Find the order. */
-        let
-            foundActive = false,
-            order = this.getOrderById(orderId);
-        if (!order) return;
-
-        /* Check if the tab is already open. */
-        this.tabsControl.map((tab, i) => {
-            if (tab.orderId == orderId) {
-                /* Set flag... */
-                foundActive = true;
-
-                /* ...set tab active... */
-                this.router.navigateByUrl(`/manage-orders/${i}`);
-
-                /* ...and gotta call this again. */
-                this.changeDetectorRef.detectChanges();
-            }
-
-        })
-
-        /* If we found an active tab, no need to do anymore... */
-        if (foundActive) {
-            return;
-        }
-
-        /* Push a new tab into the tabs control... */
-        this.tabsControl.push(
-            {
-                "title": {
-                    "icon": "fa-pencil",
-                    "text": this.padNumberLeft(order.arrangementID, 5)
-                },
-                "orderId": orderId,
-                "active": false,
-                "orderData": order
-            }
-        );
-
-        /* ...then set it active. */
-        this.router.navigateByUrl(`/manage-orders/${this.tabsControl.length - 1}`);
-
-        /* Return. */
-        return;
-    }
+    // public handleViewOrder(orderId: number): void {
+    //     /* Find the order. */
+    //     let
+    //         foundActive = false,
+    //         order = this.getOrderById(orderId);
+    //     if (!order) return;
+    //
+    //     /* Check if the tab is already open. */
+    //     this.tabsControl.map((tab, i) => {
+    //         if (tab.orderId == orderId) {
+    //             /* Set flag... */
+    //             foundActive = true;
+    //
+    //             /* ...set tab active... */
+    //             this.router.navigateByUrl(`/manage-orders/${i}`);
+    //
+    //             /* ...and gotta call this again. */
+    //             this.changeDetectorRef.detectChanges();
+    //         }
+    //
+    //     });
+    //
+    //     /* If we found an active tab, no need to do anymore... */
+    //     if (foundActive) {
+    //         return;
+    //     }
+    //
+    //     /* Push a new tab into the tabs control... */
+    //     this.tabsControl.push(
+    //         {
+    //             'title': {
+    //                 'icon': 'fa-pencil',
+    //                 'text': this.padNumberLeft(order.arrangementID, 5)
+    //             },
+    //             'orderId': orderId,
+    //             'active': false,
+    //             'orderData': order
+    //         }
+    //     );
+    //
+    //     /* ...then set it active. */
+    //     this.router.navigateByUrl(`/manage-orders/${this.tabsControl.length - 1}`);
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Handle Cancel Order
@@ -361,43 +931,43 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleCancelOrder(orderId: number): void {
-        /* Let's first find the order... */
-        let
-            request = {},
-            order = this.getOrderById(orderId);
-
-        /* ...or return if we couldn't find it. */
-        if (!order) return;
-
-        /* Now let's build the request that we'll send... */
-        request['arrangementId'] = order.arrangementID;
-        request['walletId'] = this.connectedWalletId;
-        request['status'] = 0;
-        request['price'] = order.price;
-
-        /* Let's ask the user if they're sure... */
-        this._confirmationService.create(
-            '<span>Cancelling an Order</span>',
-            '<span>Are you sure you want to cancel this order?</span>'
-        ).subscribe((ans) => {
-            /* ...if they are... */
-            if (ans.resolved) {
-                /* Send the request. */
-                this.ofiOrdersService.updateOrder(request).then((response) => {
-                    /* Handle success. */
-                    this.showSuccess('Successfully cancelled this order.');
-                }).catch((error) => {
-                    /* Handle error. */
-                    this.showError('Failed to cancel this order.');
-                    console.warn(error);
-                });
-            }
-        });
-
-        /* Return. */
-        return;
-    }
+    // public handleCancelOrder(orderId: number): void {
+    //     /* Let's first find the order... */
+    //     let
+    //         request = {},
+    //         order = this.getOrderById(orderId);
+    //
+    //     /* ...or return if we couldn't find it. */
+    //     if (!order) return;
+    //
+    //     /* Now let's build the request that we'll send... */
+    //     request['arrangementId'] = order.arrangementID;
+    //     request['walletId'] = this.connectedWalletId;
+    //     request['status'] = 0;
+    //     request['price'] = order.price;
+    //
+    //     /* Let's ask the user if they're sure... */
+    //     this._confirmationService.create(
+    //         '<span>Cancelling an Order</span>',
+    //         '<span>Are you sure you want to cancel this order?</span>'
+    //     ).subscribe((ans) => {
+    //         /* ...if they are... */
+    //         if (ans.resolved) {
+    //             /* Send the request. */
+    //             this.ofiOrdersService.updateOrder(request).then((response) => {
+    //                 /* Handle success. */
+    //                 this.showSuccess('Successfully cancelled this order.');
+    //             }).catch((error) => {
+    //                 /* Handle error. */
+    //                 this.showError('Failed to cancel this order.');
+    //                 console.warn(error);
+    //             });
+    //         }
+    //     });
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Update Order State
@@ -406,39 +976,39 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public updateOrderStatus(orderId: number, status: number): void {
-        /* Let's first find the order... */
-        let
-            request = {},
-            order = this.getOrderById(orderId);
-
-        /* ...or return if we couldn't find it. */
-        if (!order) return;
-
-        /* Now let's build the request that we'll send... */
-        request['arrangementId'] = order.arrangementID;
-        request['walletId'] = this.connectedWalletId;
-        request['status'] = status;
-        request['price'] = order.price;
-
-        /* Send the request. */
-        this.ofiOrdersService.updateOrder(request).then((response) => {
-            /* Handle success. */
-            let i;
-            for (i in this.tabsControl) {
-                if (this.tabsControl[i].orderId == orderId) {
-                    this.tabsControl[i].orderData.status = status;
-                    break;
-                }
-            }
-        }).catch((error) => {
-            /* Handle error. */
-            console.warn(error);
-        });
-
-        /* Return. */
-        return;
-    }
+    // public updateOrderStatus(orderId: number, status: number): void {
+    //     /* Let's first find the order... */
+    //     let
+    //         request = {},
+    //         order = this.getOrderById(orderId);
+    //
+    //     /* ...or return if we couldn't find it. */
+    //     if (!order) return;
+    //
+    //     /* Now let's build the request that we'll send... */
+    //     request['arrangementId'] = order.arrangementID;
+    //     request['walletId'] = this.connectedWalletId;
+    //     request['status'] = status;
+    //     request['price'] = order.price;
+    //
+    //     /* Send the request. */
+    //     this.ofiOrdersService.updateOrder(request).then((response) => {
+    //         /* Handle success. */
+    //         let i;
+    //         for (i in this.tabsControl) {
+    //             if (this.tabsControl[i].orderId == orderId) {
+    //                 this.tabsControl[i].orderData.status = status;
+    //                 break;
+    //             }
+    //         }
+    //     }).catch((error) => {
+    //         /* Handle error. */
+    //         console.warn(error);
+    //     });
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Handle Approve Order
@@ -447,43 +1017,43 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public handleApproveOrder(orderId: number): void {
-        /* Let's first find the order... */
-        let
-            request = {},
-            order = this.getOrderById(orderId);
-
-        /* ...or return if we couldn't find it. */
-        if (!order) return;
-
-        console.log(' |---- Approving contract.')
-        console.log(' | order:', order);
-
-        request['arrangementId'] = order.arrangementID;
-        request['walletId'] = this.connectedWalletId;
-
-        console.log(' | request:', request);
-
-        /* Get contract information for this order. */
-        this.ofiOrdersService.getContractsByOrder(request).then((response) => {
-            /* Handle success. */
-            console.log(' | < response:', response);
-
-            /* Make call to wallet node. */
-            var contractAddress = response[1].Data[0].contractAddr;
-            this.getContractData(contractAddress, order);
-
-            console.log(' | < contractAddr:', contractAddress);
-
-        }).catch((error) => {
-            /* Handle error. */
-            this.showError('Failed to fetch the contract information for this order.');
-            console.warn(' | < error:', error);
-        });
-
-        /* Return. */
-        return;
-    }
+    // public handleApproveOrder(orderId: number): void {
+    //     /* Let's first find the order... */
+    //     let
+    //         request = {},
+    //         order = this.getOrderById(orderId);
+    //
+    //     /* ...or return if we couldn't find it. */
+    //     if (!order) return;
+    //
+    //     console.log(' |---- Approving contract.')
+    //     console.log(' | order:', order);
+    //
+    //     request['arrangementId'] = order.arrangementID;
+    //     request['walletId'] = this.connectedWalletId;
+    //
+    //     console.log(' | request:', request);
+    //
+    //     /* Get contract information for this order. */
+    //     this.ofiOrdersService.getContractsByOrder(request).then((response) => {
+    //         /* Handle success. */
+    //         console.log(' | < response:', response);
+    //
+    //         /* Make call to wallet node. */
+    //         var contractAddress = response[1].Data[0].contractAddr;
+    //         this.getContractData(contractAddress, order);
+    //
+    //         console.log(' | < contractAddr:', contractAddress);
+    //
+    //     }).catch((error) => {
+    //         /* Handle error. */
+    //         this.showError('Failed to fetch the contract information for this order.');
+    //         console.warn(' | < error:', error);
+    //     });
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Get Contract Data
@@ -493,61 +1063,61 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} contractAddress [description]
      * @return {any}                    [description]
      */
-    public getContractData(contractAddress: string, order: any): any {
-        /* Let's get the wallet id for this asset. */
-        let i, walletId = 0;
-        for (i in this.userAssetList) {
-            if (this.userAssetList[i].asset == order.asset) {
-                walletId = this.userAssetList[i].walletId;
-                break;
-            }
-        }
-
-        /* If no wallet id, return. */
-        if (!walletId) return;
-
-        /* Reqest the contract by address. */
-        this.ofiOrdersService.buildRequest({
-            'taskPipe': this.walletNodeRequestService.requestContractByAddress({
-                'address': contractAddress,
-                'walletId': walletId
-            })
-        }).then((response) => {
-            /* Handle success. */
-            let contractData = response[1].data;
-
-            /* Get the wallet commit data. */
-            let commitData = this._blockchainContractService.handleWalletCommitContract(
-                contractData,
-                contractAddress,
-                contractData['authorisations'][0][0],
-                0,
-                'authorisationCommit'
-            );
-
-            /* Set some other meta data. */
-            commitData['walletid'] = walletId;
-            commitData['address'] = contractData['authorisations'][0][0];
-
-            /* Send the authorisation request. */
-            this.ofiOrdersService.buildRequest({
-                'taskPipe': this.walletNodeRequestService.walletCommitToContract(commitData),
-            }).then((response) => {
-                /* Update this order to waiting for payement, but not with a button for approval. */
-                // Daemon does this.
-                // this.updateOrderStatus(order.arrangementID, -1);
-
-                /* Detect changes. */
-                // this.changeDetectorRef.detectChanges();
-                this.showSuccess('Successfully approved this order.');
-            }).catch((error) => {
-                console.warn('authorisation error: ', error);
-            });
-        }).catch((error) => {
-            /* Handle error. */
-            console.log('request contract by address:', error);
-        })
-    }
+    // public getContractData(contractAddress: string, order: any): any {
+    //     /* Let's get the wallet id for this asset. */
+    //     let i, walletId = 0;
+    //     for (i in this.userAssetList) {
+    //         if (this.userAssetList[i].asset == order.asset) {
+    //             walletId = this.userAssetList[i].walletId;
+    //             break;
+    //         }
+    //     }
+    //
+    //     /* If no wallet id, return. */
+    //     if (!walletId) return;
+    //
+    //     /* Reqest the contract by address. */
+    //     this.ofiOrdersService.buildRequest({
+    //         'taskPipe': this.walletNodeRequestService.requestContractByAddress({
+    //             'address': contractAddress,
+    //             'walletId': walletId
+    //         })
+    //     }).then((response) => {
+    //         /* Handle success. */
+    //         let contractData = response[1].data;
+    //
+    //         /* Get the wallet commit data. */
+    //         let commitData = this._blockchainContractService.handleWalletCommitContract(
+    //             contractData,
+    //             contractAddress,
+    //             contractData['authorisations'][0][0],
+    //             0,
+    //             'authorisationCommit'
+    //         );
+    //
+    //         /* Set some other meta data. */
+    //         commitData['walletid'] = walletId;
+    //         commitData['address'] = contractData['authorisations'][0][0];
+    //
+    //         /* Send the authorisation request. */
+    //         this.ofiOrdersService.buildRequest({
+    //             'taskPipe': this.walletNodeRequestService.walletCommitToContract(commitData),
+    //         }).then((response) => {
+    //             /* Update this order to waiting for payement, but not with a button for approval. */
+    //             // Daemon does this.
+    //             // this.updateOrderStatus(order.arrangementID, -1);
+    //
+    //             /* Detect changes. */
+    //             // this.changeDetectorRef.detectChanges();
+    //             this.showSuccess('Successfully approved this order.');
+    //         }).catch((error) => {
+    //             console.warn('authorisation error: ', error);
+    //         });
+    //     }).catch((error) => {
+    //         /* Handle error. */
+    //         console.log('request contract by address:', error);
+    //     });
+    // }
 
     /**
      * Update Wallet Connection
@@ -561,7 +1131,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
             for (wallet in this.myWallets) {
-                if (wallet == this.connectedWalletId) {
+                if (wallet === this.connectedWalletId) {
                     this.connectedWalletName = this.myWallets[wallet].walletName;
                     break;
                 }
@@ -583,20 +1153,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {number} orderId - an order id.
      * @return {any|boolean} - the order, if found or just false.
      */
-    private getOrderById(orderId: number): any | boolean {
-        /* Ok, let's loop over the orders list... */
-        let order;
-        for (order of this.ordersList) {
-            /* ..if this is the order, break, to return it... */
-            if (order.arrangementID === orderId) break;
-
-            /* ...else set order to false, incase this is last loop. */
-            order = false;
-        }
-
-        /* Return. */
-        return order;
-    }
+    // private getOrderById(orderId: number): any | boolean {
+    //     /* Ok, let's loop over the orders list... */
+    //     let order;
+    //     for (order of this.ordersList) {
+    //         /* ..if this is the order, break, to return it... */
+    //         if (order.arrangementID === orderId) break;
+    //
+    //         /* ...else set order to false, incase this is last loop. */
+    //         order = false;
+    //     }
+    //
+    //     /* Return. */
+    //     return order;
+    // }
 
     /**
      * Request Search
@@ -607,22 +1177,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    private requestSearch(): void {
-        /* Let's check if we've got a request already... */
-        if (this.requestedSearch) {
-            /* ...if we do, cancel it. */
-            clearTimeout(this.requestedSearch);
-        }
-
-        /* Now let's set a new timeout. */
-        let timeToWait = 500; // milliseconds
-        this.requestedSearch = setTimeout(() => {
-            this.getOrdersBySearch();
-        }, timeToWait);
-
-        /* Return. */
-        return;
-    }
+    // private requestSearch(): void {
+    //     /* Let's check if we've got a request already... */
+    //     if (this.requestedSearch) {
+    //         /* ...if we do, cancel it. */
+    //         clearTimeout(this.requestedSearch);
+    //     }
+    //
+    //     /* Now let's set a new timeout. */
+    //     let timeToWait = 500; // milliseconds
+    //     this.requestedSearch = setTimeout(() => {
+    //         this.getOrdersBySearch();
+    //     }, timeToWait);
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Get Orders By Search
@@ -633,52 +1203,52 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} requested
      * @return {void}
      */
-    private getOrdersBySearch(requested: boolean = false, event = {}): void {
-        if (requested) {
-            return;
-        }
-
-        console.log(" |--- Filtering");
-
-        this.ngRedux.dispatch(ofiSetRequestedManageOrder());
-
-        /* Ok, let's get the search form information... */
-        let
-            searchForm = this.tabsControl[0].searchForm.value,
-            request = {};
-
-        /* Check if we have an event to override with. */
-        if (event.hasOwnProperty('id')) {
-            searchForm.status = [event];
-        }
-
-        /* Check if we have search parameters. */
-        if (!searchForm.status[0] || !searchForm.type[0]) {
-            return;
-        }
-
-        console.log(" | Search form: ", searchForm);
-
-        /* Build the rest of it. */
-        request['status'] = searchForm.status[0].id;
-        request['sortOrder'] = this.sort.direction;
-        request['sortBy'] = this.sort.name;
-        request['partyType'] = 2;
-        request['pageSize'] = 123456789; // we're just getting all.
-        request['pageNum'] = 0; // no need for this.
-        request['asset'] = searchForm.name;
-        request['arrangementType'] = searchForm.type[0].id;
-
-        console.log(" | Filter: ", searchForm.status[0].text);
-
-        /* ...then request the new list. */
-        this.ofiOrdersService.getManageOrdersList(request)
-            .then(response => true) // no need to do anything here.
-            .catch((error) => {
-                console.warn('failed to fetch orders list: ', error);
-                this.showError('Failed to fetch the latest orders.');
-            });
-    }
+    // private getOrdersBySearch(requested: boolean = false, event = {}): void {
+    //     if (requested) {
+    //         return;
+    //     }
+    //
+    //     console.log(" |--- Filtering");
+    //
+    //     this.ngRedux.dispatch(ofiSetRequestedManageOrder());
+    //
+    //     /* Ok, let's get the search form information... */
+    //     let
+    //         searchForm = this.tabsControl[0].searchForm.value,
+    //         request = {};
+    //
+    //     /* Check if we have an event to override with. */
+    //     if (event.hasOwnProperty('id')) {
+    //         searchForm.status = [event];
+    //     }
+    //
+    //     /* Check if we have search parameters. */
+    //     if (!searchForm.status[0] || !searchForm.type[0]) {
+    //         return;
+    //     }
+    //
+    //     console.log(" | Search form: ", searchForm);
+    //
+    //     /* Build the rest of it. */
+    //     request['status'] = searchForm.status[0].id;
+    //     request['sortOrder'] = this.sort.direction;
+    //     request['sortBy'] = this.sort.name;
+    //     request['partyType'] = 2;
+    //     request['pageSize'] = 123456789; // we're just getting all.
+    //     request['pageNum'] = 0; // no need for this.
+    //     request['asset'] = searchForm.name;
+    //     request['arrangementType'] = searchForm.type[0].id;
+    //
+    //     console.log(" | Filter: ", searchForm.status[0].text);
+    //
+    //     /* ...then request the new list. */
+    //     this.ofiOrdersService.getManageOrdersList(request)
+    //         .then(response => true) // no need to do anything here.
+    //         .catch((error) => {
+    //             console.warn('failed to fetch orders list: ', error);
+    //             this.showError('Failed to fetch the latest orders.');
+    //         });
+    // }
 
     /**
      * Switch Sort
@@ -688,54 +1258,39 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} event - the click event.
      * @param {string} name - the sort name.
      */
-    switchSort(event: any, name: string): void {
-        /* Find the header's caret. */
-        let elms = event.target.getElementsByTagName('i'), caret;
-        if (elms.length && elms[0].classList) {
-            caret = elms[0];
-        }
-
-        /* If we've clicked the one we're sorting by, reverse sort. */
-        if (name === this.sort.name && caret) {
-            /* Reverse. */
-            if (this.sort.direction === "ASC") {
-                this.sort.direction = "DESC";
-                caret.classList.remove('fa-caret-up');
-                caret.classList.add('fa-caret-down');
-            } else {
-                this.sort.direction = "ASC";
-                caret.classList.remove('fa-caret-down');
-                caret.classList.add('fa-caret-up');
-            }
-        }
-
-        /* If not, then set this as the one we're sorting by. */
-        else if (name !== this.sort.name) {
-            this.sort.name = name;
-            this.sort.direction = "ASC";
-        }
-
-        /* Send for a search. */
-        this.getOrdersBySearch();
-
-        /* Return. */
-        return;
-    }
-
-    /**
-     * New Search FormGroup
-     * --------------------
-     * Instantiates a new FormGroup for the search form.
-     *
-     * @return {FormGroup} - the new FormGroup.
-     */
-    private newSearchFormGroup(): FormGroup {
-        return new FormGroup({
-            'name': new FormControl(''),
-            'status': new FormControl([this.orderStatuses[0]]),
-            'type': new FormControl([this.orderTypes[0]]),
-        });
-    }
+    // switchSort(event: any, name: string): void {
+    //     /* Find the header's caret. */
+    //     let elms = event.target.getElementsByTagName('i'), caret;
+    //     if (elms.length && elms[0].classList) {
+    //         caret = elms[0];
+    //     }
+    //
+    //     /* If we've clicked the one we're sorting by, reverse sort. */
+    //     if (name === this.sort.name && caret) {
+    //         /* Reverse. */
+    //         if (this.sort.direction === "ASC") {
+    //             this.sort.direction = "DESC";
+    //             caret.classList.remove('fa-caret-up');
+    //             caret.classList.add('fa-caret-down');
+    //         } else {
+    //             this.sort.direction = "ASC";
+    //             caret.classList.remove('fa-caret-down');
+    //             caret.classList.add('fa-caret-up');
+    //         }
+    //     }
+    //
+    //     /* If not, then set this as the one we're sorting by. */
+    //     else if (name !== this.sort.name) {
+    //         this.sort.name = name;
+    //         this.sort.direction = "ASC";
+    //     }
+    //
+    //     /* Send for a search. */
+    //     this.getOrdersBySearch();
+    //
+    //     /* Return. */
+    //     return;
+    // }
 
     /**
      * Format Date
@@ -818,18 +1373,18 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if (!num && num != 0) return "";
+        if (!num && num !== 0) return '';
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
         let // 11 is the total required string length.
             requiredZeros = zeros - num.length,
-            returnString = "";
+            returnString = '';
 
         /* Now add the zeros. */
         while (requiredZeros--) {
-            returnString += "0";
+            returnString += '0';
         }
 
         return returnString + num;
@@ -960,7 +1515,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (let key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
 

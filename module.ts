@@ -17,6 +17,7 @@ import {OfiReportModule} from './ofi-report-module';
 import {OfiAmDashboardModule} from './ofi-am-dashboard/module';
 import {MultilingualModule} from '@setl/multilingual';
 import {SelectModule} from '@setl/utils';
+import {SetlComponentsModule, DynamicFormsModule} from '@setl/utils';
 
 /* Decorator. */
 @NgModule({
@@ -33,12 +34,15 @@ import {SelectModule} from '@setl/utils';
         OfiNavModule,
         OfiReportModule,
         OfiAmDashboardModule,
+        SetlComponentsModule,
         MultilingualModule,
         SelectModule,
+        DynamicFormsModule
     ],
     exports: [
         OfiFundInvestModule,
-        OfiCorpActionsModule
+        OfiCorpActionsModule,
+        DynamicFormsModule
     ],
     declarations: [
 

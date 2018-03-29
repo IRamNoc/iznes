@@ -14,6 +14,7 @@ export interface AllFundShareDetail {
 }
 
 export interface IznesShareDetail {
+    fundShareID: number;
     fundShareName: string;
     fundID: number;
     isin: string;
@@ -62,9 +63,11 @@ export interface IznesShareDetail {
     representationOptionalData: string;
     fundName: string;
     umbrellaFundID: number;
+    managementCompanyName: string;
+    managementCompanyId: number;
 }
 
-export interface OfiFundShareState {
+export interface OfiFundShareListState {
     amAllFundShareList: {
         [shareId: string]: AllFundShareDetail
     };

@@ -56,12 +56,33 @@ import {
 } from './nav';
 
 import {
-   OfiFundShareState,
-   OfiFundShareReducer,
-   SET_AM_ALL_FUND_SHARE_LIST,
-   SET_REQUESTED_AM_All_FUND_SHARE,
-   CLEAR_REQUESTED_AM_All_FUND_SHARE
-} from './fundshare';
+    OfiFundShareListState,
+    OfiFundShareListReducer,
+    SET_AM_ALL_FUND_SHARE_LIST,
+    SET_REQUESTED_AM_All_FUND_SHARE,
+    CLEAR_REQUESTED_AM_All_FUND_SHARE,
+    setRequestedAmAllFundShare,
+    clearRequestedAmAllFundShare,
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST
+} from './fund-share-list';
+
+import {
+    OfiFundShare,
+    SET_FUND_SHARE,
+    OfiFundShareState,
+    OfiFundShareReducer,
+    setRequestedFundShare,
+    clearRequestedFundShare
+ } from './fund-share';
+
+ import {
+    OFI_SET_CURRENT_FUND_SHARE_SF,
+    ofiSetCurrentFundShareSelectedFund,
+    getOfiFundShareSelectedFund,
+    OfiFundShareSelectedFundReducer,
+    OfiFundShareSelectedFundState
+ } from './fund-share-sf';
 
 export {
     ManagementCompanyState,
@@ -104,19 +125,38 @@ export {
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
     getOfiNavLatestCurrentRequest,
-
-    // Fund Share
+    // Fund Share List
+    OfiFundShareListState,
+    OfiFundShareListReducer,
     SET_REQUESTED_AM_All_FUND_SHARE,
     CLEAR_REQUESTED_AM_All_FUND_SHARE,
-    SET_AM_ALL_FUND_SHARE_LIST
+    SET_AM_ALL_FUND_SHARE_LIST,
+    setRequestedAmAllFundShare,
+    clearRequestedAmAllFundShare,
+    setRequestedIznesShares,
+    GET_IZN_SHARES_LIST,
+    // FUND SHARE
+    OfiFundShare,
+    SET_FUND_SHARE,
+    OfiFundShareState,
+    OfiFundShareReducer,
+    setRequestedFundShare,
+    clearRequestedFundShare,
+    // FUND SHARE SELECTED FUND
+    OFI_SET_CURRENT_FUND_SHARE_SF,
+    ofiSetCurrentFundShareSelectedFund,
+    getOfiFundShareSelectedFund,
+    OfiFundShareSelectedFundReducer
 };
 
 export interface OfiProductState {
     ofiManagementCompany: ManagementCompanyState;
     ofiSicav: SicavState;
     ofiFund: FundState;
+    ofiFundShareList: OfiFundShareListState;
     ofiUmbrellaFund: UmbrellaFundState;
     ofiFundShare: OfiFundShareState;
+    ofiFundShareSelectedFund: OfiFundShareSelectedFundState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
 }
@@ -125,8 +165,10 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiManagementCompany: ManagementCompanyReducer,
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
+    ofiFundShareList: OfiFundShareListReducer,
     ofiUmbrellaFund: UmbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
+    ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer
 });

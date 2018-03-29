@@ -13,7 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
-import {isInRootDir} from "@angular/compiler-cli/src/transformers/util";
+import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 
 
 @Component({
@@ -137,14 +137,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 id: item.get('fundShareId', 0),
                 isin: item.get('isin', ''),
                 shareName: item.get('fundShareName', ''),
-                assetClass: '',
-                assetManager: item.get('managementCompany', ''),
-                srri: '',
-                sri: '',
-                currency: item.get('shareClassCurrency', ''),
+                assetClass: FundShareValue.ClassCodeValue[item.get('shareClassCode', 0)],
+                assetManager: item.get('companyName', ''),
+                srri: item.get('keyFactOptionalData.srri', ''),
+                sri: item.get('keyFactOptionalData.sri', ''),
+                currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
                 nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
-                subscriptionDate: item.get('subscriptionCutOffTime', ''),
-                redemptionDate: item.get('redemptionCutOffTime', '')
+                subscriptionDate: item.get('subscriptionCutOffPeriod', ''),
+                redemptionDate: item.get('redemptionCutOffPeriod', '')
             });
             return result;
         }, []);
@@ -184,7 +184,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Push the edit tab into the array. */
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
-        const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
@@ -221,7 +221,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Push the edit tab into the array. */
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
-        const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
