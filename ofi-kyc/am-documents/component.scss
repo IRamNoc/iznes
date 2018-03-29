@@ -8,8 +8,8 @@
 //}
 .well {
     background: white;
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 5px;
+    //padding: 20px;
     margin: 20px;
     overflow: auto;
 }
@@ -17,15 +17,17 @@
   a {
       color: black;
       line-height: 48px;
+      font-weight: bold;
   }
   button {
       margin-right: 0;
   }
-  .fa-chevron-down {
+  .fa-chevron-right {
+        margin-right: 10px;
         transform: rotate(0deg);
         transition: transform .5s;
     &.reverse {
-         transform: rotate(-180deg);
+         transform: rotate(90deg);
      }
   }
 }
