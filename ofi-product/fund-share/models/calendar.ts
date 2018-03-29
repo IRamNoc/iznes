@@ -51,7 +51,18 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         type: FormItemType.number,
         label: 'Yearly Redemption Dealing Days',
         required: true
+    }    
+    navPeriodForSubscription: FormItem = {
+        type: FormItemType.number,
+        label: 'NAV Period For Subscription',
+        required: true
     }
+    navPeriodForRedemption: FormItem = {
+        type: FormItemType.number,
+        label: 'NAV Period For Redemption',
+        required: true
+    }
+
     subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
