@@ -45,7 +45,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         testSetUp();
-
         screenshotRule.setDriver(driver);
     }
 
@@ -85,11 +84,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplayCreatedUmbrellaFundInFundsTable(){
-
-    }
-
-    @Test
     public void shouldCreateAnUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
@@ -98,6 +92,26 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
         searchAndSelectTopDropdown("uf_domicile", "Jordan");
         submitUmbrellaFund();
+    }
+
+    @Test
+    public void shouldDisplayCreatedUmbrellaFundInFundsTable() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        try {
+            String umbFundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]")).getText();
+            String umbFundLEI = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[2]")).getText();
+            String umbFundManagement = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getText();
+            String umbFundCountry = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]")).getText();
+            System.out.println(umbFundName + ", " + umbFundLEI + ", " + umbFundManagement + ", " + umbFundCountry);
+            assertTrue(umbFundName.equals("TestUmbrellaFunds1"));
+            assertTrue(umbFundLEI.equals("testLei"));
+            assertTrue(umbFundManagement.equals("Management Company"));
+            assertTrue(umbFundCountry.equals("Jordan"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
     }
 
     @Test
