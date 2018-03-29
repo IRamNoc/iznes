@@ -188,7 +188,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         // When membernode reconnect. trigger wallet select.
         this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() =>
-            this.selected(this.selectedWalletId)));
+            this.selected(this.selectedWalletId.value[0])));
     }
 
     ngAfterViewInit() {
