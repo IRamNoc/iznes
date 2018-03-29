@@ -59,13 +59,13 @@ public class OpenCSDNavigationAcceptanceTest {
 
     @Test
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToPageByID("menu-asset-manager-dashboard");
     }
 
     @Test
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
     }
@@ -80,28 +80,28 @@ public class OpenCSDNavigationAcceptanceTest {
 
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-management-company");
     }
 
     @Test
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-sicav");
     }
 
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
 
     }
 
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage2("product-module/net-asset-value");
     }
@@ -141,7 +141,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     @Ignore
     public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/coupon-payment");
     }

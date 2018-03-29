@@ -58,7 +58,7 @@ public class OpenCSDMessageModuleAcceptanceTest {
 
     @Test
     public void shouldSendMessageToWallet() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         sendMessageToSelectedWallet("investor", "c5bg67a", "Hello Investor, please send me all your money", "Your message has been sent!");
         try {
             Thread.sleep(5000);
@@ -66,24 +66,24 @@ public class OpenCSDMessageModuleAcceptanceTest {
         } catch (Error e) {
             fail("logout button was not clickable");
         }
-        verifyMessageHasBeenReceived("investor", "trb2017", "c5bg67a");
+        verifyMessageHasBeenReceived("investor", "alex01", "c5bg67a");
     }
 
     @Test
     public void shouldNotSendMessageWithoutRecipient() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         sendMessageToSelectedWalletWithoutRecipient("c5bg66", "TextMessage", "Please fill out all fields");
     }
 
     @Test
     public void shouldNotSendMessageWithoutSubject() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         sendMessageToSelectedWallet("investor", "", "TextMessage", "Please fill out all fields");
     }
 
     @Test
     public void shouldNotSendMessageWithoutBodyText() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         sendMessageToSelectedWallet("investor", "c5bg66", "", "Please fill out all fields");
     }
 

@@ -51,7 +51,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldNavigateToSharesFundsUmbrellaFunds() throws InterruptedException, IOException{
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         String pageHeading = driver.findElement(By.id("am-product-home")).getText();
@@ -60,7 +60,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldDisplaySameTitleIconAsNavIcon() throws InterruptedException, IOException{
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         String headingIcon = driver.findElement(By.xpath("//*[@id=\"am-product-home\"]/i")).getAttribute("class");
@@ -70,7 +70,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         validatePageLayout();
@@ -78,14 +78,20 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
+
+    @Test
+    public void shouldDisplayCreatedUmbrellaFundInFundsTable(){
+
+    }
+
     @Test
     public void shouldCreateAnUmbrellaFund() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         selectAddUmbrellaFund();
@@ -96,7 +102,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         selectAddUmbrellaFund();
@@ -107,7 +113,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         selectAddUmbrellaFund();
@@ -118,18 +124,13 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     @Test
     public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "trb2017");
+        loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
         selectAddUmbrellaFund();
         fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
         searchAndSelectTopDropdown("uf_domicile", "Ireland");
         submitUmbrellaFund();
-    }
-
-    @Test
-    public void shouldDisplayCreatedUmbrellaFundInFundsTable(){
-
     }
 
     @Test
