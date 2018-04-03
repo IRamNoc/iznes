@@ -17,11 +17,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
+import java.sql.SQLException;
 
+import static SETLAPIHelpers.DatabaseHelper.databaseCountRows;
+import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUsersFormdataTable;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -47,8 +51,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldAutosaveInformation() throws IOException, InterruptedException {
+    public void shouldAutosaveInformation() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        int persist = databaseCountRows("UsersFormdata");
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
@@ -61,6 +66,19 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("user-tab-1")).click();
         String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(username.equals("I wonder if this will stay here"));
+        validateDatabaseUsersFormdataTable(persist+1);
+
+    }
+
+    @Test
+    public void shouldNotPersistInformationAfterSave() throws IOException, InterruptedException, SQLException {
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        int persist = databaseCountRows("UsersFormdata");
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-users");
+        String userDetails[] = generateRandomUserDetails();
+        createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
+        validateDatabaseUsersFormdataTable(persist);
     }
 
     @Test
@@ -317,11 +335,15 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void createUserAndVerifySuccess(String username, String email, String password) {
         driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).clear();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
+        driver.findElement(By.id("new-user-email")).clear();
         driver.findElement(By.id("new-user-email")).sendKeys(email);
         selectManageUserAccountDropdown();
         selectManageUserUserDropdown();
+        driver.findElement(By.id("new-user-password")).clear();
         driver.findElement(By.id("new-user-password")).sendKeys(password);
+        driver.findElement(By.id("new-user-password-repeat")).clear();
         driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
         driver.findElement(By.id("new-user-submit")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

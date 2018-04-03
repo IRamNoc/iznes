@@ -17,7 +17,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.*;
 
-import static SETLAPIHelpers.DatabaseHelper.deleteUserFromDB;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -63,10 +62,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
 
-    @Test
-    public void deleteUser() throws IOException, InterruptedException, SQLException {
-        deleteUserFromDB(username, password, "testops088@setl.io");
-    }
 
     @Test
     public void shouldSeeCorrectFieldsOnMyInformationPage() throws IOException, InterruptedException {
