@@ -66,7 +66,7 @@ export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
     shareisin: string;
     portfolioid: number;
     subportfolio: string;
-    datebby: string;
+    dateby: string;
     datevalue: string;
     ordertype: string;
     orderby: string;
