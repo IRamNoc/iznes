@@ -4,7 +4,7 @@ import {select, NgRedux} from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 import {SagaHelper, Common} from '@setl/utils';
 
 /* Import actions. */
@@ -33,7 +33,8 @@ import {
     OfiRequestArrangements,
     OfiUpdateArrangement,
     OfiGetContractByOrder,
-    OfiGetArrangementCollectiveArchive
+    OfiGetArrangementCollectiveArchive,
+    IznesNewOrderRequestBody
 } from './model';
 
 interface ManageOrdersData {
@@ -109,6 +110,28 @@ export class OfiOrdersService {
         ));
     }
 
+    /**
+     * Default static call to get arrangement collective archive, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiOrdersService
+     * @param ngRedux
+     */
+    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCollectiveArchive());
+
+        // Request the list.
+        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_COLLECTIVE_ARCHIVE],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
     placeFakeOrder(): any {
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'iznesfakeorder',
@@ -116,6 +139,34 @@ export class OfiOrdersService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    addNewOrder(requestData: {
+        shareIsin: string;
+        portfolioId: number;
+        subportfolio: string,
+        dateBy: string;
+        dateValue: string;
+        orderType: string;
+        orderBy: string;
+        orderValue: number;
+        comment: string;
+    }): any {
+        const messageBody: IznesNewOrderRequestBody = {
+            RequestName: 'iznesneworder',
+            token: this.memberSocketService.token,
+            shareisin: requestData.shareIsin,
+            portfolioid: requestData.portfolioId,
+            subportfolio: requestData.subportfolio,
+            datebby: requestData.dateBy,
+            datevalue: requestData.dateValue,
+            ordertype: requestData.orderType,
+            orderby: requestData.orderBy,
+            ordervalue: requestData.orderValue,
+            comment: requestData.comment
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     requestManageOrdersList(data: ManageOrdersData): any {
@@ -163,29 +214,6 @@ export class OfiOrdersService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-
-    /**
-     * Default static call to get arrangement collective archive, and dispatch default actions, and other
-     * default task.
-     *
-     * @param ofiOrdersService
-     * @param ngRedux
-     */
-    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedCollectiveArchive());
-
-        // Request the list.
-        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_COLLECTIVE_ARCHIVE],
-            [],
-            asyncTaskPipe,
-            {}
-        ));
     }
 
     /**
