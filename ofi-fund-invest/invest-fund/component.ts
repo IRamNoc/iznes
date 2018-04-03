@@ -140,8 +140,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         6: true
     };
 
-    get feePercentage(): string {
-        return this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee'];
+    get feePercentage(): number {
+        return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
     }
 
     get cutoffTime(): string {
@@ -671,7 +671,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply(feePercent).divide(100).done(), 14));
+    return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
 }
 
 /**
