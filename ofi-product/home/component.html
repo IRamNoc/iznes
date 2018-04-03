@@ -48,14 +48,18 @@
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'column.dataSource'" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let row of panel.data" (click)="goToView(panel.link, row[panel.linkIdent])">
+                <clr-dg-row
+                        *clrDgItems="let row of panel.data"
+                        (click)="goToView(panel.link, row[panel.linkIdent])"
+                        id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"
+                >
                     <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
                         <span>{{row[dataCol.dataSource]}}</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
