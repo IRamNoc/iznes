@@ -44,8 +44,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedAmAllFundShareList']) requestedAmAllFundShareListOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'amAllFundShareList']) amAllFundShareListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedShare']) requestedAmAllFundShareListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -65,8 +65,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this.requestedAmKycListObs.subscribe(requested => {
             this.requestAllFundShareList(requested);
         }));
-        this.subscriptions.push(this.amAllFundShareListOb.subscribe(navList => {
-            this.updateAllFundShareList(navList);
+        this.subscriptions.push(this.amAllFundShareListOb.subscribe(fundShareList => {
+            this.updateAllFundShareList(fundShareList);
         }));
 
         // Get the parameter passed to URL
@@ -218,12 +218,12 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             };
 
             this.investor = {
-                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
-                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest },
-                'firstName': { label: 'First name:', value: kyc.investorFirstName },
-                'lastName': { label: 'Last name:', value: kyc.investorLastName },
-                'email': { label: 'Email address:', value: kyc.investorEmail },
-                'phoneNumber': { label: 'Phone number:', value: phoneNumber }
+                'companyName': {label: 'Company name:', value: kyc.investorCompanyName},
+                'approvalDateRequest': {label: 'Date of approval request:', value: approvalDateRequest},
+                'firstName': {label: 'First name:', value: kyc.investorFirstName},
+                'lastName': {label: 'Last name:', value: kyc.investorLastName},
+                'email': {label: 'Email address:', value: kyc.investorEmail},
+                'phoneNumber': {label: 'Phone number:', value: phoneNumber}
             };
 
             this.amCompany = kyc.companyName;
@@ -244,20 +244,18 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     requestAllFundShareList(requested: boolean) {
 
-        if (requested) {
-            return;
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
         }
-
-        OfiFundShareService.defaultRequestAmAllFundShareList(this._ofiFundShareService, this._ngRedux);
     }
 
     updateAllFundShareList(shareData: { [shareId: string]: AllFundShareDetail }) {
         this.tableData = immutableHelper.reduce(shareData, (result, item) => {
             result.push({
-                id: item.get('shareId', ''),
+                id: item.get('fundShareID', ''),
                 fundName: item.get('fundName', ''),
-                shareName: item.get('shareName', ''),
-                isin: item.get('fundShareIsin', ''),
+                shareName: item.get('fundShareName', ''),
+                isin: item.get('isin', ''),
                 assess: false
             });
             return result;

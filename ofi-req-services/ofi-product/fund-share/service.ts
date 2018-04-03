@@ -29,7 +29,8 @@ export interface RequestInvestorFundAccessData {
 @Injectable()
 export class OfiFundShareService {
 
-    constructor(private memberSocketService: MemberSocketService) {}
+    constructor(private memberSocketService: MemberSocketService) {
+    }
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
@@ -68,7 +69,7 @@ export class OfiFundShareService {
      */
     requestAmAllFundShareList(): any {
         const messageBody: AmAllFundShareListRequestBody = {
-            RequestName: 'getfundstatus',
+            RequestName: 'izngetfundsharelist',
             token: this.memberSocketService.token
         };
 
@@ -104,10 +105,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultCreateFundShare(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                  ngRedux: NgRedux<any>,
+                                  requestData,
+                                  successCallback: (data) => void,
+                                  errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.createFundShare(requestData);
 
@@ -120,7 +121,7 @@ export class OfiFundShareService {
             (e) => errorCallback(e)
         ));
     }
-    
+
     createFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznescreatefundshare',
@@ -166,10 +167,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultUpdateFundShare(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                  ngRedux: NgRedux<any>,
+                                  requestData,
+                                  successCallback: (data) => void,
+                                  errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.updateFundShare(requestData);
 
@@ -182,7 +183,7 @@ export class OfiFundShareService {
             (e) => errorCallback(e)
         ));
     }
-    
+
     updateFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznesupdatefundshare',
