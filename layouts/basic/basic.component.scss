@@ -1,0 +1,21 @@
+.content-area{
+  scroll-behavior: smooth;
+}
+
+.backToTop {
+  position: fixed;
+  right: 40px;
+  bottom: 30px;
+  opacity: 0;
+  cursor: pointer;
+  -webkit-transition: opacity 0.2s ease-out;
+  -moz-transition: opacity 0.2s ease-out;
+  -ms-transition: opacity 0.2s ease-out;
+  -o-transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
+}
+
+.backToTop i {
+  font-size: 7em;
+  color: rgba(0,0,0,0.5);
+}
