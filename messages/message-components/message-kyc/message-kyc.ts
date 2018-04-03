@@ -36,7 +36,7 @@ export const kycMessages = {
             greeting: 'Bonjour {{amFirstName}},',
             line1: '{{investorCompanyName}} a répondu "Non" à la question :',
             line2: '"Avez-vous déjà rempli vos documents KYC avec{{amCompanyName}} ?"',
-            line3: 'Ci-dessous les coordonnées de {{investorCompanyName}} afin de les aider à compléter leur documents KYC :',
+            line3: 'Ci-dessous les coordonnées de {{investorCompanyName}} afin de les aider à compléter leurs documents KYC :',
             email: 'Adresse e-mail : {{investorEmail}}',
             phoneNumber: 'Numéro de téléphone : {{investorPhoneNumber}}',
             line4: 'Veuillez cliquer sur le lien suivant pour "Approuver", "Refuser" ou "Demander plus d\'information" une fois que les documents KYC de {{investorCompanyName}} sont entièrement complétés.',
