@@ -20,6 +20,9 @@ import {
     clearRequestedMailInitial,
     setRequestedMailList,
     setRequestedMailInitial,
+
+    //wallets
+    SET_OWN_WALLETS
 } from '@setl/core-store';
 
 @Injectable()
@@ -171,6 +174,18 @@ export class ChannelService {
             case 'email_mark_isdelete': // email deleted
                 this.ngRedux.dispatch(clearRequestedMailInitial());
 
+                break;
+
+            case 'uw':  //update wallets
+
+                console.log('uw - TEST ----');
+
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_OWN_WALLETS,
+                        payload: [null, data, null]
+                    }
+                );
                 break;
 
             default:
