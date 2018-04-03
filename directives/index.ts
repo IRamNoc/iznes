@@ -7,6 +7,7 @@ import {ClrDgIconSortDirective} from './clr-dg-sort-icon/directive';
 import {ClrDgSortNoSearchDirective} from './clr-dg-sort-nosearch/directive';
 import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
+import {BackToTopDirective} from './back-to-top/back-to-top.directive';
 import {MoneyValuePipe} from '../pipes';
 
 
@@ -17,6 +18,7 @@ import {MoneyValuePipe} from '../pipes';
         ClrDgSortNoSearchDirective,
         HighlightDirective,
         ClickedDirective,
+        BackToTopDirective,
     ],
     exports: [
         NumberFormatterDirective,
@@ -24,6 +26,7 @@ import {MoneyValuePipe} from '../pipes';
         ClrDgSortNoSearchDirective,
         HighlightDirective,
         ClickedDirective,
+        BackToTopDirective,
     ],
     imports: [
         CommonModule,
