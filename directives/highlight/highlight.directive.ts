@@ -42,7 +42,7 @@ export class HighlightDirective implements OnDestroy {
                     if (elt.id === this.el.nativeElement.id) {
                         if (this.originalValues[this.el.nativeElement.id].position.toString() !== 'relative') this.renderer.setStyle(this.el.nativeElement, 'position', 'relative');
                         // clr-modal use z-index 1040 for overlay & 1050 for modal
-                        if (this.originalValues[this.el.nativeElement.id].zIndex.toString() !== '2000') this.renderer.setStyle(this.el.nativeElement, 'z-index', '2000');
+                        if (this.originalValues[this.el.nativeElement.id].zIndex.toString() !== '3000') this.renderer.setStyle(this.el.nativeElement, 'z-index', '3000');
                         // to avoid background transparent on black overlay
                         //  && this.el.nativeElement.tagName !== 'IMG'
                         if (this.originalValues[this.el.nativeElement.id].backgroundColor.toString() === 'rgba(0, 0, 0, 0)') this.renderer.setStyle(this.el.nativeElement, 'background-color', 'white');
