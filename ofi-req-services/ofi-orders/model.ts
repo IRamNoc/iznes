@@ -60,3 +60,16 @@ export interface OfiGetContractByOrder extends OfiMemberNodeBody {
 export interface OfiGetArrangementCollectiveArchive extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
+    token: string;
+    shareisin: string;
+    portfolioid: number;
+    subportfolio: string;
+    datebby: string;
+    datevalue: string;
+    ordertype: string;
+    orderby: string;
+    ordervalue: number;
+    comment: string;
+}

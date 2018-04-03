@@ -13,7 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
-import {isInRootDir} from "@angular/compiler-cli/src/transformers/util";
+import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 
 
 @Component({
@@ -30,6 +30,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     fundList: Array<any>;
 
+    connectedWalletId: number;
+
     // production or not
     production: boolean;
 
@@ -38,6 +40,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
@@ -55,10 +58,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.setInitialTabs();
 
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+            if (this.connectedWalletId !== 0) {
+                this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
+                    (requested) => this.requestMyFundAccess(requested)));
+            }
+        }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-
-        this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
-            (requested) => this.requestMyFundAccess(requested)));
         this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
             (fundShareAccessList) => this.updateFundList(fundShareAccessList)));
 
@@ -66,6 +73,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         }));
+
     }
 
     setInitialTabs() {
@@ -111,7 +119,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      */
     requestMyFundAccess(requested): void {
         if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux);
+            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux, this.connectedWalletId);
         }
     }
 
@@ -126,21 +134,20 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.fundList = fundListImu.reduce((result, item) => {
             result.push({
-                id: item.get('shareId', 0),
-                isin: item.getIn(['metaData', 'isin'], ''),
-                shareName: item.getIn(['metaData', 'shareName'], ''),
-                assetClass: item.getIn(['metaData', 'assetClass'], ''),
-                assetManager: item.getIn(['managementCompany'], ''),
-                srri: item.getIn(['metaData', 'srri'], ''),
-                sri: item.getIn(['metaData', 'fundSri'], ''),
-                currency: item.getIn(['metaData', 'shareCurrency'], ''),
-                nav: this._numberConverterService.toFrontEnd(item.getIn(['price'], 0)),
-                subscriptionDate: item.getIn(['metaData', 'subscriptionCutOff'], ''),
-                redemptionDate: item.getIn(['metaData', 'redemptionCutOff'], '')
+                id: item.get('fundShareId', 0),
+                isin: item.get('isin', ''),
+                shareName: item.get('fundShareName', ''),
+                assetClass: FundShareValue.ClassCodeValue[item.get('shareClassCode', 0)],
+                assetManager: item.get('companyName', ''),
+                srri: item.get('keyFactOptionalData.srri', ''),
+                sri: item.get('keyFactOptionalData.sri', ''),
+                currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
+                nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
+                subscriptionDate: item.get('subscriptionCutOffPeriod', ''),
+                redemptionDate: item.get('redemptionCutOffPeriod', '')
             });
             return result;
         }, []);
-
         this.tabsControl = immutableHelper.copy(this.tabsControl);
 
         this._changeDetectorRef.markForCheck();
@@ -177,7 +184,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Push the edit tab into the array. */
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
-        const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
@@ -214,7 +221,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         /* Push the edit tab into the array. */
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
-        const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {

@@ -76,6 +76,9 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             }
         });
 
+        // test data.
+        this.tableData = [];
+
         this.access = {};
 
         this.amCompany = '';

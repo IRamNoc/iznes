@@ -282,7 +282,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.fundCurrencyItems, { id: fund.domicile }) || { text: '' };
+                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
                 const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
                 const fundCurrency = _.find(this.fundCurrencyItems, { id: fund.fundCurrency }) || { text: '' };
 
@@ -355,7 +355,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = this.countryItems.filter(country => country.id === item.get('domicile'));
+                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
 
                 umbrellaFundList.push({
                     umbrellaFundID: item.get('umbrellaFundID', 0),
@@ -363,7 +363,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     registerOffice: item.get('registerOffice', ''),
                     registerOfficeAddress: item.get('registerOfficeAddress', ''),
                     legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
-                    domicile: (domicile.length > 0) ? domicile[0].text : '',
+                    domicile: domicile.text,
                     umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
                     managementCompany: _.get(this.managementCompanyAccessList, [item.get('managementCompanyID', 0), 'companyName'], ''),
                     fundAdministratorID: item.get('fundAdministratorID', 0),
