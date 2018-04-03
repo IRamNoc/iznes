@@ -4,7 +4,7 @@
 </div>
 
 <!-- Main content. -->
-<div class="wrapper wrapper-content">
+<div class="wrapper wrapper-content text-margin">
     <p>Here's a list of all clients' KYC, organised by status:</p>
 </div>
 
@@ -13,7 +13,7 @@
     <div class="row panel-header">
         <div class="col-xs-6">
             <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i> {{panel.title}} ({{(panel.data).length}})
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i> <h2>{{panel.title}} ({{(panel.data).length}})</h2>
             </a>
         </div>
     </div>
@@ -33,6 +33,10 @@
                         </span>
                     </clr-dg-cell>
                 </clr-dg-row>
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
             </clr-datagrid>
         </div>
     </div>

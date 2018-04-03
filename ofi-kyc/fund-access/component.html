@@ -14,107 +14,42 @@
             <clr-tab-content>
                 <div class="panel-body">
 
-                    <div style="padding-left: 20px">Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
+                    <div>Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
 
                     <app-text-input-list [title]="'Professional Investor Details'" [content]="investor"></app-text-input-list>
 
-                    <!--<h2>Professional Investor Details</h2>-->
-
-                    <!--<form>-->
-                        <!--<div class="row form-group">-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test">-->
-                                    <!--<span>Company Name:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test" class="form-control" value="{{investorData['companyName']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test6">-->
-                                    <!--<span>Date of Approval Request:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test6" class="form-control" value="{{investorData['approvalDate']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="row form-group">-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test2">-->
-                                    <!--<span>First Name:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test2" class="form-control" value="{{investorData['firstName']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test3">-->
-                                    <!--<span>Last Name:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test3" class="form-control" value="{{investorData['lastName']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="row form-group">-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test4">-->
-                                    <!--<span>Email Address:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test4" class="form-control" value="{{investorData['email']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<label for="test5">-->
-                                    <!--<span>Telephone Number:</span>-->
-                                <!--</label>-->
-                                <!--<div>-->
-                                    <!--<input type="text" id="test5" class="form-control" value="{{investorData['telephoneNumber']}}" disabled>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</form>-->
-
                     <div class="hr-line-dashed"></div>
 
-                    <div style="padding-left: 20px; padding-right: 20px;">
+                    <div>
                         <h2>Funds' Share Access Authorisation</h2>
 
                         <form>
                             <div class="row form-group">
-                                <div class="col-sm-12">
-                                    We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
-                                </div>
-                            </div>
-                            <div class="row form-group" style="margin-top: 25px;">
-                                <div class="col-sm-12">
-                                    <clr-datagrid #myDataGrid style="max-height: 275px; overflow: scroll;">
-                                        <clr-dg-column>Fund Name</clr-dg-column>
-                                        <clr-dg-column>Share Name</clr-dg-column>
-                                        <clr-dg-column>ISIN</clr-dg-column>
-                                        <clr-dg-column>Grant Access to this Share?</clr-dg-column>
-                                        <clr-dg-row *clrDgItems="let row of tableData">
-                                            <clr-dg-cell>
-                                                {{row['fundName']}}
-                                            </clr-dg-cell>
-                                            <clr-dg-cell>
-                                                {{row['shareName']}}
-                                            </clr-dg-cell>
-                                            <clr-dg-cell>
-                                                {{row['isin']}}
-                                            </clr-dg-cell>
-                                            <clr-dg-cell>
-                                                <ng-container *ngIf="access[row['id']]">
-                                                    <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
-                                                        <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
-                                                    </span>
-                                                </ng-container>
-                                            </clr-dg-cell>
-                                        </clr-dg-row>
-                                    </clr-datagrid>
-                                </div>
+                                We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
+                                <clr-datagrid #myDataGrid class="fund-table">
+                                    <clr-dg-column>Fund Name</clr-dg-column>
+                                    <clr-dg-column>Share Name</clr-dg-column>
+                                    <clr-dg-column>ISIN</clr-dg-column>
+                                    <clr-dg-column>Grant Access to this Share?</clr-dg-column>
+                                    <clr-dg-row *clrDgItems="let row of tableData">
+                                        <clr-dg-cell>
+                                            {{row['fundName']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            {{row['shareName']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            {{row['isin']}}
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>
+                                            <ng-container *ngIf="access[row['id']]">
+                                                <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
+                                                    <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
+                                                </span>
+                                            </ng-container>
+                                        </clr-dg-cell>
+                                    </clr-dg-row>
+                                </clr-datagrid>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12" align="center">
