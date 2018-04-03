@@ -17,6 +17,7 @@ import {MultilingualModule} from '@setl/multilingual';
 import {ProductHomeComponent} from './home/component';
 import {UmbrellaFundComponent} from './umbrella-fund/component';
 import {FundShareComponent} from './fund-share/form/component';
+import {FundShareTradeCycleComponent} from './fund-share/form/trade-cycle/component';
 import {AddNewFundShareComponent} from './fund-share/add-new/component';
 import {FundComponent} from './fund/component';
 
@@ -34,6 +35,7 @@ import fundItems from './fundConfig';
         ProductHomeComponent,
         UmbrellaFundComponent,
         FundShareComponent,
+        FundShareTradeCycleComponent,
         AddNewFundShareComponent,
         FundComponent
     ],
@@ -41,6 +43,7 @@ import fundItems from './fundConfig';
         ProductHomeComponent,
         UmbrellaFundComponent,
         FundShareComponent,
+        FundShareTradeCycleComponent,
         AddNewFundShareComponent,
         FundComponent
     ],

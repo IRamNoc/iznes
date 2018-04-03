@@ -95,8 +95,19 @@ export class FundShare {
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
+            subscriptionTradeCyclePeriod: null,
+            numberOfPossibleSubscriptionsWithinPeriod: null,
+            weeklySubscriptionDealingDays: null,
+            monthlySubscriptionDealingDays: null,
+            yearlySubscriptionDealingDays: null,
+            redemptionTradeCyclePeriod: null,
+            numberOfPossibleRedemptionsWithinPeriod: null,
+            weeklyRedemptionDealingDays: null,
+            monthlyRedemptionDealingDays: null,
+            yearlyRedemptionDealingDays: null,
+            navPeriodForSubscription: this.calendar.mandatory.navPeriodForSubscription.value(),
+            navPeriodForRedemption: this.calendar.mandatory.navPeriodForRedemption.value(),
             portfolioCurrencyHedge: portfolioCurrencyHedge,
-            tradeDay: this.calendar.mandatory.tradeDay.value()[0].id,
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.calendar.mandatory.subscriptionCutOffTimeZone.value()[0].id,
             subscriptionSettlementPeriod: this.calendar.mandatory.subscriptionSettlementPeriod.value()[0].id,
@@ -153,7 +164,6 @@ export class FundShare {
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
         this.setListItemPreset(this.characteristic.optional.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
-        this.setListItemPreset(this.calendar.mandatory.tradeDay, fundShare.tradeDay);
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
         this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);

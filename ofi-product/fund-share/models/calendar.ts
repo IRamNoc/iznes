@@ -2,64 +2,28 @@ import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@set
 import * as E from '../FundShareEnum';
 
 export class ShareCalendarMandatory extends DynamicFormsValidator {
-    subscriptionTradeCyclePeriod: FormItem = {
-        type: FormItemType.number,
-        label: 'Subscription Trade Cycle Period',
-        required: true
-    }
-    numberOfPossibleSubscriptionsWithinPeriod: FormItem = {
-        type: FormItemType.number,
-        label: 'Number Of Possible Subscriptions Within Period',
-        required: true
-    }
-    weeklySubscriptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Weekly Subscription Dealing Days',
-        required: true
-    }
-    monthlySubscriptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Monthly Subscription Dealing Days',
-        required: true
-    }
-    yearlySubscriptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Yearly Subscription Dealing Days',
-        required: true
-    }
-    redemptionTradeCyclePeriod: FormItem = {
-        type: FormItemType.number,
-        label: 'Redemption Trade Cycle Period',
-        required: true
-    }
-    numberOfPossibleRedemptionsWithinPeriod: FormItem = {
-        type: FormItemType.number,
-        label: 'Number Of Possible Redemptions Within Period',
-        required: true
-    }
-    weeklyRedemptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Weekly Redemption Dealing Days',
-        required: true
-    }
-    monthlyRedemptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Monthly Redemption Dealing Days',
-        required: true
-    }
-    yearlyRedemptionDealingDays: FormItem = {
-        type: FormItemType.number,
-        label: 'Yearly Redemption Dealing Days',
-        required: true
-    }    
     navPeriodForSubscription: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.list,
         label: 'NAV Period For Subscription',
+        listItems: [
+            { id: E.BusinessDaysEnum.One, text: '1' },
+            { id: E.BusinessDaysEnum.Two, text: '2' },
+            { id: E.BusinessDaysEnum.Three, text: '3' },
+            { id: E.BusinessDaysEnum.Four, text: '4' },
+            { id: E.BusinessDaysEnum.Five, text: '5' }
+        ],
         required: true
     }
     navPeriodForRedemption: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.list,
         label: 'NAV Period For Redemption',
+        listItems: [
+            { id: E.BusinessDaysEnum.One, text: '1' },
+            { id: E.BusinessDaysEnum.Two, text: '2' },
+            { id: E.BusinessDaysEnum.Three, text: '3' },
+            { id: E.BusinessDaysEnum.Four, text: '4' },
+            { id: E.BusinessDaysEnum.Five, text: '5' }
+        ],
         required: true
     }
 
