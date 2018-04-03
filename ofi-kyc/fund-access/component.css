@@ -9,3 +9,8 @@
 .text-red{
     color: red;
 }
+
+.fund-table{
+    width: 100%;
+    margin-top: 10px;
+}
