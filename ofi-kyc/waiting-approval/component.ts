@@ -11,6 +11,7 @@ import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
 import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {ConfirmationService} from '@setl/utils';
 
 enum Statuses {
     waitingApproval = 1,
@@ -69,6 +70,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private redux: NgRedux<any>,
                 private route: ActivatedRoute,
                 private alertsService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private toast: ToasterService,
                 private _router: Router,
                 private walletsService: MyWalletsService,
@@ -224,7 +226,18 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
             case Statuses.rejected:
-                this.isRejectModalDisplayed = true;
+                //this.isRejectModalDisplayed = true;
+
+                this.confirmationService.create(
+                    'Confirm Rejection?',
+                    'Are you sure you want to reject this client\'s application?<br>You can also ask more information to this client in the previous page',
+                    {confirmText: 'Reject the cient\'s application', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
+                    if (ans.resolved){
+                        this.handleRejectButtonClick();
+                    }else{
+                        this.handleModalCloseButtonClick();
+                    }
+                });
                 break;
 
             case Statuses.askMoreInfo:

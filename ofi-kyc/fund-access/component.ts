@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
 import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
+import {ConfirmationService} from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -28,7 +29,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     investor = {};
     tableData = [];
     access = {};
-    showModal = false;
     changes = {
         add: false,
         remove: false
@@ -54,6 +54,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 private _ofiKycService: OfiKycService,
                 private _messagesService: MessagesService,
                 private _route: ActivatedRoute,
+                private _confirmationService: ConfirmationService,
                 private _ofiFundShareService: OfiFundShareService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
@@ -103,7 +104,38 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         Object.keys(this.access).forEach((key) => {
             if (this.access[key]['changed']) this.changes[(this.access[key]['access'] ? 'add' : 'remove')] = true;
         });
-        this.showModal = true;
+
+        let message = '';
+        if (!this.changes['add'] && !this.changes['remove']){
+            message += 'No changes have been made to the Investors\' Fund Access permissions.';
+        }
+        if (this.changes['add']){
+            message += `<br>You are giving ${this.investorData['companyName']} permission to invest in the following funds' shares:<br><br>
+                       <table class="table grid"><tr><td><b>Fund Name</b></td><td><b>Share Name</b></td><td><b>ISIN</b></td></tr>`;
+            this.tableData.forEach((row)=>{
+                if (this.access[row['id']]['changed'] && this.access[row['id']]['access']){
+                    message += `<tr><td>${row['fundName']}</td><td>${row['shareName']}</td><td>${row['isin']}</td></tr>`;
+                }
+            });
+            message += '</table>';
+            if (this.changes['remove']) message += '<br>';
+        }
+        if (this.changes['remove']){
+            message += `<br>You are removing ${this.investorData['companyName']}'s permission to invest in the following funds' shares:<br><br>
+                       <table class="table grid"><tr><td><b>Fund Name</b></td><td><b>Share Name</b></td><td><b>ISIN</b></td></tr>`;
+            this.tableData.forEach((row)=>{
+                if (this.access[row['id']]['changed'] && !this.access[row['id']]['access']){
+                    message += `<tr><td>${row['fundName']}</td><td>${row['shareName']}</td><td>${row['isin']}</td></tr>`;
+                }
+            });
+            message += '</table>';
+        }
+
+        this._confirmationService.create('Confirm Fund Share Access:', message, {confirmText: 'Confirm Access', declineText: 'Cancel', btnClass: 'primary'}).subscribe((ans) => {
+            if (ans.resolved) {
+                this.saveAccess();
+            }
+        });
     }
 
     saveAccess() {
