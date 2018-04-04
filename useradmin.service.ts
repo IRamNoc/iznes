@@ -124,6 +124,14 @@ export class UserAdminService {
             'id': '50',
             'text': 'Registrar'
         },
+        {
+            'id': '60',
+            'text': 'T2S Admin'
+        },
+        {
+            'id': '65',
+            'text': 'Rooster Operator'
+        },
     ];
 
     /* Group Types. */
