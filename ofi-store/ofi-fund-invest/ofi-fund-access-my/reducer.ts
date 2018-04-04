@@ -60,20 +60,17 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             };
         }
 
-        const shareId = item.get('shareID', 0);
-        // let metaData = {};
-        // try {
-        //     metaData = JSON.parse(atob(item.get('metadata', '')));
-        // } catch (e) {
-        //     metaData = {};
+        const shareId = item.get('fundShareID', 0);
+
+        // disable fundshare price check for now
+        // need to re-enable after nav page is ready.
+
+        // const price = item.get('price', 0);
+        //
+        // // Price should never be 0. if 0, jut ignore this fundshare.
+        // if (price === 0) {
+        //     return result;
         // }
-
-        const price = item.get('price', 0);
-
-        // Price should never be 0. if 0, jut ignore this fundshare.
-        if (price === 0) {
-            return result;
-        }
 
         result.fundShareAccessList[shareId] = {
             shareId,
