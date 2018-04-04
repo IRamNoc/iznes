@@ -361,12 +361,14 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['transferAgent'].setValidators(Validators.required);
                 } else {
                     this.fundForm.controls['transferAgent'].clearValidators();
+                    this.fundForm.controls['transferAgent'].updateValueAndValidity();
                 }
 
                 if (this.isCentralizingAgentActive()) {
                     this.fundForm.controls['centralizingAgent'].setValidators(Validators.required);
                 } else {
                     this.fundForm.controls['centralizingAgent'].clearValidators();
+                    this.fundForm.controls['centralizingAgent'].updateValueAndValidity();
                 }
 
                 if (this.isHomeCountryLegalTypeVisible()) {
@@ -375,6 +377,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 } else {
                     this.homeCountryLegalTypeItems = [];
                     this.fundForm.controls['homeCountryLegalType'].clearValidators();
+                    this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
                 }
             });
 
@@ -384,6 +387,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (d === this.enums.isEuDirective.NO.toString()) {
                     this.fundForm.controls['typeOfEuDirective'].setValue([]);
                     this.fundForm.controls['typeOfEuDirective'].clearValidators();
+                    this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
                 } else {
                     this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
                 }
@@ -395,6 +399,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
                     this.fundForm.controls['UcitsVersion'].setValue([]);
                     this.fundForm.controls['UcitsVersion'].clearValidators();
+                    this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
                 } else {
                     this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
                 }
