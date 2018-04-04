@@ -777,10 +777,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         let
             oldAccess = {},
             newAccess = {};
-        oldAccessArr.map(chain => {
+        oldAccessArr.map && oldAccessArr.map(chain => {
             oldAccess[chain.id] = chain
         });
-        newAccessArr.map(chain => {
+        newAccessArr.map && newAccessArr.map(chain => {
             newAccess[chain.chainId] = chain
         });
 
@@ -1116,7 +1116,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             /* Set the old wallet access, this'll be used to diff later. */
-            userWalletPermissions.map((wallet) => {
+            userWalletPermissions.map && userWalletPermissions.map((wallet) => {
                 /* Build the structure in the old  */
                 this.tabsControl[newTabId]['oldWalletAccess'][wallet.walletID] = wallet.permission;
             });
@@ -1166,7 +1166,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             /* Set the old wallet access, this'll be used to diff later. */
-            userGroupWalletPermission.map((group) => {
+            userGroupWalletPermission.map && userGroupWalletPermission.map((group) => {
                 /* Build the structure in the old  */
                 this.tabsControl[newTabId]['oldGroupWalletAccess'][group.accountID] = group.permission;
             });
