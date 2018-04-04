@@ -13,6 +13,7 @@ import {ShareProfileMandatory, ShareProfileOptional} from './models/profile';
 import {ShareRepresentationOptional} from './models/representation';
 import {ShareSolvencyOptional} from './models/solvency';
 import {ShareTaxationOptional} from './models/taxation';
+import {FundShareTradeCycleModel} from './form/trade-cycle/model';
 
 export {PanelData} from './models/panelData';
 
@@ -22,6 +23,8 @@ export class FundShare {
 
     calendar = {
         mandatory: new ShareCalendarMandatory(),
+        subscriptionTradeCycle: null,
+        redemptionTradeCycle: null,
         optional: new ShareCalendarOptional()
     }
     characteristic = {
@@ -95,18 +98,18 @@ export class FundShare {
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
-            subscriptionTradeCyclePeriod: null,
-            numberOfPossibleSubscriptionsWithinPeriod: null,
-            weeklySubscriptionDealingDays: null,
-            monthlySubscriptionDealingDays: null,
-            yearlySubscriptionDealingDays: null,
-            redemptionTradeCyclePeriod: null,
-            numberOfPossibleRedemptionsWithinPeriod: null,
-            weeklyRedemptionDealingDays: null,
-            monthlyRedemptionDealingDays: null,
-            yearlyRedemptionDealingDays: null,
-            navPeriodForSubscription: this.calendar.mandatory.navPeriodForSubscription.value(),
-            navPeriodForRedemption: this.calendar.mandatory.navPeriodForRedemption.value(),
+            subscriptionTradeCyclePeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            numberOfPossibleSubscriptionsWithinPeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            weeklySubscriptionDealingDays: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            monthlySubscriptionDealingDays: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays,
+            yearlySubscriptionDealingDays: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays,
+            redemptionTradeCyclePeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            numberOfPossibleRedemptionsWithinPeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            weeklyRedemptionDealingDays: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            monthlyRedemptionDealingDays: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays,
+            yearlyRedemptionDealingDays: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays,
+            navPeriodForSubscription: this.calendar.mandatory.navPeriodForSubscription.value()[0].id,
+            navPeriodForRedemption: this.calendar.mandatory.navPeriodForRedemption.value()[0].id,
             portfolioCurrencyHedge: portfolioCurrencyHedge,
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.calendar.mandatory.subscriptionCutOffTimeZone.value()[0].id,

@@ -23,6 +23,7 @@ import {
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
 import {FundShare, FundShareMode, PanelData} from '../model';
+import {FundShareTradeCycleModel} from './trade-cycle/model';
 import {FundShareTestData} from './TestData';
 
 @Component({
@@ -101,6 +102,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
         }
     }
 
+    calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
+        this.model.calendar.subscriptionTradeCycle = model;
+    }
+
+    calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
+        this.model.calendar.redemptionTradeCycle = model;
+    }
+
     /**
      * request the fund share
      * @param requested boolean
@@ -131,32 +140,36 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     saveFundShare(): void {
-        this.alerts.create('info', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
-                    </tr>
-                </tbody>
-            </table>
-        `, {
-            showCloseButton: false,
-            overlayClickToClose: false
-        });
+        // this.alerts.create('info', `
+        //     <table class="table grid">
+        //         <tbody>
+        //             <tr>
+        //                 <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
+        //             </tr>
+        //         </tbody>
+        //     </table>
+        // `, {
+        //     showCloseButton: false,
+        //     overlayClickToClose: false
+        // });
+
+        console.log('PZZZZZZZZZZZZZZZZ', this.model.getRequest());
+
+        return;
         
-        if(this.mode === FundShareMode.Create) {
-            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-                this.redux,
-                this.model.getRequest(),
-                (data) => this.onCreateSuccess(data[1].Data),
-                (e) => this.onCreateError(e[1].Data[0]));
-        } else {
-            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-                this.redux,
-                this.model.getRequest(),
-                (data) => this.onUpdateSuccess(data[1]),
-                (e) => this.onUpdateError(e[1].Data[0]));
-        }
+        // if(this.mode === FundShareMode.Create) {
+        //     OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+        //         this.redux,
+        //         this.model.getRequest(),
+        //         (data) => this.onCreateSuccess(data[1].Data),
+        //         (e) => this.onCreateError(e[1].Data[0]));
+        // } else {
+        //     OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
+        //         this.redux,
+        //         this.model.getRequest(),
+        //         (data) => this.onUpdateSuccess(data[1]),
+        //         (e) => this.onUpdateError(e[1].Data[0]));
+        // }
     }
 
     private onCreateSuccess(data): void {

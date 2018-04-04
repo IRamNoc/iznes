@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -24,17 +24,45 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
     get type(): string {
         return this._tradeType;
     }
+    @Output() modelEmitter: EventEmitter<FundShareTradeCycleModel> = new EventEmitter();
 
     typeLowercase: string;
     typeCapitilised: string;
-    model: FundShareTradeCycleModel = new FundShareTradeCycleModel();
-    dropdownItems;
+    model: FundShareTradeCycleModel;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) {
-        this.dropdownItems = new TradeCycleModelDropdowns();
+    constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
+    ngOnInit() {
+        this.model = new FundShareTradeCycleModel();
+        this.model.addMonthlyDealingDays();
+        this.model.addYearlyDealingDays();
+
+        this.modelEmitter.emit(this.model);
     }
 
-    ngOnInit() { }
+    addMonthlyDealingDays(): void {
+        this.model.addMonthlyDealingDays();
+    }
+
+    removeMonthlyDealingDays(index: number): void {
+        this.model.removeMonthlyDealingDays(index);
+    }
+
+    addYearlyDealingDays(): void {
+        this.model.addYearlyDealingDays();
+    }
+
+    removeYearlyDealingDays(index: number): void {
+        this.model.removeYearlyDealingDays(index);
+    }
+
+    showAdd(index: number, len: number): boolean {
+        return index+1 === len;
+    }
+
+    showRemove(index: number, len: number): boolean {
+        return len > 1;
+    }
 
     private getTypeFormatted(style: TextStyleEnum): string {
         return style === TextStyleEnum.Lowercase ?
@@ -43,7 +71,7 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        
+        this.model = undefined;
     }
 
 }

@@ -1,8 +1,10 @@
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormArray, FormControl, Validators} from '@angular/forms';
+import * as _ from 'lodash';
 import * as E from '../../FundShareEnum';
 
 export class FundShareTradeCycleModel {
     form: FormGroup;
+    dropdownItems: TradeCycleModelDropdowns = new TradeCycleModelDropdowns();
 
     private _tradeCyclePeriod: string;
     private _numberOfPossibleWithinPeriod: number;
@@ -15,50 +17,158 @@ export class FundShareTradeCycleModel {
             tradeCyclePeriod: new FormControl(),
             possibleInPeriod: new FormControl(),
             weeklyDealingDays: new FormControl(),
-            monthlyDealingDays: new FormControl(),
-            yearlyDealingDays: new FormControl()
+            monthlyDealingDays: new FormArray([]),
+            yearlyDealingDays: new FormArray([]),
+        });
+
+        this.setupFormValueChange();
+    }
+
+    private setupFormValueChange(): void {
+        this.form.controls.tradeCyclePeriod.valueChanges.subscribe((value: any) => {
+            this.form.updateValueAndValidity();
         });
     }
     
-    get tradeCyclePeriod(): string {
+    get tradeCyclePeriod(): number {
         return this.form.value.tradeCyclePeriod ?
             this.form.value.tradeCyclePeriod[0].id :
             null;
     }
-    set tradeCyclePeriod(value: string) {
+    set tradeCyclePeriod(value: number) {
         this.form.setValue({ tradeCyclePeriod: value });
     }
     get numberOfPossibleWithinPeriod(): number {
-        return this.form.value.possibleInPeriod ?
-            this.form.value.possibleInPeriod[0].id :
-            null;
+        return this.form.value.possibleInPeriod;
     }
     set numberOfPossibleWithinPeriod(value: number) {
         this.form.setValue({ possibleInPeriod: value });
     }
-    get weeklyDealingDays(): string {
+    get weeklyDealingDays(): number {
         return this.form.value.weeklyDealingDays ?
             this.form.value.weeklyDealingDays[0].id :
             null;
     }
-    set weeklyDealingDays(value: string) {
+    set weeklyDealingDays(value: number) {
         this.form.setValue({ weeklyDealingDays: value });
     }
-    get monthlyDealingDays(): string {
-        return this.form.value.monthlyDealingDays ?
-            this.form.value.monthlyDealingDays[0].id :
-            null;
+    get monthlyDealingDays(): DealingDaysTerms[] {
+        if(this.tradeCyclePeriod !== E.TradeCyclePeriodEnum.Monthly) return null;
+
+        const arr = this.convertDealingDaysToArr(this.form.controls['monthlyDealingDays'] as FormArray);
+        return arr;
     }
-    set monthlyDealingDays(value: string) {
-        this.form.setValue({ monthlyDealingDays: value });
+    set monthlyDealingDays(value: DealingDaysTerms[]) {
+        const formArr = this.convertDealingDaysToForm(value);
+        this.form.controls['monthlyDealingDays'] = formArr;
     }
-    get yearlyDealingDays(): string {
-        return this.form.value.yearlyDealingDays ?
-            this.form.value.yearlyDealingDays[0].id :
-            null;
+    get yearlyDealingDays(): DealingDaysTerms[] {
+        if(this.tradeCyclePeriod !== E.TradeCyclePeriodEnum.Yearly) return null;
+
+        const arr = this.convertDealingDaysToArr(this.form.controls['yearlyDealingDays'] as FormArray);
+        return arr;
     }
-    set yearlyDealingDays(value: string) {
-        this.form.setValue({ yearlyDealingDays: value });
+    set yearlyDealingDays(value: DealingDaysTerms[]) {
+        const formArr = this.convertDealingDaysToForm(value);
+        this.form.controls['yearlyDealingDays'] = formArr;
+    }
+
+    private convertDealingDaysToForm(obj: DealingDaysTerms[]): FormArray {
+        const formArr = new FormArray([]);
+
+        _.forEach(obj, (item: DealingDaysTerms) => {
+            const termA = _.find(this.dropdownItems, (ditem) => {
+                return ditem.id === item.termA;
+            });
+            const termB = _.find(this.dropdownItems, (ditem) => {
+                return ditem.id === item.termA;
+            });
+
+            let controls;
+
+            if(item.termC) {
+                const termC = _.find(this.dropdownItems, (ditem) => {
+                    return ditem.id === item.termA;
+                });
+
+                controls = {
+                    termA: new FormControl(termA),
+                    termB: new FormControl(termB),
+                    termC: new FormControl(termC)
+                }
+            } else {
+                controls = {
+                    termA: new FormControl(termA),
+                    termB: new FormControl(termB)
+                }
+            }
+
+            formArr.push(new FormGroup(controls));
+        });
+
+        return formArr;
+    }
+
+    private convertDealingDaysToArr(formArr: FormArray): DealingDaysTerms[] {
+        const arr = [];
+
+        _.forEach(formArr.controls, (item: FormGroup) => {
+            let obj;
+
+            if(item.controls.termC) {
+                obj = {
+                    termA: item.controls.termA.value[0].id,
+                    termB: item.controls.termB.value[0].id,
+                    termC: item.controls.termC.value[0].id
+                }
+            } else {
+                obj = {
+                    termA: item.controls.termA.value[0].id,
+                    termB: item.controls.termB.value[0].id
+                }
+            }
+
+            arr.push(obj);
+        });
+
+        return arr;
+    }
+
+    addMonthlyDealingDays(): void {
+        const group = new FormGroup({
+            termA: new FormControl(),
+            termB: new FormControl()
+        });
+
+        const name = `yearlyDealingDays${(Object.keys(this.form.controls.monthlyDealingDays).length + 1).toString()}`;
+        const control = <FormArray>this.form.controls['monthlyDealingDays'];
+        control.push(group);
+    }
+
+    removeMonthlyDealingDays(index: number): void {
+        const control = <FormArray>this.form.controls['monthlyDealingDays'];
+        control.removeAt(index);
+    }
+
+    addYearlyDealingDays(): void {
+        const group = new FormGroup({
+            termA: new FormControl(),
+            termB: new FormControl(),
+            termC: new FormControl()
+        });
+
+        const name = `yearlyDealingDays${(Object.keys(this.form.controls.yearlyDealingDays).length + 1).toString()}`;
+        const control = <FormArray>this.form.controls['yearlyDealingDays'];
+        control.push(group);
+    }
+
+    removeYearlyDealingDays(index: number): void {
+        const control = <FormArray>this.form.controls['yearlyDealingDays'];
+        control.removeAt(index);
+    }
+
+    isValid(): boolean {
+        return this.form.valid;
     }
 }
 
@@ -69,7 +179,7 @@ export class TradeCycleModelDropdowns {
         { id: E.TradeCyclePeriodEnum.Monthly, text: 'Monthly' },
         { id: E.TradeCyclePeriodEnum.Yearly, text: 'Yearly' }
     ]
-    weeklyDealingDaysItems = [
+    weeklyItems = [
         { id: E.WeeklyDealingDaysEnum.FirstBusinessDay, text: 'First Business Day' },
         { id: E.WeeklyDealingDaysEnum.LastBusinessDay, text: 'Last Business Day' },
         { id: E.WeeklyDealingDaysEnum.Monday, text: 'Monday' },
@@ -78,7 +188,16 @@ export class TradeCycleModelDropdowns {
         { id: E.WeeklyDealingDaysEnum.Thursday, text: 'Thursday' },
         { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' }
     ]
-    monthlyDealingDaysItems = [
+    dayItems = [
+        { id: E.WeeklyDealingDaysEnum.FirstBusinessDay, text: 'Calendar day' },
+        { id: E.WeeklyDealingDaysEnum.LastBusinessDay, text: 'Business Day' },
+        { id: E.WeeklyDealingDaysEnum.Monday, text: 'Monday' },
+        { id: E.WeeklyDealingDaysEnum.Tuesday, text: 'Tuesday' },
+        { id: E.WeeklyDealingDaysEnum.Wednesday, text: 'Wednesday' },
+        { id: E.WeeklyDealingDaysEnum.Thursday, text: 'Thursday' },
+        { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' }
+    ]
+    numberItems = [
         { id: E.MonthlyDealingDaysEnum.First, text: '1st' },
         { id: E.MonthlyDealingDaysEnum.Second, text: '2nd' },
         { id: E.MonthlyDealingDaysEnum.Third, text: '3rd' },
@@ -112,7 +231,7 @@ export class TradeCycleModelDropdowns {
         { id: E.MonthlyDealingDaysEnum.ThirtyFirst, text: '31st' },
         { id: E.MonthlyDealingDaysEnum.Last, text: 'Last day of Month' }
     ]
-    yearlyDealingDaysItems = [
+    monthItems = [
         { id: E.YearlyDealingDaysEnum.January, text: 'January' },
         { id: E.YearlyDealingDaysEnum.February, text: 'February' },
         { id: E.YearlyDealingDaysEnum.March, text: 'March' },
@@ -126,4 +245,10 @@ export class TradeCycleModelDropdowns {
         { id: E.YearlyDealingDaysEnum.November, text: 'November' },
         { id: E.YearlyDealingDaysEnum.December, text: 'December' },
     ]
+}
+
+export interface DealingDaysTerms {
+    termA: string;
+    termB: string;
+    termC?: string;
 }
