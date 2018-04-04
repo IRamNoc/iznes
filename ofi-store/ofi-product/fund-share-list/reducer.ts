@@ -171,9 +171,6 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
         iznShareList = iznShareList.set(share.fundShareID, shareData);
     });
 
-    // TODO: to remove before it goes live
-    console.log('handleGetIznesShareList (iznShareList): ', iznShareList);
-
     return Object.assign({}, state, {
         iznShareList: iznShareList.toJS()
     });
