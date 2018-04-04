@@ -164,6 +164,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundShareID',
             open: true,
             data: this.shareList,
+            columnLink: 'shareName'
         },
         {
             title: 'Funds',
@@ -186,6 +187,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundID',
             open: true,
             data: this.fundList,
+            columnLink: 'fundName'
         },
         {
             title: 'Umbrella funds',
@@ -206,6 +208,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'umbrellaFundID',
             open: true,
             data: this.umbrellaFundList,
+            columnLink: 'umbrellaFundName'
         },
         // {
         //     title: 'Shares, Funds & Umbrella funds waiting for your validation (modification not yet published to Investors on Iznes)',

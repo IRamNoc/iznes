@@ -5,3 +5,12 @@
 .slider {
   top: inherit !important;
 }
+
+.fakeLink {
+  color: #007cbb;
+  cursor: pointer;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
