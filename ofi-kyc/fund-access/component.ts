@@ -305,8 +305,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 isin: row['isin']
             };
         });
-        console.log(this.access);
-
         this._changeDetectorRef.markForCheck();
     }
 
