@@ -308,8 +308,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     getShareList(shares): void {
         const shareList = [];
 
-        if ((shares !== undefined) && shares.size > 0) {
-            shares.map((share) => {
+        if ((shares !== undefined) && Object.keys(shares).length > 0) {
+            Object.keys(shares).map((key) => {
+                const share = shares[key];
                 const keyFactsModel = new FundShareModels.ShareKeyFactsMandatory();
                 const status = _.find(keyFactsModel.shareClassInvestmentStatus.listItems, (item) => {
                     return item.id === share.shareClassInvestmentStatus;
@@ -335,6 +336,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
 
         this.shareList = shareList;
+
         this.filteredShareList = shareList.filter((share) => {
             return share.status !== 5;
         });
