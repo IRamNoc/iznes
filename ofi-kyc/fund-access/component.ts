@@ -290,7 +290,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 fundName: item.get('fundName', ''),
                 shareName: item.get('shareName', ''),
                 isin: item.get('fundShareIsin', ''),
-                assess: false
+                access: false
             });
             return result;
         }, []);
@@ -307,8 +307,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 isin: row['isin']
             };
         });
-        console.log(this.access);
-
         this._changeDetectorRef.markForCheck();
     }
 
