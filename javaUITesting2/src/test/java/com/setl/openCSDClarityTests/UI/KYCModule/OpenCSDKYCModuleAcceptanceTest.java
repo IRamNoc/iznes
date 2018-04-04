@@ -288,10 +288,12 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     public static void saveKYCAndVerifySuccessPageOne() throws IOException, InterruptedException{
         driver.findElement(By.id("btnKycSubmit")).click();
-        String header2 = driver.findElement(By.className("modal-title")).getText();
-        assertTrue(header2.equals("MY INFORMATION"));
+        String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
+        assertTrue(header2.equals("My Information"));
         try{
-            driver.findElement(By.id("addInfo-ok-button")).click();
+
+            driver.findElement(By.xpath("//jaspero-confirmation/div[2]/div[4]/button")).click();
+
         }catch (Exception e){
             fail(e.getMessage());
         }
