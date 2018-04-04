@@ -9,7 +9,8 @@ import {ResolveEmit} from './interfaces/resolve-emit';
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
             <div class="jaspero__dialog-title" [innerHtml]="incomingData.title">
             </div>
-            <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass != 'error'">
+            
+            <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass != 'success' && incomingData.btnClass != 'error'">
                 <div class="f-modal-alert">
                     <div class="f-modal-icon f-modal-warning scaleWarning">
                         <span class="f-modal-body pulseWarningIns"></span>
@@ -27,10 +28,21 @@ import {ResolveEmit} from './interfaces/resolve-emit';
                 </div>
             </div>
 
+            <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass == 'success'">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-success animate">
+                        <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
+                        <span class="f-modal-line f-modal-long animateSuccessLong"></span>
+                        <div class="f-modal-placeholder"></div>
+                        <div class="f-modal-fix"></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="jaspero__dialog-content" [innerHtml]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
-                <button class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
+                <button *ngIf="incomingData.declineText != ''" class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
                 <button class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
             </div>
         </div>
