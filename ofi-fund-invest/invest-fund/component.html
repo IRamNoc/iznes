@@ -59,7 +59,7 @@
                                 <span class="ml_translated">{{metadata.feeLabel}} fee</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control mlp_translated" [value]="feePercentage + '%' " [readonly]="true">
+                                <input type="text" class="form-control mlp_translated" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
                             </div>
                         </div>
                     </div>

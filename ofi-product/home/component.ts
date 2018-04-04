@@ -164,6 +164,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundShareID',
             open: true,
             data: this.shareList,
+            columnLink: 'shareName'
         },
         {
             title: 'Funds',
@@ -186,6 +187,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundID',
             open: true,
             data: this.fundList,
+            columnLink: 'fundName'
         },
         {
             title: 'Umbrella funds',
@@ -206,6 +208,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'umbrellaFundID',
             open: true,
             data: this.umbrellaFundList,
+            columnLink: 'umbrellaFundName'
         },
         // {
         //     title: 'Shares, Funds & Umbrella funds waiting for your validation (modification not yet published to Investors on Iznes)',
@@ -282,9 +285,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
-                const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
-                const fundCurrency = _.find(this.fundCurrencyItems, { id: fund.fundCurrency }) || { text: '' };
+                const domicile = _.find(this.countryItems, {id: fund.domicile}) || {text: ''};
+                const lawStatus = _.find(this.legalFormItems, {id: fund.legalForm}) || {text: ''};
+                const fundCurrency = _.find(this.fundCurrencyItems, {id: fund.fundCurrency}) || {text: ''};
 
                 fundList.push({
                     fundID: fund.fundID,
@@ -313,8 +316,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     getShareList(shares): void {
         const shareList = [];
 
-        if ((shares != undefined) && shares.size > 0) {
-            shares.map((share) => {
+        if ((shares != undefined) && Object.keys(shares).length > 0) {
+            Object.keys(shares).map((key, index) => {
+                const share = shares[key];
                 const keyFactsModel = new FundShareModels.ShareKeyFactsMandatory();
                 const status = _.find(keyFactsModel.shareClassInvestmentStatus.listItems, (item) => {
                     return item.id === share.shareClassInvestmentStatus;
@@ -355,7 +359,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
+                const domicile = _.find(this.countryItems, {id: item.get('domicile')}) || {text: ''};
 
                 umbrellaFundList.push({
                     umbrellaFundID: item.get('umbrellaFundID', 0),

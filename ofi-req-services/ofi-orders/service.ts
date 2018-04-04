@@ -178,7 +178,7 @@ export class OfiOrdersService {
             shareisin: requestData.shareIsin,
             portfolioid: requestData.portfolioId,
             subportfolio: requestData.subportfolio,
-            datebby: requestData.dateBy,
+            dateby: requestData.dateBy,
             datevalue: requestData.dateValue,
             ordertype: requestData.orderType,
             orderby: requestData.orderBy,

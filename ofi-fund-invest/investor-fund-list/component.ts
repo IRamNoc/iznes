@@ -298,11 +298,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
         const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareIsin = _.get(fundShareData, ['isin'], '');
 
         this.tabsControl.push({
             title: {
                 icon: 'fa-eye',
-                text: fundShareName,
+                text: fundShareName + ' ' + fundShareIsin,
                 colorClass: 'text-primary'
             },
             fundShareId: fundShareId,
