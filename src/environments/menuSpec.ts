@@ -33,7 +33,7 @@ const listOfFunds = {
     label_txt: 'txt_listoffunds',
     icon_class: 'fa fa-university',
     element_id: 'menu-list-of-fund',
-    router_link: '/list-of-funds/new'
+    router_link: '/list-of-funds/0'
 };
 const orderBook = {
     label: 'Order Book',
@@ -46,14 +46,14 @@ const orderBook = {
             label_txt: 'txt_placeorder',
             icon_class: 'fa fa-university',
             element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds/new'
+            router_link: '/list-of-funds/0'
         },
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders/new'
+            router_link: '/order-book/my-orders/0'
         }
     ]
 };
@@ -69,7 +69,7 @@ const manageOrders = {
     label_txt: 'txt_orderbook',
     icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
-    router_link: '/manage-orders/new'
+    router_link: '/manage-orders/0'
 };
 const reportsCollectsArchives = {
     label: 'Collects Archives',
@@ -183,21 +183,21 @@ const userAdminUsers = {
     label_txt: 'txt_users',
     icon_class: 'fa fa-user',
     element_id: 'menu-user-admin-users',
-    router_link: '/user-administration/users/new'
+    router_link: '/user-administration/users/0'
 };
 const userAdminWallets = {
     label: 'Wallets',
     label_txt: 'txt_wallets',
     icon_class: 'fa fa-briefcase',
     element_id: 'menu-user-admin-wallets',
-    router_link: '/user-administration/wallets/new'
+    router_link: '/user-administration/wallets/0'
 };
 const userAdminPermissions = {
     label: 'Permissions',
     label_txt: 'txt_permissions',
     icon_class: 'fa fa-key',
     element_id: 'menu-user-admin-permissions',
-    router_link: '/user-administration/permissions/new'
+    router_link: '/user-administration/permissions/0'
 };
 const financing = {
     label: 'Financing',
