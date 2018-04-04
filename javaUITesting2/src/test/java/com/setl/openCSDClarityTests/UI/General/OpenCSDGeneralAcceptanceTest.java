@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.databaseCountRows;
+import static SETLAPIHelpers.DatabaseHelper.deleteFormdataFromDatabase;
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUsersFormdataTable;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
@@ -52,21 +53,23 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldAutosaveInformation() throws IOException, InterruptedException, SQLException {
+        String userDetails[] = generateRandomUserDetails();
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
-        int persist = databaseCountRows("UsersFormdata");
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).sendKeys("I wonder if this will stay here");
+        driver.findElement(By.id("new-user-username")).clear();
+        driver.findElement(By.id("new-user-username")).sendKeys(userDetails[0]);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
-        assertTrue(username.equals("I wonder if this will stay here"));
-        validateDatabaseUsersFormdataTable(persist+1);
+        assertTrue(username.equals(userDetails[0]));
+        validateDatabaseUsersFormdataTable(1, "1" , "8");
+        deleteFormdataFromDatabase("8", "1");
 
     }
 
@@ -78,7 +81,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        validateDatabaseUsersFormdataTable(persist);
+        validateDatabaseUsersFormdataTable(0, "1", "8");
     }
 
     @Test
