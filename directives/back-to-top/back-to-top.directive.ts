@@ -20,9 +20,11 @@ export class BackToTopDirective {
         const divBackToTop = this.el.nativeElement.querySelector('.backToTop');
         if (event.srcElement.scrollTop > 80) {
             this.renderer.setStyle(divBackToTop, 'opacity', 1);
+            // this.renderer.setStyle(divBackToTop, 'bottom', '30px');
             this.isScroll = true;
         } else {
             this.renderer.setStyle(divBackToTop, 'opacity', 0);
+            // this.renderer.setStyle(divBackToTop, 'bottom', '-100px');
             this.isScroll = false;
         }
     }
@@ -33,6 +35,7 @@ export class BackToTopDirective {
         if (this.target && this.target.getAttribute('allowBackToTop') && divBackToTop && this.isScroll){
             this.isScroll = false;
             this.renderer.setStyle(divBackToTop, 'opacity', 0);
+            // this.renderer.setStyle(divBackToTop, 'bottom', '-100px');
             this.el.nativeElement.scrollTop = 0;
         }
     }
