@@ -105,7 +105,7 @@ export const ROUTES: Routes = [
         component: BlankLayoutComponent,
         children: [
             {
-                path: ':invitationToken',
+                path: ':lang/:invitationToken',
                 component: OfiSignUpComponent,
             },
         ],
@@ -553,7 +553,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
                 children: [
                     {
-                        path: 'client/:kycId',
+                        path: 'client/:lang/:kycId',
                         component: OfiWaitingApprovalComponent,
                     }
                 ]
