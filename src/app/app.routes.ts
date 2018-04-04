@@ -105,7 +105,7 @@ export const ROUTES: Routes = [
         component: BlankLayoutComponent,
         children: [
             {
-                path: ':invitationToken',
+                path: ':lang/:invitationToken',
                 component: OfiSignUpComponent,
             },
         ],
