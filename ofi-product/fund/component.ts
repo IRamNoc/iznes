@@ -114,7 +114,7 @@ export class FundComponent implements OnInit, OnDestroy {
     centralizingAgentItems = [];
 
     // Locale
-    language = 'fr';
+    language = 'en';
 
     // forms
     umbrellaForm: FormGroup;
@@ -139,6 +139,7 @@ export class FundComponent implements OnInit, OnDestroy {
         locale: this.language
     };
 
+    @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessList$;
@@ -183,6 +184,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.payingAgentItems = this.fundItems.payingAgentItems;
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
+
+        this.language$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                this.language = d.substr(0, 2);
+                this.configDate = {
+                    ...this.configDate,
+                    locale: this.language,
+                };
+                this.configMonth = {
+                    ...this.configMonth,
+                    locale: this.language,
+                };
+            });
 
         this.umbrellaForm = fb.group({
             'umbrellaFundName': {value: 'nem', disabled: true},

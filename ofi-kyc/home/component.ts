@@ -16,6 +16,7 @@ import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils/index';
 import {Endpoints} from '../config';
+import {ConfirmationService} from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -63,6 +64,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private toasterService: ToasterService,
                 private router: Router,
                 private ofiKycService: OfiKycService,
+                private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
@@ -115,8 +117,17 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: listToRedux});
         this._ngRedux.dispatch(setAppliedHighlight());
-        this.showModal = true;
+        // this.showModal = true;
 
+        this.confirmationService.create(
+            'My Information',
+            'My information can be changed later in "Profile" at the top of the page.',
+            {confirmText: 'Ok, I understand', declineText: ''}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.closeModal();
+            }
+        });
     }
 
     closeModal() {
@@ -141,7 +152,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         );
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
         this._ngRedux.dispatch(clearAppliedHighlight());
-        this.showModal = false;
+        //this.showModal = false;
         this.router.navigate(['new-investor', 'already-done', 'confirmation']);
     }
 

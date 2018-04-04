@@ -36,7 +36,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
 
 export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
     token: string;
-    data: any;
+    filters: any;
 }
 
 export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
@@ -59,4 +59,17 @@ export interface OfiGetContractByOrder extends OfiMemberNodeBody {
 
 export interface OfiGetArrangementCollectiveArchive extends MemberNodeMessageBody {
     token: string;
+}
+
+export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
+    token: string;
+    shareisin: string;
+    portfolioid: number;
+    subportfolio: string;
+    dateby: string;
+    datevalue: string;
+    ordertype: string;
+    orderby: string;
+    ordervalue: number;
+    comment: string;
 }

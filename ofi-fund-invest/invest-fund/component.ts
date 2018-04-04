@@ -13,44 +13,37 @@ import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 
 // Internal
-import {immutableHelper, MoneyValuePipe, mDateHelper, commonHelper} from '@setl/utils';
-import {CommonService} from '../common-service/service';
-import {InvestFundFormService} from './service';
+import {immutableHelper, MoneyValuePipe, mDateHelper, NumberConverterService} from '@setl/utils';
 import {
     InitialisationService,
     MyWalletsService,
     WalletNodeRequestService
 } from '@setl/core-req-services';
 import {setRequestedWalletAddresses} from '@setl/core-store';
+import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 
 @Component({
     selector: 'app-invest-fund',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        InvestFundFormService
-    ]
+    providers: []
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
+    static DateFormat = 'DD/MM/YYYY';
+    static valuationOffset = 2;
+    static settlementOffset = 3;
+
     @Input() shareId: number;
     @Input() type: string;
     @Input() doValidate: boolean;
     @Input() initialFormData: { [p: string]: any };
-
+    //
     @Output() close: EventEmitter<any> = new EventEmitter();
     @Output() formDataChange: EventEmitter<any> = new EventEmitter();
-
-    // List of observable subscription.
-    subscriptionsArray: Array<Subscription> = [];
-
-    connectedWalletId: number;
-    requestedWalletAddress: boolean;
-    walletList: any;
-    userId: number;
-
-    allInstruments: any;
 
     // List of redux observable.
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) shareDataOb;
@@ -58,21 +51,28 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
-    @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
-    @select(['wallet', 'myWallets', 'walletList']) walletListOb;
-    @select(['user', 'myDetail', 'userId']) userIdOb;
 
-    // 0: quantity, 1: amount
-    _actionBy: number;
+    // List of observable subscription.
+    subscriptionsArray: Array<Subscription> = [];
+
+    connectedWalletId: number;
+    requestedWalletAddress: boolean;
+
+    platformFee = 1;
+
+    // s: subscription, r: redemption
+    _actionBy: string;
+
+    // cutoff, valuation, settlement
+    _dateBy: string;
 
     // form config
-    formConfig: any;
+    metadata: any;
 
     // Date picker configuration
     configDateCutoff = {
         firstDayOfWeek: 'mo',
-        format: 'DD/MM/YYYY HH:mm',
+        format: InvestFundComponent.DateFormat,
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -83,7 +83,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     configDateValuation = {
         firstDayOfWeek: 'mo',
-        format: 'DD/MM/YYYY',
+        format: InvestFundComponent.DateFormat,
+        closeOnSelect: true,
+        opens: 'right',
+        locale: 'en',
+        isDayDisabledCallback: (thisDate) => {
+            return false;
+        }
+    };
+
+    configDateSettlement = {
+        firstDayOfWeek: 'mo',
+        format: InvestFundComponent.DateFormat,
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -98,13 +109,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     settlementDate: FormControl;
 
 
-    // subscription form meta data.
-    metaData: any;
+    //  sadata.
+    shareData: any;
 
     // Form
     form: FormGroup;
     quantity: FormControl;
-    grossAmount: FormControl;
+    amount: FormControl;
+    feeAmount: FormControl;
+    netAmount: FormControl;
     address: FormControl;
 
     addressSelected: any;
@@ -118,6 +131,48 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     subPortfolio;
     addressListObj;
 
+    panels = {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: true
+    };
+
+    get feePercentage(): number {
+        return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
+    }
+
+    get cutoffTime(): string {
+        return this.type === 'subscribe' ? this.shareData.subscriptionCutOffTime : this.shareData.redemptionCutOffTime;
+    }
+
+    get currency(): number {
+        return {
+            subscribe: FundShareValue.CurrencyValue[this.shareData['subscriptionCurrency']],
+            redeem: FundShareValue.CurrencyValue[this.shareData['redemptionCurrency']]
+        }[this.type];
+    }
+
+    get today(): string {
+        return mDateHelper.getCurrentUnixTimestampStr(InvestFundComponent.DateFormat);
+    }
+
+    get orderType(): string {
+        return {
+            subscribe: 's',
+            redeem: 'r'
+        }[this.type];
+    }
+
+    get orderTypeLabel(): string {
+        return {
+            subscribe: 'Subscription',
+            redeem: 'Redemption'
+        }[this.type];
+    }
+
     set actionBy(value) {
         this._actionBy = value;
     }
@@ -126,20 +181,53 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this._actionBy;
     }
 
-    get fee() {
-        return (Number(this._moneyValuePipe.parse(String(Number(this.quantity.value) * Number(this.metaData.nav))))
-            * this.metaData.feePercent / 100) + this.metaData.platformFee;
+    set dateBy(value) {
+        this._dateBy = value;
+    }
+
+    get dateBy() {
+        return this._dateBy;
+    }
+
+    get dateValue() {
+        return {
+            cutoff: this.cutoffDate.value,
+            valuation: this.valuationDate.value,
+            settlement: this.settlementDate.value
+        }[this.dateBy];
+    }
+
+    get orderValue() {
+        return {
+            q: this._numberConverterService.toBlockchain(
+                this._moneyValuePipe.parse(this.form.controls.quantity.value)
+            ),
+            a: this._numberConverterService.toBlockchain(
+                this._moneyValuePipe.parse(this.form.controls.amount.value)
+            )
+        }[this.actionBy];
+    }
+
+    get nav() {
+        return this._numberConverterService.toFrontEnd(this.shareData.price);
+    }
+
+    get allowCheckDisclaimer(): string | null {
+        return this.form.valid ? null : '';
+    }
+
+    get assetClass(): string {
+        return FundShareValue.ClassCodeValue[this.shareData.shareClassCode];
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
-                private _commonService: CommonService,
                 private _moneyValuePipe: MoneyValuePipe,
-                private _investFundFormService: InvestFundFormService,
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
+                private _numberConverterService: NumberConverterService,
+                private _ofiOrdersService: OfiOrdersService,
+                private _alertsService: AlertsService,
                 private _ngRedux: NgRedux<any>) {
-        this._actionBy = 0;
-
     }
 
     ngOnDestroy() {
@@ -153,19 +241,22 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const currentDate = mDateHelper.getCurrentUnixTimestampStr('DD/MM/YYYY') + ' 00:00';
-        this.cutoffDate = new FormControl(currentDate);
-        this.valuationDate = new FormControl(currentDate);
-        this.settlementDate = new FormControl(currentDate);
+        this.cutoffDate = new FormControl('', [Validators.required]);
+        this.valuationDate = new FormControl('', [Validators.required]);
+        this.settlementDate = new FormControl('', [Validators.required]);
 
         this.quantity = new FormControl(0, [Validators.required, numberValidator]);
-        this.grossAmount = new FormControl(0, [Validators.required, numberValidator]);
-        this.address = new FormControl('', [Validators.required]);
+        this.amount = new FormControl(0, [Validators.required, numberValidator]);
+        this.feeAmount = new FormControl(0);
+        this.netAmount = new FormControl(0, [Validators.required, numberValidator]);
+        this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
 
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
-            grossAmount: this.grossAmount,
+            amount: this.amount,
+            feeAmount: this.feeAmount,
+            netAmount: this.netAmount,
             comment: new FormControl('', Validators.maxLength(100)),
             address: this.address,
             cutoffDate: this.cutoffDate,
@@ -175,72 +266,36 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         this.setInitialFormValue();
 
-        this.formConfig = {
+        this.metadata = {
             subscribe: {
-                nonAcquiredFeeKey: 'entryFee',
-                acquiredFeeKey: 'sAcquiredFee',
-                cutoffOffSet: 'sCutOffOffset',
-                cutoffTimeKey: 'sCutoffTime',
-                cutoffDateTimeStrKey: 'sCutoffDateTimeStr',
-                cutoffDateTimeNumberKey: 'sCutoffDateTimeNumber',
-                valuationDateKey: 'sValuationDate',
-                valuationTimeKey: 'sValuationTime',
-                valuationDateTimeStrKey: 'sValuationDateTimeStr',
-                valuationDateTimeNumberKey: 'sValuationDateTimeNumber',
-                settlementDateKey: 'sSettlementDate',
-                settlementTimeKey: 'sSettlementTime',
-                settlementDateTimeStrKey: 'sSettlementDateTimeStr',
-                settlementDateTimeNumberKey: 'sSettlementDateTimeNumber',
-                allowTypeKey: 'sAllowType',
                 actionLabel: 'subscribe',
                 feeLabel: 'Entry',
+
             },
             redeem: {
-                nonAcquiredFeeKey: 'exitFee',
-                acquiredFeeKey: 'rAcquiredFee',
-                cutoffOffSet: 'rCutOffOffset',
-                cutoffTimeKey: 'rCutoffTime',
-                cutoffDateTimeStrKey: 'rCutoffDateTimeStr',
-                cutoffDateTimeNumberKey: 'rCutoffDateTimeNumber',
-                valuationDateKey: 'rValuationDate',
-                valuationTimeKey: 'rValuationTime',
-                valuationDateTimeStrKey: 'rValuationDateTimeStr',
-                valuationDateTimeNumberKey: 'rValuationDateTimeNumber',
-                settlementDateKey: 'rSettlementDate',
-                settlementTimeKey: 'rSettlementTime',
-                settlementDateTimeStrKey: 'rSettlementDateTimeStr',
-                settlementDateTimeNumberKey: 'rSettlementDateTimeNumber',
-                allowTypeKey: 'rAllowType',
                 actionLabel: 'redeem',
                 feeLabel: 'Exit',
-
             }
         }[this.type];
 
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
-            this.updateShareMetaData(shareData);
+            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
 
             this.updateDateInputs();
 
-            if (this.doValidate) {
-                this.pickDefaultDate();
-            }
         }));
+
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
+
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
+
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => {
-            this.requestAllInstruments(requested);
-        }));
-        this.subscriptionsArray.push(this.allInstrumentOb.subscribe(allInstruments => this.updateAllInstruments(allInstruments)));
-        this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.walletList = walletList));
-        this.subscriptionsArray.push(this.userIdOb.subscribe(userId => this.userId = userId));
     }
 
     setInitialFormValue() {
@@ -251,95 +306,39 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateShareMetaData(shareData) {
-        const filteredShareData = immutableHelper.filter(shareData, (data, id) => {
-            return id === String(this.shareId);
-        });
-
-        const thisShareData = immutableHelper.get(filteredShareData, String(this.shareId), {});
-
-        const shareCharacteristic = this._commonService.getFundCharacteristic(thisShareData);
-        console.log(shareCharacteristic);
-
-        const nonAcquiredFee = immutableHelper.get(shareCharacteristic, this.formConfig.nonAcquiredFeeKey, 0);
-        const acquiredFee = immutableHelper.get(shareCharacteristic, this.formConfig.acquiredFeeKey, 0);
-        const feePercent = nonAcquiredFee + acquiredFee;
-
-        const issuer = immutableHelper.get(thisShareData, 'issuer', '');
-        const shareName = immutableHelper.get(thisShareData, 'shareName', '');
-
-        const decimalisation = immutableHelper.get(shareCharacteristic, 'decimalisation', 2);
-        const decimalisationNumber = Math.pow(10, -decimalisation);
-
-
-        this.metaData = {
-            registrar: immutableHelper.get(thisShareData, 'managementCompany', ''),
-            issuer,
-            shareName,
-            fullAssetName: issuer + '|' + shareName,
-            isin: immutableHelper.get(thisShareData, ['metaData', 'isin'], ''),
-            currency: immutableHelper.get(thisShareData, ['metaData', 'portfolioCurrency', '0', 'text'], ''),
-            cutoffOffset: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffOffSet], 0),
-            cutoffTime: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffTimeKey], 0),
-            cutoffDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeStrKey], 0),
-            cutoffDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.cutoffDateTimeNumberKey], 0),
-            valuationTime: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationTimeKey], 0),
-            valuationDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeStrKey], 0),
-            valuationDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.valuationDateTimeNumberKey], 0),
-            settlementDateOffset: immutableHelper.get(shareCharacteristic, 'settlementDateOffset'),
-            settlementTime: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementTimeKey], 0),
-            settlementDateTimeStr: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeStrKey], 0),
-            settlementDateTimeNumber: immutableHelper.get(shareCharacteristic, [this.formConfig.settlementDateTimeNumberKey], 0),
-            allowType: immutableHelper.get(shareCharacteristic, [this.formConfig.allowTypeKey], 0),
-            knownNav: immutableHelper.get(shareCharacteristic, ['knownNav'], false),
-            nav: immutableHelper.get(shareCharacteristic, 'nav', 0),
-            nonAcquiredFee,
-            acquiredFee,
-            feePercent,
-            platformFee: immutableHelper.get(shareCharacteristic, 'platformFee', 0),
-            decimalisation,
-            decimalisationNumber
-        };
-
-    }
-
     updateDateInputs() {
 
         this.configDateCutoff.isDayDisabledCallback = (thisDate) => {
             // if day in the past.
             // if day if not the cutoff day for the fund.
-            const cutoffDay = this.metaData.cutoffOffset;
-            return ((cutoffDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
+            return !this.isCutoffDay(thisDate);
         };
 
-
         this.configDateValuation.isDayDisabledCallback = (thisDate) => {
-            // if day in the past.
-            // if day if not the valuation day for the fund.
-            // todo
-            // hardcode on Friday today.
-            const valuationDay = 5;
-            // same at cutoff time atm
-            return ((valuationDay !== thisDate.day()) || (thisDate.diff(moment(), 'days') < 0)) && this.doValidate;
+            return !this.isValuationDay(thisDate);
+        };
+
+        this.configDateSettlement.isDayDisabledCallback = (thisDate) => {
+            return !this.isSettlementDay(thisDate);
         };
 
         this._changeDetectorRef.detectChanges();
 
     }
 
-    pickDefaultDate() {
-        const cutoffOffset = this.metaData.cutoffOffset;
-        const defaultCutoffDateStr = closestDay(cutoffOffset);
-        const cutoffHour = this.metaData.cutoffTime;
-        const defaultCutoffDateTimeStr = defaultCutoffDateStr + ' ' + cutoffHour;
-        this.cutoffDate.patchValue(defaultCutoffDateTimeStr, {
-            onlySelf: false,
-            emitEvent: true,
-            emitModelToViewChange: true,
-            emitViewToModelChange: true
-        });
+    isCutoffDay(thisDate: moment): boolean {
+        const cutoffDays = [1];
+        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
+    }
 
-        this.subscribeForChangeDate('cutoff', [moment(defaultCutoffDateTimeStr, 'DD/MM/YYYY HH:mm')]);
+    isValuationDay(thisDate: moment): boolean {
+        const cutoffDays = [1 + InvestFundComponent.valuationOffset];
+        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
+    }
+
+    isSettlementDay(thisDate: moment): boolean {
+        const cutoffDays = [1 + InvestFundComponent.settlementOffset];
+        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
     }
 
     updateAddressList(addressList) {
@@ -369,15 +368,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
 
         if (this.addressList.length > 0) {
-            if (!this.addressSelected || hasSelectedAddressInList.length === 0) {
-                console.log('selecting', this.addressList[0]);
-                this.address.setValue([this.addressList[0]], {
-                    onlySelf: true,
-                    emitEvent: true,
-                    emitModelToViewChange: true,
-                    emitViewToModelChange: true
-                });
-            } else {
+            if (this.addressSelected) {
                 this.address.setValue([this.addressSelected], {
                     onlySelf: true,
                     emitEvent: true,
@@ -407,24 +398,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     requestWalletLabel(requestedState) {
 
-        console.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
             MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
         }
-    }
-
-    requestAllInstruments(requested) {
-        if (!requested) {
-            // request all instruments
-
-            InitialisationService.requestAllInstruments(this._ngRedux, this._walletNodeRequestService);
-        }
-    }
-
-    updateAllInstruments(allInstrumentData) {
-        this.allInstruments = allInstrumentData;
     }
 
     handleSelectedAddress(value) {
@@ -436,85 +414,82 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     handleSubmit() {
-        console.log(this.form);
 
-        const quantity = this.form.value.quantity;
-        const quantityParsed = this._moneyValuePipe.parse(quantity, this.metaData.decimalisation);
-        if (quantityParsed === 0) {
-            this._investFundFormService.showInvalidForm('Quantity must be ' + (1 / Math.pow(10, this.metaData.decimalisation)) + ' or greater.');
-            return false;
-        }
+        const request = {
+            shareIsin: this.shareData.isin,
+            portfolioId: this.connectedWalletId,
+            subportfolio: this.address.value[0].id,
+            dateBy: this.dateBy,
+            dateValue: this.dateValue,
+            orderType: this.orderType,
+            orderBy: this.actionBy,
+            orderValue: this.orderValue,
+            comment: this.form.controls.comment.value
+        };
 
-        // check if cutoff is pass.
-        const cutoffDateTime = this.cutoffDate.value;
-        const cutoffTimeNumber = moment(cutoffDateTime, 'DD/MM/YYYY HH:mm').valueOf();
-        if (cutoffTimeNumber < moment().valueOf() && this.doValidate) {
-            this._investFundFormService.showInvalidForm('Cutoff time is already passed for today, please choose other day.');
-            return false;
-        }
+        console.log('place an order', request);
 
-        if (this.form.valid) {
-            console.log(this.form.value);
+        this._ofiOrdersService.addNewOrder(request).then((data) => {
+            console.log('order created successfully', data);
+        }).catch((e) => {
+            console.log('order created successfully', e);
+        });
 
-            const fullAssetName = this.metaData.fullAssetName;
-            const shareIssuerAddress = immutableHelper.get(this.allInstruments, [fullAssetName, 'issuerAddress'], '');
-
-            const address = this.form.value.address[0]['id'];
-            this.subPortfolio = this.addressListObj[address].label;
-            const iban = _.get(this.addressListObj, [address, 'iban'], '');
-
-            // Add actionBy
-            const formValue = Object.assign({}, this.form.value, {
-                byType: this.actionBy,
-                shareIssuerAddress,
-                address,
-                userId: this.userId,
-                walletId: this.connectedWalletId,
-                walletName: _.get(this.walletList, [this.connectedWalletId, 'walletName'], ''),
-                walletCommuPub: _.get(this.walletList, [this.connectedWalletId, 'commuPub'], ''),
-                subPortfolio: this.subPortfolio,
-                iban
-            });
-            this._investFundFormService.handleForm(formValue, this.metaData, this.type);
-        }
     }
 
     subscribeForChange(type: string): void {
         // define which one trigger which, depend on type.
         const triggering: FormControl = {
             'quantity': this.quantity,
-            'grossAmount': this.grossAmount,
+            'amount': this.amount,
         }[type];
 
         const beTriggered: FormControl = {
-            'quantity': this.grossAmount,
-            'grossAmount': this.quantity
+            'quantity': this.amount,
+            'amount': this.quantity
         }[type];
 
         const callBack = {
             'quantity': (value) => {
-                const newValue = this._moneyValuePipe.parse(value, this.metaData.decimalisation);
+                const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
                 /**
-                 * grossAmount = ((unit * nav) * (1 + feePercent)) + platformfee
+                 * amount = unit * nav
                  */
-                const grossAmoutBeforeFee = newValue * this.metaData.nav;
-                const grossAmountAfterFee = math.round((grossAmoutBeforeFee * (this.metaData.feePercent / 100 + 1)) + this.metaData.platformFee, 2);
-                beTriggered.setValue(this._moneyValuePipe.transform(grossAmountAfterFee));
+                const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
+                beTriggered.setValue(this._moneyValuePipe.transform(amount));
+
+                // calculate fee
+                const fee = calFee(amount, this.feePercentage);
+                const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
+                this.feeAmount.setValue(feeStr);
+
+                // net amount
+                const netAmount = calNetAmount(amount, fee, this.orderType);
+                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
+                this.netAmount.setValue(netAmountStr);
+
+                this.actionBy = 'q';
             },
-            'grossAmount': (value) => {
+            'amount': (value) => {
                 const newValue = this._moneyValuePipe.parse(value);
                 /**
-                 * because:
-                 * investment = unit * nav
-                 * investment * (feePercent + 1) + platformFee = grossAmount
-                 *
-                 * so:
-                 * unit = ((grossAmount - platformFee) / (1 + feePercent)) / nav
+                 * quantity = amount / nav
                  */
 
-                const investment = ((newValue - this.metaData.platformFee) / (1 + (this.metaData.feePercent / 100))).toFixed(2);
-                const resultUnit = Number(investment) / this.metaData.nav;
-                beTriggered.setValue(this._moneyValuePipe.transform(resultUnit, this.metaData.decimalisation));
+                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14);
+                beTriggered.setValue(this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal));
+
+                // calculate fee
+                const fee = calFee(newValue, this.feePercentage);
+                const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
+                this.feeAmount.setValue(feeStr);
+
+                // net amount
+                const netAmount = calNetAmount(newValue, fee, this.orderType);
+                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
+                this.netAmount.setValue(netAmountStr);
+
+                this.actionBy = 'a';
             }
         }[type];
 
@@ -530,101 +505,102 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const triggering: FormControl = {
             'cutoff': this.cutoffDate,
             'valuation': this.valuationDate,
+            'settlement': this.settlementDate
         }[type];
 
         const beTriggered: FormControl = {
-            'cutoff': this.valuationDate,
-            'valuation': this.cutoffDate
+            'cutoff': [this.valuationDate, this.settlementDate],
+            'valuation': [this.cutoffDate, this.settlementDate],
+            'settlement': [this.cutoffDate, this.valuationDate]
         }[type];
 
         const momentDateValue = $event[0];
-        const cutoffHour = this.metaData.cutoffTime;
+        const cutoffHour = moment(this.cutoffTime, 'hh:mm:ss').format('hh:mm');
 
         if (type === 'cutoff') {
-            // if valuation day - cutoff day is positive.
-            // e.g. valuation day: Friday, cutoff day: Monday.
-            // 5 - 1 = 4
-            // offset is 4.
-
-            // if valuation day - cutoff day is negative.
-            // e.g. valuation day: Monday, cutoff day: Friday.
-            // 1 - 5 = -4
-            // offset is 7 + (-4) = 3
-
-            const cutoffOffset = this.metaData.cutoffOffset;
-            // todo
-            // hardcoded to Friday atm
-            const valuationOffset = 5;
-            const diff = valuationOffset - cutoffOffset;
-            let offset = 0;
-            if (diff >= 0) {
-                offset = diff;
-            } else {
-                offset = 7 + diff;
-            }
 
             const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mValuationDate = momentDateValue.add(offset, 'days');
-            const valuationDateStr = mValuationDate.format('DD/MM/YYYY');
+            const mValuationDate = momentDateValue.clone().add(InvestFundComponent.valuationOffset, 'days');
+            const valuationDateStr = mValuationDate.clone().format('DD/MM/YYYY');
 
-            const valuationDateNum = mValuationDate.valueOf();
-
-            const settlementOffset = this.metaData.settlementDateOffset;
-            // business moment js object;
-            const bMValuationDate = moment(valuationDateNum);
-            const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
+            const mSettlementDate = momentDateValue.clone().add(InvestFundComponent.settlementOffset, 'days');
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
             triggering.setValue(cutoffDateStr);
-            beTriggered.setValue(valuationDateStr);
-            this.settlementDate.setValue(settlementDateStr);
+            beTriggered[0].setValue(valuationDateStr);
+            beTriggered[1].setValue(settlementDateStr);
+
+            this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
-            // if valuation day - cutoff day is positive.
-            // e.g. valuation day: Friday, cutoff day: Monday.
-            // 5 - 1 = 4
-            // offset is -4.
-
-            // if valuation day - cutoff day is negative.
-            // e.g. valuation day: Monday, cutoff day: Friday.
-            // 1 - 5 = -4
-            // offset is 7 + (-4) = 3 : -3
-
-
-            const cutoffOffset = this.metaData.cutoffOffset;
-            // todo
-            // hardcoded to Friday atm
-            const valuationOffset = 5;
-            const diff = valuationOffset - cutoffOffset;
-            let offset = 0;
-            if (diff >= 0) {
-                offset = diff;
-            } else {
-                offset = 7 + diff;
-            }
-
-            const valuationDateStr = momentDateValue.format('DD/MM/YYYY');
-
-            const mCutoffDate = momentDateValue.subtract(offset, 'days');
+            const mCutoffDate = momentDateValue.clone().subtract(InvestFundComponent.valuationOffset, 'days');
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const valuationDateNum = momentDateValue.valueOf();
-
-            const settlementOffset = this.metaData.settlementDateOffset;
-            // business moment js object;
-            const bMValuationDate = moment(valuationDateNum);
-            const mSettlementDate = bMValuationDate.businessAdd(settlementOffset);
+            const mSettlementDate = mCutoffDate.clone().add(InvestFundComponent.settlementOffset, 'days');
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(settlementDateStr);
 
-            triggering.setValue(valuationDateStr);
-            beTriggered.setValue(cutoffDateStr);
-            this.settlementDate.setValue(settlementDateStr);
+            this.dateBy = 'valuation';
+        } else if (type === 'settlement') {
+            const mCutoffDate = momentDateValue.clone().subtract(InvestFundComponent.settlementOffset, 'days');
+            const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+
+            const mValuationDate = mCutoffDate.clone().add(InvestFundComponent.valuationOffset, 'days');
+            const valuationStr = mValuationDate.format('DD/MM/YYYY');
+
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(valuationStr);
+
+            this.dateBy = 'settlement';
         }
 
         return false;
 
+    }
+
+    handleDisclaimer($event) {
+        if ($event.target.checked) {
+            const subPortfolioName = this.address.value[0]['text'];
+
+            this._alertsService.create('warning', `
+            <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="left"><b>Investment SubPortfolio:</b></td>
+                        <td>${subPortfolioName}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Share Name:</b></td>
+                        <td>${this.shareData.fundShareName}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>ISIN:</b></td>
+                        <td>${this.shareData.isin}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Currency:</b></td>
+                        <td>${this.currency}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Quantity:</b></td>
+                        <td>${this.quantity.value}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Amount:</b></td>
+                        <td>${this.amount.value}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Settlement Date:</b></td>
+                        <td>${this.settlementDate.value}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `, {}, 'Order confirmation');
+        }
     }
 
     unSubscribeForChange(): void {
@@ -644,9 +620,26 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 function numberValidator(control: FormControl): { [s: string]: boolean } {
     // todo
     // check if number is none zero as well
+
     const testString = control.value.toString();
-    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString)) {
+    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+
+    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
         return {invalidNumber: true};
+    }
+}
+
+/**
+ * Check form control value is not empty array
+ * @param {FormControl} control
+ * @return {{[p: string]: boolean}}
+ */
+function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
+
+
+    const formValue = control.value;
+    if (formValue instanceof Array && control.value.length === 0) {
+        return {required: true};
     }
 }
 
@@ -666,4 +659,34 @@ function closestDay(dayToFind: number): string {
         }
     }
     return moment().format('DD/MM/YYYY');
+}
+
+/**
+ * Calculate order fee.
+ *
+ * @param amount
+ * @param feePercent
+ * @return {number}
+ */
+function calFee(amount: number | string, feePercent: number | string): number {
+    amount = Number(amount);
+    feePercent = Number(feePercent);
+    return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
+}
+
+/**
+ * Calculate order net amount.
+ *
+ * @param {number | string} amount
+ * @param {number | string} fee
+ * @param {string} orderType
+ * @return {number}
+ */
+function calNetAmount(amount: number | string, fee: number | string, orderType: string): number {
+    amount = Number(amount);
+    fee = Number(fee);
+    return {
+        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
+        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
+    }[orderType];
 }

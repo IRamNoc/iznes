@@ -11,6 +11,7 @@ import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
 import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {ConfirmationService} from '@setl/utils';
 
 enum Statuses {
     waitingApproval = 1,
@@ -69,6 +70,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private redux: NgRedux<any>,
                 private route: ActivatedRoute,
                 private alertsService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private toast: ToasterService,
                 private _router: Router,
                 private walletsService: MyWalletsService,
@@ -119,23 +121,38 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initStatuses(): void {
-        this.statuses = [
-            {
-                id: 'reject',
-                label: 'Reject',
-                value: Statuses.rejected
-            },
-            {
-                id: 'askForMoreInfo',
-                label: 'Ask for more info',
-                value: Statuses.askMoreInfo
-            },
-            {
-                id: 'accept',
-                label: 'Accept',
-                value: Statuses.approved
-            }
-        ];
+        if (this.initialStatusId == -2){
+            this.statuses = [
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }else{
+            this.statuses = [
+                {
+                    id: 'reject',
+                    label: 'Reject',
+                    value: Statuses.rejected
+                },
+                {
+                    id: 'askForMoreInfo',
+                    label: 'Ask for more info',
+                    value: Statuses.askMoreInfo
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                }
+            ];
+        }
     }
 
     getLanguage(language: string): void {
@@ -172,6 +189,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             };
 
             this.initialStatusId = kyc.status;
+            this.initStatuses();
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
 
@@ -208,11 +226,18 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
             case Statuses.rejected:
-                if (this.initialStatusId === Statuses.waitingApproval) {
-                    this.isRejectModalDisplayed = true;
-                } else {
-                    this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
-                }
+                //this.isRejectModalDisplayed = true;
+
+                this.confirmationService.create(
+                    'Confirm Rejection?',
+                    'Are you sure you want to reject this client\'s application?<br>You can also ask more information to this client in the previous page',
+                    {confirmText: 'Reject the cient\'s application', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
+                    if (ans.resolved){
+                        this.handleRejectButtonClick();
+                    }else{
+                        this.handleModalCloseButtonClick();
+                    }
+                });
                 break;
 
             case Statuses.askMoreInfo:

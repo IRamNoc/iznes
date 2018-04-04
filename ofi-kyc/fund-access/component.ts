@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
 import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
+import {ConfirmationService} from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -28,7 +29,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     investor = {};
     tableData = [];
     access = {};
-    showModal = false;
     changes = {
         add: false,
         remove: false
@@ -44,8 +44,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedAmAllFundShareList']) requestedAmAllFundShareListOb: Observable<any>;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'amAllFundShareList']) amAllFundShareListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedShare']) requestedAmAllFundShareListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
 
     /* Constructor. */
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -54,6 +54,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 private _ofiKycService: OfiKycService,
                 private _messagesService: MessagesService,
                 private _route: ActivatedRoute,
+                private _confirmationService: ConfirmationService,
                 private _ofiFundShareService: OfiFundShareService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
@@ -65,8 +66,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this.requestedAmKycListObs.subscribe(requested => {
             this.requestAllFundShareList(requested);
         }));
-        this.subscriptions.push(this.amAllFundShareListOb.subscribe(navList => {
-            this.updateAllFundShareList(navList);
+        this.subscriptions.push(this.amAllFundShareListOb.subscribe(fundShareList => {
+            this.updateAllFundShareList(fundShareList);
         }));
 
         // Get the parameter passed to URL
@@ -75,6 +76,9 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 this.kycId = Number(params.kycId);
             }
         });
+
+        // test data.
+        this.tableData = [];
 
         this.access = {};
 
@@ -100,7 +104,38 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         Object.keys(this.access).forEach((key) => {
             if (this.access[key]['changed']) this.changes[(this.access[key]['access'] ? 'add' : 'remove')] = true;
         });
-        this.showModal = true;
+
+        let message = '';
+        if (!this.changes['add'] && !this.changes['remove']){
+            message += 'No changes have been made to the Investors\' Fund Access permissions.';
+        }
+        if (this.changes['add']){
+            message += `<br>You are giving ${this.investorData['companyName']} permission to invest in the following funds' shares:<br><br>
+                       <table class="table grid"><tr><td><b>Fund Name</b></td><td><b>Share Name</b></td><td><b>ISIN</b></td></tr>`;
+            this.tableData.forEach((row)=>{
+                if (this.access[row['id']]['changed'] && this.access[row['id']]['access']){
+                    message += `<tr><td>${row['fundName']}</td><td>${row['shareName']}</td><td>${row['isin']}</td></tr>`;
+                }
+            });
+            message += '</table>';
+            if (this.changes['remove']) message += '<br>';
+        }
+        if (this.changes['remove']){
+            message += `<br>You are removing ${this.investorData['companyName']}'s permission to invest in the following funds' shares:<br><br>
+                       <table class="table grid"><tr><td><b>Fund Name</b></td><td><b>Share Name</b></td><td><b>ISIN</b></td></tr>`;
+            this.tableData.forEach((row)=>{
+                if (this.access[row['id']]['changed'] && !this.access[row['id']]['access']){
+                    message += `<tr><td>${row['fundName']}</td><td>${row['shareName']}</td><td>${row['isin']}</td></tr>`;
+                }
+            });
+            message += '</table>';
+        }
+
+        this._confirmationService.create('Confirm Fund Share Access:', message, {confirmText: 'Confirm Access', declineText: 'Cancel', btnClass: 'primary'}).subscribe((ans) => {
+            if (ans.resolved) {
+                this.saveAccess();
+            }
+        });
     }
 
     saveAccess() {
@@ -215,12 +250,12 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             };
 
             this.investor = {
-                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
-                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest },
-                'firstName': { label: 'First name:', value: kyc.investorFirstName },
-                'lastName': { label: 'Last name:', value: kyc.investorLastName },
-                'email': { label: 'Email address:', value: kyc.investorEmail },
-                'phoneNumber': { label: 'Phone number:', value: phoneNumber }
+                'companyName': {label: 'Company name:', value: kyc.investorCompanyName},
+                'approvalDateRequest': {label: 'Date of approval request:', value: approvalDateRequest},
+                'firstName': {label: 'First name:', value: kyc.investorFirstName},
+                'lastName': {label: 'Last name:', value: kyc.investorLastName},
+                'email': {label: 'Email address:', value: kyc.investorEmail},
+                'phoneNumber': {label: 'Phone number:', value: phoneNumber}
             };
 
             this.amCompany = kyc.companyName;
@@ -241,20 +276,18 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     requestAllFundShareList(requested: boolean) {
 
-        if (requested) {
-            return;
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
         }
-
-        OfiFundShareService.defaultRequestAmAllFundShareList(this._ofiFundShareService, this._ngRedux);
     }
 
     updateAllFundShareList(shareData: { [shareId: string]: AllFundShareDetail }) {
         this.tableData = immutableHelper.reduce(shareData, (result, item) => {
             result.push({
-                id: item.get('shareId', ''),
+                id: item.get('fundShareID', ''),
                 fundName: item.get('fundName', ''),
-                shareName: item.get('shareName', ''),
-                isin: item.get('fundShareIsin', ''),
+                shareName: item.get('fundShareName', ''),
+                isin: item.get('isin', ''),
                 assess: false
             });
             return result;
@@ -272,8 +305,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 isin: row['isin']
             };
         });
-        console.log(this.access);
-
         this._changeDetectorRef.markForCheck();
     }
 

@@ -29,6 +29,7 @@ import {
 import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 
@@ -67,7 +68,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    showModal = false;
+    // showModal = false;
     emailUser = '';
     emailSent = false;
     countdown = 5;
@@ -76,7 +77,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     changePassword = false;
 
     invitationToken = '';
-    isSignUp = false;
+    // isSignUp = false;
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -93,6 +94,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 private router: Router,
                 private _activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
@@ -188,10 +190,10 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
         this.isLogin = false;
 
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
-            this.resetToken = params['token'];
-            if (typeof this.resetToken !== 'undefined' && this.resetToken !== '') {
-                this.verifyToken(this.resetToken);
-            }
+            // this.resetToken = params['token'];
+            // if (typeof this.resetToken !== 'undefined' && this.resetToken !== '') {
+            //     this.verifyToken(this.resetToken);
+            // }
             this.invitationToken = params['invitationToken'];
             if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
 
@@ -266,7 +268,8 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     }
 
     signup(value) {
-        // if the alert popup exists.
+
+        // // if the alert popup exists.
         if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
             // remove the popup and return false.
             const elements = document.getElementsByClassName('error');
@@ -276,15 +279,23 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             return false;
         }
 
-        // go save data here.
+        //go save data here.
         this._ofiKycService.createUser({
             token: this.invitationToken,
             email: this.signupForm.controls.username.value,
             password: this.signupForm.controls.password.value,
             lang: this.language
         }).then(()=>{
-            this.isSignUp = true;
-            this.showModal = true;
+            this.confirmationService.create(
+                '<span>Success</span>',
+                '<p><b>Your account was created</b></p><p>A confirmation email was sent to you.</p>',
+                {confirmText: 'Continue to ' + this.appConfig.platform, declineText: '', btnClass: 'success'}
+            ).subscribe(() => {
+                this.logAfterSignup();
+            });
+
+            // this.isSignUp = true;
+            // this.showModal = true;
         }).catch((e)=>{
             //handle error.
             this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
@@ -292,8 +303,8 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     }
 
     logAfterSignup() {
-        this.showModal = false;
-        this.isSignUp = false;
+        // this.showModal = false;
+        // this.isSignUp = false;
 
         // call login function with signup informations
         if (!this.signupForm.valid) {
@@ -337,7 +348,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
             this.router.navigateByUrl(redirect);
 
-            this.isLogin = true;
+            // this.isLogin = true;
 
             // Set token for membernode connection
             const token = myAuthenData.token;
@@ -378,7 +389,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
 
     showFPModal() {
         this.isTokenExpired = false;
-        this.showModal = true;
+        // this.showModal = true;
     }
 
     sendEmail(formValues) {
@@ -416,35 +427,35 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
         );
     }
 
-    verifyToken(token) {
-        const asyncTaskPipe = this.myUserService.validToken(
-            {
-                token: token
-            });
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.changePassword = true;
-                    this.showModal = true;
-                } else {
-                    // this.isTokenExpired = true;
-                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
-                }
-                this.changePassword = true;
-                this.showModal = true;
-            },
-            (data) => {
-                // console.log('error: ', data);
-                this.isTokenExpired = true;
-                this.showModal = true;
-            })
-        );
-        // // just to test
-        // this.changePassword = true;
-        // this.showModal = true;
-    }
+    // verifyToken(token) {
+    //     const asyncTaskPipe = this.myUserService.validToken(
+    //         {
+    //             token: token
+    //         });
+    //
+    //     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+    //         asyncTaskPipe,
+    //         (data) => {
+    //             if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+    //                 this.changePassword = true;
+    //                 this.showModal = true;
+    //             } else {
+    //                 // this.isTokenExpired = true;
+    //                 this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+    //             }
+    //             this.changePassword = true;
+    //             this.showModal = true;
+    //         },
+    //         (data) => {
+    //             // console.log('error: ', data);
+    //             this.isTokenExpired = true;
+    //             this.showModal = true;
+    //         })
+    //     );
+    //     // // just to test
+    //     // this.changePassword = true;
+    //     // this.showModal = true;
+    // }
 
     saveNewPassword(formValues) {
         const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
@@ -477,7 +488,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
         this.forgottenPasswordForm.reset();
         this.emailUser = '';
         this.countdown = 5;
-        this.showModal = false;
+        // this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
     }
