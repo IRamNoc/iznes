@@ -3,7 +3,7 @@
         <span mltag="txt_orderbook">Order Book</span> - {{ connectedWalletName }}</h1>
 </div>
 
-<button type="button" class="btn btn-info m-1" (click)="placeFakeOrder()">Place a fake Order</button>
+<!--<button type="button" class="btn btn-info m-1" (click)="placeFakeOrder()">Place a fake Order</button>-->
 
 <div class="wrapper wrapper-content">
 
@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" #ordersDataGrid>
+                <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Order Ref</span> <span class="column-label"></span>
@@ -276,11 +276,11 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderDate -->
-                            {{order.orderDate | date:'shortDate'}}
+                            {{order.orderDate | date:'long'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- cutOffDate -->
-                            {{order.cutoffDate | date:'shortDate'}}
+                            {{order.cutoffDate | date:'long'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- NAVDate -->
@@ -394,6 +394,9 @@
     <ng-template #dynamicViewOrder let-orderData="orderData" let-tabid="tabid">
         <div class="panel-body">
 
+            <!--<div class="m-1">{{orderData | json}}</div>-->
+            <!--<div class="m-1">{{fundShare | json}}</div>-->
+
             <div class="well mb-1">
                 <!-- Panel header -->
                 <div class="row panel-header">
@@ -417,7 +420,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="well">
+                    <div class="well ml-1">
                         <!-- Panel header -->
                         <div class="row panel-header">
                             <div class="col-xs-6">
@@ -479,7 +482,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label>
-                                <span>Investment Portfolio</span>
+                                <span>Investor</span>
                             </label>
                             <div>
                                 <span class="readonly-field">{{showInvestor(orderData)}}</span>
@@ -496,7 +499,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="well">
+                    <div class="well ml-1">
                         <!-- Panel header -->
                         <div class="row panel-header">
                             <div class="col-xs-6">
@@ -516,7 +519,7 @@
                                             <span>One-off charges</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{fundShare.mifiidChargesOneOff}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
@@ -524,7 +527,7 @@
                                             <span>On-going charges</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{fundShare.mifiidChargesOngoing}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -534,7 +537,7 @@
                                             <span>Costs related to transactions initiated</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{fundShare.mifiidTransactionCosts}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
@@ -542,7 +545,7 @@
                                             <span>Charges related to ancillary services</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{fundShare.mifiidServicesCosts}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -552,7 +555,7 @@
                                             <span>Incidental costs</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{fundShare.mifiidIncidentalCosts}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -598,7 +601,7 @@
                                 <span>Asset Class</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{fundShare.keyFactOptionalData.assetClass}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -606,7 +609,7 @@
                                 <span>SRRI</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>
                             </div>
                         </div>
                     </div>
@@ -616,7 +619,7 @@
                                 <span>SRI</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -652,7 +655,7 @@
                                 <span>Decimalization</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{maximumNumDecimal}}</span>
                             </div>
                         </div>
                     </div>
@@ -677,7 +680,7 @@
                                 <span>Order Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.orderDate | date:'shortDate'}}</span>
+                                <span class="readonly-field">{{orderData.orderDate | date:'long'}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -685,7 +688,7 @@
                                 <span>Cut-off Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.cutoffDate | date:'shortDate'}}</span>
+                                <span class="readonly-field">{{orderData.cutoffDate | date:'long'}}</span>
                             </div>
                         </div>
                     </div>
@@ -754,7 +757,7 @@
                                 <span>Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{amountWithCost | moneyValue: 4}}</span>
                             </div>
                         </div>
                     </div>
@@ -782,7 +785,7 @@
                                 <span>Net Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{orderData.amountWithCost + (orderData.feePercentage * orderData.amountWithCost)}}</span>
                             </div>
                         </div>
                     </div>
@@ -792,7 +795,7 @@
                                 <span>Comment</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{orderNote}}</span>
                             </div>
                         </div>
                     </div>

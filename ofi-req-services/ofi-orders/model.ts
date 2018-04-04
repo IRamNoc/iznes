@@ -36,7 +36,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
 
 export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
     token: string;
-    data: any;
+    filters: any;
 }
 
 export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
