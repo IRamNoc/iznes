@@ -49,7 +49,7 @@ export class PersistService {
                 /* If it was ok, we'll try set the value. */
                 try {
                     /* Call set value. */
-                    group.setValue(recoveredData);
+                    group.patchValue(recoveredData);
                 } catch (e) {
                     /* Else, we'll catch the error. */
                     console.warn(' | Failed to use a previous state: ', e);
@@ -106,7 +106,7 @@ export class PersistService {
     public refreshState(name: string, group: FormGroup): FormGroup {
         console.log(' |--- Persist - clearState: ', name);
         /* Let's firstly set the new form value. */
-        this._forms[name] = group.value;
+        this._forms[name] = this.stripSensitiveData(group.value);
         console.log(' | Form value in service: ', this._forms[name]);
 
         /* Then let's save the empty value to the server. */
@@ -145,7 +145,7 @@ export class PersistService {
         console.log(' | Subscribing to group.');
         this._subscriptions[name] = group.valueChanges.subscribe((data) => {
             /* Set the form. */
-            this._forms[name] = data;
+            this._forms[name] = this.stripSensitiveData(data);
 
             /* Check if we're already waiting for another change, remove the old timeout. */
             if (this._wait) {
@@ -167,5 +167,38 @@ export class PersistService {
 
         /* Return. */
         return true;
+    }
+
+    /**
+     * Strip Passwords
+     * ---------------
+     * Strips passwords from the form data.
+     *
+     * @param  {any}    data - the form data.
+     * @return {void}
+     */
+    private stripSensitiveData (data: any): any {
+        /* Return. */
+        return this.loopAndRemovePassword(data);
+    }
+
+    private loopAndRemovePassword (object) {
+        /* Check if this is an object... */
+    	if (typeof object == 'object' && ! object.length) {
+    		/* Loop over keys... */
+    		var key;
+    		for (key in object) {
+    			/* ...if the key contains password, delete it... */
+    			if (key.indexOf('password') != -1) {
+    				delete object[key];
+    			} else {
+                    /* ...otherwise, let's loop over this object too... */
+    				this.loopAndRemovePassword(object[key]);
+    			}
+    		}
+    	}
+
+        /* ...finally, return the object. */
+    	return object;
     }
 }
