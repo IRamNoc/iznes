@@ -92,7 +92,7 @@ export {
     getOfiHomeOrderViewFilter,
 
     /* My orders */
-    getOfiMyOrderList,
+    // getOfiMyOrderList,
     OFI_SET_MY_ORDER_LIST,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
