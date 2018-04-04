@@ -3,32 +3,35 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {NgRedux, select} from '@angular-redux/store';
+import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
 
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
-import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
-
-/* Ofi Orders request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-
-/* Ofi Corp Actions request service. */
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 
-/* Ofi Management Company request service. */
-import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
+import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
+import {getOfiFundShareSelectedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 /* Ofi Store stuff. */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
+
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
+
+import * as _ from 'lodash';
 
 /* Types. */
 interface SelectedItem {
@@ -98,14 +101,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Ui Lists. */
     orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id: 1, text: 'Initiated'},
-        {id: 2, text: 'Waiting NAV'},
-        {id: 3, text: 'Waiting Settlement'},
-        {id: -1, text: 'Settled'},
+        {id: 1, text: 'Initiated'}, // estimatedPrice
+        {id: 2, text: 'Waiting NAV'},   // estimatedPrice
+        {id: 3, text: 'Waiting Settlement'},    // price
+        {id: -1, text: 'Settled'},  // price
         // {id: 4, text: 'Precentralised'},
         // {id: 5, text: 'Centralised'},
-        {id: 6, text: 'Unpaid'},
-        {id: 0, text: 'Cancelled'},
+        {id: 6, text: 'Unpaid'}, // price
+        {id: 0, text: 'Cancelled'}, // estimatedPrice
     ];
     orderTypes: Array<SelectedItem> = [
         {id: 0, text: 'All'},
@@ -148,6 +151,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
     private managementCompanyList: any = [];
+    fundShare = {
+        mifiidChargesOneOff: null,
+        mifiidChargesOngoing: null,
+        mifiidTransactionCosts: null,
+        mifiidServicesCosts: null,
+        mifiidIncidentalCosts: null,
+        keyFactOptionalData: {
+            assetClass: null,
+            srri: null,
+            sri: null,
+        },
+    };
+    fundShareID = 0;
 
     userAssetList: Array<any> = [];
     private requestedSearch: any;
@@ -155,17 +171,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListObj;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyObj;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListObj;
-    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
-    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersObj: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListObj: any;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyObj;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListObj;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
+    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
+    // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     // @select(['ofi', 'ofiCorpActions', 'ofiUserAssets', 'ofiUserAssetList']) userAssetListOb: any;
 
     constructor(private ofiOrdersService: OfiOrdersService,
@@ -176,6 +195,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private router: Router,
                 private _fb: FormBuilder,
                 private mcService: OfiManagementCompanyService,
+                private _ofiFundShareService: OfiFundShareService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alerts: AlertsService,
@@ -185,17 +205,27 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
+        /* Subscribe for this user's details. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
+            /* Assign list to a property. */
+            this.myDetails = myDetails;
+        });
+
+        this.createForm();
+        this.setInitialTabs();
+
         this.subscriptions.push(this.requestedOfiManagementCompanyObj.subscribe((requested) => this.getManagementCompanyRequested(requested)));
         this.subscriptions.push(this.OfiManagementCompanyListObj.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
         this.subscriptions['walletDirectory'] = this.walletDirectoryOb.subscribe((walletDirectory) => { this.walletDirectory = walletDirectory; });
 
-        this.subscriptions.push(this.requestedOfiAmOrdersObj.subscribe((requested) => this.getAmOrdersRequested(requested)));
-        this.subscriptions.push(this.OfiAmOrdersListObj.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newOrder) => this.getAmOrdersNewOrder(newOrder)));
-
-        this.createForm();
-
-        this.setInitialTabs();
+        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+            this.subscriptions.push(this.requestedOfiAmOrdersObj.subscribe((requested) => this.getAmOrdersRequested(requested)));
+            this.subscriptions.push(this.OfiAmOrdersListObj.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+            this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newOrder) => this.getAmOrdersNewOrder(newOrder)));
+        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
+            this.subscriptions.push(this.requestedOfiInvOrdersObj.subscribe((requested) => this.getInvOrdersRequested(requested)));
+            this.subscriptions.push(this.OfiInvOrdersListObj.subscribe((list) => this.getInvOrdersListFromRedux(list)));
+        }
     }
 
     ngOnInit() {
@@ -268,12 +298,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.subscriptions['order-list-requested'] = this.requestedOb.subscribe((requested) => {
         //     this.getOrdersBySearch(requested);
         // });
-
-        /* Subscribe for this user's details. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
-            /* Assign list to a property. */
-            this.myDetails = myDetails;
-        });
 
         /* Subscribe for this user's wallets. */
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
@@ -372,15 +396,113 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getAmOrdersNewOrder(newOrder): void {
-        if (newOrder) {
-            this.loading = true;
-            this.getAmOrdersList();
-            this.changeDetectorRef.markForCheck();
+    getAmOrdersListFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.ordersList = listImu.reduce((result, item) => {
+
+            result.push({
+                amAddress: item.get('amAddress'),
+                amCompanyID: item.get('amCompanyID'),
+                amWalletID: item.get('amWalletID'),
+                amountWithCost: item.get('amountWithCost'),
+                byAmountOrQuantity: item.get('byAmountOrQuantity'),
+                canceledBy: item.get('canceledBy'),
+                contractAddr: item.get('contractAddr'),
+                contractExpiryTs: item.get('contractAddr'),
+                contractStartTs: item.get('contractStartTs'),
+                currency: item.get('currency'),
+                cutoffDate: item.get('cutoffDate'),
+                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
+                estimatedPrice: item.get('estimatedPrice'),
+                estimatedQuantity: item.get('estimatedQuantity'),
+                feePercentage: item.get('feePercentage'),
+                fundShareID: item.get('fundShareID'),
+                fundShareName: item.get('fundShareName'),
+                iban: item.get('iban'),
+                investorAddress: item.get('investorAddress'),
+                investorWalletID: item.get('investorWalletID'),
+                isin: item.get('isin'),
+                label: item.get('label'),
+                navEntered: item.get('navEntered'),
+                orderID: item.get('orderID'),
+                orderDate: item.get('orderDate'),
+                orderNote: item.get('orderNote'),
+                orderStatus: item.get('orderStatus'),
+                orderType: item.get('orderType'),
+                investorIban: item.get('investorIban'),
+                orderFundShareID: item.get('orderFundShareID'),
+                platFormFee: item.get('platFormFee'),
+                price: item.get('price'),
+                quantity: item.get('quantity'),
+                settlementDate: item.get('settlementDate'),
+                totalResult: item.get('totalResult'),
+                valuationDate: item.get('valuationDate'),
+            });
+
+            return result;
+        }, []);
+
+        if (this.ordersList.length > 0) {
+            this.total = this.ordersList[0].totalResult;
+            this.lastPage = Math.ceil(this.total / this.itemPerPage);
+            this.loading = false;
+
+            this.subscriptions.push(this.route.params.subscribe(params => {
+                this.orderID = params['tabid'];
+                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+                    const order = this.ordersList.find(elmt => {
+                        if (elmt.orderID.toString() === this.orderID.toString()) {
+                            return elmt;
+                        }
+                    });
+                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                        this.fundShareID = order.fundShareID;
+                        this.tabsControl[0].active = false;
+                        let tabTitle = '';
+                        if (order.orderType === 3) tabTitle += 'Subscription: ';
+                        if (order.orderType === 4) tabTitle += 'Redemption: ';
+                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+
+                        this.tabsControl.push(
+                            {
+                                'title': {
+                                    'icon': 'fa-shopping-basket',
+                                    'text': tabTitle,
+                                },
+                                'orderId': this.orderID,
+                                'active': true,
+                                orderData: order,
+                            }
+                        );
+                        this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
+                        const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
+                        requestData.fundShareID = this.fundShareID;
+                        OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
+                    }
+                } else {
+                    if (this.tabsControl.length > 1) {
+                        this.tabsControl.splice(1, this.tabsControl.length - 1);
+                    }
+                }
+            }));
+        } else {
+            this.total = 0;
+            this.lastPage = 0;
+            this.loading = false;
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getInvOrdersRequested(requested): void {
+        if (!requested) {
+            // OfiOrdersService.setNewOrder(false, this.ngRedux);
+            OfiOrdersService.defaultRequestInvestorOrdersList(this.ofiOrdersService, this.ngRedux);
         }
     }
 
-    getAmOrdersListFromRedux(list) {
+    getInvOrdersListFromRedux(list) {
         const listImu = fromJS(list);
 
         this.ordersList = listImu.reduce((result, item) => {
@@ -474,6 +596,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    getAmOrdersNewOrder(newOrder): void {
+        if (newOrder) {
+            this.loading = true;
+            this.getAmOrdersList();
+            this.changeDetectorRef.markForCheck();
+        }
+    }
+
     getManagementCompanyRequested(requested): void {
         // console.log('requested', requested);
         if (!requested) {
@@ -516,6 +646,218 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }, []);
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    getFundShareFromRedux(fundShare) {
+        if (typeof fundShare !== 'undefined' && Object.keys(fundShare).length > 0) {
+            const keyFactOptionalData = JSON.parse(fundShare.keyFactOptionalData);
+            this.fundShare.keyFactOptionalData = keyFactOptionalData;
+            this.changeDetectorRef.markForCheck();
+        }
+
+        // {
+            // "fundShareID": 1,
+            // "fundShareName": "Test Fund Share - 1522766737",
+            // "fundID": 1,
+            // "isin": "1522766737",
+            // "shareClassCode": 0,
+            // "shareClassInvestmentStatus": 0,
+            // "subscriptionStartDate": "2018-04-01",
+            // "launchDate": "2018-04-01",
+            // "shareClassCurrency": 0,
+            // "valuationFrequency": 0,
+            // "historicOrForwardPricing": 0,
+            // "hasCoupon": 1,
+            // "couponType": 0,
+            // "freqOfDistributionDeclaration": 0,
+            // "status": "0",
+            // "maximumNumDecimal": 1,  // decimalization
+            // "subscriptionCategory": 2,
+            // "subscriptionCurrency": 0,
+            // "minInitialSubscriptionInShare": 1,
+            // "minInitialSubscriptionInAmount": 1,
+            // "minSubsequentSubscriptionInShare": 1,
+            // "minSubsequentSubscriptionInAmount": 1,
+            // "redemptionCategory": 2,
+            // "redemptionCurrency": 0,
+            // "minInitialRedemptionInShare": 1,
+            // "minInitialRedemptionInAmount": 1,
+            // "minSubsequentRedemptionInShare": 1,
+            // "minSubsequentRedemptionInAmount": 1,
+            // "portfolioCurrencyHedge": null,
+            // "tradeDay": 0,
+            // "subscriptionCutOffTime": "12:00:00",
+            // "subscriptionCutOffTimeZone": 11,
+            // "subscriptionSettlementPeriod": 0,
+            // "redemptionCutOffTime": "12:00:00",
+            // "redemptionCutOffTimeZone": 11,
+            // "redemptionSettlementPeriod": 1,
+            // "subscriptionRedemptionCalendar": "1",
+            // "maxManagementFee": 1,
+            // "maxSubscriptionFee": 1,
+            // "maxRedemptionFee": 1,
+            // "investorProfile": 0,
+            // "mifiidChargesOngoing": 1,
+            // "mifiidChargesOneOff": 1,
+            // "mifiidTransactionCosts": 1, // Costs related to transactions initiated
+            // "mifiidServicesCosts": 1,    // Charges related to ancillary services
+            // "mifiidIncidentalCosts": 1,
+            // "keyFactOptionalData": "{
+                // "cusip":"",
+                // "valor":null,
+                // "wkn":"",
+                // "bloombergCode":"",
+                // "sedol":"",
+                // "dormantStartDate":"",
+                // "dormantEndDate":"",
+                // "liquidationStartDate":"",
+                // "terminationDate":"",
+                // "terminationDateExplanation":"",
+                // "assetClass":null,
+                // "geographicalArea":null,
+                // "srri":null,
+                // "sri":null,
+                // "navHedge":null,
+                // "distributionPolicy":null,
+                // "lifecycle":null,
+                // "isClassUCITSEligible":false,
+                // "isRDRCompliant":false,
+                // "isRestrictedToSeparateFeeArrangement":false,
+                // "hasForcedRedemption":false,
+                // "isETF":false,
+                // "indexName":"",
+                // "indexCurrency":null,
+                // "indexType":null,
+                // "bloombergUnderlyingIndexCode":"",
+                // "reutersUnderlyingIndexCode":"",
+                // "denominationBase":null,
+                // "isETC":false,
+                // "isShort":false,
+                // "replicationMethodologyFirstLevel":null,
+                // "replicationMethodologySecondLevel":null,
+                // "hasPRIIPDataDelivery":false,
+                // "hasUCITSDataDelivery":false,
+                // "ucitsKiidUrl":""
+            // }",
+            // "characteristicOptionalData": "{
+                // "portfolioCurrencyHedge":null
+            // }",
+            // "calendarOptionalData": "{
+                // "holidayManagement":""
+            // }",
+            // "profileOptionalData": "{
+                // "portfolioCurrencyHedge":null
+            // }",
+            // "priipOptionalData": "{
+                // "hasCreditRisk":false,
+                // "creditRiskMeasure":null,
+                // "marketRiskMeasure":null,
+                // "liquidityRisk":null,
+                // "summaryRiskIndicator":null,
+                // "possibleMaximumLoss":null,
+                // "recommendedHoldingPeriod":null,
+                // "maturityDate":"",
+                // "referenceDate":"",
+                // "category":null,
+                // "numberOfObservedReturns":null,
+                // "meanReturn":null,
+                // "volatilityOfStressedScenario":null,
+                // "sigma":null,
+                // "skewness":null,
+                // "excessKurtosis":null,
+                // "vev":null,
+                // "isPRIIPFlexible":false,
+                // "vev1":null,
+                // "vev2":null,
+                // "vev3":null,
+                // "lumpSumOrRegularPremiumIndicator":null,
+                // "investmentAmount":null,
+                // "return1YStressScenario":"",
+                // "return1YUnfavourable":false,
+                // "return1YModerate":false,
+                // "return1YFavourable":false,
+                // "halfRHPStressScenario":"",
+                // "halfRHPUnfavourable":false,
+                // "halfRHPModerate":false,
+                // "halfRHPFavourable":false,
+                // "rhpStressScenario":"",
+                // "rhpUnfavourable":false,
+                // "rhpModerate":false,
+                // "rhpFavourable":false,
+                // "bondWeight":null,
+                // "annualizedVolatility":null,
+                // "macaulayDuration":null,
+                // "targetMarketRetailInvestorType":null,
+                // "otherRiskNarrative":null,
+                // "hasCapitalGuarantee":false,
+                // "characteristics":"",
+                // "level":"",
+                // "limitations":"",
+                // "earlyExitConditions":""
+            // }",
+            // "listingOptionalData": "{
+                // "bloombergCodeOfListing":"",
+                // "currency":"",
+                // "date":"",
+                // "exchangePlace":"",
+                // "iNAVBloombergCode":"",
+                // "iNAVReutersCode":"",
+                // "inceptionPrice":null,
+                // "isPrimaryListing":false,
+                // "marketIdentifierCode":"",
+                // "reutersCode":"",
+                // "status":null
+            // }",
+            // "taxationOptionalData": "{
+                // "tisTidReporting":null,
+                // "hasDailyDeliveryOfInterimProfit":false,
+                // "hasReducedLuxembourgTax":false,
+                // "luxembourgTax":null,
+                // "hasSwissTaxReporting":false,
+                // "swissTaxStatusRuling":false,
+                // "isEligibleForTaxDeferredFundSwitchInSpain":false,
+                // "hasUKReportingStatus":false,
+                // "ukReportingStatusValidFrom":"",
+                // "ukReportingStatusValidUntil":"",
+                // "hasUKConfirmationOfExcessAmount":false,
+                // "isUSTaxFormsW8W9Needed":false,
+                // "isFlowThroughEntityByUSTaxLaw":false,
+                // "fatcaStatusV2":null,
+                // "isSubjectToFATCAWithholdingTaxation":false
+            // }",
+            // "solvencyIIOptionalData": "{
+                // "mifidSecuritiesClassification":null,
+                // "efamaMainEFCCategory":null,
+                // "efamaActiveEFCClassification":"",
+                // "hasTripartiteReport":false,
+                // "lastTripartiteReportDate":"",
+                // "interestRateUp":null,
+                // "interestRateDown":null,
+                // "equityTypeI":"",
+                // "equityTypeII":"",
+                // "property":"",
+                // "spreadBonds":"",
+                // "spreadStructured":"",
+                // "spreadDerivativesUp":null,
+                // "spreadDerivativesDown":null,
+                // "fxUp":null,"fxDown":null
+            // }",
+            // "representationOptionalData": "{
+                // "hasCountryRepresentative":false,
+                // "representativeName":"",
+                // "hasCountryPayingAgent":false,
+                // "payingAgentName":"",
+                // "homeCountryRestrictions":null,
+                // "countryName":"",
+                // "registrationDate":"",
+                // "deregistrationDate":"",
+                // "distributionStartDate":"",
+                // "distributionEndDate":"",
+                // "legalRegistration":false,
+                // "marketingDistribution":false,
+                // "specificRestrictions":""
+            // }"
+        // }
     }
 
     placeFakeOrder() {
@@ -596,41 +938,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     exportOrders() {
 
-        console.log('EXPORT ORDERS TO CSV');
+        const asyncTaskPipe = this.ofiOrdersService.requestExportOrders({
+            filters: this.dataGridParams
+        });
 
-        // const asyncTaskPipe = this.ofiOrdersService.requestExportOrders({
-        //     data: this.ordersList
-        // });
-        //
-        // this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-        //     asyncTaskPipe,
-        //     (data) => {
-        //         console.log('export data success', data); // success
-        //     },
-        //     (data) => {
-        //         console.log('Error: ', data);
-        //     })
-        // );
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                console.log('export data success', data); // success
+            },
+            (data) => {
+                console.log('Error: ', data);
+            })
+        );
 
         // call procedure iznexportorders
-
         // data : ordersList
 
-        // orderRef: 'Order Ref',
-        // orderType: 'Order Type',
-        // isin: 'ISIN',
-        // shareName: 'Share Name',
-        // amCompanyName: 'Asset Management Company',
-        // currency: 'Share Currency',
-        // quantity: 'Quantity',
-        // latestNav: 'Latest NAV',
-        // grossAmount: 'Gross Amount',
-        // feesAmount: 'Fees Amount',
-        // orderDate: 'Order Date',
-        // cutOffDate: 'Cut-off Date',
-        // navDate: 'NAV Date',
-        // settlementDate: 'Settlement Date',
-        // status: 'Status'
     }
 
     requestSearch(form) {
@@ -710,6 +1034,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
                 case 'orderRef':
                     this.dataGridParams.sortByField = 'orderId';
+                    break;
+                case 'investor':
+                    this.dataGridParams.sortByField = 'investorWalletID';
                     break;
                 case 'orderType':
                     this.dataGridParams.sortByField = 'orderType';
@@ -1131,7 +1458,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
             for (wallet in this.myWallets) {
-                if (wallet === this.connectedWalletId) {
+                if (wallet.toString() === this.connectedWalletId.toString()) {
                     this.connectedWalletName = this.myWallets[wallet].walletName;
                     break;
                 }

@@ -3,15 +3,17 @@ import {Action} from 'redux';
 import * as _ from 'lodash';
 
 /* Local types. */
-import {MyOrders} from './';
+import {MyOrders, MyOrderDetails} from './model';
 import * as ofiMyOrdersActions from './actions';
 import {SET_ALL_TABS} from './actions';
 import {immutableHelper} from '@setl/utils';
+import {List, fromJS, Map} from 'immutable';
 
 /* Initial state. */
 const initialState: MyOrders = {
-    orderList: [],
+    orderList: {},
     requested: false,
+    newOrder: false,
     openedTabs: []
 };
 
@@ -21,7 +23,16 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
     switch (action.type) {
         /* Set Coupon List. */
         case ofiMyOrdersActions.OFI_SET_MY_ORDER_LIST:
-            return ofiSetMyOrderList(state, action);
+            // return ofiSetMyOrderList(state, action);
+            const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+            if (data.Status !== 'Fail') {
+                const orderList = formatMyOrderDataResponse(data);
+                return Object.assign({}, state, {
+                    orderList
+                });
+            }
+            return state;
 
         case ofiMyOrdersActions.OFI_SET_REQUESTED_MY_ORDER:
             return toggleRequestState(state, true);
@@ -36,6 +47,59 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
         default:
             return state;
     }
+}
+
+function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
+    const rawDataList = fromJS(rawData);
+
+    let i = 0;
+
+    const manageOrdersList = Map(rawDataList.reduce(
+        function (result, item) {
+            result[i] = {
+                amAddress: item.get('amAddress'),
+                amCompanyID: item.get('amCompanyID'),
+                amWalletID: item.get('amWalletID'),
+                amountWithCost: item.get('amountWithCost'),
+                byAmountOrQuantity: item.get('byAmountOrQuantity'),
+                canceledBy: item.get('canceledBy'),
+                contractAddr: item.get('contractAddr'),
+                contractExpiryTs: item.get('contractAddr'),
+                contractStartTs: item.get('contractStartTs'),
+                currency: item.get('currency'),
+                cutoffDate: item.get('cutoffDate'),
+                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
+                estimatedPrice: item.get('estimatedPrice'),
+                estimatedQuantity: item.get('estimatedQuantity'),
+                feePercentage: item.get('feePercentage'),
+                fundShareID: item.get('fundShareID'),
+                fundShareName: item.get('fundShareName'),
+                iban: item.get('iban'),
+                investorAddress: item.get('investorAddress'),
+                investorWalletID: item.get('investorWalletID'),
+                isin: item.get('isin'),
+                label: item.get('label'),
+                navEntered: item.get('navEntered'),
+                orderID: item.get('orderID'),
+                orderDate: item.get('orderDate'),
+                orderNote: item.get('orderNote'),
+                orderStatus: item.get('orderStatus'),
+                orderType: item.get('orderType'),
+                investorIban: item.get('investorIban'),
+                orderFundShareID: item.get('orderFundShareID'),
+                platFormFee: item.get('platFormFee'),
+                price: item.get('price'),
+                quantity: item.get('quantity'),
+                settlementDate: item.get('settlementDate'),
+                totalResult: item.get('totalResult'),
+                valuationDate: item.get('valuationDate'),
+            };
+            i++;
+            return result;
+        },
+        {}));
+
+    return manageOrdersList.toJS();
 }
 
 /**

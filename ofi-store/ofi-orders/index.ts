@@ -1,12 +1,12 @@
-import {combineReducers, Reducer} from "redux";
+import {combineReducers, Reducer} from 'redux';
 /* Manage Orders */
-import {ManageOrders, OfiManageOrderListReducer} from "./manage-orders";
+import {ManageOrders, OfiManageOrderListReducer} from './manage-orders';
 /* My Orders */
-import {MyOrders, OfiMyOrderListReducer} from "./my-orders";
+import {MyOrders, OfiMyOrderListReducer} from './my-orders';
 /* Home Orders */
-import {HomeOrders, OfiHomeOrderListReducer} from "./home-orders";
+import {HomeOrders, OfiHomeOrderListReducer} from './home-orders';
 // Collective Archive
-import {OfiCollectiveArchiveReducer, OfiCollectiveArchiveState} from "./collective-archive";
+import {OfiCollectiveArchiveReducer, OfiCollectiveArchiveState} from './collective-archive';
 
 export {
     OFI_SET_MANAGE_ORDER_LIST,
@@ -17,15 +17,13 @@ export {
     ofiManageOrderActions
 } from './manage-orders';
 
-
 export {
     OFI_SET_MY_ORDER_LIST,
-    getOfiMyOrderList,
+    // getOfiMyOrderList,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
     ofiMyOrderActions
 } from './my-orders';
-
 
 export {
     OFI_SET_HOME_ORDER_LIST,
@@ -39,7 +37,6 @@ export {
     ofiSetRequestedHomeOrder,
     ofiClearRequestedHomeOrder
 } from './home-orders';
-
 
 export {
     SET_COLLECTIVE_ARCHIVE,

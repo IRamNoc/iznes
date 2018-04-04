@@ -1,24 +1,32 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
-import {NgRedux, select} from "@angular-redux/store";
-import {Unsubscribe} from "redux";
-import {FormControl, FormGroup} from "@angular/forms";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+
+import {NgRedux, select} from '@angular-redux/store';
+import {Unsubscribe} from 'redux';
+import {fromJS} from 'immutable';
+import {ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from '@setl/utils';
+
 /* Services. */
-import {WalletNodeRequestService} from "@setl/core-req-services";
+import {WalletNodeRequestService} from '@setl/core-req-services';
+
 /* Alerts and confirms. */
-import {AlertsService} from "@setl/jaspero-ng2-alerts";
-import {ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from "@setl/utils";
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Utils. */
+
 /* Ofi Corp Actions request service. */
-import {OfiOrdersService} from "../../ofi-req-services/ofi-orders/service";
-/* Core store stuff. */
+import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
+
 /* Ofi Store stuff. */
-import {getOfiMyOrderList, ofiSetRequestedMyOrder} from "../../ofi-store";
+import {ofiSetRequestedMyOrder} from '../../ofi-store';
+import {ofiMyOrderActions} from '@ofi/ofi-main/ofi-store';
+
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import * as _ from 'lodash';
-import {ofiMyOrderActions} from '@ofi/ofi-main/ofi-store';
 
+/* Clarity */
+import {ClrDatagridStateInterface} from '@clr/angular';
 
 /* Types. */
 interface SelectedItem {
@@ -36,25 +44,91 @@ interface SelectedItem {
 /* Class. */
 export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    unknownValue = '???';
+
+    /* Datagrid server driven */
+    total: number;
+    itemPerPage = 10;
+    dataGridParams = {
+        shareName: null,
+        status: null,
+        orderType: null,
+        pageSize: this.itemPerPage,
+        rowOffSet: 0,
+        sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
+        sortOrder: 'desc', // asc / desc
+        dateSearchField: null,
+        fromDate: null,
+        toDate: null,
+    };
+    lastPage: number;
+    loading = true;
+
+    // Locale
+    language = 'fr';
+
+    // Datepicker config
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language
+    };
+
     /* Tabs Control array */
-    public tabsControl: Array<any> = [];
+    tabsControl: Array<any> = [];
+    orderID = 0;
+
+    /* expandable div */
+    isOptionalFilters = false;
+    clientInformation = true;
+    clientDetailsInformation = true;
+    generalInvestmentInformation = true;
+    mifid = true;
+    productInformation = true;
+    datesInformation = true;
+    orderInformation = true;
 
     /* Ui Lists. */
-    public orderStatuses: Array<SelectedItem> = [
+    orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id: 4, text: 'Precentralised'},
-        {id: 5, text: 'Centralised'},
-        {id: 1, text: 'Initiated'},
-        {id: 2, text: 'Waiting for NAV'},
-        {id: 3, text: 'Waiting for Settlement'},
-        {id: -1, text: 'Order settled'},
-        {id: "0", text: 'Cancelled'},
+        {id: 1, text: 'Initiated'}, // estimatedPrice
+        {id: 2, text: 'Waiting NAV'},   // estimatedPrice
+        {id: 3, text: 'Waiting Settlement'},    // price
+        {id: -1, text: 'Settled'},  // price
+        // {id: 4, text: 'Precentralised'},
+        // {id: 5, text: 'Centralised'},
+        {id: 6, text: 'Unpaid'}, // price
+        {id: 0, text: 'Cancelled'}, // estimatedPrice
     ];
-    public orderTypes: Array<SelectedItem> = [
-        {id: "0", text: 'All'},
+    orderTypes: Array<SelectedItem> = [
+        {id: 0, text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
-        {id: 5, text: 'Sell/Buy'},
+    ];
+    dateTypes: Array<SelectedItem> = [
+        {id: 'orderDate', text: 'OrderDate'},
+        {id: 'cutOffDate', text: 'CutOffDate'},
+        {id: 'navDate', text: 'NAVDate'},
+        {id: 'settlementDate', text: 'SettlementDate'},
+    ];
+
+    currencyList = [
+        {id : 0, code: 'EUR', label: 'Euro'},
+        {id : 1, code: 'USD', label: 'US Dollar'},
+        {id : 2, code: 'GBP', label: 'Pound Sterling'},
+        {id : 3, code: 'CHF', label: 'Swiss Franc'},
+        {id : 4, code: 'JPY', label: 'Yen'},
+        {id : 5, code: 'AUD', label: 'Australian Dollar'},
+        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
+        {id : 7, code: 'SEK', label: 'Swedish Krona'},
+        {id : 8, code: 'ZAR', label: 'Rand'},
+        {id : 9, code: 'RUB', label: 'Russian Ruble'},
+        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
+        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
+        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
+        {id : 13, code: 'PLN', label: 'Zloty'},
     ];
 
     /* Public Properties */
@@ -69,25 +143,30 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
     private requestedSearch: any;
     private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.
+    private managementCompanyList: any = [];
 
     /* Observables. */
-    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb: any;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) ordersListOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
 
-    constructor(private ofiOrdersService: OfiOrdersService,
-                private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,
-                private walletNodeRequestService: WalletNodeRequestService,
-                private _confirmationService: ConfirmationService,
-                private route: ActivatedRoute,
-                private router: Router,
-                public _numberConverterService: NumberConverterService) {
+    constructor(
+        private ofiOrdersService: OfiOrdersService,
+        private ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private alertsService: AlertsService,
+        private walletNodeRequestService: WalletNodeRequestService,
+        private _confirmationService: ConfirmationService,
+        private route: ActivatedRoute,
+        private router: Router,
+        public _numberConverterService: NumberConverterService
+    ) {
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
     }
 
     ngOnInit() {
@@ -97,10 +176,10 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setInitialTabs();
 
         /* Ok, let's check that we have the orders list, if not... */
-        if (!getOfiMyOrderList(state).length) {
-            /* ...request using the defaults in the form. */
-            this.getOrdersBySearch();
-        }
+        // if (!getOfiMyOrderList(state).length) {
+        //     /* ...request using the defaults in the form. */
+        //     this.getOrdersBySearch();
+        // }
 
         /* Subscribe for the order filter. */
         this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
@@ -116,30 +195,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         });
-    }
-
-    setInitialTabs() {
-
-        // Get opened tabs from redux store.
-        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'myOrders', 'openedTabs']);
-
-        if (_.isEmpty(openedTabs)) {
-            /* Default tabs. */
-            this.tabsControl = [
-                {
-                    "title": {
-                        "icon": "fa fa-th-list",
-                        "text": "List"
-                    },
-                    "orderId": -1,
-                    "searchForm": this.newSearchFormGroup(),
-                    "active": true
-                }
-            ];
-            return true;
-        }
-
-        this.tabsControl = openedTabs;
     }
 
     ngAfterViewInit() {
@@ -217,6 +272,46 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }, 100);
         });
+    }
+
+    setInitialTabs() {
+
+        // Get opened tabs from redux store.
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'myOrders', 'openedTabs']);
+
+        if (_.isEmpty(openedTabs)) {
+            /* Default tabs. */
+            this.tabsControl = [
+                {
+                    'title': {
+                        'icon': 'fa fa-th-list',
+                        'text': 'List'
+                    },
+                    'orderId': -1,
+                    'searchForm': this.newSearchFormGroup(),
+                    'active': true
+                }
+            ];
+            return true;
+        }
+
+        this.tabsControl = openedTabs;
+    }
+
+    getLanguage(requested): void {
+        if (requested) {
+            switch (requested) {
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
+            }
+        }
     }
 
     /**
@@ -775,7 +870,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (let key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
 
