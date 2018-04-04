@@ -44,7 +44,65 @@ public class DatabaseHelper {
 
                 rs.beforeFirst();
             }
-            assertEquals("There should be exactly "  + expectedCount + " record(s) matching (ignoring case): " + accountName, expectedCount, rows );
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + accountName, expectedCount, rows);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static void validateDatabaseMembersTable(String memberName,  int expectedCount) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblMembers where memberName = " + "\"" + memberName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + memberName, expectedCount, rows);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static void validateDatabaseUsersFormdataTable(int expectedCount) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblUsersFormdata");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,6 +115,38 @@ public class DatabaseHelper {
     }
 
 
+    public static void validateDatabaseUsersTable(String userName,  String email, int expectedCount) throws SQLException {
+
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+
+        try {
+
+            rs = stmt.executeQuery("select * from setlnet.tblUsers where userName = " + "\"" + userName + "\" AND emailAddress =  " + "\"" + email + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + userName + " but there were " + rows, expectedCount, rows);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
     public static void validateDatabaseCountRows(String table, int expectedCount) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
 
@@ -67,7 +157,7 @@ public class DatabaseHelper {
             String countRows = "select * from setlnet.tbl" + table;
             rs = stmt.executeQuery(countRows);
             rs.last();
-            assertEquals("There should be exactly "  + expectedCount + " record(s) " , expectedCount, rs.getRow());
+            assertEquals("There should be exactly " + expectedCount + " record(s) ", expectedCount, rs.getRow());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,6 +167,32 @@ public class DatabaseHelper {
             stmt.close();
             rs.close();
         }
+    }
+
+
+
+    public static int databaseCountRows(String table) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            String countRows = "select * from setlnet.tbl" + table;
+            rs = stmt.executeQuery(countRows);
+            rs.last();
+            count = rs.getRow();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return count;
     }
 
 
@@ -91,33 +207,16 @@ public class DatabaseHelper {
 
     }
 
-    public static void deleteUserFromDB(String DBUsername, String DBPassword, String email) throws SQLException {
-        conn = DriverManager .getConnection(connectionString, DBUsername, DBPassword);
+    public static void deleteUserFromDatabase(String email) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
 
         //for the query
         Statement stmt = conn.createStatement();
-        ResultSet rs = null;
 
-        try {
-            rs = stmt.executeQuery("select * from setlnet.tblUsers where emailAddress = " + "\"" + email + "\"");
-            int rows = 0;
+        stmt.executeUpdate("DELETE FROM setlnet.tblUsers WHERE emailAddress = " + "\"" + email + "\"");
 
-            // check there is only one result( there should be!! )
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-                stmt.executeUpdate("DELETE FROM setlnet.tblUsers WHERE emailAddress = " + "\"" + email + "\"");
-                rs.beforeFirst();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
+        conn.close();
+        stmt.close();
     }
 }
-
 
