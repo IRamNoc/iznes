@@ -175,6 +175,6 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
     console.log('handleGetIznesShareList (iznShareList): ', iznShareList);
 
     return Object.assign({}, state, {
-        iznShareList
+        iznShareList: iznShareList.toJS()
     });
 }
