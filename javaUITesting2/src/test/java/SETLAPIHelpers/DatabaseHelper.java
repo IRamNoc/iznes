@@ -85,7 +85,7 @@ public class DatabaseHelper {
         }
     }
 
-    public static void validateDatabaseUsersFormdataTable(int expectedCount) throws SQLException {
+    public static void validateDatabaseUsersFormdataTable(int expectedCount, String formId, String userId) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
 
         //for the query
@@ -93,7 +93,7 @@ public class DatabaseHelper {
         ResultSet rs = null;
 
         try {
-            rs = stmt.executeQuery("select * from setlnet.tblUsersFormdata");
+            rs = stmt.executeQuery("select * from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
             int rows = 0;
 
             if (rs.last()) {
@@ -103,6 +103,7 @@ public class DatabaseHelper {
                 rs.beforeFirst();
             }
             assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,6 +202,17 @@ public class DatabaseHelper {
         Statement stmt = conn.createStatement();
 
         stmt.executeUpdate("DELETE FROM setlnet.tblAccounts WHERE accountName = " + "\"" + accountName + "\"");
+
+        conn.close();
+        stmt.close();
+
+    }
+
+    public static void deleteFormdataFromDatabase(String userId, String formId) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+
+        stmt.executeUpdate("DELETE FROM setlnet.tblUsersFormdata WHERE userId = " + "\"" + userId +  "\" AND formId =  " + "\"" + formId + "\"");
 
         conn.close();
         stmt.close();
