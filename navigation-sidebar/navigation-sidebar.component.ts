@@ -111,12 +111,14 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
     /**
      * Active Route
-     * Returns whether a string in in the ac
-     * @param  {route}  - string
-     * @return {active} - boolean
+     * Returns true if the route tested is matching the url
+     * Takes account of route params
+     * @param  {string}  route - the route being tested
+     * @return {boolean} active - true if the route tested is matching the url
      */
-    public activeRoute(route): boolean {
-        return !!(this.router.url.indexOf(route) !== -1);
+    public activeRoute(route: string): boolean {
+        const routeRegex = new RegExp(`^${route}(\/\S+)?`);
+        return routeRegex.test(this.router.url);
     }
 
     public menuSelected(id) {
