@@ -553,7 +553,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
                 children: [
                     {
-                        path: 'client/:lang/:kycId',
+                        path: 'client/:kycId',
                         component: OfiWaitingApprovalComponent,
                     }
                 ]
