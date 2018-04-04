@@ -14,8 +14,8 @@ export class FundShareTradeCycleModel {
     
     constructor() {
         this.form = new FormGroup({
-            tradeCyclePeriod: new FormControl(),
-            possibleInPeriod: new FormControl(),
+            tradeCyclePeriod: new FormControl([{ id: E.TradeCyclePeriodEnum.Daily, text: 'Daily' }], Validators.required),
+            possibleInPeriod: new FormControl(null, Validators.required),
             weeklyDealingDays: new FormControl(),
             monthlyDealingDays: new FormArray([]),
             yearlyDealingDays: new FormArray([]),
@@ -26,8 +26,60 @@ export class FundShareTradeCycleModel {
 
     private setupFormValueChange(): void {
         this.form.controls.tradeCyclePeriod.valueChanges.subscribe((value: any) => {
-            this.form.updateValueAndValidity();
+            if(value[0].id === E.TradeCyclePeriodEnum.Daily) {
+                this.form.controls.weeklyDealingDays.clearValidators();
+                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+            } else if(value[0].id === E.TradeCyclePeriodEnum.Weekly) {
+                this.form.controls.weeklyDealingDays.setValidators(Validators.required);
+                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+            } else if(value[0].id === E.TradeCyclePeriodEnum.Monthly) {
+                this.form.controls.weeklyDealingDays.clearValidators();
+                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    this.setValidatorRequired(c);
+                });
+                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+            } else if(value[0].id === E.TradeCyclePeriodEnum.Yearly) {
+                this.form.controls.weeklyDealingDays.clearValidators();
+                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    this.clearValidators(c);
+                });
+                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    this.setValidatorRequired(c);
+                });
+            }
+
+            this.form.controls.weeklyDealingDays.updateValueAndValidity();
+            (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                this.updateValueAndValidity(c);
+            });
+            (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                this.updateValueAndValidity(c);
+            });
         });
+    }
+
+    private clearValidators(c): void {
+        _.forEach((c as any).controls, (control => control.clearValidators()));
+    }
+
+    private setValidatorRequired(c): void {
+        _.forEach((c as any).controls, (control => control.setValidators(Validators.required)));
+    }
+
+    private updateValueAndValidity(c): void {
+        _.forEach((c as any).controls, (control => control.updateValueAndValidity()));
     }
     
     get tradeCyclePeriod(): number {
@@ -140,7 +192,7 @@ export class FundShareTradeCycleModel {
             termB: new FormControl()
         });
 
-        const name = `yearlyDealingDays${(Object.keys(this.form.controls.monthlyDealingDays).length + 1).toString()}`;
+        const name = `monthlyDealingDays${(Object.keys(this.form.controls.monthlyDealingDays).length + 1).toString()}`;
         const control = <FormArray>this.form.controls['monthlyDealingDays'];
         control.push(group);
     }

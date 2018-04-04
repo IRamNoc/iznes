@@ -28,9 +28,6 @@
     </div>
 
     <div [hidden]="model.tradeCyclePeriod !== 2" formArrayName="monthlyDealingDays">
-        <div class="row">
-            <span class="text-badge" mltag="">Monthly {{typeCapitilised}} Dealing Days</span>
-        </div>
         <div class="row" *ngFor="let control of model.form.controls.monthlyDealingDays.controls; let idx = index;">
             <div class="form-group col-sm-4">
                 <label class="control-label required-field" for="{{typeLowercase}}MonthlyDealingDaysTermA" mltag="">Number</label>
@@ -45,7 +42,7 @@
             </div>
 
             <div class="form-group col-sm-4">
-                <label class="control-label" for="{{typeLowercase}}MonthlyDealingDaysTermB">Day</label>
+                <label class="control-label required-field" for="{{typeLowercase}}MonthlyDealingDaysTermB">Day</label>
                 
                 <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB"
                     [items]="model.dropdownItems.dayItems"
@@ -71,9 +68,6 @@
     </div>
 
     <div [hidden]="model.tradeCyclePeriod !== 3" formArrayName="yearlyDealingDays">
-        <div class="row">
-            <span class="text-badge" mltag="">Yearly {{typeCapitilised}} Dealing Days</span>
-        </div>
         <div class="row" *ngFor="let control of model.form.controls.yearlyDealingDays.controls; let idx = index;">
             <div class="form-group col-sm-3">
                 <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermA">Number</label>
@@ -89,7 +83,7 @@
             </div>
 
             <div class="form-group col-sm-3">
-                <label class="control-label" for="{{typeLowercase}}YearlyDealingDaysTermB">Day</label>
+                <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermB">Day</label>
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB"
                     [items]="model.dropdownItems.dayItems"
@@ -102,7 +96,7 @@
             </div>
 
             <div class="form-group col-sm-3">
-                <label class="control-label" for="{{typeLowercase}}YearlyDealingDaysTermC">Month</label>
+                <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermC">Month</label>
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC"
                     [items]="model.dropdownItems.monthItems"

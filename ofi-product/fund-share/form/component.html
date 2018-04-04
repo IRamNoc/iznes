@@ -103,7 +103,7 @@
                     <button clrTabLink id="tabCalendarButton">
                         <span>
                             Calendar
-                            <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span>
+                            <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*</span>
                         </span>
                     </button>
                     <clr-tab-content>
