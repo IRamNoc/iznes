@@ -165,7 +165,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundShareID',
             open: true,
             data: this.shareList,
-            count: this.shareList.length
+            count: this.shareList.length,
+            columnLink: 'shareName'
         },
         {
             title: 'Funds',
@@ -188,7 +189,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundID',
             open: true,
             data: this.fundList,
-            count: this.fundList.length
+            count: this.fundList.length,
+            columnLink: 'fundName'
         },
         {
             title: 'Umbrella funds',
@@ -208,7 +210,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'umbrellaFundID',
             open: true,
             data: this.umbrellaFundList,
-            count: this.umbrellaFundList.length
+            count: this.umbrellaFundList.length,
+            columnLink: 'umbrellaFundName'
         }
     ];
 
