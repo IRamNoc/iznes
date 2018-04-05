@@ -45,7 +45,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateFund() throws InterruptedException, IOException{
+    public void shouldCreateFundAndDisplayCreatedFundInFundsTable() throws InterruptedException, IOException{
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -63,7 +63,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }catch (Error e){
             fail(e.getMessage());
         }
-        shouldFillOutFundDetailsStep2();
+        shouldFillOutFundDetailsStep2("TestFund3");
         try {
             driver.findElement(By.id("fund-submitfund-btn")).click();
         }catch (Exception e){
@@ -72,10 +72,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
-            assertTrue(popup.equals("TestFund1 has been successfully created."));
+            assertTrue(popup.equals("TestFund3 has been successfully created."));
         }catch (Exception e){
             fail(e.getMessage());
         }
+        String fundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]")).getText();
+        assertTrue(fundName.equals("TestFund3"));
     }
 
     @Test
@@ -198,11 +200,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplayCreatedFundInFundsTable() throws InterruptedException, IOException{
-
-    }
-
-    @Test
     public void shouldQueryDatabaseForUmbrellaFund() throws InterruptedException, IOException{
 
     }
@@ -212,9 +209,9 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     }
 
-    private void shouldFillOutFundDetailsStep2() throws InterruptedException {
-        driver.findElement(By.id("fundName")).sendKeys("TestFund1");
-        driver.findElement(By.id("AuMFund")).sendKeys("TestFund1");
+    private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
+        driver.findElement(By.id("fundName")).sendKeys(fundName);
+        driver.findElement(By.id("AuMFund")).sendKeys(fundName);
         driver.findElement(By.id("AuMFundDate")).sendKeys("2018-04-04");
         driver.findElement(By.id("domicile")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/ul/li[1]/div/a")).click();
@@ -238,6 +235,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("nationalNomenclatureOfLegalForm")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
-        Thread.sleep(5000);
+        Thread.sleep(2500);
     }
 }
