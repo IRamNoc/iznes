@@ -88,7 +88,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }
         String fundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]")).getText();
         assertTrue(fundName.equals("TestFund1"));
-        validateDatabaseUsersFormdataTable(1,"TestFund1");
+        validateDatabaseFundExists(1,"TestFund1");
     }
 
     @Test
@@ -215,7 +215,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     }
 
-    public static void validateDatabaseUsersFormdataTable(int expectedCount, String UFundName) throws SQLException {
+    public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
         //for the query
         Statement stmt = conn.createStatement();

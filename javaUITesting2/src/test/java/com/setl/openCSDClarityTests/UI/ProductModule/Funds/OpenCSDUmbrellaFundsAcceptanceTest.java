@@ -100,7 +100,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         searchAndSelectTopDropdown("uf_domicile", "Jordan");
         submitUmbrellaFund();
         Thread.sleep(2500);
-        validateDatabaseUsersFormdataTable(1, "TestUmbrellaFunds1");
+        validateDatabaseUmbrellaFundExists(1, "TestUmbrellaFunds1");
     }
 
     @Test
@@ -161,7 +161,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     }
 
-    public static void validateDatabaseUsersFormdataTable(int expectedCount, String UFundName) throws SQLException {
+    public static void validateDatabaseUmbrellaFundExists(int expectedCount, String UFundName) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
         //for the query
         Statement stmt = conn.createStatement();
