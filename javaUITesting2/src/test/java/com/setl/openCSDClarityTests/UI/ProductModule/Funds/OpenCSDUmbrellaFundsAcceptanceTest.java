@@ -194,7 +194,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
     private void searchAndSelectTopDropdown(String dropdownID, String search){
         driver.findElement(By.id(dropdownID)).click();
-        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/input")).sendKeys(search);
+        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         }catch (Exception e){
