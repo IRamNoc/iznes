@@ -1,7 +1,7 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
-import {FormItem, FormItemType} from './DynamicForm';
+import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
 import {DynamicFormService} from './service';
 
 @Component({
@@ -46,6 +46,10 @@ export class DynamicFormComponent implements OnInit {
         }
 
         return false;
+    }
+
+    itemHasBreakAfter(item: FormItem): boolean {
+        return (item.style) && item.style.indexOf(FormItemStyle.BreakOnAfter) != -1;
     }
 
     trackFormItemByFn(index: number, item: FormItem): number {

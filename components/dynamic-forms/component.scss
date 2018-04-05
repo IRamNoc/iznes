@@ -10,9 +10,23 @@
             margin-left: -1px;
         }
     }
-    .break-on-after {
-        flex: 0 1 50%;
-        margin-right: 10px;
-        max-width: initial;
+    // .break-on-after {
+    //     flex: 0 1 50%;
+    //     margin-right: 10px;
+    //     max-width: initial;
+
+    //     &:after {
+    //         content: '';
+    //         display: flex;
+    //         flex: 0 1 100%;
+    //         position: relative;
+    //     }
+    //}
+
+    .break {
+        flex-basis: 100%;
+        width: 0px; 
+        height: 0px; 
+        overflow: hidden;
     }
 }

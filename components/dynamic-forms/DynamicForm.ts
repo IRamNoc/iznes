@@ -34,7 +34,9 @@ export enum FormItemType {
 export enum FormItemStyle {
     SingleRow,
     BreakOnBefore,
-    BreakOnAfter
+    BreakOnAfter,
+    WidthThird,
+    WidthFourth
 }
 
 export interface FormItemDropdown {
