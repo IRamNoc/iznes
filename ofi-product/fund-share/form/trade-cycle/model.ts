@@ -88,13 +88,15 @@ export class FundShareTradeCycleModel {
             null;
     }
     set tradeCyclePeriod(value: number) {
-        this.form.setValue({ tradeCyclePeriod: value });
+        this.form.controls.tradeCyclePeriod.setValue(
+            this.getDropdownItemFromValue(this.dropdownItems.tradeCyclePeriodItems, value)
+        );
     }
     get numberOfPossibleWithinPeriod(): number {
         return this.form.value.possibleInPeriod;
     }
     set numberOfPossibleWithinPeriod(value: number) {
-        this.form.setValue({ possibleInPeriod: value });
+        this.form.controls.possibleInPeriod.setValue(value);
     }
     get weeklyDealingDays(): number {
         return this.form.value.weeklyDealingDays ?
@@ -102,7 +104,9 @@ export class FundShareTradeCycleModel {
             null;
     }
     set weeklyDealingDays(value: number) {
-        this.form.setValue({ weeklyDealingDays: value });
+        this.form.controls.weeklyDealingDays.setValue(
+            this.getDropdownItemFromValue(this.dropdownItems.weeklyItems, value)
+        );
     }
     get monthlyDealingDays(): DealingDaysTerms[] {
         if(this.tradeCyclePeriod !== E.TradeCyclePeriodEnum.Monthly) return null;
@@ -125,23 +129,31 @@ export class FundShareTradeCycleModel {
         this.form.controls['yearlyDealingDays'] = formArr;
     }
 
+    private getDropdownItemFromValue(dropdowns, value): any {
+        if(value == undefined) return null;
+
+        return [_.find(dropdowns, (ditem) => {
+            return ditem.id === value;
+        })];
+    }
+
     private convertDealingDaysToForm(obj: DealingDaysTerms[]): FormArray {
         const formArr = new FormArray([]);
 
         _.forEach(obj, (item: DealingDaysTerms) => {
-            const termA = _.find(this.dropdownItems, (ditem) => {
+            const termA = [_.find(this.dropdownItems.numberItems, (ditem) => {
                 return ditem.id === item.termA;
-            });
-            const termB = _.find(this.dropdownItems, (ditem) => {
-                return ditem.id === item.termA;
-            });
+            })];
+            const termB = [_.find(this.dropdownItems.dayItems, (ditem) => {
+                return ditem.id === item.termB;
+            })];
 
             let controls;
 
-            if(item.termC) {
-                const termC = _.find(this.dropdownItems, (ditem) => {
-                    return ditem.id === item.termA;
-                });
+            if(item.termC != undefined) {
+                const termC = [_.find(this.dropdownItems.monthItems, (ditem) => {
+                    return ditem.id === item.termC;
+                })];
 
                 controls = {
                     termA: new FormControl(termA),
@@ -188,8 +200,8 @@ export class FundShareTradeCycleModel {
 
     addMonthlyDealingDays(): void {
         const group = new FormGroup({
-            termA: new FormControl(),
-            termB: new FormControl()
+            termA: new FormControl(null, Validators.required),
+            termB: new FormControl(null, Validators.required)
         });
 
         const name = `monthlyDealingDays${(Object.keys(this.form.controls.monthlyDealingDays).length + 1).toString()}`;
@@ -204,9 +216,9 @@ export class FundShareTradeCycleModel {
 
     addYearlyDealingDays(): void {
         const group = new FormGroup({
-            termA: new FormControl(),
-            termB: new FormControl(),
-            termC: new FormControl()
+            termA: new FormControl(null, Validators.required),
+            termB: new FormControl(null, Validators.required),
+            termC: new FormControl(null, Validators.required)
         });
 
         const name = `yearlyDealingDays${(Object.keys(this.form.controls.yearlyDealingDays).length + 1).toString()}`;

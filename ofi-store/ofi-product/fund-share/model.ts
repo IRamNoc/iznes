@@ -31,13 +31,13 @@ export interface OfiFundShare {
     subscriptionTradeCyclePeriod: number;
     numberOfPossibleSubscriptionsWithinPeriod: number;
     weeklySubscriptionDealingDays: number;
-    monthlySubscriptionDealingDays: any[];
-    yearlySubscriptionDealingDays: any[];
+    monthlySubscriptionDealingDays: string;
+    yearlySubscriptionDealingDays: string;
     redemptionTradeCyclePeriod: number;
     numberOfPossibleRedemptionsWithinPeriod: number;
     weeklyRedemptionDealingDays: number;
-    monthlyRedemptionDealingDays: any[];
-    yearlyRedemptionDealingDays: any[];
+    monthlyRedemptionDealingDays: string;
+    yearlyRedemptionDealingDays: string;
     navPeriodForSubscription: number;
     navPeriodForRedemption: number;
     portfolioCurrencyHedge: number;

@@ -2,13 +2,13 @@
     <div class="row">
         <div class="form-group col-sm-6">
             <label class="control-label required-field" for="{{typeLowercase}}TradeCyclePeriod" mltag="">{{typeCapitilised}} Trade Cycle Period</label>
-
+            
             <ng-select id="{{typeLowercase}}TradeCyclePeriod"
                 [items]="model.dropdownItems.tradeCyclePeriodItems"
+                [active]="model.form.value.tradeCyclePeriod"
                 [allowClear]="true"
                 placeholder=""
-                [formControl]="model.form.controls['tradeCyclePeriod']"
-                [required]="true">
+                [formControl]="model.form.controls['tradeCyclePeriod']">
             </ng-select>
         </div>
     </div>
@@ -19,10 +19,10 @@
 
             <ng-select id="{{typeLowercase}}WeeklyDealingDays"
                 [items]="model.dropdownItems.weeklyItems"
+                [active]="model.form.value.weeklyDealingDays"
                 [allowClear]="true"
                 placeholder=""
-                [formControl]="model.form.controls['weeklyDealingDays']"
-                [required]="true">
+                [formControl]="model.form.controls['weeklyDealingDays']">
             </ng-select>
         </div>
     </div>
@@ -36,8 +36,7 @@
                     [items]="model.dropdownItems.numberItems"
                     [allowClear]="true"
                     placeholder=""
-                    [formControl]="control.controls.termA"
-                    [required]="true">
+                    [formControl]="control.controls.termA">
                 </ng-select>
             </div>
 
@@ -48,8 +47,7 @@
                     [items]="model.dropdownItems.dayItems"
                     [allowClear]="true"
                     placeholder=""
-                    [formControl]="control.controls.termB"
-                    [required]="true">
+                    [formControl]="control.controls.termB">
                 </ng-select>
             </div>
 
@@ -74,11 +72,9 @@
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA"
                     [items]="model.dropdownItems.numberItems"
-                    [active]=""
                     [allowClear]="true"
                     placeholder=""
-                    [formControl]="control.controls.termA"
-                    [required]="true">
+                    [formControl]="control.controls.termA">
                 </ng-select>
             </div>
 
@@ -87,11 +83,9 @@
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB"
                     [items]="model.dropdownItems.dayItems"
-                    [active]=""
                     [allowClear]="true"
                     placeholder=""
-                    [formControl]="control.controls.termB"
-                    [required]="true">
+                    [formControl]="control.controls.termB">
                 </ng-select>
             </div>
 
@@ -100,11 +94,9 @@
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC"
                     [items]="model.dropdownItems.monthItems"
-                    [active]=""
                     [allowClear]="true"
                     placeholder=""
-                    [formControl]="control.controls.termC"
-                    [required]="true">
+                    [formControl]="control.controls.termC">
                 </ng-select>
             </div>
 

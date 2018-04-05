@@ -35,6 +35,7 @@ import {FundShareTestData} from './TestData';
 
 export class FundShareComponent implements OnInit, OnDestroy {
 
+    private fundShareData: OfiFundShare;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
@@ -104,10 +105,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
         this.model.calendar.subscriptionTradeCycle = model;
+        if(this.fundShareData) this.model.setSubscriptionTradeCycleData(this.fundShareData);
     }
 
     calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
         this.model.calendar.redemptionTradeCycle = model;
+        if(this.fundShareData) this.model.setRedemptionTradeCycleData(this.fundShareData);
     }
 
     /**
@@ -132,6 +135,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private updateFundShare(fundShare: any): void {
         if((!fundShare) || !fundShare.fundShareID) return;
 
+        this.fundShareData = fundShare;
         this.model.setFundShare(fundShare);
 
         if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
@@ -140,36 +144,32 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     saveFundShare(): void {
-        // this.alerts.create('info', `
-        //     <table class="table grid">
-        //         <tbody>
-        //             <tr>
-        //                 <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
-        //             </tr>
-        //         </tbody>
-        //     </table>
-        // `, {
-        //     showCloseButton: false,
-        //     overlayClickToClose: false
-        // });
-
-        console.log('PZZZZZZZZZZZZZZZZ', this.model.getRequest());
-
-        return;
+        this.alerts.create('info', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
+                    </tr>
+                </tbody>
+            </table>
+        `, {
+            showCloseButton: false,
+            overlayClickToClose: false
+        });
         
-        // if(this.mode === FundShareMode.Create) {
-        //     OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-        //         this.redux,
-        //         this.model.getRequest(),
-        //         (data) => this.onCreateSuccess(data[1].Data),
-        //         (e) => this.onCreateError(e[1].Data[0]));
-        // } else {
-        //     OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-        //         this.redux,
-        //         this.model.getRequest(),
-        //         (data) => this.onUpdateSuccess(data[1]),
-        //         (e) => this.onUpdateError(e[1].Data[0]));
-        // }
+        if(this.mode === FundShareMode.Create) {
+            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+                this.redux,
+                this.model.getRequest(),
+                (data) => this.onCreateSuccess(data[1].Data),
+                (e) => this.onCreateError(e[1].Data[0]));
+        } else {
+            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
+                this.redux,
+                this.model.getRequest(),
+                (data) => this.onUpdateSuccess(data[1]),
+                (e) => this.onUpdateError(e[1].Data[0]));
+        }
     }
 
     private onCreateSuccess(data): void {
