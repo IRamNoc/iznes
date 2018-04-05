@@ -37,6 +37,17 @@ export class DropdownDirective {
         })
     }
 
+    getTotalHeight(htmlCollection: HTMLCollectionOf<HTMLLIElement>): number {
+        if (!htmlCollection.length) {
+            return 0;
+        }
+        let total = 0;
+        for (let i = 0; i < htmlCollection.length; i++) {
+            total += htmlCollection.item(i).offsetHeight;
+        }
+        return total;
+    }
+
     /**
      * After View Init
      * At this point we can assign click handlers and deal with checking if
@@ -58,12 +69,10 @@ export class DropdownDirective {
             });
 
             /* Workout height. */
-            let height = this.list.getElementsByTagName('li').length
-                ? (this.list.getElementsByTagName('li').length * this.list.getElementsByTagName('li')[0].offsetHeight)
-                : 0;
+            const height = this.getTotalHeight(this.list.getElementsByTagName('li'));
 
             /* Refer to the target. */
-            this.targetHeight = height + "px";
+            this.targetHeight = height + 'px';
 
             /* Render. */
             this.render();
