@@ -126,6 +126,51 @@ public class DatabaseHelper {
         }
     }
 
+    public static void validatePopulatedDatabaseUsersFormdataTable(int expectedCount, String formId, String userId, String userName, String email) throws SQLException {
+            conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+            //for the query
+            Statement stmt = conn.createStatement();
+            ResultSet rs = null;
+
+            try {
+               rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
+                int rows = 0;
+                rs.next();
+                assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
+                String result = rs.getString("data");
+                JsonParser parser = new JsonParser();
+                // we have the json object
+                JsonObject jsonResult = (JsonObject) parser.parse(result);
+
+                // need to store the set as an set of strings
+                Set<String> names = jsonResult.keySet();
+
+                for (String name : names) {
+                    if (name.equals("username")) {
+                        System.out.println(" input userName = " + userName);
+                        System.out.println("JSON data " + jsonResult.get(name));
+                        System.out.println((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
+                        assertTrue((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
+                    }
+                    if (name.equals("email")) {
+                        System.out.println(" input email = " + email);
+                        System.out.println("JSON data " + jsonResult.get(name));
+                        System.out.println((jsonResult.get(name).toString().equals("\"" + email + "\"")));
+                        assertTrue((jsonResult.get(name).toString().equals("\"" + email + "\"")));
+                        }
+                    }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            } finally {
+                conn.close();
+                stmt.close();
+                rs.close();
+            }
+        }
+
 
     public static void validateDatabaseUsersTable(String userName,  String email, int expectedCount) throws SQLException {
 
