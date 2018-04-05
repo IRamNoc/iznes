@@ -4,7 +4,8 @@
 
 <clr-tabs>
     <clr-tab>
-        <button id="encumberAssetsTab" clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_form">Encumber Asset Request</span></button>
+        <button id="encumberAssetsTab" clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_form">Encumber Asset Request</span>
+        </button>
 
         <clr-tab-content *clrIfActive="">
             <!-- FORM -->
@@ -14,25 +15,27 @@
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="asset" mltag="txt_asset">Asset</label>
                             <ng-select id="asset"
-                                [items]="assetListOption"
-                                formControlName="asset"
-                                placeholder="Select"
-                                mltag="txt_select">
+                                       [items]="assetListOption"
+                                       formControlName="asset"
+                                       placeholder="Select"
+                                       mltag="txt_select">
                             </ng-select>
-                            <span *ngIf="encumberAssetsForm.controls.asset.hasError('required') && encumberAssetsForm.controls.asset.touched" class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
+                            <span *ngIf="encumberAssetsForm.controls.asset.hasError('required') && encumberAssetsForm.controls.asset.touched"
+                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="fromAddress" mltag="txt_asset">From Address</label>
                             <ng-select id="fromAddress"
-                                [items]="fromAddressListOption"
-                                formControlName="fromAddress"
-                                placeholder="Select"
-                                mltag="txt_select">
+                                       [items]="fromAddressListOption"
+                                       formControlName="fromAddress"
+                                       placeholder="Select"
+                                       mltag="txt_select">
                             </ng-select>
-                            <span *ngIf="encumberAssetsForm.controls.fromAddress.hasError('required') && encumberAssetsForm.controls.fromAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
+                            <span *ngIf="encumberAssetsForm.controls.fromAddress.hasError('required') && encumberAssetsForm.controls.fromAddress.touched"
+                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -43,16 +46,17 @@
                             <div class="text-badge" for="toAddress" mltag="txt_beneficiary">Beneficiary</div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <various-address-select [formControl]="encumberAssetsForm.controls['toAddress']"
-                                [relationshipArray]="toRelationshipSelectItems"
-                                [ownWalletAddressArray]="fromAddressListOption"
-                                [class.error]="!encumberAssetsForm.controls['toAddress'].valid && encumberAssetsForm.controls['toAddress'].touched"
-                                [required]="true">
+                                                    [relationshipArray]="toRelationshipSelectItems"
+                                                    [ownWalletAddressArray]="fromAddressListOption"
+                                                    [class.error]="!encumberAssetsForm.controls['toAddress'].valid && encumberAssetsForm.controls['toAddress'].touched"
+                                                    [required]="true">
                             </various-address-select>
-                            <span *ngIf="encumberAssetsForm.controls.toAddress.hasError('required') && encumberAssetsForm.controls.toAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
+                            <span *ngIf="encumberAssetsForm.controls.toAddress.hasError('required') && encumberAssetsForm.controls.toAddress.touched"
+                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -61,8 +65,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="amount">Amount</label>
-                            <input type="number" id="amount" class="form-control" formControlName="amount" placeholder="Amount" mltag="txt_amount">
-                            <div *ngIf="encumberAssetsForm.controls.amount.hasError('required') && encumberAssetsForm.controls.amount.touched" class="text-danger">
+                            <input type="number" id="amount" class="form-control" formControlName="amount"
+                                   placeholder="Amount" mltag="txt_amount">
+                            <div *ngIf="encumberAssetsForm.controls.amount.hasError('required') && encumberAssetsForm.controls.amount.touched"
+                                 class="text-danger">
                                 <span mltag="txt_thisfieldisrequired">This field is required</span>
                             </div>
                         </div>
@@ -72,11 +78,9 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="reference">Reference</label>
-                            <input type="text" id="reference" class="form-control" formControlName="reference" placeholder="Reference" mltag="txt_reference">
-                            <div *ngIf="encumberAssetsForm.controls.reference.hasError('required') && encumberAssetsForm.controls.reference.touched" class="text-danger">
-                                <span mltag="txt_thisfieldisrequired">This field is required</span>
-                            </div>
+                            <label for="reference">Reference</label>
+                            <input type="text" id="reference" class="form-control" formControlName="reference"
+                                   placeholder="Reference" mltag="txt_reference">
                         </div>
                     </div>
 
@@ -90,7 +94,8 @@
                         <div class="col-sm-6">
                             <span class="text-badge">Encumber End</span>
                             <label>
-                                <input id="isEncumberEnd" type="checkbox" class="form-control" formControlName="includeToDate">
+                                <input id="isEncumberEnd" type="checkbox" class="form-control"
+                                       formControlName="includeToDate">
                                 set encumber end date?
                             </label>
                         </div>
@@ -102,9 +107,11 @@
                                 <label for="fromDateUTC" class="required-field">Date UTC</label>
                                 <div class="input-group">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="fromDateUTC" formControlName="fromDateUTC" [dpDayPicker]="configFiltersDate" mode="day" theme="dp-material"/>
+                                    <input id="fromDateUTC" formControlName="fromDateUTC"
+                                           [dpDayPicker]="configFiltersDate" mode="day" theme="dp-material"/>
                                 </div>
-                                <div *ngIf="encumberAssetsForm.controls.fromDateUTC.hasError('required') && encumberAssetsForm.controls.fromDateUTC.touched" class="text-danger">
+                                <div *ngIf="encumberAssetsForm.controls.fromDateUTC.hasError('required') && encumberAssetsForm.controls.fromDateUTC.touched"
+                                     class="text-danger">
                                     <span mltag="txt_thisfieldisrequired">This field is required</span>
                                 </div>
                             </div>
@@ -113,9 +120,11 @@
                                 <label for="fromTimeUTC" class="required-field">Time UTC</label>
                                 <div class="input-group">
                                     <span class="fa fa-clock-o" aria-hidden="true"></span>
-                                    <input id="fromTimeUTC" formControlName="fromTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
+                                    <input id="fromTimeUTC" formControlName="fromTimeUTC"
+                                           [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
                                 </div>
-                                <div *ngIf="encumberAssetsForm.controls.fromTimeUTC.hasError('required') && encumberAssetsForm.controls.fromTimeUTC.touched" class="text-danger">
+                                <div *ngIf="encumberAssetsForm.controls.fromTimeUTC.hasError('required') && encumberAssetsForm.controls.fromTimeUTC.touched"
+                                     class="text-danger">
                                     <span mltag="txt_thisfieldisrequired">This field is required</span>
                                 </div>
                             </div>
@@ -126,20 +135,24 @@
                                 <label for="toDateUTC" class="required-field">Date UTC</label>
                                 <div class="input-group">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="toDateUTC" formControlName="toDateUTC" [dpDayPicker]="configFiltersDate" mode="day" theme="dp-material"/>
+                                    <input id="toDateUTC" formControlName="toDateUTC" [dpDayPicker]="configFiltersDate"
+                                           mode="day" theme="dp-material"/>
                                 </div>
-                                <div *ngIf="encumberAssetsForm.controls.toDateUTC.hasError('required') && encumberAssetsForm.controls.toDateUTC.touched" class="text-danger">
+                                <div *ngIf="encumberAssetsForm.controls.toDateUTC.hasError('required') && encumberAssetsForm.controls.toDateUTC.touched"
+                                     class="text-danger">
                                     <span mltag="txt_thisfieldisrequired">This field is required</span>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group" *ngIf="isEncumberEnd">
                                 <label for="toTimeUTC" class="required-field">Time UTC</label>
                                 <div class="input-group">
                                     <span class="fa fa-clock-o" aria-hidden="true"></span>
-                                    <input id="toTimeUTC" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
+                                    <input id="toTimeUTC" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime"
+                                           mode="time" theme="dp-material"/>
                                 </div>
-                                <div *ngIf="encumberAssetsForm.controls.toTimeUTC.hasError('required') && encumberAssetsForm.controls.toTimeUTC.touched" class="text-danger">
+                                <div *ngIf="encumberAssetsForm.controls.toTimeUTC.hasError('required') && encumberAssetsForm.controls.toTimeUTC.touched"
+                                     class="text-danger">
                                     <span mltag="txt_thisfieldisrequired">This field is required</span>
                                 </div>
                             </div>
