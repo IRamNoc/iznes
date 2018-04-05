@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/debounceTime';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
@@ -95,7 +96,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             date: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
-        this.subscriptionsArray.push(this.searchForm.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe(() => {
             this.clearRequestedList();
         }));
     }
