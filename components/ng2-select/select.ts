@@ -55,8 +55,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                 text: item[this.textField],
                 children: item[this.childrenField]
             })));
-            console.log('item:', value);
-            console.log('item:', this.itemObjects);
+            // console.log('item:', value);
+            // console.log('item:', this.itemObjects);
         }
 
         // this.changeDetectorRef.markForCheck();
