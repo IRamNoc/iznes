@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
 import {DpDatePickerModule, SetlDirectivesModule, SetlPipesModule, DynamicFormsModule} from '@setl/utils';
-import {SelectModule} from 'ng2-select';
+import {SelectModule} from '@setl/utils/components/ng2-select/select.module';
 import {RouterModule} from '@angular/router';
 
 /* Multilingual coolness. */
