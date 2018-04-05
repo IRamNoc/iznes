@@ -6,6 +6,7 @@ export interface NavDetail {
     currency: string;
     nav: number;
     navDate: string;
+    navPubDate: string;
     status: number;
     asm: string;
 }
