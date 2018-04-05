@@ -54,7 +54,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateFundAndDisplayCreatedFundInFundsTable() throws InterruptedException, IOException, SQLException {
+    public void shouldCreateFundAndDisplayCreatedFundInFundsTableAndCheckDatabase() throws InterruptedException, IOException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -217,11 +217,9 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     public static void validateDatabaseUsersFormdataTable(int expectedCount, String UFundName) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-
         //for the query
         Statement stmt = conn.createStatement();
         ResultSet rs = null;
-
         try {
             rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
             int rows = 0;
@@ -233,8 +231,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
                 rs.beforeFirst();
             }
             assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
-
-
         } catch (Exception e) {
             e.printStackTrace();
             fail();

@@ -15,6 +15,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.io.IOException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -40,7 +41,13 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
+    static Connection conn = null;
 
+    public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+
+    // Defines username and password to connect to database server.
+    static String DBUsername = "root";
+    static String DBPassword = "nahafusi61hucupoju78";
 
     @Before
     public void setUp() throws Exception {
@@ -84,7 +91,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateAnUmbrellaFund() throws IOException, InterruptedException {
+    public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
@@ -92,6 +99,8 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry("TestUmbrellaFunds1");
         searchAndSelectTopDropdown("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        Thread.sleep(2500);
+        validateDatabaseUsersFormdataTable(1, "TestUmbrellaFunds1");
     }
 
     @Test
@@ -150,6 +159,32 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldNotCreateFundWithoutFieldEntered(){
 
+    }
+
+    public static void validateDatabaseUsersFormdataTable(int expectedCount, String UFundName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznUmbrellaFund where umbrellaFundName =  " + "\"" + UFundName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
     }
 
     private void submitUmbrellaFund() throws InterruptedException {
