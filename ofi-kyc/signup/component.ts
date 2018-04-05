@@ -32,7 +32,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
-
+import {setLanguage} from '@setl/core-store';
 
 /* Dectorator. */
 @Component({
@@ -209,6 +209,28 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 //this.signupForm.controls['username'].patchValue(this.invitationToken);
                 console.log(this.invitationToken);
             }
+
+            let lang = params['lang'];
+            if (typeof lang !== 'undefined' && lang !== '') {
+
+                let languages = {
+                    'en': 'en-Latn',
+                    'fr': 'fr-Latn',
+                    'tch': 'tch',
+                    'sch': 'sch'
+                };
+
+                /* Save last language selected by user in localStorage */
+                if (languages[lang] != null) {
+                    this.ngRedux.dispatch(setLanguage(languages[lang]));
+
+                    if (typeof(Storage) !== 'undefined') {
+                        localStorage.setItem('lang', languages[lang]);
+                    }
+                }
+            }
+
+
         }));
 
         // Reduce observable subscription

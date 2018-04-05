@@ -22,6 +22,7 @@ import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig, SagaHelper, NumberConverterService, commonHelper} from '@setl/utils';
 import {Observable} from 'rxjs/Observable';
 import * as math from 'mathjs';
+import {Location} from '@angular/common';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -135,6 +136,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
         private _router: Router,
+        private _location: Location,
         private _activatedRoute: ActivatedRoute,
         private _numberConverterService: NumberConverterService,
         private _toasterService: ToasterService,
@@ -493,7 +495,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // console.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
                     this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
-                    this._router.navigateByUrl('/product-module/home');
+                    this._location.back();
                 },
                 (data) => {
                     console.log('Error: ', data);
@@ -538,7 +540,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // console.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
                     this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully created!');
-                    this._router.navigateByUrl('/product-module/home');
+                    this._location.back();
                 },
                 (data) => {
                     console.log('Error: ', data);

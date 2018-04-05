@@ -26,14 +26,15 @@ export interface RequestNavFundHistoryMessageBody extends MemberNodeMessageBody 
 
 export interface RequestNavFundLatestMessageBody extends MemberNodeMessageBody {
     token: string;
-    fundName: number;
+    fundShareId: number;
     navDate: string;
 }
 
 export interface UpdateNavMessageBody extends MemberNodeMessageBody {
     token: string;
-    fundName: string;
+    fundShareIsin: string;
     fundDate: string;
+    navPublicationDate: string;
     price: number;
     priceStatus: NavStatus;
     force?: number;

@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {fromJS} from 'immutable';
 import {immutableHelper} from '@setl/utils';
+import {ValuationFrequencyEnum} from '../../../../ofi-product/fund-share/FundShareEnum';
 
 import {
     SET_NAV_FUNDS_LIST,
@@ -62,21 +63,22 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
     let navFundsList: NavDetail[] = [];
     try {
         navFundsList = immutableHelper.reduce(navListData, (result: NavDetail[], item) => {
-            const metadata = JSON.parse(item.get('metadata', {}));
-            const currency = metadata.shareCurrency[0] ? metadata.shareCurrency[0].id : '';
+            // const metadata = JSON.parse(item.get('metadata', {}));
             const navDate = item.get('navDate', '');
-            const nextValuationDateRaw = metadata.valuationFrequency[0] ? metadata.valuationFrequency[0].id : '';
-            const nextValuationDate = metadata.valuationFrequency[0] ? getNextValuationDate(nextValuationDateRaw, navDate) : 'N/A';
+            const navPubDate = item.get('navPublicationDate', '');
+            const nextValuationDateRaw = item.get('valuationFrequency', '');
+            const nextValuationDate = getNextValuationDate(nextValuationDateRaw, navDate) || 'N/A';
 
             result.push({
                 shareId: item.get('shareId', 0),
                 fundId: item.get('fundId', 0),
                 fundShareName: item.get('fundShareName', ''),
                 isin: item.get('isin', 0),
-                currency: currency,
+                currency: item.get('shareClassCurrency', ''),
                 nav: item.get('nav', 0),
-                navDate: moment(navDate).format('YYYY-MM-DD'),
-                status: item.get('status', 0),
+                navDate: (navDate !== null) ? moment(navDate).format('YYYY-MM-DD') : 'N/A',
+                navPubDate: (navPubDate !== null) ? moment(navPubDate).format('YYYY-MM-DD') : 'N/A',
+                status: item.get('navStatus', 0),
                 nextValuationDate: nextValuationDate
             });
             return result;
@@ -90,28 +92,46 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
     });
 }
 
-function getNextValuationDate(nextValuationDateRaw: string, navDate: string): string {
+function getNextValuationDate(nextValuationDateRaw: number, navDate: string): string {
     let nextValuationDate;
     const date = moment(navDate);
 
     switch (nextValuationDateRaw) {
-        case 'Daily':
+        case ValuationFrequencyEnum.Daily:
             nextValuationDate = date.add(1, 'days');
             break;
-        case 'Weekly':
+        case ValuationFrequencyEnum.TwiceAWeek:
+            nextValuationDate = date.add(1, 'days');
+            break;
+        case ValuationFrequencyEnum.Weekly:
             nextValuationDate = date.add(1, 'weeks');
             break;
-        case 'Monthly':
+
+        case ValuationFrequencyEnum.TwiceAMonth:
+            nextValuationDate = date.add(1, 'days');
+            break;
+        // case ValuationFrequencyEnum.Monthly:
+        case ValuationFrequencyEnum.Monthly:
             nextValuationDate = date.add(1, 'months');
             break;
-        case 'Quarterly':
+        // case ValuationFrequencyEnum.Quarterly:
+        case ValuationFrequencyEnum.Quarterly:
             nextValuationDate = date.add(12, 'weeks');
             break;
-        case 'Annually':
+        case ValuationFrequencyEnum.TwiceAYear:
+            nextValuationDate = date.add(26, 'weeks');
+            break;
+        case ValuationFrequencyEnum.Annually:
             nextValuationDate = date.add(1, 'years');
             break;
+        case ValuationFrequencyEnum.AtLeastAnnualy:
+            nextValuationDate = date.add(1, 'years');
+            break;
+        case ValuationFrequencyEnum.Other:
+            nextValuationDate = date.add(1, 'days');
+            break;
         default:
-            nextValuationDate = 'N/A';
+            nextValuationDate = date.add(1, 'days');
     }
 
     return nextValuationDate.format('YYYY-MM-DD');

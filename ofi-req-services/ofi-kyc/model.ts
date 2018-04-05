@@ -5,13 +5,13 @@ interface Invitation {
     email: string;
     firstname?: string;
     lastname?: string;
+    lang: any;
 }
 
 export interface SendInvitationRequestData {
     assetManagerName: string;
     amCompanyName: string;
     investors: Array<Invitation>;
-    lang: string;
 }
 
 export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
@@ -19,7 +19,6 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     assetManagerName: string;
     amCompanyName: string;
     investors: Array<Invitation>;
-    lang: string;
 }
 
 export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {

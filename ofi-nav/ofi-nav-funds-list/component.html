@@ -81,14 +81,14 @@
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
-                        {{item.currency}} ({{getCurrency(item.currency)}})
+                        {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
-                        <span [hidden]="isNavNull(item.nav)">{{item.nav}}</span>
+                        <span [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">N/A</clr-dg-cell>
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
@@ -106,7 +106,7 @@
                     <clr-dg-cell (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
-                            <button id="addNav" (click)="addNav(item)" class="btn">
+                            <button id="addNav" (click)="addNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-plus"></i> <span mltag="txt_addnewnav">Add new NAV</span>
                             </button>
                         </div>

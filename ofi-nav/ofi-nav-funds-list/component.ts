@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/debounceTime';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
@@ -19,6 +20,9 @@ import {
     clearRequestedNavFundView,
     getOfiNavFundViewCurrentRequest
 } from '../../ofi-store/ofi-product/nav';
+import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
+import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
+import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-manage-list',
@@ -31,7 +35,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     navListItems: model.NavModel[];
     socketToken: string;
     userId: number;
-    
+
     searchForm: FormGroup;
     dateTypes: any[];
     dateConfig = {
@@ -52,15 +56,17 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'userId']) userOb;
 
     constructor(private router: Router,
-        private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private ofiCorpActionService: OfiCorpActionService,
-        private ofiNavService: OfiNavService,
-        private popupService: OfiManageNavPopupService) {
-        
-        
+                private redux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private ofiCorpActionService: OfiCorpActionService,
+                private ofiNavService: OfiNavService,
+                private numberConverterService: NumberConverterService,
+                private moneyPipe: MoneyValuePipe,
+                private popupService: OfiManageNavPopupService) {
+
+
     }
-        
+
     ngOnInit() {
         this.initDataTypes();
         this.initSearchForm();
@@ -90,7 +96,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             date: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
-        this.subscriptionsArray.push(this.searchForm.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe(() => {
             this.clearRequestedList();
         }));
     }
@@ -101,7 +107,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavList(requested: boolean): void {
-        if(requested) return;
+        if (requested) return;
 
         this.changeDetectorRef.detectChanges();
 
@@ -129,7 +135,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.navListItems = navList;
         this.changeDetectorRef.markForCheck();
     }
-    
+
+    private navToFrontEndString(nav: number): string {
+        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
+    }
 
     private initDataTypes(): void {
         this.dateTypes = [{
@@ -141,25 +150,46 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         }];
     }
 
-    getCurrency(currency: string): string {
+    getCurrencySymbol(currency: number): string {
         let currencyIcon;
 
         switch (currency) {
-            case 'GBP':
-                currencyIcon = '£';                
+            case CurrencyEnum.GBP:
+                currencyIcon = '£';
                 break;
-            case 'EUR':
+            case CurrencyEnum.EUR:
                 currencyIcon = '€';
                 break;
-            case 'USD':
+            case CurrencyEnum.USD:
                 currencyIcon = '$';
                 break;
             default:
                 currencyIcon = 'N/A';
                 break;
         }
-        
+
         return currencyIcon;
+    }
+
+    getCurrencyString(currency: number): string {
+        let currencyString;
+
+        switch (currency) {
+            case CurrencyEnum.GBP:
+                currencyString = 'GBP';
+                break;
+            case CurrencyEnum.EUR:
+                currencyString = 'EUR';
+                break;
+            case CurrencyEnum.USD:
+                currencyString = 'USD';
+                break;
+            default:
+                currencyString = 'N/A';
+                break;
+        }
+
+        return currencyString;
     }
 
     getNextValuationClass(nextValuationDate: string): string {
@@ -167,9 +197,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         const duration = moment.duration(fromNow);
         const timeBetween = duration.asDays();
 
-        if(timeBetween > 1 && timeBetween < 2) {
+        if (timeBetween > 1 && timeBetween < 2) {
             return 'time-orange';
-        } else if(timeBetween > 0 && timeBetween < 1) {
+        } else if (timeBetween > 0 && timeBetween < 1) {
             return 'time-red';
         } else {
             return '';
@@ -179,7 +209,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     isNavNull(nav: number): boolean {
         return nav === null;
     }
-    
+
     addNav(share: model.NavInfoModel): void {
         this.popupService.open(share, model.NavPopupMode.ADD);
     }
@@ -196,9 +226,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     exportCSV(): void {
         const requestData = this.getRequestNavListData();
-        
+
         const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundShares&shareId=null&fundName=${encodeURIComponent(requestData.fundName)}&navDateField=${requestData.navDateField}&navDate=${encodeURIComponent(requestData.navDate)}`, false);
-        
+
         window.open(url, '_blank');
     }
 

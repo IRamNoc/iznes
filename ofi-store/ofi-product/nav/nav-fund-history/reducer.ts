@@ -1,6 +1,7 @@
 import {CurrentRequest, OfiNavFundHistoryState} from './model';
 import {Action} from 'redux';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import {fromJS} from 'immutable';
 import {immutableHelper} from '@setl/utils';
 
@@ -61,15 +62,17 @@ function handleSetOfiNavFundHistory(state: OfiNavFundHistoryState, action: Actio
     let navFundHistory: NavFundHistoryItem[] = [];
     try {
         navFundHistory = immutableHelper.reduce(navFundHistoryData, (result: NavFundHistoryItem[], item) => {
-            const metadata = JSON.parse(item.get('metadata', {}));
-            const currency = metadata.shareCurrency[0].id;
+
+            const navDate = item.get('navDate', '');
+            const navPubDate = item.get('navPublicationDate', '');
 
             result.push({
                 shareId: item.get('shareId', 0),
-                currency: currency,
+                currency: item.get('shareClassCurrency', ''),
                 nav: item.get('nav', 0),
-                navDate: item.get('navDate', ''),
-                status: item.get('status', 0)
+                navDate: (navDate !== null) ? moment(navDate).format('YYYY-MM-DD') : 'N/A',
+                navPubDate: (navPubDate !== null) ? moment(navPubDate).format('YYYY-MM-DD') : 'N/A',
+                status: item.get('navStatus', 0)
             });
             return result;
         }, []);
