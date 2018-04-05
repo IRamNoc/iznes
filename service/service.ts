@@ -178,8 +178,11 @@ export class PersistService {
      * @return {void}
      */
     private stripSensitiveData (data: any): any {
+        /* Create a new object, with no references, before we mutate it. */
+        const newData = Object.assign({}, data);
+
         /* Return. */
-        return this.loopAndRemovePassword(data);
+        return this.loopAndRemovePassword(newData);
     }
 
     private loopAndRemovePassword (object) {
