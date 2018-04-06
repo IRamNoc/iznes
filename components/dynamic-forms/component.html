@@ -2,58 +2,61 @@
     <form [formGroup]="form">
         <section class="form-block">
             <div class="row">
-                <div class="form-group {{model[item].cssClass}}" *ngFor="let item of formKeys; trackBy: trackFormItemByFn" [hidden]="isHidden(item)">
-                    <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{model[item].label}}</label>
-                    
-                    <ng-container [ngSwitch]="model[item].type">
-                        <ng-container *ngSwitchCase="0">
-                            <input id="{{item}}" name="{{item}}" class="form-control"
-                                [class.required-field]="model[item].required"
-                                type="text"
-                                placeholder="{{model[item].placeholder}}"
-                                formControlName="{{item}}" />
+                <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
+                    <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
+                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{model[item].label}}</label>
+                        
+                        <ng-container [ngSwitch]="model[item].type">
+                            <ng-container *ngSwitchCase="0">
+                                <input id="{{item}}" name="{{item}}" class="form-control"
+                                    [class.required-field]="model[item].required"
+                                    type="text"
+                                    placeholder="{{model[item].placeholder}}"
+                                    formControlName="{{item}}" />
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="1">
+                                <input id="{{item}}" name="{{item}}" class="form-control"
+                                    [class.required-field]="model[item].required"
+                                    type="number"
+                                    placeholder="{{model[item].placeholder}}"
+                                    formControlName="{{item}}" />
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="2">
+                                <div class="input-group">
+                                    <span class="fa fa-calendar"></span>
+                                    <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
+                                        formControlName="{{item}}"
+                                        [dpDayPicker]="model[item].dateOptions"
+                                        mode="day"
+                                        theme="dp-material" />
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="3">
+                                <ng-select id="{{item}}"
+                                    [items]="model[item].listItems"
+                                    [active]="model[item].preset"
+                                    [allowClear]="true"
+                                    placeholder="{{model[item].placeholder}}"
+                                    [formControl]="model[item].control"
+                                    [required]="model[item].required">
+                                </ng-select>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="4">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="{{item}}" name="{{item}}" formControlName="{{item}}">
+                                    <label for="{{item}}"></label>
+                                </div>
+                            </ng-container>
                         </ng-container>
 
-                        <ng-container *ngSwitchCase="1">
-                            <input id="{{item}}" name="{{item}}" class="form-control"
-                                [class.required-field]="model[item].required"
-                                type="number"
-                                placeholder="{{model[item].placeholder}}"
-                                formControlName="{{item}}" />
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="2">
-                            <div class="input-group">
-                                <span class="fa fa-calendar"></span>
-                                <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
-                                    formControlName="{{item}}"
-                                    [dpDayPicker]="model[item].dateOptions"
-                                    mode="day"
-                                    theme="dp-material" />
-                            </div>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="3">
-                            <ng-select id="{{item}}"
-                                [items]="model[item].listItems"
-                                [active]="model[item].preset"
-                                [allowClear]="true"
-                                placeholder="{{model[item].placeholder}}"
-                                [formControl]="model[item].control"
-                                [required]="model[item].required">
-                            </ng-select>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="4">
-                            <div class="toggle-switch">
-                                <input type="checkbox" id="{{item}}" name="{{item}}" formControlName="{{item}}">
-                                <label for="{{item}}"></label>
-                            </div>
-                        </ng-container>
-                    </ng-container>
-
-                    <span class="field-error" *ngIf="showRequiredFieldText(model[item].type)">Field is required</span>
-                </div>
+                        <span class="field-error" *ngIf="showRequiredFieldText(model[item].type)">Field is required</span>
+                    </div>
+                    <div class="break" *ngIf="itemHasBreakAfter(model[item])"></div>
+                </ng-container>
             </div>
         </section>
     </form>

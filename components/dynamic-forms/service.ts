@@ -94,13 +94,22 @@ export class DynamicFormService {
             item.style.forEach((style: FormItemStyle) => {
                 switch (style) {
                     case FormItemStyle.SingleRow:
-                        cssClass = cssClass.replace('col-sm-6', 'col-sm-12');
+                        cssClass = cssClass.replace('col-sm-6 ', '');
+                        cssClass += 'col-sm-12 ';
                         break;
                     case FormItemStyle.BreakOnBefore:
                         cssClass += 'break-on-before ';
                         break;
                     case FormItemStyle.BreakOnAfter:
                         cssClass += 'break-on-after ';
+                        break;
+                    case FormItemStyle.WidthThird:
+                        cssClass = cssClass.replace('col-sm-6 ', '');
+                        cssClass += 'col-sm-4 ';
+                        break;
+                    case FormItemStyle.WidthFourth:
+                        cssClass = cssClass.replace('col-sm-6 ', '');
+                        cssClass += 'col-sm-3 ';
                         break;
                 }
             });
