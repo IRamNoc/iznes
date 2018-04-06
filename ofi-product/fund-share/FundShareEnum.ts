@@ -53,6 +53,78 @@ export enum FrequencyOfDistributionDeclarationEnum {
     TwiceAYear,
     Annually
 }
+export enum TradeCyclePeriodEnum {
+    Daily,
+    Weekly,
+    Monthly,
+    Yearly
+}
+export enum WeeklyDealingDaysEnum {
+    FirstBusinessDay,
+    LastBusinessDay,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday
+}
+export enum WeeklyDealingDaysAltEnum {
+    CalendarDay,
+    BusinessDay,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday
+}
+export enum MonthlyDealingDaysEnum {
+    First,
+    Second,
+    Third,
+    Fourth,
+    Fifth,
+    Sixth,
+    Seventh,
+    Eigth,
+    Ninth,
+    Tenth,
+    Eleventh,
+    Twelfth,
+    Thirteenth,
+    Fourteenth,
+    Fifteenth,
+    Sixteenth,
+    Seventeenth,
+    Eighteenth,
+    Nineteenth,
+    Twentieth,
+    TwentyFirst,
+    TwentySecond,
+    TwentyThird,
+    TwentyFourth,
+    TwentyFifth,
+    TwentySixth,
+    TwentySeventh,
+    TwentyEigth,
+    TwentyNinth,
+    Thirtieth,
+    ThirtyFirst,
+    Last
+}
+export enum YearlyDealingDaysEnum {
+    January,
+    February,
+    March,
+    April,
+    May,
+    June,
+    July,
+    August,
+    September,
+    October,
+    November,
+    December
+}
 export enum AssetClassEnum {
     Alternatives,
     Bonds,

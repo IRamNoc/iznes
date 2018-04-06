@@ -17,11 +17,12 @@ import {ToasterService} from 'angular2-toaster';
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
-    language: string;
-
-    /* Observables */
-    @select(['user', 'siteSettings', 'language']) languageObs;
-    private subscriptions: Array<Subscription> = [];
+    languages = [
+        {id: 'fr', text: 'Français'},
+        {id: 'en', text: 'English'},
+        // {id: 'tch', text: '繁體中文'},
+        // {id: 'sch', text: '中文'}
+        ];
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -50,15 +51,12 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.languageObs.subscribe(language => this.language = language));
+
     }
 
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
         this._changeDetectorRef.detach();
-
-        /* Unsubscribe Observables. */
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -74,6 +72,15 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
                 ])
+            ],
+            language: [
+                '',
+                Validators.compose([
+                    Validators.required
+                ])
+            ],
+            clientReference: [
+                '',
             ],
             firstName: [
                 '',
@@ -95,9 +102,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
      * @param formValues
      */
     save(formValues): void {
-        const requestData = constructInvitationRequest(formValues, this.language);
+
+        const requestData = constructInvitationRequest(formValues);
 
         this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
+
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
             const validEmailList = [];
             const invalidEmailList = [];
@@ -124,6 +133,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             this.markForCheck();
         });
     }
+
 
     displayInvitationSuccessModal(emails: Array<string>): void {
         let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
@@ -166,12 +176,14 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 /**
  * construct invitation request with form value.
  */
-function constructInvitationRequest(formValue, lang) {
+function constructInvitationRequest(formValue) {
     const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
         result.push({
             email: item.get('email', ''),
             firstname: item.get('firstName', ''),
-            lastname: item.get('lastName', '')
+            lastname: item.get('lastName', ''),
+            lang: item.get('language', 'fr'),
+            clientreference: item.get('clientReference', '')
         });
         return result;
     }, []);
@@ -179,7 +191,6 @@ function constructInvitationRequest(formValue, lang) {
     return {
         assetManagerName: 'OFI',
         amCompanyName: 'OFI Am Management',
-        investors,
-        lang
+        investors
     };
 }

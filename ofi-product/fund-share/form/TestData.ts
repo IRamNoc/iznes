@@ -42,6 +42,18 @@ export class FundShareTestData {
         (model.characteristic.mandatory.subscriptionCategory.preset as any) = [{id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' }];
         (model.characteristic.mandatory.subscriptionCurrency.preset as any) = [{id: E.CurrencyEnum.EUR, text: 'EUR' }];
 
+        // (model.calendar.mandatory.subscriptionTradeCyclePeriod.preset as any) = [{ id: E.TradeCyclePeriodEnum.Daily, text: 'Daily' }];
+        // model.calendar.mandatory.numberOfPossibleSubscriptionsWithinPeriod.preset = 1;
+        // (model.calendar.mandatory.weeklySubscriptionDealingDays.preset as any) = [{ id: E.WeeklyDealingDaysEnum.Monday, text: 'Monday' }];
+        // (model.calendar.mandatory.monthlySubscriptionDealingDays.preset as any) = [{ id: E.MonthlyDealingDaysEnum.First, text: '1st' }];
+        // (model.calendar.mandatory.yearlySubscriptionDealingDays.preset as any) = [{ id: E.YearlyDealingDaysEnum.January, text: 'January' }];
+        // (model.calendar.mandatory.redemptionTradeCyclePeriod.preset as any) = [{ id: E.TradeCyclePeriodEnum.Monthly, text: 'Monthly' }];
+        // model.calendar.mandatory.numberOfPossibleRedemptionsWithinPeriod.preset = 1;
+        // (model.calendar.mandatory.weeklyRedemptionDealingDays.preset as any) = [{ id: E.WeeklyDealingDaysAltEnum.CalendarDay, text: 'Calendar Day' }];
+        // (model.calendar.mandatory.monthlyRedemptionDealingDays.preset as any) = [{ id: E.MonthlyDealingDaysEnum.Last, text: 'Last' }];
+        // (model.calendar.mandatory.yearlyRedemptionDealingDays.preset as any) = [{ id: E.YearlyDealingDaysEnum, text: 'January' }];
+        (model.calendar.mandatory.navPeriodForSubscription.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
+        (model.calendar.mandatory.navPeriodForRedemption.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
         model.calendar.mandatory.redemptionCutOffTime.preset = '12:00:00';
         (model.calendar.mandatory.redemptionCutOffTimeZone.preset as any) = [{id: E.TimezonesEnum.UTC, text: 'UTC' }];
         model.calendar.mandatory.redemptionSettlementPeriod.preset = 1;
@@ -49,7 +61,6 @@ export class FundShareTestData {
         (model.calendar.mandatory.subscriptionCutOffTimeZone.preset as any) = [{id: E.TimezonesEnum.UTC, text: 'UTC' }];
         model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
         (model.calendar.mandatory.subscriptionSettlementPeriod.preset as any) = [{id: E.BusinessDaysEnum.One, text: '1' }];
-        (model.calendar.mandatory.tradeDay.preset as any) = [{id: E.BusinessDaysEnum.One, text: '1' }];
         
         model.fees.mandatory.maxManagementFee.preset = 1;
         model.fees.mandatory.maxRedemptionFee.preset = 1;

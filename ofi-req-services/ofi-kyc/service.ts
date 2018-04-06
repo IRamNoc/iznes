@@ -65,8 +65,7 @@ export class OfiKycService {
             token: this.memberSocketService.token,
             assetManagerName: _.get(requstData, 'assetManagerName', ''),
             amCompanyName: _.get(requstData, 'amCompanyName', ''),
-            investors: _.get(requstData, 'investors', []),
-            lang: _.get(requstData, 'lang', 'fr')
+            investors: _.get(requstData, 'investors', [])
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -114,6 +113,7 @@ export class OfiKycService {
             investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
+            invitedID: _.get(requestData, 'invitedID', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

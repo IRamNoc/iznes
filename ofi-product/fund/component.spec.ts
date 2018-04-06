@@ -8,12 +8,14 @@ import {of} from 'rxjs/observable/of';
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {Router, ActivatedRoute} from '@angular/router';
+import {Location} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
 import {ClarityModule} from '@clr/angular';
 import fundItems from '../fundConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+const locationSpy = jasmine.createSpyObj('Location', ['back']);
 const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
 const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
@@ -24,6 +26,7 @@ import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fu
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
     .and.returnValue(
@@ -119,6 +122,7 @@ describe('FundComponent', () => {
             providers: [
                 { provide: 'fund-items', useValue: fundItems },
                 { provide: Router, useValue: routerSpy },
+                { provide: Location, useValue: locationSpy },
                 { provide: OfiFundService, useValue: fundServiceSpy },
                 { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
                 { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
@@ -181,6 +185,7 @@ describe('FundComponent', () => {
 
     afterEach(() => {
         routerSpy.navigate.calls.reset();
+        locationSpy.back.calls.reset();
     });
 
     describe('structure', () => {
@@ -218,8 +223,7 @@ describe('FundComponent', () => {
             const buttonEls = fixture.debugElement.query(By.css('.submit-container button:first-child'));
             buttonEls.triggerEventHandler('click', null);
 
-            expect(routerSpy.navigate).toHaveBeenCalledTimes(1);
-            expect(routerSpy.navigate).toHaveBeenCalledWith(['product-module', 'home']);
+            expect(locationSpy.back).toHaveBeenCalledTimes(1);
         });
 
         it('should navigate to the umbrella creation page', () => {
