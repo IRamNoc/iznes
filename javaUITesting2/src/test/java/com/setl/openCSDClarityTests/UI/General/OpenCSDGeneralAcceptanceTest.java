@@ -19,9 +19,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static SETLAPIHelpers.DatabaseHelper.databaseCountRows;
-import static SETLAPIHelpers.DatabaseHelper.deleteFormdataFromDatabase;
-import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUsersFormdataTable;
+import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -54,23 +52,25 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldAutosaveInformation() throws IOException, InterruptedException, SQLException {
         String userDetails[] = generateRandomUserDetails();
+        String userName = userDetails[0];
+        String email = userDetails[1];
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).clear();
-        driver.findElement(By.id("new-user-username")).sendKeys(userDetails[0]);
+        driver.findElement(By.id("new-user-username")).sendKeys(userName);
+        driver.findElement(By.id("new-user-email")).clear();
+        driver.findElement(By.id("new-user-email")).sendKeys(email);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
-        String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
-        assertTrue(username.equals(userDetails[0]));
-        validateDatabaseUsersFormdataTable(1, "1" , "8");
-        deleteFormdataFromDatabase("8", "1");
-
+        String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
+        assertTrue(screenUserName.equals(userName));
+        validatePopulatedDatabaseUsersFormdataTable("1", "8", userName, email);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        validateDatabaseUsersFormdataTable(0, "1", "8");
+        validateDatabaseUsersFormdataTable(0, "1" , "8");
     }
 
     @Test
@@ -189,8 +189,8 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(500);
         logout();
         Thread.sleep(750);
-        loginAndUpdateMyAccount("Test_User_85","alex01", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_85", "alex01", "Jordan", "Miller");
+        loginAndUpdateMyAccount("Test_User_063","asdasd", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_063", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {

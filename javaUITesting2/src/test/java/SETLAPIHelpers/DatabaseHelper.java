@@ -2,14 +2,19 @@ package SETLAPIHelpers;
 
 import SETLAPIHelpers.JsonToJava;
 import SETLAPIHelpers.Wallet;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import io.setl.restapi.client.message.MessageFactory;
+import org.json.simple.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -44,7 +49,7 @@ public class DatabaseHelper {
 
                 rs.beforeFirst();
             }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + accountName, expectedCount, rows);
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching: " + accountName, expectedCount, rows);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +78,7 @@ public class DatabaseHelper {
 
                 rs.beforeFirst();
             }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + memberName, expectedCount, rows);
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching: " + memberName, expectedCount, rows);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,17 +98,23 @@ public class DatabaseHelper {
         ResultSet rs = null;
 
         try {
-            rs = stmt.executeQuery("select * from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
+           rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
             int rows = 0;
+            rs.next();
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
+            String result = rs.getString("data");
+            JsonParser parser = new JsonParser();
+            // we hve the json object
+            JsonObject jsonResult = (JsonObject) parser.parse(result);
 
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
+            // need to store the  set as an set of strings
+            Set<String> names = jsonResult.keySet();
 
-                rs.beforeFirst();
+            for (String name : names) {
+
+                assertTrue(jsonResult.get(name).toString().equals("\"\"") || jsonResult.get(name).toString().equals("[]"));
+
             }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,6 +125,46 @@ public class DatabaseHelper {
             rs.close();
         }
     }
+
+    public static void validatePopulatedDatabaseUsersFormdataTable(String formId, String userId, String userName, String email) throws SQLException {
+            conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+
+            //for the query
+            Statement stmt = conn.createStatement();
+            ResultSet rs = null;
+
+            try {
+               rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
+                rs.next();
+
+                String result = rs.getString("data");
+                JsonParser parser = new JsonParser();
+                // we have the json object
+                JsonObject jsonResult = (JsonObject) parser.parse(result);
+
+                // need to store the set as an set of strings
+                Set<String> names = jsonResult.keySet();
+
+                for (String name : names) {
+                    if (name.equals("username")) {
+
+                        assertTrue((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
+                    }
+                    if (name.equals("email")) {
+
+                        assertTrue((jsonResult.get(name).toString().equals("\"" + email + "\"")));
+                        }
+                    }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            } finally {
+                conn.close();
+                stmt.close();
+                rs.close();
+            }
+        }
 
 
     public static void validateDatabaseUsersTable(String userName,  String email, int expectedCount) throws SQLException {
@@ -135,7 +186,7 @@ public class DatabaseHelper {
 
                 rs.beforeFirst();
             }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): " + userName + " but there were " + rows, expectedCount, rows);
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching: " + userName + " but there were " + rows, expectedCount, rows);
 
 
         } catch (Exception e) {
