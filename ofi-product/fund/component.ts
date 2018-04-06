@@ -12,7 +12,7 @@ import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fu
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {typeOfEuDirective} from '../fundConfig';
+import {typeOfEuDirective} from '../productConfig';
 
 interface UmbrellaItem {
     auditorID: number;
@@ -85,6 +85,7 @@ export class FundComponent implements OnInit, OnDestroy {
     // local copy of config
     fundItems: any;
     enums: any;
+    validators: any;
 
     // local copy of the state
     umbrellaList: UmbrellaList;
@@ -157,15 +158,16 @@ export class FundComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private route: ActivatedRoute,
-        @Inject('fund-items') fundItems,
+        @Inject('product-config') productConfig,
     ) {
 
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
         OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
 
-        this.fundItems = fundItems.fundItems;
-        this.enums = fundItems.enums;
+        this.fundItems = productConfig.fundItems;
+        this.enums = productConfig.enums;
+        this.validators = productConfig.validators;
 
         this.domicileItems = this.fundItems.domicileItems;
         this.umbrellaItems = this.fundItems.umbrellaItems;
@@ -238,7 +240,7 @@ export class FundComponent implements OnInit, OnDestroy {
             'isFundStructure': {value: '', disabled: true},
             'fundName': [null, Validators.required],
             'AuMFund': [null, Validators.required],
-            'AuMFundDate': [null, Validators.required],
+            'AuMFundDate': [null, Validators.compose([Validators.required, this.validators.date.day])],
             'legalEntityIdentifier': [null, Validators.pattern(/^(\w{20})?$/)],
             'registerOffice': [null],
             'registerOfficeAddress': [null],
@@ -249,11 +251,11 @@ export class FundComponent implements OnInit, OnDestroy {
             'legalForm': [[], Validators.required],
             'nationalNomenclatureOfLegalForm': [[], Validators.required],
             'homeCountryLegalType': [[]],
-            'fundCreationDate': [null],
-            'fundLaunchate': [null],
+            'fundCreationDate': [null, this.validators.date.day],
+            'fundLaunchate': [null, this.validators.date.day],
             'fundCurrency': [[], Validators.required],
             'openOrCloseEnded': [null, Validators.required],
-            'fiscalYearEnd': [null, Validators.required],
+            'fiscalYearEnd': [null, Validators.compose([Validators.required, this.validators.date.month])],
             'isFundOfFund': [null, Validators.required],
             'managementCompanyID': [[], Validators.required],
             'fundAdministrator': [[], Validators.required],

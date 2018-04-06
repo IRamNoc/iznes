@@ -142,10 +142,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _toasterService: ToasterService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
         private _ofiManagementCompanyService: OfiManagementCompanyService,
-        @Inject('fund-items') fundItems,
+        @Inject('product-config') productConfig,
     ) {
 
-        this.countries = fundItems.fundItems.domicileItems;
+        this.countries = productConfig.fundItems.domicileItems;
 
         // param url
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
@@ -192,7 +192,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundCreationDate: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.validators.date.day,
                 ])
             ],
             managementCompanyID: [

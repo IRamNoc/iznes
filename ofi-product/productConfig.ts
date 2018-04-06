@@ -1,3 +1,5 @@
+import {Validators} from '@angular/forms';
+
 const unitTrustItems = [ // Unit Trust / Unit Investment Trust (UIT)
     { id: '0', text: 'GB Authorised unit trust (AUT)' },
     { id: '1', text: 'US For US UIT refer to "US Mutual Fund"' },
@@ -11,6 +13,13 @@ const unitTrustItems = [ // Unit Trust / Unit Investment Trust (UIT)
     { id: '9', text: 'SG Unit trust' },
     { id: '10', text: 'MT Unit trust' },
 ];
+
+export const validators = {
+    date: {
+        day: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])-((0[1-9])|([1-2]\d)|(3[0-1]))$/),
+        month: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])$/),
+    }
+};
 
 export enum typeOfEuDirective {
     UCITS = '0',
@@ -710,4 +719,5 @@ export const fundItems = {
 export default {
     enums,
     fundItems,
+    validators,
 };

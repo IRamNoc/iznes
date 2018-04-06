@@ -18,7 +18,7 @@ import {
     hasSecurityiesLending,
     hasSwap,
     hasDurationHedge,
-} from '@ofi/ofi-main/ofi-product/fundConfig';
+} from '@ofi/ofi-main/ofi-product/productConfig';
 
 export interface FundRequestMessageBody extends MemberNodeMessageBody {
     token: any;
