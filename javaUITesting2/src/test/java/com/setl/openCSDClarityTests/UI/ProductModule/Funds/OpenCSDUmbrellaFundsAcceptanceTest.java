@@ -157,6 +157,23 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
+    public void shouldIncreaseTitleNumberWhenUmbrellaFundIsCreated() throws InterruptedException, IOException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry("TestUmbrellaFunds3");
+        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        Thread.sleep(2500);
+        String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        System.out.println(preCreationNo);
+        System.out.println(postCreationNo);
+        assertFalse(preCreationNo.equals(postCreationNo));
+    }
+
+    @Test
     public void shouldNotCreateFundWithoutFieldEntered(){
 
     }
