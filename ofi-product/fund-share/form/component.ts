@@ -82,7 +82,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.mode = FundShareMode.Update;
             }
 
-            if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
+            // FOR TESTING
+            // if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);

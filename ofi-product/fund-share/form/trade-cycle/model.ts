@@ -312,7 +312,7 @@ export class TradeCycleModelDropdowns {
 }
 
 export interface DealingDaysTerms {
-    termA: string;
-    termB: string;
-    termC?: string;
+    termA: number;
+    termB: number;
+    termC?: number;
 }
