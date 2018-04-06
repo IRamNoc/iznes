@@ -226,7 +226,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">Fund Share successfully updated.</td>
+                        <td class="text-center text-success">Fund Share successfully updated.</td>
                     </tr>
                 </tbody>
             </table>

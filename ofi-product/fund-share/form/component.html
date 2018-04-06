@@ -13,10 +13,9 @@
         </button>
         <clr-tab-content class="outer">
             <div class="form-group row actions">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
-                </div>
-                <div class="col-sm-6 text-right">
+
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
                         (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
@@ -333,10 +332,9 @@
             </clr-tabs>
 
             <div class="form-group row actions bottom">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
-                </div>
-                <div class="col-sm-6 text-right">
+
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
                         (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>

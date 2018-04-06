@@ -71,6 +71,11 @@ export class FundShare {
     getRequest(): OfiFundShare {
         const portfolioCurrencyHedgeRaw = this.characteristic.optional.portfolioCurrencyHedge.value();
         const portfolioCurrencyHedge = portfolioCurrencyHedgeRaw ? portfolioCurrencyHedgeRaw[0].id : null;
+        console.log('PZZZZZZZ', {
+            status: this.keyFacts.mandatory.status.value()[0].id,
+            master: this.getStatusMasterValue(),
+            feeder: this.getStatusFeederValue()
+        });
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
@@ -158,6 +163,8 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
+        this.setListItemPreset(this.keyFacts.mandatory.master, fundShare.master);
+        this.setListItemPreset(this.keyFacts.mandatory.feeder, fundShare.feeder);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -258,7 +265,7 @@ export class FundShare {
     }
 
     private getStatusMasterValue(): number {
-        if(this.keyFacts.mandatory.status.value() === FundShareEnum.StatusEnum.Master) {
+        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master) {
             return this.keyFacts.mandatory.master.value()[0].id;
         } else {
             return null;
@@ -266,7 +273,7 @@ export class FundShare {
     }
 
     private getStatusFeederValue(): number {
-        if(this.keyFacts.mandatory.status.value() === FundShareEnum.StatusEnum.Feeder) {
+        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return null;
