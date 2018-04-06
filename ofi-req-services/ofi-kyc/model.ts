@@ -5,13 +5,14 @@ interface Invitation {
     email: string;
     firstname?: string;
     lastname?: string;
+    lang: any;
+    clientreference?: string;
 }
 
 export interface SendInvitationRequestData {
     assetManagerName: string;
     amCompanyName: string;
     investors: Array<Invitation>;
-    lang: string;
 }
 
 export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
@@ -19,7 +20,6 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     assetManagerName: string;
     amCompanyName: string;
     investors: Array<Invitation>;
-    lang: string;
 }
 
 export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {
@@ -50,6 +50,7 @@ export interface ApprovedKycRequestData {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
@@ -60,6 +61,7 @@ export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface RejectedKycRequestData {

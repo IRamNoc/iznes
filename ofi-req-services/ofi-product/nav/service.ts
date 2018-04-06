@@ -110,10 +110,10 @@ export class OfiNavService {
      * @param requestData
      */
     static defaultRequestNavLatest(ofiNavService: OfiNavService,
-        ngRedux: NgRedux<any>,
-        requestData: any,
-        successCallback: (res) => void,
-        errorCallback: (res) => void) {
+                                   ngRedux: NgRedux<any>,
+                                   requestData: any,
+                                   successCallback: (res) => void,
+                                   errorCallback: (res) => void) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedNavLatest());
 
@@ -137,11 +137,11 @@ export class OfiNavService {
      * @param requestData
      */
     static defaultUpdateNav(ofiNavService: OfiNavService,
-        ngRedux: NgRedux<any>,
-        requestData: any,
-        successCallback: (res) => void,
-        errorCallback: (res) => void) {
-            
+                            ngRedux: NgRedux<any>,
+                            requestData: any,
+                            successCallback: (res) => void,
+                            errorCallback: (res) => void) {
+
         // Create the request.
         const asyncTaskPipe = ofiNavService.updateNav(requestData);
 
@@ -164,11 +164,11 @@ export class OfiNavService {
      * @param requestData
      */
     static defaultDeleteNav(ofiNavService: OfiNavService,
-        ngRedux: NgRedux<any>,
-        requestData: any,
-        successCallback: (res) => void,
-        errorCallback: (res) => void) {
-            
+                            ngRedux: NgRedux<any>,
+                            requestData: any,
+                            successCallback: (res) => void,
+                            errorCallback: (res) => void) {
+
         // Create the request.
         const asyncTaskPipe = ofiNavService.deleteNav(requestData);
 
@@ -184,7 +184,7 @@ export class OfiNavService {
 
     requestNav(requestData: any): any {
         const messageBody: RequestNavMessageBody = {
-            RequestName: 'getNavFundShares',
+            RequestName: 'izngetnavfundshares',
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', undefined),
             fundName: _.get(requestData, 'fundName', ''),
@@ -197,7 +197,7 @@ export class OfiNavService {
 
     requestNavFundHistory(requestData: any): any {
         const messageBody: RequestNavFundHistoryMessageBody = {
-            RequestName: 'getNavFundHistory',
+            RequestName: 'izngetnavfundhistory',
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', undefined),
             navDateFrom: _.get(requestData, 'navDateFrom', null),
@@ -209,9 +209,9 @@ export class OfiNavService {
 
     requestNavFundLatest(requestData: any): any {
         const messageBody: RequestNavFundLatestMessageBody = {
-            RequestName: 'getNavFundLatest',
+            RequestName: 'izngetnavfundlatest',
             token: this.memberSocketService.token,
-            fundName: _.get(requestData, 'fundName', null),
+            fundShareId: _.get(requestData, 'fundShareId', null),
             navDate: _.get(requestData, 'navDate', null)
         };
 
@@ -220,10 +220,11 @@ export class OfiNavService {
 
     updateNav(requestData: any): any {
         const messageBody: UpdateNavMessageBody = {
-            RequestName: 'updateNav',
+            RequestName: 'iznupdatenav',
             token: this.memberSocketService.token,
-            fundName: _.get(requestData, 'fundName', ''),
+            fundShareIsin: _.get(requestData, 'fundShareIsin', ''),
             fundDate: _.get(requestData, 'fundDate', ''),
+            navPublicationDate: _.get(requestData, 'navPublicationDate', ''),
             price: _.get(requestData, 'price', 0),
             priceStatus: _.get(requestData, 'priceStatus', 0)
         };
@@ -233,7 +234,7 @@ export class OfiNavService {
 
     deleteNav(requestData: any): any {
         const messageBody: DeleteNavMessageBody = {
-            RequestName: 'deleteNav',
+            RequestName: 'izndeletenav',
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', ''),
             navDate: _.get(requestData, 'navDate', '')

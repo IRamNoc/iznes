@@ -29,7 +29,7 @@ import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/ma
 
 export class ProductHomeComponent implements OnInit, OnDestroy {
     /* Public properties. */
-    amManagementCompany: string;
+    amManagementCompany = '';
     fundList = [];
     shareList = [];
     umbrellaFundList = [];
@@ -46,6 +46,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             label: 'Share name',
             dataSource: 'shareName',
             sortable: true,
+        },
+        'shareCurrency': {
+            label: 'Share currency',
+            dataSource: 'shareCurrency',
+            sortable: true
         },
         'fundName': {
             label: 'Fund name',
@@ -67,9 +72,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             dataSource: 'managementCompany',
             sortable: true,
         },
-        'typeOfShare': {
-            label: 'Type of share',
-            dataSource: 'typeOfShare',
+        'shareClass': {
+            label: 'Share Class',
+            dataSource: 'shareClass',
             sortable: true,
         },
         'status': {
@@ -88,17 +93,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             sortable: true,
         },
         'lawStatus': {
-            label: 'Law status',
+            label: 'Legal Form',
             dataSource: 'lawStatus',
             sortable: true,
         },
         'umbrellaFund': {
-            label: 'Umbrella fund (to which the fund belongs)',
+            label: 'Umbrella fund',
             dataSource: 'umbrellaFundName',
             sortable: true,
         },
         'fundCurrency': {
-            label: 'Currency of the fund',
+            label: 'Fund currency',
             dataSource: 'fundCurrency',
             sortable: true,
         },
@@ -106,11 +111,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             label: 'Umbrella fund name',
             dataSource: 'umbrellaFundName',
             sortable: true
-        },
-        'uFundCurrency': {
-            label: 'Currency of the Umbrella fund',
-            dataSource: 'uFundCurrency',
-            sortable: true,
         },
         'waitingStatus': {
             label: 'Status',
@@ -150,9 +150,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this.columns['shareName'],
                 this.columns['fundName'],
                 this.columns['isin'],
+                this.columns['shareCurrency'],
                 this.columns['managementCompany'],
-                this.columns['typeOfShare'],
-                this.columns['status'],
+                this.columns['shareClass'],
+                this.columns['status']
             ],
             action: {
                 id: 'new-share-btn',
@@ -164,6 +165,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundShareID',
             open: true,
             data: this.shareList,
+            count: this.shareList.length,
             columnLink: 'shareName'
         },
         {
@@ -171,11 +173,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             columns: [
                 this.columns['fFundName'],
                 this.columns['lei'],
+                this.columns['fundCurrency'],
                 this.columns['managementCompany'],
                 this.columns['country'],
                 this.columns['lawStatus'],
-                this.columns['umbrellaFund'],
-                this.columns['fundCurrency'],
+                this.columns['umbrellaFund']
             ],
             action: {
                 id: 'new-fund-btn',
@@ -187,6 +189,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'fundID',
             open: true,
             data: this.fundList,
+            count: this.fundList.length,
             columnLink: 'fundName'
         },
         {
@@ -195,8 +198,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this.columns['uFundName'],
                 this.columns['lei'],
                 this.columns['managementCompany'],
-                this.columns['country'],
-                // this.columns['uFundCurrency'],
+                this.columns['country']
             ],
             action: {
                 id: 'new-umbrella-fund-btn',
@@ -208,20 +210,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             linkIdent: 'umbrellaFundID',
             open: true,
             data: this.umbrellaFundList,
+            count: this.umbrellaFundList.length,
             columnLink: 'umbrellaFundName'
-        },
-        // {
-        //     title: 'Shares, Funds & Umbrella funds waiting for your validation (modification not yet published to Investors on Iznes)',
-        //     columns: [
-        //         this.columns['waitingStatus'],
-        //         this.columns['waitingType'],
-        //         this.columns['productName'],
-        //         this.columns['dateModification'],
-        //         this.columns['validateFor'],
-        //         this.columns['modifiedBy'],
-        //     ],
-        //     open: false,
-        // },
+        }
     ];
 
     /* Private properties. */
@@ -235,6 +226,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestManagementCompanyAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
 
     constructor(private _ngRedux: NgRedux<any>,
@@ -251,11 +243,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
         this.countryItems = fundItems.fundItems.domicileItems;
         this.legalFormItems = fundItems.fundItems.fundLegalFormItems;
-        this.amManagementCompany = '';
-        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this._ngRedux);
     }
 
     ngOnInit() {
+        this.subscriptions.push(this.requestManagementCompanyAccessListOb.subscribe((d) => this.requestManagementCompanyAccessList(d)));
+        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe(d => this.managementCompanyAccessList = d));
         this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
         this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
@@ -263,7 +255,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
-        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe(d => this.managementCompanyAccessList = d));
     }
 
     ngOnDestroy(): void {
@@ -273,6 +264,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription: Subscription) => {
             subscription.unsubscribe();
         });
+    }
+
+    requestManagementCompanyAccessList(requested): void {
+        if (!requested) {
+            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this._ngRedux);
+        }
     }
 
     requestFundList(requested): void {
@@ -285,9 +282,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.countryItems, {id: fund.domicile}) || {text: ''};
-                const lawStatus = _.find(this.legalFormItems, {id: fund.legalForm}) || {text: ''};
-                const fundCurrency = _.find(this.fundCurrencyItems, {id: fund.fundCurrency}) || {text: ''};
+                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
+                const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
+                const fundCurrency = _.find(this.fundCurrencyItems, { id: fund.fundCurrency }) || { text: '' };
 
                 fundList.push({
                     fundID: fund.fundID,
@@ -304,6 +301,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.fundList = fundList;
         this.panelDefs[1].data = this.fundList;
+        this.panelDefs[1].count = this.fundList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -316,16 +314,19 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     getShareList(shares): void {
         const shareList = [];
 
-        if ((shares != undefined) && Object.keys(shares).length > 0) {
-            Object.keys(shares).map((key, index) => {
+        if ((shares !== undefined) && Object.keys(shares).length > 0) {
+            Object.keys(shares).map((key) => {
                 const share = shares[key];
                 const keyFactsModel = new FundShareModels.ShareKeyFactsMandatory();
                 const status = _.find(keyFactsModel.shareClassInvestmentStatus.listItems, (item) => {
                     return item.id === share.shareClassInvestmentStatus;
                 }).text;
-                const typeOfShare = _.find(keyFactsModel.shareClassCode.listItems, (item) => {
+
+                const shareClass = _.find(keyFactsModel.shareClassCode.listItems, (item) => {
                     return item.id === share.shareClassCode;
                 }).text;
+
+                const shareCurrency = _.find(this.fundCurrencyItems, { id: share.shareClassCurrency.toString() }) || { text: '' };
 
                 shareList.push({
                     fundShareID: share.fundShareID,
@@ -333,17 +334,21 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     fundName: share.fundName,
                     isin: share.isin,
                     managementCompany: share.managementCompanyName,
-                    typeOfShare: typeOfShare,
-                    status: status
+                    shareClass: shareClass,
+                    status: status,
+                    shareCurrency: shareCurrency.text
                 });
             });
         }
 
         this.shareList = shareList;
+
         this.filteredShareList = shareList.filter((share) => {
-            return share.status !== 5
+            return share.status !== 5;
         });
+
         this.panelDefs[0].data = this.filteredShareList;
+        this.panelDefs[0].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -359,7 +364,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = _.find(this.countryItems, {id: item.get('domicile')}) || {text: ''};
+                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
 
                 umbrellaFundList.push({
                     umbrellaFundID: item.get('umbrellaFundID', 0),
@@ -390,6 +395,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.umbrellaFundList = umbrellaFundList;
         this.panelDefs[2].data = this.umbrellaFundList;
+        this.panelDefs[2].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -397,10 +403,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.showOnlyActive = !this.showOnlyActive;
 
         this.filteredShareList = this.shareList.filter((share) => {
-            return (!this.showOnlyActive) ? share.status === 5 : share.status !== 5;
+            return (this.showOnlyActive) ? share.status !== 5 : share.status;
         });
 
         this.panelDefs[0].data = this.filteredShareList;
+        this.panelDefs[0].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
     }
 

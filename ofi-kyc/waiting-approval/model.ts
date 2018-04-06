@@ -10,4 +10,5 @@ export interface InvestorModel {
     email: FieldStructure;
     phoneNumber: FieldStructure;
     approvalDateRequest: FieldStructure;
+    clientReference: FieldStructure;
 }

@@ -1,6 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Location} from '@angular/common';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
@@ -148,6 +149,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private location: Location,
         private fb: FormBuilder,
         private fundService: OfiFundService,
         private umbrellaService: OfiUmbrellaFundService,
@@ -361,12 +363,14 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['transferAgent'].setValidators(Validators.required);
                 } else {
                     this.fundForm.controls['transferAgent'].clearValidators();
+                    this.fundForm.controls['transferAgent'].updateValueAndValidity();
                 }
 
                 if (this.isCentralizingAgentActive()) {
                     this.fundForm.controls['centralizingAgent'].setValidators(Validators.required);
                 } else {
                     this.fundForm.controls['centralizingAgent'].clearValidators();
+                    this.fundForm.controls['centralizingAgent'].updateValueAndValidity();
                 }
 
                 if (this.isHomeCountryLegalTypeVisible()) {
@@ -375,6 +379,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 } else {
                     this.homeCountryLegalTypeItems = [];
                     this.fundForm.controls['homeCountryLegalType'].clearValidators();
+                    this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
                 }
             });
 
@@ -384,6 +389,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (d === this.enums.isEuDirective.NO.toString()) {
                     this.fundForm.controls['typeOfEuDirective'].setValue([]);
                     this.fundForm.controls['typeOfEuDirective'].clearValidators();
+                    this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
                 } else {
                     this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
                 }
@@ -395,6 +401,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
                     this.fundForm.controls['UcitsVersion'].setValue([]);
                     this.fundForm.controls['UcitsVersion'].clearValidators();
+                    this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
                 } else {
                     this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
                 }
@@ -613,7 +620,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully created.`);
                     OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
-                    this.router.navigate(['product-module', 'home']);
+                    this.location.back();
                     return;
                 })
                 .catch(() => {
@@ -625,7 +632,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully updated.`);
                     OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
-                    this.router.navigate(['product-module', 'home']);
+                    this.location.back();
                     return;
                 })
                 .catch(() => {
@@ -636,7 +643,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     onClickBack() {
-        this.router.navigate(['product-module', 'home']);
+        this.location.back();
     }
 
     ngOnDestroy() {
