@@ -61,11 +61,10 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
         try {
-            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         }catch (Exception e){
-            fail(e.getMessage());
+            fail("dropdown not selected. " + e.getMessage());
         }
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
         try{
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
