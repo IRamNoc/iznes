@@ -303,6 +303,12 @@ public class OpenCSDGeneralAcceptanceTest {
     public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_language_0")).click();
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
