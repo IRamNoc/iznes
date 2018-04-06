@@ -162,25 +162,29 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundName: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             registerOffice: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             registerOfficeAddress: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             legalEntityIdentifier: [
                 '',
                 Validators.compose([
                     Validators.required,
+                    productConfig.lei,
                 ])
             ],
             domicile: [
@@ -240,6 +244,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             giin: [
                 '',
+                productConfig.validators.giin,
             ],
             delegatedManagementCompanyID: [
                 '',
@@ -258,6 +263,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             directors: [
                 '',
+                productConfig.alphanumeric,
             ],
         });
 

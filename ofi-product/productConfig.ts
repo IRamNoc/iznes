@@ -18,7 +18,10 @@ export const validators = {
     date: {
         day: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])-((0[1-9])|([1-2]\d)|(3[0-1]))$/),
         month: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])$/),
-    }
+    },
+    alphanumeric: Validators.pattern(/^[\w ]+$/),
+    lei: Validators.pattern(/^(\w{20})?$/),
+    giin: Validators.pattern(/^([0-9]{19})?$/),
 };
 
 export enum typeOfEuDirective {
