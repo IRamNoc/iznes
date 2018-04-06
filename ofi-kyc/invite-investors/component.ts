@@ -79,6 +79,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     Validators.required
                 ])
             ],
+            clientReference: [
+                '',
+            ],
             firstName: [
                 '',
             ],
@@ -103,6 +106,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         const requestData = constructInvitationRequest(formValues);
 
         this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
+
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
             const validEmailList = [];
             const invalidEmailList = [];
@@ -129,6 +133,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             this.markForCheck();
         });
     }
+
 
     displayInvitationSuccessModal(emails: Array<string>): void {
         let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
@@ -177,7 +182,8 @@ function constructInvitationRequest(formValue) {
             email: item.get('email', ''),
             firstname: item.get('firstName', ''),
             lastname: item.get('lastName', ''),
-            lang: item.get('language', 'fr')
+            lang: item.get('language', 'fr'),
+            clientreference: item.get('clientReference', '')
         });
         return result;
     }, []);
