@@ -304,7 +304,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             return this.updateWallets(result[1].Data[0].investorWalletID);
         }).then((walletId) => {
             /* Send action message to investor */
-            this.sendActionMessageToInvestor(walletId);
+            // this.sendActionMessageToInvestor(walletId);
             this.setAmKycListRequested(true);
 
             /* Redirect to fund access page when the kyc is being approved */
