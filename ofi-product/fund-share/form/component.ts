@@ -75,6 +75,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
 
             if(this.fundShareId != undefined) {
+                this.model.fundShareId = parseInt(fundShareId);
                 this.mode = FundShareMode.Update;
             }
 

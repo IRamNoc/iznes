@@ -19,6 +19,7 @@ export {PanelData} from './models/panelData';
 
 export class FundShare {
     fundID: number;
+    fundShareId: number;
     accountId: number;
 
     calendar = {
@@ -73,6 +74,7 @@ export class FundShare {
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
+            fundShareID: this.fundShareId,
             fundID: this.fundID,
             isin: this.keyFacts.mandatory.isin.value(),
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value()[0].id,
@@ -105,7 +107,7 @@ export class FundShare {
             subscriptionSettlementPeriod: this.calendar.mandatory.subscriptionSettlementPeriod.value()[0].id,
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.calendar.mandatory.redemptionCutOffTimeZone.value()[0].id,
-            redemptionSettlementPeriod: this.calendar.mandatory.redemptionSettlementPeriod.value(),
+            redemptionSettlementPeriod: this.calendar.mandatory.redemptionSettlementPeriod.value()[0].id,
             subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
