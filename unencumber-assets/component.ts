@@ -37,18 +37,18 @@ import {
 } from '@setl/core-store';
 
 @Component({
-    selector: 'app-encumber-assets',
+    selector: 'app-unencumber-assets',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class EncumberAssetsComponent implements OnInit, OnDestroy {
+export class UnencumberAssetsComponent implements OnInit, OnDestroy {
 
     language = 'en';
 
-    encumberAssetsForm: FormGroup;
-    isEncumberEnd = false;
+    unencumberAssetsForm: FormGroup;
+    isUnencumberEnd = false;
 
     assetListOption = [];
     fromAddressListOption = [];
@@ -111,7 +111,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.encumberAssetsForm = this._fb.group({
+        this.unencumberAssetsForm = this._fb.group({
             asset: [
                 '',
                 Validators.compose([
@@ -138,9 +138,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             ],
             reference: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ])
             ],
             fromDateUTC: [
                 '',
@@ -165,24 +162,24 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             ],
         });
 
-        this.encumberAssetsForm.controls.includeToDate.valueChanges
+        this.unencumberAssetsForm.controls.includeToDate.valueChanges
             .subscribe((value: boolean) => {
                 this.toggleToDateRequired(value);
-                this.isEncumberEnd = value;
+                this.isUnencumberEnd = value;
             });
     }
 
     private toggleToDateRequired(value: boolean): void {
         if (value) {
-            this.encumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
-            this.encumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
+            this.unencumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
+            this.unencumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
         } else {
-            this.encumberAssetsForm.controls.toDateUTC.clearValidators();
-            this.encumberAssetsForm.controls.toTimeUTC.clearValidators();
+            this.unencumberAssetsForm.controls.toDateUTC.clearValidators();
+            this.unencumberAssetsForm.controls.toTimeUTC.clearValidators();
         }
 
-        this.encumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
-        this.encumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
+        this.unencumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
+        this.unencumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
     }
 
     ngOnDestroy() {
@@ -275,14 +272,14 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     save(formValues) {
-        if (!this.encumberAssetsForm.valid) return;
+        if (!this.unencumberAssetsForm.valid) return;
 
         const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
         const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
 
-        const asyncTaskPipe = this._walletnodeTxService.encumber(
+        const asyncTaskPipe = this._walletnodeTxService.unencumber(
             {
-                txtype: 'encum',
+                txtype: 'encum', // 'unenc'
                 walletid: this.connectedWalletId,
                 reference: formValues.reference,
                 address: formValues.fromAddress[0].id,
@@ -291,9 +288,11 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 instrument: formValues.asset[0].id.split('|')[1],
                 amount: formValues.amount,
                 beneficiaries: [
-                    [formValues.fromAddress[0].id, StartUTC_Secs, EndUTC_Secs]
+                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
                 ],
-                administrators: [],
+                administrators: [
+                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
+                ],
                 protocol: '',
                 metadata: '',
             });
@@ -301,7 +300,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.showSuccess('Encumber has successfully been created');
+                this.showSuccess('Unencumber has successfully been created');
                 this.resetForm();
             },
             (data) => {
@@ -311,7 +310,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     resetForm(): void {
-        this.encumberAssetsForm.reset();
+        this.unencumberAssetsForm.reset();
     }
 
     showError(message) {
