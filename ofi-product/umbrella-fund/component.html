@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1>
+    <h1 class="text-overflow">
         <i class="fa fa-umbrella"></i>
         <span *ngIf="!editForm; else editTitle" id="add-fund-title" mltag="txt_addanewumbrellafund">Add a New Umbrella Fund</span>
 
@@ -16,12 +16,12 @@
         </button>
 
         <clr-tab-content>
-            <span *ngIf="editForm && umbrellaFund">Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
-
-            </span>
-            <span id="new-fund-text-span" *ngIf="!editForm" mltag="txt_pleasefillupthefollowinginform0003eead0d">Please fill up the following information to create a new Umbrella Fund
-
-            </span>
+            <p *ngIf="editForm && umbrellaFund" class="text-overflow">
+                Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
+            </p>
+            <p id="new-fund-text-span" *ngIf="!editForm">
+                Please fill up the following information to create a new Umbrella Fund
+            </p>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">

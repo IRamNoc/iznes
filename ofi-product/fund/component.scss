@@ -1,5 +1,12 @@
 .fundCreateComponent {
 
+    h2 {
+        width: calc(100% - 12px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     .field-error {
         color: red;
         height: 0;
@@ -35,6 +42,10 @@
 
     .radio-inline label:after {
         content: '';
+    }
+
+    textarea {
+        min-height: 40px;
     }
 
 }
