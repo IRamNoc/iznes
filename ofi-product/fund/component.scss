@@ -27,13 +27,15 @@
         }
     }
 
-    form .form-group > .checkbox {
-        margin-left: 24px;
-    }
-
-    form .form-group > .radio-inline {
-        margin-left: 24px;
-        width: initial;
+    form {
+        width: 100%;
+        .form-group > .checkbox {
+            margin-left: 24px;
+        }
+        .form-group > .radio-inline {
+            margin-left: 24px;
+            width: initial;
+        }
     }
 
     .checkbox label:first-child {
