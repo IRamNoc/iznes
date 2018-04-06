@@ -113,6 +113,7 @@ export class OfiKycService {
             investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
+            invitedID: _.get(requestData, 'invitedID', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

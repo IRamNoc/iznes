@@ -39,6 +39,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     statusId: number;
     amKycList: Array<any>;
     amCompanyName: string;
+    invitedID: number;
 
     /* Public statuses */
     APPROVED_STATUS = Statuses.approved;
@@ -181,11 +182,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             this.investor = {
                 'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
-                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest },
+                'clientReference': { label: 'Client reference:', value: kyc.clientReference },
                 'firstName': { label: 'First name:', value: kyc.investorFirstName },
                 'lastName': { label: 'Last name:', value: kyc.investorLastName },
                 'email': { label: 'Email address:', value: kyc.investorEmail },
-                'phoneNumber': { label: 'Phone number:', value: phoneNumber }
+                'phoneNumber': { label: 'Phone number:', value: phoneNumber },
+                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest }
             };
 
             this.initialStatusId = kyc.status;
@@ -195,6 +197,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             this.initWaitingApprovalForm();
             this.cdr.markForCheck();
+
+            this.invitedID = kyc.invitedID;
         }
     }
 
@@ -288,7 +292,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             investorFirstName: this.investor.firstName.value,
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
-            lang: this.language
+            lang: this.language,
+            invitedID: this.invitedID
         };
 
         this.redux.dispatch({
@@ -303,7 +308,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             return this.updateWallets(result[1].Data[0].investorWalletID);
         }).then((walletId) => {
             /* Send action message to investor */
-            this.sendActionMessageToInvestor(walletId);
+            // this.sendActionMessageToInvestor(walletId);
             this.setAmKycListRequested(true);
 
             /* Redirect to fund access page when the kyc is being approved */
