@@ -1,5 +1,5 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, FormArray} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -38,6 +38,10 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
         this.model.addYearlyDealingDays();
 
         this.modelEmitter.emit(this.model);
+    }
+
+    getControls(controlName: string) {
+        return (this.model.form.controls[controlName] as FormArray).controls;
     }
 
     addMonthlyDealingDays(): void {
