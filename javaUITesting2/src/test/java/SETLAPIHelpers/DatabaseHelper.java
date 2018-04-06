@@ -126,7 +126,7 @@ public class DatabaseHelper {
         }
     }
 
-    public static void validatePopulatedDatabaseUsersFormdataTable(int expectedCount, String formId, String userId, String userName, String email) throws SQLException {
+    public static void validatePopulatedDatabaseUsersFormdataTable(String formId, String userId, String userName, String email) throws SQLException {
             conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
 
             //for the query
@@ -135,9 +135,8 @@ public class DatabaseHelper {
 
             try {
                rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
-                int rows = 0;
                 rs.next();
-                assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
+
                 String result = rs.getString("data");
                 JsonParser parser = new JsonParser();
                 // we have the json object
@@ -148,15 +147,11 @@ public class DatabaseHelper {
 
                 for (String name : names) {
                     if (name.equals("username")) {
-                        System.out.println(" input userName = " + userName);
-                        System.out.println("JSON data " + jsonResult.get(name));
-                        System.out.println((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
+
                         assertTrue((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
                     }
                     if (name.equals("email")) {
-                        System.out.println(" input email = " + email);
-                        System.out.println("JSON data " + jsonResult.get(name));
-                        System.out.println((jsonResult.get(name).toString().equals("\"" + email + "\"")));
+
                         assertTrue((jsonResult.get(name).toString().equals("\"" + email + "\"")));
                         }
                     }
