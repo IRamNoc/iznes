@@ -103,7 +103,7 @@
                     <button clrTabLink id="tabCalendarButton">
                         <span>
                             Calendar
-                            <span class="required" [hidden]="model.calendar.mandatory.isValid()">*</span>
+                            <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*</span>
                         </span>
                     </button>
                     <clr-tab-content>
@@ -117,6 +117,16 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
+                                <app-ofi-am-trade-cycle
+                                    [tradeType]="'Subscription'"
+                                    (modelEmitter)="calendarSubscriptionModelEvent($event)">
+                                </app-ofi-am-trade-cycle>
+
+                                <app-ofi-am-trade-cycle
+                                    [tradeType]="'Redemption'"
+                                    (modelEmitter)="calendarRedemptionModelEvent($event)">
+                                </app-ofi-am-trade-cycle>
+                                
                                 <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
                             </div>
 

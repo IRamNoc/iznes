@@ -20,6 +20,9 @@ import {
     clearRequestedNavFundHistory,
     setRequestedNavFundHistory
 } from '../../ofi-store/ofi-product/nav';
+import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
+import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
+import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -27,14 +30,14 @@ import {
     styleUrls: ['./component.css']
 })
 export class OfiNavFundView implements OnInit, OnDestroy {
-    
+
     navFund: model.NavInfoModel;
     navFundHistory: any;
     socketToken: string;
     userId: number;
 
     navHistoryForm: FormGroup;
-    
+
     currentDate: string = moment().format('YYYY-MM-DD');
     dateFromConfig: any = {
         firstDayOfWeek: 'mo',
@@ -63,18 +66,20 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'userId']) userOb;
 
     constructor(private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private ofiCorpActionService: OfiCorpActionService,
-        private ofiNavService: OfiNavService,
-        private popupService: OfiManageNavPopupService) { 
+                private changeDetectorRef: ChangeDetectorRef,
+                private ofiCorpActionService: OfiCorpActionService,
+                private ofiNavService: OfiNavService,
+                private numberConverterService: NumberConverterService,
+                private moneyPipe: MoneyValuePipe,
+                private popupService: OfiManageNavPopupService) {
 
-        }
-        
+    }
+
     ngOnInit() {
         this.initDatePeriodItems();
         this.initNavHistoryForm();
         this.initSubscriptions();
-        
+
         this.redux.dispatch(clearRequestedNavFundView());
     }
 
@@ -103,15 +108,15 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
         this.dateFromConfig.max = moment().add(-1, 'days');
         this.dateToConfig.max = moment().add(-1, 'days');
-        
+
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
         }));
-        
+
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
         }));
-        
+
         this.subscriptionsArray.push(this.navHistoryForm.controls.datePeriod.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = true;
         }));
@@ -164,7 +169,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavFund(requested: boolean): void {
-        if(requested) return;
+        if (requested) return;
 
         const requestData = getOfiNavFundViewCurrentRequest(this.redux.getState());
 
@@ -187,7 +192,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             this.updateNavFundHistory(navFundHistory);
         }));
 
-        if(this.navFund) this.redux.dispatch(setRequestedNavFundView());
+        if (this.navFund) this.redux.dispatch(setRequestedNavFundView());
 
         this.changeDetectorRef.markForCheck();
     }
@@ -199,7 +204,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
      * @return void
      */
     private requestNavFundHistory(requested: boolean): void {
-        if(requested || !this.navFund) return;
+        if (requested || !this.navFund) return;
 
         const requestData = this.getNavRequestData();
 
@@ -212,7 +217,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         let navDateFrom;
         let navDateTo;
 
-        if(this.usingDatePeriodToSearch) {
+        if (this.usingDatePeriodToSearch) {
             const dateArr = this.navHistoryForm.value.datePeriod[0].id.split('|');
             navDateFrom = dateArr[0];
             navDateTo = dateArr[1];
@@ -236,38 +241,63 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private updateNavFundHistory(navFundHistory: any): void {
         this.navFundHistory = navFundHistory;
 
-        if(this.navFundHistory) this.redux.dispatch(setRequestedNavFundHistory());
+        if (this.navFundHistory) this.redux.dispatch(setRequestedNavFundHistory());
 
         this.changeDetectorRef.markForCheck();
     }
 
+    private navToFrontEndString(nav: number): string {
+        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
+    }
 
-    getCurrency(currency: string): string {
+
+    getCurrencySymbol(currency: number): string {
         let currencyIcon;
 
         switch (currency) {
-            case 'GBP':
-                currencyIcon = '£';                
+            case CurrencyEnum.GBP:
+                currencyIcon = '£';
                 break;
-            case 'EUR':
+            case CurrencyEnum.EUR:
                 currencyIcon = '€';
                 break;
-            case 'USD':
+            case CurrencyEnum.USD:
                 currencyIcon = '$';
                 break;
             default:
                 currencyIcon = 'N/A';
                 break;
         }
-        
+
         return currencyIcon;
+    }
+
+    getCurrencyString(currency: number): string {
+        let currencyString;
+
+        switch (currency) {
+            case CurrencyEnum.GBP:
+                currencyString = 'GBP';
+                break;
+            case CurrencyEnum.EUR:
+                currencyString = 'EUR';
+                break;
+            case CurrencyEnum.USD:
+                currencyString = 'USD';
+                break;
+            default:
+                currencyString = 'N/A';
+                break;
+        }
+
+        return currencyString;
     }
 
     getFilteredByDateText(): string {
         let navDateFrom: string;
         let navDateTo: string;
 
-        if(this.usingDatePeriodToSearch) {
+        if (this.usingDatePeriodToSearch) {
             const dateArr = this.navHistoryForm.value.datePeriod[0].id.split('|');
             navDateFrom = dateArr[0];
             navDateTo = dateArr[1];
@@ -286,7 +316,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     addNav(): void {
         this.popupService.open(this.navFund, model.NavPopupMode.ADD);
     }
-    
+
     editNav(nav: model.NavInfoModel): void {
         const navObj: model.NavInfoModel = nav;
         navObj.fundShareName = this.navFund.fundShareName;
@@ -308,9 +338,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     exportCSV(): void {
         const requestData = this.getNavRequestData();
-        
+
         const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundHistory&shareId=${requestData.shareId}&navDateFrom=${encodeURIComponent(requestData.navDateFrom)}&navDateTo=${encodeURIComponent(requestData.navDateTo)}`, false);
-        
+
         window.open(url, '_blank');
     }
 

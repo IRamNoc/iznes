@@ -34,7 +34,7 @@
     <!--list of fund tab-->
     <ng-template #listOfFundsTab>
         <div class="panel-body">
-            <div class="message_list_menu">
+            <div>
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>ISIN <span class="column-label"></span>
                     </clr-dg-column>
@@ -69,11 +69,11 @@
                         <clr-dg-cell>{{fund['nav'] | moneyValue}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['subscriptionDate']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['redemptionDate']}}</clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell  class="actions">
                             <div class="btn-group btn-sm">
-                                <button class="btn text-green" (click)="handleSubscribe(i)">
+                                <button class="btn btn-success btn-sm" (click)="handleSubscribe(i)">
                                     <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
-                                <button class="btn text-red" (click)="handleRedeem(i)">
+                                <button class="btn btn-danger btn-sm" (click)="handleRedeem(i)">
                                     <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
                                 <!--<button class="btn text-yellow" (click)="handleBuySell(i)">-->
                                 <!--<i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>-->

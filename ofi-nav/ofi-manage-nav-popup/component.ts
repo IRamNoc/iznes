@@ -17,6 +17,9 @@ import {
     ofiSetCurrentNavLatestRequest,
     clearRequestedNavLatest
 } from '../../ofi-store/ofi-product/nav';
+import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
+import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
+import {NumberConverterService} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-add',
@@ -59,6 +62,7 @@ export class OfiManageNavPopup implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
         private ofiNavService: OfiNavService,
+        private numberConverterService: NumberConverterService,
         private popupService: OfiManageNavPopupService) {
 
         this.initStatusData();
@@ -174,9 +178,10 @@ export class OfiManageNavPopup implements OnInit {
         if(!this.share) return;
 
         const requestData = {
-            fundName: this.share.fundShareName,
+            fundShareIsin: this.share.isin,
             fundDate: `${this.navForm.controls.navDate.value} 00:00:00`,
-            price: this.navForm.value.price,
+            navPublicationDate: `${this.navForm.controls.navPubDate.value} 00:00:00`,
+            price: this.numberConverterService.toBlockchain(this.navForm.value.price),
             priceStatus: this.navForm.controls.status.value[0].id
         }
 
@@ -230,6 +235,10 @@ export class OfiManageNavPopup implements OnInit {
         this.showErrorModal(res);
     }
 
+    getCurrencyString(currency: number): string {
+        return CurrencyValue[currency];
+    }
+
 
     /**
      * request the nav latest
@@ -240,7 +249,7 @@ export class OfiManageNavPopup implements OnInit {
         if(requested) return;
 
         const requestData = {
-            fundName: this.share.fundShareName,
+            fundShareId: this.share.shareId,
             navDate: `${this.share.navDate}`
         }
 
@@ -260,7 +269,7 @@ export class OfiManageNavPopup implements OnInit {
      * @return void
      */
     private updateNavLatest(navLatest: model.NavLatestModel[]): void {
-        this.navLatest = (navLatest[0]) ? navLatest[0].nav : null;
+        this.navLatest = (navLatest[0]) ? this.numberConverterService.toFrontEnd(navLatest[0].nav) : null;
         this.changeDetectorRef.markForCheck();
     }
 
@@ -277,7 +286,7 @@ export class OfiManageNavPopup implements OnInit {
 
         this.responseModalCallback();
     }
-    
+
     private showDeleteResponseModal(response: any) {
         this.alertsService.create('success', `
             <table class="table grid">
@@ -291,16 +300,16 @@ export class OfiManageNavPopup implements OnInit {
 
         this.responseModalCallback();
     }
-    
+
     private responseModalCallback(): void {
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
-    
+
     private showErrorModal(data): void {
         this.alertsService.create('error',
         `${data[1].status}`);
-        
+
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }

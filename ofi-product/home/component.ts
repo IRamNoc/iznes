@@ -29,7 +29,7 @@ import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/ma
 
 export class ProductHomeComponent implements OnInit, OnDestroy {
     /* Public properties. */
-    amManagementCompany: string;
+    amManagementCompany = '';
     fundList = [];
     shareList = [];
     umbrellaFundList = [];
@@ -226,6 +226,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestManagementCompanyAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
 
     constructor(private _ngRedux: NgRedux<any>,
@@ -242,11 +243,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
         this.countryItems = fundItems.fundItems.domicileItems;
         this.legalFormItems = fundItems.fundItems.fundLegalFormItems;
-        this.amManagementCompany = '';
-        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this._ngRedux);
     }
 
     ngOnInit() {
+        this.subscriptions.push(this.requestManagementCompanyAccessListOb.subscribe((d) => this.requestManagementCompanyAccessList(d)));
+        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe(d => this.managementCompanyAccessList = d));
         this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
         this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
@@ -254,7 +255,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
-        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe(d => this.managementCompanyAccessList = d));
     }
 
     ngOnDestroy(): void {
@@ -264,6 +264,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription: Subscription) => {
             subscription.unsubscribe();
         });
+    }
+
+    requestManagementCompanyAccessList(requested): void {
+        if (!requested) {
+            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this._ngRedux);
+        }
     }
 
     requestFundList(requested): void {

@@ -23,6 +23,7 @@ import {
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
 import {FundShare, FundShareMode, PanelData} from '../model';
+import {FundShareTradeCycleModel} from './trade-cycle/model';
 import {FundShareTestData} from './TestData';
 
 @Component({
@@ -34,6 +35,7 @@ import {FundShareTestData} from './TestData';
 
 export class FundShareComponent implements OnInit, OnDestroy {
 
+    private fundShareData: OfiFundShare;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
@@ -101,6 +103,16 @@ export class FundShareComponent implements OnInit, OnDestroy {
         }
     }
 
+    calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
+        this.model.calendar.subscriptionTradeCycle = model;
+        if(this.fundShareData) this.model.setSubscriptionTradeCycleData(this.fundShareData);
+    }
+
+    calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
+        this.model.calendar.redemptionTradeCycle = model;
+        if(this.fundShareData) this.model.setRedemptionTradeCycleData(this.fundShareData);
+    }
+
     /**
      * request the fund share
      * @param requested boolean
@@ -123,6 +135,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private updateFundShare(fundShare: any): void {
         if((!fundShare) || !fundShare.fundShareID) return;
 
+        this.fundShareData = fundShare;
         this.model.setFundShare(fundShare);
 
         if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
