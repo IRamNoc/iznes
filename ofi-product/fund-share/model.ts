@@ -88,8 +88,8 @@ export class FundShare {
             couponType: this.keyFacts.mandatory.couponType.value()[0].id,
             freqOfDistributionDeclaration: this.keyFacts.mandatory.freqOfDistributionDeclaration.value()[0].id,
             status: this.keyFacts.mandatory.status.value()[0].id,
-            master: this.keyFacts.mandatory.master.value()[0].id,
-            feeder: this.keyFacts.mandatory.feeder.value()[0].id,
+            master: this.getStatusMasterValue(),
+            feeder: this.getStatusFeederValue(),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.characteristic.mandatory.subscriptionCategory.value()[0].id,
             subscriptionCurrency: this.characteristic.mandatory.subscriptionCurrency.value()[0].id,
@@ -255,6 +255,22 @@ export class FundShare {
         if((!arr) || arr.length === 0) return null;
 
         return JSON.stringify(arr);
+    }
+
+    private getStatusMasterValue(): number {
+        if(this.keyFacts.mandatory.status.value() === FundShareEnum.StatusEnum.Master) {
+            return this.keyFacts.mandatory.master.value()[0].id;
+        } else {
+            return null;
+        }
+    }
+
+    private getStatusFeederValue(): number {
+        if(this.keyFacts.mandatory.status.value() === FundShareEnum.StatusEnum.Feeder) {
+            return this.keyFacts.mandatory.feeder.value()[0].id;
+        } else {
+            return null;
+        }
     }
 }
 
