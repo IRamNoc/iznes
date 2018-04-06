@@ -50,6 +50,7 @@ export interface ApprovedKycRequestData {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
@@ -60,6 +61,7 @@ export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface RejectedKycRequestData {
