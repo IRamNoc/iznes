@@ -138,9 +138,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             ],
             reference: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ])
             ],
             fromDateUTC: [
                 '',
@@ -291,9 +288,11 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 instrument: formValues.asset[0].id.split('|')[1],
                 amount: formValues.amount,
                 beneficiaries: [
-                    [formValues.fromAddress[0].id, StartUTC_Secs, EndUTC_Secs]
+                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
                 ],
-                administrators: [],
+                administrators: [
+                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
+                ],
                 protocol: '',
                 metadata: '',
             });
