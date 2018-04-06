@@ -39,6 +39,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     statusId: number;
     amKycList: Array<any>;
     amCompanyName: string;
+    invitedID: number;
 
     /* Public statuses */
     APPROVED_STATUS = Statuses.approved;
@@ -196,6 +197,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             this.initWaitingApprovalForm();
             this.cdr.markForCheck();
+
+            this.invitedID = kyc.invitedID;
         }
     }
 
@@ -289,7 +292,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             investorFirstName: this.investor.firstName.value,
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
-            lang: this.language
+            lang: this.language,
+            invitedID: this.invitedID
         };
 
         this.redux.dispatch({
