@@ -127,11 +127,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
         try {
-            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/input")).sendKeys("TestUmbrellaFunds1");
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("Test_Umbrella_Fund");
         }catch (Exception e){
             fail(e.getMessage());
         }
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-cancelUmbrella-btn")).click();
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
@@ -150,11 +150,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
             try {
-                driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/input")).sendKeys("TestUmbrellaFunds1");
+                driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
             }catch (Exception e){
                 fail(e.getMessage());
             }
-            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/ul/li[1]/div/a")).click();
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         String fundName = driver.findElement(By.id("umbrellaFundName")).getAttribute("value");
         assertTrue(fundName.equals("TestUmbrellaFunds1"));
     }
@@ -167,11 +167,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
         try {
-            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/input")).sendKeys("TestUmbrellaFunds1");
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
         }catch (Exception e){
             fail(e.getMessage());
         }
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
         try{
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
@@ -188,11 +188,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
         try {
-            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/input")).sendKeys("TestUmbrellaFunds1");
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
         }catch (Exception e){
             fail(e.getMessage());
         }
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
         try{
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
