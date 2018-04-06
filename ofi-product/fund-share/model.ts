@@ -88,6 +88,8 @@ export class FundShare {
             couponType: this.keyFacts.mandatory.couponType.value()[0].id,
             freqOfDistributionDeclaration: this.keyFacts.mandatory.freqOfDistributionDeclaration.value()[0].id,
             status: this.keyFacts.mandatory.status.value()[0].id,
+            master: this.keyFacts.mandatory.master.value()[0].id,
+            feeder: this.keyFacts.mandatory.feeder.value()[0].id,
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.characteristic.mandatory.subscriptionCategory.value()[0].id,
             subscriptionCurrency: this.characteristic.mandatory.subscriptionCurrency.value()[0].id,

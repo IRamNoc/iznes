@@ -1,6 +1,7 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
+import * as _ from 'lodash';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -44,9 +45,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
     private panels: {[key: string]: any} = new PanelData();
+    private iznShareList;
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     @select(['user', 'myDetail', 'accountId']) accountIdOb: Observable<any>;
 
     constructor(private router: Router,
@@ -87,8 +90,26 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundShareOb.subscribe(fundShare => {
             if(this.fundShareId === fundShare.fundShareID) this.updateFundShare(fundShare);
         }));
+        this.subscriptionsArray.push(this.shareListObs.subscribe(fundShareList => {
+            this.model.keyFacts.mandatory.master.listItems = this.generateListItems(fundShareList);
+            this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
+            this.iznShareList = fundShareList;
+        }));
 
         this.subscriptionsArray.push(this.accountIdOb.subscribe(accountId => this.model.accountId = accountId));
+    }
+
+    private generateListItems(fundShareList): any[] {
+        const items = [];
+
+        _.forEach(fundShareList, (item) => {
+            items.push({
+                id: item.fundShareID,
+                text: item.fundShareName
+            });
+        });
+
+        return items;
     }
 
     private configureFormForMode(): void {
@@ -102,6 +123,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.router.navigateByUrl(`product-module/fund-share/new`);
             }
         }
+    }
+
+    loadUI(): boolean {
+        return (!!this.model.fundID || this.isCreate()) &&
+            this.iznShareList != undefined;
     }
 
     calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
