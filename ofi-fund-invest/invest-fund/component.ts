@@ -498,6 +498,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     subscribeForChangeDate(type: string, $event: any): boolean {
         if (!this.doValidate) {
+            this.dateBy = 'cutoff';
             return true;
         }
 
