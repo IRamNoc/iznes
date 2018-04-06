@@ -68,9 +68,9 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPage("user-admin-users");
         Thread.sleep(1000);
         driver.findElement(By.id("user-tab-1")).click();
-        String username = driver.findElement(By.id("new-user-username")).getAttribute("value");
-        assertTrue(username.equals(userDetails[0]));
-        validatePopulatedDatabaseUsersFormdataTable(0, "1", "8", userName, email);
+        String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
+        assertTrue(screenUserName.equals(userName));
+        validatePopulatedDatabaseUsersFormdataTable("1", "8", userName, email);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        validateDatabaseUsersFormdataTable(1, "1" , "8");
+        validateDatabaseUsersFormdataTable(0, "1" , "8");
     }
 
     @Test
@@ -189,8 +189,8 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(500);
         logout();
         Thread.sleep(750);
-        loginAndUpdateMyAccount("Test_User_85","alex01", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_85", "alex01", "Jordan", "Miller");
+        loginAndUpdateMyAccount("Test_User_063","asdasd", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_063", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
