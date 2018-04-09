@@ -13,7 +13,7 @@ import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 
 // Internal
-import {immutableHelper, MoneyValuePipe, mDateHelper, NumberConverterService} from '@setl/utils';
+import {immutableHelper, MoneyValuePipe, mDateHelper, NumberConverterService, ConfirmationService} from '@setl/utils';
 import {
     InitialisationService,
     MyWalletsService,
@@ -119,6 +119,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     feeAmount: FormControl;
     netAmount: FormControl;
     address: FormControl;
+    disclaimer: FormControl;
 
     addressSelected: any;
 
@@ -132,11 +133,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     addressListObj;
 
     panels = {
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-        5: false,
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
         6: true
     };
 
@@ -216,6 +217,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.form.valid ? null : '';
     }
 
+    get allowToPlaceOrder(): string | null {
+        return (this.form.valid) && this.disclaimer.value ? null : '';
+    }
+
     get assetClass(): string {
         return FundShareValue.ClassCodeValue[this.shareData.shareClassCode];
     }
@@ -227,6 +232,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _ofiOrdersService: OfiOrdersService,
                 private _alertsService: AlertsService,
+                private _confirmationService: ConfirmationService,
                 private _ngRedux: NgRedux<any>) {
     }
 
@@ -250,6 +256,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.feeAmount = new FormControl(0);
         this.netAmount = new FormControl(0, [Validators.required, numberValidator]);
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
+        this.disclaimer = new FormControl('');
 
         // Subscription form
         this.form = new FormGroup({
@@ -261,7 +268,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             address: this.address,
             cutoffDate: this.cutoffDate,
             valuationDate: this.valuationDate,
-            settlementDate: this.settlementDate
+            settlementDate: this.settlementDate,
+            disclaimer: this.disclaimer
         });
 
         this.setInitialFormValue();
@@ -498,6 +506,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     subscribeForChangeDate(type: string, $event: any): boolean {
         if (!this.doValidate) {
+            this.dateBy = 'cutoff';
             return true;
         }
 
@@ -561,11 +570,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     }
 
-    handleDisclaimer($event) {
-        if ($event.target.checked) {
-            const subPortfolioName = this.address.value[0]['text'];
+    handleOrderConfirmation() {
 
-            this._alertsService.create('warning', `
+        const subPortfolioName = this.address.value[0]['text'];
+
+        this._confirmationService.create(
+            '<span>Order confirmation</span>',
+            `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
             <table class="table grid">
                 <tbody>
@@ -599,8 +610,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-        `, {}, 'Order confirmation');
-        }
+            `,
+            {confirmText: 'Confirmation', declineText: 'Cancel', btnClass: 'primary'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.handleSubmit();
+            }
+        });
     }
 
     unSubscribeForChange(): void {
