@@ -83,7 +83,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             }
 
             // FOR TESTING
-            // if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
+            if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
@@ -172,20 +172,20 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     saveFundShare(): void {
-        this.alerts.create('info', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
-                    </tr>
-                </tbody>
-            </table>
-        `, {
-            showCloseButton: false,
-            overlayClickToClose: false
-        });
-        
         if(this.mode === FundShareMode.Create) {
+            this.alerts.create('info', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `, {
+                showCloseButton: false,
+                overlayClickToClose: false
+            });
+            
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
                 this.redux,
                 this.model.getRequest(),
@@ -223,28 +223,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data): void {
-        this.alerts.create('success', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-success">Fund Share successfully updated.</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
+        this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+            ' has been successfully updated');
     }
 
     private onUpdateError(e): void {
-        this.alerts.create('error', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-danger">There was an issue updating the Fund Share.<br />
-                        ${e.Message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
+        this.toaster.pop('error', this.model.keyFacts.mandatory.fundShareName.value() +
+            ' could not be updated');
     }
 
     cancelFundShare(): void {

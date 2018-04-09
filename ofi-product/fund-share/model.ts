@@ -71,11 +71,7 @@ export class FundShare {
     getRequest(): OfiFundShare {
         const portfolioCurrencyHedgeRaw = this.characteristic.optional.portfolioCurrencyHedge.value();
         const portfolioCurrencyHedge = portfolioCurrencyHedgeRaw ? portfolioCurrencyHedgeRaw[0].id : null;
-        console.log('PZZZZZZZ', {
-            status: this.keyFacts.mandatory.status.value()[0].id,
-            master: this.getStatusMasterValue(),
-            feeder: this.getStatusFeederValue()
-        });
+        
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),

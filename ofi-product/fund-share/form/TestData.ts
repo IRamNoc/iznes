@@ -46,7 +46,7 @@ export class FundShareTestData {
         (model.calendar.mandatory.navPeriodForRedemption.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
         model.calendar.mandatory.redemptionCutOffTime.preset = '12:00:00';
         (model.calendar.mandatory.redemptionCutOffTimeZone.preset as any) = [{id: E.TimezonesEnum.UTC, text: 'UTC' }];
-        model.calendar.mandatory.redemptionSettlementPeriod.preset = 1;
+        (model.calendar.mandatory.redemptionSettlementPeriod.preset as any) = [{ id: E.BusinessDaysEnum.One, text: '1' }];
         model.calendar.mandatory.subscriptionCutOffTime.preset = '12:00:00';
         (model.calendar.mandatory.subscriptionCutOffTimeZone.preset as any) = [{id: E.TimezonesEnum.UTC, text: 'UTC' }];
         model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
