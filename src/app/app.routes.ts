@@ -18,6 +18,7 @@ import {LoginGuardService} from '@setl/core-login';
 import {
     CouponPaymentComponent,
     FundHoldingsComponent,
+    ShareHoldersComponent,
     ManageOrdersComponent,
     MyDashboardComponent,
     MyOrdersComponent,
@@ -297,6 +298,11 @@ export const ROUTES: Routes = [
                         component: SetlTransactionsComponent,
                         canActivate: [LoginGuardService],
                         data: { state: 'reports-transactions' }
+                    },
+                    {
+                        path: 'holders-list/:tabid',
+                        component: ShareHoldersComponent,
+                        canActivate: [LoginGuardService],
                     },
                 ],
                 data: { state: 'reports' }

@@ -100,6 +100,13 @@ const reportsPL = {
     element_id: 'menu-reports-section-pnl',
     router_link: '/reports-section/pnl'
 };
+const reportsAMHoldersList = {
+    label: 'Holders List',
+    label_txt: 'txt_holderslist',
+    icon_class: 'fa fa-sitemap',
+    element_id: 'menu-reports-holders-list',
+    router_link: '/reports/holders-list/list'
+};
 const reportsBalances = {
     label: 'Balances Reports',
     label_txt: 'txt_balancesreports',
@@ -409,6 +416,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     reportsCollectsArchives,
                     reportsHistoricalOrders,
+                    reportsAMHoldersList,
                 ]
             },
             kycDocuments
