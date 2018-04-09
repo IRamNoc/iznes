@@ -194,13 +194,13 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldNotBeAskedToEnterKycAfterFillingItOutOnce() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops004@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        loginAndVerifySuccessKYC("testops006@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops006@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("no");
         logout();
-        loginCompleteKYC("testops004@setl.io", "asdasd");
+        loginCompleteKYC("testops006@setl.io", "asdasd");
     }
 
     @Test

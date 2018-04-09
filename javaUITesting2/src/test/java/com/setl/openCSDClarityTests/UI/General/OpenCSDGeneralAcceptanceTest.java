@@ -185,17 +185,17 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops063@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
         Thread.sleep(500);
         logout();
         Thread.sleep(750);
-        loginAndUpdateMyAccount("Test_User_063","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_063", "asdasd", "Jordan", "Miller");
+        loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_064", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
-        String userName = "Test_User_063";
-        String emailAddress = "testops063@setl.io";
+        String userName = "Test_User_064";
+        String emailAddress = "testops064@setl.io";
         return new String[] {userName, emailAddress};
     }
 
