@@ -14,7 +14,7 @@ export class FundShareTradeCycleModel {
     
     constructor() {
         this.form = new FormGroup({
-            tradeCyclePeriod: new FormControl([{ id: E.TradeCyclePeriodEnum.Daily, text: 'Daily' }], Validators.required),
+            tradeCyclePeriod: new FormControl(null, Validators.required),
             possibleInPeriod: new FormControl(null, Validators.required),
             weeklyDealingDays: new FormControl(),
             monthlyDealingDays: new FormArray([]),
