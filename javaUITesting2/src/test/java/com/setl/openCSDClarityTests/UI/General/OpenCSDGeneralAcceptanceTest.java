@@ -300,7 +300,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) {
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_language_0")).click();
@@ -317,6 +317,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("FAILED : " + e.getMessage());
         }
         try {
+            Thread.sleep(750);
             WebElement popupSuccess = driver.findElement(By.className("jaspero__dialog-title"));
             wait.until(visibilityOf(popupSuccess));
         } catch (Error e) {
@@ -422,10 +423,15 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectInvestorOnManageUserAccountDropdown() {
+    public static void selectInvestorOnManageUserAccountDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
+        Thread.sleep(1250);
         try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+            try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
