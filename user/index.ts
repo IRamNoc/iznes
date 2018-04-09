@@ -61,13 +61,15 @@ import {
     SiteSettingsState,
     setLanguage,
     setMenuShown,
-    SET_PRODUCTION
+    SET_PRODUCTION,
+    SET_LANGUAGE
 } from './site-settings';
 
 export {
     setLanguage,
     setMenuShown,
-    SET_PRODUCTION
+    SET_PRODUCTION,
+    SET_LANGUAGE
 };
 
 
