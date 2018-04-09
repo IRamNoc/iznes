@@ -251,11 +251,12 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
             this.investor = {
                 'companyName': {label: 'Company name:', value: kyc.investorCompanyName},
-                'approvalDateRequest': {label: 'Date of approval request:', value: approvalDateRequest},
+                'clientReference': {label: 'Client reference:', value: kyc.clientReference},
                 'firstName': {label: 'First name:', value: kyc.investorFirstName},
                 'lastName': {label: 'Last name:', value: kyc.investorLastName},
                 'email': {label: 'Email address:', value: kyc.investorEmail},
-                'phoneNumber': {label: 'Phone number:', value: phoneNumber}
+                'phoneNumber': {label: 'Phone number:', value: phoneNumber},
+                'approvalDateRequest': {label: 'Date of approval request:', value: approvalDateRequest}
             };
 
             this.amCompany = kyc.companyName;

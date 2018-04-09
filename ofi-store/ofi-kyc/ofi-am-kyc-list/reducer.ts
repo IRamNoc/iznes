@@ -56,7 +56,8 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 isInvited: item.get('isInvited', 0),
                 invitedID: item.get('invitedID', 0),
                 status: item.get('kycStatus', 0),
-                dateEntered: item.get('dateEntered', 0)
+                dateEntered: item.get('dateEntered', 0),
+                clientReference: item.get('clientReference', 0)
             });
 
             return result;

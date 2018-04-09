@@ -6,6 +6,7 @@ interface Invitation {
     firstname?: string;
     lastname?: string;
     lang: any;
+    clientreference?: string;
 }
 
 export interface SendInvitationRequestData {
@@ -49,6 +50,7 @@ export interface ApprovedKycRequestData {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
@@ -59,6 +61,7 @@ export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     investorCompanyName: string;
     amCompanyName: string;
     lang: string;
+    invitedID: number;
 }
 
 export interface RejectedKycRequestData {

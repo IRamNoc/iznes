@@ -134,7 +134,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.fundList = fundListImu.reduce((result, item) => {
             result.push({
-                id: item.get('fundShareId', 0),
+                id: item.get('fundShareID', 0),
                 isin: item.get('isin', ''),
                 shareName: item.get('fundShareName', ''),
                 assetClass: FundShareValue.ClassCodeValue[item.get('shareClassCode', 0)],
