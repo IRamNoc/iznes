@@ -81,6 +81,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         this.defaultHomePage.subscribe(
             (homePage) => {
                 this.disableMenu = (homePage != null && homePage != '/home');
+                this._changeDetectorRef.markForCheck();
             }
         );
     }
