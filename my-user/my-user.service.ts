@@ -224,6 +224,7 @@ export class MyUserService implements OnDestroy {
     getLanguage(data: GetLanguageTokenData): any {
         const messageBody: GetLanguageRequestBody = {
             RequestName: 'getlanguage',
+            token: this.memberSocketService.token,
             userID: data.userID
         };
 

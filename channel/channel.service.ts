@@ -21,8 +21,12 @@ import {
     clearRequestedMailInitial,
     setRequestedMailList,
     setRequestedMailInitial,
+
+    setRequestedMyChainAccess,
+    SET_MY_CHAIN_ACCESS
 } from '@setl/core-store';
 import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
+import {ChainService} from '@setl/core-req-services/chain/service';
 
 @Injectable()
 export class ChannelService {
@@ -33,7 +37,9 @@ export class ChannelService {
 
     constructor(private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                private myWalletsService: MyWalletsService) {
+                private myWalletsService: MyWalletsService,
+                private chainService: ChainService
+    ) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -173,6 +179,22 @@ export class ChannelService {
                     [],
                     asyncTaskPipes, {}));
 
+
+
+
+                // Set the state flag to true. so we do not request it again.
+                this.ngRedux.dispatch(setRequestedMyChainAccess());
+
+                // Request the list.
+                const asyncTaskPipe = this.chainService.requestMyChainAccess();
+
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_MY_CHAIN_ACCESS],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                ));
+
                 break;
 
             case 'email_send': // send email
@@ -197,7 +219,6 @@ export class ChannelService {
                     }
                 );
                 break;
-
             default:
                 break;
         }

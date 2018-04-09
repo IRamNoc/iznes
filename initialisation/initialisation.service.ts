@@ -219,10 +219,6 @@ export class InitialisationService {
             asyncTaskPipes, {},
             ()=>{
                 console.log('language set!');
-
-                //detect changes.
-
-
             }));
 
         return true;

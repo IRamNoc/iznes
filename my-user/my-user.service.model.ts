@@ -68,6 +68,7 @@ export interface SetLanguageRequestBody extends MemberNodeMessageBody {
 }
 
 export interface GetLanguageRequestBody extends MemberNodeMessageBody {
+    token: string;
     userID: string;
 }
 
