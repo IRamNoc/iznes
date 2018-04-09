@@ -40,6 +40,9 @@ export const FundListReducer = function (state: FundListState = initialState, ac
         case FundActions.SET_REQUESTED_IZN_FUNDS:
             return handleSetIznesFundsRequested(state);
 
+        case FundActions.CLEAR_REQUESTED_IZN_FUNDS:
+            return clearSetIznesFundsRequested(state);
+
         case FundActions.GET_IZN_FUND_LIST:
             return handleGetIznesFunds(state, action);
 
