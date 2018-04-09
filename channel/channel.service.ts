@@ -24,6 +24,8 @@ import {
     //wallets
     SET_OWN_WALLETS
 } from '@setl/core-store';
+import {SET_OWN_WALLETS} from '@setl/core-store/index';
+import {MyWalletsService} from '@setl/core-req-services';
 
 @Injectable()
 export class ChannelService {
@@ -33,7 +35,8 @@ export class ChannelService {
     changedPassword = false;
 
     constructor(private ngRedux: NgRedux<any>,
-                private  toasterService: ToasterService) {
+                private toasterService: ToasterService,
+                private myWalletsService: MyWalletsService) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -56,9 +59,9 @@ export class ChannelService {
         data = JSON.parse(data);
 
         // The Hench Switch Statement of Channels.
-        console.log(" |--- Resolving Core channel broadcast.");
-        console.log(" | name: ", data.Request);
-        console.log(" | data: ", data);
+        console.log(' |--- Resolving Core channel broadcast.');
+        console.log(' | name: ', data.Request);
+        console.log(' | data: ', data);
         switch (data.Request) {
             case 'nu': // new user
             case 'udu': // update user
@@ -160,6 +163,19 @@ export class ChannelService {
                         payload: [null, data, null]
                     }
                 );
+                break;
+
+            case 'uduwp': // update user wallet permissions
+                console.log(' | UPDATE USER WALLET PERMISSION: ');
+
+                // need to be retrieve as the admin does not know our wallet list
+                const asyncTaskPipes = this.myWalletsService.requestOwnWallets();
+
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_OWN_WALLETS],
+                    [],
+                    asyncTaskPipes, {}));
+
                 break;
 
             case 'email_send': // send email
