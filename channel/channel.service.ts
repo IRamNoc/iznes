@@ -9,6 +9,7 @@ import {
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
+    SET_OWN_WALLETS,
 
     /* My details */
     SET_USER_DETAILS,
@@ -21,7 +22,6 @@ import {
     setRequestedMailList,
     setRequestedMailInitial,
 } from '@setl/core-store';
-import {SET_OWN_WALLETS} from '@setl/core-store/index';
 import {MyWalletsService} from '@setl/core-req-services';
 
 @Injectable()
