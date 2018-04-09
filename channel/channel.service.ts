@@ -20,9 +20,6 @@ import {
     clearRequestedMailInitial,
     setRequestedMailList,
     setRequestedMailInitial,
-
-    //wallets
-    SET_OWN_WALLETS
 } from '@setl/core-store';
 
 @Injectable()
