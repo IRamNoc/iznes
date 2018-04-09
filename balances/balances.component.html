@@ -5,7 +5,8 @@
 
 <clr-tabs *ngIf="tabs.length">
     <clr-tab *ngFor="let tab of tabs; let id = index">
-        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id)" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title | asset}}"></button>
+        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id)"
+                innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title | asset}}"></button>
         <clr-tab-content *clrIfActive="tab.active">
             <!-- User list tab. -->
             <ng-container *ngIf="id === 0">
@@ -31,14 +32,17 @@
             <clr-dg-column mltag="txt_actions" style="min-width: 160px;">Actions</clr-dg-column>
             <clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>
             <clr-dg-column mltag="txt_asset" style="min-width: 170px;">Asset</clr-dg-column>
-            <clr-dg-column mltag="txt_total" style="min-width: 170px;">Total</clr-dg-column> <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column> <clr-dg-column mltag="txt_free">Free</clr-dg-column>
+            <clr-dg-column mltag="txt_total" style="min-width: 170px;">Total</clr-dg-column>
+            <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
+            <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
                 <clr-dg-cell>
                     <div class="btn-group btn-sm">
                         <button (click)="handleViewBreakdown(asset)" class="btn">
                             <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
-                        <button class="btn" (click)="handleViewHistory(asset)"><i class="fa fa-history"></i><span mltag="txt_history">History</span>
+                        <button class="btn" (click)="handleViewHistory(asset)"><i class="fa fa-history"></i><span
+                                mltag="txt_history">History</span>
                         </button>
                     </div>
                 </clr-dg-cell>
@@ -64,7 +68,8 @@
 </ng-template>
 
 <!-- User Edit Form. -->
-<ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-template="template" let-transactions="transactions" let-transaction="transaction">
+<ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-template="template"
+             let-transactions="transactions" let-transaction="transaction">
     <div class="user-tab-panel-body panel-body">
 
         <!-- Breakdown view -->
@@ -83,7 +88,7 @@
                 <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
                     <clr-dg-cell>{{breakdown.addr}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.balance | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell>{{breakdown.encumbered | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.encumbrance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
                 </clr-dg-row>
 
@@ -107,9 +112,16 @@
                 <clr-dg-column mltag="txt_type">Type</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let transaction of transactions | async">
-                    <clr-dg-cell><button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i class="fa fa-search"></i>View</button></clr-dg-cell>
-                    <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.shortHash}}</clr-dg-cell>
-                    <clr-dg-cell class="ellipsised" [title]="transaction.issuer + ' | ' + transaction.instrument">{{transaction.issuer}} | {{transaction.instrument}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i
+                                class="fa fa-search"></i>View
+                        </button>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.shortHash}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="ellipsised" [title]="transaction.issuer + ' | ' + transaction.instrument">
+                        {{transaction.issuer}} | {{transaction.instrument}}
+                    </clr-dg-cell>
                     <clr-dg-cell>{{transaction.amount | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{transaction.utc | date: 'dd/MM/yyyy hh:mm:ss'}}</clr-dg-cell>
                     <clr-dg-cell><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
@@ -140,7 +152,8 @@
                                     <span class="ml" mltag="txt_">{{field.displayName}}</span>
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" readonly="" [value]="transaction[field.field]">
+                                    <input type="text" class="form-control" readonly=""
+                                           [value]="transaction[field.field]">
                                 </div>
                             </div>
                         </ng-container>
