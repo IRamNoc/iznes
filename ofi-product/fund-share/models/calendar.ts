@@ -110,7 +110,7 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         ]
     }
     redemptionSettlementPeriod: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.list,
         label: 'Settlement Period For Redemption',
         required: true,
         listItems: [

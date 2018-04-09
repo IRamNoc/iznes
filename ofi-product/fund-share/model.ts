@@ -19,6 +19,7 @@ export {PanelData} from './models/panelData';
 
 export class FundShare {
     fundID: number;
+    fundShareId: number;
     accountId: number;
 
     calendar = {
@@ -70,9 +71,11 @@ export class FundShare {
     getRequest(): OfiFundShare {
         const portfolioCurrencyHedgeRaw = this.characteristic.optional.portfolioCurrencyHedge.value();
         const portfolioCurrencyHedge = portfolioCurrencyHedgeRaw ? portfolioCurrencyHedgeRaw[0].id : null;
+        
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
+            fundShareID: this.fundShareId,
             fundID: this.fundID,
             isin: this.keyFacts.mandatory.isin.value(),
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value()[0].id,
@@ -86,6 +89,8 @@ export class FundShare {
             couponType: this.keyFacts.mandatory.couponType.value()[0].id,
             freqOfDistributionDeclaration: this.keyFacts.mandatory.freqOfDistributionDeclaration.value()[0].id,
             status: this.keyFacts.mandatory.status.value()[0].id,
+            master: this.getStatusMasterValue(),
+            feeder: this.getStatusFeederValue(),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.characteristic.mandatory.subscriptionCategory.value()[0].id,
             subscriptionCurrency: this.characteristic.mandatory.subscriptionCurrency.value()[0].id,
@@ -105,7 +110,7 @@ export class FundShare {
             subscriptionSettlementPeriod: this.calendar.mandatory.subscriptionSettlementPeriod.value()[0].id,
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.calendar.mandatory.redemptionCutOffTimeZone.value()[0].id,
-            redemptionSettlementPeriod: this.calendar.mandatory.redemptionSettlementPeriod.value(),
+            redemptionSettlementPeriod: this.calendar.mandatory.redemptionSettlementPeriod.value()[0].id,
             subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
@@ -154,6 +159,8 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
+        this.setListItemPreset(this.keyFacts.mandatory.master, fundShare.master);
+        this.setListItemPreset(this.keyFacts.mandatory.feeder, fundShare.feeder);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -251,6 +258,22 @@ export class FundShare {
         if((!arr) || arr.length === 0) return null;
 
         return JSON.stringify(arr);
+    }
+
+    private getStatusMasterValue(): number {
+        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master) {
+            return this.keyFacts.mandatory.master.value()[0].id;
+        } else {
+            return null;
+        }
+    }
+
+    private getStatusFeederValue(): number {
+        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+            return this.keyFacts.mandatory.feeder.value()[0].id;
+        } else {
+            return null;
+        }
     }
 }
 

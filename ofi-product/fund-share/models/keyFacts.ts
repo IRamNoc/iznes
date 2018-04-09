@@ -99,22 +99,24 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     }
     // conditional - status
     master: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.list,
         label: 'Master',
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Master;
-        }
+        },
+        listItems: []
     }
     feeder: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.list,
         label: 'Feeder',
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
             return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Feeder;
-        }
+        },
+        listItems: []
     }
     valuationFrequency: FormItem = {
         type: FormItemType.list,
