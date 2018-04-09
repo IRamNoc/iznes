@@ -12,9 +12,9 @@ $setlHover: darken($setl, 2%);
 @import 'buttons';
 @import 'utils/ngSelect';
 @import 'utils/datagrid';
-@import 'utils/_modal';
-@import 'utils/_icons';
-@import '_jaspero-ng2-alerts';
+@import 'utils/modal';
+@import 'utils/icons';
+@import 'jaspero-ng2-alerts';
 
 .color-square {
     display: inline-block;
