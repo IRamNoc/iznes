@@ -52,7 +52,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -111,10 +111,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops088@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], "testops082@setl.io", "asdasd");
         Thread.sleep(500);
         logout();
-        clickForgottenPassword("testops088@setl.io");
+        clickForgottenPassword("testops082@setl.io");
         LoginToOutlook("test@setl.io", "Sphericals1057!");
         //Manually assert that email has been received
     }
