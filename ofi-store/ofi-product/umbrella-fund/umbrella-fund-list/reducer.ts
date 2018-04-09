@@ -49,7 +49,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 registerOfficeAddress: item.get('registerOfficeAddress'),
                 legalEntityIdentifier: item.get('legalEntityIdentifier'),
                 domicile: item.get('domicile'),
-                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate'),
+                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate').split(' ')[0],
                 managementCompanyID: item.get('managementCompanyID'),
                 fundAdministratorID: item.get('fundAdministratorID'),
                 custodianBankID: item.get('custodianBankID'),

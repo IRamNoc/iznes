@@ -1,0 +1,6 @@
+.text-overflow {
+  width: calc(100% - 12px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

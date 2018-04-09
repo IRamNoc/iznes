@@ -24,8 +24,8 @@ import {FundComponent} from './fund/component';
 import {ChartsModule} from 'ng2-charts';
 import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 
-/* fundItems config ( should be served by backend TT ) */
-import fundItems from './fundConfig';
+/* product config: select items, validators, countries, currencies ( should be served by backend :( ) */
+import productConfig from './productConfig';
 
 
 /* Am Dashboard service. */
@@ -63,7 +63,7 @@ import fundItems from './fundConfig';
         SetlComponentsModule
     ],
     providers: [
-        { provide: 'fund-items', useValue: fundItems },
+        { provide: 'product-config', useValue: productConfig },
     ]
 })
 

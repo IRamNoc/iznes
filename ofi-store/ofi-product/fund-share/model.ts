@@ -12,6 +12,8 @@ export interface OfiFundShare {
     valuationFrequency: number;
     historicOrForwardPricing: number;
     status: string;
+    master: number;
+    feeder: number;
     hasCoupon: number;
     couponType: number;
     freqOfDistributionDeclaration: number;

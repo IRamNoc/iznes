@@ -82,6 +82,7 @@ export {OfiAmDashboardModule} from './ofi-am-dashboard/module';
 export {OfiAmDashboardService} from './ofi-req-services/ofi-am-dashboard/service';
 export {FundHoldingsComponent} from './ofi-am-dashboard/fund-holdings/component';
 export {MyDashboardComponent} from './ofi-am-dashboard/my-dashboard/component';
+export {ShareHoldersComponent} from './ofi-am-dashboard/share-holders/component';
 
 /**
  * Report module
