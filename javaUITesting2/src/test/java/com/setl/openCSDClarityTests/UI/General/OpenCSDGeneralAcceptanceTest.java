@@ -39,7 +39,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(4000000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -343,7 +343,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void createUserAndVerifySuccess(String username, String email, String password) {
+    public static void createUserAndVerifySuccess(String username, String email, String password) throws InterruptedException {
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).clear();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
@@ -405,8 +405,10 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectManageUserAccountDropdown() {
+    public static void selectManageUserAccountDropdown() throws InterruptedException {
+        Thread.sleep(1750);
         driver.findElement(By.id("new-user-account-select")).click();
+        Thread.sleep(1750);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
@@ -414,8 +416,9 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectManageUserUserDropdown() {
+    public static void selectManageUserUserDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-usertype-select")).click();
+        Thread.sleep(1000);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
@@ -425,7 +428,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectInvestorOnManageUserAccountDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-account-select")).click();
-        Thread.sleep(1250);
+        Thread.sleep(1500);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
         }catch (Error e){
