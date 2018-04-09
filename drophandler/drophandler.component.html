@@ -1,39 +1,72 @@
-<!-- Raw input and form. -->
-<form #dropFileForm>
-    <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
-</form>
+<ng-container *ngIf="!inline">
+    <!-- Raw input and form. -->
+    <form #dropFileForm>
+        <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
+    </form>
 
-<!-- Custom UI. -->
-<div
-    class="drop-file-zone">
+    <!-- Custom UI. -->
     <div
-        class="drop-file-area"
-        [ngClass]="{active: this.isHovering}"
-        (drag)="stopPropagation($event)"
-        (dragstart)="stopPropagation($event)"
-        (dragend)="stopPropagation($event);onDragLeave($event)"
-        (dragover)="stopPropagation($event);onDragEnter($event)"
-        (dragenter)="stopPropagation($event)"
-        (dragleave)="stopPropagation($event);onDragLeave($event)"
-        (drop)="stopPropagation($event);onDragLeave($event)"
-        (click)="handleClick($event)"
-        (drop)="handleDrop($event)">
-        <p>
-            <span>{{uploadPrompt}}</span>
-        </p>
-        <p>
-            <span>{{numberFilesText}}</span>
-        </p>
-    </div>
+        class="drop-file-zone">
+        <div
+            class="drop-file-area"
+            [ngClass]="{active: this.isHovering}"
+            (drag)="stopPropagation($event)"
+            (dragstart)="stopPropagation($event)"
+            (dragend)="stopPropagation($event);onDragLeave($event)"
+            (dragover)="stopPropagation($event);onDragEnter($event)"
+            (dragenter)="stopPropagation($event)"
+            (dragleave)="stopPropagation($event);onDragLeave($event)"
+            (drop)="stopPropagation($event);onDragLeave($event)"
+            (click)="handleClick($event)"
+            (drop)="handleDrop($event)">
+            <p>
+                <span>{{uploadPrompt}}</span>
+            </p>
+            <p>
+                <span>{{numberFilesText}}</span>
+            </p>
+        </div>
 
-    <div
-        class="drop-file-meta"
-        *ngIf="uploadedFiles.length">
-        <span
-            *ngFor="let file of uploadedFiles; let i = index">
-            <span class="tablet added-file {{file.status}}" (click)="stopPropagation($event);clearFiles(i)" *ngIf="file.name">
-                <i class="fa fa-times"></i> {{ file.name }}
+        <div
+            class="drop-file-meta"
+            *ngIf="uploadedFiles.length">
+            <span
+                *ngFor="let file of uploadedFiles; let i = index">
+                <span class="tablet added-file {{file.status}}" (click)="stopPropagation($event);clearFiles(i)" *ngIf="file.name">
+                    <i class="fa fa-times"></i> {{ file.name }}
+                </span>
             </span>
-        </span>
+        </div>
     </div>
-</div>
+</ng-container>
+
+<ng-container *ngIf="inline">
+    <div class="inline-filedrop">
+        <form #dropFileForm>
+            <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
+        </form>
+
+        <div class="drop-file-zone">
+            <div class="drop-file-area"
+                [ngClass]="{active: this.isHovering}"
+                (drag)="stopPropagation($event)"
+                (dragstart)="stopPropagation($event)"
+                (dragend)="stopPropagation($event);onDragLeave($event)"
+                (dragover)="stopPropagation($event);onDragEnter($event)"
+                (dragenter)="stopPropagation($event)"
+                (dragleave)="stopPropagation($event);onDragLeave($event)"
+                (drop)="stopPropagation($event);onDragLeave($event)"
+                (click)="handleClick($event)"
+                (drop)="handleDrop($event)">
+            </div>
+
+            <div class="drop-file-meta" *ngIf="uploadedFiles.length">
+                <span *ngFor="let file of uploadedFiles; let i = index">
+                    <span class="added-file-inline {{file.status}}-inline" *ngIf="file.name">
+                        <i class="fa fa-times" (click)="stopPropagation($event);clearFiles(i)"></i> {{ file.name }}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-container>
