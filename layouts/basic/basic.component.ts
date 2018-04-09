@@ -5,6 +5,10 @@ import {FadeSlideRight} from '../../animations/fade-slide-right';
 
 import {setLanguage} from '@setl/core-store';
 
+import {MyUserService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
+import {SET_LANGUAGE} from "@setl/core-store/user/site-settings/actions";
+
 @Component({
     selector: 'app-basic-layout',
     templateUrl: './basic.component.html',
@@ -43,6 +47,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     subscriptionsArray: Array<Subscription> = [];
 
     constructor(private ngRedux: NgRedux<any>,
+                private myUserService: MyUserService,
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
@@ -101,15 +106,25 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             'fr-Latn'
         ];
 
-        /* Save last language selected by user in localStorage */
-        if (validLocales.indexOf(lang) !== -1) {
-            if (typeof(Storage) !== 'undefined') {
-                localStorage.setItem('lang', lang);
-            }
-        }
+        // /* Save last language selected by user in localStorage */
+        // if (validLocales.indexOf(lang) !== -1) {
+        //     if (typeof(Storage) !== 'undefined') {
+        //         localStorage.setItem('lang', lang);
+        //     }
+        // }
+
+        //save language in db
+        let asyncTaskPipe = this.myUserService.setLanguage({lang: lang});
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LANGUAGE],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
 
         /* Set the language in redux. */
-        this.ngRedux.dispatch(setLanguage(lang));
+        // this.ngRedux.dispatch(setLanguage(lang));
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
