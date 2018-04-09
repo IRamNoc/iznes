@@ -58,6 +58,11 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
                 mustChangePassword
             });
 
+        case AuthenticationAction.RESET_HOMEPAGE:
+            return Object.assign({}, state, {
+                defaultHomePage: '/home'
+            });
+
         default:
             return state;
     }

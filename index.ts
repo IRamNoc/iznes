@@ -15,6 +15,7 @@ export {
     getAuthentication,
     SET_NEW_PASSWORD,
     CLEAR_MUST_CHANGE_PASSWORD,
+    resetHomepage,
 
     // connected
     setConnectedWallet,
