@@ -62,3 +62,12 @@ export interface SetNewPasswordFromTokenRequestBody extends MemberNodeMessageBod
     lang: string;
 }
 
+export interface SetLanguageRequestBody extends MemberNodeMessageBody {
+    token: string;
+    lang: any;
+}
+
+export interface GetLanguageRequestBody extends MemberNodeMessageBody {
+    userID: string;
+}
+
