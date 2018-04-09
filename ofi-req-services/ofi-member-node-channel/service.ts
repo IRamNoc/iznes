@@ -1,6 +1,7 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
+
 import * as _ from 'lodash';
 
 /* Actions. */
@@ -18,6 +19,8 @@ import {
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
+
+import {resetHomepage} from '@setl/core-store';
 
 /* Service class. */
 @Injectable()
@@ -93,6 +96,10 @@ export class OfiMemberNodeChannelService {
             case 'izncreateorderbyinvestor':
                 this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
                 break;
+                
+            case 'kycaccepted':
+                //enable menu.
+                this.ngRedux.dispatch(resetHomepage());
 
             // new umbrella fund created and umbrella fund updated.
             // todo
