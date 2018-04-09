@@ -595,6 +595,11 @@ app-login .modal-body {
     width: 14rem;
 }
 
+.modal-body {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
 .content-area p {
     margin-top: 0px;
     margin-bottom: 0.5rem;
