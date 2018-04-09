@@ -239,10 +239,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
-                @Inject('fund-items') fundItems) {
-        this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
-        this.countryItems = fundItems.fundItems.domicileItems;
-        this.legalFormItems = fundItems.fundItems.fundLegalFormItems;
+                @Inject('product-config') productConfig) {
+        this.fundCurrencyItems = productConfig.fundItems.fundCurrencyItems;
+        this.countryItems = productConfig.fundItems.domicileItems;
+        this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
     }
 
     ngOnInit() {

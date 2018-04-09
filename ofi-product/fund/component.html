@@ -1,5 +1,8 @@
 <div class="header-breadcrumbs fundCreateComponent">
-    <h1><i class="fa fa-bars"></i> <span mltag="txt_addanewfund">Add a New Fund</span></h1>
+    <h1><i class="fa fa-bars"></i>
+        <span *ngIf="param === 'new'" mltag="txt_addanewfund">Add a New Fund</span>
+        <span *ngIf="param !== 'new'">Fund: {{fundForm.controls['fundName'].value}}</span>
+    </h1>
 </div>
 
 <div class="padding fundCreateComponent"></div>
@@ -22,24 +25,24 @@
                                 <label class="control-label" for="fund-umbrellaControl-select-1">
                                     <span mltag="txt_isthisfundpartofanumbrellafundc57e8acae4">Is this Fund part of an Umbrella Fund?</span>
                                 </label>
-                                <ng-select
-                                        id="fund-umbrellaControl-select-1"
-                                        [items]="umbrellaItems"
-                                        [allowClear]="true"
-                                        placeholder="Select or type an Umbrella Fund name"
-                                        [formControl]="umbrellaControl"
-                                        mltag="txt_selectortypeanumbrellafundname3c6014113f"
-                                ></ng-select>
+                                <ng-select id="fund-umbrellaControl-select-1" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund name" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafundname3c6014113f">
+
+
+
+
+
+
+                                </ng-select>
                             </div>
                             <div class="form-group col-sm-6 btn-container">
                                 <p mltag="txt_or">or</p>
-                                <a
-                                        id="fund-add-new-umbrella-btn"
-                                        class="btn btn-default"
-                                        routerLink="/product-module/umbrella-fund/0"
-                                        mltag="txt_addanewumbrellafund"
-                                >
+                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/umbrella-fund/0" mltag="txt_addanewumbrellafund">
+
+
+
+
                                     Add a new Umbrella Fund
+
                                 </a>
                             </div>
                         </div>
@@ -127,14 +130,14 @@
                                                 <label class="control-label" for="fund-umbrellaControl-select-2">
                                                     <span mltag="txt_clickheretoselectanotherumbrel79cad3aa48">Click here to select another Umbrella Fund for this Fund</span>
                                                 </label>
-                                                <ng-select
-                                                        id="fund-umbrellaControl-select-2"
-                                                        [items]="umbrellaItems"
-                                                        [allowClear]="true"
-                                                        placeholder="Select or type an Umbrella Fund"
-                                                        [formControl]="umbrellaControl"
-                                                        mltag="txt_selectortypeanumbrellafund"
-                                                ></ng-select>
+                                                <ng-select id="fund-umbrellaControl-select-2" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafund">
+
+
+
+
+
+
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </section>
@@ -415,7 +418,7 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="fundName" mltag="txt_fundname">Fund Name</label>
-                                                    <input type="text" name="fundName" id="fundName" formControlName="fundName">
+                                                    <input type="text" name="fundName" id="fundName" formControlName="fundName" maxlength="100">
                                                     <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -440,8 +443,17 @@
                                                     <div class="input-group">
                                                         <span class="fa fa-calendar" aria-hidden="true"></span>
                                                         <input id="AuMFundDate" formControlName="AuMFundDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
+
+
                                                     </div>
                                                     <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -507,14 +519,14 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="typeOfEuDirective" mltag="txt_typeofeudirective">Type of EU Directive</label>
-                                                    <ng-select
-                                                            id="typeOfEuDirective"
-                                                            [items]="typeOfEuDirectiveItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['typeOfEuDirective']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="typeOfEuDirective" [items]="typeOfEuDirectiveItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['typeOfEuDirective']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -566,7 +578,7 @@
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
                                                 </div>
-                                                <div *ngIf="false" class="text-danger" mltag="txt_usererrorfeedback">User error feedback</div>
+                                                <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
@@ -575,20 +587,20 @@
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundLaunchate" formControlName="fundLaunchate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
                                                 </div>
-                                                <div *ngIf="false" class="text-danger" mltag="txt_usererrorfeedback">User error feedback</div>
+                                                <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="fundCurrency" mltag="txt_fundcurrency">Fund Currency</label>
-                                                    <ng-select
-                                                            id="fundCurrency"
-                                                            [items]="fundCurrencyItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['fundCurrency']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="fundCurrency" [items]="fundCurrencyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['fundCurrency']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -612,6 +624,7 @@
                                                     <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" placeholder="Choose a date" mode="month" theme="dp-material" mltag="txt_chooseadate">
                                                 </div>
                                                 <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')" class="text-danger" mltag="txt_fieldisrequired">Field is required</div>
+                                                <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
@@ -629,14 +642,14 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="managementCompanyID" mltag="txt_managementcompany">Management Company</label>
-                                                    <ng-select
-                                                            id="managementCompanyID"
-                                                            [items]="managementCompanyItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['managementCompanyID']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="managementCompanyID" [items]="managementCompanyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['managementCompanyID']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -644,14 +657,14 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="fundAdministrator" mltag="txt_fundadministrator">Fund Administrator</label>
-                                                    <ng-select
-                                                            id="fundAdministrator"
-                                                            [items]="fundAdministratorItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['fundAdministrator']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="fundAdministrator" [items]="fundAdministratorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['fundAdministrator']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundAdministrator'].hasError('required') && fundForm.controls['fundAdministrator'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -659,14 +672,14 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="custodianBank" mltag="txt_custodianbank">Custodian Bank</label>
-                                                    <ng-select
-                                                            id="custodianBank"
-                                                            [items]="custodianBankItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['custodianBank']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="custodianBank" [items]="custodianBankItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['custodianBank']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['custodianBank'].hasError('required') && fundForm.controls['custodianBank'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -709,14 +722,14 @@
                                             <div class="form-group required-field col-sm-6" *ngIf="isTransferAgentActive()">
                                                 <div>
                                                     <label class="control-label" for="transferAgent" mltag="txt_transferagent">Transfer Agent</label>
-                                                    <ng-select
-                                                            id="transferAgent"
-                                                            [items]="transferAgentItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['transferAgent']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['transferAgent']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['transferAgent'].hasError('required') && fundForm.controls['transferAgent'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -724,14 +737,14 @@
                                             <div class="form-group required-field col-sm-6" *ngIf="isCentralizingAgentActive()">
                                                 <div>
                                                     <label class="control-label" for="centralizingAgent" mltag="txt_centralizingagent">Centralizing Agent</label>
-                                                    <ng-select
-                                                            id="centralizingAgent"
-                                                            [items]="centralizingAgentItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['centralizingAgent']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['centralizingAgent']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['centralizingAgent'].hasError('required') && fundForm.controls['centralizingAgent'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -751,14 +764,14 @@
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
                                                     <label class="control-label" for="portfolioCurrencyHedge" mltag="txt_portfoliocurrencyhedge">Portfolio Currency Hedge</label>
-                                                    <ng-select
-                                                            id="portfolioCurrencyHedge"
-                                                            [items]="portfolioCurrencyHedgeItems"
-                                                            [allowClear]="true"
-                                                            placeholder="Select"
-                                                            [formControl]="fundForm.controls['portfolioCurrencyHedge']"
-                                                            mltag="txt_select"
-                                                    ></ng-select>
+                                                    <ng-select id="portfolioCurrencyHedge" [items]="portfolioCurrencyHedgeItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['portfolioCurrencyHedge']" mltag="txt_select">
+
+
+
+
+
+
+                                                    </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
@@ -1008,16 +1021,17 @@
                                                     <label for="hasDurationHedge2" mltag="txt_no">No</label>
                                                 </div>
                                             </div>
+                                        </div>
 
+                                        <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
                                                 <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
                                             </div>
-
                                         </div>
+
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
