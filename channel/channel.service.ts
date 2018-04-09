@@ -21,11 +21,8 @@ import {
     clearRequestedMailInitial,
     setRequestedMailList,
     setRequestedMailInitial,
-
-    //wallets
-    SET_OWN_WALLETS
 } from '@setl/core-store';
-import {MyWalletsService} from '@setl/core-req-services';
+import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
 
 @Injectable()
 export class ChannelService {
