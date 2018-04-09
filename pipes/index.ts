@@ -82,6 +82,7 @@ export class MoneyValuePipe implements PipeTransform {
     }
 
     parse(value: any, fractionSize: number = 2): any {
+        let returnValue;
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
             // console.log('parse', value, fractionSize);
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
@@ -97,9 +98,14 @@ export class MoneyValuePipe implements PipeTransform {
                 ? this.DECIMAL_SEPARATOR + (fraction + this.PADDING).substring(0, fractionSize)
                 : '';
 
-            return Number(integer + fraction);
+            try {
+                returnValue = Number(integer + fraction);
+            } catch (e) {
+                returnValue = 0;
+            }
+            return returnValue;
         } else {
-            return value;
+            return 0;
         }
     }
 
