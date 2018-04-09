@@ -54,7 +54,7 @@ export class MoneyValuePipe implements PipeTransform {
         if (typeof value !== 'number') {
             value = Number(value);
         }
-        if (value === '' || value === null) {
+        if (value === '' || value === null || isNaN(value)) {
             value = 0;
         }
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
