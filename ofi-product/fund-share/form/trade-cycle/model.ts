@@ -115,6 +115,8 @@ export class FundShareTradeCycleModel {
         return arr;
     }
     set monthlyDealingDays(value: DealingDaysTerms[]) {
+        if((!value) || value.length === 0) return;
+
         const formArr = this.convertDealingDaysToForm(value);
         this.form.controls['monthlyDealingDays'] = formArr;
     }
@@ -125,6 +127,8 @@ export class FundShareTradeCycleModel {
         return arr;
     }
     set yearlyDealingDays(value: DealingDaysTerms[]) {
+        if((!value) || value.length === 0) return;
+
         const formArr = this.convertDealingDaysToForm(value);
         this.form.controls['yearlyDealingDays'] = formArr;
     }
