@@ -211,6 +211,10 @@ ul.breadcrumb li a:hover {
     text-align: center;
 }
 
+.pagination {
+    margin-right: 35px;
+}
+
 // Angular Froala WYSIWYG Editor toolbar
 .fr-toolbar {
     box-shadow: none !important;
@@ -589,6 +593,11 @@ app-login .modal-body {
 
 .modal-dialog.modal-sm {
     width: 14rem;
+}
+
+.modal-body {
+    overflow-x: visible;
+    overflow-y: visible;
 }
 
 .content-area p {
