@@ -177,9 +177,6 @@ export class ChannelService {
                 break;
 
             case 'uw':  //update wallets
-
-                console.log('uw - TEST ----');
-
                 this.ngRedux.dispatch(
                     {
                         type: SET_OWN_WALLETS,
