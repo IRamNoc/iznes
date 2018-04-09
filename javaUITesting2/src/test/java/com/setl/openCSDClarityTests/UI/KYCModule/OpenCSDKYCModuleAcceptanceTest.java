@@ -199,6 +199,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("no");
+        selectOptionNoValidatePopup();
         logout();
         loginCompleteKYC("testops006@setl.io", "asdasd");
     }
@@ -289,6 +290,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public static void saveKYCAndVerifySuccessPageOne() throws IOException, InterruptedException{
         driver.findElement(By.id("btnKycSubmit")).click();
         try {
+            Thread.sleep(750);
             String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
             System.out.println(header2);
             assertTrue(header2.equals("My Information"));
