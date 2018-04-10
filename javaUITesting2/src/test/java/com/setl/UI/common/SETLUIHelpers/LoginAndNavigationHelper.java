@@ -202,7 +202,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-        Thread.sleep(1500);
+        Thread.sleep(3000);
         try {
             String headingKYC = driver.findElement(By.className("modal-title")).getText();
             assertTrue(headingKYC.equals("CONFIRMATION SCREEN"));

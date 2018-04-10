@@ -39,7 +39,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(4000000);
+    public Timeout globalTimeout = new Timeout(40000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -185,17 +185,17 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops063@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
         Thread.sleep(500);
         logout();
         Thread.sleep(750);
-        loginAndUpdateMyAccount("Test_User_063","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_063", "asdasd", "Jordan", "Miller");
+        loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
+        loginAndAssertMyInfomation("Test_User_064", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
-        String userName = "Test_User_063";
-        String emailAddress = "testops063@setl.io";
+        String userName = "Test_User_064";
+        String emailAddress = "testops064@setl.io";
         return new String[] {userName, emailAddress};
     }
 
@@ -300,9 +300,15 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) {
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_language_0")).click();
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
         try {
@@ -311,6 +317,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("FAILED : " + e.getMessage());
         }
         try {
+            Thread.sleep(750);
             WebElement popupSuccess = driver.findElement(By.className("jaspero__dialog-title"));
             wait.until(visibilityOf(popupSuccess));
         } catch (Error e) {
@@ -336,7 +343,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void createUserAndVerifySuccess(String username, String email, String password) {
+    public static void createUserAndVerifySuccess(String username, String email, String password) throws InterruptedException {
         driver.findElement(By.id("user-tab-1")).click();
         driver.findElement(By.id("new-user-username")).clear();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
@@ -398,8 +405,10 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectManageUserAccountDropdown() {
+    public static void selectManageUserAccountDropdown() throws InterruptedException {
+        Thread.sleep(1750);
         driver.findElement(By.id("new-user-account-select")).click();
+        Thread.sleep(1750);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
@@ -407,8 +416,9 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectManageUserUserDropdown() {
+    public static void selectManageUserUserDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-usertype-select")).click();
+        Thread.sleep(1000);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
@@ -416,10 +426,15 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void selectInvestorOnManageUserAccountDropdown() {
+    public static void selectInvestorOnManageUserAccountDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-account-select")).click();
-        driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
+        Thread.sleep(1500);
         try {
+            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+            try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());

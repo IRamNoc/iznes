@@ -77,14 +77,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         };
 
         this.walletNodeSocketService.walletnodeClose.throttleTime(2000).subscribe((message) => {
-            this.toasterService.pop('warning', 'Wallet node connection is closed');
+            // commented out as the wallet connection close when no activities to walletnode for 2 minutes.
+            // this.toasterService.pop('warning', 'Wallet node connection is closed');
         });
 
         this.initialisationService.channelUpdateCallbacks.push((data) => {
             this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
         });
-
-        this.checkUserLanguage();
 
     }
 
@@ -103,36 +102,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     ngAfterViewInit() {
 
-    }
-
-    private checkUserLanguage(): void {
-        let langFromLocalStorage = '';
-        const validLanguages = [
-            'en',
-            'fr'
-        ];
-
-        if ((navigator) && navigator.language) {
-            const lang = navigator.language.split('-')[0];
-
-            if (typeof(Storage) !== 'undefined') {
-                if (localStorage.getItem('lang') !== null) {
-                    langFromLocalStorage = localStorage.getItem('lang');
-                }
-            }
-
-            if (langFromLocalStorage !== '') {
-                this.ngRedux.dispatch(setLanguage(langFromLocalStorage));
-            } else {
-                if (validLanguages.indexOf(lang) !== -1) {
-                    if (lang === 'en') {
-                        this.ngRedux.dispatch(setLanguage('en-Latn'));
-                    } else if (lang === 'fr') {
-                        this.ngRedux.dispatch(setLanguage('fr-Latn'));
-                    }
-                }
-            }
-        }
     }
 }
 
