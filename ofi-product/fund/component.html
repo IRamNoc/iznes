@@ -469,11 +469,13 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="registerOffice" mltag="txt_nameoftheregisteredofficeofthe5032bb8072">Name of the Registered Office of the Fund</label>
                                                 <input type="text" name="registerOffice" id="registerOffice" formControlName="registerOffice">
+                                                <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')" class="field-error" mltag="txt_incorrectname">Incorrect name</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="registerOfficeAddress" mltag="txt_addressoftheregisterofficeofth6110081a32">Address of the register Office of the Fund</label>
                                                 <input type="text" name="registerOfficeAddress" id="registerOfficeAddress" formControlName="registerOfficeAddress">
+                                                <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error" mltag="txt_incorrectaddress">Incorrect address</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
@@ -717,6 +719,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="fundManagers" mltag="txt_fundmanagers">Fund Managers</label>
                                                 <input type="text" name="fundManagers" id="fundManagers" formControlName="fundManagers">
+                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched" mltag="txt_incorrectentry">Incorrect entry</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6" *ngIf="isTransferAgentActive()">
@@ -802,6 +805,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="delegatedManagementCompany" mltag="txt_delegatedmanagementcompany">Delegated Management Company</label>
                                                 <input type="text" name="delegatedManagementCompany" id="delegatedManagementCompany" formControlName="delegatedManagementCompany">
+                                                <span *ngIf="fundForm.controls['delegatedManagementCompany'].touched && fundForm.controls['delegatedManagementCompany'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">

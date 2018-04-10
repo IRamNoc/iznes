@@ -42,12 +42,15 @@
                                 <label for="uf_umbrellaFundName" class="control-label" mltag="txt_umbrellafundname">Umbrella Fund Name</label>
                                 <input type="text" id="uf_umbrellaFundName" formControlName="umbrellaFundName">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundName'].touched && umbrellaFundForm.controls['umbrellaFundName'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_lei" class="control-label" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
                                 <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+
+                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_incorrectlei">Incorrect LEI</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -56,6 +59,7 @@
                                 </label>
                                 <input type="text" id="uf_registerOffice" formControlName="registerOffice">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -65,6 +69,7 @@
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
 
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
