@@ -13,7 +13,13 @@ import {
 import {MyUserService} from '@setl/core-req-services';
 import {MemberSocketService} from '@setl/websocket-service';
 import {Subject} from 'rxjs/Subject';
+import {APP_CONFIG} from '@setl/utils';
 
+const environment = {
+    logoID: '',
+    logoUrl: '',
+    platform: ''
+};
 
 describe('LoginGuardService', () => {
 
@@ -29,7 +35,11 @@ describe('LoginGuardService', () => {
                 {provide: ToasterService, useClass: ToasterServiceMock},
                 LoginGuardService,
                 {provide: MyUserService, useClass: MyUserServiceMock},
-                {provide: MemberSocketService, useClass: MemberSocketServiceMock}
+                {provide: MemberSocketService, useClass: MemberSocketServiceMock},
+                {
+                    provide: APP_CONFIG,
+                    useValue: environment,
+                },
             ]
         });
 
