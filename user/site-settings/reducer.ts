@@ -52,8 +52,8 @@ function setLanguage(actionType, action, state) {
         languageData = _.get(action, 'payload[1].Data[0]');
     }
 
-    let language = _.get(languageData, 'language', []);
-    language = (language !== '' ? language : 'en-Latn');
+    let language = _.get(languageData, 'language', '');
+    language = (language !== '' && language !== null ? language : 'en-Latn');
 
     newState = Object.assign({}, state, {
         language
