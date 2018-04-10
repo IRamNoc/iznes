@@ -55,7 +55,8 @@ export {OfiWalletnodeChannelService} from './ofi-req-services/ofi-walletnode-cha
 export {
     OfiReducer,
     OfiState,
-    OfiFundShare
+    OfiFundShare,
+    OfiFundShareDocuments
 } from './ofi-store';
 
 
