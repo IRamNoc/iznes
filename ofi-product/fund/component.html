@@ -433,7 +433,6 @@
                                                 <div>
                                                     <label class="control-label" for="AuMFund" mltag="txt_aumfund">AuM Fund</label>
                                                     <input type="text" name="AuMFund" id="AuMFund" formControlName="AuMFund">
-                                                    <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
 
@@ -452,7 +451,6 @@
 
 
                                                     </div>
-                                                    <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                                                     <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
                                                 </div>
                                             </div>
