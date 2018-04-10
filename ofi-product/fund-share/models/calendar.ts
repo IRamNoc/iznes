@@ -2,31 +2,6 @@ import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@set
 import * as E from '../FundShareEnum';
 
 export class ShareCalendarMandatory extends DynamicFormsValidator {
-    navPeriodForSubscription: FormItem = {
-        type: FormItemType.list,
-        label: 'NAV Period For Subscription',
-        listItems: [
-            { id: E.BusinessDaysEnum.One, text: '1' },
-            { id: E.BusinessDaysEnum.Two, text: '2' },
-            { id: E.BusinessDaysEnum.Three, text: '3' },
-            { id: E.BusinessDaysEnum.Four, text: '4' },
-            { id: E.BusinessDaysEnum.Five, text: '5' }
-        ],
-        required: true
-    }
-    navPeriodForRedemption: FormItem = {
-        type: FormItemType.list,
-        label: 'NAV Period For Redemption',
-        listItems: [
-            { id: E.BusinessDaysEnum.One, text: '1' },
-            { id: E.BusinessDaysEnum.Two, text: '2' },
-            { id: E.BusinessDaysEnum.Three, text: '3' },
-            { id: E.BusinessDaysEnum.Four, text: '4' },
-            { id: E.BusinessDaysEnum.Five, text: '5' }
-        ],
-        required: true
-    }
-
     subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
@@ -60,7 +35,23 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.TimezonesEnum.UTCM9, text: 'UTC -9' },
             { id: E.TimezonesEnum.UTCM10, text: 'UTC -10' },
             { id: E.TimezonesEnum.UTCM11, text: 'UTC -11' }           
-        ]
+        ],
+        style: [FormItemStyle.BreakOnAfter]
+    }
+    navPeriodForSubscription: FormItem = {
+        type: FormItemType.list,
+        label: 'NAV Period For Subscription',
+        listItems: [
+            { id: E.BusinessDaysEnum.MinusOne, text: '-1' },
+            { id: E.BusinessDaysEnum.Zero, text: '0' },
+            { id: E.BusinessDaysEnum.One, text: '1' },
+            { id: E.BusinessDaysEnum.Two, text: '2' },
+            { id: E.BusinessDaysEnum.Three, text: '3' },
+            { id: E.BusinessDaysEnum.Four, text: '4' },
+            { id: E.BusinessDaysEnum.Five, text: '5' }
+        ],
+        required: true,
+        style: [FormItemStyle.BreakOnAfter]
     }
     redemptionCutOffTime: FormItem = {
         type: FormItemType.text,
@@ -95,13 +86,30 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.TimezonesEnum.UTCM9, text: 'UTC -9' },
             { id: E.TimezonesEnum.UTCM10, text: 'UTC -10' },
             { id: E.TimezonesEnum.UTCM11, text: 'UTC -11' }            
-        ]
+        ],
+        style: [FormItemStyle.BreakOnAfter]
+    }
+    navPeriodForRedemption: FormItem = {
+        type: FormItemType.list,
+        label: 'NAV Period For Redemption',
+        listItems: [
+            { id: E.BusinessDaysEnum.MinusOne, text: '-1' },
+            { id: E.BusinessDaysEnum.Zero, text: '0' },
+            { id: E.BusinessDaysEnum.One, text: '1' },
+            { id: E.BusinessDaysEnum.Two, text: '2' },
+            { id: E.BusinessDaysEnum.Three, text: '3' },
+            { id: E.BusinessDaysEnum.Four, text: '4' },
+            { id: E.BusinessDaysEnum.Five, text: '5' }
+        ],
+        required: true,
+        style: [FormItemStyle.BreakOnAfter]
     }
     subscriptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
         label: 'Settlement Period For Subscription',
         required: true,
         listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: '0' },
             { id: E.BusinessDaysEnum.One, text: '1' },
             { id: E.BusinessDaysEnum.Two, text: '2' },
             { id: E.BusinessDaysEnum.Three, text: '3' },
@@ -114,6 +122,7 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         label: 'Settlement Period For Redemption',
         required: true,
         listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: '0' },
             { id: E.BusinessDaysEnum.One, text: '1' },
             { id: E.BusinessDaysEnum.Two, text: '2' },
             { id: E.BusinessDaysEnum.Three, text: '3' },
@@ -122,10 +131,10 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         ]
     }
     subscriptionRedemptionCalendar: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.text,
         label: 'Calendar of subscription/redemption',
         required: true
-    } // 1
+    }
 }
 
 export class ShareCalendarOptional extends DynamicFormsValidator {

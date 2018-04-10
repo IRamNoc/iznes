@@ -32,12 +32,12 @@ export interface OfiFundShare {
     minSubsequentRedemptionInAmount: number;
     subscriptionTradeCyclePeriod: number;
     numberOfPossibleSubscriptionsWithinPeriod: number;
-    weeklySubscriptionDealingDays: number;
+    weeklySubscriptionDealingDays: string;
     monthlySubscriptionDealingDays: string;
     yearlySubscriptionDealingDays: string;
     redemptionTradeCyclePeriod: number;
     numberOfPossibleRedemptionsWithinPeriod: number;
-    weeklyRedemptionDealingDays: number;
+    weeklyRedemptionDealingDays: string;
     monthlyRedemptionDealingDays: string;
     yearlyRedemptionDealingDays: string;
     navPeriodForSubscription: number;
