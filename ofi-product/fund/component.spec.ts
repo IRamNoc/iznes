@@ -12,7 +12,7 @@ import {Location} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
 import {ClarityModule} from '@clr/angular';
-import fundItems from '../fundConfig';
+import productConfig from '../productConfig';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
@@ -120,7 +120,7 @@ describe('FundComponent', () => {
                 BrowserAnimationsModule,
             ],
             providers: [
-                { provide: 'fund-items', useValue: fundItems },
+                { provide: 'product-config', useValue: productConfig },
                 { provide: Router, useValue: routerSpy },
                 { provide: Location, useValue: locationSpy },
                 { provide: OfiFundService, useValue: fundServiceSpy },

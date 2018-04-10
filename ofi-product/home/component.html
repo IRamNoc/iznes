@@ -32,8 +32,8 @@
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
-            <div class="mb-1" *ngIf="panel.title === 'Shares'"><span mltag="txt_displayonlyactiveshares">Display only active Shares</span>
-
+            <div class="mb-1" *ngIf="panel.title === 'Shares'">
+                <span mltag="txt_displayonlyactiveshares">Display only active Shares</span>
                 <label class="switch">
                     <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="showOnlyActive" (click)="handleShareToggleClick()">
                     <span class="slider round"></span>
@@ -48,9 +48,14 @@
                         <!--id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"-->
                 <!--&gt;-->
                 <clr-dg-row
-                        *clrDgItems="let row of panel.data"
-                        id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}">
-                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
+                        *clrDgItems="let row of panel.data; index as i"
+                        id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"
+                >
+                    <clr-dg-cell
+                            *ngFor="let dataCol of panel.columns"
+                            data-id="{{row.id}}"
+                            id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}"
+                    >
                         <span *ngIf="dataCol.dataSource == panel.columnLink" class="fakeLink" (click)="goToView(panel.link, row[panel.linkIdent])">{{row[dataCol.dataSource]}}</span>
                         <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
                     </clr-dg-cell>

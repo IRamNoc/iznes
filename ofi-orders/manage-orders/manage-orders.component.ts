@@ -46,7 +46,6 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 

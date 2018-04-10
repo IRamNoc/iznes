@@ -28,8 +28,8 @@ import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 import {FileDropModule} from '@setl/core-filedrop';
 import {FileViewerModule} from '@setl/core-fileviewer';
 
-/* fundItems config ( should be served by backend TT ) */
-import fundItems from './fundConfig';
+/* product config: select items, validators, countries, currencies ( should be served by backend :( ) */
+import productConfig from './productConfig';
 
 
 /* Am Dashboard service. */
@@ -67,7 +67,7 @@ import fundItems from './fundConfig';
         SetlComponentsModule
     ],
     providers: [
-        { provide: 'fund-items', useValue: fundItems }
+        { provide: 'product-config', useValue: productConfig },
     ]
 })
 
