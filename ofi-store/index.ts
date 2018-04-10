@@ -145,6 +145,7 @@ export {
     GET_IZN_SHARES_LIST,
     // FUND SHARE
     OfiFundShare,
+    OfiFundShareDocuments,
     SET_FUND_SHARE,
     setRequestedFundShare,
     clearRequestedFundShare,

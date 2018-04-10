@@ -24,6 +24,10 @@ import {FundComponent} from './fund/component';
 import {ChartsModule} from 'ng2-charts';
 import {OfiKYCModule} from '@ofi/ofi-main/ofi-kyc/module';
 
+/* Files */
+import {FileDropModule} from '@setl/core-filedrop';
+import {FileViewerModule} from '@setl/core-fileviewer';
+
 /* fundItems config ( should be served by backend TT ) */
 import fundItems from './fundConfig';
 
@@ -44,7 +48,7 @@ import fundItems from './fundConfig';
         FundShareComponent,
         FundShareTradeCycleComponent,
         AddNewFundShareComponent,
-        FundComponent
+        FundComponent,
     ],
     imports: [
         CommonModule,
@@ -63,7 +67,7 @@ import fundItems from './fundConfig';
         SetlComponentsModule
     ],
     providers: [
-        { provide: 'fund-items', useValue: fundItems },
+        { provide: 'fund-items', useValue: fundItems }
     ]
 })
 

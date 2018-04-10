@@ -77,6 +77,15 @@ import {
  } from './fund-share';
 
  import {
+    OfiFundShareDocuments,
+    SET_FUND_SHARE_DOCS,
+    OfiFundShareDocsState,
+    OfiFundShareDocsReducer,
+    setRequestedFundShareDocs,
+    clearRequestedFundShareDocs
+ } from './fund-share-docs';
+
+ import {
     OFI_SET_CURRENT_FUND_SHARE_SF,
     ofiSetCurrentFundShareSelectedFund,
     getOfiFundShareSelectedFund,
@@ -142,6 +151,13 @@ export {
     OfiFundShareReducer,
     setRequestedFundShare,
     clearRequestedFundShare,
+    // FUND SHARE DOCS
+    OfiFundShareDocuments,
+    SET_FUND_SHARE_DOCS,
+    OfiFundShareDocsState,
+    OfiFundShareDocsReducer,
+    setRequestedFundShareDocs,
+    clearRequestedFundShareDocs,
     // FUND SHARE SELECTED FUND
     OFI_SET_CURRENT_FUND_SHARE_SF,
     ofiSetCurrentFundShareSelectedFund,
@@ -156,6 +172,7 @@ export interface OfiProductState {
     ofiFundShareList: OfiFundShareListState;
     ofiUmbrellaFund: UmbrellaFundState;
     ofiFundShare: OfiFundShareState;
+    ofiFundShareDocs: OfiFundShareDocsState;
     ofiFundShareSelectedFund: OfiFundShareSelectedFundState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
@@ -168,6 +185,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiFundShareList: OfiFundShareListReducer,
     ofiUmbrellaFund: UmbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
+    ofiFundShareDocs: OfiFundShareDocsReducer,
     ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer

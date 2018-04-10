@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import {FormItem, FormItemDropdown, FormItemType} from '@setl/utils';
-import {OfiFundShare} from '@ofi/ofi-main';
+import {OfiFundShare, OfiFundShareDocuments} from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
 import {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './models/characteristic';
 import {ShareCalendarMandatory, ShareCalendarOptional} from './models/calendar';
@@ -13,6 +13,7 @@ import {ShareProfileMandatory, ShareProfileOptional} from './models/profile';
 import {ShareRepresentationOptional} from './models/representation';
 import {ShareSolvencyOptional} from './models/solvency';
 import {ShareTaxationOptional} from './models/taxation';
+import {ShareDocumentsMandatory, ShareDocumentsOptional} from './models/documents';
 import {FundShareTradeCycleModel} from './form/trade-cycle/model';
 
 export {PanelData} from './models/panelData';
@@ -58,6 +59,10 @@ export class FundShare {
     }
     taxation = {
         optional: new ShareTaxationOptional()
+    }
+    documents = {
+        mandatory: new ShareDocumentsMandatory(),
+        optional: new ShareDocumentsOptional()
     }
 
     constructor() {}
@@ -221,6 +226,31 @@ export class FundShare {
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlyRedemptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForRedemption, fundShare.navPeriodForRedemption);
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod = fundShare.redemptionTradeCyclePeriod;
+    }
+
+    getDocumentsRequest(fundShareId: number): OfiFundShareDocuments {
+        return {
+            fundShareId: fundShareId,
+            prospectus: this.documents.mandatory.prospectus.value(),
+            kiid: this.documents.mandatory.kiid.value(),
+            annualActivityReport: this.documents.optional.annualActivityReport.value(),
+            semiAnnualSummary: this.documents.optional.semiAnnualSummary.value(),
+            sharesAllocation: this.documents.optional.sharesAllocation.value(),
+            sriPolicy: this.documents.optional.sriPolicy.value(),
+            transparencyCode: this.documents.optional.transparencyCode.value(),
+            businessLetter: this.documents.optional.businessLetter.value(),
+            productSheet: this.documents.optional.productSheet.value(),
+            monthlyFinancialReport: this.documents.optional.monthlyFinancialReport.value(),
+            monthlyExtraFinancialReport: this.documents.optional.monthlyExtraFinancialReport.value(),
+            quarterlyFinancialReport: this.documents.optional.quarterlyFinancialReport.value(),
+            quarterlyExtraFinancialReport: this.documents.optional.quarterlyExtraFinancialReport.value(),
+            letterToShareholders: this.documents.optional.letterToShareholders.value(),
+            kid: this.documents.optional.kid.value(),
+            statutoryAuditorsCertification: this.documents.optional.statutoryAuditorsCertification.value(),
+            ept: this.documents.optional.ept.value(),
+            emt: this.documents.optional.emt.value(),
+            tpts2: this.documents.optional.tpts2.value()
+        }
     }
 
     private generateJSONString(model): string {

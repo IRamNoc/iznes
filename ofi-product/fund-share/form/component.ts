@@ -205,8 +205,15 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.onCreateError(data);
             return;
         }
-        this.toaster.pop('success', data.fundShareName + ' has been successfully creates');
-        this.router.navigateByUrl(`product-module/home`);
+
+        OfiFundShareService.defaultCreateFundShareDocuments(this.ofiFundShareService,
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (data) => {
+                this.toaster.pop('success', data.fundShareName + ' has been successfully creates');
+                this.router.navigateByUrl(`product-module/home`);
+            },
+            (e) => this.onCreateError(e[1].Data[0]));
     }
 
     private onCreateError(e): void {
@@ -223,8 +230,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data): void {
-        this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
-            ' has been successfully updated');
+        OfiFundShareService.defaultUpdateFundShareDocuments(this.ofiFundShareService,
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (data) => {
+                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+                    ' has been successfully updated');
+            },
+            (e) => this.onUpdateError(e[1].Data[0]));
     }
 
     private onUpdateError(e): void {

@@ -19,7 +19,10 @@ import {
     SET_AM_ALL_FUND_SHARE_LIST,
     setRequestedAmAllFundShare,
     setRequestedIznesShares,
-    GET_IZN_SHARES_LIST
+    GET_IZN_SHARES_LIST,
+    SET_FUND_SHARE_DOCS,
+    setRequestedFundShareDocs,
+    clearRequestedFundShareDocs
 } from '@ofi/ofi-main/ofi-store/ofi-product';
 
 export interface RequestInvestorFundAccessData {
@@ -187,6 +190,72 @@ export class OfiFundShareService {
     updateFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznesupdatefundshare',
+            token: this.memberSocketService.token
+        }
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Create new fund share documents
+     * @return {any}
+     */
+    static defaultCreateFundShareDocuments(ofiFundService: OfiFundShareService,
+        ngRedux: NgRedux<any>,
+        requestData,
+        successCallback: (data) => void,
+        errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.createFundShareDocuments(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_DOCS],
+            [],
+            asyncTaskPipe,
+            {},
+            (data) => successCallback(data),
+            (e) => errorCallback(e)
+        ));
+    }
+
+    createFundShareDocuments(requestData): any {
+        let messageBody = {
+            RequestName: 'iznescreatefundsharedocs',
+            token: this.memberSocketService.token
+        }
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Update fund share documents
+     * @return {any}
+     */
+    static defaultUpdateFundShareDocuments(ofiFundService: OfiFundShareService,
+        ngRedux: NgRedux<any>,
+        requestData,
+        successCallback: (data) => void,
+        errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.updateFundShareDocuments(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_DOCS],
+            [],
+            asyncTaskPipe,
+            {},
+            (data) => successCallback(data),
+            (e) => errorCallback(e)
+        ));
+    }
+
+    updateFundShareDocuments(requestData): any {
+        let messageBody = {
+            RequestName: 'iznesupdatefundsharedocs',
             token: this.memberSocketService.token
         }
 
