@@ -139,48 +139,8 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
             reference: [
                 '',
             ],
-            fromDateUTC: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            fromTimeUTC: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            includeToDate: [
-                false
-            ],
-            toDateUTC: [
-                '',
-            ],
-            toTimeUTC: [
-                '',
-            ],
         });
-
-        this.unencumberAssetsForm.controls.includeToDate.valueChanges
-            .subscribe((value: boolean) => {
-                this.toggleToDateRequired(value);
-                this.isUnencumberEnd = value;
-            });
-    }
-
-    private toggleToDateRequired(value: boolean): void {
-        if (value) {
-            this.unencumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
-            this.unencumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
-        } else {
-            this.unencumberAssetsForm.controls.toDateUTC.clearValidators();
-            this.unencumberAssetsForm.controls.toTimeUTC.clearValidators();
-        }
-
-        this.unencumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
-        this.unencumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
-    }
+}
 
     ngOnDestroy() {
         this.reduxUnsubscribe();
@@ -274,25 +234,16 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     save(formValues) {
         if (!this.unencumberAssetsForm.valid) return;
 
-        const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
-        const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
-
         const asyncTaskPipe = this._walletnodeTxService.unencumber(
             {
-                txtype: 'encum', // 'unenc'
+                txtype: 'unenc',
                 walletid: this.connectedWalletId,
                 reference: formValues.reference,
-                address: formValues.fromAddress[0].id,
-                subjectaddress: formValues.fromAddress[0].id,
+                address: formValues.fromAddress[0].id, // Beneficiary or Administrator address
+                subjectaddress: formValues.toAddress, // Asset Holder/Owner address
                 namespace: formValues.asset[0].id.split('|')[0],
                 instrument: formValues.asset[0].id.split('|')[1],
                 amount: formValues.amount,
-                beneficiaries: [
-                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
-                ],
-                administrators: [
-                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
-                ],
                 protocol: '',
                 metadata: '',
             });
