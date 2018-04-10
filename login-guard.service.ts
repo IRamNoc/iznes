@@ -12,7 +12,6 @@ import {ToasterService} from 'angular2-toaster';
 import {MyUserService} from '@setl/core-req-services';
 import {Subscription} from 'rxjs/Subscription';
 import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
-import {getMyDetail} from '@setl/core-store';
 import * as _ from 'lodash';
 
 @Injectable()
