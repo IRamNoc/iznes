@@ -63,11 +63,13 @@
 .datagrid .datagrid-column.asc .datagrid-column-flex:after, .datagrid .datagrid-head .asc.datagrid-row-actions .datagrid-column-flex:after {
     //background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg aria-hidden='true' data-prefix='fas' data-icon='sort-up' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 -80 320 512' class='svg-inline--fa fa-sort-up fa-w-10 fa-1x'%3e%3cpath fill='currentColor' d='M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z' class=''%3e%3c/path%3e%3c/svg%3e") !important;
     background-image: none !important;
+    display: none !important;
 }
 
 .datagrid .datagrid-column.desc .datagrid-column-flex:after, .datagrid .datagrid-head .desc.datagrid-row-actions .datagrid-column-flex:after {
     //background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg aria-hidden='true' data-prefix='fas' data-icon='sort-down' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 128 320 512' class='svg-inline--fa fa-sort-down fa-w-10 fa-1x'%3e%3cpath fill='currentColor' d='M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z' class=''%3e%3c/path%3e%3c/svg%3e") !important;
     background-image: none !important;
+    display: none !important;
 }
 
 app-wfe .datagrid-cell.datagrid-expandable-caret button {
@@ -114,6 +116,10 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 
 .additionalInfos table tr:nth-child(even) {
     background: transparent;
+}
+
+.column-label{
+  float: right;
 }
 
 .column-toggle--action::after {
