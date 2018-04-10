@@ -625,5 +625,7 @@ export const menuSpec: MenuSpec = {
                 ]
             }
         ],
-    }
+    },
+    disabled: ['/manage-orders/list', '/am-reports-section/collects-archive', '/reports-section/csv',
+        '/order-book/my-orders/list', '/asset-management/my-dashboard']
 };
