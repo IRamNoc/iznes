@@ -53,7 +53,7 @@ const orderBook = {
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders/0'
+            router_link: '/order-book/my-orders/list'
         }
     ]
 };
@@ -69,7 +69,7 @@ const manageOrders = {
     label_txt: 'txt_orderbook',
     icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
-    router_link: '/manage-orders/0'
+    router_link: '/manage-orders/list'
 };
 const reportsCollectsArchives = {
     label: 'Collects Archives',
