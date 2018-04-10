@@ -142,10 +142,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _toasterService: ToasterService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
         private _ofiManagementCompanyService: OfiManagementCompanyService,
-        @Inject('fund-items') fundItems,
+        @Inject('product-config') productConfig,
     ) {
 
-        this.countries = fundItems.fundItems.domicileItems;
+        this.countries = productConfig.fundItems.domicileItems;
 
         // param url
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
@@ -162,25 +162,29 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundName: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             registerOffice: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             registerOfficeAddress: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.alphanumeric,
                 ])
             ],
             legalEntityIdentifier: [
                 '',
                 Validators.compose([
                     Validators.required,
+                    productConfig.lei,
                 ])
             ],
             domicile: [
@@ -192,7 +196,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundCreationDate: [
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
+                    productConfig.validators.date.day,
                 ])
             ],
             managementCompanyID: [
@@ -239,6 +244,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             giin: [
                 '',
+                productConfig.validators.giin,
             ],
             delegatedManagementCompanyID: [
                 '',
@@ -257,6 +263,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             directors: [
                 '',
+                productConfig.alphanumeric,
             ],
         });
 

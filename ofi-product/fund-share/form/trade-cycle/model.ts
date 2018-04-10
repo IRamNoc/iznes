@@ -14,7 +14,7 @@ export class FundShareTradeCycleModel {
     
     constructor() {
         this.form = new FormGroup({
-            tradeCyclePeriod: new FormControl([{ id: E.TradeCyclePeriodEnum.Daily, text: 'Daily' }], Validators.required),
+            tradeCyclePeriod: new FormControl(null, Validators.required),
             possibleInPeriod: new FormControl(null, Validators.required),
             weeklyDealingDays: new FormControl(),
             monthlyDealingDays: new FormArray([]),
@@ -115,6 +115,8 @@ export class FundShareTradeCycleModel {
         return arr;
     }
     set monthlyDealingDays(value: DealingDaysTerms[]) {
+        if((!value) || value.length === 0) return;
+
         const formArr = this.convertDealingDaysToForm(value);
         this.form.controls['monthlyDealingDays'] = formArr;
     }
@@ -125,6 +127,8 @@ export class FundShareTradeCycleModel {
         return arr;
     }
     set yearlyDealingDays(value: DealingDaysTerms[]) {
+        if((!value) || value.length === 0) return;
+
         const formArr = this.convertDealingDaysToForm(value);
         this.form.controls['yearlyDealingDays'] = formArr;
     }
@@ -312,7 +316,7 @@ export class TradeCycleModelDropdowns {
 }
 
 export interface DealingDaysTerms {
-    termA: string;
-    termB: string;
-    termC?: string;
+    termA: number;
+    termB: number;
+    termC?: number;
 }

@@ -17,13 +17,10 @@ export const UmbrellaFundListReducer = function (state: UmbrellaFundListState = 
 
             const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            if (ufdata.Status !== 'Fail') {
-                const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
-                return Object.assign({}, state, {
-                    umbrellaFundList
-                });
-            }
-            return state;
+            const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
+            return Object.assign({}, state, {
+                umbrellaFundList
+            });
 
         case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
             return handleSetRequested(state, action);
@@ -49,7 +46,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 registerOfficeAddress: item.get('registerOfficeAddress'),
                 legalEntityIdentifier: item.get('legalEntityIdentifier'),
                 domicile: item.get('domicile'),
-                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate'),
+                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate').split(' ')[0],
                 managementCompanyID: item.get('managementCompanyID'),
                 fundAdministratorID: item.get('fundAdministratorID'),
                 custodianBankID: item.get('custodianBankID'),

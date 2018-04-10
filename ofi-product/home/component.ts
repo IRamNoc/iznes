@@ -222,7 +222,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail']) userDetailObs;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedFundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requestedShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
@@ -239,10 +239,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
-                @Inject('fund-items') fundItems) {
-        this.fundCurrencyItems = fundItems.fundItems.fundCurrencyItems;
-        this.countryItems = fundItems.fundItems.domicileItems;
-        this.legalFormItems = fundItems.fundItems.fundLegalFormItems;
+                @Inject('product-config') productConfig) {
+        this.fundCurrencyItems = productConfig.fundItems.fundCurrencyItems;
+        this.countryItems = productConfig.fundItems.domicileItems;
+        this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
     }
 
     ngOnInit() {
@@ -282,9 +282,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
-                const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
-                const fundCurrency = _.find(this.fundCurrencyItems, { id: fund.fundCurrency }) || { text: '' };
+                const domicile = _.find(this.countryItems, {id: fund.domicile}) || {text: ''};
+                const lawStatus = _.find(this.legalFormItems, {id: fund.legalForm}) || {text: ''};
+                const fundCurrency = _.find(this.fundCurrencyItems, {id: fund.fundCurrency}) || {text: ''};
 
                 fundList.push({
                     fundID: fund.fundID,
@@ -326,7 +326,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     return item.id === share.shareClassCode;
                 }).text;
 
-                const shareCurrency = _.find(this.fundCurrencyItems, { id: share.shareClassCurrency.toString() }) || { text: '' };
+                const shareCurrency = _.find(this.fundCurrencyItems, {id: share.shareClassCurrency.toString()}) || {text: ''};
 
                 shareList.push({
                     fundShareID: share.fundShareID,
@@ -364,7 +364,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
+                const domicile = _.find(this.countryItems, {id: item.get('domicile')}) || {text: ''};
 
                 umbrellaFundList.push({
                     umbrellaFundID: item.get('umbrellaFundID', 0),
