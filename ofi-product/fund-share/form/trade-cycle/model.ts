@@ -15,7 +15,6 @@ export class FundShareTradeCycleModel {
     constructor() {
         this.form = new FormGroup({
             tradeCyclePeriod: new FormControl(null, Validators.required),
-            possibleInPeriod: new FormControl(null, Validators.required),
             weeklyDealingDays: new FormControl(),
             monthlyDealingDays: new FormArray([]),
             yearlyDealingDays: new FormArray([]),
@@ -93,20 +92,28 @@ export class FundShareTradeCycleModel {
         );
     }
     get numberOfPossibleWithinPeriod(): number {
-        return this.form.value.possibleInPeriod;
+        const value = this.tradeCyclePeriod;
+        let possible: number;
+
+        if(value === E.TradeCyclePeriodEnum.Daily) {
+            possible = 1;
+        } else if(value === E.TradeCyclePeriodEnum.Weekly) {
+            possible = this.weeklyDealingDays.length;
+        } else if(value === E.TradeCyclePeriodEnum.Monthly) {
+            possible = this.monthlyDealingDays.length;
+        } else if(value === E.TradeCyclePeriodEnum.Yearly) {
+            possible = this.yearlyDealingDays.length;
+        }
+
+        return possible;
     }
-    set numberOfPossibleWithinPeriod(value: number) {
-        this.form.controls.possibleInPeriod.setValue(value);
-    }
-    get weeklyDealingDays(): number {
+    get weeklyDealingDays(): any[] {
         return this.form.value.weeklyDealingDays ?
-            this.form.value.weeklyDealingDays[0].id :
-            null;
+            this.form.value.weeklyDealingDays :
+            [];
     }
-    set weeklyDealingDays(value: number) {
-        this.form.controls.weeklyDealingDays.setValue(
-            this.getDropdownItemFromValue(this.dropdownItems.weeklyItems, value)
-        );
+    set weeklyDealingDays(value: any[]) {
+        this.form.controls.weeklyDealingDays.setValue(value);
     }
     get monthlyDealingDays(): DealingDaysTerms[] {
         if(this.tradeCyclePeriod !== E.TradeCyclePeriodEnum.Monthly) return null;

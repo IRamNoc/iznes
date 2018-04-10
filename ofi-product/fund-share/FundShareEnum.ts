@@ -204,6 +204,8 @@ export enum CurrencyHedgeEnum {
     PartialHedge
 }
 export enum BusinessDaysEnum {
+    MinusOne,
+    Zero,
     One,
     Two,
     Three,

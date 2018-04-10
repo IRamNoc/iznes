@@ -123,12 +123,12 @@ export class FundShare {
             mifiidIncidentalCosts: this.fees.mandatory.miFIDIIIncidentalCosts.value(),
             subscriptionTradeCyclePeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklySubscriptionDealingDays: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            weeklySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
             monthlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
             yearlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             redemptionTradeCyclePeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleRedemptionsWithinPeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklyRedemptionDealingDays: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            weeklyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
             monthlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
             yearlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             navPeriodForSubscription: this.getSelectValue(this.calendar.mandatory.navPeriodForSubscription),
@@ -206,8 +206,7 @@ export class FundShare {
     }
 
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod = fundShare.numberOfPossibleSubscriptionsWithinPeriod;
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = fundShare.weeklySubscriptionDealingDays;
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklySubscriptionDealingDays);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlySubscriptionDealingDays);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlySubscriptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
@@ -215,8 +214,7 @@ export class FundShare {
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod = fundShare.numberOfPossibleRedemptionsWithinPeriod;
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = fundShare.weeklyRedemptionDealingDays;
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklyRedemptionDealingDays);
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlyRedemptionDealingDays);
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlyRedemptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForRedemption, fundShare.navPeriodForRedemption);
