@@ -3,13 +3,15 @@ export interface CurrentRequest {
 }
 
 export interface OfiFundShareDocsState {
-    fundShareDocuments: OfiFundShareDocuments;
+    fundShareDocuments: {
+        [shareId: string]: OfiFundShareDocuments
+    };
     requested: boolean;
     currentRequest: CurrentRequest;
 }
 
 export interface OfiFundShareDocuments {
-    fundShareId: number;
+    fundShareID: number;
     prospectus: number;
     kiid: number;
     annualActivityReport: number;

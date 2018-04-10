@@ -232,6 +232,35 @@ export class OfiFundShareService {
     }
 
     /**
+     * Request fund share documents
+     * @return {any}
+     */
+    static defaultRequestFundShareDocs(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>, requestData) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedFundShareDocs());
+
+        // Request the list.
+        const asyncTaskPipe = ofiFundService.requestFundShareDocs(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_DOCS],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    requestFundShareDocs(requestData): any {
+        const messageBody: FundShareRequestBody = {
+            RequestName: 'iznesgetfundsharedocs',
+            token: this.memberSocketService.token,
+            fundShareID: _.get(requestData, 'fundShareID')
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
      * Update fund share documents
      * @return {any}
      */

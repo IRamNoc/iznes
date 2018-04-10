@@ -230,7 +230,7 @@ export class FundShare {
 
     getDocumentsRequest(fundShareId: number): OfiFundShareDocuments {
         return {
-            fundShareId: fundShareId,
+            fundShareID: fundShareId,
             prospectus: this.documents.mandatory.prospectus.value(),
             kiid: this.documents.mandatory.kiid.value(),
             annualActivityReport: this.documents.optional.annualActivityReport.value(),
@@ -250,6 +250,40 @@ export class FundShare {
             ept: this.documents.optional.ept.value(),
             emt: this.documents.optional.emt.value(),
             tpts2: this.documents.optional.tpts2.value()
+        }
+    }
+
+    setFundShareDocs(fundShareDocs: OfiFundShareDocuments): void {
+        this.documents.mandatory.prospectus.preset = fundShareDocs.prospectus;
+        this.documents.mandatory.kiid.preset = fundShareDocs.kiid;
+        
+        this.documents.optional.annualActivityReport.preset = fundShareDocs.annualActivityReport;
+        this.documents.optional.businessLetter.preset = fundShareDocs.businessLetter;
+        this.documents.optional.emt.preset = fundShareDocs.emt;
+        this.documents.optional.ept.preset = fundShareDocs.ept;
+        this.documents.optional.kid.preset = fundShareDocs.kid;
+        this.documents.optional.letterToShareholders.preset = fundShareDocs.letterToShareholders;
+        this.documents.optional.monthlyExtraFinancialReport.preset = fundShareDocs.monthlyExtraFinancialReport;
+        this.documents.optional.monthlyFinancialReport.preset = fundShareDocs.monthlyFinancialReport;
+        this.documents.optional.productSheet.preset = fundShareDocs.productSheet;
+        this.documents.optional.quarterlyExtraFinancialReport.preset = fundShareDocs.quarterlyExtraFinancialReport;
+        this.documents.optional.quarterlyFinancialReport.preset = fundShareDocs.quarterlyFinancialReport;
+        this.documents.optional.semiAnnualSummary.preset = fundShareDocs.semiAnnualSummary;
+        this.documents.optional.sharesAllocation.preset = fundShareDocs.sharesAllocation;
+        this.documents.optional.sriPolicy.preset = fundShareDocs.sriPolicy;
+        this.documents.optional.statutoryAuditorsCertification.preset = fundShareDocs.statutoryAuditorsCertification;
+        this.documents.optional.tpts2.preset = fundShareDocs.tpts2;
+        this.documents.optional.transparencyCode.preset = fundShareDocs.transparencyCode;
+    }
+
+    private convertDocumentStr(str: string) {
+        if(!str) return null;
+        
+        const arr = str.split('|');
+
+        return {
+            hash: arr[0],
+            title: arr[1]
         }
     }
 

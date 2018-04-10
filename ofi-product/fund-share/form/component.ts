@@ -19,8 +19,11 @@ import {
     ofiSetCurrentFundShareSelectedFund
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 import {
-    
-} from '@setl/core-useradmin';
+    clearRequestedFundShareDocs,
+    setRequestedFundShareDocs,
+    getOfiFundShareDocsCurrentRequest,
+    OfiFundShareDocuments
+} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-docs';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
 import {FundShare, FundShareMode, PanelData} from '../model';
@@ -37,6 +40,7 @@ import {FundShareTestData} from './TestData';
 export class FundShareComponent implements OnInit, OnDestroy {
 
     private fundShareData: OfiFundShare;
+    private fundShareDocsData: OfiFundShareDocuments;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
@@ -49,6 +53,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareDocs', 'requested']) fundShareDocsRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareDocs', 'fundShareDocuments']) fundShareDocsOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     @select(['user', 'myDetail', 'accountId']) accountIdOb: Observable<any>;
 
@@ -70,6 +76,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.configureFormForMode();
 
         this.redux.dispatch(clearRequestedFundShare());
+        this.redux.dispatch(clearRequestedFundShareDocs());
     }
 
     private initSubscriptions(): void {
@@ -83,13 +90,19 @@ export class FundShareComponent implements OnInit, OnDestroy {
             }
 
             // FOR TESTING
-            // if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
+            if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
         }));
         this.subscriptionsArray.push(this.fundShareOb.subscribe(fundShare => {
             if(this.fundShareId === fundShare.fundShareID) this.updateFundShare(fundShare);
+        }));
+        this.subscriptionsArray.push(this.fundShareDocsRequestedOb.subscribe(requested => {
+            if(this.mode === FundShareMode.Update) this.requestFundShareDocs(requested);
+        }));
+        this.subscriptionsArray.push(this.fundShareDocsOb.subscribe(fundShareDocs => {
+            if(this.fundShareId === fundShareDocs.fundShareID) this.updateFundShareDocs(fundShareDocs);
         }));
         this.subscriptionsArray.push(this.shareListObs.subscribe(fundShareList => {
             this.model.keyFacts.mandatory.master.listItems = this.generateListItems(fundShareList);
@@ -157,7 +170,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     /**
      * get the fund share
-     * @param navList NavList
+     * @param fundShare fundShare
      * @return void
      */
     private updateFundShare(fundShare: any): void {
@@ -167,6 +180,36 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.model.setFundShare(fundShare);
 
         if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
+
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * request the fund share documents
+     * @param requested boolean
+     * @return void
+     */
+    private requestFundShareDocs(requested: boolean): void {
+        if(requested) return;
+
+        const requestData = getOfiFundShareDocsCurrentRequest(this.redux.getState());
+        requestData.fundShareID = this.fundShareId;
+
+        OfiFundShareService.defaultRequestFundShareDocs(this.ofiFundShareService, this.redux, requestData);
+    }
+
+    /**
+     * get the fund share documents
+     * @param fundShareDocs fundShareDocs
+     * @return void
+     */
+    private updateFundShareDocs(fundShareDocs: any): void {
+        if((!fundShareDocs) || !fundShareDocs.fundShareID) return;
+
+        this.fundShareDocsData = fundShareDocs;
+        this.model.setFundShareDocs(fundShareDocs);
+
+        if(this.model.fundID) this.redux.dispatch(setRequestedFundShareDocs());
 
         this.changeDetectorRef.detectChanges();
     }
@@ -209,7 +252,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         OfiFundShareService.defaultCreateFundShareDocuments(this.ofiFundShareService,
             this.redux,
             this.model.getDocumentsRequest(data.fundShareID),
-            (data) => {
+            (docsData) => {
                 this.toaster.pop('success', data.fundShareName + ' has been successfully creates');
                 this.router.navigateByUrl(`product-module/home`);
             },
@@ -233,7 +276,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         OfiFundShareService.defaultUpdateFundShareDocuments(this.ofiFundShareService,
             this.redux,
             this.model.getDocumentsRequest(data.fundShareID),
-            (data) => {
+            (docsData) => {
                 this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
                     ' has been successfully updated');
             },

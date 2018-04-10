@@ -8,7 +8,7 @@ import * as actions from './actions';
 import {OfiFundShareDocuments, OfiFundShareDocsState, CurrentRequest} from './model';
 
 const initialState: OfiFundShareDocsState = {
-    fundShareDocuments: null,
+    fundShareDocuments: {},
     requested: false,
     currentRequest: {}
 };
@@ -58,7 +58,7 @@ function handleSetOfiFundShareDocs(state: OfiFundShareDocsState, action: Action)
             }
 
             result = {
-                fundShareId: shareId,
+                fundShareID: shareId,
                 prospectus: item.get('prospectus', ''),
                 kiid: item.get('kiid', ''),
                 annualActivityReport: item.get('annualActivityReport', ''),
