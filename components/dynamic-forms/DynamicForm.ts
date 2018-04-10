@@ -19,6 +19,7 @@ export interface FormItem {
         id: string | number;
         text: string;
     }[];
+    listAllowMultiple?: boolean;
 
     dateOptions?: { [key: string]: any };
 }
