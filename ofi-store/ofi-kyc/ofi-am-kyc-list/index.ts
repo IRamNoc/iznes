@@ -4,8 +4,11 @@ export {
 
 export {
     SET_AMKYCLIST,
+    setamkyclist,
     SET_REQUESTED,
-    CLEAR_REQUESTED
+    setrequested,
+    CLEAR_REQUESTED,
+    clearrequested
 } from './actions';
 
 export {

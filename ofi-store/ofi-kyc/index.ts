@@ -12,6 +12,9 @@ export {
     SET_AMKYCLIST,
     SET_REQUESTED,
     CLEAR_REQUESTED,
+    setamkyclist,
+    setrequested,
+    clearrequested
 } from './ofi-am-kyc-list';
 
 export interface KycState {
