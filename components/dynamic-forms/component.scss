@@ -1,4 +1,7 @@
 :host {
+    display: block;
+    width: 100%;
+
     .toggle-switch label {
         margin-left: -0.75em;
     }
@@ -10,23 +13,51 @@
             margin-left: -1px;
         }
     }
-    // .break-on-after {
-    //     flex: 0 1 50%;
-    //     margin-right: 10px;
-    //     max-width: initial;
-
-    //     &:after {
-    //         content: '';
-    //         display: flex;
-    //         flex: 0 1 100%;
-    //         position: relative;
-    //     }
-    //}
 
     .break {
         flex-basis: 100%;
         width: 0px; 
         height: 0px; 
         overflow: hidden;
+    }
+
+    .filedrop-wrapper {
+        display: flex;
+
+        /deep/ .drop-file-wrapper { padding: 0; }
+
+        setl-file-drop {
+            display: block;
+            flex: 1 1 auto;
+            z-index: 0;
+        }
+
+        setl-file-viewer {
+            flex: 0 0 100px;
+            z-index: 1;
+        }
+                
+        /deep/ .btn {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            height: 40px;
+            margin-bottom: 0;
+            margin-left: -4px;
+            margin-top: 0;
+        }
+
+        /deep/ .no-file {
+            background: #DDD;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            height: 40px;
+            line-height: 40px;
+            margin-bottom: 0;
+            margin-left: -4px;
+            margin-top: 0;
+            text-align: center;
+        }
     }
 }

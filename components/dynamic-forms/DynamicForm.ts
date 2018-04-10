@@ -28,7 +28,8 @@ export enum FormItemType {
     number,
     date,
     list,
-    boolean
+    boolean,
+    file
 }
 
 export enum FormItemStyle {
