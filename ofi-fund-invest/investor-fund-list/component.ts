@@ -14,6 +14,7 @@ import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 
 @Component({
@@ -38,6 +39,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
+    allowOrder = false;
+
 
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -51,6 +54,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _route: ActivatedRoute,
                 private _router: Router,
+                private _alerts: AlertsService,
                 private _ofiFundInvestService: OfiFundInvestService) {
     }
 
@@ -170,7 +174,21 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      * Handle subscribe button is click in the list of funds.
      * @param index
      */
-    handleSubscribe(index: number): void {
+    handleSubscribe(index: number): any {
+
+        if (!this.allowOrder) {
+            this._alerts.create('warning', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-warning">Subscription is not available at current version.</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+            return false;
+        }
+
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
@@ -207,7 +225,20 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      * Handle redeem button is click in the list of funds.
      * @param index
      */
-    handleRedeem(index: number): void {
+    handleRedeem(index: number): any {
+        if (!this.allowOrder) {
+            this._alerts.create('warning', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-warning">Redemption is not available at the current version.</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+            return false;
+        }
+
         /* Check if the tab is already open. */
         let i;
         for (i = 0; i < this.tabsControl.length; i++) {
