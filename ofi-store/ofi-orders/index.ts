@@ -19,10 +19,12 @@ export {
 
 export {
     OFI_SET_MY_ORDER_LIST,
-    // getOfiMyOrderList,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
+    ofiClearNewOrderMyOrder,
+    ofiSetNewOrderMyOrder,
     ofiMyOrderActions
+    // getOfiMyOrderList,
 } from './my-orders';
 
 export {

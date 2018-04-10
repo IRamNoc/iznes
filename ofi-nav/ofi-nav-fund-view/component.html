@@ -63,6 +63,16 @@
                     </div>
 
                     <div class="form-group col-sm-2">
+                        <label class="control-label" for="units">Units</label>
+                        <input type="text" id="units" name="units" value="" readonly />
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="aum">AUM</label>
+                        <input type="text" id="aum" name="aum" value="" readonly />
+                    </div>
+
+                    <div class="form-group col-sm-2">
                         <label class="control-label">&nbsp;</label>
                         <button class="btn btn-primary" (click)="addNav()" mltag="txt_addnewnav" *ngIf="!navFund.nav">Add New NAV</button>
                         <button class="btn btn-primary" (click)="editNav(navFund)" mltag="txt_editnav" *ngIf="navFund.nav">Edit NAV</button>
@@ -130,16 +140,34 @@
                     <span mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navpubdate">NAV Publication Date</span>
+                    <span mltag="txt_status">Status</span>
                 </clr-dg-column>
+                <!--<clr-dg-column>-->
+                    <!--<span>Use</span>-->
+                <!--</clr-dg-column>-->
                 <clr-dg-column>
-                    <span mltag="txt_navccy">NAV CCY</span>
+                    <span>Publication Date</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_status">Status</span>
+                    <span>Number of Shares</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span>Share AUM</span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span>Fund Currency</span>
+                </clr-dg-column>
+                <!--<clr-dg-column>-->
+                    <!--<span>Parity</span>-->
+                <!--</clr-dg-column>-->
+                <!--<clr-dg-column>-->
+                    <!--<span>Fund AUM</span>-->
+                <!--</clr-dg-column>-->
+                <clr-dg-column>
+                    <span>Coupons</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
@@ -147,14 +175,6 @@
 
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index">
                     <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
-                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
-                    </clr-dg-cell>
                     <clr-dg-cell>
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
@@ -169,12 +189,26 @@
                             </span>
                         </span>
                     </clr-dg-cell>
+                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="editNav" (click)="editNav(item)" class="btn btn-success btn-sm">
+                            <button id="editNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="editNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit NAV</span>
                             </button>
-                            <button id="cancelNav" (click)="cancelNav(item)" class="btn btn-danger btn-sm">
+                            <button id="cancelNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
                                 <i class="fa fa-remove"></i> <span mltag="txt_deletenav">Delete NAV</span>
                             </button>
                         </div>

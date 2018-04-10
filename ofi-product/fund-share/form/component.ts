@@ -24,6 +24,7 @@ import {
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';  
 import {FundShare, FundShareMode, PanelData} from '../model';
+import * as Enum from '../FundShareEnum';
 import {FundShareTradeCycleModel} from './trade-cycle/model';
 import {FundShareTestData} from './TestData';
 
@@ -94,6 +95,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.shareListObs.subscribe(fundShareList => {
             this.model.keyFacts.mandatory.master.listItems = this.generateListItems(fundShareList);
             this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
+            
+            if((!fundShareList) || Object.keys(fundShareList).length === 0) {
+                _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
+                    return item.id === Enum.StatusEnum.Master || item.id === Enum.StatusEnum.Feeder;
+                });
+            }
+
             this.iznShareList = fundShareList;
         }));
 

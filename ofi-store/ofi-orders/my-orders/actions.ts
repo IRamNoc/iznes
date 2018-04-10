@@ -36,3 +36,9 @@ export const setAllTabs: ActionCreator<SetAllTab> = (tabs: Array<OrderTab>) => (
         tabs
     }
 );
+
+export const OFI_SET_NEW_ORDER_MY_ORDER = `${name}/OFI_SET_NEW_ORDER_MY_ORDER`;
+export const ofiSetNewOrderMyOrder = kAction(OFI_SET_NEW_ORDER_MY_ORDER);
+
+export const OFI_CLEAR_NEW_ORDER_MY_ORDER = `${name}/OFI_CLEAR_NEW_ORDER_MY_ORDER`;
+export const ofiClearNewOrderMyOrder = kAction(OFI_CLEAR_NEW_ORDER_MY_ORDER);
