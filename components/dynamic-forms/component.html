@@ -38,7 +38,6 @@
                                 <ng-select id="{{item}}"
                                     [items]="model[item].listItems"
                                     [active]="model[item].preset"
-                                    [allowClear]="true"
                                     placeholder="{{model[item].placeholder}}"
                                     [formControl]="model[item].control"
                                     [required]="model[item].required">
@@ -49,6 +48,14 @@
                                 <div class="toggle-switch">
                                     <input type="checkbox" id="{{item}}" name="{{item}}" formControlName="{{item}}">
                                     <label for="{{item}}"></label>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="5">
+                                <div class="filedrop-wrapper">
+                                    <input type="hidden" class="form-control" formControlName="{{item}}">
+                                    <setl-file-drop id="{{item}}" [inline]="true" (onDrop)="onDropFiles($event, model[item].control)" ngDefaultControl></setl-file-drop>
+                                    <setl-file-viewer fileHash="{{model[item].control.value}}"></setl-file-viewer>                                    
                                 </div>
                             </ng-container>
                         </ng-container>

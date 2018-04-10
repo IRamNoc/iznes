@@ -19,6 +19,7 @@ export interface FormItem {
         id: string | number;
         text: string;
     }[];
+    listAllowMultiple?: boolean;
 
     dateOptions?: { [key: string]: any };
 }
@@ -28,7 +29,8 @@ export enum FormItemType {
     number,
     date,
     list,
-    boolean
+    boolean,
+    file
 }
 
 export enum FormItemStyle {

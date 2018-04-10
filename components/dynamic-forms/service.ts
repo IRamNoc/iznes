@@ -1,13 +1,19 @@
 import * as _ from 'lodash';
-import {Injectable} from '@angular/core';
+import {Injectable, ChangeDetectorRef} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgRedux} from '@angular-redux/store';
+import {FileService} from '@setl/core-req-services/file/file.service';
+import {SagaHelper} from '@setl/utils';
+import {ToasterService} from 'angular2-toaster';
 
 import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
 
 @Injectable()
 export class DynamicFormService {
 
-    constructor() {}
+    constructor(private fileService: FileService,
+        private toaster: ToasterService,
+        private redux: NgRedux<any>) {}
 
     generateForm(model: { [key: string]: FormItem }): FormGroup {
         const form = new FormGroup({});
@@ -36,6 +42,7 @@ export class DynamicFormService {
             if(item.type === FormItemType.date) preset = '';
             if(item.type === FormItemType.number) preset = null;
             if(item.type === FormItemType.list) preset = null;
+            if(item.type === FormItemType.file) preset = null;
         }
 
         const validator = (item.required && !item.validator) ? [Validators.required] : item.validator;
@@ -58,7 +65,7 @@ export class DynamicFormService {
             };
 
             (model[index].isValid as any) = function(val?: any) {
-                return ((model[index].hidden) && model[index].hidden()) ? true : form.controls[index].valid;
+                return (((model[index].hidden) && model[index].hidden()) || form.controls[index].disabled) ? true : form.controls[index].valid;
             };
             
             (model[index].cssClass as any) = this.getFormItemStyles(item);
@@ -116,5 +123,58 @@ export class DynamicFormService {
         }
 
         return cssClass;
+    }
+
+    uploadFile(event, formControl: FormControl, changeDetectorRef: ChangeDetectorRef): void {
+        const asyncTaskPipe = this.fileService.addFile({
+            files: _.filter(event.files, function (file) {
+                return file.status !== 'uploaded-file';
+            })
+        });
+
+        this.redux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data[1] && data[1].Data) {
+                    let errorMessage;
+
+                    _.each(data[1].Data, (file) => {
+                        if (file.error) {
+                            errorMessage = file.error;
+                            event.target.updateFileStatus(file.id, 'file-error');
+                        } else {
+                            event.target.updateFileStatus(file[0].id, 'uploaded-file');
+                            formControl.patchValue(file[0].fileID);
+                        }
+                    });
+
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+
+                    if (data[1].Data.length === 0) {
+                        formControl.patchValue(null);
+                    }
+
+                    changeDetectorRef.detectChanges();
+                }
+            },
+            (data) => {
+                let errorMessage;
+
+                _.each(data[1].Data, (file) => {
+                    if (file.error) {
+                        errorMessage += file.error + '<br/>';
+                        event.target.updateFileStatus(file.id, 'file-error');
+                    }
+                });
+
+                if (errorMessage) {
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+                }
+            })
+        );
     }
 }
