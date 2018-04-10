@@ -37,18 +37,18 @@ import {
 } from '@setl/core-store';
 
 @Component({
-    selector: 'app-encumber-assets',
+    selector: 'app-unencumber-assets',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class EncumberAssetsComponent implements OnInit, OnDestroy {
+export class UnencumberAssetsComponent implements OnInit, OnDestroy {
 
     language = 'en';
 
-    encumberAssetsForm: FormGroup;
-    isEncumberEnd = false;
+    unencumberAssetsForm: FormGroup;
+    isUnencumberEnd = false;
 
     assetListOption = [];
     fromAddressListOption = [];
@@ -104,14 +104,16 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) =>
+            this.requestWalletInstruments(requestedState)));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) =>
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
     }
 
     ngOnInit() {
-        this.encumberAssetsForm = this._fb.group({
+        this.unencumberAssetsForm = this._fb.group({
             asset: [
                 '',
                 Validators.compose([
@@ -139,47 +141,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             reference: [
                 '',
             ],
-            fromDateUTC: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            fromTimeUTC: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            includeToDate: [
-                false
-            ],
-            toDateUTC: [
-                '',
-            ],
-            toTimeUTC: [
-                '',
-            ],
         });
-
-        this.encumberAssetsForm.controls.includeToDate.valueChanges
-            .subscribe((value: boolean) => {
-                this.toggleToDateRequired(value);
-                this.isEncumberEnd = value;
-            });
-    }
-
-    private toggleToDateRequired(value: boolean): void {
-        if (value) {
-            this.encumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
-            this.encumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
-        } else {
-            this.encumberAssetsForm.controls.toDateUTC.clearValidators();
-            this.encumberAssetsForm.controls.toTimeUTC.clearValidators();
-        }
-
-        this.encumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
-        this.encumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
     }
 
     ngOnDestroy() {
@@ -210,7 +172,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
 
     getAddressList(addresses: Array<any>) {
 
-        let data = [];
+        const data = [];
 
         Object.keys(addresses).map((key) => {
             data.push({
@@ -271,28 +233,22 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         }
     }
 
+    // To unencumber, encumber must have ended before Date.now()
     save(formValues) {
-        if (!this.encumberAssetsForm.valid) return;
+        if (!this.unencumberAssetsForm.valid) {
+            return;
+        }
 
-        const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
-        const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
-
-        const asyncTaskPipe = this._walletnodeTxService.encumber(
+        const asyncTaskPipe = this._walletnodeTxService.unencumber(
             {
-                txtype: 'encum',
+                txtype: 'unenc',
                 walletid: this.connectedWalletId,
                 reference: formValues.reference,
-                address: formValues.fromAddress[0].id,
-                subjectaddress: formValues.fromAddress[0].id,
+                address: formValues.fromAddress[0].id, // Beneficiary or Administrator address
+                subjectaddress: formValues.toAddress, // Asset Holder/Owner address
                 namespace: formValues.asset[0].id.split('|')[0],
                 instrument: formValues.asset[0].id.split('|')[1],
                 amount: formValues.amount,
-                beneficiaries: [
-                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
-                ],
-                administrators: [
-                    [formValues.toAddress, StartUTC_Secs, EndUTC_Secs]
-                ],
                 protocol: '',
                 metadata: '',
             });
@@ -300,7 +256,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.showSuccess('Encumber has successfully been created');
+                this.showSuccess('Unencumber has successfully been created');
                 this.resetForm();
             },
             (data) => {
@@ -310,7 +266,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     resetForm(): void {
-        this.encumberAssetsForm.reset();
+        this.unencumberAssetsForm.reset();
     }
 
     showError(message) {

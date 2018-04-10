@@ -7,6 +7,7 @@ import {SendAssetComponent} from './send-asset/send-asset.component';
 import {RequestAssetComponent} from './request-asset/request-asset.component';
 import {RequestTypeSelectComponent} from './request-asset/request-type-select/request-type-select.component';
 import {EncumberAssetsComponent} from './encumber-assets/component';
+import {UnencumberAssetsComponent} from './unencumber-assets/component';
 import {SelectModule} from '@setl/utils';
 import {
     FormsModule,
@@ -34,6 +35,7 @@ import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/u
         RequestAssetComponent,
         RequestTypeSelectComponent,
         EncumberAssetsComponent,
+        UnencumberAssetsComponent,
     ],
     exports: [
         RegisterIssuerComponent,
@@ -43,6 +45,7 @@ import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/u
         RequestAssetComponent,
         RequestTypeSelectComponent,
         EncumberAssetsComponent,
+        UnencumberAssetsComponent,
     ]
 })
 export class AssetServicingModule {
