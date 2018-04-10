@@ -209,7 +209,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         }catch (Exception e){
-            fail(e.getMessage());
         }
     }
 
