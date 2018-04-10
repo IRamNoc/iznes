@@ -36,12 +36,12 @@
                             </div>
                             <div class="form-group col-sm-6 btn-container">
                                 <p mltag="txt_or">or</p>
-                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/umbrella-fund/0" mltag="txt_addanewumbrellafund">
+                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/umbrella-fund/0" mltag="txt_addanewumbrellafund">Add a new Umbrella Fund
 
 
 
 
-                                    Add a new Umbrella Fund
+
 
                                 </a>
                             </div>
@@ -460,8 +460,8 @@
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="legalEntityIdentifier" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
-                                                <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier">
-                                                <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_fieldshouldbe20characterslengtee388d5307">Field should be 20 characters length</span>
+                                                <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
+                                                <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_incorrectlei">Incorrect LEI</span>
 
                                             </div>
                                         </div>
@@ -795,7 +795,8 @@
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="globalItermediaryIdentification" mltag="txt_globalintermediaryidentificatif680906e8a">Global Intermediary Identification Number (GIIN)</label>
-                                                <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification" formControlName="globalItermediaryIdentification">
+                                                <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification" formControlName="globalItermediaryIdentification" maxlength="19">
+                                                <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')" class="field-error" mltag="txt_incorrectgiin">Incorrect GIIN</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
