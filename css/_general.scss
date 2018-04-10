@@ -26,12 +26,12 @@ body *, body *:before, body *:after {
     background: #f9f9f9;
 }
 
-@mixin transition($transition){
-  -webkit-transition: $transition;
-     -moz-transition: $transition;
-      -ms-transition: $transition;
-       -o-transition: $transition;
-          transition: $transition;
+@mixin transition($transition) {
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -ms-transition: $transition;
+    -o-transition: $transition;
+    transition: $transition;
 }
 
 .header-breadcrumbs {
@@ -62,7 +62,7 @@ body *, body *:before, body *:after {
                 color: #007cbb;
                 &:link, &:visited {
                     text-decoration: none;
-                    border-bottom: 1px solid rgba(0,0,0,0);
+                    border-bottom: 1px solid rgba(0, 0, 0, 0);
                     @include transition((border-bottom 0.3s));
                 }
 
@@ -212,7 +212,11 @@ ul.breadcrumb li a:hover {
 }
 
 .pagination {
-    margin-right: 35px;
+    margin-right: 25px;
+}
+
+.pagination button {
+    min-width: 25px;
 }
 
 // Angular Froala WYSIWYG Editor toolbar
@@ -769,5 +773,37 @@ clr-tab-content {
         margin-top: 20px;
         margin-bottom: 10px;
     }
-
 }
+
+dp-calendar-nav.dp-material .dp-nav-header-btn {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    width: 60% !important;
+    line-height: 20px !important;
+    border-radius: 20px !important;
+    margin: 0px !important;
+}
+
+dp-day-calendar.dp-material .dp-calendar-weekday {
+    padding: 0px !important;
+    font-size: 12px !important;
+}
+
+.dp-calendar-wrapper {
+    padding: 5px !important;
+    border-top: 0px !important;
+}
+
+.dp-nav-header {
+    width: 60% !important;
+    line-height: 20px !important;
+    height: 20px !important;
+    text-align: center !important;
+    border: 0px !important;
+}
+
+dp-date-picker div {
+    width: auto !important;
+}
+
+
