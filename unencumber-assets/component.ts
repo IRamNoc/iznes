@@ -104,8 +104,10 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) =>
+            this.requestWalletInstruments(requestedState)));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) =>
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
     }
@@ -140,7 +142,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                 '',
             ],
         });
-}
+    }
 
     ngOnDestroy() {
         this.reduxUnsubscribe();
@@ -170,7 +172,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
 
     getAddressList(addresses: Array<any>) {
 
-        let data = [];
+        const data = [];
 
         Object.keys(addresses).map((key) => {
             data.push({
@@ -231,8 +233,11 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         }
     }
 
+    // To unencumber, encumber must have ended before Date.now()
     save(formValues) {
-        if (!this.unencumberAssetsForm.valid) return;
+        if (!this.unencumberAssetsForm.valid) {
+            return;
+        }
 
         const asyncTaskPipe = this._walletnodeTxService.unencumber(
             {
