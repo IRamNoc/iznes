@@ -190,24 +190,16 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
         this.isLogin = false;
 
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
-            // this.resetToken = params['token'];
-            // if (typeof this.resetToken !== 'undefined' && this.resetToken !== '') {
-            //     this.verifyToken(this.resetToken);
-            // }
             this.invitationToken = params['invitationToken'];
             if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
 
                 //go get the email linked to the token here.
-
                 this._ofiKycService.verifyInvitationToken(this.invitationToken).then((data)=>{
                     this.signupForm.controls['username'].patchValue(data[1].Data[0].email);
                 }).catch((e)=>{
                     //handle error.
                     this.signupForm.controls['username'].patchValue('');
                 });
-
-                //this.signupForm.controls['username'].patchValue(this.invitationToken);
-                console.log(this.invitationToken);
             }
 
             let lang = params['lang'];
@@ -220,17 +212,12 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                     'sch': 'sch'
                 };
 
-                /* Save last language selected by user in localStorage */
+                /* Save language in redux */
                 if (languages[lang] != null) {
                     this.ngRedux.dispatch(setLanguage(languages[lang]));
-
-                    if (typeof(Storage) !== 'undefined') {
-                        localStorage.setItem('lang', languages[lang]);
-                    }
+                    this.language = languages[lang];
                 }
             }
-
-
         }));
 
         // Reduce observable subscription
