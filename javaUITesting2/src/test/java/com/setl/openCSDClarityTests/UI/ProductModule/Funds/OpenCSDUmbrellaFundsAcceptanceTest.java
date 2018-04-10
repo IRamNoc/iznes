@@ -212,8 +212,8 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     private void selectTopDropdown(String dropdownID) throws InterruptedException {
-        Thread.sleep(1750);
-        driver.findElement(By.id(dropdownID)).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']")).click();
         try {
             //driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
             driver.findElement(By.xpath("//*[@id=\"" + dropdownID + "\"]/div/div[3]/ul/li[1]/div/a")).click();
