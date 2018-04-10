@@ -2,6 +2,8 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 
+import {MemberSocketService} from '@setl/websocket-service';
+
 import {NgRedux, select} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
@@ -23,7 +25,7 @@ import {getOfiFundShareSelectedFund} from '@ofi/ofi-main/ofi-store/ofi-product/f
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 /* Ofi Store stuff. */
-import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
+import {ofiManageOrderActions, ofiMyOrderActions} from '@ofi/ofi-main/ofi-store';
 
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
@@ -58,6 +60,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     itemPerPage = 10;
     dataGridParams = {
         shareName: null,
+        isin: null,
         status: null,
         orderType: null,
         pageSize: this.itemPerPage,
@@ -72,7 +75,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     loading = true;
 
     // Locale
-    language = 'fr';
+    language = 'en';
 
     // Datepicker config
     configDate = {
@@ -115,31 +118,31 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 4, text: 'Redemption'},
     ];
     dateTypes: Array<SelectedItem> = [
-        {id: 'orderDate', text: 'OrderDate'},
-        {id: 'cutOffDate', text: 'CutOffDate'},
-        {id: 'navDate', text: 'NAVDate'},
-        {id: 'settlementDate', text: 'SettlementDate'},
+        {id: 'orderDate', text: 'Order Date'},
+        {id: 'cutOffDate', text: 'Cut-off Date'},
+        {id: 'navDate', text: 'NAV Date'},
+        {id: 'settlementDate', text: 'Settlement Date'},
     ];
 
     currencyList = [
-        {id : 0, code: 'EUR', label: 'Euro'},
-        {id : 1, code: 'USD', label: 'US Dollar'},
-        {id : 2, code: 'GBP', label: 'Pound Sterling'},
-        {id : 3, code: 'CHF', label: 'Swiss Franc'},
-        {id : 4, code: 'JPY', label: 'Yen'},
-        {id : 5, code: 'AUD', label: 'Australian Dollar'},
-        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
-        {id : 7, code: 'SEK', label: 'Swedish Krona'},
-        {id : 8, code: 'ZAR', label: 'Rand'},
-        {id : 9, code: 'RUB', label: 'Russian Ruble'},
-        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
-        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
-        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
-        {id : 13, code: 'PLN', label: 'Zloty'},
+        {id : 0, text: 'EUR'},
+        {id : 1, text: 'USD'},
+        {id : 2, text: 'GBP'},
+        {id : 3, text: 'CHF'},
+        {id : 4, text: 'JPY'},
+        {id : 5, text: 'AUD'},
+        {id : 6, text: 'NOK'},
+        {id : 7, text: 'SEK'},
+        {id : 8, text: 'ZAR'},
+        {id : 9, text: 'RUB'},
+        {id : 10, text: 'SGD'},
+        {id : 11, text: 'AED'},
+        {id : 12, text: 'CNY'},
+        {id : 13, text: 'PLN'},
     ];
 
     /* Public Properties */
-    public connectedWalletName: string = '';
+    public connectedWalletName = '';
 
     /* Private Properties. */
     private subscriptions: Array<any> = [];
@@ -161,7 +164,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             srri: null,
             sri: null,
         },
+        decimalization: null,
     };
+
     fundShareID = 0;
 
     userAssetList: Array<any> = [];
@@ -179,6 +184,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersObj: any;
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListObj: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'newOrder']) newOrderOfiInvOrdersObj;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyObj;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListObj;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
@@ -193,6 +199,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private _fb: FormBuilder,
+                private memberSocketService: MemberSocketService,
                 private mcService: OfiManagementCompanyService,
                 private _ofiFundShareService: OfiFundShareService,
                 private ofiCorpActionService: OfiCorpActionService,
@@ -220,10 +227,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
             this.subscriptions.push(this.requestedOfiAmOrdersObj.subscribe((requested) => this.getAmOrdersRequested(requested)));
             this.subscriptions.push(this.OfiAmOrdersListObj.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-            this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newOrder) => this.getAmOrdersNewOrder(newOrder)));
+            // if new Orders coming (broadcast)
+            this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newAmOrder) => this.getAmOrdersNewOrder(newAmOrder)));
         } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
             this.subscriptions.push(this.requestedOfiInvOrdersObj.subscribe((requested) => this.getInvOrdersRequested(requested)));
             this.subscriptions.push(this.OfiInvOrdersListObj.subscribe((list) => this.getInvOrdersListFromRedux(list)));
+            // if new Orders coming (broadcast)
+            this.subscriptions.push(this.newOrderOfiInvOrdersObj.subscribe((newInvOrder) => this.getInvOrdersNewOrder(newInvOrder)));
         }
     }
 
@@ -354,6 +364,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             sharename: [
                 '',
             ],
+            isin: [
+                '',
+            ],
             status: [
                 '',
             ],
@@ -390,7 +403,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAmOrdersRequested(requested): void {
         if (!requested) {
-            OfiOrdersService.setNewOrder(false, this.ngRedux);
+            OfiOrdersService.setAmNewOrder(false, this.ngRedux);
             OfiOrdersService.defaultRequestManageOrdersList(this.ofiOrdersService, this.ngRedux);
         }
     }
@@ -442,61 +455,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return result;
         }, []);
 
-        if (this.ordersList.length > 0) {
-            this.total = this.ordersList[0].totalResult;
-            this.lastPage = Math.ceil(this.total / this.itemPerPage);
-            this.loading = false;
-
-            this.subscriptions.push(this.route.params.subscribe(params => {
-                this.orderID = params['tabid'];
-                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
-                    const order = this.ordersList.find(elmt => {
-                        if (elmt.orderID.toString() === this.orderID.toString()) {
-                            return elmt;
-                        }
-                    });
-                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
-                        this.fundShareID = order.fundShareID;
-                        this.tabsControl[0].active = false;
-                        let tabTitle = '';
-                        if (order.orderType === 3) tabTitle += 'Subscription: ';
-                        if (order.orderType === 4) tabTitle += 'Redemption: ';
-                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
-
-                        this.tabsControl.push(
-                            {
-                                'title': {
-                                    'icon': 'fa-shopping-basket',
-                                    'text': tabTitle,
-                                },
-                                'orderId': this.orderID,
-                                'active': true,
-                                orderData: order,
-                            }
-                        );
-                        this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
-                        const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
-                        requestData.fundShareID = this.fundShareID;
-                        OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
-                    }
-                } else {
-                    if (this.tabsControl.length > 1) {
-                        this.tabsControl.splice(1, this.tabsControl.length - 1);
-                    }
-                }
-            }));
-        } else {
-            this.total = 0;
-            this.lastPage = 0;
-            this.loading = false;
-        }
-
+        this.updateTabs();
         this.changeDetectorRef.markForCheck();
     }
 
     getInvOrdersRequested(requested): void {
         if (!requested) {
-            // OfiOrdersService.setNewOrder(false, this.ngRedux);
+            OfiOrdersService.setInvNewOrder(false, this.ngRedux);
             OfiOrdersService.defaultRequestInvestorOrdersList(this.ofiOrdersService, this.ngRedux);
         }
     }
@@ -509,7 +474,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             result.push({
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
+                amCompanyName: item.get('amCompanyName'),
                 amWalletID: item.get('amWalletID'),
+                amount: item.get('amount'),
                 amountWithCost: item.get('amountWithCost'),
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
@@ -518,10 +485,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 contractStartTs: item.get('contractStartTs'),
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
+                estimatedAmount: item.get('estimatedAmountWithCost'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
                 estimatedQuantity: item.get('estimatedQuantity'),
                 feePercentage: item.get('feePercentage'),
+                firstName: item.get('firstName'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 iban: item.get('iban'),
@@ -529,14 +498,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 investorWalletID: item.get('investorWalletID'),
                 isin: item.get('isin'),
                 label: item.get('label'),
+                lastName: item.get('lastName'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
                 orderDate: item.get('orderDate'),
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
-                investorIban: item.get('investorIban'),
-                orderFundShareID: item.get('orderFundShareID'),
                 platFormFee: item.get('platFormFee'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
@@ -548,57 +516,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return result;
         }, []);
 
-        if (this.ordersList.length > 0) {
-            this.total = this.ordersList[0].totalResult;
-            this.lastPage = Math.ceil(this.total / this.itemPerPage);
-            this.loading = false;
-
-            this.subscriptions.push(this.route.params.subscribe(params => {
-                this.orderID = params['tabid'];
-                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
-                    const order = this.ordersList.find(elmt => {
-                        if (elmt.orderID.toString() === this.orderID.toString()) {
-                            return elmt;
-                        }
-                    });
-                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
-                        this.tabsControl[0].active = false;
-                        let tabTitle = '';
-                        if (order.orderType === 3) tabTitle += 'Subscription: ';
-                        if (order.orderType === 4) tabTitle += 'Redemption: ';
-                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
-
-                        this.tabsControl.push(
-                            {
-                                'title': {
-                                    'icon': 'fa-shopping-basket',
-                                    'text': tabTitle,
-                                },
-                                'orderId': this.orderID,
-                                'active': true,
-                                orderData: order,
-                            }
-                        );
-                    }
-                } else {
-                    if (this.tabsControl.length > 1) {
-                        this.tabsControl.splice(1, this.tabsControl.length - 1);
-                    }
-                }
-            }));
-        } else {
-            this.total = 0;
-            this.lastPage = 0;
-            this.loading = false;
-        }
-
+        this.updateTabs();
         this.changeDetectorRef.markForCheck();
     }
 
-    getAmOrdersNewOrder(newOrder): void {
-        if (newOrder) {
+    getAmOrdersNewOrder(newAmOrder): void {
+        if (newAmOrder) {
             this.loading = true;
-            this.getAmOrdersList();
+            this.getOrdersList();
+            this.changeDetectorRef.markForCheck();
+        }
+    }
+
+    getInvOrdersNewOrder(newInvOrder): void {
+        if (newInvOrder) {
+            this.loading = true;
+            this.getOrdersList();
             this.changeDetectorRef.markForCheck();
         }
     }
@@ -651,6 +584,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (typeof fundShare !== 'undefined' && Object.keys(fundShare).length > 0) {
             const keyFactOptionalData = JSON.parse(fundShare.keyFactOptionalData);
             this.fundShare.keyFactOptionalData = keyFactOptionalData;
+            this.fundShare.decimalization = fundShare.maximumNumDecimal;
+            this.fundShare.mifiidChargesOneOff = fundShare.mifiidChargesOneOff;
+            this.fundShare.mifiidChargesOngoing = fundShare.mifiidChargesOngoing;
+            this.fundShare.mifiidTransactionCosts = fundShare.mifiidTransactionCosts;
+            this.fundShare.mifiidServicesCosts = fundShare.mifiidServicesCosts;
+            this.fundShare.mifiidIncidentalCosts = fundShare.mifiidIncidentalCosts;
             this.changeDetectorRef.markForCheck();
         }
 
@@ -874,7 +813,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     setInitialTabs() {
-
         // Get opened tabs from redux store.
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
@@ -891,10 +829,59 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     'active': true
                 }
             ];
-            return true;
+        } else {
+            this.tabsControl = openedTabs;
         }
+    }
 
-        this.tabsControl = openedTabs;
+    updateTabs() {
+        this.loading = false;
+        if (this.ordersList.length > 0) {
+            this.total = this.ordersList[0].totalResult;
+            this.lastPage = Math.ceil(this.total / this.itemPerPage);
+
+            this.subscriptions.push(this.route.params.subscribe(params => {
+                this.orderID = params['tabid'];
+                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+                    const order = this.ordersList.find(elmt => {
+                        if (elmt.orderID.toString() === this.orderID.toString()) {
+                            return elmt;
+                        }
+                    });
+                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                        this.fundShareID = order.fundShareID;
+                        let tabTitle = '';
+                        if (order.orderType === 3) tabTitle += 'Subscription: ';
+                        if (order.orderType === 4) tabTitle += 'Redemption: ';
+                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+
+                        const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
+                        if (tabAlreadyHere === undefined) {
+                            this.tabsControl.push(
+                                {
+                                    'title': {
+                                        'icon': 'fa-shopping-basket',
+                                        'text': tabTitle,
+                                    },
+                                    'orderId': this.orderID,
+                                    'active': true,
+                                    orderData: order,
+                                }
+                            );
+                        }
+                        this.setTabActive(this.orderID);
+
+                        this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
+                        const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
+                        requestData.fundShareID = this.fundShareID;
+                        OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
+                    }
+                }
+            }));
+        } else {
+            this.total = 0;
+            this.lastPage = 0;
+        }
     }
 
     cancelOrder(index) {
@@ -911,9 +898,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
-            '<span>Confirmation</span>',
+            '<span>Are you sure?</span>',
             '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
-            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'success'}
+            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
         ).subscribe((ans) => {
             if (ans.resolved) {
                 const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
@@ -925,7 +912,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     (data) => {
                         console.log('cancel order success', data); // success
                         this.loading = true;
-                        this.getAmOrdersList();
+                        this.getOrdersList();
                     },
                     (data) => {
                         console.log('Error: ', data);
@@ -935,31 +922,34 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    exportOrders() {
+    exportOrders(): void {
+        let methodName = '';
+        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+            methodName = 'exportAssetManagerOrders';
+        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
+            methodName = 'exportInvestorOrders';
+        }
 
-        const asyncTaskPipe = this.ofiOrdersService.requestExportOrders({
-            filters: this.dataGridParams
-        });
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&userId=' + this.myDetails.userId;
+        for (let filter in this.dataGridParams) {
+            if (this.dataGridParams.hasOwnProperty(filter)) {
+                paramUrl += '&' + filter + '=' + encodeURIComponent(this.dataGridParams[filter]);
+            }
+        }
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                console.log('export data success', data); // success
-            },
-            (data) => {
-                console.log('Error: ', data);
-            })
-        );
-
-        // call procedure iznexportorders
-        // data : ordersList
-
+    generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
     }
 
     requestSearch(form) {
 
         const tmpDataGridParams = {
             shareName: this.dataGridParams.shareName,
+            isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
             orderType: this.dataGridParams.orderType,
             pageSize: this.dataGridParams.pageSize,
@@ -972,6 +962,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this.dataGridParams.shareName = (this.tabsControl[0].searchForm.get('sharename').value !== '' && this.tabsControl[0].searchForm.get('sharename').value.length > 2) ? this.tabsControl[0].searchForm.get('sharename').value : null;
+        this.dataGridParams.isin = (this.tabsControl[0].searchForm.get('isin').value !== '' && this.tabsControl[0].searchForm.get('isin').value.length > 2) ? this.tabsControl[0].searchForm.get('isin').value : null;
         this.dataGridParams.status = (this.tabsControl[0].searchForm.get('status').value && this.tabsControl[0].searchForm.get('status').value[0] && this.tabsControl[0].searchForm.get('status').value[0].id) ? this.tabsControl[0].searchForm.get('status').value[0].id : null;
         this.dataGridParams.orderType = (this.tabsControl[0].searchForm.get('type').value && this.tabsControl[0].searchForm.get('type').value[0] && this.tabsControl[0].searchForm.get('type').value[0].id) ? this.tabsControl[0].searchForm.get('type').value[0].id : null;
         // date filters
@@ -996,7 +987,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-            this.getAmOrdersList();
+            this.getOrdersList();
         }
     }
 
@@ -1017,6 +1008,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const tmpDataGridParams = {
             shareName: this.dataGridParams.shareName,
+            isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
             orderType: this.dataGridParams.orderType,
             pageSize: this.dataGridParams.pageSize,
@@ -1078,23 +1070,32 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // send request only if changes
         if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
             this.loading = true;
-            this.getAmOrdersList();
+            this.getOrdersList();
         }
 
         this.changeDetectorRef.markForCheck();
     }
 
-    getAmOrdersList() {
-        console.log('dataGridParams', this.dataGridParams);
+    getOrdersList() {
+        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+            const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
 
-        const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
+                [],
+                asyncTaskPipe,
+                {},
+            ));
+        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
+            const asyncTaskPipe = this.ofiOrdersService.requestInvestorOrdersList(this.dataGridParams);
 
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [ofiMyOrderActions.OFI_SET_MY_ORDER_LIST],
+                [],
+                asyncTaskPipe,
+                {},
+            ));
+        }
     }
 
     showTypes(order) {
@@ -1102,7 +1103,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (obj !== undefined) {
             return obj.text;
         } else {
-            return 'Error!';
+            return 'Not found!';
         }
     }
 
@@ -1110,7 +1111,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.walletDirectory[order.investorWalletID] && this.walletDirectory[order.investorWalletID].walletName) {
             return this.walletDirectory[order.investorWalletID].walletName;
         } else {
-            return 'Error!';
+            return 'Not found!';
         }
     }
 
@@ -1119,16 +1120,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (obj !== undefined) {
             return obj.companyName;
         } else {
-            return 'Error!';
+            return 'Not found!';
         }
     }
 
     showCurrency(order) {
         const obj = this.currencyList.find(o => o.id === order.currency);
         if (obj !== undefined) {
-            return obj.label;
+            return obj.text;
         } else {
-            return 'Error!';
+            return 'Not found!';
         }
     }
 
@@ -1136,7 +1137,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.orderStatuses[order.orderStatus] && this.orderStatuses[order.orderStatus].text) {
             return this.orderStatuses[order.orderStatus].text;
         } else {
-            return 'Error!';
+            return 'Not found!';
         }
     }
 
@@ -1675,7 +1676,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted date or empty string.
      */
-    private getOrderDate(dateString): string {
+    private getOnlyDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
@@ -1685,7 +1686,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted time or empty string.
      */
-    private getOrderTime(dateString): string {
+    private getOnlyTime(dateString): string {
         return this.formatDate('hh:mm:ss', new Date(dateString));
     }
 
@@ -1744,7 +1745,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.router.navigateByUrl('/manage-orders/0');
+        this.router.navigateByUrl('/manage-orders/new');
+
+        this.tabsControl[0].active = true;
 
         /* Return */
         return;
@@ -1760,10 +1763,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public setTabActive(index: number = 0) {
-        this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
-            return item.set('active', thisIndex === Number(index));
-        });
+    public setTabActive(orderID) {
+        for (const i in this.tabsControl) {
+            this.tabsControl[i].active = (Number(this.tabsControl[i].orderId) === Number(orderID));
+        }
         this.changeDetectorRef.markForCheck();
     }
 

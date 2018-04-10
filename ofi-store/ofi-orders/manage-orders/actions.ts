@@ -15,7 +15,6 @@ export const OFI_SET_MANAGE_ORDER_LIST = `${name}/OFI_SET_MANAGE_ORDER_LIST`;
 export const OFI_SET_REQUESTED_MANAGE_ORDER = `${name}/OFI_SET_REQUESTED_MANAGE_ORDER`;
 export const ofiSetRequestedManageOrder = kAction(OFI_SET_REQUESTED_MANAGE_ORDER);
 
-
 /**
  * Clear (set to false) request manage order list state
  * Flag that to indicate we will ned to request it when we need it.

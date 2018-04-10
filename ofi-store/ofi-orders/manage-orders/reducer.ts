@@ -4,9 +4,10 @@ import {Action} from 'redux';
 /* Local types. */
 import {ManageOrders, ManageOrderDetails} from './model';
 import * as ofiManageOrdersActions from './actions';
-import * as _ from 'lodash';
+import {SET_ALL_TABS} from './actions';
 import {immutableHelper} from '@setl/utils';
 import {List, fromJS, Map} from 'immutable';
+import * as _ from 'lodash';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -43,7 +44,6 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
             return toggleNewOrderState(state, true);
 
         case ofiManageOrdersActions.OFI_CLEAR_NEW_ORDER_MANAGE_ORDER:
-            console.log('OFI_CLEAR_NEW_ORDER_MANAGE_ORDER in REDUCER');
             return toggleNewOrderState(state, false);
 
         case ofiManageOrdersActions.SET_ALL_TABS:
@@ -65,7 +65,9 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
             result[i] = {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
+                amCompanyName: item.get('amCompanyName'),
                 amWalletID: item.get('amWalletID'),
+                amount: item.get('amount'),
                 amountWithCost: item.get('amountWithCost'),
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
@@ -74,10 +76,12 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 contractStartTs: item.get('contractStartTs'),
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
+                estimatedAmount: item.get('estimatedAmountWithCost'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
                 estimatedQuantity: item.get('estimatedQuantity'),
                 feePercentage: item.get('feePercentage'),
+                firstName: item.get('firstName'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 iban: item.get('iban'),
@@ -85,14 +89,13 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 investorWalletID: item.get('investorWalletID'),
                 isin: item.get('isin'),
                 label: item.get('label'),
+                lastName: item.get('lastName'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
                 orderDate: item.get('orderDate'),
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
-                investorIban: item.get('investorIban'),
-                orderFundShareID: item.get('orderFundShareID'),
                 platFormFee: item.get('platFormFee'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
@@ -151,7 +154,6 @@ function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrde
 }
 
 function toggleNewOrderState(state: ManageOrders, newOrder: boolean): ManageOrders {
-    console.log('toggleNewOrderState', newOrder);
     return Object.assign({}, state, {newOrder});
 }
 

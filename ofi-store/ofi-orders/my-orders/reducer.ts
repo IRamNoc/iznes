@@ -18,12 +18,12 @@ const initialState: MyOrders = {
 };
 
 /* Reducer. */
-export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
-                                               action: Action) {
+export const OfiMyOrderListReducer = function (state: MyOrders = initialState, action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
         case ofiMyOrdersActions.OFI_SET_MY_ORDER_LIST:
             // return ofiSetMyOrderList(state, action);
+
             const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data.Status !== 'Fail') {
@@ -40,6 +40,12 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
         case ofiMyOrdersActions.OFI_CLEAR_REQUESTED_MY_ORDER:
             return toggleRequestState(state, false);
 
+        case ofiMyOrdersActions.OFI_SET_NEW_ORDER_MY_ORDER:
+            return toggleNewOrderState(state, true);
+
+        case ofiMyOrdersActions.OFI_CLEAR_NEW_ORDER_MY_ORDER:
+            return toggleNewOrderState(state, false);
+
         case SET_ALL_TABS:
             return handleSetAllTabs(action, state);
 
@@ -47,7 +53,7 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState,
         default:
             return state;
     }
-}
+};
 
 function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
     const rawDataList = fromJS(rawData);
@@ -59,7 +65,9 @@ function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
             result[i] = {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
+                amCompanyName: item.get('amCompanyName'),
                 amWalletID: item.get('amWalletID'),
+                amount: item.get('amount'),
                 amountWithCost: item.get('amountWithCost'),
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
@@ -68,10 +76,12 @@ function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
                 contractStartTs: item.get('contractStartTs'),
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
+                estimatedAmount: item.get('estimatedAmountWithCost'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
                 estimatedQuantity: item.get('estimatedQuantity'),
                 feePercentage: item.get('feePercentage'),
+                firstName: item.get('firstName'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 iban: item.get('iban'),
@@ -79,14 +89,13 @@ function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
                 investorWalletID: item.get('investorWalletID'),
                 isin: item.get('isin'),
                 label: item.get('label'),
+                lastName: item.get('lastName'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
                 orderDate: item.get('orderDate'),
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
-                investorIban: item.get('investorIban'),
-                orderFundShareID: item.get('orderFundShareID'),
                 platFormFee: item.get('platFormFee'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
@@ -142,6 +151,10 @@ function ofiSetMyOrderList(state: MyOrders, action: Action) {
  */
 function toggleRequestState(state: MyOrders, requested: boolean): MyOrders {
     return Object.assign({}, state, {requested});
+}
+
+function toggleNewOrderState(state: MyOrders, newOrder: boolean): MyOrders {
+    return Object.assign({}, state, {newOrder});
 }
 
 /**

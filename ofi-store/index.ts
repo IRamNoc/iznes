@@ -96,6 +96,8 @@ export {
     OFI_SET_MY_ORDER_LIST,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
+    ofiClearNewOrderMyOrder,
+    ofiSetNewOrderMyOrder,
     ofiMyOrderActions,
 
     // Collective report
