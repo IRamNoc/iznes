@@ -158,7 +158,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         Thread.sleep(2000);
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         String fundName = driver.findElement(By.id("umbrellaFundName")).getAttribute("value");
-        assertTrue(fundName.equals("TestUmbrellaFunds1"));
+        assertTrue(fundName.equals("umbfund2"));
     }
 
     @Test
