@@ -1,0 +1,157 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <span>Centralization Report: All Shares</span>
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="demoOptimisedDatagridBtn" clrTabLink>
+            <i class="fa fa-th-list"></i> <span>List</span>
+        </button>
+        <clr-tab-content *clrIfActive>
+            <section class="form-block">
+                <form>
+                    <div class="row bordered form-group">
+                        <div class="form-group col-sm-12">
+                            <h3>Please find below the centralization reports by Share:</h3>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="input">Search for a specific share:</label>
+                            <input type="text" name="input" id="input" placeholder="Type a Share name or ISIN" [formControl]="filterInput"/>
+                        </div>
+                        <div class="form-group col-sm-6 flex-container-column">
+                            <button class="btn btn-default" (click)="onClickExportCentralizationReport()">Export centralization report</button>
+                        </div>
+                    </div>
+                </form>
+                <br>
+
+                <clr-datagrid class="expandable">
+                    <clr-dg-column [clrDgField]="'isin'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>ISIN</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Share Name</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'navDate'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>NAV Date</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'settlementDate'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Settlement Date</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareCurrency'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Share Currency</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'latestNav'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Latest NAV</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'aum'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>AUM</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'netPositionShareCurrency'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Net Position ([Share currency])</span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'netPositionPerCentAum'">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            <span>Net Position (% AUM)</span>
+                        </ng-container>
+                    </clr-dg-column>
+
+
+                    <clr-dg-row *clrDgItems="let data of filteredDatas" [clrDgItem]="data">
+                        <clr-dg-cell>{{data.isin}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareName}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.navDate}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareCurrency}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.latestNav}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.aum}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netPositionShareCurrency}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netPositionPerCentAum}}</clr-dg-cell>
+
+                        <clr-dg-row-detail *clrIfExpanded>
+                            <div class="additionalInfos">
+                                <div class="row">
+                                    <div class="form-group col-sm-7">
+                                        <table class="table table-noborder">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Quantity</th>
+                                                    <th>Amount</th>
+                                                    <th>Cut-off Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Subscriptions</td>
+                                                    <td>Sub Quantity</td>
+                                                    <td>32189489159498184894981981498</td>
+                                                    <td>Sub Cut-off Date</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Redemptions</td>
+                                                    <td>Red Quantity</td>
+                                                    <td>Red Amount</td>
+                                                    <td>Red Cut-off Date</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="form-group col-sm-5 flex-container-column">
+                                        <div class="flex-container-row">
+                                            <button class="btn btn-default" (click)="onClickViewCorrespondingOrders()">View corresponding orders</button>
+                                            <button class="btn btn-default" (click)="onClickDownloadCorrespondingOrders()"><i class="fa fa-download"></i></button>
+                                        </div>
+                                        <div class="flex-container-row">
+                                            <button class="btn btn-default" (click)="onClickViewCentralizationHistory()">View centralization history</button>
+                                            <button class="btn btn-default" (click)="onClickDownloadCentralizationHistory()"><i class="fa fa-download"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </clr-dg-row-detail>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        <!-- Optional customization of hide/show columns toggle -->
+                        <clr-dg-column-toggle>
+                            <clr-dg-column-toggle-title>Show/hide fields:</clr-dg-column-toggle-title>
+                            <!--<clr-dg-column-toggle-button clrType="selectAll">-->
+                            <!--<button type="button" class="btn btn-primary">-->
+                            <!--Select All-->
+                            <!--</button>-->
+                            <!--</clr-dg-column-toggle-button>-->
+                            <clr-dg-column-toggle-button clrType="ok">
+                                <button type="button" class="btn btn-primary" style="padding:0 20px">
+                                    <clr-icon shape="check"></clr-icon>
+                                </button>
+                            </clr-dg-column-toggle-button>
+                        </clr-dg-column-toggle>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

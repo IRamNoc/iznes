@@ -101,6 +101,8 @@ describe('FundComponent', () => {
     let de:      DebugElement;
     let el:      HTMLElement;
 
+    const resetTestingModule = TestBed.resetTestingModule;
+
     let linkDes;
     let routerLinks;
 

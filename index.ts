@@ -93,7 +93,8 @@ export {
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
     OfiReportModule,
-    OfiManageCsvComponent
+    OfiManageCsvComponent,
+    CentralizationReportComponent,
 } from './ofi-report-module';
 
 /*
