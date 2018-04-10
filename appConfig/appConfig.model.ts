@@ -12,10 +12,11 @@ export interface MenuSpec {
         profile: {
             [userType: string]: Array<MenuItem>;
         }
-    },
+    };
     side: {
         [userType: string]: Array<MenuItem>;
-    }
+    };
+    disabled: Array<string>;
 }
 
 interface MemberNodeConnection {
