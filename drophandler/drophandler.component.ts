@@ -30,6 +30,9 @@ export class DropHandler {
     /* Allow multiple. */
     @Input() multiple = false;
 
+    /* Used to display inline version. */
+    @Input() inline:boolean = false;    
+
     /* Form control. */
     @Input() formControl: FormControl;
 
