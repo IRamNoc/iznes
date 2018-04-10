@@ -181,7 +181,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-warning">Subscription is not available at current version.</td>
+                        <td class="text-center text-warning">Subscription is not available in current version.</td>
                     </tr>
                 </tbody>
             </table>
@@ -231,7 +231,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-warning">Redemption is not available at the current version.</td>
+                        <td class="text-center text-warning">Redemption is not available in the current version.</td>
                     </tr>
                 </tbody>
             </table>

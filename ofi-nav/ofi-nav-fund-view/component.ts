@@ -132,19 +132,19 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private initDatePeriodItems(): void {
         this.datePeriodItems = [{
-            id: this.generateDatePeriod(-30, 'days', -1, 'days'),
+            id: this.generateDatePeriod(-30, 'days', 0, 'days'),
             text: 'Last 30 days'
         }, {
-            id: this.generateDatePeriod(-3, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-3, 'months', 0, 'days'),
             text: 'Last 3 months'
         }, {
-            id: this.generateDatePeriod(-6, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-6, 'months', 0, 'days'),
             text: 'Last 6 months'
         }, {
-            id: this.generateDatePeriod(-9, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-9, 'months', 0, 'days'),
             text: 'Last 9 months'
         }, {
-            id: this.generateDatePeriod(-12, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-12, 'months', 0, 'days'),
             text: 'Last 12 months'
         }, {
             id: this.generateYearToDatePeriod(),
