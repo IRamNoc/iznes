@@ -1,4 +1,4 @@
-import { MenuSpec, MenuItem } from '@setl/utils';
+import {MenuSpec} from '@setl/utils';
 
 const home = {
     label: 'Home',
@@ -8,7 +8,7 @@ const home = {
     router_link: '/home'
 };
 const dashboard = {
-    label: 'My dashboard',
+    label: 'My Dashboard',
     label_txt: 'txt_mydashboard',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-my-dashboard',
@@ -302,7 +302,7 @@ const profileMyInfo = {
 };
 
 const kycDocuments = {
-    label: 'KYC Documents',
+    label: 'KYC',
     label_txt: 'txt_kyc_documents',
     icon_class: 'fa fa-align-left',
     element_id: 'top-menu-kyc-documents',
@@ -368,38 +368,23 @@ export const menuSpec: MenuSpec = {
     side: {
         investor: [
             home,
+            orderBook,
             dashboard,
             subPortfolio,
-            messages,
-            orderBook,
-            {
-                label: 'Reports',
-                label_txt: 'txt_reports',
-                icon_class: 'fa fa-book',
-                element_id: 'menu-report-section',
-                children: [
-                    reportsTaxReport,
-                    reportsPL,
-                ]
-            }
+            // messages,
+            // {
+            //     label: 'Reports',
+            //     label_txt: 'txt_reports',
+            //     icon_class: 'fa fa-book',
+            //     element_id: 'menu-report-section',
+            //     children: [
+            //         reportsTaxReport,
+            //         reportsPL,
+            //     ]
+            // }
         ],
         am: [
             home,
-            fundHoldings,
-            messages,
-            {
-                label: 'Product Module',
-                label_txt: 'txt_productmodule',
-                icon_class: 'fa fa-industry',
-                element_id: 'menu-product-module',
-                children: [
-                    ofiProductHome,
-                    productsManagementCompany,
-                    productsSicav,
-                    productsFund,
-                    productsNav,
-                ]
-            },
             manageOrders,
             {
                 label: 'Reports',
@@ -411,7 +396,18 @@ export const menuSpec: MenuSpec = {
                     reportsHistoricalOrders,
                 ]
             },
-            kycDocuments
+            kycDocuments,
+            {
+                label: 'Product Module',
+                label_txt: 'txt_productmodule',
+                icon_class: 'fa fa-industry',
+                element_id: 'menu-product-module',
+                children: [
+                    ofiProductHome,
+                    productsNav,
+                ]
+            },
+            productsManagementCompany,
         ],
         valuer: [
             home,
