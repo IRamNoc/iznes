@@ -15,6 +15,10 @@ import {
     ofiClearNewOrderManageOrder,
     ofiSetNewOrderManageOrder,
     OFI_SET_MY_ORDER_LIST,
+    ofiSetRequestedMyOrder,
+    ofiClearRequestedMyOrder,
+    ofiClearNewOrderMyOrder,
+    ofiSetNewOrderMyOrder,
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
     OFI_RESET_HOME_ORDER_BUFFER,
@@ -72,6 +76,28 @@ export class OfiOrdersService {
         /* Stub. */
     }
 
+    /**
+     * Default static call to get arrangement collective archive, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiOrdersService
+     * @param ngRedux
+     */
+    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCollectiveArchive());
+
+        // Request the list.
+        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_COLLECTIVE_ARCHIVE],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
         if (!boolValue) {
@@ -81,12 +107,21 @@ export class OfiOrdersService {
         }
     }
 
-    static setNewOrder(boolValue: boolean, ngRedux: NgRedux<any>) {
+    static setAmNewOrder(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
         if (!boolValue) {
             ngRedux.dispatch(ofiClearNewOrderManageOrder());
         } else {
             ngRedux.dispatch(ofiSetNewOrderManageOrder());
+        }
+    }
+
+    static setInvNewOrder(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if (!boolValue) {
+            ngRedux.dispatch(ofiClearNewOrderMyOrder());
+        } else {
+            ngRedux.dispatch(ofiSetNewOrderMyOrder());
         }
     }
 
@@ -110,31 +145,9 @@ export class OfiOrdersService {
         ));
     }
 
-    /**
-     * Default static call to get arrangement collective archive, and dispatch default actions, and other
-     * default task.
-     *
-     * @param ofiOrdersService
-     * @param ngRedux
-     */
-    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedCollectiveArchive());
-
-        // Request the list.
-        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_COLLECTIVE_ARCHIVE],
-            [],
-            asyncTaskPipe,
-            {}
-        ));
-    }
-
     static defaultRequestInvestorOrdersList(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedManageOrder());
+        ngRedux.dispatch(ofiSetRequestedMyOrder());
 
         // Request the list.
         const asyncTaskPipe = ofiOrdersService.requestInvestorOrdersList({
@@ -234,17 +247,6 @@ export class OfiOrdersService {
             rowOffSet: (data.rowOffSet * data.pageSize),
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    requestExportOrders(data: ExportOrdersData): any {
-
-        const messageBody: OfiAmExportOrdersRequestBody = {
-            RequestName: 'iznexportorders',
-            token: this.memberSocketService.token,
-            filters: data.filters,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

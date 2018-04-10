@@ -263,7 +263,7 @@ export class FundComponent implements OnInit, OnDestroy {
             'investmentManager': [[]],
             'principalPromoter': [[]],
             'payingAgent': [[]],
-            'fundManagers': [null, Validators.compose([Validators.required, this.validators.alphanumeric])],
+            'fundManagers': [null, Validators.compose([this.validators.alphanumeric])],
             'transferAgent': [[]],
             'centralizingAgent': [[]],
             'isDedicatedFund': [null, Validators.required],
