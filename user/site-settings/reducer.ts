@@ -44,12 +44,16 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
  */
 function setLanguage(actionType, action, state) {
     let newState;
+    let languageData;
 
-    const languageData = _.get(action, 'payload[1].Data[0]');
+    if (_.get(action, 'payload[1].Data[0]','') == ''){
+        languageData = action;
+    }else{
+        languageData = _.get(action, 'payload[1].Data[0]');
+    }
 
-    let language = _.get(languageData, 'language', []);
-
-    language = (language !== '' ? language : 'en-Latn');
+    let language = _.get(languageData, 'language', '');
+    language = (language !== '' && language !== null ? language : 'en-Latn');
 
     newState = Object.assign({}, state, {
         language
