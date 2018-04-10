@@ -106,25 +106,14 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             'fr-Latn'
         ];
 
-        // /* Save last language selected by user in localStorage */
-        // if (validLocales.indexOf(lang) !== -1) {
-        //     if (typeof(Storage) !== 'undefined') {
-        //         localStorage.setItem('lang', lang);
-        //     }
-        // }
-
         //save language in db
         let asyncTaskPipe = this.myUserService.setLanguage({lang: lang});
-
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LANGUAGE],
             [],
             asyncTaskPipe,
             {}
         ));
-
-        /* Set the language in redux. */
-        // this.ngRedux.dispatch(setLanguage(lang));
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
