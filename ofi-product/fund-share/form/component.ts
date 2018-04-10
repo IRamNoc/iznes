@@ -98,10 +98,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             
             if((!fundShareList) || Object.keys(fundShareList).length === 0) {
                 _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
-                    return item.id === Enum.StatusEnum.Master;
-                });
-                _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
-                    return item.id === Enum.StatusEnum.Feeder;
+                    return item.id === Enum.StatusEnum.Master || item.id === Enum.StatusEnum.Feeder;
                 });
             }
 
