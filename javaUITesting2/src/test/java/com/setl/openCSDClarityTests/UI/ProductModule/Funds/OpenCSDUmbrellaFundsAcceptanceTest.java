@@ -188,7 +188,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         }
     }
 
-    private void fillUmbrellaDetailsNotCountry(String fundName){
+    private void fillUmbrellaDetailsNotCountry(String fundName) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
         driver.findElement(By.id("uf_lei")).sendKeys("testLei");
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
@@ -211,12 +211,19 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         }
     }
 
-    private void selectTopDropdown(String dropdownID){
-        driver.findElement(By.id(dropdownID)).click();
+    private void selectTopDropdown(String dropdownID) throws InterruptedException {
+        Thread.sleep(1000);
+        try {
+            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']")).click();
+        }catch (Exception e){
+            fail("this step failed.");
+        }
+        Thread.sleep(1000);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+            //driver.findElement(By.id(dropdownID)).click();
         }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
+            fail("dropdown not selected..: " + e.getMessage());
         }
     }
 

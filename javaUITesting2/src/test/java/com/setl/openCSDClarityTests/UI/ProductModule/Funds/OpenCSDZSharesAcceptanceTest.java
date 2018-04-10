@@ -18,13 +18,14 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 
 
-public class OpenCSDSharesAcceptanceTest {
+public class OpenCSDZSharesAcceptanceTest {
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -45,9 +46,24 @@ public class OpenCSDSharesAcceptanceTest {
     }
 
     @Test
-    @Ignore("Code not completed.")
-    public void shouldCreateShare(){
-
+    public void shouldCreateShare() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-product-home");
+        try {
+            driver.findElement(By.id("new-share-btn")).click();
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+        try {
+            String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-3\"]/h3")).getText();
+            assertTrue(shareTitle.equals("Please enter following information to create a new Fund Share:"));
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+        driver.findElement(By.id("selectFund")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
     }
 
 }
