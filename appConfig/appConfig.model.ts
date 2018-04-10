@@ -16,7 +16,7 @@ export interface MenuSpec {
     side: {
         [userType: string]: Array<MenuItem>;
     };
-    disabled: Array<string>;
+    disabled?: Array<string>;
 }
 
 interface MemberNodeConnection {
