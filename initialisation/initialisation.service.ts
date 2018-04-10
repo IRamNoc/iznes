@@ -13,7 +13,7 @@ import {
     SET_WALLET_ADDRESSES, SET_WALLET_DIRECTORY, SET_WALLET_HOLDING, SET_WALLET_TO_RELATIONSHIP,
     setUpdatedContractList,
     setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
-    updateLastCreatedRegisterIssuerDetail
+    updateLastCreatedRegisterIssuerDetail, SET_LANGUAGE
 } from '@setl/core-store';
 import * as _ from 'lodash';
 
@@ -191,7 +191,35 @@ export class InitialisationService {
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_USER_DETAILS],
             [],
-            asyncTaskPipes, {}));
+            asyncTaskPipes, {},
+            (data)=>{
+                this.requestLanguage(ngRedux, myUserService, data[1]['Data'][0]['userID']);
+            },
+            ));
+
+        return true;
+
+    }
+
+    static requestLanguage(ngRedux: NgRedux<any>,
+                              myUserService: MyUserService, userID) {
+
+        // Create a saga pipe.
+        const asyncTaskPipes = myUserService.getLanguage({userID: userID});
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LANGUAGE],
+            [],
+            asyncTaskPipes, {},
+            ()=>{
+                console.log('language set!');
+            }));
 
         return true;
 

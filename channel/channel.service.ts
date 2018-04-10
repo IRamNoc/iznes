@@ -9,6 +9,7 @@ import {
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
+    SET_OWN_WALLETS,
 
     /* My details */
     SET_USER_DETAILS,
@@ -21,9 +22,11 @@ import {
     setRequestedMailList,
     setRequestedMailInitial,
 
-    //wallets
-    SET_OWN_WALLETS
+    setRequestedMyChainAccess,
+    SET_MY_CHAIN_ACCESS
 } from '@setl/core-store';
+import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
+import {ChainService} from '@setl/core-req-services/chain/service';
 
 @Injectable()
 export class ChannelService {
@@ -33,7 +36,10 @@ export class ChannelService {
     changedPassword = false;
 
     constructor(private ngRedux: NgRedux<any>,
-                private  toasterService: ToasterService) {
+                private toasterService: ToasterService,
+                private myWalletsService: MyWalletsService,
+                private chainService: ChainService
+    ) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -56,9 +62,9 @@ export class ChannelService {
         data = JSON.parse(data);
 
         // The Hench Switch Statement of Channels.
-        console.log(" |--- Resolving Core channel broadcast.");
-        console.log(" | name: ", data.Request);
-        console.log(" | data: ", data);
+        console.log(' |--- Resolving Core channel broadcast.');
+        console.log(' | name: ', data.Request);
+        console.log(' | data: ', data);
         switch (data.Request) {
             case 'nu': // new user
             case 'udu': // update user
@@ -162,6 +168,35 @@ export class ChannelService {
                 );
                 break;
 
+            case 'uduwp': // update user wallet permissions
+                console.log(' | UPDATE USER WALLET PERMISSION: ');
+
+                // need to be retrieve as the admin does not know our wallet list
+                const asyncTaskPipes = this.myWalletsService.requestOwnWallets();
+
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_OWN_WALLETS],
+                    [],
+                    asyncTaskPipes, {}));
+
+
+
+
+                // Set the state flag to true. so we do not request it again.
+                this.ngRedux.dispatch(setRequestedMyChainAccess());
+
+                // Request the list.
+                const asyncTaskPipe = this.chainService.requestMyChainAccess();
+
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_MY_CHAIN_ACCESS],
+                    [],
+                    asyncTaskPipe,
+                    {}
+                ));
+
+                break;
+
             case 'email_send': // send email
                 // request new emails
                 this.ngRedux.dispatch(clearRequestedMailInitial());
@@ -177,9 +212,6 @@ export class ChannelService {
                 break;
 
             case 'uw':  //update wallets
-
-                console.log('uw - TEST ----');
-
                 this.ngRedux.dispatch(
                     {
                         type: SET_OWN_WALLETS,
@@ -187,7 +219,6 @@ export class ChannelService {
                     }
                 );
                 break;
-
             default:
                 break;
         }

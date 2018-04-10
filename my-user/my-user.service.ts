@@ -10,7 +10,9 @@ import {
     RefreshTokenRequestBody,
     ForgotPasswordRequestBody,
     ValidTokenRequestBody,
-    SetNewPasswordFromTokenRequestBody
+    SetNewPasswordFromTokenRequestBody,
+    SetLanguageRequestBody,
+    GetLanguageRequestBody
 } from './my-user.service.model';
 import {NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
@@ -66,6 +68,14 @@ interface SetNewPasswordFromTokenData {
     token: string;
     password: string;
     lang: string;
+}
+
+interface SetLanguageTokenData {
+    lang: any;
+}
+
+interface GetLanguageTokenData {
+    userID: string;
 }
 
 const TIMEOUT = 14 * 60 * 1000;
@@ -196,6 +206,26 @@ export class MyUserService implements OnDestroy {
             resetToken: data.token,
             newPassword: data.password,
             lang: data.lang
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    setLanguage(data: SetLanguageTokenData): any {
+        const messageBody: SetLanguageRequestBody = {
+            RequestName: 'setlanguage',
+            token: this.memberSocketService.token,
+            lang: data.lang
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getLanguage(data: GetLanguageTokenData): any {
+        const messageBody: GetLanguageRequestBody = {
+            RequestName: 'getlanguage',
+            token: this.memberSocketService.token,
+            userID: data.userID
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
