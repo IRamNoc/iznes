@@ -77,7 +77,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         };
 
         this.walletNodeSocketService.walletnodeClose.throttleTime(2000).subscribe((message) => {
-            this.toasterService.pop('warning', 'Wallet node connection is closed');
+            // commented out as the wallet connection close when no activities to walletnode for 2 minutes.
+            // this.toasterService.pop('warning', 'Wallet node connection is closed');
         });
 
         this.initialisationService.channelUpdateCallbacks.push((data) => {
