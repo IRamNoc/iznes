@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {
     Router,
     CanActivate,
@@ -11,6 +11,9 @@ import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {MyUserService} from '@setl/core-req-services';
 import {Subscription} from 'rxjs/Subscription';
+import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
+import {getMyDetail} from '@setl/core-store';
+import * as _ from 'lodash';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
@@ -23,6 +26,7 @@ export class LoginGuardService implements CanActivate {
     @select(['user', 'authentication', 'isLogin']) isLoginOb;
 
     constructor(private ngRedux: NgRedux<any>,
+                @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private toasterService: ToasterService,
                 private router: Router,
                 private _myUserService: MyUserService) {
@@ -31,7 +35,6 @@ export class LoginGuardService implements CanActivate {
         // Reduce observable subscription
         this.subscriptionsArray.push(this.isLoginOb.subscribe(isLogin => {
             this.isLogin = isLogin;
-
         }));
     }
 
@@ -45,8 +48,19 @@ export class LoginGuardService implements CanActivate {
         } else {
             // refresh token.
             this._myUserService.defaultRefreshToken(this.ngRedux);
+
+            if (this.isMenuDisabled(state['url'])) {
+                this.toasterService.pop('warning', 'This page is not available in the current version.');
+
+                return false;
+            }
         }
         return this.isLogin;
+    }
+
+    isMenuDisabled(url: string): boolean {
+        const disabledMenus: Array<string> = _.get(this.appConfig, ['menuSpec', 'disabled'], []);
+        return disabledMenus.indexOf(url) !== -1;
     }
 
 }
