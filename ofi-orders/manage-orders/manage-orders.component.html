@@ -9,7 +9,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'new' : tabdata.orderData.orderID]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}} <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
+            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}} <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon list tab. -->
