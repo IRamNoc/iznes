@@ -171,10 +171,10 @@
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="editNav" (click)="editNav(item)" class="btn btn-success btn-sm">
+                            <button id="editNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="editNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit NAV</span>
                             </button>
-                            <button id="cancelNav" (click)="cancelNav(item)" class="btn btn-danger btn-sm">
+                            <button id="cancelNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
                                 <i class="fa fa-remove"></i> <span mltag="txt_deletenav">Delete NAV</span>
                             </button>
                         </div>

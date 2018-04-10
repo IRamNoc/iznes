@@ -59,18 +59,18 @@ export class OfiManageNavPopup implements OnInit {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavLatest', 'navLatest']) navLatestOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private ofiNavService: OfiNavService,
-        private numberConverterService: NumberConverterService,
-        private popupService: OfiManageNavPopupService) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private ofiNavService: OfiNavService,
+                private numberConverterService: NumberConverterService,
+                private popupService: OfiManageNavPopupService) {
 
         this.initStatusData();
         this.initSubscriptions();
     }
 
     ngOnInit() {
-        this.popupService.onOpen.subscribe((res: {share: model.NavInfoModel, mode: model.NavPopupMode}) => {
+        this.popupService.onOpen.subscribe((res: { share: model.NavInfoModel, mode: model.NavPopupMode }) => {
             this.redux.dispatch(clearRequestedNavLatest());
             this.navExceedsThreshold = false;
             this.initNavForm(res.share, res.mode);
@@ -97,8 +97,9 @@ export class OfiManageNavPopup implements OnInit {
     get isOpen(): boolean {
         return this.popupService.isOpen();
     }
+
     set isOpen(bool: boolean) {
-        if(!bool) this.popupService.close();
+        if (!bool) this.popupService.close();
     }
 
     close(): void {
@@ -127,7 +128,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private initNavForm(share: model.NavInfoModel, mode: model.NavPopupMode): void {
         const statusObj = (share.status) ?
-            [_.find(this.statusItems, { 'id': share.status })] :
+            [_.find(this.statusItems, {'id': share.status})] :
             [this.statusItems[0]];
 
         this.navForm = new FormGroup({
@@ -137,11 +138,19 @@ export class OfiManageNavPopup implements OnInit {
             status: new FormControl(statusObj, Validators.required)
         });
 
-        if(mode !== model.NavPopupMode.ADD) {
+        if (mode !== model.NavPopupMode.ADD) {
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
+            // this.navForm.controls.status.disable();
+        }
+
+        if (Number(share.status) === -1) {
+            this.navForm.controls.price.disable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
             this.navForm.controls.status.disable();
         }
+
 
         this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
             this.checkIfNavExceedsThreshold(nav);
@@ -175,7 +184,7 @@ export class OfiManageNavPopup implements OnInit {
      * @return void
      */
     private updateNav(): void {
-        if(!this.share) return;
+        if (!this.share) return;
 
         const requestData = {
             fundShareIsin: this.share.isin,
@@ -211,7 +220,7 @@ export class OfiManageNavPopup implements OnInit {
      * @return void
      */
     private deleteNav(): void {
-        if(!this.share) return;
+        if (!this.share) return;
 
         const requestData = {
             shareId: this.share.shareId,
@@ -246,7 +255,7 @@ export class OfiManageNavPopup implements OnInit {
      * @return void
      */
     private requestNavLatest(requested: boolean): void {
-        if(requested) return;
+        if (requested) return;
 
         const requestData = {
             fundShareId: this.share.shareId,
@@ -256,8 +265,10 @@ export class OfiManageNavPopup implements OnInit {
         OfiNavService.defaultRequestNavLatest(this.ofiNavService,
             this.redux,
             requestData,
-            () => {},
-            () => {}
+            () => {
+            },
+            () => {
+            }
         );
 
         this.redux.dispatch(ofiSetCurrentNavLatestRequest(requestData));
@@ -308,7 +319,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private showErrorModal(data): void {
         this.alertsService.create('error',
-        `${data[1].status}`);
+            `${data[1].status}`);
 
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
