@@ -72,8 +72,6 @@ export interface UnencumberMessageBody extends WalletNodeMessageBody {
     namespace: string;
     instrument: string;
     amount: number;
-    beneficiaries: any;
-    administrators: any;
     protocol: number;
     metadata: number;
 }

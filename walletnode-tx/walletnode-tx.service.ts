@@ -125,8 +125,6 @@ export class WalletnodeTxService {
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
             amount: _.get(requestData, 'amount', 0),
-            beneficiaries: _.get(requestData, 'beneficiaries', []),
-            administrators: _.get(requestData, 'administrators', []),
             protocol: _.get(requestData, 'protocol', ''),
             metadata: _.get(requestData, 'metadata', {})
         };
