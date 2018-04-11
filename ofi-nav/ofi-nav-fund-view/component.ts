@@ -22,7 +22,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe, immutableHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -102,12 +102,16 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private initNavHistoryForm(): void {
         this.navHistoryForm = new FormGroup({
             navDateFrom: new FormControl(moment().add(-1, 'weeks').add(-1, 'days').format('YYYY-MM-DD')),
-            navDateTo: new FormControl(moment().add(-1, 'days').format('YYYY-MM-DD')),
+            // comment out and default search up to "today"
+            // navDateTo: new FormControl(moment().add(-1, 'days').format('YYYY-MM-DD')),
+            navDateTo: new FormControl(moment().add(0, 'days').format('YYYY-MM-DD')),
             datePeriod: new FormControl([this.datePeriodItems[0]])
         });
 
         this.dateFromConfig.max = moment().add(-1, 'days');
-        this.dateToConfig.max = moment().add(-1, 'days');
+        // comment out and changed to allow search toDate for "today".
+        // this.dateToConfig.max = moment().add(-1, 'days');
+        this.dateToConfig.max = moment();
 
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
@@ -128,19 +132,19 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private initDatePeriodItems(): void {
         this.datePeriodItems = [{
-            id: this.generateDatePeriod(-30, 'days', -1, 'days'),
+            id: this.generateDatePeriod(-30, 'days', 0, 'days'),
             text: 'Last 30 days'
         }, {
-            id: this.generateDatePeriod(-3, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-3, 'months', 0, 'days'),
             text: 'Last 3 months'
         }, {
-            id: this.generateDatePeriod(-6, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-6, 'months', 0, 'days'),
             text: 'Last 6 months'
         }, {
-            id: this.generateDatePeriod(-9, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-9, 'months', 0, 'days'),
             text: 'Last 9 months'
         }, {
-            id: this.generateDatePeriod(-12, 'months', -1, 'days'),
+            id: this.generateDatePeriod(-12, 'months', 0, 'days'),
             text: 'Last 12 months'
         }, {
             id: this.generateYearToDatePeriod(),
@@ -318,20 +322,20 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     editNav(nav: model.NavInfoModel): void {
-        const navObj: model.NavInfoModel = nav;
+        const navObj: model.NavInfoModel = immutableHelper.copy(nav);
         navObj.fundShareName = this.navFund.fundShareName;
         navObj.isin = this.navFund.isin;
-        navObj.status = this.navFund.status;
+        // navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.EDIT);
     }
 
     cancelNav(nav: model.NavInfoModel): void {
-        const navObj: model.NavInfoModel = nav;
+        const navObj: model.NavInfoModel = immutableHelper.copy(nav);
         navObj.fundShareName = this.navFund.fundShareName;
         navObj.isin = this.navFund.isin;
         navObj.shareId = this.navFund.shareId;
-        navObj.status = this.navFund.status;
+        // navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.DELETE);
     }

@@ -15,6 +15,8 @@ import {
     ofiClearRequestedIssuedAssets,
     clearRequestedCollectiveArchive,
     ofiSetNewOrderManageOrder,
+    setamkyclist,
+    clearrequested
 } from '../../ofi-store';
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
@@ -95,6 +97,11 @@ export class OfiMemberNodeChannelService {
 
             case 'izncreateorderbyinvestor':
                 this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
+                break;
+
+            case 'updatekyc':
+                this.ngRedux.dispatch(clearrequested());
+                this.ngRedux.dispatch(setamkyclist());
                 break;
                 
             case 'kycaccepted':

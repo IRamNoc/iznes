@@ -16,11 +16,11 @@
         </button>
 
         <clr-tab-content>
-            <p *ngIf="editForm && umbrellaFund" class="text-overflow">
-                Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
+            <p *ngIf="editForm && umbrellaFund" class="text-overflow">Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
+
             </p>
-            <p id="new-fund-text-span" *ngIf="!editForm">
-                Please fill up the following information to create a new Umbrella Fund
+            <p id="new-fund-text-span" *ngIf="!editForm" mltag="txt_pleasefillupthefollowinginform0003eead0d">Please fill up the following information to create a new Umbrella Fund
+
             </p>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
@@ -42,12 +42,15 @@
                                 <label for="uf_umbrellaFundName" class="control-label" mltag="txt_umbrellafundname">Umbrella Fund Name</label>
                                 <input type="text" id="uf_umbrellaFundName" formControlName="umbrellaFundName">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundName'].touched && umbrellaFundForm.controls['umbrellaFundName'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_lei" class="control-label" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
                                 <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+
+                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_incorrectlei">Incorrect LEI</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -56,6 +59,7 @@
                                 </label>
                                 <input type="text" id="uf_registerOffice" formControlName="registerOffice">
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -65,6 +69,7 @@
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
 
                                 <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -80,8 +85,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -97,11 +102,11 @@
 
                                 </div>
 
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_incorrectdate">
-                                    Incorrect date
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_incorrectdate">Incorrect date
+
                                 </div>
                             </div>
 
@@ -114,8 +119,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -129,8 +134,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -143,8 +148,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -157,8 +162,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['investmentManagerID'].hasError('required') && umbrellaFundForm.controls['investmentManagerID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['investmentManagerID'].hasError('required') && umbrellaFundForm.controls['investmentManagerID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -172,8 +177,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -187,8 +192,8 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['payingAgentID'].hasError('required') && umbrellaFundForm.controls['payingAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">
-                                    This field is required
+                                <div *ngIf="umbrellaFundForm.controls['payingAgentID'].hasError('required') && umbrellaFundForm.controls['payingAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+
                                 </div>
                             </div>
 
@@ -229,6 +234,9 @@
 
                                 </label>
                                 <input type="text" id="uf_giin" formControlName="giin" maxlength="19">
+                                <div *ngIf="umbrellaFundForm.controls['giin'].hasError('pattern') && umbrellaFundForm.controls['giin'].touched" class="text-danger" mltag="txt_incorrectgiin">Incorrect GIIN
+
+                                </div>
                             </div>
 
                             <div class="form-group col-sm-6">
@@ -351,11 +359,11 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)" mltag="txt_no">
-            No
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)" mltag="txt_no">No
+
         </button>
-        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)" mltag="txt_yes">
-            Yes
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)" mltag="txt_yes">Yes
+
         </button>
     </div>
 </clr-modal>

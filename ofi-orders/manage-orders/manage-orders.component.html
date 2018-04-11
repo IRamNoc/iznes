@@ -3,13 +3,13 @@
         <span mltag="txt_orderbook">Order Book</span> - {{ connectedWalletName }}</h1>
 </div>
 
-<button type="button" class="btn btn-info m-1" (click)="placeFakeOrder()">Place a fake Order</button>
+<!--<button type="button" class="btn btn-info m-1" (click)="placeFakeOrder()">Place a fake Order</button>-->
 
 <div class="wrapper wrapper-content">
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}} <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon list tab. -->
@@ -35,15 +35,23 @@
             <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form">
                 <div class="form-horizontal">
                     <div class="row bordered">
-                        <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-3">
+                            <label>
+                                <span mltag="txt_isin">ISIN</span>
+                            </label>
+                            <div class="input-button-group">
+                                <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text" placeholder="ISIN" mltag="txt_isin" style="width: 100% !important"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
                             <label>
                                 <span mltag="txt_sharename">Share Name</span>
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename"/>
+                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename" style="width: 100% !important"/>
                             </div>
                         </div>
-                        <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-3">
                             <label>
                                 <span title="poop" mltag="txt_status">Status</span>
                             </label>
@@ -58,9 +66,9 @@
                                     mltag="txt_status"></ng-select>
                             </div>
                         </div>
-                        <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-3">
                             <label>
-                                <span mltag="txt_type">Type</span>
+                                <span mltag="txt_type">Order type</span>
                             </label>
                             <div>
                                 <ng-select
@@ -214,7 +222,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column><span>Action</span></clr-dg-column>
+                    <clr-dg-column><span class="text-center">Cancel?</span></clr-dg-column>
 
                     <!--<clr-dg-column style="min-width: 120px;"><span mltag="txt_action">Action</span></clr-dg-column>-->
                     <!--<clr-dg-column style="min-width: 170px;"><span mltag="txt_investor">Investor</span></clr-dg-column>-->
@@ -229,14 +237,14 @@
                     <clr-dg-row *ngFor="let order of ordersList; let i = index">
                         <clr-dg-cell>
                             <!-- orderRef -->
-                            <a (click)="buildLink(order, i)" style="cursor: pointer; text-decoration: underline;">
+                            <a (click)="buildLink(order, i)" class="fakeLink">
                                 {{padNumberLeft(order.orderID, 5)}}
                             </a>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderType -->
-                            <span *ngIf="order.orderType == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>
-                            <span *ngIf="order.orderType == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>
+                            <span *ngIf="order.orderType == 3" mltag="txt_subscription"> Subscription</span>
+                            <span *ngIf="order.orderType == 4" mltag="txt_redemption"> Redemption</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- investor -->
@@ -276,19 +284,19 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderDate -->
-                            {{order.orderDate | date:'long'}}
+                            {{getOnlyDate(order.orderDate)}} {{getOnlyTime(order.orderDate)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- cutOffDate -->
-                            {{order.cutoffDate | date:'long'}}
+                            {{getOnlyDate(order.cutoffDate)}} {{order.cutoffDate | date:'longTime'}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- NAVDate -->
-                            {{order.valuationDate | date:'shortDate'}}
+                            {{getOnlyDate(order.valuationDate)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- settlementDate -->
-                            {{order.settlementDate | date:'shortDate'}}
+                            {{getOnlyDate(order.settlementDate)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <span *ngIf="order.orderStatus == -3" class="label">
@@ -315,7 +323,10 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Actions -->
-                            <button type="button" *ngIf="order.orderStatus == 1" (click)="cancelOrder(i)" class="btn btn-sm btn-info">Cancel</button>
+                            <button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">Cancel</button>
+                            <ng-template #cancelDisabled>
+                                <button type="button" class="btn btn-sm btn-info" disabled>Cancel</button>
+                            </ng-template>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -335,7 +346,7 @@
                                             <tbody>
                                             <tr>
                                                 <td><b>Latest NAV</b></td>
-                                                <td>{{order.estimatedPrice}}</td>
+                                                <td>{{order.estimatedPrice | moneyValue: 2}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -345,7 +356,7 @@
                                             <tbody>
                                             <tr>
                                                 <td><b>Fees Amount</b></td>
-                                                <td>{{order.feePercentage * order.amountWithCost}}</td>
+                                                <td>{{order.feePercentage * order.amountWithCost | moneyValue: 4}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -355,7 +366,7 @@
                                             <tbody>
                                             <tr>
                                                 <td><b>NAV Date</b></td>
-                                                <td>{{order.valuationDate | date:'shortDate'}}</td>
+                                                <td>{{getOnlyDate(order.valuationDate)}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -416,7 +427,7 @@
                                 <span>Company name</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{unknownValue}}</span>
+                                <span class="readonly-field">{{orderData.investorCompanyName}}</span>
                             </div>
                         </div>
                     </div>
@@ -440,7 +451,7 @@
                                             <span>First name</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{orderData.firstName}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
@@ -448,7 +459,7 @@
                                             <span>Last name</span>
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{unknownValue}}</span>
+                                            <span class="readonly-field">{{orderData.lastName}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -524,7 +535,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label>
-                                            <span>On-going charges</span>
+                                            <span>Ongoing charges</span>
                                         </label>
                                         <div>
                                             <span class="readonly-field">{{fundShare.mifiidChargesOngoing}}</span>
@@ -564,6 +575,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="well mb-1">
                 <!-- Panel header -->
                 <div class="row panel-header">
@@ -645,7 +657,7 @@
                                 <span>NAV Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.valuationDate | date:'shortDate'}}</span>
+                                <span class="readonly-field">{{getOnlyDate(orderData.valuationDate)}}</span>
                             </div>
                         </div>
                     </div>
@@ -655,7 +667,7 @@
                                 <span>Decimalization</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{maximumNumDecimal}}</span>
+                                <span class="readonly-field">{{fundShare.decimalization}}</span>
                             </div>
                         </div>
                     </div>
@@ -680,7 +692,7 @@
                                 <span>Order Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.orderDate | date:'long'}}</span>
+                                <span class="readonly-field">{{getOnlyDate(orderData.orderDate)}} {{getOnlyTime(orderData.orderDate)}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -688,7 +700,7 @@
                                 <span>Cut-off Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.cutoffDate | date:'long'}}</span>
+                                <span class="readonly-field">{{getOnlyDate(orderData.cutoffDate)}} {{orderData.cutoffDate | date:'longTime'}}</span>
                             </div>
                         </div>
                     </div>
@@ -706,7 +718,7 @@
                                 <span>Settlement Date</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.settlementDate | date:'shortDate'}}</span>
+                                <span class="readonly-field">{{getOnlyDate(orderData.settlementDate)}}</span>
                             </div>
                         </div>
                     </div>
@@ -775,7 +787,7 @@
                                 <span>Fee Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.feePercentage * orderData.amountWithCost}}</span>
+                                <span class="readonly-field">{{orderData.feePercentage * orderData.amountWithCost | moneyValue: 4}}</span>
                             </div>
                         </div>
                     </div>
@@ -785,7 +797,7 @@
                                 <span>Net Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.amountWithCost + (orderData.feePercentage * orderData.amountWithCost)}}</span>
+                                <span class="readonly-field">{{orderData.amountWithCost + (orderData.feePercentage * orderData.amountWithCost)  | moneyValue: 4}}</span>
                             </div>
                         </div>
                     </div>
@@ -795,7 +807,7 @@
                                 <span>Comment</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderNote}}</span>
+                                <span class="readonly-field">{{orderData.orderNote}}</span>
                             </div>
                         </div>
                     </div>

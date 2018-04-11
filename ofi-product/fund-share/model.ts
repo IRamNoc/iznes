@@ -83,44 +83,44 @@ export class FundShare {
             fundShareID: this.fundShareId,
             fundID: this.fundID,
             isin: this.keyFacts.mandatory.isin.value(),
-            shareClassCode: this.keyFacts.mandatory.shareClassCode.value()[0].id,
-            shareClassInvestmentStatus: this.keyFacts.mandatory.shareClassInvestmentStatus.value()[0].id,
+            shareClassCode: this.getSelectValue(this.keyFacts.mandatory.shareClassCode),
+            shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.mandatory.shareClassInvestmentStatus),
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.launchDate.value(),
-            shareClassCurrency: this.keyFacts.mandatory.shareClassCurrency.value()[0].id,
-            valuationFrequency: this.keyFacts.mandatory.valuationFrequency.value()[0].id,
-            historicOrForwardPricing: this.keyFacts.mandatory.historicOrForwardPricing.value()[0].id,
+            shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
+            valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
+            historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
-            couponType: this.keyFacts.mandatory.couponType.value()[0].id,
-            freqOfDistributionDeclaration: this.keyFacts.mandatory.freqOfDistributionDeclaration.value()[0].id,
-            status: this.keyFacts.mandatory.status.value()[0].id,
+            couponType: this.getSelectValue(this.keyFacts.mandatory.couponType),
+            freqOfDistributionDeclaration: this.getSelectValue(this.keyFacts.mandatory.freqOfDistributionDeclaration),
+            status: this.getSelectValue(this.keyFacts.mandatory.status),
             master: this.getStatusMasterValue(),
             feeder: this.getStatusFeederValue(),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
-            subscriptionCategory: this.characteristic.mandatory.subscriptionCategory.value()[0].id,
-            subscriptionCurrency: this.characteristic.mandatory.subscriptionCurrency.value()[0].id,
+            subscriptionCategory: this.getSelectValue(this.characteristic.mandatory.subscriptionCategory),
+            subscriptionCurrency: this.getSelectValue(this.characteristic.mandatory.subscriptionCurrency),
             minInitialSubscriptionInShare: this.characteristic.mandatory.minInitialSubscriptionInShare.value(),
             minInitialSubscriptionInAmount: this.characteristic.mandatory.minInitialSubscriptionInAmount.value(),
             minSubsequentSubscriptionInShare: this.characteristic.mandatory.minSubsequentSubscriptionInShare.value(),
             minSubsequentSubscriptionInAmount: this.characteristic.mandatory.minSubsequentSubscriptionInAmount.value(),
-            redemptionCategory: this.characteristic.mandatory.redemptionCategory.value()[0].id,
-            redemptionCurrency: this.characteristic.mandatory.redemptionCurrency.value()[0].id,
+            redemptionCategory: this.getSelectValue(this.characteristic.mandatory.redemptionCategory),
+            redemptionCurrency: this.getSelectValue(this.characteristic.mandatory.redemptionCurrency),
             minInitialRedemptionInShare: this.characteristic.mandatory.minInitialRedemptionInShare.value(),
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
             portfolioCurrencyHedge: portfolioCurrencyHedge,
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
-            subscriptionCutOffTimeZone: this.calendar.mandatory.subscriptionCutOffTimeZone.value()[0].id,
-            subscriptionSettlementPeriod: this.calendar.mandatory.subscriptionSettlementPeriod.value()[0].id,
+            subscriptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.subscriptionCutOffTimeZone),
+            subscriptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.subscriptionSettlementPeriod),
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
-            redemptionCutOffTimeZone: this.calendar.mandatory.redemptionCutOffTimeZone.value()[0].id,
-            redemptionSettlementPeriod: this.calendar.mandatory.redemptionSettlementPeriod.value()[0].id,
+            redemptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.redemptionCutOffTimeZone),
+            redemptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.redemptionSettlementPeriod),
             subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
-            investorProfile: this.profile.mandatory.investorProfile.value()[0].id,
+            investorProfile: this.getSelectValue(this.profile.mandatory.investorProfile),
             mifiidChargesOngoing: this.fees.mandatory.miFIDIIOngoingCharges.value(),
             mifiidChargesOneOff: this.fees.mandatory.miFIDIIOneOffCharges.value(),
             mifiidTransactionCosts: this.fees.mandatory.miFIDIITransactionsCosts.value(),
@@ -128,16 +128,16 @@ export class FundShare {
             mifiidIncidentalCosts: this.fees.mandatory.miFIDIIIncidentalCosts.value(),
             subscriptionTradeCyclePeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklySubscriptionDealingDays: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            weeklySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
             monthlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
             yearlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             redemptionTradeCyclePeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleRedemptionsWithinPeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklyRedemptionDealingDays: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays,
+            weeklyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
             monthlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
             yearlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
-            navPeriodForSubscription: this.calendar.mandatory.navPeriodForSubscription.value()[0].id,
-            navPeriodForRedemption: this.calendar.mandatory.navPeriodForRedemption.value()[0].id,
+            navPeriodForSubscription: this.getSelectValue(this.calendar.mandatory.navPeriodForSubscription),
+            navPeriodForRedemption: this.getSelectValue(this.calendar.mandatory.navPeriodForRedemption),
             keyFactOptionalData: this.generateJSONString(this.keyFacts.optional),
             characteristicOptionalData: this.generateJSONString(this.characteristic.optional),
             calendarOptionalData: this.generateJSONString(this.calendar.optional),
@@ -211,8 +211,7 @@ export class FundShare {
     }
 
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod = fundShare.numberOfPossibleSubscriptionsWithinPeriod;
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = fundShare.weeklySubscriptionDealingDays;
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklySubscriptionDealingDays);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlySubscriptionDealingDays);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlySubscriptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
@@ -220,8 +219,7 @@ export class FundShare {
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod = fundShare.numberOfPossibleRedemptionsWithinPeriod;
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = fundShare.weeklyRedemptionDealingDays;
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklyRedemptionDealingDays);
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlyRedemptionDealingDays);
         (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlyRedemptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForRedemption, fundShare.navPeriodForRedemption);
@@ -338,6 +336,12 @@ export class FundShare {
         } else {
             return null;
         }
+    }
+
+    private getSelectValue(formItem: FormItem): any {
+        const rawValue = formItem.value();
+
+        return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
 }
 

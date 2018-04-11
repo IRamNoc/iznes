@@ -26,6 +26,21 @@
     /*padding: 10px;*/
 /*}*/
 
+.additionalInfos .row div{
+    position: relative;
+    margin-top: 2rem;
+}
+.additionalInfos .row div table {
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+}
+
 .datagrid-host{
     height: auto !important;
+}
+
+.fakeLink {
+    color: #007cbb;
+    cursor: pointer;
 }

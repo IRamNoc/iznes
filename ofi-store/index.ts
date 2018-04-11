@@ -36,7 +36,7 @@ import {OfiOrdersReducer, OfiOrdersState} from "./ofi-orders";
 /*
  Ofi My Informations
  */
-import {KycReducer, KycState} from './ofi-kyc';
+import {KycReducer, KycState, setamkyclist, setrequested, clearrequested} from './ofi-kyc';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -96,6 +96,8 @@ export {
     OFI_SET_MY_ORDER_LIST,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
+    ofiClearNewOrderMyOrder,
+    ofiSetNewOrderMyOrder,
     ofiMyOrderActions,
 
     // Collective report
@@ -150,6 +152,12 @@ export {
     setRequestedFundShare,
     clearRequestedFundShare,
 } from './ofi-product';
+
+export {
+    setrequested,
+    setamkyclist,
+    clearrequested
+} from './ofi-kyc';
 
 
 export interface OfiState {

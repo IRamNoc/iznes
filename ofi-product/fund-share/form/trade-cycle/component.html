@@ -20,6 +20,7 @@
             <ng-select id="{{typeLowercase}}WeeklyDealingDays"
                 [items]="model.dropdownItems.weeklyItems"
                 [active]="model.form.value.weeklyDealingDays"
+                [multiple]="true"
                 [allowClear]="true"
                 placeholder=""
                 [formControl]="model.form.controls['weeklyDealingDays']">
@@ -111,17 +112,6 @@
                     [hidden]="!showAdd(idx, model.form.controls.yearlyDealingDays.controls.length)">
                     Add</button>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-sm-6">
-            <label class="control-label required-field" for="{{typeLowercase}}PossibleInPeriod" mltag="">Number Of Possible {{typeCapitilised}}s Within Period</label>
-
-            <input id="{{typeLowercase}}PossibleInPeriod" name="" class="form-control required-field"
-                type="number"
-                placeholder=""
-                formControlName="possibleInPeriod" />
         </div>
     </div>
 </form>
