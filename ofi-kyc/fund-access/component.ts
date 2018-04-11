@@ -222,7 +222,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                         });
                     });
                 }
-                bodyStr += '<br><br><a class="btn" href="/#/funds">Go to the Funds shares page to start trading</a> [link needs ammending]<br><br>Thank you,<br><br>The IZNES team.';
+                bodyStr += '<br><br><a class="btn" href="/#/list-of-funds/0">Go to the Funds shares page to start trading</a><br><br>Thank you,<br><br>The IZNES team.';
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
