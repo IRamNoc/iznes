@@ -289,10 +289,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 private _fb: FormBuilder,
                 private mcService: OfiManagementCompanyService) {
 
-        // language
-        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe((managementCompanyList) => this.getManagementCompanyListFromRedux(managementCompanyList)));
-
         this.additionnalForm = this._fb.group({
             email: [
                 '',
@@ -340,7 +336,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
             ]
         });
 
-
+        // language
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptions.push(this.managementCompanyAccessListOb.subscribe((managementCompanyList) => this.getManagementCompanyListFromRedux(managementCompanyList)));
     }
 
     ngOnInit() {
@@ -358,7 +356,10 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         this.additionnalForm.controls['phoneCode'].setValue(this.getPhoneCode(userInfo.phoneCode));
         this.additionnalForm.controls['phoneNumber'].setValue(userInfo.phoneNumber);
 
-        // needs to be asset management company name
+        // needs to be asset management company name, this handles investor
+        if (this.type == '46') {
+            this.additionnalForm.controls['companyName'].setValue(userInfo.companyName);
+        }
     }
 
     isPopUpMode() {
@@ -424,25 +425,29 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
     getManagementCompanyListFromRedux(managementCompanyList) {
 
+        // if investor no need to run the code
+        if (this.type == '46') {
+            return;
+        }
+
+        // if no mangement company no need to run this code
         if (Object.keys(managementCompanyList).length === 0) {
             return;
         }
 
         const managementCompanyListImu = fromJS(managementCompanyList);
-
         this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-
             result.push({
                 companyName: item.get('companyName', '')
             });
-
             return result;
         }, []);
 
+        // get am company name
         const assetManagerValue = this.managementCompanyList && this.managementCompanyList[0].companyName;
         this.additionnalForm.controls['companyName'].setValue(assetManagerValue);
         this.additionnalForm.controls['companyName'].disable();
-        
+
         this._changeDetectorRef.markForCheck();
     }
 }
