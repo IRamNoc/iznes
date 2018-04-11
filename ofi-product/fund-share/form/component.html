@@ -322,11 +322,38 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabFeesButton">
-                        <span>Documents</span>
+                    <button clrTabLink id="tabDocumentsButton">
+                        <span>
+                            Documents
+                            <span class="required" [hidden]="model.documents.mandatory.isValid()">*</span>
+                        </span>
                     </button>
                     <clr-tab-content>
-                        <app-dynamic-form [model]="{}"></app-dynamic-form>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].mandatory)"></i>
+                                        <h2 id="toggleDocumentsMandatory" mltag="txt_">Documents: Main Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].mandatory)">
+                                <app-dynamic-form [model]="model.documents.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['documents'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].optional)"></i>
+                                        <h2 id="toggleDocumentsOptional" mltag="txt_">Documents: Optional Information</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].optional)">
+                                <app-dynamic-form [model]="model.documents.optional"></app-dynamic-form>
+                            </div>
+                        </div>
                     </clr-tab-content>
                 </clr-tab>
             </clr-tabs>
