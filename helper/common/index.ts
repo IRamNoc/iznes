@@ -47,3 +47,35 @@ export function commaSeparateNumber(val: number | string): string {
     val = val.toString().replace(/,/g, '');
     return (val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+/**
+ * Safe base64 encode from browser, btoa something cause issue.
+ * try to encode "Documents KYC : veuillez aider {{investorCompanyName}} à finaliser son dossier client" with btoa
+ * @param str
+ * @return {string}
+ */
+export function b64EncodeUnicode(str: string): string {
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode(Number('0x' + p1));
+        }));
+}
+
+/**
+ * Safe base64 encode from browser, atob something cause issue.
+ * try to decode
+ * "RG9jdW1lbnRzIEtZQyA6IHZldWlsbGV6IGFpZGVyIHt7aW52ZXN0b3JDb21wYW55TmFtZX19IMOgIGZpbmFsaXNlciBzb24gZG9zc2llciBjbGllbnQ="
+ * with atob
+ * @param str
+ * @return {string}
+ */
+export function b64DecodeUnicode(str: string): string {
+    // Going backwards: from bytestream, to percent-encoding, to original string.
+    return decodeURIComponent(atob(str).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+

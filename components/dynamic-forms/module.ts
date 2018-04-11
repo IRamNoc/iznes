@@ -6,7 +6,7 @@ import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 import {DpDatePickerModule} from '../ng2-date-picker/date-picker.module';
 import {SelectModule} from '../ng2-select/select.module';
 import {FileDropModule} from '@setl/core-filedrop';
-import {FileViewerModule} from '@setl/core-fileviewer';
+import {FileViewerModule} from '@setl/core-fileviewer/fileviewer.module';
 
 import {DynamicFormComponent} from './component';
 import {DynamicFormService} from './service';
