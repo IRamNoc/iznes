@@ -5,15 +5,14 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 /* Pipes. */
-import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
+import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
 /* Clarity module. */
 import {ClarityModule} from '@clr/angular';
 
 import {MultilingualModule} from '@setl/multilingual';
-
 /* Components. */
 import {OfiHomeComponent} from './home/component';
-
+import {SetlLayoutModule} from '@setl/core-layout';
 
 /* Decorator. */
 @NgModule({
@@ -35,10 +34,9 @@ import {OfiHomeComponent} from './home/component';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
+        SetlLayoutModule
     ],
-    providers: [
-
-    ]
+    providers: []
 })
 
 /* Class. */

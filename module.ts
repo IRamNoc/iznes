@@ -1,6 +1,5 @@
 /* Core/Angular imports. */
 import {NgModule} from '@angular/core';
-
 /* Custom Ofi imports. */
 import {OfiHomeModule} from './ofi-home/module';
 import {OfiAmProductHomeModule} from './ofi-product/module';
@@ -16,8 +15,8 @@ import {OfiNavModule} from './ofi-nav/module';
 import {OfiReportModule} from './ofi-report-module';
 import {OfiAmDashboardModule} from './ofi-am-dashboard/module';
 import {MultilingualModule} from '@setl/multilingual';
-import {SelectModule} from '@setl/utils';
-import {SetlComponentsModule, DynamicFormsModule} from '@setl/utils';
+import {DynamicFormsModule, SelectModule, SetlComponentsModule} from '@setl/utils';
+import {SetlLayoutModule} from '@setl/core-layout';
 
 /* Decorator. */
 @NgModule({
@@ -37,15 +36,13 @@ import {SetlComponentsModule, DynamicFormsModule} from '@setl/utils';
         SetlComponentsModule,
         MultilingualModule,
         SelectModule,
-        DynamicFormsModule
+        DynamicFormsModule,
+        SetlLayoutModule
     ],
     exports: [
         OfiFundInvestModule,
         OfiCorpActionsModule,
         DynamicFormsModule
-    ],
-    declarations: [
-
     ],
     providers: [OfiPostTxService]
 })
