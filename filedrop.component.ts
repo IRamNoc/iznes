@@ -1,11 +1,12 @@
 /* Core imports. */
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 /* Form Group. */
 import { FormControl } from '@angular/forms';
 
 /* DropHandler Component */
 import { DropHandler } from './drophandler/drophandler.component';
+import { FileDropItem } from './FileDrop';
 
 @Component({
     selector: 'setl-file-drop',
@@ -13,7 +14,7 @@ import { DropHandler } from './drophandler/drophandler.component';
     styleUrls: ['filedrop.component.css']
 })
 
-export class FileDropComponent {
+export class FileDropComponent implements OnInit {
     /* OnDrop event - emit every file that's dropped or removed. */
     @Output() onDrop:EventEmitter<{}> = new EventEmitter();
 
@@ -26,10 +27,14 @@ export class FileDropComponent {
     /* Used to display inline version. */
     @Input() inline:boolean = false;
 
+    @Input() preset:FileDropItem = null;
+
     /* Constructor */
     public constructor () {
         /* Stub */
     }
+
+    ngOnInit() { }
 
     /**
      * Handle Drop Files
