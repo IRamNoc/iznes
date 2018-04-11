@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {select, NgRedux} from '@angular-redux/store';
-import {SagaHelper} from '@setl/utils';
+import * as SagaHelper from '@setl/utils/sagaHelper';
 import * as utilsCommon from '@setl/utils/common';
 import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
 import * as _ from 'lodash';
