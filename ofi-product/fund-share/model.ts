@@ -252,36 +252,38 @@ export class FundShare {
     }
 
     setFundShareDocs(fundShareDocs: OfiFundShareDocuments): void {
-        this.documents.mandatory.prospectus.preset = fundShareDocs.prospectus;
-        this.documents.mandatory.kiid.preset = fundShareDocs.kiid;
+        this.setDocumentItem(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
+        this.setDocumentItem(this.documents.mandatory.kiid, fundShareDocs.kiid);
         
-        this.documents.optional.annualActivityReport.preset = fundShareDocs.annualActivityReport;
-        this.documents.optional.businessLetter.preset = fundShareDocs.businessLetter;
-        this.documents.optional.emt.preset = fundShareDocs.emt;
-        this.documents.optional.ept.preset = fundShareDocs.ept;
-        this.documents.optional.kid.preset = fundShareDocs.kid;
-        this.documents.optional.letterToShareholders.preset = fundShareDocs.letterToShareholders;
-        this.documents.optional.monthlyExtraFinancialReport.preset = fundShareDocs.monthlyExtraFinancialReport;
-        this.documents.optional.monthlyFinancialReport.preset = fundShareDocs.monthlyFinancialReport;
-        this.documents.optional.productSheet.preset = fundShareDocs.productSheet;
-        this.documents.optional.quarterlyExtraFinancialReport.preset = fundShareDocs.quarterlyExtraFinancialReport;
-        this.documents.optional.quarterlyFinancialReport.preset = fundShareDocs.quarterlyFinancialReport;
-        this.documents.optional.semiAnnualSummary.preset = fundShareDocs.semiAnnualSummary;
-        this.documents.optional.sharesAllocation.preset = fundShareDocs.sharesAllocation;
-        this.documents.optional.sriPolicy.preset = fundShareDocs.sriPolicy;
-        this.documents.optional.statutoryAuditorsCertification.preset = fundShareDocs.statutoryAuditorsCertification;
-        this.documents.optional.tpts2.preset = fundShareDocs.tpts2;
-        this.documents.optional.transparencyCode.preset = fundShareDocs.transparencyCode;
+        this.setDocumentItem(this.documents.optional.annualActivityReport, fundShareDocs.annualActivityReport);
+        this.setDocumentItem(this.documents.optional.businessLetter, fundShareDocs.businessLetter);
+        this.setDocumentItem(this.documents.optional.emt, fundShareDocs.emt);
+        this.setDocumentItem(this.documents.optional.ept, fundShareDocs.ept);
+        this.setDocumentItem(this.documents.optional.kid, fundShareDocs.kid);
+        this.setDocumentItem(this.documents.optional.letterToShareholders, fundShareDocs.letterToShareholders);
+        this.setDocumentItem(this.documents.optional.monthlyExtraFinancialReport, fundShareDocs.monthlyExtraFinancialReport);
+        this.setDocumentItem(this.documents.optional.monthlyFinancialReport, fundShareDocs.monthlyFinancialReport);
+        this.setDocumentItem(this.documents.optional.productSheet, fundShareDocs.productSheet);
+        this.setDocumentItem(this.documents.optional.quarterlyExtraFinancialReport, fundShareDocs.quarterlyExtraFinancialReport);
+        this.setDocumentItem(this.documents.optional.quarterlyFinancialReport, fundShareDocs.quarterlyFinancialReport);
+        this.setDocumentItem(this.documents.optional.semiAnnualSummary, fundShareDocs.semiAnnualSummary);
+        this.setDocumentItem(this.documents.optional.sharesAllocation, fundShareDocs.sharesAllocation);
+        this.setDocumentItem(this.documents.optional.sriPolicy, fundShareDocs.sriPolicy);
+        this.setDocumentItem(this.documents.optional.statutoryAuditorsCertification, fundShareDocs.statutoryAuditorsCertification);
+        this.setDocumentItem(this.documents.optional.tpts2, fundShareDocs.tpts2);
+        this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
     }
 
-    private convertDocumentStr(str: string) {
+    private setDocumentItem(formItem: FormItem, str: any): void {
         if(!str) return null;
         
         const arr = str.split('|');
 
-        return {
-            hash: arr[0],
-            title: arr[1]
+        formItem.preset = arr[0];
+        formItem.fileData = {
+            fileID: arr[0],
+            hash: arr[1],
+            name: arr[2]
         }
     }
 

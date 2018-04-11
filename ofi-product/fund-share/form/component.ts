@@ -42,6 +42,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
+    fundShareDocsLoaded: boolean = false;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
@@ -182,7 +183,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShare(fundShare: any): void {
-        if((!fundShare) || !fundShare.fundShareID) return;
+        if((!fundShare) || !fundShare.fundShareID) {
+            return;
+        }
 
         this.fundShareData = fundShare;
         this.model.setFundShare(fundShare);
@@ -212,13 +215,18 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShareDocs(fundShareDocs: any): void {
-        if((!fundShareDocs) || !fundShareDocs.fundShareID) return;
+        if((!fundShareDocs) || !fundShareDocs.fundShareID) {
+            this.fundShareDocsLoaded = true;
+            this.changeDetectorRef.detectChanges();
+            return;
+        }
 
         this.fundShareDocsData = fundShareDocs;
         this.model.setFundShareDocs(fundShareDocs);
 
         if(this.model.fundID) this.redux.dispatch(setRequestedFundShareDocs());
 
+        this.fundShareDocsLoaded = true;
         this.changeDetectorRef.detectChanges();
     }
 
@@ -246,7 +254,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
                 this.redux,
                 this.model.getRequest(),
-                (data) => this.onUpdateSuccess(data[1]),
+                (data) => this.onUpdateSuccess(data[1].Data),
                 (e) => this.onUpdateError(e[1].Data[0]));
         }
     }
