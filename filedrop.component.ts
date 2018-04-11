@@ -23,6 +23,9 @@ export class FileDropComponent {
     /* Multiple allows more than one file to be added. */
     @Input() multiple:boolean = false;
 
+    /* Used to display inline version. */
+    @Input() inline:boolean = false;
+
     /* Constructor */
     public constructor () {
         /* Stub */
