@@ -69,8 +69,6 @@ interface Unencumber {
     namespace: string;
     instrument: string;
     amount: number;
-    beneficiaries: any;
-    administrators: any;
     protocol: string;
     metadata: string;
 }
