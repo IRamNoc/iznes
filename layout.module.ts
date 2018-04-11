@@ -31,7 +31,6 @@ import {UiTextComponent} from './layouts/ui-form/components/text/text.component'
 import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
 import {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';
-
 /* Directives. */
 import {DropdownDirective} from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -41,10 +40,9 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlPipesModule, SetlDirectivesModule, SetlComponentsModule} from '@setl/utils';
+import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
-
 /* Import the persist module. */
 import {PersistModule} from '@setl/core-persist';
 
@@ -96,7 +94,7 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiLayout2Component,
         UiTextComponent,
         UiExpandableComponent,
-        UiDatagridExpandComponent
+        UiDatagridExpandComponent,
     ],
     exports: [
         /* Directives. */
@@ -127,7 +125,7 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiLayout2Component,
         UiTextComponent,
         UiExpandableComponent,
-        UiDatagridExpandComponent
+        UiDatagridExpandComponent,
     ],
     providers: [
         /* Services. */
