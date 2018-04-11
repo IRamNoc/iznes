@@ -1,22 +1,15 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
-import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
-
-import { fromJS } from 'immutable';
-import {ToasterService} from 'angular2-toaster';
 import {MultilingualService} from '@setl/multilingual';
-import {immutableHelper, MoneyValuePipe, NumberConverterService, APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
-
+import {APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterService} from '@setl/utils';
 /* Ofi orders request service. */
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {ofiSetRequestedHomeOrder} from '../../ofi-store';
 import * as math from 'mathjs';
-import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
-import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -37,6 +30,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     private subscriptions: Array<any> = [];
     private myWallets: any = [];
     private connectedWalletId: any = 0;
+    private userType;
 
     // pipeForm: FormGroup;
     // randomNum = 0;
@@ -57,8 +51,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 private _fb: FormBuilder,
                 private _router: Router,
                 private multilingualService: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
     }
 
@@ -118,6 +111,14 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
             /* Update wallet name. */
             this.updateWalletConnection();
+        });
+
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((details) => {
+            /* Assign list to a property. */
+
+            this.userType = details.userType;
+            this._changeDetectorRef.markForCheck();
         });
 
     }
