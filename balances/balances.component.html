@@ -86,7 +86,7 @@
 
 
                 <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
-                    <clr-dg-cell>{{breakdown.addr}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.label}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.balance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.encumbrance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
