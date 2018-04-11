@@ -302,7 +302,7 @@ const profileMyInfo = {
 };
 
 const kycDocuments = {
-    label: 'KYC',
+    label: 'KYC Documents',
     label_txt: 'txt_kyc_documents',
     icon_class: 'fa fa-align-left',
     element_id: 'top-menu-kyc-documents',
