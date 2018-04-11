@@ -4,7 +4,8 @@ import {MyMessagesState, MessageDetail} from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
-import {setDecryptedContent} from "./actions";
+import {setDecryptedContent} from './actions';
+import {commonHelper} from '@setl/utils';
 
 const initialState: MyMessagesState = {
     messageList: [],
@@ -190,7 +191,7 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
         function (thisMessageDetail) {
             let subject, content;
             try {
-                subject = window.atob(thisMessageDetail.get('subject'));
+                subject = commonHelper.b64DecodeUnicode(thisMessageDetail.get('subject'));
             } catch (e) {
                 // something failed
                 subject = thisMessageDetail.get('subject');
@@ -231,13 +232,13 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
 
             if (thisMailId === mailId) {
                 let decryptedObject = JSON.parse(newContent);
-                let content = atob(decryptedObject.general);
+                let content = commonHelper.b64DecodeUnicode(decryptedObject.general);
                 let action = decryptedObject.action;
                 const isDecrypted = true;
 
                 if (content.substring(0, 11) === '{"general":') {
                     decryptedObject = JSON.parse(content);
-                    content = atob(decryptedObject.general);
+                    content = commonHelper.b64DecodeUnicode(decryptedObject.general);
                     action = decryptedObject.action;
                 }
 
