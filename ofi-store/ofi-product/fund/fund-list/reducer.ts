@@ -176,6 +176,8 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             hasSwap: fund.hasSwap !== null && fund.hasSwap.toString(),
             hasDurationHedge: fund.hasDurationHedge !== null && fund.hasDurationHedge.toString(),
             fiscalYearEnd: fund.fiscalYearEnd !== null && fund.fiscalYearEnd.substr(0, 7),
+            fundCreationDate: fund.fundCreationDate !== null && fund.fundCreationDate.substr(0, 10),
+            fundLaunchate: fund.fundLaunchate !== null && fund.fundLaunchate.substr(0, 10),
         };
         return {
             ...sum,
