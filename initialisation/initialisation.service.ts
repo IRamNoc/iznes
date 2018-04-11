@@ -192,17 +192,20 @@ export class InitialisationService {
             [SET_USER_DETAILS],
             [],
             asyncTaskPipes, {},
-            (data)=>{
-                this.requestLanguage(ngRedux, myUserService, data[1]['Data'][0]['userID']);
+            (data) => {
+                const userID = Number(_.get(data, '[1].Data[0].userID', 0));
+                if (userID !== 0) {
+                    this.requestLanguage(ngRedux, myUserService, userID);
+                }
             },
-            ));
+        ));
 
         return true;
 
     }
 
     static requestLanguage(ngRedux: NgRedux<any>,
-                              myUserService: MyUserService, userID) {
+                           myUserService: MyUserService, userID) {
 
         // Create a saga pipe.
         const asyncTaskPipes = myUserService.getLanguage({userID: userID});
@@ -217,7 +220,7 @@ export class InitialisationService {
             [SET_LANGUAGE],
             [],
             asyncTaskPipes, {},
-            ()=>{
+            () => {
                 console.log('language set!');
             }));
 
@@ -377,7 +380,7 @@ export class InitialisationService {
 
         // clear (set to false) the state of contract need handle
         ngRedux.dispatch(clearContractNeedHandle());
-        }
+    }
 
     /**
      * Using 'block' update from wallet node.
