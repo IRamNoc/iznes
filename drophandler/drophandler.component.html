@@ -60,13 +60,19 @@
                 (drop)="handleDrop($event)">
             </div>
 
-            <div class="drop-file-nofile" [hidden]="uploadedFiles.length">{{uploadPrompt}}</div>
+            <div class="drop-file-nofile" [hidden]="uploadedFiles.length || preset">{{uploadPrompt}}</div>
 
             <div class="drop-file-meta" *ngIf="uploadedFiles.length">
                 <span *ngFor="let file of uploadedFiles; let i = index">
                     <span class="added-file-inline {{file.status}}-inline" *ngIf="file.name">
                         <i class="fa fa-times" (click)="stopPropagation($event);clearFiles(i)"></i> {{ file.name }}
                     </span>
+                </span>
+            </div>
+
+            <div class="drop-file-meta" *ngIf="!uploadedFiles.length && preset">
+                <span class="added-file-inline uploaded-file-inline" *ngIf="preset.name">
+                    <i class="fa fa-times" (click)="stopPropagation($event);clearPreset()"></i> {{ preset.name }}
                 </span>
             </div>
         </div>

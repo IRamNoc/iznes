@@ -7,12 +7,14 @@ import {
     ViewChild,
     ElementRef,
     Renderer,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    AfterViewInit
 } from '@angular/core';
 import * as _ from 'lodash';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 
 import {FormControl} from '@angular/forms';
+import {FileDropItem} from '../FileDrop';
 
 /* Decorator. */
 @Component({
@@ -22,7 +24,7 @@ import {FormControl} from '@angular/forms';
 })
 
 /* Class. */
-export class DropHandler {
+export class DropHandler implements AfterViewInit {
 
     /* Events */
     @Output() onDropFiles: EventEmitter<{}> = new EventEmitter();
@@ -35,6 +37,8 @@ export class DropHandler {
 
     /* Form control. */
     @Input() formControl: FormControl;
+
+    @Input() preset:FileDropItem = null;
 
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput: ElementRef;
@@ -349,6 +353,10 @@ export class DropHandler {
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
+    }
+
+    clearPreset(): void {
+        this.preset = null;
     }
 
     /**
