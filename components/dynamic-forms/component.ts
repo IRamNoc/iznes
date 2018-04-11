@@ -56,4 +56,8 @@ export class DynamicFormComponent implements OnInit {
         return index;
     }
 
+    onDropFiles(event, formControl: FormControl) {
+        this.service.uploadFile(event, formControl, this.changeDetectorRef);
+    }
+
 }
