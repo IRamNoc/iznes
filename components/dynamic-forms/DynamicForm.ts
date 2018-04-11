@@ -22,6 +22,8 @@ export interface FormItem {
     listAllowMultiple?: boolean;
 
     dateOptions?: { [key: string]: any };
+
+    fileData?: any;
 }
 
 export enum FormItemType {
