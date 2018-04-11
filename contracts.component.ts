@@ -235,7 +235,7 @@ export class ContractsComponent implements OnInit, OnChanges {
             commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
         });
         const receive = [];
-        _.each(contractJson.parties[index][3], (recieveListItem, i) => {
+        _.each(contractJson.parties[index][3], (receiveListItem, i) => {
             receive[i] = [i, contract.parties[index - 1].sigAddress];
         });
 

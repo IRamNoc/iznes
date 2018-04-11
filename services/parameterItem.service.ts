@@ -6,7 +6,7 @@ export class ParameterItemService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let parameterItem = new ParameterItemModel();
+        const parameterItem = new ParameterItemModel();
         parameterItem.key = key;
         parameterItem.address = json[0];
         parameterItem.value = json[1];

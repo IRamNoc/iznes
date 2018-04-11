@@ -39,7 +39,7 @@ export class ContractService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let contract = new ContractModel();
+        const contract = new ContractModel();
         for (const prop in json) {
             if (contract.hasOwnProperty(prop)) {
                 contract[prop] = JSON.parse(JSON.stringify(json[prop]));
@@ -62,7 +62,6 @@ export class ContractService {
             }
             contract.payors = [];
             contract.payees = [];
-            contract.__completed = 1;
             contract.status = 'Completed';
             _.each(contract.parties, (partyJson, partyIndex) => {
                 if (typeof partyJson !== 'number') {
@@ -87,8 +86,7 @@ export class ContractService {
                     }
                     contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
                 }
-                if (contract.parties[partyIndex].signature === '') {
-                    contract.__completed = 0;
+                if (contract.__completed === 0) {
                     contract.status = 'Pending';
                 }
             });
@@ -108,8 +106,12 @@ export class ContractService {
 
         // Parameters
         if (typeof contract.parameters !== 'undefined' && contract.parameters !== null) {
-            _.each(contract.parameters, (parameterJson, parameterKey) => {
-                contract.parameters[parameterKey] = this.parameterItemService.fromJSON(parameterJson, parameterKey);
+            let parameterIndex = 0;
+            const parameters = contract.parameters;
+            contract.parameters = [];
+            _.each(parameters, (parameterJson, parameterKey) => {
+                contract.parameters[parameterIndex] = this.parameterItemService.fromJSON(parameterJson, parameterKey);
+                parameterIndex++;
             });
         }
 
@@ -122,7 +124,7 @@ export class ContractService {
 
         contract.address = contract.__address;
         contract.function = contract.__function;
-        contract.completed = contract.__completed != 0;
+        contract.completed = contract.__completed !== 0;
         contract.timeevent = contract.__timeevent;
         return contract;
     }
@@ -151,11 +153,11 @@ export class ContractService {
             'addencumbrances',
         ];
 
-        let contractJsonObject: any = {
+        const contractJsonObject: any = {
             contractdata: {}
         };
 
-        for (let index in contractDataFields) {
+        for (const index in contractDataFields) {
             if (stringifyDataFields.indexOf(contractDataFields[index]) !== -1 &&
                 typeof contract[contractDataFields[index]] !== 'undefined'
             ) {
@@ -189,14 +191,7 @@ export class ContractService {
     }
 
     public addParameter(contract: ContractModel, parameter: ParameterItemModel): void {
-        contract.parameters[parameter.key] = [
-            parameter.address,
-            parameter.value,
-            parameter.calculatedIndex,
-            parameter.contractSpecific,
-            parameter.calculationOnly,
-            parameter.signature
-        ];
+        contract.parameters.push(parameter);
     }
 
     public addEncumbrance(contract: ContractModel, encumbrance: EncumbranceModel): void {

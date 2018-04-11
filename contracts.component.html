@@ -32,8 +32,8 @@
                 <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
                 <clr-dg-cell>{{contract.expiry * 1000 | date:'dd MMM yyyy H:mm:ss'}}</clr-dg-cell>
                 <clr-dg-cell>
-                    <span *ngIf="contract.completed == true" class="label label-success" mltag="txt_enabled">Complete</span>
-                    <span *ngIf="contract.completed != true" class="label label-warning" mltag="txt_incomplete">Incomplete</span>
+                    <span *ngIf="contract.__completed == -1" class="label label-success" mltag="txt_enabled">Complete</span>
+                    <span *ngIf="contract.__completed !== -1" class="label label-warning" mltag="txt_incomplete">Incomplete</span>
                 </clr-dg-cell>
                 <clr-dg-cell>
                     <div class="btn-group btn-sm" style="float:right">
@@ -63,8 +63,8 @@
                     </td>
                     <td>
                         <div class="form-group tx-view-header" style="float:right">
-                            <span *ngIf="contract.completed == true" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
-                            <span *ngIf="contract.completed != true" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
+                            <span *ngIf="contract.__completed == -1" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
+                            <span *ngIf="contract.__completed != -1" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
                         </div>
                     </td>
                 </tr>
@@ -119,6 +119,17 @@
                             </button>
                         </span>
                     </clr-dg-cell>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
+        <div *ngIf="contract.parameters.length > 0">
+            Parameters
+            <clr-datagrid #parametersDataGrid>
+                <clr-dg-column mltag="txt_parameter">Parameter</clr-dg-column>
+                <clr-dg-column mltag="txt_value">Value</clr-dg-column>
+                <clr-dg-row *clrDgItems="let parameter of contract.parameters">
+                    <clr-dg-cell>{{parameter.key}}</clr-dg-cell>
+                    <clr-dg-cell>{{parameter.value}}</clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
         </div>
