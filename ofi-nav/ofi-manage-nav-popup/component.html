@@ -1,11 +1,9 @@
 <clr-modal [(clrModalOpen)]="isOpen">
-    <div class="modal-title">
-        <h4 class="modal-title-text">
-            <span class="ml_translated" mltag="txt_addnewnav" *ngIf="isAddMode()">Add New NAV</span>
-            <span class="ml_translated" mltag="txt_editnav" *ngIf="isEditMode()">Edit NAV</span>
-            <span class="ml_translated" mltag="txt_deletenav" *ngIf="isDeleteMode()">Delete NAV</span>
-        </h4>
-    </div>
+    <h3 class="modal-title">
+        <span class="ml_translated" mltag="txt_addnewnav" *ngIf="isAddMode()">Add New NAV</span>
+        <span class="ml_translated" mltag="txt_editnav" *ngIf="isEditMode()">Edit NAV</span>
+        <span class="ml_translated" mltag="txt_deletenav" *ngIf="isDeleteMode()">Delete NAV</span>
+    </h3>
     <div class="modal-body">
         <form [formGroup]="navForm" *ngIf="isOpen && navForm">
             <div class="row">
@@ -41,7 +39,7 @@
                     </span>
                 </div>
 
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6">
                     <label class="control-label" for="navDate" mltag="txt_navdate">NAV Date</label>
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
@@ -54,7 +52,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6">
                     <label class="control-label" for="navPublishDate" mltag="txt_navpubdate">Publication Date</label>
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
