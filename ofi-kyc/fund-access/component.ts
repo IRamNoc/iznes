@@ -136,7 +136,6 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             if (ans.resolved) {
                 this.saveAccess();
             } else {
-                console.log('Update Fund Access');
                 this.updateFundAccess();
             }
         });
