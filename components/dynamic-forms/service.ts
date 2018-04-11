@@ -3,7 +3,7 @@ import {Injectable, ChangeDetectorRef} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux} from '@angular-redux/store';
 import {FileService} from '@setl/core-req-services/file/file.service';
-import {SagaHelper} from '@setl/utils';
+import * as SagaHelper from '@setl/utils/sagaHelper';
 import {ToasterService} from 'angular2-toaster';
 
 import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
