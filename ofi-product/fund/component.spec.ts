@@ -104,6 +104,8 @@ describe('FundComponent', () => {
     let linkDes;
     let routerLinks;
 
+    const resetTestingModule = TestBed.resetTestingModule;
+
     beforeAll((done) => (async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -133,6 +135,10 @@ describe('FundComponent', () => {
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
+
+    afterAll(() => {
+        TestBed.resetTestingModule = resetTestingModule;
+    });
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(FundComponent);

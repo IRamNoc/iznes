@@ -7,12 +7,13 @@
 // import {NgReduxModule} from '@angular-redux/store';
 // import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 // import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-// import {MemberSocketService} from '@setl/websocket-service';
-// import {MemberSocketServiceMock} from "@setl/core-test-util";
 //
-// export class OfiManagementCompanyServiceMock extends OfiManagementCompanyService {
-//
+// export class OfiManagementCompanyServiceMock {
+//     defaultRequestManagementCompanyList() {
+//         return;
+//     }
 // }
+//
 //
 // describe('kyc-my-informations', () => {
 //
@@ -21,7 +22,10 @@
 //     let de: DebugElement;
 //     let el: HTMLElement;
 //
-//     beforeEach(async(() => {
+//     const resetTestingModule = TestBed.resetTestingModule;
+//
+//     beforeAll((done) => (async () => {
+//         TestBed.resetTestingModule();
 //         TestBed.configureTestingModule({
 //             declarations: [
 //                 OfiMyInformationsComponent,
@@ -33,10 +37,14 @@
 //             ],
 //             providers: [
 //                 {provide: OfiManagementCompanyService, useClass: OfiManagementCompanyServiceMock},
-//                 {provide: MemberSocketService, useClass: MemberSocketServiceMock}
 //             ]
 //         }).compileComponents();
-//     }));
+//         TestBed.resetTestingModule = () => TestBed;
+//     })().then(done).catch(done.fail));
+//
+//     afterAll(() => {
+//         TestBed.resetTestingModule = resetTestingModule;
+//     });
 //
 //     beforeEach(fakeAsync(() => {
 //         fixture = TestBed.createComponent(OfiMyInformationsComponent);

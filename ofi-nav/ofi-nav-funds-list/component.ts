@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef, Inject} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
@@ -22,7 +22,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe, APP_CONFIG, AppConfig} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-manage-list',
@@ -48,6 +48,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     navPopupMode: model.NavPopupMode = model.NavPopupMode.ADD;
 
+    appConfig: AppConfig;
+
     private subscriptionsArray: Subscription[] = [];
 
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
@@ -62,8 +64,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
-                private popupService: OfiManageNavPopupService) {
-
+                private popupService: OfiManageNavPopupService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
 
     }
 
@@ -226,7 +229,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     exportCSV(): void {
         const requestData = this.getRequestNavListData();
 
-        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundShares&shareId=null&fundName=${encodeURIComponent(requestData.fundName)}&navDateField=${requestData.navDateField}&navDate=${encodeURIComponent(requestData.navDate)}`, false);
+        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundShares&shareId=null&fundName=${encodeURIComponent(requestData.fundName)}&navDateField=${requestData.navDateField}&navDate=${encodeURIComponent(requestData.navDate)}`, this.appConfig.production);
 
         window.open(url, '_blank');
     }
