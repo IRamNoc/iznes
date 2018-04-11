@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef, Inject} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
@@ -22,7 +22,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService, MoneyValuePipe, immutableHelper} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -56,6 +56,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     datePeriodItems: any;
     usingDatePeriodToSearch: boolean = false;
 
+    appConfig: AppConfig;
+
     private subscriptionsArray: Subscription[] = [];
 
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navFundRequestedOb: Observable<any>;
@@ -71,7 +73,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
-                private popupService: OfiManageNavPopupService) {
+                private popupService: OfiManageNavPopupService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
 
     }
 
@@ -343,7 +347,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     exportCSV(): void {
         const requestData = this.getNavRequestData();
 
-        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundHistory&shareId=${requestData.shareId}&navDateFrom=${encodeURIComponent(requestData.navDateFrom)}&navDateTo=${encodeURIComponent(requestData.navDateTo)}`, false);
+        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundHistory&shareId=${requestData.shareId}&navDateFrom=${encodeURIComponent(requestData.navDateFrom)}&navDateTo=${encodeURIComponent(requestData.navDateTo)}`, this.appConfig.production);
 
         window.open(url, '_blank');
     }
