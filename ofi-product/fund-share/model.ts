@@ -70,7 +70,8 @@ export class FundShare {
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
             this.calendar.subscriptionTradeCycle.isValid() && this.calendar.redemptionTradeCycle.isValid() &&
-            this.fees.mandatory.isValid() && this.keyFacts.mandatory.isValid() && this.profile.mandatory.isValid();
+            this.fees.mandatory.isValid() && this.keyFacts.mandatory.isValid() && this.profile.mandatory.isValid() &&
+            this.documents.mandatory.isValid();
     }
 
     getRequest(): OfiFundShare {
