@@ -70,6 +70,19 @@
                 </tr>
             </tbody>
         </table>
+        <form>
+            <section class="form-block">
+                <label>Details</label>
+                <div class="form-group">
+                    <label for="startDate" mltag="txt_startdate">Start Date</label>
+                    <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000|date:short}}">
+                </div>
+                <div class="form-group">
+                    <label for="expiryDate" mltag="txt_expirydate">Expiry Date</label>
+                    <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000|date:short}}">
+                </div>
+            </section>
+        </form>
         <div *ngIf="contract.parties.length > 0">
             Parties
             <clr-datagrid #partiesDataGrid>
@@ -104,7 +117,6 @@
             <clr-datagrid #authorisationsDataGrid>
                 <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
                 <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
-                <clr-dg-column mltag="txt_element">Element</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
                 <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
                     <clr-dg-cell>
@@ -119,6 +131,17 @@
                             </button>
                         </span>
                     </clr-dg-cell>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
+        <div *ngIf="contract.addencumbrances.length > 0">
+            Encumbrances
+            <clr-datagrid #encumbrancesDataGrid>
+                <clr-dg-column mltag="txt_parameter">Asset Id</clr-dg-column>
+                <clr-dg-column mltag="txt_value">Amount</clr-dg-column>
+                <clr-dg-row *clrDgItems="let encumbrance of contract.addencumbrances">
+                    <clr-dg-cell>{{encumbrance.fullAssetId}}</clr-dg-cell>
+                    <clr-dg-cell>{{encumbrance.amount}}</clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
         </div>
