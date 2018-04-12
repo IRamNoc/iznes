@@ -1,0 +1,330 @@
+<div class="header-breadcrumbs">
+    <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
+        <span>Holders list:</span>
+        <span *ngIf="shareID === 0">All Shares</span>
+        <span *ngIf="shareID > 0">{{shareID}}</span>
+    </h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="-{{id}}" [routerLink]="['/am-reports-section/centralization-history', (id === 0) ? 'select' :  id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+
+                <form [formGroup]="searchForm" id="search-orders-form">
+                    <div class="form-horizontal">
+                        <div class="row bordered">
+                            <div class="form-group col-sm-6">
+                                <label style="margin: 10px 0;">
+                                    <b><span>Please find below the Centralization history for {{shareName}}:</span></b>
+                                </label>
+                                <br>
+                                <div class="input-button-group">
+                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']"></ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="hr-line-dashed"></div>
+
+                <ng-container *ngIf="id === 0">
+                    <!-- list tab. -->
+                    <ng-container
+                            *ngTemplateOutlet="staticList"
+                    ></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id > 0">
+                    <!-- Create new tab -->
+                    <ng-container
+                            *ngTemplateOutlet="dynamicView; context: {'shareData': tabdata.shareData, 'tabid': id}"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Orders Data Table. -->
+    <ng-template #staticList>
+        <div class="panel-body">
+
+            <table style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3 style="margin-bottom: 3px;">Please find a list of all the shares below:</h3>
+                            You can access the holders list for a specific Share by clicking on a line in this table.
+                        </td>
+                        <td class="text-right" valign="middle">
+                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important">Export this holders list for all these Funds & Shares below</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+
+            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+                <clr-dg-column [clrDgField]="'fundName'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Fund name</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Share name</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Currency</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>ISIN</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>NAV</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Number of units</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>AUM (CCY)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Ratio (%)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'numberOfHolders'" clrDgSortIcon clrDgSortNoSearch>
+                        <span>Number of holders</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <!-- ACTIONS -->
+                <!--<clr-dg-column><span>Action</span></clr-dg-column>-->
+
+                <clr-dg-row *ngFor="let data of dataList; let i = index">
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        yo
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <!-- Orders Data Table. -->
+    <ng-template #dynamicView let-shareData="shareData" let-tabid="tabid">
+        <div class="panel-body">
+
+            <form [formGroup]="filterForm" id="search-share-form">
+
+                <table style="width: 100%;" class="tableShareDetails">
+                    <tbody>
+                    <tr>
+                        <td [ngStyle]="(isFundUmbrella && {'width': '40%'}) || (!isFundUmbrella && {'width': '60%'})">
+                            <div class="form-group">
+                                <label>
+                                    <span>Fund name:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{unknownValue}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td *ngIf="isFundUmbrella" [ngStyle]="isFundUmbrella && {'width': '40%'}">
+                            <div class="form-group">
+                                <label>
+                                    <span>Umbrella fund:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">€ {{unknownValue}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td [ngStyle]="(isFundUmbrella && {'width': '20%'}) || (!isFundUmbrella && {'width': '40%'})">
+                            <div class="form-group">
+                                <label>
+                                    <span>Number of units:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">EUR</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="mb-1">Please choose the NAV dates for which you would like  to see this share's centralization history:</h3>
+
+                <table style="width: 100%;" class="tableShareDetails">
+                    <tbody>
+                        <tr>
+                            <td style="width: 400px;">
+                                <div class="form-group">
+                                    <label for="perdiod-search-field">
+                                        <span>Choose a period:</span>
+                                    </label>
+                                    <div class="input-button-group">
+                                        <ng-select id="perdiod-search-field" [items]="periodList" name="top" [allowClear]="true" placeholder="Select" [formControl]="filterForm.controls['period']"></ng-select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 30px; padding: 0;">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <br>
+                                    <div>
+                                        or:
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="search-date-from">
+                                        <span>Date from:</span>
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="search-date-from" formControlName="dateFrom" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="search-date-to">
+                                        <span>Date to:</span>
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="search-date-to" formControlName="dateTo" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-right">
+                                    <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important">Export Centralization history for these dates</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label>
+                            <b><span>You can click on each line to more information unfold:</span></b>
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
+                <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>NAV date</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>Settlement date</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>NAV</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>AUM</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'netPosition'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>Net Position (CCY)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'netPositionAum'" clrDgSortIcon clrDgSortNoSearch>
+                    <span>Net Position (% AUM)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <!--ACTIONS-->
+                <clr-dg-column><span>View corresponding orders page?</span></clr-dg-column>
+                <clr-dg-column><span>Download csv report?</span></clr-dg-column>
+
+                <clr-dg-row *ngFor="let data of dataList; let i = index">
+                    <clr-dg-cell>
+                        xx-xx-xxxx
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        xx-xx-xxxx
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{1234.45630 | moneyValue: 2}}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{123456.7845 | moneyValue: 2}}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{123456.7845 | moneyValue: 2}}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        17.23%
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm">View Orders</button>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm">Download Orders</button>
+                    </clr-dg-cell>
+                    <clr-dg-row-detail *clrIfExpanded>
+                        <table class="addInfos">
+                            <tr>
+                                <th></th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                                <th>Cut-off date</th>
+                            </tr>
+                            <tr>
+                                <td>Subscriptions:</td>
+                                <td>Subsc Qty</td>
+                                <td>Subsc Amnt</td>
+                                <td>Subsc C-O date</td>
+                            </tr>
+                            <tr>
+                                <td>Rdemption:</td>
+                                <td>Subsc Qty</td>
+                                <td>Subsc Amnt</td>
+                                <td>Subsc C-O date</td>
+                            </tr>
+                        </table>
+                    </clr-dg-row-detail>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+                    <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="text-center mt-1">
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', 'list']">Back to ALL holders page</button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>
