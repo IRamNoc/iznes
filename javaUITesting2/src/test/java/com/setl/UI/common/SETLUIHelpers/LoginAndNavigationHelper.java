@@ -177,7 +177,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("ofi-homepage")).isDisplayed();
+        driver.findElement(By.id("menu-home")).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
@@ -227,7 +227,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
       Thread.sleep(1500);
       try {
-        driver.findElement(By.id("ofi-homepage")).isDisplayed();
+        driver.findElement(By.id("menu-home")).isDisplayed();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
