@@ -812,3 +812,17 @@ dp-date-picker div {
     height: 30px !important;
     margin-top: -7px !important;
 }
+
+.messages-icon span {
+    z-index: 2000;
+    background: #e43212;
+    position: absolute;
+    font-size: 10px;
+    border-radius: 20px;
+    color: white;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 20px;
+}
