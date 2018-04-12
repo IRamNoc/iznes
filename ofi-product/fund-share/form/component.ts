@@ -78,6 +78,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.configureFormForMode();
 
         this.redux.dispatch(clearRequestedFundShare());
+        this.redux.dispatch(clearRequestedFundShareDocs());
     }
 
     private initSubscriptions(): void {
@@ -90,8 +91,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.mode = FundShareMode.Update;
             }
 
-            // FOR TESTING
-            // if(this.mode === FundShareMode.Create) this.model = FundShareTestData.generate(new FundShare());
+            if(this.mode === FundShareMode.Create) {
+                this.fundShareDocsLoaded = true;
+                // this.model = FundShareTestData.generate(new FundShare());
+            }
         }));
         this.subscriptionsArray.push(this.fundShareRequestedOb.subscribe(requested => {
             if(this.mode === FundShareMode.Update) this.requestFundShare(requested);
@@ -189,8 +192,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.fundShareData = fundShare;
         this.model.setFundShare(fundShare);
 
-        if(this.model.fundID) this.redux.dispatch(setRequestedFundShare());
-
         this.changeDetectorRef.detectChanges();
     }
 
@@ -214,14 +215,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShareDocs(fundShareDocs: any): void {
-        if((!fundShareDocs) || !fundShareDocs.fundShareID) {
+        if((!fundShareDocs) || fundShareDocs.fundShareID == undefined) {
+            this.fundShareDocsLoaded = true;
+            this.changeDetectorRef.detectChanges();
             return;
         }
 
         this.fundShareDocsData = fundShareDocs;
         this.model.setFundShareDocs(fundShareDocs);
-
-        if(this.model.fundID) this.redux.dispatch(setRequestedFundShareDocs());
 
         this.fundShareDocsLoaded = true;
         this.changeDetectorRef.detectChanges();

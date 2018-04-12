@@ -162,7 +162,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.CouponTypeEnum.InterestCapitalGain, text: 'Interest & Capital gain' }
         ],
         hidden: () => {
-            return this.hasCoupon.value() !== 1;
+            return this.hasCoupon.value() === false;
         }
     }
     freqOfDistributionDeclaration: FormItem = {
@@ -180,7 +180,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.FrequencyOfDistributionDeclarationEnum.Annually, text: 'Annually' }
         ],
         hidden: () => {
-            return this.hasCoupon.value() !== 1;
+            return this.hasCoupon.value() === false;
         }
     }
 }
