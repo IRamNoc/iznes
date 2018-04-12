@@ -177,6 +177,19 @@ export class WalletnodeTxService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
+    voidAsset(requestData: VoidAsset): any {
+        const messageBody: VoidAssetMessageBody = {
+            topic: 'istra',
+            walletid: _.get(requestData, 'walletId', 0),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            address: _.get(requestData, 'address', ''),
+            amount: _.get(requestData, 'amount', 0)
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
     sendAsset(requestData: SendAsset): any {
         const messageBody: SendAssetMessageBody = {
             topic: 'astra',
