@@ -79,6 +79,7 @@
             </div>
 
             <clr-datagrid #myDataGrid>
+                <clr-dg-column mltag="txt_address_label">Address Label</clr-dg-column>
                 <clr-dg-column mltag="txt_address">Address</clr-dg-column>
                 <clr-dg-column mltag="txt_total">Total</clr-dg-column>
                 <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
@@ -87,6 +88,7 @@
 
                 <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
                     <clr-dg-cell>{{breakdown.label}}</clr-dg-cell>
+                    <clr-dg-cell>{{breakdown.addr}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.balance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.encumbrance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell>{{breakdown.free | moneyValue}}</clr-dg-cell>
