@@ -110,7 +110,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        assertTrue(driver.findElement(By.id("ofi-homepage")).isDisplayed());
+        assertTrue(driver.findElement(By.id("menu-home")).isDisplayed());
     }
 
     @Test
