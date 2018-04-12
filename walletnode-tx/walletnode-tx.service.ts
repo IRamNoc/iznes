@@ -5,6 +5,7 @@ import {
     RegisterIssuerMessageBody,
     RegisterAssetMessageBody,
     IssueAssetMessageBody,
+    VoidAssetMessageBody,
     SendAssetMessageBody,
     NewAddressMessageBody,
     NewContractMessageBody,
@@ -29,6 +30,14 @@ interface RegisterAsset {
 }
 
 interface IssueAsset {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    amount: number;
+}
+
+interface VoidAsset {
     walletId: number;
     address: string;
     namespace: string;
