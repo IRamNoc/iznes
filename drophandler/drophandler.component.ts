@@ -357,6 +357,7 @@ export class DropHandler implements AfterViewInit {
 
     clearPreset(): void {
         this.preset = null;
+        this.formControl.patchValue(null);
     }
 
     /**

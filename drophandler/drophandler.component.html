@@ -69,7 +69,7 @@
                     </span>
                 </span>
             </div>
-
+            
             <div class="drop-file-meta" *ngIf="!uploadedFiles.length && preset">
                 <span class="added-file-inline uploaded-file-inline" *ngIf="preset.name">
                     <i class="fa fa-times" (click)="stopPropagation($event);clearPreset()"></i> {{ preset.name }}
