@@ -104,7 +104,10 @@ export class ReportingService {
                 }
                 if (
                     (this.addressList.length === 0 && requested > 1)
-                    || (this.addressList.constructor !== Array && 'label' in this.addressList[Object.keys(this.addressList)[0]])
+                    || (this.addressList.constructor !== Array
+                        && Object.keys(this.addressList).length
+                        && Object.keys(this.addressList)[0] in this.addressList
+                        && 'label' in this.addressList[Object.keys(this.addressList)[0]])
                 ) {
                     // Only initialise after we have address labels (or there are no address labels after requesting them...)
                     initialisedSubject.next(true);
