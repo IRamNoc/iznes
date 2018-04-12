@@ -78,7 +78,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.configureFormForMode();
 
         this.redux.dispatch(clearRequestedFundShare());
-        this.redux.dispatch(clearRequestedFundShareDocs());
     }
 
     private initSubscriptions(): void {
@@ -216,8 +215,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
      */
     private updateFundShareDocs(fundShareDocs: any): void {
         if((!fundShareDocs) || !fundShareDocs.fundShareID) {
-            this.fundShareDocsLoaded = true;
-            this.changeDetectorRef.detectChanges();
             return;
         }
 

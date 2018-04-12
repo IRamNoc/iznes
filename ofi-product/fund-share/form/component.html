@@ -329,7 +329,7 @@
                         </span>
                     </button>
                     <clr-tab-content>
-                        <div class="well">
+                        <div class="well" *ngIf="fundShareDocsLoaded">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">
