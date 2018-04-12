@@ -638,6 +638,8 @@ h3 {
     margin: 20px;
     overflow: visible;
     border: 1px solid #dce1eb;
+    display: inline-block;
+    width: calc(100% - 40px);
 }
 
 .well .row.panel-header {
