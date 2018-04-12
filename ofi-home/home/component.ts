@@ -30,7 +30,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     private subscriptions: Array<any> = [];
     private myWallets: any = [];
     private connectedWalletId: any = 0;
-    private userType;
+    userType;
 
     // pipeForm: FormGroup;
     // randomNum = 0;
