@@ -5,7 +5,7 @@
 .backToTop {
   position: fixed;
   right: 40px;
-  bottom: 30px;
+  bottom: 80px;
   opacity: 0;
   cursor: pointer;
   -webkit-transition: opacity 0.2s ease-out;
@@ -16,6 +16,6 @@
 }
 
 .backToTop i {
-  font-size: 7em;
+  font-size: 6.5em;
   color: rgba(0,0,0,0.5);
 }
