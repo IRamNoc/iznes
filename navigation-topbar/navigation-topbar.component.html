@@ -43,9 +43,11 @@
 
         <div class="right-buttons">
             <div class="dropdown">
-                <a [routerLink]="['/messages']" class="nav-button dropdown-toggle">
+                <a [routerLink]="['/messages']" class="nav-button dropdown-toggle messages-icon">
                     <clr-icon shape="email" class="icon" [ngClass]="hasMail"></clr-icon>
                     <p mltag="txt_messages">Messages</p>
+
+                    <span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span>
                 </a>
             </div>
 
