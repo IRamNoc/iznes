@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {immutableHelper} from '@setl/utils';
@@ -7,6 +7,8 @@ import {select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterService} from 'angular2-toaster';
+
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 @Component({
     selector: 'app-invite-investors',
@@ -33,10 +35,33 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _toasterService: ToasterService) {
 
         this.invitationForm = this._fb.group({
-            investors: this._fb.array([])
+            investors: this._fb.array([
+                this._fb.group({
+                    email: [
+                        '',
+                        Validators.compose([
+                            Validators.required,
+                            Validators.pattern(emailRegex),
+                        ])
+                    ],
+                    language: [
+                        '',
+                        Validators.compose([
+                            Validators.required
+                        ])
+                    ],
+                    clientReference: [
+                        '',
+                    ],
+                    firstName: [
+                        '',
+                    ],
+                    lastName: [
+                        '',
+                    ]
+                })
+            ])
         });
-
-        this.addInvestor(this.invitationForm);
     }
 
     /**
@@ -63,6 +88,19 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         return (<FormArray>frmGrp.controls[key]).controls;
     }
 
+    duplicateValidator(control: FormControl) {
+        if (!this.invitationForm.controls['investors'].value.length || !control.value.length) {
+            return;
+        }
+        const emails = this.invitationForm.controls['investors'].value.map((item) => {
+            return item['email'];
+        });
+        if (emails.indexOf(control.value) !== -1) {
+            return {'notUnique': true};
+        }
+        return;
+    }
+
     addInvestor(formObj) {
         const control = <FormArray>formObj.controls['investors'];
         const addrCtrl = this._fb.group({
@@ -70,7 +108,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+                    Validators.pattern(emailRegex),
+                    this.duplicateValidator.bind(this),
                 ])
             ],
             language: [
