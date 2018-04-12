@@ -55,7 +55,7 @@ export class DropHandler implements AfterViewInit {
     private silentEncodedFiles: any = [];
     private processInterval: any;
     private removingFile = false;
-    private maxFileSize = 10485760; // 10 MB
+    private maxFileSize = 2048576; // 10 MB
 
     /* Constructor */
     public constructor (
@@ -234,9 +234,13 @@ export class DropHandler implements AfterViewInit {
      * @return {void}
      */
     private addFiles (files): void {
+
         /* Loop over each... */
         for (const file of files) {
             /* ...and push. */
+            if (!this.multiple && this.uploadedFiles.length > 0) {
+                continue;
+            }
             this.uploadedFiles.push(file);
         }
     }
@@ -382,7 +386,7 @@ export class DropHandler implements AfterViewInit {
             return;
         }
 
-        /* If mutliple, only do the first. */
+        /* If multiple, only do the first. */
         if ( ! this.multiple ) {
             files = [files[0]];
         }
@@ -424,7 +428,6 @@ export class DropHandler implements AfterViewInit {
                 let j = 0;
                 for ( i = 0; i < files.length; i++ ) {
                     /* ...continue if no file... */
-                    console.log('silentEncodedFiles : ', this.silentEncodedFiles);
                     if ( ! files[i] || files[i].status === 'uploaded-file') {
                         continue;
                     }
@@ -489,8 +492,8 @@ export class DropHandler implements AfterViewInit {
     private updateFilesText (): void {
         /* Update. */
         this.numberFilesText = (
-            (!this.encodedFiles || this.encodedFiles.length === 0) ? 'No' : this.encodedFiles.length) + ' ' +
-            (this.multiple && this.encodedFiles.length > 1 ? 'files' : 'file') + ' selected.';
+            (!this.uploadedFiles || this.uploadedFiles.length === 0) ? 'No' : this.uploadedFiles.length) + ' ' +
+            (this.multiple && this.uploadedFiles.length > 1 ? 'files' : 'file') + ' selected.';
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -546,5 +549,4 @@ export class DropHandler implements AfterViewInit {
               </table>
           `);
     }
-
 }
