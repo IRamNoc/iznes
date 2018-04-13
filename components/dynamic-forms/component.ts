@@ -32,6 +32,8 @@ export class DynamicFormComponent implements OnInit {
         this.form = this.service.generateForm(this._model);
         this.formKeys = this.service.getFormKeys(this._model);
         this.service.updateModel(this._model, this.form);
+        
+        this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
     }
 
@@ -56,8 +58,8 @@ export class DynamicFormComponent implements OnInit {
         return index;
     }
 
-    onDropFiles(event, formControl: FormControl) {
-        this.service.uploadFile(event, formControl, this.changeDetectorRef);
+    onDropFiles(event, modelItem) {
+        this.service.uploadFile(event, modelItem, this.changeDetectorRef);
     }
 
 }

@@ -125,7 +125,7 @@ export class DynamicFormService {
         return cssClass;
     }
 
-    uploadFile(event, formControl: FormControl, changeDetectorRef: ChangeDetectorRef): void {
+    uploadFile(event, modelItem, changeDetectorRef: ChangeDetectorRef): void {
         const asyncTaskPipe = this.fileService.addFile({
             files: _.filter(event.files, function (file) {
                 return file.status !== 'uploaded-file';
@@ -144,7 +144,12 @@ export class DynamicFormService {
                             event.target.updateFileStatus(file.id, 'file-error');
                         } else {
                             event.target.updateFileStatus(file[0].id, 'uploaded-file');
-                            formControl.patchValue(file[0].fileID);
+                            modelItem.control.patchValue(file[0].fileID);
+                            modelItem.fileData = {
+                                fileID: file[0].fileID,
+                                hash: file[0].fileHash,
+                                name: file[0].fileTitle
+                            }
                         }
                     });
 
@@ -153,9 +158,11 @@ export class DynamicFormService {
                     }
 
                     if (data[1].Data.length === 0) {
-                        formControl.patchValue(null);
+                        modelItem.control.patchValue(null);
+                        modelItem.fileData = null;
                     }
 
+                    changeDetectorRef.markForCheck();
                     changeDetectorRef.detectChanges();
                 }
             },
