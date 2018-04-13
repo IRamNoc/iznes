@@ -189,4 +189,8 @@ export class WalletNodeRequestService {
         return this.http.post(this.appConfig.reportingNodeUrl, {request: msgId});
     }
 
+    requestWalletNodeInitialSnapshot(){
+        return this.walletNodeSocketService.getInitialSnapshotFromThroughSocket();
+    }
+
 }
