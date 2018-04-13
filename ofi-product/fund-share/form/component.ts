@@ -215,6 +215,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShareDocs(fundShareDocs: any): void {
+        if(fundShareDocs.prospectus.length < 1) return;
+
         if((!fundShareDocs) || fundShareDocs.fundShareID == undefined) {
             this.fundShareDocsLoaded = true;
             this.changeDetectorRef.detectChanges();
@@ -225,6 +227,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.model.setFundShareDocs(fundShareDocs);
 
         this.fundShareDocsLoaded = true;
+        this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
     }
 
