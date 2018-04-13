@@ -46,6 +46,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
     searchForm: FormGroup;
     filterForm: FormGroup;
+    hideCalendars = true;
+    isValidDates = true;
 
     /* Datagrid server driven */
     total: number;
@@ -78,6 +80,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         disableKeypress: true,
         locale: this.language
     };
+    dateFrom: any;
+    dateTo: any;
 
     /* Tabs Control array */
     tabsControl: Array<any> = [];
@@ -99,6 +103,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         {id: 'lastquarter', text: 'Last quarter'},
         {id: 'lastsemester', text: 'Last semester'},
         {id: 'lastyear', text: 'Last year'},
+        {id: 'custom', text: 'Custom date'},
     ];
 
     currencyList = [
@@ -161,7 +166,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 // });
 
                 // debug temp
-                this.dataList = [1,2,3,4,5];
+                this.dataList = [1, 2, 3, 4, 5];
                 const share = {
                     id: this.shareID,
                     label: 'blablabla',
@@ -169,7 +174,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 if (share && typeof share !== 'undefined' && share !== undefined && share !== null) {
                     // this.fundShareID = order.fundShareID;
                     // this.tabsControl[0].active = false;
-                    let tabTitle = 'Orders history';
+                    const tabTitle = 'Orders history';
                     // if (order.orderType === 3) tabTitle += 'Subscription: ';
                     // if (order.orderType === 4) tabTitle += 'Redemption: ';
                     // tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
@@ -249,6 +254,162 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 '',
             ],
         });
+        this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
+    }
+
+    getMonday(date) {
+        let d = new Date(date);
+        let day = d.getDay();
+        let diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    }
+
+    addDays(date, nb) {
+        let result = new Date(date);
+        result.setDate(result.getDate() + nb);
+        return result;
+    }
+
+    addMonths(date, nb) {
+        let result = new Date(date);
+        result.setMonth(result.getMonth() + nb);
+        return result;
+    }
+
+    daysInMonth (month, year) {
+        return new Date(year, month, 0).getDate();
+    }
+
+    reformatDate(dateString): string {
+        return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
+    }
+
+    private formatDate(formatString: string, dateObj: Date): string {
+        /* Return if we're missing a param. */
+        if (!formatString || !dateObj) return '';
+
+        /* Return the formatted string. */
+        return formatString
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
+    }
+
+    requestFilters(form) {
+        if (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) {
+            this.hideCalendars = (this.filterForm.get('period').value[0].id === 'custom') ? false : true;
+
+            const today = new Date();
+            let m: any,
+                y: any,
+                nbDaysInMonth: any,
+                currentQuarter: any,
+                currentSemester: any
+            ;
+
+            switch (this.filterForm.get('period').value[0].id) {
+                case 'lastcutoff':
+                    break;
+                case 'currentweek':
+                    this.dateFrom = this.reformatDate(this.getMonday(today));
+                    this.dateTo = this.reformatDate(today);
+                    break;
+                case 'currentmonth':
+                    m = today.getMonth() + 1;
+                    y = today.getFullYear();
+                    nbDaysInMonth = this.daysInMonth(m, y);
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
+                    // this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
+                    this.dateTo = this.reformatDate(today);
+                    break;
+                case 'currentquarter':
+                    y = today.getFullYear();
+                    currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentQuarter * 3) + 1) + '-' + '01'));
+                    this.dateTo = this.reformatDate(today);
+                    break;
+                case 'currentsemester':
+                    y = today.getFullYear();
+                    currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentSemester * 6) + 1) + '-' + '01'));
+                    this.dateTo = this.reformatDate(today);
+                    break;
+                case 'currentyear':
+                    y = today.getFullYear();
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
+                    this.dateTo = this.reformatDate(today);
+                    break;
+                case 'lastweek':
+                    this.dateFrom = this.reformatDate(this.addDays(this.getMonday(today), -7));
+                    this.dateTo = this.reformatDate(this.addDays(this.dateFrom, 6));
+                    break;
+                case 'lastmonth':
+                    m = today.getMonth();
+                    y = today.getFullYear();
+                    nbDaysInMonth = this.daysInMonth(m, y);
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
+                    this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
+                    break;
+                case 'lastquarter':
+                    y = today.getFullYear();
+                    currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
+                    if (currentQuarter > 0) {
+                        this.dateFrom = this.reformatDate(new Date(y + '-' + (((currentQuarter - 1) * 3) + 1) + '-' + '01'));
+                        m = (((currentQuarter - 1) * 3) + 3);
+                        nbDaysInMonth = this.daysInMonth(m, y);
+                        this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
+                    } else {
+                        y = today.getFullYear() - 1;
+                        this.dateFrom = this.reformatDate(new Date(y + '-' + ((3 * 3) + 1) + '-' + '01'));
+                        nbDaysInMonth = this.daysInMonth(12, y);
+                        this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
+                    }
+                    break;
+                case 'lastsemester':
+                    y = today.getFullYear();
+                    currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
+                    if (currentSemester === 1) {
+                        this.dateFrom = this.reformatDate(new Date(y + '-' + (((currentSemester - 1) * 6) + 1) + '-' + '01'));
+                        nbDaysInMonth = this.daysInMonth(6, y);
+                        this.dateTo = this.reformatDate(new Date(y + '-' + '06' + '-' + nbDaysInMonth));
+                    } else {
+                        y = today.getFullYear() - 1;
+                        this.dateFrom = this.reformatDate(new Date(y + '-06-01'));
+                        nbDaysInMonth = this.daysInMonth(12, y);
+                        this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
+                    }
+                    break;
+                case 'lastyear':
+                    y = today.getFullYear() - 1;
+                    this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
+                    nbDaysInMonth = this.daysInMonth(12, y);
+                    this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
+                    break;
+            }
+
+            // check dates are valid
+            if (this.filterForm.get('dateFrom').value !== '' && this.filterForm.get('dateTo').value !== '') {
+                const d1 = new Date(this.filterForm.get('dateFrom').value);
+                const d2 = new Date(this.filterForm.get('dateTo').value);
+                const validDates = (d1 <= d2);
+                if (!validDates) {
+                    this.isValidDates = false;
+                    this.dateTo = '';
+                } else {
+                    this.isValidDates = true;
+                }
+            }
+
+        } else {
+            this.dateFrom = '';
+            this.dateTo = '';
+            this.hideCalendars = true;
+        }
     }
 
     setInitialTabs() {

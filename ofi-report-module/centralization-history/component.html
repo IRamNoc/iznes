@@ -211,7 +211,7 @@
                                     </label>
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="search-date-from" formControlName="dateFrom" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                        <input id="search-date-from" [(ngModel)]="dateFrom" formControlName="dateFrom" [disabled]="hideCalendars" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
                                     </div>
                                 </div>
                             </td>
@@ -222,7 +222,7 @@
                                     </label>
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="search-date-to" formControlName="dateTo" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                        <input id="search-date-to" [(ngModel)]="dateTo" formControlName="dateTo" [disabled]="hideCalendars" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
                                     </div>
                                 </div>
                             </td>
@@ -234,6 +234,8 @@
                         </tr>
                     </tbody>
                 </table>
+                <div *ngIf="!isValidDates" class="text-danger text-center">Dates invalid!</div>
+
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label>
@@ -322,7 +324,7 @@
             </clr-datagrid>
 
             <div class="text-center mt-1">
-                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', 'list']">Back to ALL holders page</button>
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization', 'list']">Back to Centralization</button>
             </div>
         </div>
     </ng-template>

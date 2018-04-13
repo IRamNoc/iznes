@@ -21,7 +21,7 @@
 .addInfos td, .addInfos th {
     border: 1px solid #ccc;
     text-align: left;
-    padding: 10px;
+    padding: 5px 10px;
 }
 
 .addInfos th:nth-child(n+2), .addInfos tr:nth-child(n+2) td:first-child {
