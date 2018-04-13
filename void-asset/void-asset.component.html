@@ -17,13 +17,7 @@
                                     [formControl]="voidAssetForm.controls['asset']"
                                     mltag="txt_selectissueraddress">
                         </ng-select>
-                    </div>
-
-                    <!-- <various-address-select [formControl]="voidAssetForm.controls['recipient']"
-                                            [relationshipArray]="toRelationshipSelectItems"
-                                            [ownWalletAddressArray]="walletAddressSelectItems"
-                                            [class.error]="!voidAssetForm.controls['recipient'].valid &&
-                                            voidAssetForm.controls['recipient'].touched"></various-address-select> -->
+                    </div>             
                     
                     <various-address-select [formControl]="voidAssetForm.controls['fromAddress']" 
                                             [relationshipArray]="toRelationshipSelectItems"
@@ -52,23 +46,10 @@
                             </div>
                         </div>
 
-                    </div>
-
-                    <!-- <div *ngIf="!voidAssetForm.controls['recipient'].valid &&
-                        voidAssetForm.controls['recipient'].touched" class="alert-items col-sm-5">
-
-                        <div class="alert alert-danger">
-                            <div class="alert-items">
-                                <div class="alert-item static">
-                                    <span class="alert-text" mltag="txt_recipientisrequired">Recipient is required</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div> -->
+                    </div>                    
 
                     <div *ngIf="!voidAssetForm.controls['fromAddress'].valid &&
-                                            voidAssetForm.controls['fromAddress'].touched" class="alert-items col-sm-5">
+                                voidAssetForm.controls['fromAddress'].touched" class="alert-items col-sm-5">
                     
                         <div class="alert alert-danger">
                             <div class="alert-items">
