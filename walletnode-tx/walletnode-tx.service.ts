@@ -39,9 +39,10 @@ interface IssueAsset {
 
 interface VoidAsset {
     walletId: number;
-    address: string;
     namespace: string;
     instrument: string;
+    fromAddress: string;
+    toAddress: string;
     amount: number;
 }
 
@@ -183,7 +184,8 @@ export class WalletnodeTxService {
             walletid: _.get(requestData, 'walletId', 0),
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
-            address: _.get(requestData, 'address', ''),
+            fromaddress: _.get(requestData, 'fromAddress', ''),
+            toaddress: _.get(requestData, 'toAddress', ''),
             amount: _.get(requestData, 'amount', 0)
         };
 

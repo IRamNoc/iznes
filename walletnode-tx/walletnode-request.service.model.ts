@@ -31,7 +31,8 @@ export interface VoidAssetMessageBody extends WalletNodeMessageBody {
     walletid: number;
     namespace: string;
     instrument: string;
-    address: string;
+    fromaddress: string;
+    toaddress: string;
     amount: number;
 }
 
