@@ -175,10 +175,33 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldNotCreateFundWithoutFieldEntered(){
-
+    public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-product-module");
+        navigateToPage("product-home");
+        String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
+        try {
+            driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        String title = driver.findElement(By.id("edit-fund-title")).getText();
+        assertTrue(title.contains("Umbrella fund:"));
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys("Updated");
+        driver.findElement(By.id("mcBtnSubmitForm")).click();
+        try {
+            String popup = driver.findElement(By.className("toast-title")).getText();
+            assertTrue(popup.contains("has been successfully updated!"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        try {
+            String umFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
+            assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
     }
-
 
     private void submitUmbrellaFund() throws InterruptedException {
         try {
