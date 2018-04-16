@@ -173,6 +173,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
+                '27': 'bank',
                 '35': 'member_user',
                 '36': 'am',
                 '45': 'standard_user',
@@ -182,6 +183,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 '49': 'cac',
                 '50': 'registrar',
                 '60': 't2s',
+                '65': 'rooster_operator',
             }[userType];
             this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
         }));
