@@ -168,7 +168,7 @@ public class OpenCSDMyAccountAcceptanceTest {
 
         driver.findElement(By.id(btnToClick)).click();
         if (btnToClick == "btnKycClose") {
-            assertTrue(driver.findElement(By.id("menu-home")).isDisplayed());
+            assertTrue(driver.findElement(By.id("topBarMenu")).isDisplayed());
         } else {
             try {
                 assertTrue(driver.findElement(By.className("toast-title")).isDisplayed());
