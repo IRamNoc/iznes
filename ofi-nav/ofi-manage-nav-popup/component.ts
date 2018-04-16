@@ -148,9 +148,8 @@ export class OfiManageNavPopup implements OnInit {
             this.navForm.controls.price.disable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
-            this.navForm.controls.status.disable();
+            // this.navForm.controls.status.disable();
         }
-
 
         this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
             this.checkIfNavExceedsThreshold(nav);
