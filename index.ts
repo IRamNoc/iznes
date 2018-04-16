@@ -1,4 +1,5 @@
 import {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
+import {DashboardComponent} from "./dashboard/dashboard.component";
 
 export {SetlLayoutModule} from './layout.module';
 export {BasicLayoutComponent} from './layouts/basic/basic.component';
@@ -28,3 +29,5 @@ export {UiTextComponent} from './layouts/ui-form/components/text/text.component'
 export {UiExpandableComponent} from './layouts/ui-form/components/expandable/expandable.component';
 
 export {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';
+
+export {DashboardComponent} from './dashboard/dashboard.component';
