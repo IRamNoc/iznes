@@ -79,3 +79,19 @@ export function b64DecodeUnicode(str: string): string {
     }).join(''));
 }
 
+/**
+ * Safely parse the json string with try catch.
+ * @param {string} jsonStr
+ * @return {object}
+ */
+export function safeJsonParse(jsonStr: string): object {
+    let returnVal = {};
+    try {
+       returnVal = JSON.parse(jsonStr);
+    } catch (e) {
+        console.log(e);
+    }
+
+    return returnVal;
+}
+
