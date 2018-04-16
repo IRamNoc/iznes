@@ -212,11 +212,19 @@ ul.breadcrumb li a:hover {
 }
 
 .pagination {
-    margin-right: 25px;
+    margin-right: 100px;
 }
 
 .pagination button {
     min-width: 25px;
+}
+
+.pagination-current {
+    min-width: 25px;
+}
+
+.datagrid-foot-description {
+    margin-right: 60px;
 }
 
 // Angular Froala WYSIWYG Editor toolbar
