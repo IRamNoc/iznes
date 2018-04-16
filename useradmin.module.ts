@@ -27,6 +27,7 @@ import {MultilingualModule} from '@setl/multilingual';
 import {PersistModule} from '@setl/core-persist';
 /* directive Module. */
 import {SetlDirectivesModule} from '@setl/utils';
+import {UserAdminService} from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */
 @NgModule({
@@ -74,7 +75,7 @@ import {SetlDirectivesModule} from '@setl/utils';
         RouterModule,
         SetlDirectivesModule
     ],
-    providers: [AdminUsersService]
+    providers: [AdminUsersService, UserAdminService]
 })
 
 export class UserAdminModule {
