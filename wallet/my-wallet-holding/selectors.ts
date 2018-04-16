@@ -2,7 +2,7 @@ import {createSelector} from 'reselect';
 import {WalletState} from '../index';
 import {MyWalletHoldingState} from './index';
 import {getConnectedWallet} from '../../user/connected';
-import memoize from 'lodash.memoize';
+import {memoize} from 'lodash/memoize';
 
 const getWallet = (state): WalletState => state.wallet;
 
