@@ -387,7 +387,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys(recipient);
@@ -452,7 +457,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWalletWithoutRecipient(String subject, String message, String toasterMessage) throws InterruptedException {
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesSubject")).sendKeys(subject);
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
@@ -469,7 +479,12 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         String subjectMessage = driver.findElement(By.id("message_list_subject_0_0")).getText();
         System.out.println(subjectMessage + subject);
         assertTrue(subjectMessage.equals(subject));
