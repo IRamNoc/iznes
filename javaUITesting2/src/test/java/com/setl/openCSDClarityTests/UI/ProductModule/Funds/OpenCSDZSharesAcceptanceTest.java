@@ -148,7 +148,7 @@ public class OpenCSDZSharesAcceptanceTest {
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
-        driver.findElement(By.id(dropdownID)).click();
+        driver.findElement(By.id("//*[@id='" + dropdownID + "']/div")).click();
         Thread.sleep(750);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();

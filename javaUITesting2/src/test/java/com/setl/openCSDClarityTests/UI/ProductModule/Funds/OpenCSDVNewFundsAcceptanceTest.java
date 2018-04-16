@@ -59,7 +59,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.id("//*[@id='fund-umbrellaControl-select-1']/div")).click();
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         }catch (Exception e){
