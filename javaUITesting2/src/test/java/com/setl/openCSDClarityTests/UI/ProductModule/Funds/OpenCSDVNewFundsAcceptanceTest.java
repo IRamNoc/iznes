@@ -248,15 +248,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
-        Thread.sleep(2000);
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         System.out.println(umbFundNamePrev);
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
         }catch (Exception e){
-            fail(e.getMessage());
-        }
-        Thread.sleep(2000);
+            fail(e.getMessage());}
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
@@ -266,14 +263,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
             Thread.sleep(750);
             assertTrue(popup.contains("has been successfully updated."));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
         try {
             String umFundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
             assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
     }
 
     private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
@@ -303,6 +298,5 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("nationalNomenclatureOfLegalForm")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
-        Thread.sleep(2500);
     }
 }
