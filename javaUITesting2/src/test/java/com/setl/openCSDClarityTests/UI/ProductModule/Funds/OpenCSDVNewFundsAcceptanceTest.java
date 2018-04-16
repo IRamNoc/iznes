@@ -59,7 +59,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("//*[@id='fund-umbrellaControl-select-1']/div")).click();
+        driver.findElement(By.id("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         }catch (Exception e){
@@ -125,7 +125,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("Test_Umbrella_Fund");
 //        }catch (Exception e){
@@ -149,7 +149,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.id("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //            try {
 //                driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("asdasd");
 //            }catch (Exception e){
@@ -167,7 +167,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.id("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
 //        }catch (Exception e){
@@ -189,7 +189,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.id("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
 //        }catch (Exception e){
