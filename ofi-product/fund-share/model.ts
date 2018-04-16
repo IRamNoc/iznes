@@ -306,10 +306,15 @@ export class FundShare {
 
     private applyValueToExistingFormItem(field: FormItem, value: any): void {
         if(field.type === FormItemType.list) {
-            this.setListItemPreset(field, value);
+            this.setListItemPresetFromOptional(field, value);
         } else {
             field.preset = value;
         }
+    }
+
+    private setListItemPresetFromOptional(field: FormItem, value: any): void {
+        if(value == undefined) return;
+        (field.preset as any) = value;
     }
 
     private setListItemPreset(field: FormItem, value: any): void {
