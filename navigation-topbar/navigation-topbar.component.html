@@ -17,7 +17,7 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <span mltag="txt_last">Last</span> <span>{{lastLogin}}</span>
+                <span mltag="txt_last">Last</span> <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
             </div>
 
             <div class="dropdown-menu">
