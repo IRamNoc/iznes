@@ -46,10 +46,16 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage(String pageHref) throws InterruptedException {
-        Thread.sleep(750);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement messagesLink = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
+
         try {
-            driver.findElement(By.id("menu-" + pageHref)).click();
+            wait.until(visibilityOf(messagesLink));
+            wait.until(elementToBeClickable(messagesLink));
+            messagesLink.click();
+
         }catch (Error e){
+
             fail(pageHref + "page not present");
         }
     }
