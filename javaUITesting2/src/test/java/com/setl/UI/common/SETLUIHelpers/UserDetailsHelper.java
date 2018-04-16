@@ -83,11 +83,13 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
                 "/div/form/div/div[4]/div/div/div/ul/li[" + userTypeIndex + "]")).click();
     }
 
-    private static void enterPasswordAndVerificationPassword(String password, String repeatPassword) {
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[5]/div/input"));
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[5]/div/input")).sendKeys(password);
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[6]/div/input"));
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[6]/div/input")).sendKeys(repeatPassword);
+    public static void enterPasswordAndVerificationPassword(String password, String repeatPassword) {
+        driver.findElement(By.id("new-user-password")).clear();
+        driver.findElement(By.id("new-user-password")).sendKeys(password);
+        driver.findElement(By.id("new-user-password-repeat")).clear();
+        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
+        driver.findElement(By.id("new-user-submit")).click();
+
     }
 
     private static void selectAdministrativeGroup(String... groups)

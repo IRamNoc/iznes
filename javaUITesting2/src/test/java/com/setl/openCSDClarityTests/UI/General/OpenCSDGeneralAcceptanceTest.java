@@ -44,7 +44,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (40000);
+    public Timeout globalTimeout = new Timeout (30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -187,11 +187,9 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
         createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
-        Thread.sleep(500);
         logout();
-        Thread.sleep(750);
         loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_064", "asdasd", "Jordan", "Miller");
+        loginAndAssertMyInformation("Test_User_064", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
@@ -202,13 +200,9 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(username, password);
-        try {
-            driver.findElement(By.id("topBarMenu")).click();
-        }catch (Exception e) {
-            fail(e.getMessage());
-        }
+
+
         driver.findElement(By.id("topBarMyAccount")).click();
-        Thread.sleep(1000);
         driver.findElement(By.id("udDisplayName")).clear();
         driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
         driver.findElement(By.id("udFirstName")).clear();
@@ -224,9 +218,7 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("udPostalCode")).clear();
         driver.findElement(By.id("udPostalCode")).sendKeys("code");
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
-        Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
-        Thread.sleep(500);
         driver.findElement(By.id("udSubmit")).click();
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
@@ -238,7 +230,7 @@ public class OpenCSDGeneralAcceptanceTest {
         logout();
     }
 
-    public static void loginAndAssertMyInfomation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+    public static void loginAndAssertMyInformation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(username, password);
         driver.findElement(By.id("dropdown-user")).click();
         try{
@@ -345,18 +337,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void createUserAndVerifySuccess(String username, String email, String password) throws InterruptedException {
-        driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).clear();
-        driver.findElement(By.id("new-user-username")).sendKeys(username);
-        driver.findElement(By.id("new-user-email")).clear();
-        driver.findElement(By.id("new-user-email")).sendKeys(email);
+        enterUsername(username);
+        enterEmailAddress(email);
         selectManageUserAccountDropdown();
         selectManageUserUserDropdown();
-        driver.findElement(By.id("new-user-password")).clear();
-        driver.findElement(By.id("new-user-password")).sendKeys(password);
-        driver.findElement(By.id("new-user-password-repeat")).clear();
-        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
-        driver.findElement(By.id("new-user-submit")).click();
+        enterPasswordAndVerificationPassword(password, password);
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement jasperoPopup = driver.findElement(By.className("jaspero__dialog-title"));
         wait.until(visibilityOf(jasperoPopup));
@@ -412,10 +398,13 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
-        Thread.sleep(1750);
-        driver.findElement(By.id("new-user-account-select")).click();
-        Thread.sleep(1750);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
         try {
+        wait.until(visibilityOf(accountTypeCaret));
+        wait.until(elementToBeClickable(accountTypeCaret));
+        accountTypeCaret.click();
+
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
@@ -423,9 +412,13 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserUserDropdown() throws InterruptedException {
-        driver.findElement(By.id("new-user-usertype-select")).click();
-        Thread.sleep(1000);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[2]/span/i[2]"));
+
         try {
+            wait.until(visibilityOf(userTypeCaret));
+            wait.until(elementToBeClickable(userTypeCaret));
+            userTypeCaret.click();
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
