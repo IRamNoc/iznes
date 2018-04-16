@@ -49,14 +49,15 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
         submitUserDetails();
    }
 
-    private static void enterUsername(String username) {
-        driver.findElement(By.cssSelector("input.form-control.username")).clear();
-        driver.findElement(By.cssSelector("input.form-control.username")).sendKeys(username);
+    public static void enterUsername(String username) {
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).clear();
+        driver.findElement(By.id("new-user-username")).sendKeys(username);
     }
 
     public static void enterEmailAddress(String email) {
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[2]/div/input")).clear();
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[2]/div/input")).sendKeys(email);
+        driver.findElement(By.id("new-user-email")).clear();
+        driver.findElement(By.id("new-user-email")).sendKeys(email);
     }
 
     private static void selectAccount(String accountIndex) throws InterruptedException {

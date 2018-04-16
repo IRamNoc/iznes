@@ -1,31 +1,36 @@
 package com.setl.openCSDClarityTests.UI.General;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccessAdmin;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.logout;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateTo365Page;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToLoginPage;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPageByID;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -39,7 +44,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(40000);
+    public Timeout globalTimeout = new Timeout (40000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -57,16 +62,12 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
-        Thread.sleep(1000);
-        driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).clear();
-        driver.findElement(By.id("new-user-username")).sendKeys(userName);
-        driver.findElement(By.id("new-user-email")).clear();
-        driver.findElement(By.id("new-user-email")).sendKeys(email);
+        enterUsername(userName);
+        enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         navigateToPage("user-admin-users");
-        Thread.sleep(1000);
+
         driver.findElement(By.id("user-tab-1")).click();
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(screenUserName.equals(userName));

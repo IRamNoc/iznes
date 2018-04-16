@@ -225,9 +225,12 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-      Thread.sleep(1500);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement menuBar = driver.findElement(By.id("topBarMenu"));
       try {
-        driver.findElement(By.id("topBarMenu")).isDisplayed();
+        wait.until(visibilityOf(menuBar));
+        wait.until(elementToBeClickable(menuBar));
+        menuBar.click();
       }catch (Exception e){
         fail("Page heading was not present " + e.getMessage());
       }
@@ -251,9 +254,13 @@ public class LoginAndNavigationHelper {
     }
 
   public static void navigateToDropdown(String dropdownID) throws InterruptedException {
-    Thread.sleep(1500);
+    WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+    WebElement dropdown =  driver.findElement(By.id(dropdownID));
+
     try {
-      driver.findElement(By.id(dropdownID)).click();
+        wait.until(visibilityOf(dropdown));
+        wait.until(elementToBeClickable(dropdown));
+        dropdown.click();
     }catch (Error e){
       System.out.println(dropdownID + "not present");
       fail();
