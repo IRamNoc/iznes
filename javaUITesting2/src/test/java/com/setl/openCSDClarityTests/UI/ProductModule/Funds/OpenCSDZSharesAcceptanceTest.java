@@ -35,7 +35,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(45000);
+    public Timeout globalTimeout = new Timeout(450000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -88,6 +88,9 @@ public class OpenCSDZSharesAcceptanceTest {
         openDropdownAndSelectOption("status", 1);
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
+        openDropdownAndSelectOption("valuationFrequency", 3);
+        openDropdownAndSelectOption("couponType", 3);
+        openDropdownAndSelectOption("freqOfDistributionDeclaration", 3);
         assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 2);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
@@ -139,9 +142,9 @@ public class OpenCSDZSharesAcceptanceTest {
         driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
         //PROFILE
-//        assertClassRequiredIsPresent("tabFeesButton");
-//        openDropdownAndSelectOption("investorProfile", 1);
-//        assertHiddenAttributeIsPresent("tabFeesButton");
+        assertClassRequiredIsPresent("tabProfileButton");
+        openDropdownAndSelectOption("investorProfile", 1);
+        assertHiddenAttributeIsPresent("tabProfileButton");
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
