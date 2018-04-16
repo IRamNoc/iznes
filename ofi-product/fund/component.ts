@@ -270,7 +270,7 @@ export class FundComponent implements OnInit, OnDestroy {
             'portfolioCurrencyHedge': [[], Validators.required],
 
             'globalItermediaryIdentification': [null, this.validators.giin],
-            'delegatedManagementCompany': [null, Validators.compose([this.validators.alphanumeric])],
+            'delegatedManagementCompany': [[]],
             'investmentAdvisor': [[]],
             'auditor': [[]],
             'taxAuditor': [[]],
@@ -349,6 +349,22 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['umbrellaFundName'].setValue(newUmbrella.umbrellaFundName);
 
                     this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
+
+                    this.fundForm.controls['domicile'].setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
+                    this.fundForm.controls['managementCompanyID'].setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
+                    this.fundForm.controls['fundAdministrator'].setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
+                    this.fundForm.controls['custodianBank'].setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
+                    this.fundForm.controls['investmentManager'].setValue(FundComponent.getListItem(newUmbrella.investmentManagerID, this.investmentManagerItems));
+                    this.fundForm.controls['investmentAdvisor'].setValue(FundComponent.getListItem(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
+                    this.fundForm.controls['payingAgent'].setValue(FundComponent.getListItem(newUmbrella.payingAgentID, this.payingAgentItems));
+                    this.fundForm.controls['delegatedManagementCompany'].setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
+                    this.fundForm.controls['auditor'].setValue(FundComponent.getListItem(newUmbrella.auditorID, this.auditorItems));
+                    this.fundForm.controls['taxAuditor'].setValue(FundComponent.getListItem(newUmbrella.taxAuditorID, this.taxAuditorItems));
+                    this.fundForm.controls['principalPromoter'].setValue(FundComponent.getListItem(newUmbrella.principlePromoterID, this.principalPromoterItems));
+                    this.fundForm.controls['legalAdvisor'].setValue(FundComponent.getListItem(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
+                    this.fundForm.controls['directors'].setValue(newUmbrella.directors);
+
+
                 }
                 this.selectedUmbrella = d[0].id;
                 return;
@@ -616,6 +632,7 @@ export class FundComponent implements OnInit, OnDestroy {
             principalPromoter: _.get(this.fundForm.controls['principalPromoter'].value, ['0', 'id'], null),
             payingAgent: _.get(this.fundForm.controls['payingAgent'].value, ['0', 'id'], null),
             managementCompanyID:  _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            delegatedManagementCompany:  _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
             umbrellaFundID:  _.get(this.umbrellaControl.value, ['0', 'id'], null),
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
