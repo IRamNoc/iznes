@@ -273,17 +273,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     public static void fillKYCLowerFields(String companyName, String phoneNumber) throws IOException, InterruptedException{
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
         driver.findElement(By.id("kyc_additionnal_phoneCode")).click();
-        WebElement phoneCode = driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/ul/li[1]/div/a"));
-        wait.until(elementToBeClickable(phoneCode));
-        wait.until(visibilityOf(phoneCode));
-        try {
-            phoneCode.click();
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
     }
 
