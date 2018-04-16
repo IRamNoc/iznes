@@ -58,6 +58,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore("Page removed for now")
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToPageByID("menu-asset-manager-dashboard");
@@ -86,6 +87,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore("Page removed for now")
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");

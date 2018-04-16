@@ -216,7 +216,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("uf_lei")).sendKeys("testLei");
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
-        selectTopDropdown("uf_managementCompany");
+        searchAndSelectTopDropdown("uf_managementCompany", "Management Company");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_investmentAdvisor");
         selectTopDropdown("uf_fundAdministrator");
@@ -235,26 +235,22 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     private void selectTopDropdown(String dropdownID) throws InterruptedException {
-        Thread.sleep(1000);
         try {
-            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']")).click();
+            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
         }catch (Exception e){
             fail("this step failed.");
         }
-        Thread.sleep(1000);
         try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
-            //driver.findElement(By.id(dropdownID)).click();
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
         }catch (Exception e){
             fail("dropdown not selected..: " + e.getMessage());
         }
     }
 
-    private void searchAndSelectTopDropdown(String dropdownID, String search){
-        driver.findElement(By.id(dropdownID)).click();
-        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
+    private void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
         try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
         }catch (Exception e){
             fail("dropdown not selected. " + e.getMessage());
         }
