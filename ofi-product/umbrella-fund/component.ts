@@ -66,59 +66,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     countries = [];
 
-    fundAdminOptions = [
-        {id: '1', text: 'Fund Admin 1'},
-        {id: '2', text: 'Fund Admin 2'},
-        {id: '3', text: 'Fund Admin 3'},
-    ];
-
-    custodianBankOptions = [
-        {id: '1', text: 'Custodian bank 1'},
-        {id: '2', text: 'Custodian bank 2'},
-        {id: '3', text: 'Custodian bank 3'},
-    ];
-
-    investmentManagerOptions = [
-        {id: '1', text: 'Investment Manager 1'},
-        {id: '2', text: 'Investment Manager 2'},
-        {id: '3', text: 'Investment Manager 3'},
-    ];
-
-    investmentAdvisorOptions = [
-        {id: '1', text: 'Investment Advisor 1'},
-        {id: '2', text: 'Investment Advisor 2'},
-        {id: '3', text: 'Investment Advisor 3'},
-    ];
-
-    payingagentOptions = [
-        {id: '1', text: 'Paying Agent 1'},
-        {id: '2', text: 'Paying Agent 2'},
-        {id: '3', text: 'Paying Agent 3'},
-    ];
-
-    auditorOptions = [
-        {id: '1', text: 'Auditor 1'},
-        {id: '2', text: 'Auditor 2'},
-        {id: '3', text: 'Auditor 3'},
-    ];
-
-    taxAuditorOptions = [
-        {id: '1', text: 'Tax Auditor 1'},
-        {id: '2', text: 'Tax Auditor 2'},
-        {id: '3', text: 'Tax Auditor 3'},
-    ];
-
-    principalPromoterOptions = [
-        {id: '1', text: 'Principal Promoter 1'},
-        {id: '2', text: 'Principal Promoter 2'},
-        {id: '3', text: 'Principal Promoter 3'},
-    ];
-
-    legalAdvisorOptions = [
-        {id: '1', text: 'Legal Advisor 1'},
-        {id: '2', text: 'Legal Advisor 2'},
-        {id: '3', text: 'Legal Advisor 3'},
-    ];
+    fundAdminOptions = [];
+    custodianBankOptions = [];
+    investmentManagerOptions = [];
+    investmentAdvisorOptions = [];
+    payingagentOptions = [];
+    auditorOptions = [];
+    taxAuditorOptions = [];
+    principalPromoterOptions = [];
+    legalAdvisorOptions = [];
 
     /* Private properties. */
     subscriptionsArray: Array<Subscription> = [];
@@ -146,6 +102,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
 
         this.countries = productConfig.fundItems.domicileItems;
+        this.fundAdminOptions = productConfig.fundItems.fundAdministratorItems;
+        this.custodianBankOptions = productConfig.fundItems.custodianBankItems;
+        this.investmentManagerOptions = productConfig.fundItems.investmentManagerItems;
+        this.investmentAdvisorOptions = productConfig.fundItems.investmentAdvisorItems;
+        this.payingagentOptions = productConfig.fundItems.payingAgentItems;
+        this.auditorOptions = productConfig.fundItems.auditorItems;
+        this.taxAuditorOptions = productConfig.fundItems.taxAuditorItems;
+        this.principalPromoterOptions = productConfig.fundItems.principalPromoterItems;
+        this.legalAdvisorOptions = productConfig.fundItems.legalAdvisorItems;
 
         // param url
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
