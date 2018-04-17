@@ -3,6 +3,8 @@
         <i class="fa fa-home"></i> <span mltag="txt_home">Home</span> - {{ connectedWalletName }}</h1>
 
 
+     <!--Add mltag make component not working-->
+     <!--todo: fix that ;)-->
      <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == '36'">
          <app-counter-tile name="actions" icon="align-left" [count]="" color="red" route="kyc-am-documents">KYC Documents</app-counter-tile>
          <app-counter-tile name="connections" icon="industry" [count]="" color="green" route="product-module/home">Product Module</app-counter-tile>
