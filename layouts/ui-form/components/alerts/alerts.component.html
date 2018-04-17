@@ -1,40 +1,45 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-bell"></i> <span mltag="txt_ui_alerts">Alerts
-    </span></h1>
+    <h1><i class="fa fa-bell"></i> <span mltag="txt_alerts">Alerts
+        </span></h1>
 </div>
 
 <div class="padding">
     <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
-        '[+] show info panes' }}</a>
-    <app-ui-info-pane [hidden]="!showInfoPanes"
-                      [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+        '[+] show info panes' }}
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="alerts">
-            <i class="fa fa-bars"></i> <span mltag="txt_ui_alerts">Alerts</span>
+            <i class="fa fa-bars"></i> <span mltag="txt_alerts">Alerts</span>
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
                 <section class="form-block">
                     <div class="form-group col-sm-12">
-                        <button id="showSimpleAlert" class="btn btn-primary" (click)="showSimpleAlert()">Show Example
+                        <button id="showSimpleAlert" class="btn btn-primary" (click)="showSimpleAlert()" mltag="txt_showexamplesimplealert">Show Example
                             Simple Alert
+
                         </button>
 
 
-                        <button id="showTabledAlert" class="btn" (click)="showTabledAlert()">Show Example Tabled Alert
+                        <button id="showTabledAlert" class="btn" (click)="showTabledAlert()" mltag="txt_showexampletabledalert">Show Example Tabled Alert
                         </button>
-                        <button id="showErrorAlert" class="btn btn-danger" (click)="showErrorAlert()">Show Example Error
+                        <button id="showErrorAlert" class="btn btn-danger" (click)="showErrorAlert()" mltag="txt_showexampleerroralert">Show Example Error
                             Alert
+
                         </button>
-                        <button id="showWarningAlert" class="btn" (click)="showWarningAlert()">Show Example Warning
+                        <button id="showWarningAlert" class="btn" (click)="showWarningAlert()" mltag="txt_showexamplewarningalert">Show Example Warning
                             Alert
+
                         </button>
-                        <button id="showInfoAlert" class="btn" (click)="showInfoAlert()">Show Example Info
+                        <button id="showInfoAlert" class="btn" (click)="showInfoAlert()" mltag="txt_showexampleinfoalert">Show Example Info
                             Alert
+
                         </button>
                     </div>
                 </section>
@@ -43,16 +48,18 @@
                     <div class="form-group col-sm-12">
 
 
-                        <button id="showCheckAlert" class="btn" (click)="showCheckAlert()">Show Example Check Alert
+                        <button id="showCheckAlert" class="btn" (click)="showCheckAlert()" mltag="txt_showexamplecheckalert">Show Example Check Alert
                         </button>
 
-                        <button id="showConfirmationAlert" class="btn btn-primary" (click)="showConfirmationAlert()">
-                            Show Example
+                        <button id="showConfirmationAlert" class="btn btn-primary" (click)="showConfirmationAlert()" mltag="txt_showexampleconfirmationalert">Show Example
                             Confirmation Alert
+
+
                         </button>
-                        <button id="showRejectAlert" class="btn btn-danger" (click)="showRejectAlert()">
-                            Show Example
+                        <button id="showRejectAlert" class="btn btn-danger" (click)="showRejectAlert()" mltag="txt_showexamplerejectalert">Show Example
                             Reject Alert
+
+
                         </button>
                     </div>
                 </section>

@@ -2,23 +2,23 @@
 
     <ng-sidebar-container>
 
-        <ng-sidebar [(opened)]="_opened"
-                    [mode]="_MODES[_modeNum]"
-                    [keyClose]="_keyClose"
-                    [position]="_POSITIONS[_positionNum]"
-                    [dock]="_dock"
-                    [dockedSize]="'50px'"
-                    [autoCollapseHeight]="_autoCollapseHeight"
-                    [autoCollapseWidth]="_autoCollapseWidth"
-                    [closeOnClickOutside]="_closeOnClickOutside"
-                    [closeOnClickBackdrop]="_closeOnClickBackdrop"
-                    [showBackdrop]="_showBackdrop"
-                    [animate]="_animate"
-                    [trapFocus]="_trapFocus"
-                    [autoFocus]="_autoFocus"
-                    [sidebarClass]="'demo-sidebar'"
-                    [ariaLabel]="'My sidebar'"
-        >
+        <ng-sidebar [(opened)]="_opened" [mode]="_MODES[_modeNum]" [keyClose]="_keyClose" [position]="_POSITIONS[_positionNum]" [dock]="_dock" [dockedSize]="'50px'" [autoCollapseHeight]="_autoCollapseHeight" [autoCollapseWidth]="_autoCollapseWidth" [closeOnClickOutside]="_closeOnClickOutside" [closeOnClickBackdrop]="_closeOnClickBackdrop" [showBackdrop]="_showBackdrop" [animate]="_animate" [trapFocus]="_trapFocus" [autoFocus]="_autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
                     <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()" mltag="txt_close">Close</button>
@@ -87,6 +87,9 @@
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
                     -->
+
+
+
                     <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
                         <div class="fade-slide-right">
                             <router-outlet #o="outlet"></router-outlet>
