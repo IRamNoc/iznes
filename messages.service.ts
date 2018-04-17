@@ -8,6 +8,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper} from '@setl/utils/index';
 import {MyMessagesService} from '@setl/core-req-services';
 import {MessageActionsConfig, MessageConnectionConfig, MessageKycConfig} from '@setl/core-messages';
+import {getBodyNode} from "@angular/animations/browser/src/render/shared";
 
 /* Service Class. */
 @Injectable()
@@ -21,6 +22,7 @@ export class MessagesService {
 
     connectedWallet;
     walletDirectory;
+    replyData;
 
     /* Constructor. */
     constructor(private ngRedux: NgRedux<any>,
@@ -157,6 +159,39 @@ export class MessagesService {
                 })
             );
         });
+    }
+
+    /**
+     * save reply message
+     *
+     * @param messageData
+     */
+    public saveReply(messageData){
+        this.replyData = {
+            senderId: messageData['senderId'],
+            senderWalletName: messageData['senderWalletName'],
+            subject: messageData['subject'],
+            body: messageData['content'],
+            date: messageData['date']
+        };
+    }
+
+    /**
+     * load reply message
+     *
+     * @returns {Promise<any>}
+     */
+    public loadReply(){
+        return new Promise((resolve, reject) => {
+            resolve(this.replyData);
+        });
+    }
+
+    /**
+     * clear reply message
+     */
+    public clearReply(){
+        this.replyData = {};
     }
 
 }
