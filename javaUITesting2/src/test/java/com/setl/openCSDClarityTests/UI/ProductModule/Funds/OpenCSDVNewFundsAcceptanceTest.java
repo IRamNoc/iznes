@@ -59,7 +59,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         }catch (Exception e){
@@ -85,7 +85,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }catch (Exception e){
             fail(e.getMessage());
         }
-        String fundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]")).getText();
+        String fundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         assertTrue(fundName.equals("TestFund1"));
         validateDatabaseFundExists(1,"TestFund1");
     }
@@ -125,7 +125,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("Test_Umbrella_Fund");
 //        }catch (Exception e){
@@ -149,7 +149,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //            try {
 //                driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("asdasd");
 //            }catch (Exception e){
@@ -167,7 +167,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
 //        }catch (Exception e){
@@ -189,7 +189,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
-        driver.findElement(By.id("fund-umbrellaControl-select-1")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
 //        try {
 //            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys("TestUmbrellaFunds1");
 //        }catch (Exception e){
@@ -248,15 +248,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-home");
-        Thread.sleep(2000);
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         System.out.println(umbFundNamePrev);
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
         }catch (Exception e){
-            fail(e.getMessage());
-        }
-        Thread.sleep(2000);
+            fail(e.getMessage());}
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
@@ -266,43 +263,46 @@ public class OpenCSDVNewFundsAcceptanceTest {
             Thread.sleep(750);
             assertTrue(popup.contains("has been successfully updated."));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
         try {
             String umFundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
             assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
     }
 
     private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.id("AuMFund")).sendKeys(fundName);
         driver.findElement(By.id("AuMFundDate")).sendKeys("2019-04-04");
-        driver.findElement(By.id("domicile")).click();
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isEuDirective2")).click();
-        driver.findElement(By.id("legalForm")).click();
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("fundCurrency")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
-        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
         driver.findElement(By.id("fundManagers")).sendKeys("testManager");
-        driver.findElement(By.id("managementCompanyID")).click();
+        Thread.sleep(1750);
+        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,200)");
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("custodianBank")).click();
+        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
+        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
+        Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("portfolioCurrencyHedge")).click();
+        Thread.sleep(750);
+        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)");
+        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
         driver.findElement(By.id("isFundOfFund2")).click();
-        driver.findElement(By.id("fundAdministrator")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("nationalNomenclatureOfLegalForm")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
-        Thread.sleep(2500);
     }
 }

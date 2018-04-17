@@ -1,31 +1,36 @@
 package com.setl.openCSDClarityTests.UI.General;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccessAdmin;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.logout;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateTo365Page;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToLoginPage;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
+import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPageByID;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -39,7 +44,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(40000);
+    public Timeout globalTimeout = new Timeout (30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -57,16 +62,12 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPage("user-admin-users");
-        Thread.sleep(1000);
-        driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).clear();
-        driver.findElement(By.id("new-user-username")).sendKeys(userName);
-        driver.findElement(By.id("new-user-email")).clear();
-        driver.findElement(By.id("new-user-email")).sendKeys(email);
+        enterUsername(userName);
+        enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         navigateToPage("user-admin-users");
-        Thread.sleep(1000);
+
         driver.findElement(By.id("user-tab-1")).click();
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(screenUserName.equals(userName));
@@ -110,7 +111,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        assertTrue(driver.findElement(By.id("menu-home")).isDisplayed());
+        assertTrue(driver.findElement(By.id("topBarMenu")).isDisplayed());
     }
 
     @Test
@@ -186,11 +187,9 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
         createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
-        Thread.sleep(500);
         logout();
-        Thread.sleep(750);
         loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInfomation("Test_User_064", "asdasd", "Jordan", "Miller");
+        loginAndAssertMyInformation("Test_User_064", "asdasd", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
@@ -201,13 +200,9 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(username, password);
-        try {
-            driver.findElement(By.id("topBarMenu")).click();
-        }catch (Exception e) {
-            fail(e.getMessage());
-        }
+
+
         driver.findElement(By.id("topBarMyAccount")).click();
-        Thread.sleep(1000);
         driver.findElement(By.id("udDisplayName")).clear();
         driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
         driver.findElement(By.id("udFirstName")).clear();
@@ -223,9 +218,7 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("udPostalCode")).clear();
         driver.findElement(By.id("udPostalCode")).sendKeys("code");
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[2]/span")).click();
-        Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"country\"]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
-        Thread.sleep(500);
         driver.findElement(By.id("udSubmit")).click();
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
@@ -237,7 +230,7 @@ public class OpenCSDGeneralAcceptanceTest {
         logout();
     }
 
-    public static void loginAndAssertMyInfomation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+    public static void loginAndAssertMyInformation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(username, password);
         driver.findElement(By.id("dropdown-user")).click();
         try{
@@ -344,18 +337,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void createUserAndVerifySuccess(String username, String email, String password) throws InterruptedException {
-        driver.findElement(By.id("user-tab-1")).click();
-        driver.findElement(By.id("new-user-username")).clear();
-        driver.findElement(By.id("new-user-username")).sendKeys(username);
-        driver.findElement(By.id("new-user-email")).clear();
-        driver.findElement(By.id("new-user-email")).sendKeys(email);
+        enterUsername(username);
+        enterEmailAddress(email);
         selectManageUserAccountDropdown();
         selectManageUserUserDropdown();
-        driver.findElement(By.id("new-user-password")).clear();
-        driver.findElement(By.id("new-user-password")).sendKeys(password);
-        driver.findElement(By.id("new-user-password-repeat")).clear();
-        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
-        driver.findElement(By.id("new-user-submit")).click();
+        enterPasswordAndVerificationPassword(password, password);
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement jasperoPopup = driver.findElement(By.className("jaspero__dialog-title"));
         wait.until(visibilityOf(jasperoPopup));
@@ -387,7 +374,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesRecipients\"]/div/div[2]/div/input")).sendKeys(recipient);
@@ -406,10 +398,13 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
-        Thread.sleep(1750);
-        driver.findElement(By.id("new-user-account-select")).click();
-        Thread.sleep(1750);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
         try {
+        wait.until(visibilityOf(accountTypeCaret));
+        wait.until(elementToBeClickable(accountTypeCaret));
+        accountTypeCaret.click();
+
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
@@ -417,9 +412,13 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserUserDropdown() throws InterruptedException {
-        driver.findElement(By.id("new-user-usertype-select")).click();
-        Thread.sleep(1000);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[2]/span/i[2]"));
+
         try {
+            wait.until(visibilityOf(userTypeCaret));
+            wait.until(elementToBeClickable(userTypeCaret));
+            userTypeCaret.click();
             driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
@@ -452,7 +451,12 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWalletWithoutRecipient(String subject, String message, String toasterMessage) throws InterruptedException {
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesSubject")).sendKeys(subject);
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
@@ -469,7 +473,12 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
-        navigateToPageByID("menu-messages");
+        try{
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+        }catch (Exception e){
+            fail("couldnt navigate to messages " + e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         String subjectMessage = driver.findElement(By.id("message_list_subject_0_0")).getText();
         System.out.println(subjectMessage + subject);
         assertTrue(subjectMessage.equals(subject));

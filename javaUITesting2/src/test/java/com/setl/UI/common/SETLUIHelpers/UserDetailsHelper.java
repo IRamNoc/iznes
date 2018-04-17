@@ -49,14 +49,15 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
         submitUserDetails();
    }
 
-    private static void enterUsername(String username) {
-        driver.findElement(By.cssSelector("input.form-control.username")).clear();
-        driver.findElement(By.cssSelector("input.form-control.username")).sendKeys(username);
+    public static void enterUsername(String username) {
+        driver.findElement(By.id("user-tab-1")).click();
+        driver.findElement(By.id("new-user-username")).clear();
+        driver.findElement(By.id("new-user-username")).sendKeys(username);
     }
 
     public static void enterEmailAddress(String email) {
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[2]/div/input")).clear();
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[2]/div/input")).sendKeys(email);
+        driver.findElement(By.id("new-user-email")).clear();
+        driver.findElement(By.id("new-user-email")).sendKeys(email);
     }
 
     private static void selectAccount(String accountIndex) throws InterruptedException {
@@ -82,11 +83,13 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
                 "/div/form/div/div[4]/div/div/div/ul/li[" + userTypeIndex + "]")).click();
     }
 
-    private static void enterPasswordAndVerificationPassword(String password, String repeatPassword) {
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[5]/div/input"));
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[5]/div/input")).sendKeys(password);
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[6]/div/input"));
-        driver.findElement(By.xpath(".//*[@id='user-tab-2']/div/form/div/div[6]/div/input")).sendKeys(repeatPassword);
+    public static void enterPasswordAndVerificationPassword(String password, String repeatPassword) {
+        driver.findElement(By.id("new-user-password")).clear();
+        driver.findElement(By.id("new-user-password")).sendKeys(password);
+        driver.findElement(By.id("new-user-password-repeat")).clear();
+        driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
+        driver.findElement(By.id("new-user-submit")).click();
+
     }
 
     private static void selectAdministrativeGroup(String... groups)

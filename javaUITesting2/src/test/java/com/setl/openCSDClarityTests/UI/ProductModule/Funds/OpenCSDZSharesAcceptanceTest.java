@@ -35,7 +35,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(450000);
+    public Timeout globalTimeout = new Timeout(45000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -148,7 +148,7 @@ public class OpenCSDZSharesAcceptanceTest {
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
-        driver.findElement(By.id(dropdownID)).click();
+        driver.findElement(By.id("//*[@id='" + dropdownID + "']/div")).click();
         Thread.sleep(750);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
