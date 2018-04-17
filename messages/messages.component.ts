@@ -228,7 +228,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             this.currentBoxCount = this.mailCounts[this.currentBox.type];
             if (this.currentBox.type === 'inbox') {
-                this.currentBoxCount = this.mailCounts['inboxUnread'];
+                //this.currentBoxCount = this.mailCounts['inboxUnread'];
                 this.unreadMessages = this.mailCounts['inboxUnread'];
             }
 

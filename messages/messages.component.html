@@ -3,7 +3,7 @@
     <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
     <div class="message_list">
-        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="messages.length > 0">{{messages.length || 0}}</span>
+        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="currentBoxCount > 0">{{currentBoxCount || 0}}</span>
         </h2>
         <div class="search">
             <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#"
@@ -35,7 +35,7 @@
             </div>
             <div class="message_list_menu_pages">
                 <pagination-controls
-                        (pageChange)="currentPage = $event; onPageChange($event)" maxSize="3"></pagination-controls>
+                        (pageChange)="currentPage = $event; onPageChange($event)" maxSize="5"></pagination-controls>
             </div>
         </div>
 
@@ -54,7 +54,7 @@
         </div>
 
         <div class=""
-             *ngFor="let message of messages | paginate: { itemsPerPage: 8, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
+             *ngFor="let message of messages | paginate: { itemsPerPage: 15, currentPage: currentPage, totalItems:currentBoxCount }; let i = index"
              [ngClass]="{'message-active': i === currentMessage.id}">
 
             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
