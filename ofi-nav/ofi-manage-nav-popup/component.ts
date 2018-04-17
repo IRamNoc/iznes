@@ -136,6 +136,7 @@ export class OfiManageNavPopup implements OnInit {
             [this.statusItems[0]];
 
         this.navForm = new FormGroup({
+            nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
             price: new FormControl(this.navLatest, Validators.required),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
@@ -153,6 +154,7 @@ export class OfiManageNavPopup implements OnInit {
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
         } else if(mode == model.NavPopupMode.DELETE) {
+            this.navForm.controls.nav.disable();
             this.navForm.controls.status.disable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
@@ -326,7 +328,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private showErrorModal(data): void {
         this.alertsService.create('error',
-            `${data[1].status}`);
+            `${data[1].Data[0].Message}`);
 
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());

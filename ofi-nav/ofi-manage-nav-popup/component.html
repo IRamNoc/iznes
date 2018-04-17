@@ -21,7 +21,7 @@
                     <div class="form-group col-sm-8">
                         <label class="control-label" for="nav" mltag="txt_latestnav" *ngIf="!isDeleteMode()">Latest NAV</label>
                         <label class="control-label" for="nav" mltag="txt_latestnav" *ngIf="isDeleteMode()">NAV</label>
-                        <input type="text" id="nav" name="nav" appNumberFormatter [fractionSize]="2" value="{{isDeleteMode() ? share.nav : navLatest}}" readonly/>
+                        <input type="text" id="nav" name="nav" formControlName="nav" />
                     </div>
 
                     <div class="form-group col-sm-4">
@@ -42,7 +42,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="navDate" mltag="txt_navdate">NAV Date</label>
                     <div class="input-group date-pick-wrapper">
-                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
                         <input id="navDate" name="navDate" placeholder="Select date" mltag="txt_selectdate"
                                formControlName="navDate"
                                [dpDayPicker]="navDateConfig"
@@ -55,7 +55,7 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="navPublishDate" mltag="txt_navpubdate">Publication Date</label>
                     <div class="input-group date-pick-wrapper">
-                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
                         <input id="navPublishDate" name="navPublishDate" placeholder="Select date" mltag="txt_selectdate"
                                formControlName="navPubDate"
                                [dpDayPicker]="navPublishDateConfig"
