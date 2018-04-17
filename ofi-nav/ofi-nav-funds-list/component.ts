@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import * as model from '../OfiNav';
 import {OfiManageNavPopupService} from '../ofi-manage-nav-popup/service';
@@ -134,8 +135,26 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @return void
      */
     private updateNavList(navList: model.NavModel[]): void {
-        this.navListItems = navList;
+        this.navListItems = this.processNavList(navList);
         this.changeDetectorRef.markForCheck();
+    }
+
+    private processNavList(navList: model.NavModel[]): model.NavModel[] {
+        const uniques = _.uniqBy(navList, (e) => {
+            return e.fundShareName;
+        });
+
+        _.forEach(uniques, (item: model.NavModel) => {
+            if(item.navValidated) {
+                item.nav = item.navValidated;
+            } else if(item.navTechnical) {
+                item.nav = item.navTechnical;
+            } else {
+                item.nav = item.navEstimated;
+            }
+        });
+
+        return uniques;
     }
 
     private navToFrontEndString(nav: number): string {
@@ -213,7 +232,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
 
     addNav(share: model.NavInfoModel): void {
-        this.popupService.open(share, model.NavPopupMode.ADD);
+        this.popupService.open(share, model.NavPopupMode.ADD_EXISTING);
     }
 
     navigateToShare(shareId: number): void {

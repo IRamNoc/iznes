@@ -49,47 +49,66 @@
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column>
+                <clr-dg-column class="col-fundsharename">
                     <span mltag="txt_sharename">Share name</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navdate">NAV Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navpubdate">NAV<br />Pub Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navnextvaluation">Next Valuation Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-currency">
                     <span mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navdate">NAV Date</span>
+                    <span mltag="txt_navestimated">NAV<br />Estimated</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navpubdate">NAV Publication Date</span>
+                    <span mltag="txt_navtechnical">NAV<br />Technical</span>
                 </clr-dg-column>
                 <clr-dg-column>
+                    <span mltag="txt_navvalidated">NAV<br />Validated</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-status">
                     <span mltag="txt_status">Status</span>
-                </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_navnextvaluation">Next Valuation Date</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems">
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharename" (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-currency" (click)="navigateToShare(item.shareId)">
                         {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">
+                        {{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">
+                        {{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">
+                        {{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
                                 <span class="label label-success" mltag="txt_validated">Validated</span>
@@ -103,7 +122,6 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn btn-success btn-sm">

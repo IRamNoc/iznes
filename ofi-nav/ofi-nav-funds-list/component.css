@@ -4,3 +4,16 @@
 
 .time-orange { color: orange; }
 .time-red { color: red; }
+
+.col-fundsharename { width: 175px !important; }
+.datagrid-cell {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+.col-status { width: 100px !important; }
+.col-date { width: 80px !important; }
+.col-currency { width: 50px !important; }
+
+.nav-status-price { color: #888; }
+.nav-status-price.not-set { color: #BBB; }
