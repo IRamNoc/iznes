@@ -237,7 +237,8 @@ export class OfiNavService {
             RequestName: 'izndeletenav',
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', ''),
-            navDate: _.get(requestData, 'navDate', '')
+            navDate: _.get(requestData, 'navDate', ''),
+            navStatus: _.get(requestData, 'navStatus', '')
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

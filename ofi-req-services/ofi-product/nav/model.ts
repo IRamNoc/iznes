@@ -44,4 +44,5 @@ export interface DeleteNavMessageBody extends MemberNodeMessageBody {
     token: string;
     shareId: number;
     navDate: string;
+    navStatus: string;
 }

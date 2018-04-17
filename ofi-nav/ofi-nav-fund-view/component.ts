@@ -350,7 +350,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         navObj.fundShareName = this.navFund.fundShareName;
         navObj.isin = this.navFund.isin;
         navObj.shareId = this.navFund.shareId;
-        // navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.DELETE);
     }
