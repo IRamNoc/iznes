@@ -30,6 +30,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private mode: model.NavPopupMode;
     private _isOpen: boolean;
+    private popupModel: { share: model.NavInfoModel, mode: model.NavPopupMode };
 
     navLatest: number;
 
@@ -73,7 +74,7 @@ export class OfiManageNavPopup implements OnInit {
         this.popupService.onOpen.subscribe((res: { share: model.NavInfoModel, mode: model.NavPopupMode }) => {
             this.redux.dispatch(clearRequestedNavLatest());
             this.navExceedsThreshold = false;
-            this.initNavForm(res.share, res.mode);
+            this.popupModel = res;
         });
 
         this.popupService.onClose.subscribe(() => {
@@ -87,6 +88,8 @@ export class OfiManageNavPopup implements OnInit {
         }));
         this.subscriptionsArray.push(this.navLatestOb.subscribe(navList => {
             this.updateNavLatest(navList);
+
+            if(this.popupModel) this.initNavForm(this.popupModel.share, this.popupModel.mode);
         }));
     }
 
@@ -107,7 +110,8 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     isAddMode(): boolean {
-        return this.popupService.mode() === model.NavPopupMode.ADD;
+        return this.popupService.mode() === model.NavPopupMode.ADD ||
+            this.popupService.mode() === model.NavPopupMode.ADD_EXISTING;
     }
 
     isEditMode(): boolean {
@@ -148,14 +152,11 @@ export class OfiManageNavPopup implements OnInit {
             this.navForm.controls.status.disable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
+        } else if(mode == model.NavPopupMode.DELETE) {
+            this.navForm.controls.status.disable();
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
         }
-
-        // if (Number(share.status) === -1) {
-        //     this.navForm.controls.price.disable();
-        //     this.navForm.controls.navDate.disable();
-        //     this.navForm.controls.navPubDate.disable();
-        //     // this.navForm.controls.status.disable();
-        // }
 
         this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
             this.checkIfNavExceedsThreshold(nav);
@@ -229,7 +230,8 @@ export class OfiManageNavPopup implements OnInit {
 
         const requestData = {
             shareId: this.share.shareId,
-            navDate: `${this.navForm.controls.navDate.value} 00:00:00`
+            navDate: `${this.navForm.controls.navDate.value} 00:00:00`,
+            navStatus: this.navForm.controls.status.value[0].id
         }
 
         OfiNavService.defaultDeleteNav(this.ofiNavService,
