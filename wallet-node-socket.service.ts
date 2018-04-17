@@ -146,30 +146,6 @@ export class WalletNodeSocketService{
         }
     }
 
-    getInitialSnapshotFromThroughSocket() {
-        const messageID = this.callBackRegister.uniqueIDValue;
-        const Request = {
-            messageType: 'Request',
-            messageHeader: '',
-            messageBody: {
-                topic: 'state'
-            },
-            requestID: messageID
-        };
-
-        return new Promise((resolve, reject) => {
-            if(this.walletNodeToken === '' || this.websocket === undefined){
-                reject();
-            }
-
-            this.callBackRegister.addHandler(messageID, (ID, initialSnapshot, UserData) => {
-                resolve(initialSnapshot.data);
-            }, {});
-
-            this.websocket.sendRequest(Request);
-        });
-    }
-
     sendRequest(request, callBack) {
         const messageId = this.callBackRegister.uniqueIDValue;
         this.callBackRegister.addHandler(messageId, callBack, {});
