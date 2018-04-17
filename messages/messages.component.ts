@@ -142,9 +142,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         ]).subscribe((subs) => {
             this.mailCounts = subs[0];
             this.messagesList(subs[1]);
-
-            console.log('counts',this.mailCounts);
-
         });
 
         this.messageComposeForm = new FormGroup({
