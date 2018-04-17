@@ -803,8 +803,12 @@
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="delegatedManagementCompany" mltag="txt_delegatedmanagementcompany">Delegated Management Company</label>
-                                                <input type="text" name="delegatedManagementCompany" id="delegatedManagementCompany" formControlName="delegatedManagementCompany">
-                                                <span *ngIf="fundForm.controls['delegatedManagementCompany'].touched && fundForm.controls['delegatedManagementCompany'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</span>
+                                                <ng-select id="delegatedManagementCompany" [items]="managementCompanyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['delegatedManagementCompany']" mltag="txt_select">
+
+
+
+
+                                                </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
