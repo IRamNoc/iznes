@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 
-
 public class OpenCSDVNewFundsAcceptanceTest {
 
     @Rule
@@ -62,19 +61,19 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try{
+        try {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
         shouldFillOutFundDetailsStep2("TestFund1");
         try {
             driver.findElement(By.id("fund-submitfund-btn")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
         Thread.sleep(2500);
@@ -82,16 +81,16 @@ public class OpenCSDVNewFundsAcceptanceTest {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
             assertTrue(popup.equals("TestFund1 has been successfully created."));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
         String fundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         assertTrue(fundName.equals("TestFund1"));
-        validateDatabaseFundExists(1,"TestFund1");
+        validateDatabaseFundExists(1, "TestFund1");
     }
 
     @Test
-    public void shouldDisplayCorrectTitle() throws InterruptedException, IOException{
+    public void shouldDisplayCorrectTitle() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -101,26 +100,26 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldClickAddNewUmbrellaFundAndBeNavigatedAway() throws InterruptedException, IOException{
+    public void shouldClickAddNewUmbrellaFundAndBeNavigatedAway() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         try {
             driver.findElement(By.id("fund-add-new-umbrella-btn")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
-        try{
+        try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
             assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
-        }
+    }
 
     @Test
-    public void shouldBeAbleToCancelFundCreationStep1() throws InterruptedException, IOException{
+    public void shouldBeAbleToCancelFundCreationStep1() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -137,14 +136,14 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
 
     }
 
     @Test
-    public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException{
+    public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -162,7 +161,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldTakeUserToStep2WhenNextIsClicked() throws InterruptedException, IOException{
+    public void shouldTakeUserToStep2WhenNextIsClicked() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -176,15 +175,15 @@ public class OpenCSDVNewFundsAcceptanceTest {
         Thread.sleep(1750);
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try{
+        try {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void shouldBeAbleToCancelFundCreationStep2() throws InterruptedException, IOException{
+    public void shouldBeAbleToCancelFundCreationStep2() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
@@ -198,9 +197,9 @@ public class OpenCSDVNewFundsAcceptanceTest {
         Thread.sleep(1750);
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try{
+        try {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
         ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
@@ -208,12 +207,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     @Test
-    public void shouldQueryDatabaseForFunds() throws InterruptedException, IOException{
+    public void shouldQueryDatabaseForFunds() throws InterruptedException, IOException {
 
     }
 
@@ -247,13 +246,14 @@ public class OpenCSDVNewFundsAcceptanceTest {
     public void shouldUpdateFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-home");
+        navigateToPage("product-module/home");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         System.out.println(umbFundNamePrev);
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
@@ -262,13 +262,15 @@ public class OpenCSDVNewFundsAcceptanceTest {
             String popup = driver.findElement(By.className("toast-title")).getText();
             Thread.sleep(750);
             assertTrue(popup.contains("has been successfully updated."));
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
         try {
             String umFundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
             assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {

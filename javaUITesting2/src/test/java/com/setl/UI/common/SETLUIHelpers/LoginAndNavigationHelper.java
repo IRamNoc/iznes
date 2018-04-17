@@ -28,30 +28,30 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage2(String pageHref) throws InterruptedException {
-      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-      WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
-      try {
-          wait.until(visibilityOf(page2));
-          wait.until(elementToBeClickable(page2));
-          page2.click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
+        try {
+            wait.until(visibilityOf(page2));
+            wait.until(elementToBeClickable(page2));
+            page2.click();
 
-      }catch (Error e){
+        } catch (Error e) {
 
-         fail(pageHref + "page not present");
+            fail(pageHref + "page not present");
         }
     }
 
     public static void navigateToPageByID(String pageID) throws InterruptedException {
-      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-      WebElement page = driver.findElement(By.id(pageID));
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement page = driver.findElement(By.id(pageID));
         try {
-        wait.until(visibilityOf(page));
-        wait.until(elementToBeClickable(page));
-        page.click();
+            wait.until(visibilityOf(page));
+            wait.until(elementToBeClickable(page));
+            page.click();
 
-      }catch (Error e){
-         fail(pageID + "page not present");
-      }
+        } catch (Error e) {
+            fail(pageID + "page not present");
+        }
     }
 
     public static void navigateToPage(String pageHref) throws InterruptedException {
@@ -63,7 +63,7 @@ public class LoginAndNavigationHelper {
             wait.until(elementToBeClickable(messagesLink));
             messagesLink.click();
 
-        }catch (Error e){
+        } catch (Error e) {
 
             fail(pageHref + "page not present");
         }
@@ -74,21 +74,21 @@ public class LoginAndNavigationHelper {
         WebElement pageXpath = driver.findElement(By.xpath(pageHref));
 
         try {
-        wait.until(visibilityOf(pageXpath));
-        wait.until(elementToBeClickable(pageXpath));
-        pageXpath.click();
-        }catch (Error e){
+            wait.until(visibilityOf(pageXpath));
+            wait.until(elementToBeClickable(pageXpath));
+            pageXpath.click();
+        } catch (Error e) {
             fail(pageHref + "page not present");
         }
     }
 
     public static void waitForLoginPageToLoad() throws InterruptedException {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             WebElement usernameInput = driver.findElement(By.id("username-field"));
             wait.until(visibilityOf(usernameInput));
             wait.until(elementToBeClickable(usernameInput));
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Login page not ready - Username " + e.getMessage());
         }
 
@@ -121,6 +121,7 @@ public class LoginAndNavigationHelper {
             fail("User name field is not ready");
         }
     }
+
     public static void enterLoginCredentialsPassword(String password) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -134,95 +135,91 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void clickLoginButton(){
-        try{
+    public static void clickLoginButton() {
+        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement login = driver.findElement(By.id("login-submit"));
             wait.until(visibilityOf(login));
             wait.until(elementToBeClickable(login));
             login.click();
-        }catch(Exception e)
-            {
-                fail("Login button not ready " + e.getMessage());
-            }
+        } catch (Exception e) {
+            fail("Login button not ready " + e.getMessage());
+        }
     }
 
     public static void selectNewTabToNavigateTo(String newTabId) throws InterruptedException {
-            try {
-                WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-                WebElement tab = driver.findElement(By.xpath(".//*[@id='home-holding-" +
-                    newTabId + "-select']/a/span"));
-                wait.until(visibilityOf(tab));
-                wait.until(elementToBeClickable(tab));
-                tab.click();
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement tab = driver.findElement(By.xpath(".//*[@id='home-holding-" +
+                newTabId + "-select']/a/span"));
+            wait.until(visibilityOf(tab));
+            wait.until(elementToBeClickable(tab));
+            tab.click();
 
-            } catch (Exception e) {
-                System.out.println("Link to " + newTabId + " is not ready" + e);
-            }
+        } catch (Exception e) {
+            System.out.println("Link to " + newTabId + " is not ready" + e);
+        }
     }
 
     public static void navigateToAddressesTab() throws InterruptedException {
-            try {
-                WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-                WebElement addressesTab = driver.findElement(By.xpath(".//*[@id='home-addresses-select']/a/span"));
-                wait.until(visibilityOf(addressesTab));
-                wait.until(elementToBeClickable(addressesTab));
-                addressesTab.click();
-            } catch (Exception e)
-                {
-                    System.out.println("Link to Addresses is not ready" + e);
-                }
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement addressesTab = driver.findElement(By.xpath(".//*[@id='home-addresses-select']/a/span"));
+            wait.until(visibilityOf(addressesTab));
+            wait.until(elementToBeClickable(addressesTab));
+            addressesTab.click();
+        } catch (Exception e) {
+            System.out.println("Link to Addresses is not ready" + e);
+        }
     }
 
-    public static void acceptCookies() throws InterruptedException
-    {
-       try {
-           WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-           WebElement cookies = driver.findElement(By.linkText("Got it!"));
-           wait.until(visibilityOf(cookies));
-           wait.until(elementToBeClickable(cookies));
-           cookies.click();
-       } catch (Exception e)
-       {
-           System.out.println("Cookies message is not present " + e.getMessage());
-       }
+    public static void acceptCookies() throws InterruptedException {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement cookies = driver.findElement(By.linkText("Got it!"));
+            wait.until(visibilityOf(cookies));
+            wait.until(elementToBeClickable(cookies));
+            cookies.click();
+        } catch (Exception e) {
+            System.out.println("Cookies message is not present " + e.getMessage());
+        }
     }
 
-    public static void loginAndVerifySuccess(String username, String password) throws InterruptedException, IOException{
-        navigateToLoginPage();
-        enterLoginCredentialsUserName(username);
-        enterLoginCredentialsPassword(password);
-
-      clickLoginButton();
-      try {
-      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-      WebElement topBar = driver.findElement(By.id("topBarMenu"));
-          wait.until(visibilityOf(topBar));
-
-      }catch (Exception e){
-        fail("Page heading was not present " + e.getMessage());
-      }
-    }
-
-
-    public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
+    public static void loginAndVerifySuccess(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-      try {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement menuBar = driver.findElement(By.id("topBarMenu"));
-        wait.until(visibilityOf(menuBar));
-        wait.until(elementToBeClickable(menuBar));
-        menuBar.click();
-      }catch (Exception e){
-        fail("Page heading was not present " + e.getMessage());
-      }
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement topBar = driver.findElement(By.id("topBarMenu"));
+            wait.until(visibilityOf(topBar));
+
+        } catch (Exception e) {
+            fail("Page heading was not present " + e.getMessage());
+        }
     }
 
-    public static void loginAndVerifySuccessKYC(String username, String password, String headingID) throws InterruptedException, IOException{
+
+    public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException {
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement menuBar = driver.findElement(By.id("topBarMenu"));
+            wait.until(visibilityOf(menuBar));
+            wait.until(elementToBeClickable(menuBar));
+            menuBar.click();
+        } catch (Exception e) {
+            fail("Page heading was not present " + e.getMessage());
+        }
+    }
+
+    public static void loginAndVerifySuccessKYC(String username, String password, String headingID) throws InterruptedException, IOException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
@@ -230,14 +227,15 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement homePage = driver.findElement(By.id("ofi-welcome-" + headingID));
-      try {
+        try {
 
-          wait.until(visibilityOf(homePage));
-      }catch (Exception e){
-        fail("Page heading was not present " + e.getMessage());
-      }
+            wait.until(visibilityOf(homePage));
+        } catch (Exception e) {
+            fail("Page heading was not present " + e.getMessage());
+        }
     }
-    public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException{
+
+    public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
@@ -249,11 +247,12 @@ public class LoginAndNavigationHelper {
             wait.until(visibilityOf(modal));
             String headingKYC = modal.getText();
             assertTrue(headingKYC.equals("CONFIRMATION SCREEN"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Invited investor not being taken to completed KYC page : " + e.getMessage());
         }
     }
-    public static void loginKYCConfirmationScreen(String username, String password) throws InterruptedException, IOException{
+
+    public static void loginKYCConfirmationScreen(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
@@ -261,56 +260,58 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
 
     }
+
     public static void logout() {
-        try {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement settings = driver.findElement(By.id("dropdown-settings"));
 
-
+        try {
             wait.until(visibilityOf(settings));
             wait.until(elementToBeClickable(settings));
             settings.click();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Logout button not available " + e.getMessage());
         }
 
-        try {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
         WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
-        wait.until(visibilityOf(logOff));
-        wait.until(elementToBeClickable(logOff));
-        logOff.click();
 
-        }catch (Exception e){
+        try {
+            wait1.until(visibilityOf(logOff));
+            wait1.until(elementToBeClickable(logOff));
+            logOff.click();
+
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
-  public static void navigateToDropdown(String dropdownID) {
-    try {
-    WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-    WebElement dropdown =  driver.findElement(By.id(dropdownID));
+    public static void navigateToDropdown(String dropdownID) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement dropdown = driver.findElement(By.id(dropdownID));
 
-        wait.until(visibilityOf(dropdown));
-        wait.until(elementToBeClickable(dropdown));
-        dropdown.click();
-    }catch (Error e){
-      System.out.println(dropdownID + "not present");
-      fail();
+        try {
+            wait.until(visibilityOf(dropdown));
+            wait.until(elementToBeClickable(dropdown));
+            dropdown.click();
+        } catch (Error e) {
+            System.out.println(dropdownID + "not present");
+            fail();
+        }
     }
-  }
-  public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
-    WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-    WebElement dropdown = driver.findElement(By.xpath(dropdownXpath));
 
-    try {
-    wait.until(visibilityOf(dropdown));
-    wait.until(elementToBeClickable(dropdown));
-    dropdown.click();
-    }catch (Error e){
-      System.out.println(dropdownXpath + "not present");
-      fail();
+    public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement dropdown = driver.findElement(By.xpath(dropdownXpath));
+
+        try {
+            wait.until(visibilityOf(dropdown));
+            wait.until(elementToBeClickable(dropdown));
+            dropdown.click();
+        } catch (Error e) {
+            System.out.println(dropdownXpath + "not present");
+            fail();
+        }
     }
-  }
 }
