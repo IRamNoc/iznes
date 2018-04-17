@@ -137,7 +137,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldHaveIZNESlogoOnLoginPage() throws InterruptedException {
+    public void shouldHaveIZNESLogoOnLoginPage() throws InterruptedException {
         navigateToLoginPage();
         try {
             driver.findElement(By.id("logo-iznes")).isDisplayed();
@@ -160,19 +160,22 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
