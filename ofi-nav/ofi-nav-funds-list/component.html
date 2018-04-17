@@ -87,7 +87,7 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems">
-                    <clr-dg-cell class="col-fundsharename" (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharename" (click)="navigateToShare(item.shareId)" title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
                     <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
                     <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
