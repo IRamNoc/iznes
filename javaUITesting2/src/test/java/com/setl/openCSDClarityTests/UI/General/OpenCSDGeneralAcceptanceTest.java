@@ -61,12 +61,12 @@ public class OpenCSDGeneralAcceptanceTest {
         String email = userDetails[1];
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-admin-users");
+        navigateToPageByID("menu-user-admin-users");
         enterUsername(userName);
         enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
-        navigateToPage("user-admin-users");
+        navigateToPageByID("menu-user-admin-users");
 
         driver.findElement(By.id("user-tab-1")).click();
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
