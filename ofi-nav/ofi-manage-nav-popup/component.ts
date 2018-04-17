@@ -132,24 +132,30 @@ export class OfiManageNavPopup implements OnInit {
             [this.statusItems[0]];
 
         this.navForm = new FormGroup({
-            price: new FormControl('', Validators.required),
+            price: new FormControl(this.navLatest, Validators.required),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             status: new FormControl(statusObj, Validators.required)
         });
 
-        if (mode !== model.NavPopupMode.ADD) {
+        if(mode === model.NavPopupMode.ADD) {
+            this.navForm.controls.status.enable();
+        } else if(mode === model.NavPopupMode.ADD_EXISTING) {
+            this.navForm.controls.status.enable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
-            // this.navForm.controls.status.disable();
+        } else if(mode === model.NavPopupMode.EDIT) {
+            this.navForm.controls.status.disable();
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
         }
 
-        if (Number(share.status) === -1) {
-            this.navForm.controls.price.disable();
-            this.navForm.controls.navDate.disable();
-            this.navForm.controls.navPubDate.disable();
-            // this.navForm.controls.status.disable();
-        }
+        // if (Number(share.status) === -1) {
+        //     this.navForm.controls.price.disable();
+        //     this.navForm.controls.navDate.disable();
+        //     this.navForm.controls.navPubDate.disable();
+        //     // this.navForm.controls.status.disable();
+        // }
 
         this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
             this.checkIfNavExceedsThreshold(nav);
