@@ -202,10 +202,42 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement login =  driver.findElement(By.id("login-submit"));
+            wait.until(visibilityOf(login));
+            wait.until(elementToBeClickable(login));
+
+
+        } catch (Exception e) {
+            fail("Login button not available " +  e.getMessage());
+        }
+
         loginAndVerifySuccessAdmin(username, password);
 
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement topBar = driver.findElement(By.id("topBarMenu"));
+            wait.until(visibilityOf(topBar));
+            wait.until(elementToBeClickable(topBar));
+            topBar.click();
+           try {
+               WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
+               WebElement topBarAcc = driver.findElement(By.id("topBarMyAccount"));
+               wait1.until(visibilityOf(topBarAcc));
+               wait1.until(elementToBeClickable(topBarAcc));
+               topBarAcc.click();
 
-        driver.findElement(By.id("topBarMyAccount")).click();
+            }catch (Exception e1) {
+               fail("My Account not available" + e1.getMessage());
+
+               }
+
+        } catch (Exception e) {
+            fail("Top Bar not available " +  e.getMessage());
+        }
+
         driver.findElement(By.id("udDisplayName")).clear();
         driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
         driver.findElement(By.id("udFirstName")).clear();
@@ -378,7 +410,9 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
         try{
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+
         }catch (Exception e){
             fail("couldnt navigate to messages " + e.getMessage());
         }
@@ -401,7 +435,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
         try {
         wait.until(visibilityOf(accountTypeCaret));
@@ -415,14 +449,14 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserUserDropdown() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[2]/span/i[2]"));
 
         try {
             wait.until(visibilityOf(userTypeCaret));
             wait.until(elementToBeClickable(userTypeCaret));
             userTypeCaret.click();
-            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[8]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }

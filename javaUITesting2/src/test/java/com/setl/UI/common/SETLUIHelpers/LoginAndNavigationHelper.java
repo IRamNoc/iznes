@@ -204,6 +204,24 @@ public class LoginAndNavigationHelper {
       }
     }
 
+
+    public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+
+        clickLoginButton();
+      try {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement menuBar = driver.findElement(By.id("topBarMenu"));
+        wait.until(visibilityOf(menuBar));
+        wait.until(elementToBeClickable(menuBar));
+        menuBar.click();
+      }catch (Exception e){
+        fail("Page heading was not present " + e.getMessage());
+      }
+    }
+
     public static void loginAndVerifySuccessKYC(String username, String password, String headingID) throws InterruptedException, IOException{
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
@@ -243,29 +261,12 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
 
     }
-
-    public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException{
-        navigateToLoginPage();
-        enterLoginCredentialsUserName(username);
-        enterLoginCredentialsPassword(password);
-
-        clickLoginButton();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement menuBar = driver.findElement(By.id("topBarMenu"));
-      try {
-        wait.until(visibilityOf(menuBar));
-        wait.until(elementToBeClickable(menuBar));
-        menuBar.click();
-      }catch (Exception e){
-        fail("Page heading was not present " + e.getMessage());
-      }
-    }
-
-    public static void logout() throws InterruptedException {
+    public static void logout() {
+        try {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement settings = driver.findElement(By.id("dropdown-settings"));
 
-        try {
+
             wait.until(visibilityOf(settings));
             wait.until(elementToBeClickable(settings));
             settings.click();
@@ -273,20 +274,24 @@ public class LoginAndNavigationHelper {
         }catch (Exception e){
             fail("Logout button not available " + e.getMessage());
         }
+
+        try {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
         wait.until(visibilityOf(logOff));
-        try {
-            driver.findElement(By.id("dropdown-btn-logout")).click();
+        wait.until(elementToBeClickable(logOff));
+        logOff.click();
+
         }catch (Exception e){
             fail(e.getMessage());
         }
     }
 
-  public static void navigateToDropdown(String dropdownID) throws InterruptedException {
+  public static void navigateToDropdown(String dropdownID) {
+    try {
     WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
     WebElement dropdown =  driver.findElement(By.id(dropdownID));
 
-    try {
         wait.until(visibilityOf(dropdown));
         wait.until(elementToBeClickable(dropdown));
         dropdown.click();
