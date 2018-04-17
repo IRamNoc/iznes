@@ -5,7 +5,7 @@ import {NgRedux, select} from '@angular-redux/store';
 
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {AppConfig, APP_CONFIG} from '@setl/utils';
-import {createWalletNodeSagaRequest} from '@setl/utils/common';
+import {createWalletNodeSagaRequest, createWalletNodeRequest} from '@setl/utils/common';
 import {
     WalletAddressRequestMessageBody,
     WalletIssuerRequestMessageBody,
@@ -189,8 +189,13 @@ export class WalletNodeRequestService {
         return this.http.post(this.appConfig.reportingNodeUrl, {request: msgId});
     }
 
-    requestWalletNodeInitialSnapshot(){
-        return this.walletNodeSocketService.getInitialSnapshotFromThroughSocket();
+    requestWalletNodeInitialSnapshot() {
+        const messageBody = {
+            topic: 'state'
+        };
+        return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then(response => {
+            return _.get(response, '[1].data');
+        });
     }
 
 }
