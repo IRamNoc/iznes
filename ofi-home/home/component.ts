@@ -7,8 +7,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import {MultilingualService} from '@setl/multilingual';
 import {APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterService} from '@setl/utils';
 /* Ofi orders request service. */
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {ofiSetRequestedHomeOrder} from '../../ofi-store';
+import {OfiOrdersService} from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
+import {ofiSetRequestedHomeOrder} from '@ofi/ofi-main/ofi-store';
 import * as math from 'mathjs';
 
 @Component({
@@ -21,19 +21,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
 
     /* Public properties. */
-    public walletHoldingsByAddress: Array<any> = [];
     public myDetails: any = {};
-    public connectedWalletName: string = '';
+    public connectedWalletName = '';
     public ordersList: Array<any> = [];
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
     private myWallets: any = [];
     private connectedWalletId: any = 0;
-    userType;
-
-    // pipeForm: FormGroup;
-    // randomNum = 0;
+    userType: number;
 
     /* Observables. */
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -43,15 +39,17 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'homeOrders', 'requested']) homeOrdersRequestedOb: any;
 
     /* Constructor. */
-    constructor(private _changeDetectorRef: ChangeDetectorRef,
-                private ofiOrdersService: OfiOrdersService,
-                private _numberConverterService: NumberConverterService,
-                private _ngRedux: NgRedux<any>,
-                private _moneyValuePipe: MoneyValuePipe,
-                private _fb: FormBuilder,
-                private _router: Router,
-                private multilingualService: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,) {
+    constructor(
+        private _changeDetectorRef: ChangeDetectorRef,
+        private ofiOrdersService: OfiOrdersService,
+        private _numberConverterService: NumberConverterService,
+        private _ngRedux: NgRedux<any>,
+        private _moneyValuePipe: MoneyValuePipe,
+        private _fb: FormBuilder,
+        private _router: Router,
+        private multilingualService: MultilingualService,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
     }
 
@@ -61,20 +59,22 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         /* Orders list. */
         this.subscriptions['home-orders-list'] = this.homeOrdersListOb.subscribe((orderList) => {
             /* Fail safely... */
-            if (!orderList.length) return;
+            if (!orderList.length) {
+                return;
+            }
 
             /* Subscribe and set the orders list. */
             const ordersList_new = immutableHelper.copy(orderList);
             this.ordersList = ordersList_new.map((order) => {
                 /* Pointer. */
-                let fixed = order;
+                const fixed = order;
 
                 /* Fix dates. */
                 fixed.cutoffDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.cutoffDate));
                 fixed.cutoffTimeStr = this.formatDate('hh:mm', new Date(fixed.cutoffDate));
                 fixed.deliveryDateStr = this.formatDate('YYYY-MM-DD', new Date(fixed.deliveryDate));
 
-                let metaData = immutableHelper.copy(order.metaData);
+                const metaData = immutableHelper.copy(order.metaData);
 
                 metaData.price = this._numberConverterService.toFrontEnd(metaData.price);
                 metaData.units = this._numberConverterService.toFrontEnd(metaData.units);
@@ -118,7 +118,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             /* Assign list to a property. */
 
             this.userType = details.userType;
-            this._changeDetectorRef.markForCheck();
+            this._changeDetectorRef.detectChanges();
         });
 
     }
@@ -223,20 +223,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         return;
     }
 
-    public beginBalanceJourney(): void {
-        /* Send the user to their order page. */
-        if ([46].indexOf(this.myDetails.userType) !== -1) {
-            /* Is holder. */
-            this._router.navigateByUrl('/reports-section/pnl');
-        } else {
-            /* Is other. */
-            this._router.navigateByUrl('/am-reports-section/collects-archive');
-        }
-
-        /* Return. */
-        return;
-    }
-
     /**
      * Format Date
      * -----------
@@ -272,33 +258,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
     private numPad(num) {
         return num < 10 ? "0" + num : num;
-    }
-
-    /**
-     * Pad Number Left
-     * -------------
-     * Pads a number left
-     *
-     * @param  {number} num - the orderId.
-     * @return {string}
-     */
-    private padNumberLeft(num: number | string, zeros?: number): string {
-        /* Validation. */
-        if (!num && num !== 0) return '';
-        zeros = zeros || 2;
-
-        /* Variables. */
-        num = num.toString();
-        let // 11 is the total required string length.
-            requiredZeros = zeros - num.length,
-            returnString = '';
-
-        /* Now add the zeros. */
-        while (requiredZeros--) {
-            returnString += '0';
-        }
-
-        return returnString + num;
     }
 
     /**
