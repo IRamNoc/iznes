@@ -1,3 +1,6 @@
+.add-new-nav { justify-content: flex-end; }
+.add-new-nav .btn { margin-right: -10px; }
+
 .export-nav {
     display: flex;
     justify-content: flex-end;
