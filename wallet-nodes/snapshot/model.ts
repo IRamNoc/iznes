@@ -1,13 +1,21 @@
 export interface WalletNodeSnapshotDetail {
-    height: number,
-    TXCount: number,
-    Timestamp: number
+    Height: number;
+    TXCount: number;
+    Timestamp: number;
+    TX24Hours : number;
 }
 
 export interface WalletNodeInitialSnapshotDetail{
-    LastBlock : WalletNodeSnapshotDetail
+    TX24Hours : number;
+    LastBlock : WalletNodeSnapshotDetail;
+    Hostname : string;
 }
 
-export interface WalletNodeSnapshotListState {
-    snapshotList: WalletNodeSnapshotDetail[]
+export interface WalletNodeBlockChainDetail{
+    Hostname : string
+}
+
+export interface WalletNodeSnapshotsState {
+    blockChainInfo : WalletNodeBlockChainDetail;
+    snapshotList: WalletNodeSnapshotDetail[];
 }

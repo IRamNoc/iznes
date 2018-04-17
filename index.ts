@@ -280,6 +280,7 @@ export {
 
 export {
     addWalletNodeSnapshot,
+    addWalletNodeInitialSnapshot,
     WalletNodeReducer,
     WalletNodeState
 } from './wallet-nodes/';

@@ -3,11 +3,12 @@ import {combineReducers, Reducer} from 'redux';
 import {
     // Action
     addWalletNodeSnapshot,
+    addWalletNodeInitialSnapshot,
 
     // State
     WalletNodeSnapshotDetail,
     WalletNodeInitialSnapshotDetail,
-    WalletNodeSnapshotListState,
+    WalletNodeSnapshotsState,
 
     // Reducer
     WalletNodeSnapshotReducer
@@ -15,13 +16,14 @@ import {
 
 
 export {
-    addWalletNodeSnapshot
+    addWalletNodeSnapshot,
+    addWalletNodeInitialSnapshot
 }
 
 export interface WalletNodeState {
-    walletNodeSnapshotList: WalletNodeSnapshotListState;
+    walletNodeSnapshots: WalletNodeSnapshotsState;
 }
 
 export const WalletNodeReducer: Reducer<WalletNodeState> = combineReducers<WalletNodeState>({
-    walletNodeSnapshotList: WalletNodeSnapshotReducer
+    walletNodeSnapshots: WalletNodeSnapshotReducer
 });
