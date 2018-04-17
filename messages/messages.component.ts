@@ -17,6 +17,7 @@ import 'rxjs/add/observable/combineLatest';
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
+
 export class SetlMessagesComponent implements OnDestroy, OnInit {
     public messageComposeForm: FormGroup;
     public editor;
@@ -156,6 +157,18 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     return;
                 }
                 if (params.category === 'compose') {
+                    this.messageService.loadReply().then((reply:any)=>{
+                        if (reply){
+                            this.messageService.clearReply();
+
+                            this.messageComposeForm.setValue({
+                                subject: 'Re: ' + reply.subject,
+                                recipients: [{id: {walletId: reply.senderId}, text: reply.senderWalletName}],
+                                body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' + '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' + reply.senderWalletName + '</b> ' + reply.date + ':</p>' + reply.body.replace(/<p>/g,'<p>&nbsp;&nbsp;&nbsp;')
+                            });
+                        }
+                    });
+
                     return this.showCategory(999, true);
                 }
                 const idx = this.categories.findIndex(cat => cat.type === params.category);
@@ -340,13 +353,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 );
                 return;
             }
+
             // Mark message as read (if necessary)
-            if (!messages[index].isRead) {
+            if (!messages[index].isRead && messages[index].senderId != this.connectedWalletId) {
                 this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
+                messages[index].isRead = true;
             }
             // set message to active to apply message-active css class
             messages[index].active = true;
-            messages[index].isRead = true;
+
             this.messages = messages;
             currentMessage.isRead = true;
             if ((currentMessage.action) &&
@@ -520,5 +535,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             .map((item: any) => {
                 return item.text;
             }).join(',');
+    }
+
+    replyMessage(){
+        this.messageService.saveReply(this.currentMessage);
+        this.router.navigateByUrl('/messages/compose');
     }
 }
