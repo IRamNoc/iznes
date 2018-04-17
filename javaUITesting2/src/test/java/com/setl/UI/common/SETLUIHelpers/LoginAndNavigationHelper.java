@@ -194,9 +194,9 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
       clickLoginButton();
+      try {
       WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
       WebElement topBar = driver.findElement(By.id("topBarMenu"));
-      try {
           wait.until(visibilityOf(topBar));
 
       }catch (Exception e){
