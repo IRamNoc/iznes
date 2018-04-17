@@ -4,6 +4,7 @@ import {RegisterIssuerComponent} from './register-issuer/register-issuer.compone
 import {RegisterAssetComponent} from './register-asset/register-asset.component';
 import {IssueAssetComponent} from './issue-asset/issue-asset.component';
 import {SendAssetComponent} from './send-asset/send-asset.component';
+import {VoidAssetComponent} from './void-asset/void-asset.component';
 import {RequestAssetComponent} from './request-asset/request-asset.component';
 import {RequestTypeSelectComponent} from './request-asset/request-type-select/request-type-select.component';
 import {EncumberAssetsComponent} from './encumber-assets/component';
@@ -31,6 +32,7 @@ import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/u
         RegisterIssuerComponent,
         RegisterAssetComponent,
         IssueAssetComponent,
+        VoidAssetComponent,
         SendAssetComponent,
         RequestAssetComponent,
         RequestTypeSelectComponent,
@@ -41,6 +43,7 @@ import {SetlPipesModule, DpDatePickerModule, SetlComponentsModule} from '@setl/u
         RegisterIssuerComponent,
         RegisterAssetComponent,
         IssueAssetComponent,
+        VoidAssetComponent,
         SendAssetComponent,
         RequestAssetComponent,
         RequestTypeSelectComponent,

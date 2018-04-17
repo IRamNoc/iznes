@@ -1,0 +1,80 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-paper-plane"></i> <span mltag="txt_voidasset">Void Asset</span></h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_voidassetissue">Void Asset Issue</span></button>
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="voidAssetForm" (ngSubmit)="voidAsset()">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="asset" mltag="txt_asset">Asset</label>
+                        <ng-select id="asset"
+                                    [items]="walletInstrumentsSelectItems"
+                                    [allowClear]="true"
+                                    placeholder="Select an asset"
+                                    [formControl]="voidAssetForm.controls['asset']"
+                                    mltag="txt_selectissueraddress">
+                        </ng-select>
+                    </div>             
+                    
+                    <various-address-select [formControl]="voidAssetForm.controls['fromAddress']" 
+                                            [relationshipArray]="toRelationshipSelectItems"
+                                            [ownWalletAddressArray]="walletAddressSelectItems" 
+                                            [class.error]="!voidAssetForm.controls['fromAddress'].valid &&
+                                            voidAssetForm.controls['fromAddress'].touched"></various-address-select>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="amount" mltag="txt_amount">Amount</label>
+                        <input type="text" id="amount" placeholder="Amount" size="45"
+                                [formControl]="voidAssetForm.controls['amount']"
+                                [class.error]="!voidAssetForm.controls['amount'].valid &&
+                                voidAssetForm.controls['amount'].touched" mltag="txt_amount"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" mltag="txt_voidasset">Void Asset</button>
+
+                    <div *ngIf="!voidAssetForm.controls['asset'].valid &&
+                        voidAssetForm.controls['asset'].touched" class="alert-items col-sm-5">
+
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_assetisrequired">Asset is required</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>                    
+
+                    <div *ngIf="!voidAssetForm.controls['fromAddress'].valid &&
+                                voidAssetForm.controls['fromAddress'].touched" class="alert-items col-sm-5">
+                    
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_fromaddressisrequired">From Address is required</span>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div *ngIf="!voidAssetForm.controls['amount'].valid &&
+                        voidAssetForm.controls['amount'].touched" class="alert-items col-sm-5">
+
+                        <div class="alert alert-danger">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <span class="alert-text" mltag="txt_amountisrequired">Amount is required</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
