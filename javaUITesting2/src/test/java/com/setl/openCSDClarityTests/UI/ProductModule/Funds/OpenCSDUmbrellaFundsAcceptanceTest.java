@@ -39,7 +39,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -118,7 +118,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             fail(e.getMessage());
         }
     }
-
 
     @Test
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
@@ -254,6 +253,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         }catch (Exception e){
             fail("dropdown not selected. " + e.getMessage());
         }
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).clear();
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2018-04-27");
     }
 
