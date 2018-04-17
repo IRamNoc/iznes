@@ -545,9 +545,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public void checkAlert() {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, 2);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.alertIsPresent());
+        try {
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (Exception e) {

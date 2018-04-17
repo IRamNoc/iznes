@@ -110,9 +110,9 @@ public class LoginAndNavigationHelper {
     }
 
     public static void enterLoginCredentialsUserName(String username) {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement name = driver.findElement(By.id("username-field"));
+        try {
             wait.until(visibilityOf(name));
             wait.until(elementToBeClickable(name));
             name.clear();
@@ -123,9 +123,9 @@ public class LoginAndNavigationHelper {
     }
 
     public static void enterLoginCredentialsPassword(String password) {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement login_password = driver.findElement(By.id("password-field"));
+        try {
             wait.until(visibilityOf(login_password));
             wait.until(elementToBeClickable(login_password));
             login_password.clear();
@@ -136,9 +136,9 @@ public class LoginAndNavigationHelper {
     }
 
     public static void clickLoginButton() {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement login = driver.findElement(By.id("login-submit"));
+        try {
             wait.until(visibilityOf(login));
             wait.until(elementToBeClickable(login));
             login.click();
@@ -148,10 +148,10 @@ public class LoginAndNavigationHelper {
     }
 
     public static void selectNewTabToNavigateTo(String newTabId) throws InterruptedException {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement tab = driver.findElement(By.xpath(".//*[@id='home-holding-" +
                 newTabId + "-select']/a/span"));
+        try {
             wait.until(visibilityOf(tab));
             wait.until(elementToBeClickable(tab));
             tab.click();
@@ -174,9 +174,9 @@ public class LoginAndNavigationHelper {
     }
 
     public static void acceptCookies() throws InterruptedException {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement cookies = driver.findElement(By.linkText("Got it!"));
+        try {
             wait.until(visibilityOf(cookies));
             wait.until(elementToBeClickable(cookies));
             cookies.click();
@@ -191,9 +191,9 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement topBar = driver.findElement(By.id("topBarMenu"));
+        try {
             wait.until(visibilityOf(topBar));
 
         } catch (Exception e) {
@@ -208,9 +208,9 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             WebElement menuBar = driver.findElement(By.id("topBarMenu"));
+        try {
             wait.until(visibilityOf(menuBar));
             wait.until(elementToBeClickable(menuBar));
             menuBar.click();
