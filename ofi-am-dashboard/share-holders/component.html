@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
-        <span>Holders list:</span>
-        <span *ngIf="shareID === 0">All Shares</span>
+        <span><span mltag="txt_holderslist">Holders list</span>:</span>
+        <span *ngIf="shareID === 0" mltag="txt_allshares">All Shares</span>
         <span *ngIf="shareID > 0">{{shareID}}</span>
     </h1>
 </div>
@@ -18,11 +18,11 @@
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label style="margin: 10px 0;">
-                                    <b><span>Search for a holders list for a specific Share:</span></b>
+                                    <b><span><span mltag="txt_searchforaholderslistforaspecib00a426e95">Search for a holders list for a specific Share</span>:</span></b>
                                 </label>
                                 <br>
                                 <div class="input-button-group">
-                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchListForm.controls['search']"></ng-select>
+                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchListForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>
                                 </div>
                             </div>
                         </div>
@@ -33,16 +33,16 @@
 
                 <ng-container *ngIf="id === 0">
                     <!-- list tab. -->
-                    <ng-container
-                            *ngTemplateOutlet="staticList"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticList">
+
+                    </ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="id > 0">
                     <!-- Create new tab -->
-                    <ng-container
-                            *ngTemplateOutlet="dynamicView; context: {'shareData': tabdata.shareData, 'tabid': id}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="dynamicView; context: {'shareData': tabdata.shareData, 'tabid': id}">
+
+                    </ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -56,11 +56,11 @@
                 <tbody>
                     <tr>
                         <td>
-                            <h3 style="margin-bottom: 3px;">Please find a list of all the shares below:</h3>
-                            You can access the holders list for a specific Share by clicking on a line in this table.
+                            <h3 style="margin-bottom: 3px;"><span mltag="txt_pleasefindalistofallthesharesb681c697503">Please find a list of all the shares below</span>:</h3><span mltag="txt_youcanaccesstheholderslistfora65f367141e">You can access the holders list for a specific Share by clicking on a line in this table.</span>
+
                         </td>
                         <td class="text-right" valign="middle">
-                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important">Export this holders list for all these Funds & Shares below</button>
+                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisholderslistforallthef4ca32ae77">Export this holders list for all these Funds & Shares below</button>
                         </td>
                     </tr>
                 </tbody>
@@ -70,67 +70,67 @@
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid>
                 <clr-dg-column [clrDgField]="'fundName'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Fund name</span> <span class="column-label"></span>
+                    <span mltag="txt_fundname">Fund name</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Share name</span> <span class="column-label"></span>
+                    <span mltag="txt_sharename">Share name</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Currency</span> <span class="column-label"></span>
+                    <span mltag="txt_currency">Currency</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>ISIN</span> <span class="column-label"></span>
+                    <span mltag="txt_isin">ISIN</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>NAV</span> <span class="column-label"></span>
+                    <span mltag="txt_nav">NAV</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Number of units</span> <span class="column-label"></span>
+                    <span mltag="txt_numberofunits">Number of units</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>AUM (CCY)</span> <span class="column-label"></span>
+                    <span mltag="txt_aumccy">AUM (CCY)</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Ratio (%)</span> <span class="column-label"></span>
+                    <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'numberOfHolders'" clrDgSortIcon clrDgSortNoSearch>
-                        <span>Number of holders</span> <span class="column-label"></span>
+                    <span mltag="txt_numberofholders">Number of holders</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <!-- ACTIONS -->
                 <!--<clr-dg-column><span>Action</span></clr-dg-column>-->
 
                 <clr-dg-row *ngFor="let data of dataList; let i = index">
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        yo
+                    <clr-dg-cell mltag="txt_yo">yo
+
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -146,26 +146,26 @@
                     <div class="row bordered">
                         <div class="form-group col-xl-4">
                             <label>
-                                <span>Top holders of this Share:</span>
+                                <span><span mltag="txt_topholdersofthisshare">Top holders of this Share</span>:</span>
                             </label>
                             <br>
                             <div class="input-button-group">
-                                <ng-select id="top-holders-search-field" [items]="topHolders" name="top" [allowClear]="true" placeholder="Select" [formControl]="searchInShareForm.controls['top']"></ng-select>
+                                <ng-select id="top-holders-search-field" [items]="topHolders" name="top" [allowClear]="true" placeholder="Select" [formControl]="searchInShareForm.controls['top']" mltag="txt_select"></ng-select>
                             </div>
                         </div>
                         <div class="form-group col-xl-4">
                             <label for="holders-search-date">
-                                <span>From date</span>
+                                <span mltag="txt_fromdate">From date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="holders-search-date" formControlName="dateUsed" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material"/>
+                                <input id="holders-search-date" formControlName="dateUsed" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
                             </div>
                         </div>
                         <div class="form-group col-xl-4 text-right">
-                            <label>&nbsp;</label>
+                            <label mltag="txt_nbsp">&nbsp;</label>
                             <div>
-                                <button id="holders-export-share-btn" type="button" class="btn btn-success" style="max-width: none !important">Export holders list for this date</button>
+                                <button id="holders-export-share-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportholderslistforthisdate">Export holders list for this date</button>
                             </div>
                         </div>
                     </div>
@@ -173,96 +173,96 @@
 
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
-                    <tr>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span>Number of holders (for this date):</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{unknownValue}}</span>
+                        <tr>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_numberofholdersforthisdate">Number of holders (for this date)</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{unknownValue}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span>AUM:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">€ {{unknownValue}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_aum">AUM</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">€ {{unknownValue}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span>Number of units:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{unknownValue}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_numberofunits">Number of units</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{unknownValue}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span>Latest NAV:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{unknownValue}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_latestnav">Latest NAV</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{unknownValue}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span>Currency:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">EUR</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_currency">Currency</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field" mltag="txt_eur">EUR</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </form>
 
             <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                 <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Ranking</span> <span class="column-label"></span>
+                    <span mltag="txt_ranking">Ranking</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Investor name</span> <span class="column-label"></span>
+                    <span mltag="txt_investorname">Investor name</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Quantity</span> <span class="column-label"></span>
+                    <span mltag="txt_quantity">Quantity</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Amount (€)</span> <span class="column-label"></span>
+                    <span mltag="txt_amount">Amount (€)</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Ratio (%)</span> <span class="column-label"></span>
+                    <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
                 </clr-dg-column>
                 <!-- ACTIONS -->
                 <!--<clr-dg-column><span>Action</span></clr-dg-column>-->
 
                 <clr-dg-row *ngFor="let data of dataList; let i = index">
-                    <clr-dg-cell>
-                        1
+                    <clr-dg-cell mltag="txt_1">1
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        MACIF Investissement SA
+                    <clr-dg-cell mltag="txt_macifinvestissementsa">MACIF Investissement SA
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        {{1234.45630 | moneyValue: 5}}
+                    <clr-dg-cell>{{1234.45630 | moneyValue: 5}}
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        {{1600000000 | moneyValue: 4}}
+                    <clr-dg-cell>{{1600000000 | moneyValue: 4}}
+
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                        42.17%
+                    <clr-dg-cell mltag="txt_4217">42.17%
+
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -273,415 +273,415 @@
             </clr-datagrid>
 
             <div class="text-center mt-1">
-                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', 'list']">Back to ALL holders page</button>
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', 'list']" mltag="txt_backtoallholderspage">Back to ALL holders page</button>
             </div>
 
             <!--<div class="m-1">{{shareData | json}}</div>-->
             <!--<div class="m-1">{{fundShare | json}}</div>-->
 
             <!--<div class="well mb-1">-->
-                <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                <!--<div class="row panel-header">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<a href="#" (click)="clientInformation  = !clientInformation ; $event.preventDefault();">-->
-                            <!--<i class="fa fa-chevron-right" [class.rotate]="clientInformation "></i>-->
-                            <!--<h2> Client Information</h2>-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="clientInformation  = !clientInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="clientInformation "></i>-->
+            <!--<h2> Client Information</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                <!--<div class="panel-body" [class.hidden]="!clientInformation">-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Company name</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{unknownValue}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="well ml-1">-->
-                        <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                        <!--<div class="row panel-header">-->
-                            <!--<div class="col-xs-6">-->
-                                <!--<a href="#" (click)="clientDetailsInformation  = !clientDetailsInformation ; $event.preventDefault();">-->
-                                    <!--<i class="fa fa-chevron-right" [class.rotate]="clientDetailsInformation "></i>-->
-                                    <!--<h2> Details</h2>-->
-                                <!--</a>-->
-                            <!--</div>-->
-                        <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!clientInformation">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Company name</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{unknownValue}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="well ml-1">-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="clientDetailsInformation  = !clientDetailsInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="clientDetailsInformation "></i>-->
+            <!--<h2> Details</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                        <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                        <!--<div class="panel-body" [class.hidden]="!clientDetailsInformation">-->
-                            <!--<div class="form-group col-sm-12">-->
-                                <!--<div class="row mb-1">-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>First name</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{unknownValue}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>Last name</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{unknownValue}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!clientDetailsInformation">-->
+            <!--<div class="form-group col-sm-12">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>First name</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{unknownValue}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Last name</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{unknownValue}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
             <!--<div class="well mb-1">-->
-                <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                <!--<div class="row panel-header">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<a href="#" (click)="generalInvestmentInformation  = !generalInvestmentInformation ; $event.preventDefault();">-->
-                            <!--<i class="fa fa-chevron-right" [class.rotate]="generalInvestmentInformation "></i>-->
-                            <!--<h2> General Investment Information</h2>-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="generalInvestmentInformation  = !generalInvestmentInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="generalInvestmentInformation "></i>-->
+            <!--<h2> General Investment Information</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                <!--<div class="panel-body" [class.hidden]="!generalInvestmentInformation">-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Asset Management Company</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{showManagementCompany(shareData)}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Investor</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{showInvestor(shareData)}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>(Entry/Exit) fees</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.feePercentage}}%</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="well ml-1">-->
-                        <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                        <!--<div class="row panel-header">-->
-                            <!--<div class="col-xs-6">-->
-                                <!--<a href="#" (click)="mifid  = !mifid ; $event.preventDefault();">-->
-                                    <!--<i class="fa fa-chevron-right" [class.rotate]="mifid "></i>-->
-                                    <!--<h2> MIFID II Costs & Charges</h2>-->
-                                <!--</a>-->
-                            <!--</div>-->
-                        <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!generalInvestmentInformation">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Asset Management Company</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{showManagementCompany(shareData)}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Investor</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{showInvestor(shareData)}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>(Entry/Exit) fees</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.feePercentage}}%</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="well ml-1">-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="mifid  = !mifid ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="mifid "></i>-->
+            <!--<h2> MIFID II Costs & Charges</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                        <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                        <!--<div class="panel-body" [class.hidden]="!mifid">-->
-                            <!--<div class="form-group col-sm-12">-->
-                                <!--<div class="row mb-1">-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>One-off charges</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{fundShare.mifiidChargesOneOff}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>On-going charges</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{fundShare.mifiidChargesOngoing}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--<div class="row mb-1">-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>Costs related to transactions initiated</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{fundShare.mifiidTransactionCosts}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>Charges related to ancillary services</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{fundShare.mifiidServicesCosts}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--<div class="row mb-1">-->
-                                    <!--<div class="form-group col-sm-6">-->
-                                        <!--<label>-->
-                                            <!--<span>Incidental costs</span>-->
-                                        <!--</label>-->
-                                        <!--<div>-->
-                                            <!--<span class="readonly-field">{{fundShare.mifiidIncidentalCosts}}</span>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!mifid">-->
+            <!--<div class="form-group col-sm-12">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>One-off charges</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.mifiidChargesOneOff}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>On-going charges</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.mifiidChargesOngoing}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Costs related to transactions initiated</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.mifiidTransactionCosts}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Charges related to ancillary services</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.mifiidServicesCosts}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Incidental costs</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.mifiidIncidentalCosts}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
             <!--<div class="well mb-1">-->
-                <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                <!--<div class="row panel-header">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<a href="#" (click)="productInformation  = !productInformation ; $event.preventDefault();">-->
-                            <!--<i class="fa fa-chevron-right" [class.rotate]="productInformation "></i>-->
-                            <!--<h2> Product Information</h2>-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="productInformation  = !productInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="productInformation "></i>-->
+            <!--<h2> Product Information</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                <!--<div class="panel-body" [class.hidden]="!productInformation">-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>ISIN</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.isin}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Share Name</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.fundShareName}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Asset Class</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.assetClass}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>SRRI</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>SRI</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Share Currency</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{showCurrency(shareData)}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>NAV</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>NAV Date</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Decimalization</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{maximumNumDecimal}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!productInformation">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>ISIN</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.isin}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Share Name</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.fundShareName}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Asset Class</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.assetClass}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>SRRI</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>SRI</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Share Currency</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{showCurrency(shareData)}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>NAV</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>NAV Date</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Decimalization</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{maximumNumDecimal}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
             <!--<div class="well mb-1">-->
-                <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                <!--<div class="row panel-header">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<a href="#" (click)="datesInformation  = !datesInformation ; $event.preventDefault();">-->
-                            <!--<i class="fa fa-chevron-right" [class.rotate]="datesInformation "></i>-->
-                            <!--<h2> Dates Information</h2>-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="datesInformation  = !datesInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="datesInformation "></i>-->
+            <!--<h2> Dates Information</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                <!--<div class="panel-body" [class.hidden]="!datesInformation">-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Order Date</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.orderDate | date:'long'}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Cut-off Date</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.cutoffDate | date:'long'}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>NAV Date</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Settlement Date</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.settlementDate | date:'shortDate'}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!datesInformation">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Order Date</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.orderDate | date:'long'}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Cut-off Date</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.cutoffDate | date:'long'}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>NAV Date</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Settlement Date</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.settlementDate | date:'shortDate'}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
             <!--<div class="well mb-1">-->
-                <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-                <!--<div class="row panel-header">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<a href="#" (click)="orderInformation  = !orderInformation ; $event.preventDefault();">-->
-                            <!--<i class="fa fa-chevron-right" [class.rotate]="orderInformation "></i>-->
-                            <!--<h2> Order Information</h2>-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
+            <!--<div class="row panel-header">-->
+            <!--<div class="col-xs-6">-->
+            <!--<a href="#" (click)="orderInformation  = !orderInformation ; $event.preventDefault();">-->
+            <!--<i class="fa fa-chevron-right" [class.rotate]="orderInformation "></i>-->
+            <!--<h2> Order Information</h2>-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
 
-                <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-                <!--<div class="panel-body" [class.hidden]="!orderInformation">-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Order Reference</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Order Type</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{showTypes(shareData)}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Quantity</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.quantity | moneyValue: 5}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Amount</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{amountWithCost | moneyValue: 4}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Gross Amount</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.amountWithCost | moneyValue: 4}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Fee Amount</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.feePercentage * shareData.amountWithCost}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-6">-->
-                            <!--<label>-->
-                                <!--<span>Net Amount</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{shareData.amountWithCost + (shareData.feePercentage * shareData.amountWithCost)}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="row mb-1">-->
-                        <!--<div class="form-group col-sm-12">-->
-                            <!--<label>-->
-                                <!--<span>Comment</span>-->
-                            <!--</label>-->
-                            <!--<div>-->
-                                <!--<span class="readonly-field">{{orderNote}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
+            <!--<div class="panel-body" [class.hidden]="!orderInformation">-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Order Reference</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Order Type</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{showTypes(shareData)}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Quantity</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.quantity | moneyValue: 5}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Amount</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{amountWithCost | moneyValue: 4}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Gross Amount</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.amountWithCost | moneyValue: 4}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Fee Amount</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.feePercentage * shareData.amountWithCost}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-6">-->
+            <!--<label>-->
+            <!--<span>Net Amount</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{shareData.amountWithCost + (shareData.feePercentage * shareData.amountWithCost)}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row mb-1">-->
+            <!--<div class="form-group col-sm-12">-->
+            <!--<label>-->
+            <!--<span>Comment</span>-->
+            <!--</label>-->
+            <!--<div>-->
+            <!--<span class="readonly-field">{{orderNote}}</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
         </div>
     </ng-template>

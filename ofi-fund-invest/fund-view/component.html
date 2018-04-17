@@ -85,12 +85,16 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
-                    <td>
-                        {{metaData.fundAddressPrefix && metaData.fundAddressPrefix + ','}}
+                    <td>{{metaData.fundAddressPrefix && metaData.fundAddressPrefix + ','}}
                         {{metaData.fundAddress1 && metaData.fundAddress1 + ','}}
                         {{metaData.fundAddress2 && metaData.fundAddress2 + ','}}
                         {{metaData.fundAddress3 && metaData.fundAddress3 + ','}}
                         {{metaData.fundAddress4 && metaData.fundAddress4 + ','}}
+
+
+
+
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -141,20 +145,20 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sidepocket">Side Pocket</td>
-                    <td *ngIf="metaData.sidePocket" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.sidePocket" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.sidePocket" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.sidePocket" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_inliquidation">In liquidation</td>
-                    <td *ngIf="metaData.fundInLiquidation" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundInLiquidation" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundInLiquidation" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundInLiquidation" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -163,11 +167,11 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_businessdayrule">Business Day Rule</td>
-                    <td *ngIf="metaData.fundBusinessDayRule" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundBusinessDayRule" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundBusinessDayRule" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundBusinessDayRule" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -176,11 +180,11 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_estimatednav">Estimated NAV</td>
-                    <td *ngIf="metaData.fundEstimated" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundEstimated" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundEstimated" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundEstimated" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -226,28 +230,38 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
-                    <td>
-                        {{metaData.managementCompanyAddressPrefix && metaData.managementCompanyAddressPrefix + ','}}
+                    <td>{{metaData.managementCompanyAddressPrefix && metaData.managementCompanyAddressPrefix + ','}}
                         {{metaData.managementCompanyAddress1 && metaData.managementCompanyAddress1 + ','}}
                         {{metaData.managementCompanyAddress2 && metaData.managementCompanyAddress2 + ','}}
                         {{metaData.managementCompanyAddress3 && metaData.managementCompanyAddress3 + ','}}
                         {{metaData.managementCompanyAddress4 && metaData.managementCompanyAddress4 + ','}}
                         {{metaData.managementCompanyCodePostal && metaData.managementCompanyCodePostal}}
+
+
+
+
+
+
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_delegatedassetmanagementcompany">Delegated asset management company</td>
+                    <td class="font-weight-bold" mltag="txt_delegatedassetmanagementcompan2f1e27865e">Delegated asset management company</td>
                     <td>{{metaData.delegatedAssetManagementCompany[0] && metaData.delegatedAssetManagementCompany[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_address">Address</td>
-                    <td>
-                        {{metaData.delegatedManagementCompanyAddressPrefix && metaData.delegatedManagementCompanyAddressPrefix + ','}}
+                    <td>{{metaData.delegatedManagementCompanyAddressPrefix && metaData.delegatedManagementCompanyAddressPrefix + ','}}
                         {{metaData.delegatedManagementCompanyAddress1 && metaData.delegatedManagementCompanyAddress1 + ','}}
                         {{metaData.delegatedManagementCompanyAddress2 && metaData.delegatedManagementCompanyAddress2 + ','}}
                         {{metaData.delegatedManagementCompanyAddress3 && metaData.delegatedManagementCompanyAddress3 + ','}}
                         {{metaData.delegatedManagementCompanyAddress4 && metaData.delegatedManagementCompanyAddress4 + ','}}
                         {{metaData.delegatedManagementCompanyCodePostal && metaData.delegatedManagementCompanyCodePostal}}
+
+
+
+
+
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -315,7 +329,7 @@
                     <td>{{metaData.registryAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_administrativeandaccountingmanager">Administrative and Accounting Manager</td>
+                    <td class="font-weight-bold" mltag="txt_administrativeandaccountingman2599fb7fbb">Administrative and Accounting Manager</td>
                     <td>{{metaData.adminAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
@@ -352,20 +366,20 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_sri">SRI</td>
-                    <td *ngIf="metaData.fundSri" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundSri" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundSri" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundSri" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_copromotion">Co-promotion</td>
-                    <td *ngIf="metaData.fundCopromotion" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundCopromotion" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundCopromotion" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundCopromotion" mltag="txt_no">No
+
                     </td>
                 </tr>
             </table>
@@ -417,29 +431,29 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_ucitsofucits">UCITS of UCITS</td>
-                    <td *ngIf="metaData.fundUcitsOfUcits" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundUcitsOfUcits" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundUcitsOfUcits" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundUcitsOfUcits" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_feeder">Feeder</td>
-                    <td *ngIf="metaData.fundFeeder" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundFeeder" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundFeeder" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundFeeder" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_master">Master</td>
-                    <td *ngIf="metaData.fundMaster" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundMaster" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundMaster" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundMaster" mltag="txt_no">No
+
                     </td>
                 </tr>
             </table>
@@ -475,7 +489,7 @@
                     <td>{{metaData.actualCalcBasis}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_provisionedactualmanagementfee">Provisioned Actual Management Fee</td>
+                    <td class="font-weight-bold" mltag="txt_provisionedactualmanagementfeea54e581ca2">Provisioned Actual Management Fee</td>
                     <td>{{metaData.provisionedActualManagementFees}} %</td>
                 </tr>
                 <tr class="data-row">
@@ -487,11 +501,11 @@
                     <td>{{metaData.acquiredRedemptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_maximumnonacquiredsubscriptionfee">Maximum non-acquired Subscription Fee</td>
+                    <td class="font-weight-bold" mltag="txt_maximumnonacquiredsubscription681332f3ef">Maximum non-acquired Subscription Fee</td>
                     <td>{{metaData.maxSubscriptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold" mltag="txt_maximumnonaccruedredemptionfee">Maximum non-accrued Redemption Fee</td>
+                    <td class="font-weight-bold" mltag="txt_maximumnonaccruedredemptionfee7a6b8b49f3">Maximum non-accrued Redemption Fee</td>
                     <td>{{metaData.maxRedemptionFees}} %</td>
                 </tr>
                 <tr class="data-row">
@@ -531,11 +545,11 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_acquisitiononredemption">Acquisition on Redemption</td>
-                    <td *ngIf="metaData.fundAcquisitionOnRedemption" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundAcquisitionOnRedemption" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundAcquisitionOnRedemption" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundAcquisitionOnRedemption" mltag="txt_no">No
+
                     </td>
                 </tr>
             </table>
@@ -556,11 +570,11 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_guaranteeofcapital">Guarantee of Capital</td>
-                    <td *ngIf="metaData.fundGuaranteeOfCapital" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundGuaranteeOfCapital" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundGuaranteeOfCapital" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundGuaranteeOfCapital" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -601,20 +615,20 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_dedicated">Dedicated</td>
-                    <td *ngIf="metaData.fundDedicated" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundDedicated" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundDedicated" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundDedicated" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_reserved">Reserved</td>
-                    <td *ngIf="metaData.fundReserved" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundReserved" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundReserved" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundReserved" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
@@ -627,29 +641,29 @@
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_peaeligability">PEA Eligability</td>
-                    <td *ngIf="metaData.fundPeaEligibility" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundPeaEligibility" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundPeaEligibility" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundPeaEligibility" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_taxration90">Tax Ration 90%</td>
-                    <td *ngIf="metaData.fundTaxRatio90Percent" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundTaxRatio90Percent" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundTaxRatio90Percent" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundTaxRatio90Percent" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td class="font-weight-bold" mltag="txt_reversesolictation">Reverse Solictation</td>
-                    <td *ngIf="metaData.fundReverseSolicitation" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundReverseSolicitation" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundReverseSolicitation" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundReverseSolicitation" mltag="txt_no">No
+
                     </td>
                 </tr>
             </table>
@@ -701,7 +715,7 @@
                     <td>{{metaData.minSubscriptionvalue}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_minimumsubscriptionunit">Minimum Subscription Units</td>
+                    <td mltag="txt_minimumsubscriptionunits">Minimum Subscription Units</td>
                     <td>{{metaData.minsubscriptionUnits}}</td>
                 </tr>
             </table>
@@ -717,38 +731,38 @@
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_swingpricing">Swing Pricing</td>
-                    <td *ngIf="metaData.fundSwingPricing" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundSwingPricing" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundSwingPricing" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundSwingPricing" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_admissiontoblockchain">Admission to Blockchain</td>
-                    <td *ngIf="metaData.fundAdmissionToBlockchain" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundAdmissionToBlockchain" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundAdmissionToBlockchain" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundAdmissionToBlockchain" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_currencyhedgedamount">Currency Hedged Amount</td>
-                    <td *ngIf="metaData.fundCurrencyHedgedAmount" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundCurrencyHedgedAmount" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundCurrencyHedgedAmount" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundCurrencyHedgedAmount" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_guaranteeorprotection">Guarantee or Protection</td>
-                    <td *ngIf="metaData.fundGuaranteeOrProtection" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundGuaranteeOrProtection" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundGuaranteeOrProtection" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundGuaranteeOrProtection" mltag="txt_no">No
+
                     </td>
                 </tr>
             </table>
@@ -777,15 +791,15 @@
                 </tr>
                 <tr class="data-row">
                     <td mltag="txt_dvp">DVP</td>
-                    <td *ngIf="metaData.fundDvp" mltag="txt_yes">
-                        Yes
+                    <td *ngIf="metaData.fundDvp" mltag="txt_yes">Yes
+
                     </td>
-                    <td *ngIf="!metaData.fundDvp" mltag="txt_no">
-                        No
+                    <td *ngIf="!metaData.fundDvp" mltag="txt_no">No
+
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_datecalculationcondition">Date Calculation Conditions</td>
+                    <td mltag="txt_datecalculationconditions">Date Calculation Conditions</td>
                     <td>{{metaData.dateCalculationConditions && metaData.dateCalculationConditions[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
@@ -805,7 +819,7 @@
                     <td>{{metaData.subscriptionCutOffHour && metaData.subscriptionCutOffHour[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td mltag="txt_advanceNotice">Advance Notice</td>
+                    <td mltag="txt_advancenotice">Advance Notice</td>
                     <td>{{metaData.advancedNotice}}</td>
                 </tr>
                 <tr class="data-row">
@@ -825,7 +839,7 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">Section 2</th>
+                    <th colspan="2" mltag="txt_section2">Section 2</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
@@ -860,7 +874,7 @@
     </div>
 </ng-template>
 
-<ng-template #documentTab mltag="txt_document">
+<ng-template #documentTab>
     <div class="row">
         <div class="col-sm-12 col-md-6">
             <table class="rwd-table">

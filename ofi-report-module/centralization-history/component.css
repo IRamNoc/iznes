@@ -18,13 +18,13 @@
     width: 100%;
 }
 
-.addInfos td, .addInfos th {
-    border: 1px solid #ccc;
-    text-align: left;
-    padding: 5px 10px;
-}
+/*.addInfos td, .addInfos th {*/
+    /*border: 1px solid #ccc;*/
+    /*text-align: left;*/
+    /*padding: 5px 10px;*/
+/*}*/
 
-.addInfos th:nth-child(n+2), .addInfos tr:nth-child(n+2) td:first-child {
-    background-color: #dddddd;
-    font-weight: 900;
-}
+/*.addInfos th:nth-child(n+2), .addInfos tr:nth-child(n+2) td:first-child {*/
+    /*background-color: #dddddd;*/
+    /*font-weight: 900;*/
+/*}*/
