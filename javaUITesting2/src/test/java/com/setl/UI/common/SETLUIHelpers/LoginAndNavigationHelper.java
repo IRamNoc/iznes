@@ -28,7 +28,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage2(String pageHref) throws InterruptedException {
-      WebDriverWait wait = new WebDriverWait(driver, 5);
+      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
       WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
       try {
           wait.until(visibilityOf(page2));
@@ -42,7 +42,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPageByID(String pageID) throws InterruptedException {
-      WebDriverWait wait = new WebDriverWait(driver, 5);
+      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
       WebElement page = driver.findElement(By.id(pageID));
         try {
         wait.until(visibilityOf(page));
@@ -55,7 +55,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPage(String pageHref) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement messagesLink = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
 
         try {
@@ -70,7 +70,7 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPageXpath(String pageHref) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement pageXpath = driver.findElement(By.xpath(pageHref));
 
         try {
@@ -193,8 +193,8 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
-        clickLoginButton();
-      WebDriverWait wait = new WebDriverWait(driver, 5);
+      clickLoginButton();
+      WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
       WebElement topBar = driver.findElement(By.id("topBarMenu"));
       try {
           wait.until(visibilityOf(topBar));
@@ -210,7 +210,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement homePage = driver.findElement(By.id("ofi-welcome-" + headingID));
       try {
 
@@ -225,7 +225,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement modal = driver.findElement(By.className("modal-title"));
         try {
             wait.until(visibilityOf(modal));
@@ -296,7 +296,7 @@ public class LoginAndNavigationHelper {
     }
   }
   public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
-    WebDriverWait wait = new WebDriverWait(driver, 5);
+    WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
     WebElement dropdown = driver.findElement(By.xpath(dropdownXpath));
 
     try {
