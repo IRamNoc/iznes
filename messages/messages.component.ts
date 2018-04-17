@@ -142,6 +142,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         ]).subscribe((subs) => {
             this.mailCounts = subs[0];
             this.messagesList(subs[1]);
+
+            console.log('counts',this.mailCounts);
+
         });
 
         this.messageComposeForm = new FormGroup({
@@ -228,7 +231,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             this.currentBoxCount = this.mailCounts[this.currentBox.type];
             if (this.currentBox.type === 'inbox') {
-                this.currentBoxCount = this.mailCounts['inboxUnread'];
+                //this.currentBoxCount = this.mailCounts['inboxUnread'];
                 this.unreadMessages = this.mailCounts['inboxUnread'];
             }
 
