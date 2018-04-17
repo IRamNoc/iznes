@@ -128,7 +128,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdown("uf_domicile", "France");
-        submitUmbrellaFund();
+        assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdown("uf_domicile", "Luxembourg");
-        submitUmbrellaFund();
+        assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdown("uf_domicile", "Ireland");
-        submitUmbrellaFund();
+        assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
     }
 
     @Test
