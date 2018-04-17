@@ -355,12 +355,13 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
 
             // Mark message as read (if necessary)
-            if (!messages[index].isRead) {
+            if (!messages[index].isRead && messages[index].senderId != this.connectedWalletId) {
                 this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
+                messages[index].isRead = true;
             }
             // set message to active to apply message-active css class
             messages[index].active = true;
-            messages[index].isRead = true;
+
             this.messages = messages;
             currentMessage.isRead = true;
             if ((currentMessage.action) &&
