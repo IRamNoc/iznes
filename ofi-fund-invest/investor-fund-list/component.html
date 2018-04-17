@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list"></i> <span mltag="txt_listoffunds">Place an Order</span></h1>
+    <h1><i class="fa fa-list"></i> <span mltag="txt_placeanorder">Place an Order</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,27 +36,27 @@
         <div class="panel-body">
             <div>
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>ISIN <span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon><span mltag="txt_isin">ISIN</span><span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>Share Name
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon><span mltag="txt_sharename">Share Name</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>Asset Class
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_assetclass">Asset Class</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>Asset Manager
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon><span mltag="txt_assetmanager">Asset Manager</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>SRRI
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_srri">SRRI</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>SRI
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_sri">SRI</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>Share Currency
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_sharecurrency">Share Currency</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>Last NAV <span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon><span mltag="txt_lastnav">Last NAV</span><span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>Subscription Cut-off Date
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon><span mltag="txt_subscriptioncutoffdate">Subscription Cut-off Date</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>Redemption Cut-off Date
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon><span mltag="txt_redemptioncutoffdate">Redemption Cut-off Date</span>
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column mltag="txt_actions" style="min-width: 190px;">Actions</clr-dg-column>
+                    <clr-dg-column style="min-width: 190px;" mltag="txt_actions">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>{{fund['isin']}}</clr-dg-cell>
@@ -64,15 +64,15 @@
                         <clr-dg-cell>{{fund['assetClass']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['assetManager']}}</clr-dg-cell>
                         <!--<clr-dg-cell>{{fund['srri']}}</clr-dg-cell>-->
-                        <clr-dg-cell>N/A</clr-dg-cell>
+                        <clr-dg-cell mltag="txt_na">N/A</clr-dg-cell>
                         <!--<clr-dg-cell>{{fund['sri']}}</clr-dg-cell>-->
-                        <clr-dg-cell>N/A</clr-dg-cell>
+                        <clr-dg-cell mltag="txt_na">N/A</clr-dg-cell>
                         <clr-dg-cell>{{fund['currency']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nav'] | moneyValue}}</clr-dg-cell>
                         <!--<clr-dg-cell>{{fund['subscriptionDate']}}</clr-dg-cell>-->
-                        <clr-dg-cell>N/A</clr-dg-cell>
+                        <clr-dg-cell mltag="txt_na">N/A</clr-dg-cell>
                         <!--<clr-dg-cell>{{fund['redemptionDate']}}</clr-dg-cell>-->
-                        <clr-dg-cell>N/A</clr-dg-cell>
+                        <clr-dg-cell mltag="txt_na">N/A</clr-dg-cell>
                         <clr-dg-cell class="actions">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" (click)="handleSubscribe(i)">
@@ -85,8 +85,8 @@
                         </clr-dg-cell>
                     </clr-dg-row>
 
-                    <clr-dg-footer>
-                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                         <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>

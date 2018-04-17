@@ -8,36 +8,36 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> <span>KYC Already Done?</span>
+            <i class="fa fa-bars"></i> <span mltag="txt_kycalreadydone">KYC Already Done?</span>
         </button>
 
         <clr-tab-content *clrIfActive>
             <div>
                 <section *ngIf="investorStatus == 'confirmation' || investorStatus == 'waiting-for-more-info' " class="form-block">
-                    <span style="font-weight: 13px;">Let's start with the mandatory administrative part: the KYC</span>
-                    <h2>KYC & client folder</h2>
+                    <span style="font-weight: 13px;" mltag="txt_letsstartwiththemandatoryadmin8cef61f4d1">Let's start with the mandatory administrative part: the KYC</span>
+                    <h2 mltag="txt_kycclientfolder">KYC & client folder</h2>
                     <p>Did you already fill up your KYC documents with {{amDetails.companyName.value}}?</p>
                     <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
                         <div class="form-group opt-btn-container">
                             <div class="radio-inline opt-btn-element">
                                 <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorAnsweredNo ? '' : null ">
-                                <label for="opt-yes">Yes</label>
+                                <label for="opt-yes" mltag="txt_yes">Yes</label>
                             </div>
                             <div class="radio-inline opt-btn-element">
                                 <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo" [attr.disabled]=" investorAnsweredNo ? '' : null ">
-                                <label for="opt-no">No</label>
+                                <label for="opt-no" mltag="txt_no">No</label>
                             </div>
                             <div *ngIf="!investorAnsweredNo" class="opt-btn-context">
-                                <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">We will ask the Asset Management company to confirm this.</p>
-                                <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">If you click no, you will have to fill up and review KYC documents with them.</p>
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'" mltag="txt_wewillasktheassetmanagementcom07f51571f3">We will ask the Asset Management company to confirm this.</p>
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'" mltag="txt_ifyouclicknoyouwillhavetofillu030ec878ba">If you click no, you will have to fill up and review KYC documents with them.</p>
                             </div>
                             <div *ngIf="investorAnsweredNo">
-                                <p>Fill out your KYC documents, the AM will approve them & you'll be able to place orders on IZNES.</p>
+                                <p mltag="txt_filloutyourkycdocumentstheamwice32c0db85">Fill out your KYC documents, the AM will approve them & you'll be able to place orders on IZNES.</p>
                             </div>
                         </div>
                         <div>
                             <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()" [attr.disabled]="investorAnsweredNo ? '' : null ">
-                                <span>Back</span>
+                                <span mltag="txt_back">Back</span>
                             </button>
                             <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid" [attr.disabled]="investorAnsweredNo ? '' : null ">
                                 <span mltag="txt_validate">Validate</span>
@@ -47,14 +47,14 @@
                 </section>
 
                 <section *ngIf="investorStatus == 'waiting-for-validation'">
-                    <p>
-                        Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
+                    <p>Thank you for having notified us that you had already filled your KYC documents with {{amDetails.companyName.value}}.
+
                     </p>
-                    <p>
-                        A message was sent to {{amDetails.companyName.value}}, asking them to confirm this information.
+                    <p>A message was sent to {{amDetails.companyName.value}}, asking them to confirm this information.
+
                     </p>
-                    <p>
-                        Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
+                    <p>Once {{amDetails.companyName.value}} will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.
+
                     </p>
                 </section>
             </div>
@@ -63,11 +63,11 @@
 
             <section class="form-block">
                 <!--<div class="text-input-list">-->
-                    <app-text-input-list
-                        [title]="'Info: Details of your Asset Management company'"
-                        [content]="amDetails"
-                        [additionnalText]="'You can contact your asset manager directly.'"
-                    ></app-text-input-list>
+                <app-text-input-list [title]="'Info: Details of your Asset Management company'" [content]="amDetails" [additionnalText]="'You can contact your asset manager directly.'">
+
+
+
+                </app-text-input-list>
                 <!--</div>-->
             </section>
         </clr-tab-content>
@@ -76,21 +76,21 @@
 
 <!--CUSTOM TEXT MODALS-->
 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-    <h3 class="modal-title">CONFIRMATION SCREEN</h3>
+    <h3 class="modal-title" mltag="txt_confirmationscreen">CONFIRMATION SCREEN</h3>
     <div class="modal-body text-center">
-        <p>
-            Please contact {{amDetails.companyName.value}}, in order to fill up and review the KYC documents with them.
+        <p>Please contact {{amDetails.companyName.value}}, in order to fill up and review the KYC documents with them.
+
         </p>
-        <p>
-            Please note that {{amDetails.companyName.value}} may require additional information from their clients, on top of the KYC.
+        <p>Please note that {{amDetails.companyName.value}} may require additional information from their clients, on top of the KYC.
+
         </p>
         <br>
-        <p class="highlight">
-            You will have full access to the platform menu once they will have reviewed your KYC.
+        <p class="highlight" mltag="txt_youwillhavefullaccesstotheplat127e78a469">You will have full access to the platform menu once they will have reviewed your KYC.
+
         </p>
         <br>
         <button class="btn btn-primary" type="button" (click)="closeModal()">
-            <span>Close</span>
+            <span mltag="txt_close">Close</span>
         </button>
         <br>
     </div>

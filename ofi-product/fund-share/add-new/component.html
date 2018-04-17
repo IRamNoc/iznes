@@ -1,27 +1,27 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-umbrella"></i> <span>Add new Fund Share</span></h1>
+    <h1><i class="fa fa-umbrella"></i> <span mltag="txt_addnewfundshare">Add new Fund Share</span></h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton"><span>Select Fund</span></button>
+        <button clrTabLink id="tabFundShareButton"><span mltag="txt_selectfund">Select Fund</span></button>
         <clr-tab-content class="outer">
-            <h3>Please enter following information to create a new Fund Share:</h3>
+            <h3><span mltag="txt_pleaseenterfollowinginformatio07623519b7">Please enter following information to create a new Fund Share</span>:</h3>
 
             <div class="row" *ngIf="newFundShareForm">
                 <div class="col-sm-6">
                     <form [formGroup]="newFundShareForm">
                         <section class="form-block">
                             <div class="form-group">
-                                <label class="control-label" mltag="txt_">Is this Share part of an existing Fund?</label>
-                                <ng-select id="selectFund"
-                                    [items]="fundListItems"
-                                    [allowClear]="true"
-                                    placeholder=""
-                                    [formControl]="newFundShareForm.controls['fund']"
-                                    [required]="true">
+                                <label class="control-label" mltag="txt_isthissharepartofanexistingfunadd88fe222">Is this Share part of an existing Fund?</label>
+                                <ng-select id="selectFund" [items]="fundListItems" [allowClear]="true" placeholder="" [formControl]="newFundShareForm.controls['fund']" [required]="true">
+
+
+
+
+
                                 </ng-select>
-                                
+
                             </div>
                         </section>
                     </form>
@@ -29,12 +29,12 @@
                 <div class="col-sm-6">
                     <section class="form-block">
                         <div class="form-group alt-option">
-                            <label class="control-label">&nbsp;</label>
+                            <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                             <div>
-                                <span>or</span>
-                                <a href="/#/product-module/fund/new" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund"
-                                    mltag="txt_">
+                                <span mltag="txt_or">or</span>
+                                <a href="/#/product-module/fund/new" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund" mltag="txt_addanewfund">
                                     Add a new Fund
+
                                 </a>
                             </div>
                         </div>
@@ -45,13 +45,13 @@
                 <div class="col-sm-12">
                     <form>
                         <div class="form-group">
-                            <a href="/#/product-module/home" class="btn btn-default" id="buttonBack"
-                                mltag="txt_">
+                            <a href="/#/product-module/home" class="btn btn-default" id="buttonBack" mltag="txt_back">
                                 Back
+
                             </a>
-                            <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
-                                mltag="txt_" (click)="selectFund()" [disabled]="!isValid()">
+                            <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund" (click)="selectFund()" [disabled]="!isValid()" mltag="txt_next">
                                 Next
+
                             </button>
                         </div>
                     </form>

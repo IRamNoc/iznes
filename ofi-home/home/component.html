@@ -1,22 +1,22 @@
-    <div class="p-1">
+ <div class="p-1">
     <h1>
         <i class="fa fa-home"></i> <span mltag="txt_home">Home</span> - {{ connectedWalletName }}</h1>
 
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == '36'">
-        <app-counter-tile name="actions" icon="align-left" [count]="" color="red" route="kyc-am-documents">KYC Documents</app-counter-tile>
-        <app-counter-tile name="connections" icon="industry" [count]="" color="green" route="product-module/home">Product Module</app-counter-tile>
+        <app-counter-tile name="actions" icon="align-left" [count]="" color="red" route="kyc-am-documents" mltag="txt_kycdocuments">KYC Documents</app-counter-tile>
+        <app-counter-tile name="connections" icon="industry" [count]="" color="green" route="product-module/home" mltag="txt_productmodule">Product Module</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="ellipsis-h" [count]="" color="orange" route="product-module/net-asset-value">Net Asset Value</app-counter-tile>
-        <app-counter-tile name="contracts" icon="envelope" count="" color="blue" route="messages">New Messages</app-counter-tile>
+        <app-counter-tile name="messages" icon="ellipsis-h" [count]="" color="orange" route="product-module/net-asset-value" mltag="txt_netassetvalue">Net Asset Value</app-counter-tile>
+        <app-counter-tile name="contracts" icon="envelope" count="" color="blue" route="messages" mltag="txt_newmessages">New Messages</app-counter-tile>
     </app-dashboard>
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == '46'">
-        <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0">Place Order</app-counter-tile>
-        <app-counter-tile name="connections" icon="user" [count]="" color="green" route="profile/my-information">My Information</app-counter-tile>
+        <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0" mltag="txt_placeorder">Place Order</app-counter-tile>
+        <app-counter-tile name="connections" icon="user" [count]="" color="green" route="profile/my-information" mltag="txt_myinformation">My Information</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio">Sub-portfolio</app-counter-tile>
-        <app-counter-tile name="contracts" icon="envelope" count="" color="blue" route="messages">New Messages</app-counter-tile>
+        <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio" mltag="txt_subportfolio">Sub-portfolio</app-counter-tile>
+        <app-counter-tile name="contracts" icon="envelope" count="" color="blue" route="messages" mltag="txt_newmessages">New Messages</app-counter-tile>
     </app-dashboard>
 
 </div>
@@ -189,4 +189,3 @@
 <!--</div>-->
 <!--</div>-->
 <!--</div>-->
-

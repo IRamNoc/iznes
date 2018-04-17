@@ -11,16 +11,16 @@
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon Payment list tab. -->
-                    <ng-container
-                        *ngTemplateOutlet="staticOrdersList"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="staticOrdersList">
+
+                    </ng-container>
                 </ng-container>
 
                 <ng-container *ngIf="id >= 1">
                     <!-- Create Coupon Payment tab. -->
-                    <ng-container
-                        *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="dynamicViewOrder; context: {'orderData': tabdata.orderData, 'tabid': id}">
+
+                    </ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -37,7 +37,7 @@
                             <span mltag="txt_sharename">Share Name</span>
                         </label>
                         <div class="input-button-group">
-                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename"/>
+                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename">
                             <button (click)="requestSearch()" style="margin-top: 0 !important"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
@@ -46,16 +46,16 @@
                             <span mltag="txt_status">Status</span>
                         </label>
                         <div>
-                            <ng-select
-                                id="orders-search-status"
-                                class="fluid-width"
-                                [items]="orderStatuses"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch(false, $event)"
-                                (removed)="getOrdersBySearch(false, $event)"
-                                [formControl]="tabsControl[0].searchForm.controls['status']"
-                                placeholder="Status"
-                                mltag="txt_status"></ng-select>
+                            <ng-select id="orders-search-status" class="fluid-width" [items]="orderStatuses" [allowClear]="true" (selected)="getOrdersBySearch(false, $event)" (removed)="getOrdersBySearch(false, $event)" [formControl]="tabsControl[0].searchForm.controls['status']" placeholder="Status" mltag="txt_status">
+
+
+
+
+
+
+
+
+                            </ng-select>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -63,16 +63,16 @@
                             <span mltag="txt_type">Type</span>
                         </label>
                         <div>
-                            <ng-select
-                                id="orders-search-type"
-                                class="fluid-width"
-                                [items]="orderTypes"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch()"
-                                (removed)="getOrdersBySearch()"
-                                [formControl]="tabsControl[0].searchForm.controls['type']"
-                                placeholder="Type"
-                                mltag="txt_type"></ng-select>
+                            <ng-select id="orders-search-type" class="fluid-width" [items]="orderTypes" [allowClear]="true" (selected)="getOrdersBySearch()" (removed)="getOrdersBySearch()" [formControl]="tabsControl[0].searchForm.controls['type']" placeholder="Type" mltag="txt_type">
+
+
+
+
+
+
+
+
+                            </ng-select>
                         </div>
                     </div>
                 </div>
@@ -82,72 +82,72 @@
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Order Ref</span>
+                            <span mltag="txt_orderref">Order Ref</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Order Type</span>
+                            <span mltag="txt_ordertype">Order Type</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareName'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Share Name</span>
+                            <span mltag="txt_sharename">Share Name</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManagementCompany'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Asset Management Company</span>
+                            <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Share Currency</span>
+                            <span mltag="txt_sharecurrency">Share Currency</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Quantity</span>
+                            <span mltag="txt_quantity">Quantity</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNAV'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Latest NAV</span>
+                            <span mltag="txt_latestnav">Latest NAV</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'grossAmount'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Gross Amount</span>
+                            <span mltag="txt_grossamount">Gross Amount</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'feesAmount'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Fees Amount</span>
+                            <span mltag="txt_feesamount">Fees Amount</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderDate'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Order Date</span>
+                            <span mltag="txt_orderdate">Order Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'cutOffDate'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Cut-off Date</span>
+                            <span mltag="txt_cutoffdate">Cut-off Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'navDate'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>NAV Date</span>
+                            <span mltag="txt_navdate">NAV Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'settlementDate'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Settlement Date</span>
+                            <span mltag="txt_settlementdate">Settlement Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Status</span>
+                            <span mltag="txt_status">Status</span>
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
@@ -167,165 +167,165 @@
 
                     <clr-dg-row *clrDgItems="let order of ordersList">
                         <clr-dg-cell>
-                            <!-- orderRef -->
-                            Yo
+                            <!-- orderRef -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- orderType -->
-                            Yo
+                            <!-- orderType -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- shareName -->
-                            Yo
+                            <!-- shareName -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- assetManagementCompany -->
-                            Yo
+                            <!-- assetManagementCompany -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- shareCurrency -->
-                            Yo
+                            <!-- shareCurrency -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- quantity -->
-                            Yo
+                            <!-- quantity -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- latestNAV -->
-                            Yo
+                            <!-- latestNAV -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- grossAmount -->
-                            Yo
+                            <!-- grossAmount -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- feesAmount -->
-                            Yo
+                            <!-- feesAmount -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- orderDate -->
-                            Yo
+                            <!-- orderDate -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- cutOffDate -->
-                            Yo
+                            <!-- cutOffDate -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- navDate -->
-                            Yo
+                            <!-- navDate -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- settlementDate -->
-                            Yo
+                            <!-- settlementDate -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- status -->
-                            Yo
+                            <!-- status -- mltag="txt_yo">Yo
+
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Actions -->
-                            <button type="button" class="btn btn-info">Cancel</button>
+                            <button type="button" class="btn btn-info" mltag="txt_cancel">Cancel</button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
-                                <b>Additional informations:</b>
+                                <b><span mltag="txt_additionalinformations">Additional informations</span>:</b>
                                 <br><br>
                                 <table>
                                     <tr>
-                                        <th>Asset Management Company</th>
-                                        <th>Latest NAV</th>
-                                        <th>Fees Amount</th>
-                                        <th>NAV Date</th>
+                                        <th mltag="txt_assetmanagementcompany">Asset Management Company</th>
+                                        <th mltag="txt_latestnav">Latest NAV</th>
+                                        <th mltag="txt_feesamount">Fees Amount</th>
+                                        <th mltag="txt_navdate">NAV Date</th>
                                     </tr>
                                     <tr>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
-                                        <td>Yo</td>
+                                        <td mltag="txt_yo">Yo</td>
+                                        <td mltag="txt_yo">Yo</td>
+                                        <td mltag="txt_yo">Yo</td>
+                                        <td mltag="txt_yo">Yo</td>
                                     </tr>
                                 </table>
                             </div>
                         </clr-dg-row-detail>
 
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Action &ndash;&gt;-->
-                            <!--<div class="btn-group btn-sm compact">-->
-                                <!--&lt;!&ndash; If order status is 1, allow cancel. &ndash;&gt;-->
-                                <!--<button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">-->
-                                    <!--<i class="fa fa-times"></i>-->
-                                <!--</button>-->
-                                <!--&lt;!&ndash; else, disable cancel. &ndash;&gt;-->
-                                <!--<button *ngIf="order.status != 1" id="order-cancel-{{order.arrangementID}}" class="btn" disabled="disabled">-->
-                                    <!--<i class="fa fa-times"></i>-->
-                                <!--</button>-->
+                        <!--&lt;!&ndash; Action &ndash;&gt;-->
+                        <!--<div class="btn-group btn-sm compact">-->
+                        <!--&lt;!&ndash; If order status is 1, allow cancel. &ndash;&gt;-->
+                        <!--<button *ngIf="order.status == 1" id="order-cancel-{{order.arrangementID}}" (click)="handleCancelOrder(order.arrangementID)" class="btn">-->
+                        <!--<i class="fa fa-times"></i>-->
+                        <!--</button>-->
+                        <!--&lt;!&ndash; else, disable cancel. &ndash;&gt;-->
+                        <!--<button *ngIf="order.status != 1" id="order-cancel-{{order.arrangementID}}" class="btn" disabled="disabled">-->
+                        <!--<i class="fa fa-times"></i>-->
+                        <!--</button>-->
 
-                                <!--&lt;!&ndash; View order. &ndash;&gt;-->
-                                <!--<button id="order-view-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn">-->
-                                    <!--<i class="fa fa-search"></i>-->
-                                <!--</button>-->
-                            <!--</div>-->
+                        <!--&lt;!&ndash; View order. &ndash;&gt;-->
+                        <!--<button id="order-view-{{order.arrangementID}}" (click)="handleViewOrder(order.arrangementID)" class="btn">-->
+                        <!--<i class="fa fa-search"></i>-->
+                        <!--</button>-->
+                        <!--</div>-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Investor &ndash;&gt;-->
-                            <!--{{ order.metaData.investorSubPortfolio }}-->
-                            <!--<b class="text_small">Ref</b> {{ padNumberLeft(order.arrangementID, 5) }}-->
+                        <!--&lt;!&ndash; Investor &ndash;&gt;-->
+                        <!--{{ order.metaData.investorSubPortfolio }}-->
+                        <!--<b class="text_small">Ref</b> {{ padNumberLeft(order.arrangementID, 5) }}-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Order type &ndash;&gt;-->
-                            <!--<span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>-->
-                            <!--<span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>-->
+                        <!--&lt;!&ndash; Order type &ndash;&gt;-->
+                        <!--<span *ngIf="order.type == 3" class="label label-info" mltag="txt_subscription"> Subscription</span>-->
+                        <!--<span *ngIf="order.type == 4" class="label label-success" mltag="txt_redemption"> Redemption</span>-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Fund name &ndash;&gt;-->
-                            <!--{{ order.metaData.assetISIN }}<br/>-->
-                            <!--<span class="text_small">{{ order.asset }}</span>-->
+                        <!--&lt;!&ndash; Fund name &ndash;&gt;-->
+                        <!--{{ order.metaData.assetISIN }}<br/>-->
+                        <!--<span class="text_small">{{ order.asset }}</span>-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Quantity &ndash;&gt;-->
-                            <!--{{ order.metaData.units | moneyValue: 5}}-->
+                        <!--&lt;!&ndash; Quantity &ndash;&gt;-->
+                        <!--{{ order.metaData.units | moneyValue: 5}}-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Amount &ndash;&gt;-->
-                            <!--{{ order.metaData.total | moneyValue: 4}}-->
+                        <!--&lt;!&ndash; Amount &ndash;&gt;-->
+                        <!--{{ order.metaData.total | moneyValue: 4}}-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Price &ndash;&gt;-->
-                            <!--{{ order.price | moneyValue: 2}}-->
+                        <!--&lt;!&ndash; Price &ndash;&gt;-->
+                        <!--{{ order.price | moneyValue: 2}}-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Cut-off date &ndash;&gt;-->
-                            <!--{{ order.cutoffDateStr }} <br>-->
-                            <!--<span class="text_small">{{ order.cutoffTimeStr}}</span>-->
+                        <!--&lt;!&ndash; Cut-off date &ndash;&gt;-->
+                        <!--{{ order.cutoffDateStr }} <br>-->
+                        <!--<span class="text_small">{{ order.cutoffTimeStr}}</span>-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Delivery date &ndash;&gt;-->
-                            <!--{{ order.deliveryDateStr }}-->
+                        <!--&lt;!&ndash; Delivery date &ndash;&gt;-->
+                        <!--{{ order.deliveryDateStr }}-->
                         <!--</clr-dg-cell>-->
                         <!--<clr-dg-cell>-->
-                            <!--&lt;!&ndash; Status &ndash;&gt;-->
-                            <!--<span *ngIf="order.status == 1" class="label label-warning">-->
-                                <!--<span class="txt_initiated" mltag="txt_initiated">Initiated</span>-->
-                            <!--</span>-->
+                        <!--&lt;!&ndash; Status &ndash;&gt;-->
+                        <!--<span *ngIf="order.status == 1" class="label label-warning">-->
+                        <!--<span class="txt_initiated" mltag="txt_initiated">Initiated</span>-->
+                        <!--</span>-->
 
-                            <!--<span *ngIf="order.status == 2" class="label label-info">-->
-                                <!--<span class="ml" mltag="txt_waitingfornav">Waiting for NAV</span>-->
-                            <!--</span>-->
+                        <!--<span *ngIf="order.status == 2" class="label label-info">-->
+                        <!--<span class="ml" mltag="txt_waitingfornav">Waiting for NAV</span>-->
+                        <!--</span>-->
 
-                            <!--<span *ngIf="order.status == 3" class="label label-info">-->
-                                <!--<span class="txt_waitingnav" mltag="txt_waitingforsettlement">Waiting for settlement</span>-->
-                            <!--</span>-->
+                        <!--<span *ngIf="order.status == 3" class="label label-info">-->
+                        <!--<span class="txt_waitingnav" mltag="txt_waitingforsettlement">Waiting for settlement</span>-->
+                        <!--</span>-->
 
-                            <!--<span *ngIf="order.status == 0" class="label label-error">-->
-                                <!--<span class="ml" mltag="txt_cancelled">Cancelled</span>-->
-                            <!--</span>-->
+                        <!--<span *ngIf="order.status == 0" class="label label-error">-->
+                        <!--<span class="ml" mltag="txt_cancelled">Cancelled</span>-->
+                        <!--</span>-->
 
-                            <!--<span *ngIf="order.status == -1" class="label label-success">-->
-                                <!--<span class="ml" mltag="txt_ordersettled">Order settled</span>-->
-                            <!--</span>-->
+                        <!--<span *ngIf="order.status == -1" class="label label-success">-->
+                        <!--<span class="ml" mltag="txt_ordersettled">Order settled</span>-->
+                        <!--</span>-->
 
-                            <!--<span *ngIf="order.status == -2" class="label label-error">-->
-                                <!--<span class="ml" mltag="txt_orderexpired">Order expired</span>-->
-                            <!--</span>-->
+                        <!--<span *ngIf="order.status == -2" class="label label-error">-->
+                        <!--<span class="ml" mltag="txt_orderexpired">Order expired</span>-->
+                        <!--</span>-->
                         <!--</clr-dg-cell>-->
                     </clr-dg-row>
 
@@ -333,7 +333,7 @@
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
                             <clr-dg-column-toggle-title>
-                                <span>Show/hide fields:</span>
+                                <span><span mltag="txt_showhidefields">Show/hide fields</span>:</span>
                             </clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
@@ -345,8 +345,8 @@
                                     <clr-icon shape="check"></clr-icon>
                                 </button>
                             </clr-dg-column-toggle-button>
-                        </clr-dg-column-toggle>
-                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        </clr-dg-column-toggle>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                         <clr-dg-pagination #pagination [clrDgPageSize]="10" [(clrDgPage)]="datagridPage"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
@@ -363,13 +363,13 @@
                     <div class="col-sm-12">
                         <div>
                             <!-- Order type -->
-                            <h2 *ngIf="orderData.type == 3" mltag="txt_subscription"> Subscription</h2>
-                            <h2 *ngIf="orderData.type == 4" mltag="txt_redemption"> Redemption</h2>
+                            <h2 *ngIf="orderData.type == 3" mltag="txt_subscription">Subscription</h2>
+                            <h2 *ngIf="orderData.type == 4" mltag="txt_redemption">Redemption</h2>
                         </div>
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -406,7 +406,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -427,7 +427,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -440,7 +440,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-12">
@@ -449,20 +449,20 @@
                         </label>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_date"> Date</span>
+                        <span mltag="txt_date">Date</span>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.cutoffDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <span mltag="txt_time"> Time</span>
+                        <span mltag="txt_time">Time</span>
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.cutoffDate ) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -483,7 +483,7 @@
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="row form-group">
                     <div class="col-sm-6">
@@ -505,12 +505,12 @@
                     </div>
                 </div>
 
-                <hr class="dashed"/>
+                <hr class="dashed">
 
                 <div class="form-group button-group">
                     <div class="col-sm-12">
-                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close"> Close</a>
-                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning" mltag="txt_cancel"> Cancel</button>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</a>
+                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning" mltag="txt_cancel">Cancel</button>
                     </div>
                 </div>
             </form>
