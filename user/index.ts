@@ -30,7 +30,6 @@ import {
 
 export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD, CLEAR_MUST_CHANGE_PASSWORD, resetHomepage};
 
-
 // connected
 import {
 
@@ -55,13 +54,13 @@ export {
     resetMembernodeSessionManager
 };
 
-
 // site settings
 import {
     SiteSettingsReducer,
     SiteSettingsState,
     setLanguage,
     setMenuShown,
+    getSiteSettings,
     SET_PRODUCTION,
     SET_LANGUAGE
 } from './site-settings';
@@ -69,10 +68,10 @@ import {
 export {
     setLanguage,
     setMenuShown,
+    getSiteSettings,
     SET_PRODUCTION,
     SET_LANGUAGE
 };
-
 
 export interface UserState {
     myDetail: MyDetailState;
@@ -87,4 +86,3 @@ export const userReducer: Reducer<UserState> = combineReducers<UserState>({
     connected: ConnectedReducer,
     siteSettings: SiteSettingsReducer
 });
-

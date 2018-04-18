@@ -1,1 +1,1 @@
-export const name = 'my-detail';
+export const name = 'site-settings';

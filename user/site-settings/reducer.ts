@@ -1,3 +1,4 @@
+import {Action} from 'redux';
 import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
 import {SiteSettingsState} from './model';
 import * as _ from 'lodash';
@@ -21,7 +22,7 @@ const initialState: SiteSettingsState = {
     production: true
 };
 
-export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action) {
+export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
     switch (action.type) {
         case SET_LANGUAGE:
             return setLanguage(SET_LANGUAGE, action, state);
@@ -46,9 +47,9 @@ function setLanguage(actionType, action, state) {
     let newState;
     let languageData;
 
-    if (_.get(action, 'payload[1].Data[0]','') == ''){
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
         languageData = action;
-    }else{
+    } else {
         languageData = _.get(action, 'payload[1].Data[0]');
     }
 
@@ -60,11 +61,10 @@ function setLanguage(actionType, action, state) {
     });
 
     return newState;
-};
+}
 
 function setMenuShown(actionType, action, state) {
     let newState;
-
     const menuShown = _.get(action, 'menuShown', []);
 
     newState = Object.assign({}, state, {
@@ -72,7 +72,7 @@ function setMenuShown(actionType, action, state) {
     });
 
     return newState;
-};
+}
 
 /**
  *

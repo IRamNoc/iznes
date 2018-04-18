@@ -29,4 +29,3 @@ export const setMenuShown: ActionCreator<SetMenuShownAction> =
         type: SET_MENU_SHOWN,
         menuShown: menuShown,
     });
-

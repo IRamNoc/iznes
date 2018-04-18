@@ -29,6 +29,7 @@ export {
     // site settings
     setLanguage,
     setMenuShown,
+    getSiteSettings,
     SET_PRODUCTION,
     SET_LANGUAGE
 
