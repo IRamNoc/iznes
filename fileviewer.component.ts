@@ -1,13 +1,14 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {NgRedux, select} from '@angular-redux/store';
-import {SagaHelper} from '@setl/utils';
+import * as SagaHelper from '@setl/utils/sagaHelper';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import {APP_CONFIG} from '@setl/utils/appConfig/appConfig';
+import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
 
 import {ValidateFileMessageBody} from "./fileviewer.module";
 import {FileViewerPreviewService} from './preview-modal/service';
