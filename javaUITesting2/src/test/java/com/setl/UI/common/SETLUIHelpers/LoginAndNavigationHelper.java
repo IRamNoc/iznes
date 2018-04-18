@@ -10,6 +10,7 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPres
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 public class LoginAndNavigationHelper {
@@ -43,8 +44,8 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToPageByID(String pageID) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement page = driver.findElement(By.id(pageID));
         try {
+        WebElement page = driver.findElement(By.id(pageID));
             wait.until(visibilityOf(page));
             wait.until(elementToBeClickable(page));
             page.click();
@@ -56,9 +57,9 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToPage(String pageHref) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement messagesLink = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
 
         try {
+        WebElement messagesLink = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
             wait.until(visibilityOf(messagesLink));
             wait.until(elementToBeClickable(messagesLink));
             messagesLink.click();
@@ -124,8 +125,8 @@ public class LoginAndNavigationHelper {
 
     public static void enterLoginCredentialsPassword(String password) {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement login_password = driver.findElement(By.id("password-field"));
         try {
+            WebElement login_password = driver.findElement(By.id("password-field"));
             wait.until(visibilityOf(login_password));
             wait.until(elementToBeClickable(login_password));
             login_password.clear();
@@ -137,8 +138,8 @@ public class LoginAndNavigationHelper {
 
     public static void clickLoginButton() {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement login = driver.findElement(By.id("login-submit"));
         try {
+            WebElement login = driver.findElement(By.id("login-submit"));
             wait.until(visibilityOf(login));
             wait.until(elementToBeClickable(login));
             login.click();
@@ -149,9 +150,9 @@ public class LoginAndNavigationHelper {
 
     public static void selectNewTabToNavigateTo(String newTabId) throws InterruptedException {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
             WebElement tab = driver.findElement(By.xpath(".//*[@id='home-holding-" +
                 newTabId + "-select']/a/span"));
-        try {
             wait.until(visibilityOf(tab));
             wait.until(elementToBeClickable(tab));
             tab.click();
@@ -162,8 +163,8 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToAddressesTab() throws InterruptedException {
-        try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
             WebElement addressesTab = driver.findElement(By.xpath(".//*[@id='home-addresses-select']/a/span"));
             wait.until(visibilityOf(addressesTab));
             wait.until(elementToBeClickable(addressesTab));
@@ -175,8 +176,8 @@ public class LoginAndNavigationHelper {
 
     public static void acceptCookies() throws InterruptedException {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement cookies = driver.findElement(By.linkText("Got it!"));
         try {
+            WebElement cookies = driver.findElement(By.linkText("Got it!"));
             wait.until(visibilityOf(cookies));
             wait.until(elementToBeClickable(cookies));
             cookies.click();
@@ -192,8 +193,8 @@ public class LoginAndNavigationHelper {
 
         clickLoginButton();
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement topBar = driver.findElement(By.id("topBarMenu"));
         try {
+            WebElement topBar = driver.findElement(By.id("topBarMenu"));
             wait.until(visibilityOf(topBar));
 
         } catch (Exception e) {
@@ -209,8 +210,8 @@ public class LoginAndNavigationHelper {
 
         clickLoginButton();
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement menuBar = driver.findElement(By.id("topBarMenu"));
         try {
+            WebElement menuBar = driver.findElement(By.id("topBarMenu"));
             wait.until(visibilityOf(menuBar));
             wait.until(elementToBeClickable(menuBar));
             menuBar.click();
@@ -226,8 +227,8 @@ public class LoginAndNavigationHelper {
 
         clickLoginButton();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement homePage = driver.findElement(By.id("ofi-welcome-" + headingID));
         try {
+        WebElement homePage = driver.findElement(By.id("ofi-welcome-" + headingID));
 
             wait.until(visibilityOf(homePage));
         } catch (Exception e) {
@@ -242,8 +243,8 @@ public class LoginAndNavigationHelper {
 
         clickLoginButton();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement modal = driver.findElement(By.className("modal-title"));
         try {
+        WebElement modal = driver.findElement(By.className("modal-title"));
             wait.until(visibilityOf(modal));
             String headingKYC = modal.getText();
             assertTrue(headingKYC.equals("CONFIRMATION SCREEN"));
@@ -263,9 +264,9 @@ public class LoginAndNavigationHelper {
 
     public static void logout() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement settings = driver.findElement(By.id("dropdown-settings"));
 
         try {
+        WebElement settings = driver.findElement(By.id("dropdown-settings"));
             wait.until(visibilityOf(settings));
             wait.until(elementToBeClickable(settings));
             settings.click();
@@ -289,9 +290,10 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToDropdown(String dropdownID) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement dropdown = driver.findElement(By.id(dropdownID));
 
         try {
+        WebElement dropdown = driver.findElement(By.id(dropdownID));
+            wait.until(presenceOfElementLocated(By.id(dropdownID)));
             wait.until(visibilityOf(dropdown));
             wait.until(elementToBeClickable(dropdown));
             dropdown.click();
@@ -303,9 +305,9 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement dropdown = driver.findElement(By.xpath(dropdownXpath));
 
         try {
+        WebElement dropdown = driver.findElement(By.xpath(dropdownXpath));
             wait.until(visibilityOf(dropdown));
             wait.until(elementToBeClickable(dropdown));
             dropdown.click();
