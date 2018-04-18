@@ -20,8 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUmbrellaFundExists;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomUmbrellaFundsDetails;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
@@ -39,7 +38,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -80,7 +79,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         validatePageLayout();
     }
 
@@ -88,7 +87,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
 
@@ -96,7 +95,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -123,7 +122,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -135,7 +134,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -147,7 +146,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -159,7 +158,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldIncreaseTitleNumberWhenUmbrellaFundIsCreated() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -177,7 +176,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module");
+        navigateToPage("product-module/home");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).click();
@@ -200,61 +199,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         }catch (Exception e){
             fail(e.getMessage());
         }
-    }
-
-    private void submitUmbrellaFund() throws InterruptedException {
-        try {
-            driver.findElement(By.id("mcBtnSubmitForm")).click();
-        }catch (Exception e){
-            fail("Save button was not clicked. " + e.getMessage());
-        }
-    }
-
-    private void fillUmbrellaDetailsNotCountry(String fundName) throws InterruptedException {
-        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        driver.findElement(By.id("uf_lei")).sendKeys("testLei");
-        driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
-        driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
-        searchAndSelectTopDropdown("uf_managementCompany", "Management Company");
-        selectTopDropdown("uf_custodian");
-        selectTopDropdown("uf_investmentAdvisor");
-        selectTopDropdown("uf_fundAdministrator");
-        selectTopDropdown("uf_investmentManager");
-        selectTopDropdown("uf_payingAgent");
-    }
-
-    private void selectAddUmbrellaFund(){
-        driver.findElement(By.id("new-umbrella-fund-btn")).click();
-        try{
-            String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
-        }catch (Exception e){
-            fail("Page heading text was not correct : " + e.getMessage());
-        }
-    }
-
-    private void selectTopDropdown(String dropdownID) throws InterruptedException {
-        try {
-            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-        }catch (Exception e){
-            fail("this step failed.");
-        }
-        try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected..: " + e.getMessage());
-        }
-    }
-
-    private void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
-        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
-        driver.findElement(By.id("uf_umbrellaFundCreationDate")).clear();
-        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2018-04-27");
     }
 
     private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
