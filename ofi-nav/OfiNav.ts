@@ -1,5 +1,6 @@
 export enum NavPopupMode {
     ADD,
+    ADD_EXISTING,
     EDIT,
     DELETE
 }
@@ -13,6 +14,9 @@ export class ShareModel {
 
 export class NavModel {
     nav: number;
+    navEstimated?: number;
+    navTechnical?: number;
+    navValidated?: number;
     currency: string;
     navDate: string;
     navPubDate: string;

@@ -49,7 +49,7 @@ export class FundShare {
     }
     profile = {
         mandatory: new ShareProfileMandatory(),
-        optional: new ShareCharacteristicOptional()
+        optional: new ShareProfileOptional()
     }
     representation = {
         optional: new ShareRepresentationOptional()
@@ -305,6 +305,8 @@ export class FundShare {
     }
 
     private applyValueToExistingFormItem(field: FormItem, value: any): void {
+        if(!field) return;
+        
         if(field.type === FormItemType.list) {
             this.setListItemPresetFromOptional(field, value);
         } else {
