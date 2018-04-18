@@ -213,7 +213,7 @@ export const ROUTES: Routes = [
                 path: 'product-module',
                 children: [
                     {
-                        path: 'home',
+                        path: '',
                         component: ProductHomeComponent,
                         canActivate: [LoginGuardService],
                     },
