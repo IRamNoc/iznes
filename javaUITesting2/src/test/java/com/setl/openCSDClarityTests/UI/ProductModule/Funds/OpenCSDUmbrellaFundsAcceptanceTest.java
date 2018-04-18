@@ -79,7 +79,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         validatePageLayout();
     }
 
@@ -87,7 +87,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
 
@@ -95,7 +95,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -112,7 +112,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             assertTrue(umbFundName.equals(uFundDetails[0]));
             assertTrue(umbFundLEI.equals("testLei"));
             assertTrue(umbFundManagement.equals("Management Company"));
-            assertTrue(umbFundCountry.equals("Jordan"));
+            assertTrue(umbFundCountry.equals("Afghanistan"));
         }catch (Exception e){
             fail(e.getMessage());
         }
@@ -122,7 +122,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -134,7 +134,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -146,7 +146,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -158,7 +158,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldIncreaseTitleNumberWhenUmbrellaFundIsCreated() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -176,7 +176,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).click();
@@ -191,6 +191,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             String popup = driver.findElement(By.className("toast-title")).getText();
             assertTrue(popup.contains("has been successfully updated!"));
         }catch (Exception e){
+
             fail(e.getMessage());
         }
         try {
