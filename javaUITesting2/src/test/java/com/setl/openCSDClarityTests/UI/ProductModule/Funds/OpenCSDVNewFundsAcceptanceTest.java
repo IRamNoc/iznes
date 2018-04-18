@@ -11,17 +11,19 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -202,7 +204,10 @@ public class OpenCSDVNewFundsAcceptanceTest {
         } catch (Error e) {
             fail(e.getMessage());
         }
-        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
+
         driver.findElement(By.id("fund-cancelfund-btn")).click();
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();

@@ -1,17 +1,13 @@
 package com.setl.UI.common.SETLUIHelpers;
 
-import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class LoginAndNavigationHelper {
 
@@ -294,8 +290,8 @@ public class LoginAndNavigationHelper {
         try {
         WebElement dropdown = driver.findElement(By.id(dropdownID));
             wait.until(presenceOfElementLocated(By.id(dropdownID)));
-            wait.until(visibilityOf(dropdown));
-            wait.until(elementToBeClickable(dropdown));
+            wait.until(visibilityOfElementLocated(By.id(dropdownID)));
+            wait.until(elementToBeClickable(By.id(dropdownID)));
             dropdown.click();
         } catch (Error e) {
             System.out.println(dropdownID + "not present");
