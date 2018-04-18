@@ -112,7 +112,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             assertTrue(umbFundName.equals(uFundDetails[0]));
             assertTrue(umbFundLEI.equals("testLei"));
             assertTrue(umbFundManagement.equals("Management Company"));
-            assertTrue(umbFundCountry.equals("Jordan"));
+            assertTrue(umbFundCountry.equals("Afghanistan"));
         }catch (Exception e){
             fail(e.getMessage());
         }
