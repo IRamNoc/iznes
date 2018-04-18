@@ -30,9 +30,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("uf_lei")).sendKeys("testLei");
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
-        searchAndSelectTopDropdown("uf_managementCompany", "Management Company");
-        selectTopDropdown("uf_custodian");
+        //searchAndSelectTopDropdown("uf_managementCompany", "2019-10-20");
+        selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_investmentAdvisor");
+        selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
         selectTopDropdown("uf_investmentManager");
         selectTopDropdown("uf_payingAgent");
@@ -61,13 +62,23 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+        //driver.findElement(By.id(dropdownID)).clear();
+        driver.findElement(By.id(dropdownID)).sendKeys(search);
         try {
             driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
         }catch (Exception e){
             fail("dropdown not selected. " + e.getMessage());
         }
-        driver.findElement(By.id("uf_umbrellaFundCreationDate")).clear();
-        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2018-04-27");
+    }
+    public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) throws InterruptedException {
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+        //driver.findElement(By.id(dropdownID)).clear();
+        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
+        try {
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
     }
 
 }

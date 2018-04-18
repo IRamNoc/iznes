@@ -163,6 +163,11 @@ public class OpenCSDSprint4AcceptanceTest {
     public void shouldAssertThatFundSharesHas2ExpandableFields(){
     }
 
+    @Test
+    public void shouldCreateAndSetWalletWhenFundIsCreated(){
+
+    }
+
     public static void navigateToAddUser() {
     }
 }

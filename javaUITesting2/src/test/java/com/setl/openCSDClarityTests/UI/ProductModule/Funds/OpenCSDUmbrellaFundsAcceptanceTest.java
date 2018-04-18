@@ -112,7 +112,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             assertTrue(umbFundName.equals(uFundDetails[0]));
             assertTrue(umbFundLEI.equals("testLei"));
             assertTrue(umbFundManagement.equals("Management Company"));
-            assertTrue(umbFundCountry.equals("Afghanistan"));
+            assertTrue(umbFundCountry.equals("Jordan"));
         }catch (Exception e){
             fail(e.getMessage());
         }
@@ -126,7 +126,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "France");
+        searchAndSelectTopDropdownXpath("uf_domicile", "France");
         assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
     }
 
@@ -138,8 +138,8 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Luxembourg");
-        assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
+        searchAndSelectTopDropdownXpath("uf_domicile", "Luxembourg");
+        assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
     }
 
     @Test
@@ -150,8 +150,8 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Ireland");
-        assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
+        searchAndSelectTopDropdownXpath("uf_domicile", "Ireland");
+        assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
     }
 
     @Test
@@ -191,7 +191,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             String popup = driver.findElement(By.className("toast-title")).getText();
             assertTrue(popup.contains("has been successfully updated!"));
         }catch (Exception e){
-
             fail(e.getMessage());
         }
         try {
