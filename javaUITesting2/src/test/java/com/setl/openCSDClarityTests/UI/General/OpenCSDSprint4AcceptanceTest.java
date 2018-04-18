@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.General;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -42,7 +43,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (30000);
+    public Timeout globalTimeout = new Timeout (300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -56,7 +57,7 @@ public class OpenCSDSprint4AcceptanceTest {
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         //Get the name of the umbrella fund from the database
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
@@ -89,7 +90,7 @@ public class OpenCSDSprint4AcceptanceTest {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         //Get the name of the fund from the database
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         try {

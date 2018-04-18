@@ -251,7 +251,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     public void shouldUpdateFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage("product-module/home");
+        navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         System.out.println(umbFundNamePrev);
         try {
