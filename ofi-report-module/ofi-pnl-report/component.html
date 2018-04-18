@@ -30,13 +30,13 @@
                                 <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
                             </label>
                             <div>
-                                <ng-select
-                                    [items]="addressList"
-                                    [allowClear]="false"
-                                    placeholder="Select sub-portfolio"
-                                    [formControl]="address"
-                                    (selected)="handleSelectedAddress($event)"
-                                    mltag="txt_selectsubportfolio">
+                                <ng-select [items]="addressList" [allowClear]="false" placeholder="Select sub-portfolio" [formControl]="address" (selected)="handleSelectedAddress($event)" mltag="txt_selectsubportfolio">
+
+
+
+
+
+
                                 </ng-select>
                             </div>
                         </div>
@@ -62,30 +62,30 @@
                         </div>
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.fundName}}
+                    <clr-dg-cell>{{tx.fundName}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.activeQuantity | moneyValue : 5 }}
+                    <clr-dg-cell>{{tx.activeQuantity | moneyValue : 5 }}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.realisePnl | moneyValue: 4}}
+                    <clr-dg-cell>{{tx.realisePnl | moneyValue: 4}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.unRealisePnl | moneyValue: 4}}
+                    <clr-dg-cell>{{tx.unRealisePnl | moneyValue: 4}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.lastMovement | date : 'dd/MM/yyyy'}}
+                    <clr-dg-cell>{{tx.lastMovement | date : 'dd/MM/yyyy'}}
+
                     </clr-dg-cell>
 
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -112,38 +112,38 @@
 
             <clr-dg-row *clrDgItems="let tx of relatedTxList">
 
-                <clr-dg-cell>
-                    {{tx.transactionInstrumentName}}
+                <clr-dg-cell>{{tx.transactionInstrumentName}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionType | txType}}
+                <clr-dg-cell>{{tx.transactionType | txType}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionRefId | padding : 10 }}
+                <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionPrice | moneyValue: 4}}
+                <clr-dg-cell>{{tx.transactionPrice | moneyValue: 4}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionUnits | moneyValue : 5}}
+                <clr-dg-cell>{{tx.transactionUnits | moneyValue : 5}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionSettlement | moneyValue: 4}}
+                <clr-dg-cell>{{tx.transactionSettlement | moneyValue: 4}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionDate | date : 'dd/MM/yyyy' }}
+                <clr-dg-cell>{{tx.transactionDate | date : 'dd/MM/yyyy' }}
+
                 </clr-dg-cell>
 
             </clr-dg-row>
 
-            <clr-dg-footer>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>

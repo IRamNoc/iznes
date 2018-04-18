@@ -14,8 +14,8 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <span>
-                Please fill up the following information to {{subtitleLabel}} a new share:
+            <span>Please fill up the following information to {{subtitleLabel}} a new share:
+
             </span>
 
             <form [formGroup]="placeOrdersFormGroup" (ngSubmit)="handleSubmitButtonClick()">
@@ -23,10 +23,10 @@
                     <!-- General investment information -->
                     <div class="well">
                         <div class="row panel-header">
-                            <h4 class="col-sm-12"
-                                (click)="isGenInvestAccordionOpened = !isGenInvestAccordionOpened; $event.preventDefault();">
-                                <i class="fa fa-chevron-down" [class.reverse]="isGenInvestAccordionOpened"></i>
-                                General Investment Information
+                            <h4 class="col-sm-12" (click)="isGenInvestAccordionOpened = !isGenInvestAccordionOpened; $event.preventDefault();">
+
+                                <i class="fa fa-chevron-down" [class.reverse]="isGenInvestAccordionOpened"></i><span mltag="txt_generalinvestmentinformation">General Investment Information</span>
+
                             </h4>
                         </div>
 
@@ -34,27 +34,27 @@
                             <div class="col-sm-6">
                                 <!-- Asset management company -->
                                 <label for="assetManagementCompany">
-                                    <span>Asset Management Company:</span>
+                                    <span><span mltag="txt_assetmanagementcompany">Asset Management Company</span>:</span>
                                 </label>
 
-                                <input id="assetManagementCompany"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="assetManagementCompany"/>
+                                <input id="assetManagementCompany" class="form-control" type="text" formControlName="assetManagementCompany">
+
+
+
                             </div>
 
                             <!-- Investment portfolio -->
                             <div class="col-sm-6">
-                                <label for="investmentPortfolio">Investment Portfolio:</label>
+                                <label for="investmentPortfolio"><span mltag="txt_investmentportfolio">Investment Portfolio</span>:</label>
 
                                 <div class="form-control">
                                     <div class="form-group col-sm-6">
-                                        <ng-select id="investmentPortfolio"
-                                                   placeholder="Select an investment portfolio"
-                                                   [items]="investmentPortfolioItems"
-                                                   [allowClear]="true"
-                                                   [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']"
-                                                   (selected)="handleDropdownItemSelect($event)">
+                                        <ng-select id="investmentPortfolio" placeholder="Select an investment portfolio" [items]="investmentPortfolioItems" [allowClear]="true" [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']" (selected)="handleDropdownItemSelect($event)" mltag="txt_selectaninvestmentportfolio">
+
+
+
+
+
                                         </ng-select>
                                     </div>
                                 </div>
@@ -63,72 +63,72 @@
                             <!-- Entry/exit fees -->
                             <div class="col-sm-6">
                                 <label for="entryExitFees">{{entryExitFeesLabel}} fees:</label>
-                                <input id="entryExitFees"
-                                       class="form-control"
-                                       type="number"
-                                       formControlName="entryExitFees"/>
+                                <input id="entryExitFees" class="form-control" type="number" formControlName="entryExitFees">
+
+
+
                             </div>
 
                             <!-- MiFID -->
                             <div class="well">
                                 <div class="row panel-header">
-                                    <h4 class="col-sm-12"
-                                        (click)="isMifidAccordionOpened = !isMifidAccordionOpened; $event.preventDefault();">
-                                        <i class="fa fa-chevron-down" [class.reverse]="isMifidAccordionOpened"></i>
-                                        MiFID II Costs & Charges
+                                    <h4 class="col-sm-12" (click)="isMifidAccordionOpened = !isMifidAccordionOpened; $event.preventDefault();">
+
+                                        <i class="fa fa-chevron-down" [class.reverse]="isMifidAccordionOpened"></i><span mltag="txt_mifidiicostscharges">MiFID II Costs & Charges</span>
+
                                     </h4>
                                 </div>
 
                                 <div class="row panel-body" [class.hidden]="!isMifidAccordionOpened">
                                     <!-- One-off charges -->
                                     <div class="col-sm-6">
-                                        <label for="oneOffCharges">One-off charges:</label>
-                                        <input id="oneOffCharges"
-                                               class="form-control"
-                                               type="number"
-                                               formControlName="oneOffCharges"/>
+                                        <label for="oneOffCharges"><span mltag="txt_oneoffcharges">One-off charges</span>:</label>
+                                        <input id="oneOffCharges" class="form-control" type="number" formControlName="oneOffCharges">
+
+
+
                                     </div>
 
                                     <!-- On-going charges -->
                                     <div class="col-sm-6">
-                                        <label for="onGoingCharges">On-going charges:</label>
-                                        <input id="onGoingCharges"
-                                               class="form-control"
-                                               type="number"
-                                               formControlName="onGoingCharges"/>
+                                        <label for="onGoingCharges"><span mltag="txt_ongoingcharges">On-going charges</span>:</label>
+                                        <input id="onGoingCharges" class="form-control" type="number" formControlName="onGoingCharges">
+
+
+
                                     </div>
 
                                     <!-- Costs related to transactions initiated -->
                                     <div class="col-sm-6">
-                                        <label for="costsTransactionsInitiated">
-                                            Costs related to transactions initiated:
+                                        <label for="costsTransactionsInitiated"><span mltag="txt_costsrelatedtotransactionsinitd82e13ff15">Costs related to transactions initiated</span>:
+
                                         </label>
 
-                                        <input id="costsTransactionsInitiated"
-                                               class="form-control"
-                                               type="number"
-                                               formControlName="costsTransactionsInitiated"/>
+                                        <input id="costsTransactionsInitiated" class="form-control" type="number" formControlName="costsTransactionsInitiated">
+
+
+
                                     </div>
 
                                     <!-- Charges related to anciliary services -->
                                     <div class="col-sm-6">
-                                        <label for="chargesAnciliaryServices">
-                                            Charges related to anciliary services:
+                                        <label for="chargesAnciliaryServices"><span mltag="txt_chargesrelatedtoanciliaryservie59bdcd494">Charges related to anciliary services</span>:
+
                                         </label>
 
-                                        <input id="chargesAnciliaryServices"
-                                               class="form-control"
-                                               type="number"
-                                               formControlName="chargesAnciliaryServices"/>
+                                        <input id="chargesAnciliaryServices" class="form-control" type="number" formControlName="chargesAnciliaryServices">
+
+
+
                                     </div>
 
                                     <!-- Incidental costs -->
                                     <div class="col-sm-6">
-                                        <label for="incidentalCosts">Incidental costs:</label>
-                                        <input id="incidentalCosts"
-                                               class="form-control"
-                                               type="number"
-                                               formControlName="incidentalCosts"/>
+                                        <label for="incidentalCosts"><span mltag="txt_incidentalcosts">Incidental costs</span>:</label>
+                                        <input id="incidentalCosts" class="form-control" type="number" formControlName="incidentalCosts">
+
+
+
                                     </div>
                                 </div>
                             </div>
@@ -139,10 +139,10 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <h4 class="col-sm-12"
-                                (click)="isProductInfoAccordionOpened = !isProductInfoAccordionOpened; $event.preventDefault();">
-                                <i class="fa fa-chevron-down" [class.reverse]="isProductInfoAccordionOpened"></i>
-                                Product Information
+                            <h4 class="col-sm-12" (click)="isProductInfoAccordionOpened = !isProductInfoAccordionOpened; $event.preventDefault();">
+
+                                <i class="fa fa-chevron-down" [class.reverse]="isProductInfoAccordionOpened"></i><span mltag="txt_productinformation">Product Information</span>
+
                             </h4>
                         </div>
 
@@ -150,90 +150,90 @@
                         <div class="row panel-body" [class.hidden]="!isProductInfoAccordionOpened">
                             <!-- ISIN -->
                             <div class="col-sm-6">
-                                <label for="isin">ISIN:</label>
-                                <input id="isin"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="isin"/>
+                                <label for="isin"><span mltag="txt_isin">ISIN</span>:</label>
+                                <input id="isin" class="form-control" type="text" formControlName="isin">
+
+
+
                             </div>
 
                             <!-- Share name -->
                             <div class="col-sm-6">
-                                <label for="shareName">Share Name:</label>
-                                <input id="shareName"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="shareName"/>
+                                <label for="shareName"><span mltag="txt_sharename">Share Name</span>:</label>
+                                <input id="shareName" class="form-control" type="text" formControlName="shareName">
+
+
+
                             </div>
 
                             <!-- Asset class -->
                             <div class="col-sm-6">
-                                <label for="assetClass">Asset Class:</label>
-                                <input id="assetClass"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="assetClass"/>
+                                <label for="assetClass"><span mltag="txt_assetclass">Asset Class</span>:</label>
+                                <input id="assetClass" class="form-control" type="text" formControlName="assetClass">
+
+
+
                             </div>
 
                             <!-- SRRI -->
                             <div class="col-sm-6">
-                                <label for="srri">SRRI:</label>
-                                <input id="srri"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="srri"/>
+                                <label for="srri"><span mltag="txt_srri">SRRI</span>:</label>
+                                <input id="srri" class="form-control" type="text" formControlName="srri">
+
+
+
                             </div>
 
                             <!-- SRI -->
                             <div class="col-sm-6">
-                                <label for="sri">SRI:</label>
-                                <input id="sri"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="sri"/>
+                                <label for="sri"><span mltag="txt_sri">SRI</span>:</label>
+                                <input id="sri" class="form-control" type="text" formControlName="sri">
+
+
+
                             </div>
 
                             <!-- Share Currency -->
                             <div class="col-sm-6">
-                                <label for="shareCurrency">Share Currency:</label>
-                                <input id="shareCurrency"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="shareCurrency"/>
+                                <label for="shareCurrency"><span mltag="txt_sharecurrency">Share Currency</span>:</label>
+                                <input id="shareCurrency" class="form-control" type="text" formControlName="shareCurrency">
+
+
+
                             </div>
 
                             <!-- NAV -->
                             <div class="col-sm-6">
-                                <label for="nav">NAV:</label>
-                                <input id="nav"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="nav"/>
+                                <label for="nav"><span mltag="txt_nav">NAV</span>:</label>
+                                <input id="nav" class="form-control" type="text" formControlName="nav">
+
+
+
                             </div>
 
                             <!-- NAV date -->
                             <div class="col-sm-6">
-                                <label for="navDate">NAV Date:</label>
+                                <label for="navDate"><span mltag="txt_navdate">NAV Date</span>:</label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="navDate"
-                                           placeholder="Choose a date"
-                                           formControlName="navDate"
-                                           [dpDayPicker]="datePickerConfig"
-                                           mode="day"
-                                           theme="dp-material"
-                                           mltag="txt_chooseadate"/>
+                                    <input id="navDate" placeholder="Choose a date" formControlName="navDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
                                 </div>
                             </div>
 
                             <!-- Decimalization -->
                             <div class="col-sm-6">
-                                <label for="decimalization">Decimalization:</label>
-                                <input id="decimalization"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="decimalization"/>
+                                <label for="decimalization"><span mltag="txt_decimalization">Decimalization</span>:</label>
+                                <input id="decimalization" class="form-control" type="text" formControlName="decimalization">
+
+
+
                             </div>
                         </div>
                     </div>
@@ -242,10 +242,10 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <h4 class="col-sm-12"
-                                (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
-                                <i class="fa fa-chevron-down" [class.reverse]="isDatesInfoAccordionOpened"></i>
-                                Dates Information
+                            <h4 class="col-sm-12" (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
+
+                                <i class="fa fa-chevron-down" [class.reverse]="isDatesInfoAccordionOpened"></i><span mltag="txt_datesinformation">Dates Information</span>
+
                             </h4>
                         </div>
 
@@ -253,65 +253,65 @@
                         <div class="row panel-body" [class.hidden]="!isDatesInfoAccordionOpened">
                             <!-- Order Date -->
                             <div class="col-sm-6">
-                                <label for="orderDate">Order Date:</label>
+                                <label for="orderDate"><span mltag="txt_orderdate">Order Date</span>:</label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="orderDate"
-                                           placeholder="Choose a date"
-                                           formControlName="orderDate"
-                                           [dpDayPicker]="datePickerConfig"
-                                           mode="day"
-                                           theme="dp-material"
-                                           mltag="txt_chooseadate"/>
+                                    <input id="orderDate" placeholder="Choose a date" formControlName="orderDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
                                 </div>
                             </div>
 
                             <!-- Cut-off Date -->
                             <div class="col-sm-6">
-                                <label for="cutOffDate">Cut-off Date:</label>
+                                <label for="cutOffDate"><span mltag="txt_cutoffdate">Cut-off Date</span>:</label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="cutOffDate"
-                                           placeholder="Choose a date"
-                                           formControlName="cutOffDate"
-                                           [dpDayPicker]="datePickerConfig"
-                                           mode="day"
-                                           theme="dp-material"
-                                           mltag="txt_chooseadate"/>
+                                    <input id="cutOffDate" placeholder="Choose a date" formControlName="cutOffDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
                                 </div>
                             </div>
 
                             <!-- NAV Date -->
                             <div class="col-sm-6">
-                                <label for="dateInfoNavDate">NAV Date:</label>
+                                <label for="dateInfoNavDate"><span mltag="txt_navdate">NAV Date</span>:</label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="dateInfoNavDate"
-                                           placeholder="Choose a date"
-                                           formControlName="dateInfoNavDate"
-                                           [dpDayPicker]="datePickerConfig"
-                                           mode="day"
-                                           theme="dp-material"
-                                           mltag="txt_chooseadate"/>
+                                    <input id="dateInfoNavDate" placeholder="Choose a date" formControlName="dateInfoNavDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
                                 </div>
                             </div>
 
                             <!-- Settlement Date -->
                             <div class="col-sm-6">
-                                <label for="settlementDate">Settlement Date:</label>
+                                <label for="settlementDate"><span mltag="txt_settlementdate">Settlement Date</span>:</label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="settlementDate"
-                                           placeholder="Choose a date"
-                                           formControlName="settlementDate"
-                                           [dpDayPicker]="datePickerConfig"
-                                           mode="day"
-                                           theme="dp-material"
-                                           mltag="txt_chooseadate"/>
+                                    <input id="settlementDate" placeholder="Choose a date" formControlName="settlementDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -321,10 +321,10 @@
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
-                            <h4 class="col-sm-12"
-                                (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
-                                <i class="fa fa-chevron-down" [class.reverse]="isOrderInfoAccordionOpened"></i>
-                                Order Information
+                            <h4 class="col-sm-12" (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
+
+                                <i class="fa fa-chevron-down" [class.reverse]="isOrderInfoAccordionOpened"></i><span mltag="txt_orderinformation">Order Information</span>
+
                             </h4>
                         </div>
 
@@ -332,49 +332,49 @@
                         <div class="row panel-body" [class.hidden]="!isOrderInfoAccordionOpened">
                             <!-- Order Reference -->
                             <div class="col-sm-6">
-                                <label for="orderReference">Order Reference:</label>
-                                <input id="orderReference"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="orderReference"/>
+                                <label for="orderReference"><span mltag="txt_orderreference">Order Reference</span>:</label>
+                                <input id="orderReference" class="form-control" type="text" formControlName="orderReference">
+
+
+
                             </div>
 
                             <!-- Order Type -->
                             <div class="col-sm-6">
-                                <label for="orderType">Order Type:</label>
-                                <input id="orderType"
-                                       class="form-control"
-                                       type="text"
-                                       formControlName="orderType"/>
+                                <label for="orderType"><span mltag="txt_ordertype">Order Type</span>:</label>
+                                <input id="orderType" class="form-control" type="text" formControlName="orderType">
+
+
+
                             </div>
 
-                            <span class="col-sm-12">Please type below a quantity or an amount:</span>
+                            <span class="col-sm-12"><span mltag="txt_pleasetypebelowaquantityoranam6e693cbd2c">Please type below a quantity or an amount</span>:</span>
 
                             <!-- Quantity -->
                             <div class="col-sm-6">
-                                <label for="quantity">Quantity:</label>
-                                <input id="quantity"
-                                       class="form-control"
-                                       type="number"
-                                       formControlName="quantity"/>
+                                <label for="quantity"><span mltag="txt_quantity">Quantity</span>:</label>
+                                <input id="quantity" class="form-control" type="number" formControlName="quantity">
+
+
+
                             </div>
 
                             <!-- Amount -->
                             <div class="col-sm-6">
-                                <label for="amount">Amount:</label>
-                                <input id="amount"
-                                       class="form-control"
-                                       type="number"
-                                       formControlName="amount"/>
+                                <label for="amount"><span mltag="txt_amount">Amount</span>:</label>
+                                <input id="amount" class="form-control" type="number" formControlName="amount">
+
+
+
                             </div>
 
                             <!-- Comment -->
                             <div class="col-sm-12">
-                                <label for="comment">Comment:</label>
-                                <textarea id="comment"
-                                          class="form-control"
-                                          placeholder="Please feel free to type any comment here"
-                                          formControlName="comment">
+                                <label for="comment"><span mltag="txt_comment">Comment</span>:</label>
+                                <textarea id="comment" class="form-control" placeholder="Please feel free to type any comment here" formControlName="comment" mltag="txt_pleasefeelfreetotypeanycomment87caff4f84">
+
+
+
                                 </textarea>
                             </div>
                         </div>
@@ -383,37 +383,38 @@
                     <!-- Checkbox -->
                     <div class="form-group col-sm-12">
                         <div class="form-check">
-                            <input id="checkbox"
-                                   class="form-check-input"
-                                   type="checkbox"
-                                   formControlName="isDisclaimerChecked"
-                                   value="false"/>
+                            <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isDisclaimerChecked" value="false">
 
-                            <label class="form-check-label" for="checkbox">
-                                I confirm that I have read and understood the latest version of the Key Investor
+
+
+
+
+                            <label class="form-check-label" for="checkbox" mltag="txt_iconfirmthatihavereadandundersd81b480003">I confirm that I have read and understood the latest version of the Key Investor
                                 Information Document (KIID) for the fund share I am considering investing in.
+
+
                             </label>
                         </div>
 
-                        <div class="form-block">
-                            The latest version of the KIID can be accessed via the link below: {{link}}
+                        <div class="form-block">The latest version of the KIID can be accessed via the link below: {{link}}
+
                         </div>
                     </div>
 
                     <!-- Cancel and save buttons -->
                     <div class="form-group col-sm-12">
-                        <button id="cancelButton"
-                                type="button"
-                                class="btn btn-light"
-                                (click)="handleCancelButtonClick()">
+                        <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()" mltag="txt_cancel">
+
+
                             Cancel
+
                         </button>
 
-                        <button id="saveButton"
-                                type="submit"
-                                class="btn btn-primary"
-                                [disabled]="!placeOrdersFormGroup.controls['isDisclaimerChecked'].value">
+                        <button id="saveButton" type="submit" class="btn btn-primary" [disabled]="!placeOrdersFormGroup.controls['isDisclaimerChecked'].value" mltag="txt_save">
+
+
                             Save
+
                         </button>
                     </div>
                 </section>
@@ -426,12 +427,12 @@
 <clr-modal [(clrModalOpen)]="isConfirmModalOpened" [clrModalClosable]="false">
     <div class="modal-title">
         <h4 class="modal-title-text">
-            <span class="ml_translated">Order confirmation</span>
+            <span class="ml_translated" mltag="txt_orderconfirmation">Order confirmation</span>
         </h4>
     </div>
 
     <div class="modal-body text-center">
-        <p>Please check information about your order before confirm it:</p>
+        <p><span mltag="txt_pleasecheckinformationaboutyou45ff2321b5">Please check information about your order before confirm it</span>:</p>
         <p><i class="fa fa-exclamation-triangle modal-icon text-muted text-danger"></i></p>
         <p>Investment Portfolio: {{selectedDropdownItem}}</p>
         <p>Share Name: {{placeOrdersFormGroup.controls['shareName'].value}}</p>
@@ -443,15 +444,15 @@
     </div>
 
     <div class="modal-footer text-center">
-        <button id="modalCancelButton"
-                type="button"
-                class="btn btn-outline-info"
-                (click)="handleModalCancelButtonClick()">
+        <button id="modalCancelButton" type="button" class="btn btn-outline-info" (click)="handleModalCancelButtonClick()" mltag="txt_cancel">
+
+
             Cancel
+
         </button>
 
-        <button id="modalConfirmButton" type="button" class="btn btn-primary" (click)="handleModalConfirmButtonClick()">
-            Confirm
+        <button id="modalConfirmButton" type="button" class="btn btn-primary" (click)="handleModalConfirmButtonClick()" mltag="txt_confirm">Confirm
+
         </button>
     </div>
 </clr-modal>

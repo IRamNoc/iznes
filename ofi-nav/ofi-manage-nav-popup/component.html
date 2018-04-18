@@ -1,41 +1,41 @@
 <clr-modal [(clrModalOpen)]="isOpen">
     <h3 class="modal-title">
-        <span class="ml_translated" mltag="txt_addnewnav" *ngIf="isAddMode()">Add New NAV</span>
-        <span class="ml_translated" mltag="txt_editnav" *ngIf="isEditMode()">Edit NAV</span>
-        <span class="ml_translated" mltag="txt_deletenav" *ngIf="isDeleteMode()">Delete NAV</span>
+        <span class="ml_translated" *ngIf="isAddMode()" mltag="txt_addnewnav">Add New NAV</span>
+        <span class="ml_translated" *ngIf="isEditMode()" mltag="txt_editnav">Edit NAV</span>
+        <span class="ml_translated" *ngIf="isDeleteMode()" mltag="txt_deletenav">Delete NAV</span>
     </h3>
     <div class="modal-body">
         <form [formGroup]="navForm" *ngIf="isOpen && navForm">
             <div class="row">
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="shareName" mltag="txt_sharename">Share name</label>
-                    <input type="text" id="shareName" name="shareName" value="{{share.fundShareName}}" readonly/>
+                    <input type="text" id="shareName" name="shareName" value="{{share.fundShareName}}" readonly>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="isin" mltag="txt_isin">ISIN</label>
-                    <input type="text" id="isin" name="isin" value="{{share.isin}}" readonly/>
+                    <input type="text" id="isin" name="isin" value="{{share.isin}}" readonly>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-8">
                         <label class="control-label" for="nav" mltag="txt_latestnav" *ngIf="!isDeleteMode()">Latest NAV</label>
-                        <label class="control-label" for="nav" mltag="txt_latestnav" *ngIf="isDeleteMode()">NAV</label>
+                        <label class="control-label" for="nav" mltag="txt_nav" *ngIf="isDeleteMode()">NAV</label>
                         <input type="text" id="nav" name="nav" formControlName="nav" />
                     </div>
 
                     <div class="form-group col-sm-4">
-                        <label class="control-label">&nbsp;</label>
-                        <input type="text" id="navCurrency" name="navCurrency" value="{{getCurrencyString(share.currency)}}" readonly/>
+                        <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
+                        <input type="text" id="navCurrency" name="navCurrency" value="{{getCurrencyString(share.currency)}}" readonly>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12" *ngIf="!isDeleteMode()">
                     <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
-                    <input type="text" id="nav" name="nav" formControlName="price" appNumberFormatter [fractionSize]="2"/>
+                    <input type="text" id="nav" name="nav" formControlName="price" appNumberFormatter [fractionSize]="2">
 
-                    <span class="text-danger" mltag="txt_navcautionmsg" [hidden]="!navExceedsThreshold">
-                        Caution: the NAV is being modified by more than 10%.
+                    <span class="text-danger" [hidden]="!navExceedsThreshold" mltag="txt_cautionthenavisbeingmodifiedby7cc5550a2e">Caution: the NAV is being modified by more than 10%.
+
                     </span>
                 </div>
 
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="form-group col-sm-6">
-                    <label class="control-label" for="navPublishDate" mltag="txt_navpubdate">Publication Date</label>
+                    <label class="control-label" for="navPublishDate" mltag="txt_publicationdate">Publication Date</label>
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
                         <input id="navPublishDate" name="navPublishDate" placeholder="Select date" mltag="txt_selectdate"
@@ -67,18 +67,16 @@
 
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="status" mltag="txt_status">Status</label>
-                    <ng-select id="status"
-                               [disabled]="navForm.controls['status'].disabled"
-                               class="fluid-width"
-                               [items]="statusItems"
-                               formControlName="status"
-                               [allowClear]="false"
-                               placeholder="Select status"
-                               mltag="txt_selectdstatus">
+                    <ng-select id="status" class="fluid-width"
+                        [disabled]="navForm.controls['status'].disabled"
+                        [items]="statusItems" formControlName="status"
+                        [allowClear]="false"
+                        placeholder="Select status"
+                        mltag="txt_selectstatus">
                     </ng-select>
                 </div>
 
-                <span class="text-danger" mltag="txt_navwarningmsg" [hidden]="!showStatusWarning()">
+                <span class="text-danger" [hidden]="!showStatusWarning()" mltag="txt_warningifyouclickvalidatethena30f2227d93">
                     Warning: If you click "validate", the NAV will be modified at the selected date.
                 </span>
             </div>
@@ -86,16 +84,14 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary"
-                (click)="close()" mltag="txt_cancel">Cancel
+        <button class="btn btn-secondary" (click)="close()" mltag="txt_cancel">
+            Cancel
         </button>
-
-        <button class="btn btn-primary" *ngIf="!isDeleteMode()"
-                [disabled]="!navFormValid()"
-                (click)="updateNav()" mltag="txt_validate">Validate
+        <button class="btn btn-primary" *ngIf="!isDeleteMode()" [disabled]="!navFormValid()" (click)="updateNav()" mltag="txt_validate">
+            Validate
         </button>
-        <button class="btn btn-primary" *ngIf="isDeleteMode()"
-                (click)="deleteNav()" mltag="txt_delete">Delete
+        <button class="btn btn-primary" *ngIf="isDeleteMode()" (click)="deleteNav()" mltag="txt_delete">
+            Delete
         </button>
     </div>
 </clr-modal>

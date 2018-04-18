@@ -16,53 +16,53 @@
                         <div class="row form-group">
                             <div class="col-sm-12">
                                 <label mltag="txt_fundmanager">Fund Manager</label>
-                                <ng-select
-                                        [items]="filteredFundAssetList"
-                                        [allowClear]="true"
-                                        [formControl]="fundShareForm.controls['selectFund']">
+                                <ng-select [items]="filteredFundAssetList" [allowClear]="true" [formControl]="fundShareForm.controls['selectFund']">
+
+
+
                                 </ng-select>
-                                <button
-                                        (click)="handleCompanySelection()"
-                                        class="btn btn-primary btn-end" mltag="txt_go">Go</button>
+                                <button (click)="handleCompanySelection()" class="btn btn-primary btn-end" mltag="txt_go">
+
+                                    Go</button>
                             </div>
                         </div>
                     </form>
 
                     <div *ngIf="showStats">
-                        <hr class="dashed"/>
+                        <hr class="dashed">
                         <!-- Holder list table. -->
                         <div class="row">
                             <div class="col-sm-12 col-md-6">
                                 <table class="table">
                                     <thead>
-                                    <tr>
-                                        <th class="text-left"><span mltag="txt_sub_portfolio">Sub Portfolio</span></th>
-                                        <th><span mltag="txt_asset">Asset</span></th>
-                                        <th class="text-left"><span mltag="txt_asset_manager">Asset Manager</span></th>
-                                        <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
-                                        <th class="text-right"><span mltag="txt_estimated_amount">Estimated Amount</span></th>
-                                        <th class="text-right"><span mltag="txt_ratio">Ratio</span></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="text-left"><span mltag="txt_subportfolio">Sub Portfolio</span></th>
+                                            <th><span mltag="txt_asset">Asset</span></th>
+                                            <th class="text-left"><span mltag="txt_assetmanager">Asset Manager</span></th>
+                                            <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
+                                            <th class="text-right"><span mltag="txt_estimatedamount">Estimated Amount</span></th>
+                                            <th class="text-right"><span mltag="txt_ratio">Ratio</span></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let holding of fundStats.assets">
-                                        <!--<td colspan="5">{{ holding | json }}</td>-->
-                                        <td class="text-left">{{ holding.walletName }}</td>
-                                        <td class="text-left">{{ holding.asset }}</td>
-                                        <td class="text-left">{{ holding.assetManager }}</td>
-                                        <td class="text-right">{{ holding.quantity | moneyValue: 5 }}</td>
-                                        <td class="text-right">&euro; {{ holding.estimatedAmount | moneyValue: 4 }}</td>
-                                        <td class="text-right">{{ holding.ratio }}%</td>
-                                    </tr>
+                                        <tr *ngFor="let holding of fundStats.assets">
+                                            <!--<td colspan="5">{{ holding | json }}</td>-->
+                                            <td class="text-left">{{ holding.walletName }}</td>
+                                            <td class="text-left">{{ holding.asset }}</td>
+                                            <td class="text-left">{{ holding.assetManager }}</td>
+                                            <td class="text-right">{{ holding.quantity | moneyValue: 5 }}</td>
+                                            <td class="text-right">&euro; {{ holding.estimatedAmount | moneyValue: 4 }}</td>
+                                            <td class="text-right">{{ holding.ratio }}%</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-sm-12 col-md-6">
-                                <canvas *ngIf="fundStats.graphLabels.length"
-                                        baseChart
-                                        [data]="fundStats.graphData"
-                                        [labels]="fundStats.graphLabels"
-                                        [chartType]="'pie'"></canvas>
+                                <canvas *ngIf="fundStats.graphLabels.length" baseChart [data]="fundStats.graphData" [labels]="fundStats.graphLabels" [chartType]="'pie'">
+
+
+
+                                </canvas>
                             </div>
                         </div>
                     </div>

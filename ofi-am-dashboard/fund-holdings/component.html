@@ -15,14 +15,14 @@
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label id="fund-share-label" mltag="txt_pleaseselectafundshareinthislia3458b556c">
-                                    Please select a fund share in this list
+                                <label id="fund-share-label" mltag="txt_pleaseselectafundshareinthislia3458b556c">Please select a fund share in this list
+
                                 </label>
 
-                                <ng-select [containerWidth]="'80%'"
-                                           [items]="filteredUserAssetList"
-                                           [allowClear]="false"
-                                           [formControl]="fundShareForm.controls['selectFund']">
+                                <ng-select [containerWidth]="'80%'" [items]="filteredUserAssetList" [allowClear]="false" [formControl]="fundShareForm.controls['selectFund']">
+
+
+
                                 </ng-select>
                                 <!--<button-->
                                 <!--(click)="handleFundSelection()"-->
@@ -33,7 +33,7 @@
                     </form>
 
                     <div *ngIf="showStats">
-                        <hr class="dashed"/>
+                        <hr class="dashed">
 
                         <form>
                             <div class="row form-group">
@@ -58,7 +58,7 @@
                                         <span mltag="txt_nav">NAV</span>
                                     </label>
                                     <div>
-                                        <span class="readonly-field">{{fundStats.navPrice | moneyValue: 2}}  <small>Last updated: {{fundStats.navDate}}</small></span>
+                                        <span class="readonly-field">{{fundStats.navPrice | moneyValue: 2}} <small>Last updated: {{fundStats.navDate}}</small></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -80,44 +80,44 @@
                             </div>
                         </form>
 
-                        <hr class="dashed"/>
+                        <hr class="dashed">
 
                         <!-- Holder list table. -->
                         <div *ngIf="fundStats.holders && fundStats.holders.length > 0" class="row">
                             <div class="col-sm-12 col-md-6">
                                 <table class="table">
                                     <thead>
-                                    <tr>
-                                        <th class="text-left"><span mltag="txt_holder">Holder</span></th>
-                                        <th class="text-right"><span mltag="txt_amount">Amount</span> (€)</th>
-                                        <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
-                                        <th class="text-right"><span mltag="txt_ratioamount">Ratio Amount</span></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="text-left"><span mltag="txt_holder">Holder</span></th>
+                                            <th class="text-right"><span mltag="txt_amount">Amount</span> </th>
+                                            <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
+                                            <th class="text-right"><span mltag="txt_ratioamount">Ratio Amount</span></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let holder of fundStats.holders">
-                                        <!--<td colspan="4">{{ holder | json }}</td>-->
-                                        <td class="text-left">{{ holder.label }}</td>
-                                        <td class="text-right">€ {{ holder.amount | moneyValue: 4 }}</td>
-                                        <td class="text-right">{{ holder.quantity | moneyValue: 5 }}</td>
-                                        <td class="text-right">{{ holder.ratio }}%</td>
-                                    </tr>
+                                        <tr *ngFor="let holder of fundStats.holders">
+                                            <!--<td colspan="4">{{ holder | json }}</td>-->
+                                            <td class="text-left">{{ holder.label }}</td>
+                                            <td class="text-right">€ {{ holder.amount | moneyValue: 4 }}</td>
+                                            <td class="text-right">{{ holder.quantity | moneyValue: 5 }}</td>
+                                            <td class="text-right">{{ holder.ratio }}%</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-sm-12 col-md-6">
-                                <canvas *ngIf="fundStats.graphLabels && fundStats.graphLabels.length > 0"
-                                        baseChart
-                                        [data]="fundStats.graphData"
-                                        [labels]="fundStats.graphLabels"
-                                        [chartType]="'pie'"
-                                        (chartHover)="chartHovered($event)"
-                                        (chartClick)="chartClicked($event)"></canvas>
+                                <canvas *ngIf="fundStats.graphLabels && fundStats.graphLabels.length > 0" baseChart [data]="fundStats.graphData" [labels]="fundStats.graphLabels" [chartType]="'pie'" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+
+
+
+
+
+                                </canvas>
                             </div>
                         </div>
                         <div *ngIf="fundStats.holders && fundStats.holders.length == 0" class="row">
                             <div class="col-sm-12">
-                                <h2 class="statement">No data to show</h2>
+                                <h2 class="statement" mltag="txt_nodatatoshow">No data to show</h2>
                             </div>
                         </div>
                     </div>
