@@ -121,17 +121,17 @@
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column>
+                <clr-dg-column class="col-date">
                     <span mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_status">Status</span>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_publicationdate">Publication Date</span>
                 </clr-dg-column>
                 <!--<clr-dg-column>-->
                 <!--<span>Use</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column>
-                    <span mltag="txt_publicationdate">Publication Date</span>
+                <clr-dg-column class="col-currency">
+                    <span mltag="txt_fundcurrency">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_nav">NAV</span>
@@ -141,10 +141,7 @@
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_shareaum">Share AUM</span>
-                </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_fundcurrency">Fund Currency</span>
-                </clr-dg-column>
+                </clr-dg-column>                
                 <!--<clr-dg-column>-->
                 <!--<span>Parity</span>-->
                 <!--</clr-dg-column>-->
@@ -154,13 +151,28 @@
                 <clr-dg-column>
                     <span mltag="txt_coupons">Coupons</span>
                 </clr-dg-column>
+                <clr-dg-column class="col-status">
+                    <span mltag="txt_status">Status</span>
+                </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index">
-                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-currency">{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})</clr-dg-cell>
                     <clr-dg-cell>
+                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
                                 <span class="label label-success" mltag="txt_validated">Validated</span>
@@ -173,20 +185,6 @@
                                 <span class="label label-warning" mltag="txt_technical">Technical</span>
                             </span>
                         </span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
-                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
-
-                    </clr-dg-cell>
-                    <clr-dg-cell>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
