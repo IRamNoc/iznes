@@ -175,7 +175,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.ofiOrdersService.setOrderBuffer(orderId);
 
         /* Send the user to their order page. */
-        if ([46].indexOf(this.myDetails.userType) != -1) {
+        if ([46].indexOf(this.myDetails.userType) !== -1) {
             /* Is holder. */
             this._router.navigateByUrl('/order-book/my-orders');
         } else {
@@ -193,7 +193,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.ofiOrdersService.setOrderFilter(journey);
 
         /* Send the user to their order page. */
-        if ([46].indexOf(this.myDetails.userType) != -1) {
+        if ([46].indexOf(this.myDetails.userType) !== -1) {
             /* Is holder. */
             this._router.navigateByUrl('/order-book/my-orders');
         } else {
@@ -211,7 +211,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      */
     public beginListOfFundsJourney(): void {
         /* Send the user to their order page. */
-        if ([46].indexOf(this.myDetails.userType) != -1) {
+        if ([46].indexOf(this.myDetails.userType) !== -1) {
             /* Is holder. */
             this._router.navigateByUrl('/list-of-funds');
         } else {
@@ -225,7 +225,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
     public beginBalanceJourney(): void {
         /* Send the user to their order page. */
-        if ([46].indexOf(this.myDetails.userType) != -1) {
+        if ([46].indexOf(this.myDetails.userType) !== -1) {
             /* Is holder. */
             this._router.navigateByUrl('/reports-section/pnl');
         } else {
@@ -284,7 +284,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
      */
     private padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if (!num && num != 0) return '';
+        if (!num && num !== 0) return '';
         zeros = zeros || 2;
 
         /* Variables. */
@@ -333,7 +333,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this._changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (let key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
     }

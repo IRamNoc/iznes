@@ -1,11 +1,11 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-align-left"></i> <span>KYC Documents</span></h1>
+    <h1><i class="fa fa-align-left"></i> <span mltag="txt_kycdocuments">KYC Documents</span></h1>
 </div>
 
 <!-- Main content. -->
 <div class="wrapper wrapper-content text-margin">
-    <p>Here's a list of all clients' KYC, organised by status:</p>
+    <p><span mltag="txt_heresalistofallclientskycorgan8b15e8832c">Here's a list of all clients' KYC, organised by status</span>:</p>
 </div>
 
 <div class="well" *ngFor="let panel of panelDefs">
@@ -25,16 +25,16 @@
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-row *clrDgItems="let row of panel.data">
                     <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
-                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">
-                            {{row[dataCol.dataSource]}}
+                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">{{row[dataCol.dataSource]}}
+
                         </a>
-                        <span *ngIf="!dataCol.hasLink">
-                            {{row[dataCol.dataSource]}}<ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
+                        <span *ngIf="!dataCol.hasLink">{{row[dataCol.dataSource]}}
+                            <ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
                         </span>
                     </clr-dg-cell>
                 </clr-dg-row>
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>

@@ -1,26 +1,26 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-umbrella"></i>
-        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
-        <span mltag="txt_" [hidden]="!isUpdate()">View Fund Share</span>
+        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
+        <span [hidden]="!isUpdate()" mltag="txt_viewfundshare">View Fund Share</span>
     </h1>
 </div>
 
 <clr-tabs *ngIf="loadUI()">
     <clr-tab>
         <button clrTabLink id="tabFundShareButton">
-            <span>Fund Share</span>
+            <span mltag="txt_fundshare">Fund Share</span>
         </button>
         <clr-tab-content class="outer">
             <div class="form-group row actions">
                 <div class="col-sm-12">
-                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
+                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom" mltag="txt_cancel">Cancel</button>
 
-                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop"
-                        (click)="saveFundShare()" [disabled]="!model.isValid()">
+                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop" (click)="saveFundShare()" [disabled]="!model.isValid()">
+
                         <i class="fa fa-save"></i>
-                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
-                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
+                        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
+                        <span [hidden]="!isUpdate()" mltag="txt_updatefundshare">Update Fund Share</span>
                     </button>
                 </div>
             </div>
@@ -28,8 +28,8 @@
             <clr-tabs>
                 <clr-tab>
                     <button clrTabLink id="tabKeyFactsButton">
-                        <span>
-                            Key Facts
+                        <span><span mltag="txt_keyfacts">Key Facts</span>
+
                             <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -39,7 +39,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].mandatory)"></i>
-                                        <h2 id="toggleKeyFactsMandatory" mltag="txt_">Key Facts: Main Information</h2>
+                                        <h2 id="toggleKeyFactsMandatory" mltag="txt_keyfactsmaininformation">Key Facts: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].optional)"></i>
-                                        <h2 id="toggleKeyFactsOptional" mltag="txt_">Key Facts: Optional Information</h2>
+                                        <h2 id="toggleKeyFactsOptional" mltag="txt_keyfactsoptionalinformation">Key Facts: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -64,8 +64,8 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCharacteristicsButton">
-                        <span>
-                            Characteristics
+                        <span><span mltag="txt_characteristics">Characteristics</span>
+
                             <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -75,7 +75,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['characteristic'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].mandatory)"></i>
-                                        <h2 id="toggleCharacteristicMandatory" mltag="txt_">Characteristics: Main Information</h2>
+                                        <h2 id="toggleCharacteristicMandatory" mltag="txt_characteristicsmaininformation64d7884a77">Characteristics: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['characteristic'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].optional)"></i>
-                                        <h2 id="toggleCharacteristicOptional" mltag="txt_">Characteristics: Optional Information</h2>
+                                        <h2 id="toggleCharacteristicOptional" mltag="txt_characteristicsoptionalinforma6a0bedd5ec">Characteristics: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -100,8 +100,8 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCalendarButton">
-                        <span>
-                            Calendar
+                        <span><span mltag="txt_calendar">Calendar</span>
+
                             <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*</span>
                         </span>
                     </button>
@@ -111,21 +111,21 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
-                                        <h2 id="toggleCalendarMandatory" mltag="txt_">Calendar: Main Information</h2>
+                                        <h2 id="toggleCalendarMandatory" mltag="txt_calendarmaininformation">Calendar: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
-                                <app-ofi-am-trade-cycle
-                                    [tradeType]="'Subscription'"
-                                    (modelEmitter)="calendarSubscriptionModelEvent($event)">
+                                <app-ofi-am-trade-cycle [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)">
+
+
                                 </app-ofi-am-trade-cycle>
 
-                                <app-ofi-am-trade-cycle
-                                    [tradeType]="'Redemption'"
-                                    (modelEmitter)="calendarRedemptionModelEvent($event)">
+                                <app-ofi-am-trade-cycle [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)">
+
+
                                 </app-ofi-am-trade-cycle>
-                                
+
                                 <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
                             </div>
 
@@ -133,7 +133,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['calendar'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].optional)"></i>
-                                        <h2 id="toggleCalendarOptional" mltag="txt_">Calendar: Optional Information</h2>
+                                        <h2 id="toggleCalendarOptional" mltag="txt_calendaroptionalinformation">Calendar: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -146,8 +146,8 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabFeesButton">
-                        <span>
-                            Fees
+                        <span><span mltag="txt_fees">Fees</span>
+
                             <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -157,7 +157,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['fees'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].mandatory)"></i>
-                                        <h2 id="toggleFeesMandatory" mltag="txt_">Fees: Main Information</h2>
+                                        <h2 id="toggleFeesMandatory" mltag="txt_feesmaininformation">Fees: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['fees'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].optional)"></i>
-                                        <h2 id="toggleFeesOptional" mltag="txt_">Fees: Optional Information</h2>
+                                        <h2 id="toggleFeesOptional" mltag="txt_feesoptionalinformation">Fees: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -182,8 +182,8 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabProfileButton">
-                        <span>
-                            Profile
+                        <span><span mltag="txt_profile">Profile</span>
+
                             <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -193,7 +193,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['profile'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].mandatory)"></i>
-                                        <h2 id="toggleProfileMandatory" mltag="txt_">Profile: Main Information</h2>
+                                        <h2 id="toggleProfileMandatory" mltag="txt_profilemaininformation">Profile: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['profile'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].optional)"></i>
-                                        <h2 id="toggleProfileOptional" mltag="txt_">Profile: Optional Information</h2>
+                                        <h2 id="toggleProfileOptional" mltag="txt_profileoptionalinformation">Profile: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabFTaxationButton">
-                        <span>Taxation</span>
+                        <span mltag="txt_taxation">Taxation</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -226,7 +226,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['taxation'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['taxation'].optional)"></i>
-                                        <h2 id="toggleTaxationOptional" mltag="txt_">Taxation: Optional Information</h2>
+                                        <h2 id="toggleTaxationOptional" mltag="txt_taxationoptionalinformation">Taxation: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -239,7 +239,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabRespresentationButton">
-                        <span>Representation</span>
+                        <span mltag="txt_representation">Representation</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -247,7 +247,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['representation'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['representation'].optional)"></i>
-                                        <h2 id="toggleRepresentationOptional" mltag="txt_">Representation: Optional Information</h2>
+                                        <h2 id="toggleRepresentationOptional" mltag="txt_representationoptionalinformat11d2d1d8c4">Representation: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabListingButton">
-                        <span>Listing</span>
+                        <span mltag="txt_listing">Listing</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -268,7 +268,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['listing'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['listing'].optional)"></i>
-                                        <h2 id="toggleListingOptional" mltag="txt_">Listing: Optional Information</h2>
+                                        <h2 id="toggleListingOptional" mltag="txt_listingoptionalinformation">Listing: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -281,7 +281,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabPRIIPButton">
-                        <span>PRIIP</span>
+                        <span mltag="txt_priip">PRIIP</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -289,7 +289,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['priip'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['priip'].optional)"></i>
-                                        <h2 id="togglePriipOptional" mltag="txt_">PRRIP: Optional Information</h2>
+                                        <h2 id="togglePriipOptional" mltag="txt_prripoptionalinformation">PRRIP: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -302,7 +302,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabSolvencyButton">
-                        <span>Solvency II</span>
+                        <span mltag="txt_solvencyii">Solvency II</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -310,7 +310,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['solvency'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['solvency'].optional)"></i>
-                                        <h2 id="toggleSolvencyOptional" mltag="txt_">Solvency II: Optional Information</h2>
+                                        <h2 id="toggleSolvencyOptional" mltag="txt_solvencyiioptionalinformation">Solvency II: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -323,8 +323,8 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabDocumentsButton">
-                        <span>
-                            Documents
+                        <span><span mltag="txt_documents">Documents</span>
+
                             <span class="required" [hidden]="model.documents.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -334,7 +334,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].mandatory)"></i>
-                                        <h2 id="toggleDocumentsMandatory" mltag="txt_">Documents: Main Information</h2>
+                                        <h2 id="toggleDocumentsMandatory" mltag="txt_documentsmaininformation">Documents: Main Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -346,7 +346,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].optional)"></i>
-                                        <h2 id="toggleDocumentsOptional" mltag="txt_">Documents: Optional Information</h2>
+                                        <h2 id="toggleDocumentsOptional" mltag="txt_documentsoptionalinformation">Documents: Optional Information</h2>
                                     </a>
                                 </div>
                             </div>
@@ -360,13 +360,13 @@
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
-                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">Cancel</button>
+                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom" mltag="txt_cancel">Cancel</button>
 
-                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom"
-                        (click)="saveFundShare()" [disabled]="!model.isValid()">
+                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
+
                         <i class="fa fa-save"></i>
-                        <span mltag="txt_" [hidden]="!isCreate()">Add new Fund Share</span>
-                        <span mltag="txt_" [hidden]="!isUpdate()">Update Fund Share</span>
+                        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
+                        <span [hidden]="!isUpdate()" mltag="txt_updatefundshare">Update Fund Share</span>
                     </button>
                 </div>
             </div>

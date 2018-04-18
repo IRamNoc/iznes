@@ -1,16 +1,16 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="ofi-kyc-invite-investors"><i class="fa fa-user-plus"></i> <span>Invite Investors to IZNES</span></h1>
+    <h1 id="ofi-kyc-invite-investors"><i class="fa fa-user-plus"></i> <span mltag="txt_inviteinvestorstoiznes">Invite Investors to IZNES</span></h1>
 </div>
 
 <!-- Main content. -->
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-12">
-            <p>
-                Please provide the email address(es) of the Investors you would like to invite to IZNES.
+            <p><span mltag="txt_pleaseprovidetheemailaddresses5c0f9d306a">Please provide the email address(es) of the Investors you would like to invite to IZNES.</span>
+
                 <br>
-                <span class="text-danger">Please note that the people you add will all be Super Admins within their company.</span>
+                <span class="text-danger" mltag="txt_pleasenotethatthepeopleyouaddw8c4268fff0">Please note that the people you add will all be Super Admins within their company.</span>
             </p>
         </div>
     </div>
@@ -22,30 +22,32 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_email_{{i}}">
-                                <span>Email address:</span>
+                                <span><span mltag="txt_emailaddress">Email address</span>:</span>
                                 <div class="mandatory text-danger">*</div>
                             </label>
                             <div>
                                 <input type="text" id="kyc_email_{{i}}" class="form-control" formControlName="email" maxlength="70">
                             </div>
-                            <div *ngIf="investor.controls.email.hasError('required') && investor.controls.email.dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                            <div *ngIf="!investor.controls.email.valid && !investor.controls.email.hasError('required')" class="text-danger">Email not valid!</div>
+                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('required')" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('pattern')" class="text-danger" mltag="txt_emailnotvalid">Email not valid!</div>
+                            <div *ngIf="!investor.controls.email.hasError('pattern') && investor.controls.email.hasError('notUnique')" class="text-danger" mltag="txt_emailalreadyusedforinvitation">Email already used for invitation!</div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="kyc_language_{{i}}">
-                                <span>Language:</span>
+                                <span><span mltag="txt_language">Language</span>:</span>
+                                <div class="mandatory text-danger">*</div>
                             </label>
                             <div>
-                                <ng-select
-                                        id="kyc_language_{{i}}"
-                                        class="form-control"
-                                        [items]="languages"
-                                        [allowClear]="true"
-                                        placeholder="Select"
-                                        formControlName="language"
-                                        [ngStyle]="{'padding':'6px 0'}"
-                                        [containerWidth]="'95%'"
-                                        mltag="txt_select">
+                                <ng-select id="kyc_language_{{i}}" class="form-control" [items]="languages" [allowClear]="true" placeholder="Select" formControlName="language" [ngStyle]="{'padding':'6px 0'}" [containerWidth]="'95%'" mltag="txt_select">
+
+
+
+
+
+
+
+
+
                                 </ng-select>
                                 <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                             </div>
@@ -55,7 +57,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_clientReference_{{i}}">
-                                <span>Client Reference (optional):</span>
+                                <span><span mltag="txt_clientreferenceoptional">Client Reference (optional)</span>:</span>
                             </label>
                             <div>
                                 <input type="text" id="kyc_clientReference_{{i}}" class="form-control" formControlName="clientReference">
@@ -65,7 +67,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_firstName_{{i}}">
-                                <span>First name (optional):</span>
+                                <span><span mltag="txt_firstnameoptional">First name (optional)</span>:</span>
                             </label>
                             <div>
                                 <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
@@ -73,7 +75,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="kyc_lastName_{{i}}">
-                                <span>Last name (optional):</span>
+                                <span><span mltag="txt_lastnameoptional">Last name (optional)</span>:</span>
                             </label>
                             <div>
                                 <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
@@ -85,7 +87,7 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
-                        <i class="fa fa-plus"></i> <span>Add another email invitation</span>
+                        <i class="fa fa-plus"></i> <span mltag="txt_addanotheremailinvitation">Add another email invitation</span>
                     </button>
                 </div>
             </div>
@@ -95,8 +97,8 @@
                 </button>
                 <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
                     <i class="fa fa-save"></i>
-                    <span *ngIf="!hasMultipleInvites">Send email invitation</span>
-                    <span *ngIf="hasMultipleInvites">Send email invitations</span>
+                    <span *ngIf="!hasMultipleInvites" mltag="txt_sendemailinvitation">Send email invitation</span>
+                    <span *ngIf="hasMultipleInvites" mltag="txt_sendemailinvitations">Send email invitations</span>
                 </button>
             </div>
         </section>
