@@ -192,10 +192,11 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], userDetails[1], "password");
         logout();
-        loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInformation("Test_User_064", "asdasd", "Jordan", "Miller");
+        loginAndUpdateMyAccount(userDetails[0],"password", "Jordan", "Miller");
+        logout();
+        loginAndAssertMyInformation(userDetails[0], "password", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
@@ -219,12 +220,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
         loginAndVerifySuccessAdmin(username, password);
 
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement topBar = driver.findElement(By.id("topBarMenu"));
-            wait.until(visibilityOf(topBar));
-            wait.until(elementToBeClickable(topBar));
-            topBar.click();
+
            try {
                WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
                WebElement topBarAcc = driver.findElement(By.id("topBarMyAccount"));
@@ -237,9 +233,6 @@ public class OpenCSDGeneralAcceptanceTest {
 
                }
 
-        } catch (Exception e) {
-            fail("Top Bar not available " +  e.getMessage());
-        }
 
         driver.findElement(By.id("udDisplayName")).clear();
         driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
@@ -265,7 +258,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("success message did not match : " + e.getMessage());
         }
         driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-        logout();
+
     }
 
     public static void loginAndAssertMyInformation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {

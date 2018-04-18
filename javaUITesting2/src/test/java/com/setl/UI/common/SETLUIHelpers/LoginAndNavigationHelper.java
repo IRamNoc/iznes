@@ -259,16 +259,18 @@ public class LoginAndNavigationHelper {
     }
 
     public static void logout() {
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement settings = driver.findElement(By.id("dropdown-settings"));
 
         try {
-        WebElement settings = driver.findElement(By.id("dropdown-settings"));
+            wait.until(invisibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
             wait.until(visibilityOf(settings));
             wait.until(elementToBeClickable(settings));
             settings.click();
 
         } catch (Exception e) {
-            fail("Logout button not available " + e.getMessage());
+            fail("Settings dropdown not available " + e.getMessage());
         }
 
         WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
@@ -280,7 +282,7 @@ public class LoginAndNavigationHelper {
             logOff.click();
 
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail("Logout button not available " + e.getMessage());
         }
     }
 
