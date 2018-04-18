@@ -15,6 +15,8 @@ import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
+import {OrderType} from '../../ofi-orders/order.model';
 
 
 @Component({
@@ -39,7 +41,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    allowOrder = false;
+    allowOrder = true;
+
+    calandarHelper: CalendarHelper;
 
 
     // List of redux observable.
@@ -137,19 +141,28 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         const fundListImu = fromJS(fundList);
 
         this.fundList = fundListImu.reduce((result, item) => {
+            // get next subscription cutoff.
+            const nextSubCutOff = new CalendarHelper(item.toJS()).getNextCutoffDate(OrderType.Subscription);
+
+            // get next redemption cutoff.
+            const nextRedCutOff = new CalendarHelper(item.toJS()).getNextCutoffDate(OrderType.Redemption);
+
+            const nav = this._numberConverterService.toFrontEnd(item.get('price', 0));
             result.push({
                 id: item.get('fundShareID', 0),
                 isin: item.get('isin', ''),
                 shareName: item.get('fundShareName', ''),
                 assetClass: FundShareValue.ClassCodeValue[item.get('shareClassCode', 0)],
                 assetManager: item.get('companyName', ''),
-                srri: item.get('keyFactOptionalData.srri', ''),
-                sri: item.get('keyFactOptionalData.sri', ''),
+                srri: item.getIn(['keyFactOptionalData', 'srri'], ''),
+                sri: item.getIn(['keyFactOptionalData', 'sri'], ''),
                 currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
-                nav: this._numberConverterService.toFrontEnd(item.get('price', 0)),
-                subscriptionDate: item.get('subscriptionCutOffPeriod', ''),
-                redemptionDate: item.get('redemptionCutOffPeriod', '')
+                nav,
+                nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD'),
+                nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD'),
+                hasNoNav: Boolean(nav <= 0)
             });
+
             return result;
         }, []);
         this.tabsControl = immutableHelper.copy(this.tabsControl);
