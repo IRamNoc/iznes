@@ -27,6 +27,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToD
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToLoginPage;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPageByID;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
@@ -58,6 +59,12 @@ public class OpenCSDSprint4AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
         navigateToPage("product-module");
+        selectAddUmbrellaFund();
+        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0]);
+        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        Thread.sleep(750);
         //Get the name of the umbrella fund from the database
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
