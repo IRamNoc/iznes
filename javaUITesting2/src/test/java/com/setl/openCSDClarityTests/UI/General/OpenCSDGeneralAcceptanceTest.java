@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.General;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -72,6 +73,7 @@ public class OpenCSDGeneralAcceptanceTest {
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(screenUserName.equals(userName));
         validatePopulatedDatabaseUsersFormdataTable("1", "8", userName, email);
+        deleteFormdataFromDatabase("8", "1");
     }
 
     @Test
@@ -83,6 +85,7 @@ public class OpenCSDGeneralAcceptanceTest {
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
         validateDatabaseUsersFormdataTable(0, "1" , "8");
+        deleteFormdataFromDatabase("8", "1");
     }
 
     @Test
