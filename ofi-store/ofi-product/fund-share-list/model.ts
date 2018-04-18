@@ -65,6 +65,25 @@ export interface IznesShareDetail {
     umbrellaFundID: number;
     managementCompanyName: string;
     managementCompanyId: number;
+    subscriptionStartDate: string;
+    launchDate: string;
+    fundShareStatus: string;
+    mifiidChargesOngoing: string;
+    mifiidChargesOneOff: string;
+    mifiidTransactionCosts: string;
+    mifiidIncidentalCosts: string;
+    subscriptionTradeCyclePeriod: number;
+    numberOfPossibleSubscriptionsWithinPeriod: number;
+    weeklySubscriptionDealingDays: number;
+    monthlySubscriptionDealingDays: number;
+    yearlySubscriptionDealingDays: number;
+    redemptionTradeCyclePeriod: number;
+    numberOfPossibleRedemptionsWithinPeriod: number;
+    weeklyRedemptionDealingDays: number;
+    monthlyRedemptionDealingDays: number;
+    yearlyRedemptionDealingDays: number;
+    navPeriodForSubscription: number;
+    navPeriodForRedemption: number;
 }
 
 export interface OfiFundShareListState {
