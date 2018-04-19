@@ -4,6 +4,7 @@ import { ReportingService } from '../reporting.service';
 import { Observable } from 'rxjs/Observable';
 import { TabControl, Tab } from '../tabs';
 import { Subscription } from 'rxjs/Subscription';
+import { select } from '@angular-redux/store';
 
 @Component({
     selector: 'setl-issue',
@@ -14,14 +15,24 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
 
+    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+
     private issuers$: Observable<any>;
     private tabControl: TabControl;
     private subscriptions: Array<Subscription> = [];
     public tabs: Tab[] = [];
+    public connectedWalletId;
 
     constructor(private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetector: ChangeDetectorRef,
-                private reportingService: ReportingService) { }
+                private reportingService: ReportingService) {
+
+            this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+            }
+        ));
+    }
 
     ngOnInit() {
         this.issuers$ = this.reportingService.getIssuers();
@@ -65,6 +76,23 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
         });
+    }
+
+    /**
+     * Close tabs.
+     *
+     * @return void
+     */
+    closeTabs() {
+        if (this.tabControl) {
+            let tabIndex = this.tabControl.tabs.length;
+
+            while (tabIndex) {
+                this.tabControl.close(tabIndex);
+                this.changeDetector.markForCheck();
+                tabIndex--;
+            }
+        }
     }
 
     ngOnDestroy() {
