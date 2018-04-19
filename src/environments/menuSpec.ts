@@ -309,14 +309,14 @@ const kycDocuments = {
     children: [
         {
             label: 'On-boarding Management',
-            label_txt: 'txt_my_information',
+            label_txt: 'txt_on_boarding_management',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-onboarding-management',
             router_link: '/kyc-am-documents'
         },
         {
-            label: 'Invite Investor',
-            label_txt: 'txt_my_information',
+            label: 'Invite Investors',
+            label_txt: 'txt_invite_investors',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-invite-investor',
             router_link: '/invite-investors'
@@ -339,13 +339,6 @@ export const menuSpec: MenuSpec = {
             ],
             am: [
                 profileMyInfo,
-                {
-                    label: 'Invite Investors',
-                    label_txt: 'txt_invite_investors',
-                    icon_class: '',
-                    element_id: 'top-menu-invite-investors',
-                    router_link: '/invite-investors'
-                },
             ],
             valuer: [
                 profileMyInfo,
