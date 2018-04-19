@@ -24,6 +24,7 @@ import {
     MyOrdersComponent,
     OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
+    OfiCentralizationHistoryComponent,
     OfiDocumentsComponent,
     OfiFundAccessComponent,
     OfiHomeComponent,
@@ -212,7 +213,7 @@ export const ROUTES: Routes = [
                 path: 'product-module',
                 children: [
                     {
-                        path: 'home',
+                        path: '',
                         component: ProductHomeComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -524,6 +525,11 @@ export const ROUTES: Routes = [
                         path: 'collects-archive',
                         canActivate: [LoginGuardService],
                         component: OfiCollectiveArchiveComponent
+                    },
+                    {
+                        path: 'centralization-history/:tabid',
+                        canActivate: [LoginGuardService],
+                        component: OfiCentralizationHistoryComponent
                     }
                 ]
             },
