@@ -6,31 +6,31 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> <span>User Informations</span>
+            <i class="fa fa-bars"></i> <span mltag="txt_userinformations">User Informations</span>
         </button>
 
         <clr-tab-content *clrIfActive>
-            <h2>Please provide a bit information:</h2>
+            <h2><span mltag="txt_pleaseprovideabitinformation">Please provide a bit information</span>:</h2>
             <div *ngIf="!hasFilledAdditionnalInfos">
-                <app-my-informations
-                        [viewMode]="'PAGE'"
-                        [type]="userType"
-                        [userInfo]="userInfo"
-                        (onSubmit)="openMyInformationsModal($event)"
-                ></app-my-informations>
+                <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)">
+
+
+
+
+                </app-my-informations>
 
                 <!--CUSTOM TEXT MODALS-->
                 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-                    <h3 class="modal-title">MY INFORMATION</h3>
+                    <h3 class="modal-title" mltag="txt_myinformation">MY INFORMATION</h3>
                     <div class="modal-body text-center">
-                        <p>
-                            This information will be saved in <b>"Profile"</b> (above), in <b>"My information"</b>
-                            <br>
-                            It is located at the top right of each page, in the top menu bar.
+                        <p><span mltag="txt_thisinformationwillbesavedin">This information will be saved in</span>
+                            <b mltag="txt_profile">"Profile"</b> <span mltag="txt_abovein">(above), in</span> <b mltag="txt_myinformation">"My information"</b>
+                            <br><span mltag="txt_itislocatedatthetoprightofeach5fe9e0ad3f">It is located at the top right of each page, in the top menu bar.</span>
+
                         </p>
                         <br>
                         <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">
-                            <span>OK, I understand</span>
+                            <span mltag="txt_okiunderstand">OK, I understand</span>
                         </button>
                         <br>
                     </div>

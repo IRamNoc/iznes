@@ -3,17 +3,17 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label for="kyc_additionnal_email">
-                    <span>Email address:</span>
+                    <span><span mltag="txt_emailaddress">Email address</span>:</span>
                 </label>
                 <div>
                     <input type="text" id="kyc_additionnal_email" class="form-control" formControlName="email">
                 </div>
                 <div *ngIf="additionnalForm.controls['email'].hasError('required') && additionnalForm.controls['email'].dirty" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="text-danger">Email not valid!</div>
+                <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="text-danger" mltag="txt_emailnotvalid">Email not valid!</div>
             </div>
             <div class="form-group col-sm-6">
                 <label for="kyc_additionnal_invitedBy">
-                    <span>Invited by:</span>
+                    <span><span mltag="txt_invitedby">Invited by</span>:</span>
                 </label>
                 <div>
                     <input type="text" id="kyc_additionnal_invitedBy" class="form-control" formControlName="invitedBy">
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label for="kyc_additionnal_firstName">
-                    <span>First name:</span>
+                    <span><span mltag="txt_firstname">First name</span>:</span>
                 </label>
                 <div>
                     <input type="text" id="kyc_additionnal_firstName" class="form-control" formControlName="firstName">
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group required-field col-sm-6">
                 <label for="kyc_additionnal_lastName">
-                    <span>Last name:</span>
+                    <span><span mltag="txt_lastname">Last name</span>:</span>
                 </label>
                 <div>
                     <input type="text" id="kyc_additionnal_lastName" class="form-control" formControlName="lastName">
@@ -44,7 +44,7 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6" [ngStyle]="{'height':'35px'}">
                     <label for="kyc_additionnal_companyName">
-                        <span>Company name:</span>
+                        <span><span mltag="txt_companyname">Company name</span>:</span>
                     </label>
                     <div>
                         <input type="text" id="kyc_additionnal_companyName" class="form-control" formControlName="companyName">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group required-field col-sm-6">
                     <label>
-                        <span>Work phone number:</span>
+                        <span><span mltag="txt_workphonenumber">Work phone number</span>:</span>
                     </label>
 
                     <div class="form-group phone-input-container">
@@ -72,12 +72,12 @@
         </ng-container>
 
         <ng-container *ngIf="type == '46'">
-            <h2>I am a professional investor from:</h2>
+            <h2><span mltag="txt_iamaprofessionalinvestorfrom">I am a professional investor from</span>:</h2>
 
             <div class="row">
                 <div class="form-group required-field col-sm-6" [ngStyle]="{'height':'35px'}">
                     <label for="kyc_additionnal_companyName">
-                        <span>Company name:</span>
+                        <span><span mltag="txt_companyname">Company name</span>:</span>
                     </label>
                     <div>
                         <input type="text" id="kyc_additionnal_companyName" class="form-control" formControlName="companyName">
@@ -86,7 +86,7 @@
                 </div>
                 <div class="form-group required-field col-sm-6">
                     <label>
-                        <span>Work phone number:</span>
+                        <span><span mltag="txt_workphonenumber">Work phone number</span>:</span>
                     </label>
 
                     <div class="form-group phone-input-container">
@@ -105,7 +105,7 @@
 
         <div>
             <button id="btnKycClose" type="button" class="btn btn-default" *ngIf="isPopUpMode()" (click)="onClickCloseButton()">
-                <i class="fa fa-close"></i> <span>Close</span>
+                <i class="fa fa-close"></i> <span mltag="txt_close">Close</span>
             </button>
             <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!additionnalForm.valid">
                 <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
