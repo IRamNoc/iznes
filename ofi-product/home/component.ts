@@ -145,28 +145,25 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     };
     panelDefs = [
         {
-            title: 'Shares',
+            title: 'Umbrella funds',
             columns: [
-                this.columns['shareName'],
-                this.columns['fundName'],
-                this.columns['isin'],
-                this.columns['shareCurrency'],
+                this.columns['uFundName'],
+                this.columns['lei'],
                 this.columns['managementCompany'],
-                this.columns['shareClass'],
-                this.columns['status']
+                this.columns['country']
             ],
             action: {
-                id: 'new-share-btn',
-                title: 'Add new Share',
+                id: 'new-umbrella-fund-btn',
+                title: 'Add new Umbrella fund',
                 icon: 'plus',
-                type: 'share',
+                type: 'ufund',
             },
-            link: '/product-module/fund-share/',
-            linkIdent: 'fundShareID',
+            link: '/product-module/umbrella-fund/',
+            linkIdent: 'umbrellaFundID',
             open: true,
-            data: this.shareList,
-            count: this.shareList.length,
-            columnLink: 'shareName'
+            data: this.umbrellaFundList,
+            count: this.umbrellaFundList.length,
+            columnLink: 'umbrellaFundName'
         },
         {
             title: 'Funds',
@@ -193,25 +190,29 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             columnLink: 'fundName'
         },
         {
-            title: 'Umbrella funds',
+            title: 'Shares',
             columns: [
-                this.columns['uFundName'],
-                this.columns['lei'],
+                this.columns['shareName'],
+                this.columns['isin'],
+                this.columns['fundName'],
+                this.columns['shareCurrency'],
                 this.columns['managementCompany'],
-                this.columns['country']
+                this.columns['uFundName'],
+                this.columns['shareClass'],
+                this.columns['status']
             ],
             action: {
-                id: 'new-umbrella-fund-btn',
-                title: 'Add new Umbrella fund',
+                id: 'new-share-btn',
+                title: 'Add new Share',
                 icon: 'plus',
-                type: 'ufund',
+                type: 'share',
             },
-            link: '/product-module/umbrella-fund/',
-            linkIdent: 'umbrellaFundID',
+            link: '/product-module/fund-share/',
+            linkIdent: 'fundShareID',
             open: true,
-            data: this.umbrellaFundList,
-            count: this.umbrellaFundList.length,
-            columnLink: 'umbrellaFundName'
+            data: this.shareList,
+            count: this.shareList.length,
+            columnLink: 'shareName'
         }
     ];
 
@@ -336,7 +337,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     managementCompany: share.managementCompanyName,
                     shareClass: shareClass,
                     status: status,
-                    shareCurrency: shareCurrency.text
+                    shareCurrency: shareCurrency.text,
+                    umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
                 });
             });
         }
@@ -347,8 +349,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             return share.status !== 5;
         });
 
-        this.panelDefs[0].data = this.filteredShareList;
-        this.panelDefs[0].count = this.filteredShareList.length;
+        this.panelDefs[2].data = this.filteredShareList;
+        this.panelDefs[2].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -394,8 +396,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
 
         this.umbrellaFundList = umbrellaFundList;
-        this.panelDefs[2].data = this.umbrellaFundList;
-        this.panelDefs[2].count = this.umbrellaFundList.length;
+        this.panelDefs[0].data = this.umbrellaFundList;
+        this.panelDefs[0].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -422,6 +424,21 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             case 'ufund':
                 this._router.navigateByUrl('/product-module/umbrella-fund/0');
                 break;
+        }
+    }
+
+    getUmbrellaFundName(id) {
+        if (id && id !== 0 && id !== null) {
+            if (this.umbrellaFundList.length > 0) {
+                const obj = this.umbrellaFundList.find(o => o.umbrellaFundID === id);
+                if (obj !== undefined) {
+                    return obj.umbrellaFundName;
+                } else {
+                    return '';
+                }
+            }
+        } else {
+            return '';
         }
     }
 

@@ -94,7 +94,8 @@ export {
     OfiCollectiveArchiveComponent,
     OfiCentralizationHistoryComponent,
     OfiReportModule,
-    OfiManageCsvComponent
+    OfiManageCsvComponent,
+    CentralizationReportComponent,
 } from './ofi-report-module';
 
 /*

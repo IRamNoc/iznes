@@ -13,8 +13,9 @@ import {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component'
 import {OfiCentralizationHistoryComponent} from './centralization-history/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {ActionDirection} from './pnlHelper/class';
-import {OfiManageCsvComponent} from "./ofi-csv-report/component";
+import {OfiManageCsvComponent} from './ofi-csv-report/component';
 import {MultilingualModule} from '@setl/multilingual';
+import {CentralizationReportComponent} from './centralization/component';
 
 @Pipe({name: 'txType'})
 export class TxTypePipe implements PipeTransform {
@@ -48,9 +49,11 @@ export class TxTypePipe implements PipeTransform {
         OfiTaxReportComponent,
         OfiPnlReportComponent,
         OfiCollectiveArchiveComponent,
+        TxTypePipe,
+        OfiManageCsvComponent,
+        CentralizationReportComponent,
         OfiCentralizationHistoryComponent,
         TxTypePipe,
-        OfiManageCsvComponent
     ],
     providers: [],
 })
