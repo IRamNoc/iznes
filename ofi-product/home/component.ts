@@ -347,8 +347,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             return share.status !== 5;
         });
 
-        this.panelDefs[0].data = this.filteredShareList;
-        this.panelDefs[0].count = this.filteredShareList.length;
+        this.panelDefs[2].data = this.filteredShareList;
+        this.panelDefs[2].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -394,8 +394,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
 
         this.umbrellaFundList = umbrellaFundList;
-        this.panelDefs[2].data = this.umbrellaFundList;
-        this.panelDefs[2].count = this.umbrellaFundList.length;
+        this.panelDefs[0].data = this.umbrellaFundList;
+        this.panelDefs[0].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
     }
 
