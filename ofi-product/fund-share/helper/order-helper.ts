@@ -10,6 +10,7 @@ import * as ShareValue from '../fundShareValue';
 import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
+    ContractData,
     ArrangementData,
     ArrangementActionType,
     ConditionType
@@ -25,7 +26,7 @@ interface OrderRequest {
     datevalue: string; // (date value relate to dateby)
     ordertype: string; // ('s', 'r')
     orderby: string; // ('q', 'a' )
-    ordervalue: string; //(order value relate to orderby)
+    ordervalue: string; // (order value relate to orderby)
     comment: string;
 }
 
@@ -37,6 +38,11 @@ interface IznShareDetailWithNav extends IznesShareDetail {
     entryFee: number;
     exitFee: number;
     platFormFee: number;
+}
+
+interface VerifyResponse {
+    orderValid: boolean;
+    errorMessage?: string;
 }
 
 interface OrderDates {
@@ -62,6 +68,47 @@ interface OrderTimeStamps {
 interface OrderPrices {
     price: number;
     estimatedPrice: number;
+}
+
+interface OrderRequestBody {
+    investorAddress: string;
+    amCompanyID: number;
+    amWalletID: number;
+    amAddress: string;
+    orderStatus: number;
+    currency: number;
+    fundShareID: number;
+    byAmountOrQuantity: number;
+    price: number;
+    estimatedPrice: number;
+    quantity: number;
+    estimatedQuantity: number;
+    amount: number;
+    estimatedAmount: number;
+    amountWithCost: number;
+    estimatedAmountWithCost: number;
+    feePercentage: number;
+    platFormFee: number;
+    cutoffDate: any;
+    valuationDate: any;
+    settlementDate: any;
+    orderNote: string;
+    contractExpiryTs: number;
+    contractStartTs: number;
+
+}
+
+type TX = 'tx';
+type NewContractType = 'conew';
+
+interface ContractRequestBody {
+    messagetype: TX;
+    messagebody: {
+        txtype: NewContractType,
+        walletid: any,
+        address: String,
+        contractdata: ContractData
+    };
 }
 
 const OrderTypeNumber = {
@@ -94,6 +141,15 @@ export class OrderHelper {
     amWalletId: number;
     investorAddress: string;
     investorWalletId: number;
+    minInitialSubscriptionInAmount: number;
+    minInitialSubscriptionInShare: number;
+    minSubsequentSubscriptionInAmount: number;
+    minSubsequentSubscriptionInShare: number;
+    minInitialRedemptionInAmount: number;
+    minInitialRedemptionInShare: number;
+    minSubsequentRedemptionInAmount: number;
+    minSubsequentRedemptionInShare: number;
+
 
     get feePercentage() {
         return Number({
@@ -107,6 +163,24 @@ export class OrderHelper {
             [OrderType.Subscription]: this.fundShare.shareClassCurrency || 0,
             [OrderType.Redemption]: this.fundShare.redemptionCurrency || 0,
         }[this.orderType]);
+    }
+
+    get initialMinFig() {
+        return ({
+            [OrderType.Subscription]: {
+                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInAmount),
+                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInShare),
+            },
+            [OrderType.Redemption]: {
+                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInAmount),
+                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInShare),
+            }
+        }[this.orderType] || {})[this.orderBy] || 0;
+    }
+
+    get subsequentMinFig() {
+
+        return OrderHelper.getSubsequentMinFig(this.fundShare, this.orderType, this.orderBy);
     }
 
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {
@@ -126,11 +200,35 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
     }
 
+    static getChildErrorMessage(response) {
+        return {
+            orderValid: false,
+            errorMessage: response.errorMessage
+        };
+    }
+
+    static isResponseGood(response: VerifyResponse): boolean {
+        return !('orderValid' in response) || response.orderValid;
+    }
+
+    static getSubsequentMinFig(fundShareData, orderType, orderByType) {
+        return ({
+            [OrderType.Subscription]: {
+                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInAmount),
+                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInShare),
+            },
+            [OrderType.Redemption]: {
+                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInAmount),
+                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInShare),
+            },
+        }[orderType] || {})[orderByType] || 0;
+    }
+
     processOrder() {
 
     }
 
-    buildContractData(): any {
+    buildContractData(): VerifyResponse | ContractData {
 
         let arrangementData;
 
@@ -139,22 +237,26 @@ export class OrderHelper {
         } else if (this.orderType === OrderType.Redemption) {
             arrangementData = this.buildRedemptionArrangementData();
         } else {
-            return false;
+            return {
+                orderValid: false,
+                errorMessage: 'Invalid order type.'
+            };
         }
 
-        if (!arrangementData) {
-            return false;
+        if (!OrderHelper.isResponseGood(arrangementData)) {
+            return OrderHelper.getChildErrorMessage(arrangementData);
         }
         let contractData = BlockchainContractService.arrangementToContractData(arrangementData as ArrangementData);
-        if (!contractData) {
-            return false;
+        if (!OrderHelper.isResponseGood(arrangementData)) {
+            return OrderHelper.getChildErrorMessage(contractData);
         } else {
             contractData = contractData as Contract;
         }
+
         return contractData.contractData;
     }
 
-    buildOrderRequestBody() {
+    buildOrderRequestBody(): VerifyResponse | OrderRequestBody {
         const investorAddress = this.investorAddress;
         const amCompanyID = this.fundShare.amCompanyID;
         const amWalletID = this.fundShare.amWalletID;
@@ -167,8 +269,8 @@ export class OrderHelper {
         const estimatedPrice = this.nav;
         let orderFigure = this.getOrderFigures();
 
-        if (!orderFigure) {
-            return false;
+        if (!OrderHelper.isResponseGood(orderFigure as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderFigure);
         } else {
             orderFigure = orderFigure as OrderFigures;
         }
@@ -183,8 +285,8 @@ export class OrderHelper {
         const platFormFee = this.fundShare.platFormFee || 0;
 
         let orderDates = this.getOrderDates();
-        if (!orderDates) {
-            return false;
+        if (!OrderHelper.isResponseGood(orderDates as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderDates);
         } else {
             orderDates = orderDates as OrderDates;
         }
@@ -195,13 +297,7 @@ export class OrderHelper {
 
         const orderNote = this.orderRequest.comment;
 
-        let orderTimeStamps = this.getOrderTimeStamp();
-
-        if (!orderTimeStamps) {
-            return false;
-        } else {
-            orderTimeStamps = orderTimeStamps as OrderTimeStamps;
-        }
+        const orderTimeStamps = this.getOrderTimeStamp();
 
         const contractExpiryTs = orderTimeStamps.expiryTimeStamp;
         const contractStartTs = orderTimeStamps.settleTimeStamp;
@@ -234,10 +330,10 @@ export class OrderHelper {
         };
     }
 
-    buildContractRequestBody() {
+    buildContractRequestBody(): VerifyResponse | ContractRequestBody {
         const contractData = this.buildContractData();
-        if (!contractData) {
-            return false;
+        if (!OrderHelper.isResponseGood(contractData as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(contractData);
         }
         return {
             messagetype: 'tx',
@@ -245,12 +341,12 @@ export class OrderHelper {
                 txtype: 'conew',
                 walletid: this.investorWalletId,
                 address: this.investorAddress,
-                contractdata: contractData
+                contractdata: contractData as any
             }
         };
     }
 
-    getOrderDates(): boolean | OrderDates {
+    getOrderDates(): VerifyResponse | OrderDates {
         // depend on order by cutoff, valuation, and settlement date.
         let dateValid = false;
         let cutoff, valuation, settlement;
@@ -259,7 +355,10 @@ export class OrderHelper {
             case 'cutoff':
                 dateValid = this.calendarHelper.isValidCutoffDateTime(this.dateValue, this.orderType);
                 if (!dateValid) {
-                    return false;
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date'
+                    };
                 }
 
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
@@ -271,7 +370,10 @@ export class OrderHelper {
             case 'valuation':
                 dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
                 if (!dateValid) {
-                    return false;
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date'
+                    };
                 }
 
                 valuation = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
@@ -284,7 +386,10 @@ export class OrderHelper {
             case 'settlement':
                 dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
                 if (!dateValid) {
-                    return false;
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date'
+                    };
                 }
 
                 settlement = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
@@ -294,7 +399,10 @@ export class OrderHelper {
                 break;
 
             default:
-                return false;
+                return {
+                    orderValid: false,
+                    errorMessage: 'Invalid date'
+                };
         }
 
         return {
@@ -316,8 +424,29 @@ export class OrderHelper {
         };
     }
 
-    getOrderFigures(): Boolean | OrderFigures {
+    checkOrderValueValid(orderValueToCheck) {
+        // Check order value (quantity / amount) is meet requirements:
+        // - [] greater than initial min order value ;
+        // - [x] greater than subsequent min order value ;
+        if (orderValueToCheck <= this.subsequentMinFig) {
+            return {
+                orderValid: false,
+                errorMessage: 'Order value does not meet subsequent minimum'
+            };
+        }
+
+        return {
+            orderValid: true
+        };
+    }
+
+    getOrderFigures(): VerifyResponse | OrderFigures {
         let quantity, estimatedQuantity, amount, estimatedAmount, amountWithCost, estimatedAmountWithCost, fee;
+
+        const checkOrderValue = this.checkOrderValueValid(this.orderValue);
+        if (!OrderHelper.isResponseGood(checkOrderValue)) {
+            return OrderHelper.getChildErrorMessage(checkOrderValue);
+        }
 
         switch (this.orderBy) {
             case OrderByType.Quantity:
@@ -358,7 +487,10 @@ export class OrderHelper {
                 break;
 
             default:
-                return false;
+                return {
+                    orderValid: false,
+                    errorMessage: 'Invalid orderBy type'
+                };
         }
 
         return {
@@ -381,14 +513,16 @@ export class OrderHelper {
         };
     }
 
-    buildSubscriptionArrangementData() {
+    buildSubscriptionArrangementData(): ArrangementData | VerifyResponse {
         let actionData;
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
 
-        if (!orderDate || !orderFigures) {
-            return false;
+        if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderDate);
+        } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderDate);
         } else {
             orderDate = orderDate as OrderDates;
             orderFigures = orderFigures as OrderFigures;
@@ -437,7 +571,10 @@ export class OrderHelper {
             ];
 
         } else {
-            throw new Error('Invalid action-by type.');
+            return {
+                orderValid: false,
+                errorMessage: 'Invalid action-by type.'
+            };
         }
 
         const conditions = [
@@ -472,14 +609,16 @@ export class OrderHelper {
         };
     }
 
-    buildRedemptionArrangementData() {
+    buildRedemptionArrangementData(): ArrangementData | VerifyResponse {
         let actionData;
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
 
-        if (!orderDate || !orderFigures) {
-            return false;
+        if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderDate);
+        } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderDate);
         } else {
             orderDate = orderDate as OrderDates;
             orderFigures = orderFigures as OrderFigures;
@@ -528,7 +667,10 @@ export class OrderHelper {
             ];
 
         } else {
-            throw new Error('Invalid action-by type.');
+            return {
+                orderValid: false,
+                errorMessage: 'Invalid action-by type.'
+            };
         }
 
         const conditions = [
@@ -575,6 +717,10 @@ export function calFee(amount: number | string, feePercent: number | string): nu
     amount = Number(amount);
     feePercent = Number(feePercent) / NumberMultiplier;
     return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
+}
+
+export function convertToBlockChainNumber(num) {
+    return Number(math.format(math.chain(num).multiply(NumberMultiplier).done(), 14));
 }
 
 /**

@@ -265,8 +265,8 @@ describe('Subscription order', () => {
                         "commit",
                         "expiry"
                     ],
-                    "expiry": 1526850000,
-                    "startdate": 1524258000,
+                    'expiry': orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                    'startdate': orderHelper.getOrderTimeStamp().settleTimeStamp,
                     "protocol": "dvp",
                     "encumbrance": [
                         true,
@@ -355,8 +355,8 @@ describe('Subscription order', () => {
                         "commit",
                         "expiry"
                     ],
-                    "expiry": 1526850000,
-                    "startdate": 1524258000,
+                    'expiry': orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                    'startdate': orderHelper.getOrderTimeStamp().settleTimeStamp,
                     "protocol": "dvp",
                     "encumbrance": [
                         true,

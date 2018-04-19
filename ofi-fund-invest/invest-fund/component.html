@@ -39,12 +39,6 @@
                                 <ng-select id="subportfolio" [class.error]="!form.controls['address'].valid && form.controls['address'].touched" [items]="addressList" [allowClear]="false" placeholder="Select an investment porfolio" formControlName="address" (selected)="handleSelectedAddress($event)" mltag="txt_selectaninvestmentporfolio">
 
 
-
-
-
-
-
-
                                 </ng-select>
                             </div>
                             <span *ngIf="address.hasError('required') && address.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
@@ -86,7 +80,7 @@
                                             <span class="" mltag="txt_oneoffcharges">One-off charges</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifidiiOneOffCharges" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="shareData.mifiidChargesOneOff" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +90,7 @@
                                             <span class="" mltag="txt_onegoingcharges">One-going charges</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifidiiOngoingCharges" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="shareData.mifiidChargesOngoing" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +103,7 @@
                                             <span class="" mltag="txt_costsrelatedtotransactionsinitd82e13ff15">Costs related to transactions initiated</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifidiiTranInitiatedCosts" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="shareData.mifiidTransactionCosts" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +113,7 @@
                                             <span class="" mltag="txt_chargesrelatedtoancillaryservi31f9ae522d">Charges related to ancillary services</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifidiiAncillaryServiceCharges" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="shareData.mifiidServicesCosts" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +126,7 @@
                                             <span class="" mltag="txt_incidentalcosts">Incidental costs</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifidiiIncidentalCosts" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="shareData.mifiidIncidentalCosts" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -298,7 +292,6 @@
                                 <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" (dateChange)="subscribeForChangeDate('cutoff', $event)" mltag="txt_chooseadate">
 
 
-
                             </div>
                             <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
@@ -332,7 +325,6 @@
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
                                     <input id="settlementdate" formControlName="settlementDate" [dpDayPicker]="configDateSettlement" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" (dateChange)="subscribeForChangeDate('settlement', $event)" mltag="txt_chooseadate">
-
 
 
                                 </div>
@@ -383,6 +375,7 @@
                             </div>
                             <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -395,6 +388,7 @@
                             </div>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
                         </div>
                     </div>
                 </div>
@@ -452,10 +446,6 @@
                             <input id="checkbox" class="form-check-input" style="margin-top: 10px; margin-right: 10px;" type="checkbox" formControlName="disclaimer" [attr.disabled]="allowCheckDisclaimer" value="false">
 
 
-
-
-
-
                             <label class="form-check-label" for="checkbox" mltag="txt_iconfirmthatihavereadandundersd81b480003">I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.
 
                             </label>
@@ -474,10 +464,12 @@
             <div class="form-group button-group">
                 <div class="col-sm-12">
                     <button type="submit" class="btn btn-primary" *ngIf="type === 'subscribe'" [attr.disabled]="allowToPlaceOrder">
-                        <i class="fa fa-sign-in"></i> <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
+                        <i class="fa fa-sign-in"></i>
+                        <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
                     </button>
                     <button type="submit" class="btn btn-primary" *ngIf="type === 'redeem'" [attr.disabled]="allowToPlaceOrder">
-                        <i class="fa fa-sign-out"></i> <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
+                        <i class="fa fa-sign-out"></i>
+                        <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
                     </button>
                     <button (click)="handleClose()" class="btn btn-secondary" mltag="txt_cancel">Cancel</button>
                 </div>
