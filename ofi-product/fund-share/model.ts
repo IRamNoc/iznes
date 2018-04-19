@@ -49,7 +49,7 @@ export class FundShare {
     }
     profile = {
         mandatory: new ShareProfileMandatory(),
-        optional: new ShareCharacteristicOptional()
+        optional: new ShareProfileOptional()
     }
     representation = {
         optional: new ShareRepresentationOptional()
@@ -70,7 +70,8 @@ export class FundShare {
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
             this.calendar.subscriptionTradeCycle.isValid() && this.calendar.redemptionTradeCycle.isValid() &&
-            this.fees.mandatory.isValid() && this.keyFacts.mandatory.isValid() && this.profile.mandatory.isValid();
+            this.fees.mandatory.isValid() && this.keyFacts.mandatory.isValid() && this.profile.mandatory.isValid() &&
+            this.documents.mandatory.isValid();
     }
 
     getRequest(): OfiFundShare {
@@ -304,11 +305,18 @@ export class FundShare {
     }
 
     private applyValueToExistingFormItem(field: FormItem, value: any): void {
+        if(!field) return;
+        
         if(field.type === FormItemType.list) {
-            this.setListItemPreset(field, value);
+            this.setListItemPresetFromOptional(field, value);
         } else {
             field.preset = value;
         }
+    }
+
+    private setListItemPresetFromOptional(field: FormItem, value: any): void {
+        if(value == undefined) return;
+        (field.preset as any) = value;
     }
 
     private setListItemPreset(field: FormItem, value: any): void {

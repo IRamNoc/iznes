@@ -92,6 +92,7 @@ export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
+    OfiCentralizationHistoryComponent,
     OfiReportModule,
     OfiManageCsvComponent,
     CentralizationReportComponent,

@@ -1,0 +1,332 @@
+<div class="header-breadcrumbs">
+    <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
+        <span><span mltag="txt_holderslist">Holders list</span>:</span>
+        <span *ngIf="shareID === 0" mltag="txt_allshares">All Shares</span>
+        <span *ngIf="shareID > 0">{{shareID}}</span>
+    </h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="-{{id}}" [routerLink]="['/am-reports-section/centralization-history', (id === 0) ? 'select' :  id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+
+                <form [formGroup]="searchForm" id="search-orders-form">
+                    <div class="form-horizontal">
+                        <div class="row bordered">
+                            <div class="form-group col-sm-6">
+                                <label style="margin: 10px 0;">
+                                    <b><span>Please find below the Centralization history for {{shareName}}:</span></b>
+                                </label>
+                                <br>
+                                <div class="input-button-group">
+                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="hr-line-dashed"></div>
+
+                <ng-container *ngIf="id === 0">
+                    <!-- list tab. -->
+                    <ng-container *ngTemplateOutlet="staticList">
+
+                    </ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="id > 0">
+                    <!-- Create new tab -->
+                    <ng-container *ngTemplateOutlet="dynamicView; context: {'shareData': tabdata.shareData, 'tabid': id}">
+
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Orders Data Table. -->
+    <ng-template #staticList>
+        <div class="panel-body">
+
+            <table style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3 style="margin-bottom: 3px;"><span mltag="txt_pleasefindalistofallthesharesb681c697503">Please find a list of all the shares below</span>:</h3><span mltag="txt_youcanaccesstheholderslistfora65f367141e">You can access the holders list for a specific Share by clicking on a line in this table.</span>
+
+                        </td>
+                        <td class="text-right" valign="middle">
+                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisholderslistforallthef4ca32ae77">Export this holders list for all these Funds & Shares below</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+
+            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+                <clr-dg-column [clrDgField]="'fundName'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_fundname">Fund name</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_sharename">Share name</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_currency">Currency</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_isin">ISIN</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_nav">NAV</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_numberofunits">Number of units</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_aumccy">AUM (CCY)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'numberOfHolders'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_numberofholders">Number of holders</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <!-- ACTIONS -->
+                <!--<clr-dg-column><span>Action</span></clr-dg-column>-->
+
+                <clr-dg-row *ngFor="let data of dataList; let i = index">
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_yo">yo
+
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <!-- Orders Data Table. -->
+    <ng-template #dynamicView let-shareData="shareData" let-tabid="tabid">
+        <div class="panel-body">
+
+            <form [formGroup]="filterForm" id="search-share-form">
+
+                <table style="width: 100%;" class="tableShareDetails">
+                    <tbody>
+                        <tr>
+                            <td [ngStyle]="(isFundUmbrella && {'width': '40%'}) || (!isFundUmbrella && {'width': '60%'})">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_fundname">Fund name</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{unknownValue}}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td *ngIf="isFundUmbrella" [ngStyle]="isFundUmbrella && {'width': '40%'}">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_umbrellafund">Umbrella fund</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">€ {{unknownValue}}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td [ngStyle]="(isFundUmbrella && {'width': '20%'}) || (!isFundUmbrella && {'width': '40%'})">
+                                <div class="form-group">
+                                    <label>
+                                        <span><span mltag="txt_numberofunits">Number of units</span>:</span>
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field" mltag="txt_eur">EUR</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="mb-1"><span mltag="txt_pleasechoosethenavdatesforwhic448538d4f6">Please choose the NAV dates for which you would like  to see this share's centralization history</span>:</h3>
+
+                <table style="width: 100%;" class="tableShareDetails">
+                    <tbody>
+                        <tr>
+                            <td style="width: 400px;">
+                                <div class="form-group">
+                                    <label for="perdiod-search-field">
+                                        <span><span mltag="txt_chooseaperiod">Choose a period</span>:</span>
+                                    </label>
+                                    <div class="input-button-group">
+                                        <ng-select id="perdiod-search-field" [items]="periodList" name="top" [allowClear]="true" placeholder="Select" [formControl]="filterForm.controls['period']" mltag="txt_select"></ng-select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 30px; padding: 0;">
+                                <div class="form-group">
+                                    <label mltag="txt_nbsp">&nbsp;</label>
+                                    <br>
+                                    <div><span mltag="txt_or">or</span>:
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="search-date-from">
+                                        <span><span mltag="txt_datefrom">Date from</span>:</span>
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="search-date-from" [(ngModel)]="dateFrom" formControlName="dateFrom" [disabled]="hideCalendars" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="search-date-to">
+                                        <span><span mltag="txt_dateto">Date to</span>:</span>
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="search-date-to" [(ngModel)]="dateTo" formControlName="dateTo" [disabled]="hideCalendars" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-right">
+                                    <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportcentralizationhistoryforbf39cb18b5">Export Centralization history for these dates</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="!isValidDates" class="text-danger text-center" mltag="txt_datesinvalid">Dates invalid!</div>
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label>
+                            <b><span><span mltag="txt_youcanclickoneachlinetomoreinf002b2eca34">You can click on each line to more information unfold</span>:</span></b>
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
+                <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_navdate">NAV date</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_settlementdate">Settlement date</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_nav">NAV</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_aum">AUM</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'netPosition'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_netpositionccy">Net Position (CCY)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'netPositionAum'" clrDgSortIcon clrDgSortNoSearch>
+                    <span mltag="txt_netpositionaum">Net Position (% AUM)</span> <span class="column-label"></span>
+                </clr-dg-column>
+                <!--ACTIONS-->
+                <clr-dg-column><span mltag="txt_viewcorrespondingorderspage">View corresponding orders page?</span></clr-dg-column>
+                <clr-dg-column><span mltag="txt_downloadcsvreport">Download csv report?</span></clr-dg-column>
+
+                <clr-dg-row *ngFor="let data of dataList; let i = index">
+                    <clr-dg-cell mltag="txt_xxxxxxxx">xx-xx-xxxx
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_xxxxxxxx">xx-xx-xxxx
+
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{1234.45630 | moneyValue: 2}}
+
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{123456.7845 | moneyValue: 2}}
+
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{123456.7845 | moneyValue: 2}}
+
+                    </clr-dg-cell>
+                    <clr-dg-cell mltag="txt_1723">17.23%
+
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders">View Orders</button>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" mltag="txt_downloadorders">Download Orders</button>
+                    </clr-dg-cell>
+                    <clr-dg-row-detail *clrIfExpanded>
+                        <table class="additionalInfos addInfos">
+                            <tr>
+                                <th></th>
+                                <th mltag="txt_quantity">Quantity</th>
+                                <th mltag="txt_amount">Amount</th>
+                                <th mltag="txt_cutoffdate">Cut-off date</th>
+                            </tr>
+                            <tr>
+                                <td><span mltag="txt_subscriptions">Subscriptions</span>:</td>
+                                <td mltag="txt_subscqty">Subsc Qty</td>
+                                <td mltag="txt_subscamnt">Subsc Amnt</td>
+                                <td mltag="txt_subsccodate">Subsc C-O date</td>
+                            </tr>
+                            <tr>
+                                <td><span mltag="txt_rdemption">Rdemption</span>:</td>
+                                <td mltag="txt_subscqty">Subsc Qty</td>
+                                <td mltag="txt_subscamnt">Subsc Amnt</td>
+                                <td mltag="txt_subsccodate">Subsc C-O date</td>
+                            </tr>
+                        </table>
+                    </clr-dg-row-detail>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+                    <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="text-center mt-1">
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization', 'list']" mltag="txt_backtocentralization">Back to Centralization</button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>

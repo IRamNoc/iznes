@@ -109,7 +109,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             // comment out and default search up to "today"
             // navDateTo: new FormControl(moment().add(-1, 'days').format('YYYY-MM-DD')),
             navDateTo: new FormControl(moment().add(0, 'days').format('YYYY-MM-DD')),
-            datePeriod: new FormControl([this.datePeriodItems[0]])
+            datePeriod: new FormControl([])
         });
 
         this.dateFromConfig.max = moment().add(-1, 'days');
@@ -119,14 +119,25 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
+            this.navHistoryForm.controls.datePeriod.setValue([]);
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
+            this.navHistoryForm.controls.datePeriod.setValue([]);
         }));
 
-        this.subscriptionsArray.push(this.navHistoryForm.controls.datePeriod.valueChanges.subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.datePeriod.valueChanges.subscribe((val: any[]) => {
+            if(!val[0]) return;
+
             this.usingDatePeriodToSearch = true;
+
+            const dateArr = val[0].id.split('|');
+            const navDateFrom = moment(dateArr[0]).format('YYYY-MM-DD');
+            const navDateTo = moment(dateArr[1]).format('YYYY-MM-DD');
+
+            this.navHistoryForm.controls.navDateFrom.patchValue(navDateFrom);
+            this.navHistoryForm.controls.navDateTo.patchValue(navDateTo);
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.valueChanges.subscribe(() => {
@@ -339,7 +350,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         navObj.fundShareName = this.navFund.fundShareName;
         navObj.isin = this.navFund.isin;
         navObj.shareId = this.navFund.shareId;
-        // navObj.status = this.navFund.status;
 
         this.popupService.open(navObj, model.NavPopupMode.DELETE);
     }

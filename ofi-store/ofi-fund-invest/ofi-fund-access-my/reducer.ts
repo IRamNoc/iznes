@@ -8,6 +8,7 @@ import {
     SET_REQUESTED_FUND_ACCESS_MY,
     CLEAR_REQUESTED_FUND_ACCESS_MY,
 } from './actions';
+import {commonHelper} from '@setl/utils';
 
 const initialState: OfiFundAccessMyState = {
     fundAccessList: {},
@@ -62,15 +63,16 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
 
         const shareId = item.get('fundShareID', 0);
 
-        // disable fundshare price check for now
-        // need to re-enable after nav page is ready.
+        const keyFactOptionalData = commonHelper.safeJsonParse(item.get('keyFactOptionalData', '{}'));
+        const characteristicOptionalData = commonHelper.safeJsonParse(item.get('characteristicOptionalData', '{}'));
+        const calendarOptionalData = commonHelper.safeJsonParse(item.get('calendarOptionalData', '{}'));
+        const profileOptionalData = commonHelper.safeJsonParse(item.get('profileOptionalData', '{}'));
+        const priipOptionalData = commonHelper.safeJsonParse(item.get('priipOptionalData', '{}'));
+        const listingOptionalData = commonHelper.safeJsonParse(item.get('listingOptionalData', '{}'));
+        const taxationOptionalData = commonHelper.safeJsonParse(item.get('taxationOptionalData', '{}'));
+        const solvencyIIOptionalData = commonHelper.safeJsonParse(item.get('solvencyIIOptionalData', '{}'));
+        const representationOptionalData = commonHelper.safeJsonParse(item.get('representationOptionalData', '{}'));
 
-        // const price = item.get('price', 0);
-        //
-        // // Price should never be 0. if 0, jut ignore this fundshare.
-        // if (price === 0) {
-        //     return result;
-        // }
 
         result.fundShareAccessList[shareId] = {
             shareId,
@@ -86,7 +88,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             hasCoupon: item.get('hasCoupon', 0),
             couponType: item.get('couponType', 0),
             freqOfDistributionDeclaration: item.get('freqOfDistributionDeclaration', 0),
-            maximumNumDecimal: 2 || item.get('maximumNumDecimal', 0),
+            maximumNumDecimal: item.get('maximumNumDecimal', 0),
             subscriptionCategory: item.get('subscriptionCategory', 0),
             subscriptionCurrency: item.get('subscriptionCurrency', 0),
             minInitialSubscriptionInShare: item.get('minInitialSubscriptionInShare', 0),
@@ -111,15 +113,15 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             maxSubscriptionFee: item.get('maxSubscriptionFee', 0),
             maxRedemptionFee: item.get('maxRedemptionFee', 0),
             investorProfile: item.get('investorProfile', 0),
-            keyFactOptionalData: item.get('keyFactOptionalData', {}),
-            characteristicOptionalData: item.get('characteristicOptionalData', {}),
-            calendarOptionalData: item.get('calendarOptionalData', {}),
-            profileOptionalData: item.get('profileOptionalData', {}),
-            priipOptionalData: item.get('priipOptionalData', {}),
-            listingOptionalData: item.get('listingOptionalData', {}),
-            taxationOptionalData: item.get('taxationOptionalData', {}),
-            solvencyIIOptionalData: item.get('solvencyIIOptionalData', {}),
-            representationOptionalData: item.get('representationOptionalData', {}),
+            keyFactOptionalData,
+            characteristicOptionalData,
+            calendarOptionalData,
+            profileOptionalData,
+            priipOptionalData,
+            listingOptionalData,
+            taxationOptionalData,
+            solvencyIIOptionalData,
+            representationOptionalData,
             entryFee: item.get('entryFee', 0),
             exitFee: item.get('exitFee', 0),
             fundName: item.get('fundName', ''),
@@ -139,11 +141,11 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             weeklySubscriptionDealingDays: item.get('weeklySubscriptionDealingDays', 0),
             monthlySubscriptionDealingDays: item.get('monthlySubscriptionDealingDays', 0),
             yearlySubscriptionDealingDays: item.get('yearlySubscriptionDealingDays', 0),
-            redemptionTradeCyclePeriod: item.get('yearlySubscriptionDealingDays', 0),
-            numberOfPossibleRedemptionsWithinPeriod: item.get('yearlySubscriptionDealingDays', 0),
-            weeklyRedemptionDealingDays: item.get('yearlySubscriptionDealingDays', 0),
+            redemptionTradeCyclePeriod: item.get('redemptionTradeCyclePeriod', 0),
+            numberOfPossibleRedemptionsWithinPeriod: item.get('numberOfPossibleRedemptionsWithinPeriod', 0),
+            weeklyRedemptionDealingDays: item.get('weeklyRedemptionDealingDays', 0),
             monthlyRedemptionDealingDays: item.get('monthlyRedemptionDealingDays', 0),
-            yearlyRedemptionDealingDays: item.get('monthlyRedemptionDealingDays', 0),
+            yearlyRedemptionDealingDays: item.get('yearlyRedemptionDealingDays', 0),
             navPeriodForSubscription: item.get('navPeriodForSubscription', 0),
             navPeriodForRedemption: item.get('navPeriodForRedemption', 0)
         };

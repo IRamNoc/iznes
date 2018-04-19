@@ -4,14 +4,16 @@ import {ClarityModule} from '@clr/angular';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule} from '@setl/utils';
+import {RouterModule} from '@angular/router';
 
 // Local components
 import {OfiTaxReportComponent} from './ofi-tax-report/component';
 import {OfiPnlReportComponent} from './ofi-pnl-report/component';
 import {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component';
+import {OfiCentralizationHistoryComponent} from './centralization-history/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {ActionDirection} from './pnlHelper/class';
-import {OfiManageCsvComponent} from "./ofi-csv-report/component";
+import {OfiManageCsvComponent} from './ofi-csv-report/component';
 import {MultilingualModule} from '@setl/multilingual';
 import {CentralizationReportComponent} from './centralization/component';
 
@@ -39,7 +41,8 @@ export class TxTypePipe implements PipeTransform {
         DpDatePickerModule,
         SetlComponentsModule,
         SetlDirectivesModule,
-        MultilingualModule
+        MultilingualModule,
+        RouterModule,
     ],
     exports: [],
     declarations: [
@@ -49,6 +52,8 @@ export class TxTypePipe implements PipeTransform {
         TxTypePipe,
         OfiManageCsvComponent,
         CentralizationReportComponent,
+        OfiCentralizationHistoryComponent,
+        TxTypePipe,
     ],
     providers: [],
 })

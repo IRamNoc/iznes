@@ -30,6 +30,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private mode: model.NavPopupMode;
     private _isOpen: boolean;
+    private popupModel: { share: model.NavInfoModel, mode: model.NavPopupMode };
 
     navLatest: number;
 
@@ -73,7 +74,7 @@ export class OfiManageNavPopup implements OnInit {
         this.popupService.onOpen.subscribe((res: { share: model.NavInfoModel, mode: model.NavPopupMode }) => {
             this.redux.dispatch(clearRequestedNavLatest());
             this.navExceedsThreshold = false;
-            this.initNavForm(res.share, res.mode);
+            this.popupModel = res;
         });
 
         this.popupService.onClose.subscribe(() => {
@@ -87,6 +88,8 @@ export class OfiManageNavPopup implements OnInit {
         }));
         this.subscriptionsArray.push(this.navLatestOb.subscribe(navList => {
             this.updateNavLatest(navList);
+
+            if(this.popupModel) this.initNavForm(this.popupModel.share, this.popupModel.mode);
         }));
     }
 
@@ -107,7 +110,8 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     isAddMode(): boolean {
-        return this.popupService.mode() === model.NavPopupMode.ADD;
+        return this.popupService.mode() === model.NavPopupMode.ADD ||
+            this.popupService.mode() === model.NavPopupMode.ADD_EXISTING;
     }
 
     isEditMode(): boolean {
@@ -132,25 +136,29 @@ export class OfiManageNavPopup implements OnInit {
             [this.statusItems[0]];
 
         this.navForm = new FormGroup({
-            price: new FormControl('', Validators.required),
+            nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
+            price: new FormControl(this.navLatest, Validators.required),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             status: new FormControl(statusObj, Validators.required)
         });
 
-        if (mode !== model.NavPopupMode.ADD) {
+        if(mode === model.NavPopupMode.ADD) {
+            this.navForm.controls.status.enable();
+        } else if(mode === model.NavPopupMode.ADD_EXISTING) {
+            this.navForm.controls.status.enable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
-            // this.navForm.controls.status.disable();
-        }
-
-        if (Number(share.status) === -1) {
-            this.navForm.controls.price.disable();
-            this.navForm.controls.navDate.disable();
-            this.navForm.controls.navPubDate.disable();
+        } else if(mode === model.NavPopupMode.EDIT) {
             this.navForm.controls.status.disable();
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
+        } else if(mode == model.NavPopupMode.DELETE) {
+            this.navForm.controls.nav.disable();
+            this.navForm.controls.status.disable();
+            this.navForm.controls.navDate.disable();
+            this.navForm.controls.navPubDate.disable();
         }
-
 
         this.navForm.controls.price.valueChanges.subscribe((nav: number) => {
             this.checkIfNavExceedsThreshold(nav);
@@ -224,7 +232,8 @@ export class OfiManageNavPopup implements OnInit {
 
         const requestData = {
             shareId: this.share.shareId,
-            navDate: `${this.navForm.controls.navDate.value} 00:00:00`
+            navDate: `${this.navForm.controls.navDate.value} 00:00:00`,
+            navStatus: this.navForm.controls.status.value[0].id
         }
 
         OfiNavService.defaultDeleteNav(this.ofiNavService,
@@ -319,7 +328,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private showErrorModal(data): void {
         this.alertsService.create('error',
-            `${data[1].status}`);
+            `${data[1].Data[0].Message}`);
 
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());

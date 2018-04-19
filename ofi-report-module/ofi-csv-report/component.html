@@ -24,42 +24,42 @@
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_download">Download:</span>
+                                <span class="ml_translated"><span mltag="txt_download">Download</span>:</span>
                             </label>
                             <div>
-                                <button class="btn btn-primary" (click)="getCsvReport()">
-                                    Historical Orders
+                                <button class="btn btn-primary" (click)="getCsvReport()" mltag="txt_historicalorders">Historical Orders
+
                                 </button>
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_datefrom">Date From:</span>
+                                <span class="ml_translated"><span mltag="txt_datefrom">Date From</span>:</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input
-                                    formControlName="navDateFrom"
-                                    [dpDayPicker]="configDate" placeholder="Choose a date from"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    [readonly]="true"
-                                    mltag="txt_chooseadatefrom"/>
+                                <input formControlName="navDateFrom" [dpDayPicker]="configDate" placeholder="Choose a date from" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="true" mltag="txt_chooseadatefrom">
+
+
+
+
+
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_dateto">Date To:</span>
+                                <span class="ml_translated"><span mltag="txt_dateto">Date To</span>:</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input
-                                    formControlName="navDateTo"
-                                    [dpDayPicker]="configDate" placeholder="Choose a date to"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    [readonly]="true"
-                                    mltag="txt_chooseadateto"/>
+                                <input formControlName="navDateTo" [dpDayPicker]="configDate" placeholder="Choose a date to" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="true" mltag="txt_chooseadateto">
+
+
+
+
+
                             </div>
                         </div>
                     </div>

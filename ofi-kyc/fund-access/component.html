@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>
-        <span mltag="">Client folder - Funds' Shares access authorisation:</span> - {{investorData['companyName']}}
+        <span><span mltag="txt_clientfolderfundssharesaccessa1c2656ad8e">Client folder - Funds' Shares access authorisation</span>:</span> - {{investorData['companyName']}}
     </h1>
 </div>
 
@@ -9,7 +9,7 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-user"></i> <span mltag="">Funds' Shares Access Authorisation</span>
+                <i class="fa fa-user"></i> <span mltag="txt_fundssharesaccessauthorisation55e4a20f24">Funds' Shares Access Authorisation</span>
             </button>
             <clr-tab-content>
                 <div class="panel-body">
@@ -21,40 +21,43 @@
                     <div class="hr-line-dashed"></div>
 
                     <div>
-                        <h2>Funds' Share Access Authorisation</h2>
+                        <h2 mltag="txt_fundsshareaccessauthorisation">Funds' Share Access Authorisation</h2>
 
                         <form>
-                            <div class="row form-group">
-                                We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
+                            <div class="row form-group">We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
+
                                 <clr-datagrid #myDataGrid class="fund-table">
-                                    <clr-dg-column>Fund Name</clr-dg-column>
-                                    <clr-dg-column>Share Name</clr-dg-column>
-                                    <clr-dg-column>ISIN</clr-dg-column>
-                                    <clr-dg-column>Grant Access to this Share?</clr-dg-column>
+                                    <clr-dg-column mltag="txt_fundname">Fund Name</clr-dg-column>
+                                    <clr-dg-column mltag="txt_sharename">Share Name</clr-dg-column>
+                                    <clr-dg-column mltag="txt_isin">ISIN</clr-dg-column>
+                                    <clr-dg-column mltag="txt_grantaccesstothisshare">Grant Access to this Share?</clr-dg-column>
                                     <clr-dg-row *clrDgItems="let row of tableData">
-                                        <clr-dg-cell>
-                                            {{row['fundName']}}
+                                        <clr-dg-cell>{{row['fundName']}}
+
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>{{row['shareName']}}
+
+                                        </clr-dg-cell>
+                                        <clr-dg-cell>{{row['isin']}}
+
                                         </clr-dg-cell>
                                         <clr-dg-cell>
-                                            {{row['shareName']}}
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>
-                                            {{row['isin']}}
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>
-                                            <ng-container *ngIf="access[row['id']]">
-                                                <span class="pointer" (click)="access[row['id']]['access'] = !access[row['id']]['access']; access[row['id']]['changed'] = !access[row['id']]['changed'];">
-                                                    <i class="fa fa-lg fa-{{(access[row['id']]['access']?'un':'')}}lock text-{{(access[row['id']]['access']?'green':'red')}}"></i> {{(access[row['id']]['access']?'On':'Off')}}
-                                                </span>
-                                            </ng-container>
+                                            <label class="switch">
+                                                <input type="checkbox"
+                                                       id="{{row['isin'] + '-access'}}"
+                                                       [value]="access[row['id']]['access']"
+                                                       (click)="onClickAccess(access[row['id']])"
+                                                >
+                                                <span class="slider round"></span>
+                                            </label>
                                         </clr-dg-cell>
                                     </clr-dg-row>
                                 </clr-datagrid>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12" align="center">
-                                    <button class="btn btn-info" routerLink="/kyc-am-documents">Back</button>
-                                    <button class="btn btn-primary" (click)="displayModal();">Validate</button>
+                                    <button class="btn btn-info" routerLink="/kyc-am-documents" mltag="txt_back">Back</button>
+                                    <button class="btn btn-primary" (click)="displayModal();" mltag="txt_validate">Validate</button>
                                 </div>
                             </div>
                         </form>

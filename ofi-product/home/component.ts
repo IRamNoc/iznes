@@ -145,28 +145,25 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     };
     panelDefs = [
         {
-            title: 'Shares',
+            title: 'Umbrella funds',
             columns: [
-                this.columns['shareName'],
-                this.columns['fundName'],
-                this.columns['isin'],
-                this.columns['shareCurrency'],
+                this.columns['uFundName'],
+                this.columns['lei'],
                 this.columns['managementCompany'],
-                this.columns['shareClass'],
-                this.columns['status']
+                this.columns['country']
             ],
             action: {
-                id: 'new-share-btn',
-                title: 'Add new Share',
+                id: 'new-umbrella-fund-btn',
+                title: 'Add new Umbrella fund',
                 icon: 'plus',
-                type: 'share',
+                type: 'ufund',
             },
-            link: '/product-module/fund-share/',
-            linkIdent: 'fundShareID',
+            link: '/product-module/umbrella-fund/',
+            linkIdent: 'umbrellaFundID',
             open: true,
-            data: this.shareList,
-            count: this.shareList.length,
-            columnLink: 'shareName'
+            data: this.umbrellaFundList,
+            count: this.umbrellaFundList.length,
+            columnLink: 'umbrellaFundName'
         },
         {
             title: 'Funds',
@@ -193,25 +190,28 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             columnLink: 'fundName'
         },
         {
-            title: 'Umbrella funds',
+            title: 'Shares',
             columns: [
-                this.columns['uFundName'],
-                this.columns['lei'],
+                this.columns['shareName'],
+                this.columns['fundName'],
+                this.columns['isin'],
+                this.columns['shareCurrency'],
                 this.columns['managementCompany'],
-                this.columns['country']
+                this.columns['shareClass'],
+                this.columns['status']
             ],
             action: {
-                id: 'new-umbrella-fund-btn',
-                title: 'Add new Umbrella fund',
+                id: 'new-share-btn',
+                title: 'Add new Share',
                 icon: 'plus',
-                type: 'ufund',
+                type: 'share',
             },
-            link: '/product-module/umbrella-fund/',
-            linkIdent: 'umbrellaFundID',
+            link: '/product-module/fund-share/',
+            linkIdent: 'fundShareID',
             open: true,
-            data: this.umbrellaFundList,
-            count: this.umbrellaFundList.length,
-            columnLink: 'umbrellaFundName'
+            data: this.shareList,
+            count: this.shareList.length,
+            columnLink: 'shareName'
         }
     ];
 

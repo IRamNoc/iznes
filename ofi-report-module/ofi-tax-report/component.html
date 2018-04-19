@@ -30,13 +30,13 @@
                                 <span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>
                             </label>
                             <div>
-                                <ng-select
-                                    [items]="addressList"
-                                    [allowClear]="false"
-                                    placeholder="Select sub-portfolio"
-                                    [formControl]="address"
-                                    (selected)="handleSelectedAddress($event)"
-                                    mltag="txt_selectsubportfolio">
+                                <ng-select [items]="addressList" [allowClear]="false" placeholder="Select sub-portfolio" [formControl]="address" (selected)="handleSelectedAddress($event)" mltag="txt_selectsubportfolio">
+
+
+
+
+
+
                                 </ng-select>
                             </div>
                         </div>
@@ -54,13 +54,13 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input
-                                    formControlName="fromDate"
-                                    [dpDayPicker]="configDate" placeholder="Choose a date"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    (ngModelChange)="dateChange('from', $event)"
-                                    [readonly]="true"
-                                    mltag="txt_chooseadate"/>
+                                <input formControlName="fromDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('from', $event)" [readonly]="true" mltag="txt_chooseadate">
+
+
+
+
+
+
                             </div>
                         </div>
 
@@ -71,13 +71,13 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input
-                                    formControlName="toDate"
-                                    [dpDayPicker]="configDate" placeholder="Choose a date"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    (ngModelChange)="dateChange('to', $event)"
-                                    [readonly]="true"
-                                    mltag="txt_chooseadate"/>
+                                <input formControlName="toDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('to', $event)" [readonly]="true" mltag="txt_chooseadate">
+
+
+
+
+
+
                             </div>
                         </div>
 
@@ -85,8 +85,8 @@
                             <label class="control-label">
                                 <span class="ml_translated" mltag="txt_totalamounttobedeclared">Total Amount to be declared</span>
                             </label>
-                            <div>
-                                € <span class="text-primary">{{totalAmountToDeclared | moneyValue: 4}}</span>
+                            <div>€ 
+                                <span class="text-primary">{{totalAmountToDeclared | moneyValue: 4}}</span>
                             </div>
                         </div>
                     </div>
@@ -114,42 +114,42 @@
                         </div>
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.fundName}}
+                    <clr-dg-cell>{{tx.fundName}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.type | txType}}
+                    <clr-dg-cell>{{tx.type | txType}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.transactionRefId | padding : 10 }}
+                    <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.grossAmount | moneyValue: 4}}
+                    <clr-dg-cell>{{tx.grossAmount | moneyValue: 4}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.quantity | moneyValue : 5}}
+                    <clr-dg-cell>{{tx.quantity | moneyValue : 5}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.taxCredit | moneyValue: 4}}
+                    <clr-dg-cell>{{tx.taxCredit | moneyValue: 4}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.amountToDeclared | moneyValue: 5}}
+                    <clr-dg-cell>{{tx.amountToDeclared | moneyValue: 5}}
+
                     </clr-dg-cell>
 
-                    <clr-dg-cell>
-                        {{tx.deliveryDate | date : 'dd/MM/yyyy' }}
+                    <clr-dg-cell>{{tx.deliveryDate | date : 'dd/MM/yyyy' }}
+
                     </clr-dg-cell>
 
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
@@ -176,38 +176,38 @@
 
             <clr-dg-row *clrDgItems="let tx of relatedRedemptionTxList">
 
-                <clr-dg-cell>
-                    {{tx.transactionInstrumentName}}
+                <clr-dg-cell>{{tx.transactionInstrumentName}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionType | txType}}
+                <clr-dg-cell>{{tx.transactionType | txType}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionRefId | padding : 10 }}
+                <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionPrice | moneyValue: 4}}
+                <clr-dg-cell>{{tx.transactionPrice | moneyValue: 4}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionUnits | moneyValue : 5}}
+                <clr-dg-cell>{{tx.transactionUnits | moneyValue : 5}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionSettlement | moneyValue: 4}}
+                <clr-dg-cell>{{tx.transactionSettlement | moneyValue: 4}}
+
                 </clr-dg-cell>
 
-                <clr-dg-cell>
-                    {{tx.transactionDeliveryDate | date : 'dd/MM/yyyy' }}
+                <clr-dg-cell>{{tx.transactionDeliveryDate | date : 'dd/MM/yyyy' }}
+
                 </clr-dg-cell>
 
             </clr-dg-row>
 
-            <clr-dg-footer>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>

@@ -23,6 +23,10 @@ import {setRequestedWalletAddresses} from '@setl/core-store';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
+import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
+import {OrderHelper} from '../../ofi-product/fund-share/helper/order-helper';
+import {commonHelper} from '@setl/utils';
+import {OrderByType, OrderType} from '../../ofi-orders/order.model';
 
 @Component({
     selector: 'app-invest-fund',
@@ -34,8 +38,6 @@ import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 
 export class InvestFundComponent implements OnInit, OnDestroy {
     static DateFormat = 'DD/MM/YYYY';
-    static valuationOffset = 2;
-    static settlementOffset = 3;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -167,6 +169,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }[this.type];
     }
 
+    get orderTypeNumber(): number {
+        return {
+            subscribe: 3,
+            redeem: 4
+        }[this.type];
+    }
+
     get orderTypeLabel(): string {
         return {
             subscribe: 'Subscription',
@@ -180,6 +189,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get actionBy() {
         return this._actionBy;
+    }
+
+    get actionByNumber() {
+        return {
+            a: OrderByType.Amount,
+            q: OrderByType.Quantity
+        }[this.actionBy];
     }
 
     set dateBy(value) {
@@ -214,7 +230,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get allowCheckDisclaimer(): string | null {
-        return this.form.valid ? null : '';
+        return (this.form.valid && this.isValidOrderValue()) ? null : '';
     }
 
     get allowToPlaceOrder(): string | null {
@@ -223,6 +239,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get assetClass(): string {
         return FundShareValue.ClassCodeValue[this.shareData.shareClassCode];
+    }
+
+    get valuationOffset() {
+        return (new CalendarHelper(this.shareData)).valuationOffSet;
+    }
+
+    get settlementOffset() {
+        return (new CalendarHelper(this.shareData)).settlementOffSet;
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -335,18 +359,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     isCutoffDay(thisDate: moment): boolean {
-        const cutoffDays = [1];
-        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
+        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.orderTypeNumber);
+        return isValidCutOff || !this.doValidate;
     }
 
     isValuationDay(thisDate: moment): boolean {
-        const cutoffDays = [1 + InvestFundComponent.valuationOffset];
-        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
+        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.orderTypeNumber);
+        return isValidValuation || !this.doValidate;
     }
 
     isSettlementDay(thisDate: moment): boolean {
-        const cutoffDays = [1 + InvestFundComponent.settlementOffset];
-        return ((cutoffDays.includes(thisDate.day()) && (thisDate.diff(moment(), 'days') > 0))) || !this.doValidate;
+        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.orderTypeNumber);
+        return isValidSettlement || !this.doValidate;
     }
 
     updateAddressList(addressList) {
@@ -421,12 +445,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.close.emit();
     }
 
-    handleSubmit() {
+    buildOrderRequest() {
 
-        const request = {
+        return {
             shareIsin: this.shareData.isin,
             portfolioId: this.connectedWalletId,
-            subportfolio: this.address.value[0].id,
+            subportfolio: _.get(this.address, ['value', '0', 'id'], ''),
             dateBy: this.dateBy,
             dateValue: this.dateValue,
             orderType: this.orderType,
@@ -434,13 +458,36 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value
         };
+    }
+
+    handleSubmit() {
+        const request = this.buildOrderRequest();
 
         console.log('place an order', request);
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
-            console.log('order created successfully', data);
-        }).catch((e) => {
-            console.log('order created successfully', e);
+            const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+            const orderRef = commonHelper.pad(orderId, 8, '0');
+            this._alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">Order ${orderRef} has been successfully created</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        }).catch((data) => {
+            const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+            this._alertsService.create('error', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">${errorMessage}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `);
         });
 
     }
@@ -460,6 +507,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const callBack = {
             'quantity': (value) => {
                 const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
+
                 /**
                  * amount = unit * nav
                  */
@@ -504,6 +552,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
     }
 
+    isValidOrderValue() {
+        const minValue = OrderHelper.getSubsequentMinFig(this.shareData, this.orderTypeNumber, this.actionByNumber);
+
+        return Boolean(minValue <= this.orderValue);
+    }
+
     subscribeForChangeDate(type: string, $event: any): boolean {
         if (!this.doValidate) {
             this.dateBy = 'cutoff';
@@ -530,10 +584,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mValuationDate = momentDateValue.clone().add(InvestFundComponent.valuationOffset, 'days');
+            const mValuationDate = momentDateValue.clone().add(this.valuationOffset, 'days');
             const valuationDateStr = mValuationDate.clone().format('DD/MM/YYYY');
 
-            const mSettlementDate = momentDateValue.clone().add(InvestFundComponent.settlementOffset, 'days');
+            const mSettlementDate = momentDateValue.clone().add(this.settlementOffset, 'days');
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
@@ -543,10 +597,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
-            const mCutoffDate = momentDateValue.clone().subtract(InvestFundComponent.valuationOffset, 'days');
+            const mCutoffDate = momentDateValue.clone().subtract(this.valuationOffset, 'days');
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mSettlementDate = mCutoffDate.clone().add(InvestFundComponent.settlementOffset, 'days');
+            const mSettlementDate = mCutoffDate.clone().add(this.settlementOffset, 'days');
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -554,10 +608,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
-            const mCutoffDate = momentDateValue.clone().subtract(InvestFundComponent.settlementOffset, 'days');
+            const mCutoffDate = momentDateValue.clone().subtract(this.settlementOffset, 'days');
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mValuationDate = mCutoffDate.clone().add(InvestFundComponent.valuationOffset, 'days');
+            const mValuationDate = mCutoffDate.clone().add(this.valuationOffset, 'days');
             const valuationStr = mValuationDate.format('DD/MM/YYYY');
 
             beTriggered[0].setValue(cutoffDateStr);

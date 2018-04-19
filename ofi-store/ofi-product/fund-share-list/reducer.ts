@@ -165,7 +165,26 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             fundName: share.fundName,
             umbrellaFundID: share.umbrellaFundID,
             managementCompanyName: share.managementCompanyName,
-            managementCompanyId: share.managementCompanyID
+            managementCompanyId: share.managementCompanyID,
+            subscriptionStartDate: share.subscriptionStartDate,
+            launchDate: share.launchDate,
+            fundShareStatus: share.fundShareStatus,
+            mifiidChargesOngoing: share.mifiidChargesOngoing,
+            mifiidChargesOneOff: share.mifiidChargesOneOff,
+            mifiidTransactionCosts: share.mifiidTransactionCosts,
+            mifiidIncidentalCosts: share.mifiidIncidentalCosts,
+            subscriptionTradeCyclePeriod: share.subscriptionTradeCyclePeriod,
+            numberOfPossibleSubscriptionsWithinPeriod: share.numberOfPossibleSubscriptionsWithinPeriod,
+            weeklySubscriptionDealingDays: share.weeklySubscriptionDealingDays,
+            monthlySubscriptionDealingDays: share.monthlySubscriptionDealingDays,
+            yearlySubscriptionDealingDays: share.yearlySubscriptionDealingDays,
+            redemptionTradeCyclePeriod: share.redemptionTradeCyclePeriod,
+            numberOfPossibleRedemptionsWithinPeriod: share.numberOfPossibleRedemptionsWithinPeriod,
+            weeklyRedemptionDealingDays: share.weeklyRedemptionDealingDays,
+            monthlyRedemptionDealingDays: share.monthlyRedemptionDealingDays,
+            yearlyRedemptionDealingDays: share.yearlyRedemptionDealingDays,
+            navPeriodForSubscription: share.navPeriodForSubscription,
+            navPeriodForRedemption: share.navPeriodForRedemption
         };
 
         iznShareList = iznShareList.set(share.fundShareID, shareData);

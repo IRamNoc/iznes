@@ -1,0 +1,30 @@
+.tableShareDetails{
+    margin: 1% 0;
+}
+.tableShareDetails td:nth-child(n+2) {
+    padding-left: 2%;
+}
+
+.addInfos {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #dddddd;
+    padding: 10px;
+    background-color: #f0f0f0;
+    margin: 20px 10px 20px 0;
+}
+.addInfos table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/*.addInfos td, .addInfos th {*/
+    /*border: 1px solid #ccc;*/
+    /*text-align: left;*/
+    /*padding: 5px 10px;*/
+/*}*/
+
+/*.addInfos th:nth-child(n+2), .addInfos tr:nth-child(n+2) td:first-child {*/
+    /*background-color: #dddddd;*/
+    /*font-weight: 900;*/
+/*}*/

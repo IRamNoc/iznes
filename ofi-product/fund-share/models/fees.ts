@@ -183,11 +183,6 @@ export class ShareFeesOptional {
         label: 'Subscription Fee Minimum',
         required: false
     }
-    subscriptionFeeMaximum: FormItem = {
-        type: FormItemType.number,
-        label: 'Subscription Fee Maximum',
-        required: false
-    }
     subscriptionFeeInFavourOfFund: FormItem = {
         type: FormItemType.number,
         label: 'Subscription Fee In Favour Of Fund',

@@ -2,15 +2,16 @@
     cursor: pointer;
 }
 
-.text-green{
-    color: green;
-}
-
-.text-red{
-    color: red;
-}
-
 .fund-table{
     width: 100%;
     margin-top: 10px;
+}
+
+.slider {
+    top: inherit !important;
+}
+
+label.switch {
+    position: absolute !important;
+    margin: 4px !important;
 }
