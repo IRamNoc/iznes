@@ -119,7 +119,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
      * @return {boolean} active - true if the route tested is matching the url
      */
     public activeRoute(route: string): boolean {
-        const routeRegex = new RegExp(`^${route}(\/\S+)?`);
+        const routeRegex = new RegExp(`^${route}(\/\S+)*`);
         return routeRegex.test(this.router.url);
     }
 
