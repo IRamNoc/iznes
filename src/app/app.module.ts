@@ -64,6 +64,7 @@ import {AppComponent} from './app.component';
  */
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
+import {FileViewerModule} from '@setl/core-fileviewer';
 /**
  * App main state
  */
@@ -108,6 +109,7 @@ export function memberSocketServiceFactory() {
         SelectModule,
         ToasterModule,
         JasperoAlertsModule,
+        FileViewerModule,
         NgReduxModule,
         NgxPaginationModule,
         SidebarModule.forRoot(),
