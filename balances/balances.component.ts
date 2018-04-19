@@ -5,8 +5,8 @@ import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { Location } from '@angular/common';
 import { TabControl, Tab } from '../tabs';
+import { select } from '@angular-redux/store';
 
 @Component({
     selector: 'setl-balances',
@@ -19,15 +19,24 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @ViewChild('myDataGrid') myDataGrid;
 
+    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+
     public tabControl: TabControl;
     public tabs: Tab[];
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
     private subscriptions: Array<Subscription> = [];
+    public connectedWalletId;
 
     constructor(private reportingService: ReportingService,
                 private route: ActivatedRoute,
-                private changeDetector: ChangeDetectorRef,
-                private location: Location) { }
+                private changeDetector: ChangeDetectorRef) {
+
+            this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+            }
+        ));
+    }
 
     ngOnInit() {
         let previous = null;
@@ -191,13 +200,20 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     /**
-     * Close tab. Update the location.
+     * Close tabs.
      *
-     * @param id
+     * @return void
      */
-    closeTab(id: number) {
-        this.location.go('/reports/balances');
-        this.tabControl.close(id);
+    closeTabs() {
+        if (this.tabControl) {
+            let tabIndex = this.tabControl.tabs.length;
+
+            while (tabIndex) {
+                this.tabControl.close(tabIndex);
+                this.changeDetector.markForCheck();
+                tabIndex--;
+            }
+        }
     }
 
     ngOnDestroy() {
