@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.General;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -61,17 +62,18 @@ public class OpenCSDGeneralAcceptanceTest {
         String email = userDetails[1];
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPage("user-admin-users");
+        navigateToPageByID("menu-user-admin-users");
         enterUsername(userName);
         enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
-        navigateToPage("user-admin-users");
+        navigateToPageByID("menu-user-admin-users");
 
         driver.findElement(By.id("user-tab-1")).click();
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(screenUserName.equals(userName));
         validatePopulatedDatabaseUsersFormdataTable("1", "8", userName, email);
+        deleteFormdataFromDatabase("8", "1");
     }
 
     @Test
@@ -83,6 +85,7 @@ public class OpenCSDGeneralAcceptanceTest {
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
         validateDatabaseUsersFormdataTable(0, "1" , "8");
+        deleteFormdataFromDatabase("8", "1");
     }
 
     @Test
@@ -137,7 +140,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    public void shouldHaveIZNESlogoOnLoginPage() throws InterruptedException {
+    public void shouldHaveIZNESLogoOnLoginPage() throws InterruptedException {
         navigateToLoginPage();
         try {
             driver.findElement(By.id("logo-iznes")).isDisplayed();
@@ -160,19 +163,22 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("menu-product-module", "menu-nav", "pageTitle");
+        navigateToDropdown("menu-product-module");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
@@ -186,10 +192,11 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops064@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], userDetails[1], "password");
         logout();
-        loginAndUpdateMyAccount("Test_User_064","asdasd", "Jordan", "Miller");
-        loginAndAssertMyInformation("Test_User_064", "asdasd", "Jordan", "Miller");
+        loginAndUpdateMyAccount(userDetails[0],"password", "Jordan", "Miller");
+        logout();
+        loginAndAssertMyInformation(userDetails[0], "password", "Jordan", "Miller");
     }
 
     public static String[] generateUserDetails() {
@@ -199,10 +206,34 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
+
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement login =  driver.findElement(By.id("login-submit"));
+            wait.until(visibilityOf(login));
+            wait.until(elementToBeClickable(login));
+
+
+        } catch (Exception e) {
+            fail("Login button not available " +  e.getMessage());
+        }
+
         loginAndVerifySuccessAdmin(username, password);
 
 
-        driver.findElement(By.id("topBarMyAccount")).click();
+           try {
+               WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
+               WebElement topBarAcc = driver.findElement(By.id("topBarMyAccount"));
+               wait1.until(visibilityOf(topBarAcc));
+               wait1.until(elementToBeClickable(topBarAcc));
+               topBarAcc.click();
+
+            }catch (Exception e1) {
+               fail("My Account not available" + e1.getMessage());
+
+               }
+
+
         driver.findElement(By.id("udDisplayName")).clear();
         driver.findElement(By.id("udDisplayName")).sendKeys(firstname + lastname);
         driver.findElement(By.id("udFirstName")).clear();
@@ -227,7 +258,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("success message did not match : " + e.getMessage());
         }
         driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
-        logout();
+
     }
 
     public static void loginAndAssertMyInformation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
@@ -375,7 +406,9 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
         try{
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+
         }catch (Exception e){
             fail("couldnt navigate to messages " + e.getMessage());
         }
@@ -398,7 +431,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
         try {
         wait.until(visibilityOf(accountTypeCaret));
@@ -412,14 +445,14 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void selectManageUserUserDropdown() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[2]/span/i[2]"));
 
         try {
             wait.until(visibilityOf(userTypeCaret));
             wait.until(elementToBeClickable(userTypeCaret));
             userTypeCaret.click();
-            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[8]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
@@ -508,9 +541,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public void checkAlert() {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, 2);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.alertIsPresent());
+        try {
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (Exception e) {

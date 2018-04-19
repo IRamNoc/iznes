@@ -262,7 +262,7 @@ const ofiProductHome = {
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
-    router_link: '/product-module/home'
+    router_link: '/product-module'
 };
 const productsManagementCompany = {
     label: 'Management Company',
@@ -302,11 +302,26 @@ const profileMyInfo = {
 };
 
 const kycDocuments = {
-    label: 'KYC Documents',
-    label_txt: 'txt_kyc_documents',
+    label: 'My Clients',
+    label_txt: 'txt_my_clients',
     icon_class: 'fa fa-align-left',
-    element_id: 'top-menu-kyc-documents',
-    router_link: '/kyc-am-documents'
+    element_id: 'top-menu-my-clients',
+    children: [
+        {
+            label: 'On-boarding Management',
+            label_txt: 'txt_my_information',
+            icon_class: 'fa fa-align-left',
+            element_id: 'top-menu-onboarding-management',
+            router_link: '/kyc-am-documents'
+        },
+        {
+            label: 'Invite Investor',
+            label_txt: 'txt_my_information',
+            icon_class: 'fa fa-align-left',
+            element_id: 'top-menu-invite-investor',
+            router_link: '/invite-investors'
+        }
+    ]
 };
 
 export const menuSpec: MenuSpec = {
@@ -391,10 +406,10 @@ export const menuSpec: MenuSpec = {
             },
             kycDocuments,
             {
-                label: 'Product Module',
-                label_txt: 'txt_productmodule',
+                label: 'My Products',
+                label_txt: 'txt_my_products',
                 icon_class: 'fa fa-industry',
-                element_id: 'menu-product-module',
+                element_id: 'menu-my-products',
                 children: [
                     ofiProductHome,
                     productsNav,
@@ -406,10 +421,10 @@ export const menuSpec: MenuSpec = {
             home,
             messages,
             {
-                label: 'Product Module',
-                label_txt: 'txt_productmodule',
+                label: 'My Products',
+                label_txt: 'txt_my_products',
                 icon_class: 'fa fa-industry',
-                element_id: 'menu-product-module',
+                element_id: 'menu-my-products',
                 children: [
                     productsNav,
                 ]
@@ -443,10 +458,10 @@ export const menuSpec: MenuSpec = {
             fundHoldings,
             messages,
             {
-                label: 'Product Module',
-                label_txt: 'txt_productmodule',
+                label: 'My Products',
+                label_txt: 'txt_my_products',
                 icon_class: 'fa fa-industry',
-                element_id: 'menu-product-module',
+                element_id: 'menu-my-products',
                 children: [
                     productsSicav,
                     productsFund,
