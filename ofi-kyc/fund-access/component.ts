@@ -312,6 +312,11 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         this._changeDetectorRef.markForCheck();
     }
 
+    onClickAccess(item) {
+        item['access'] = !item['access'];
+        item['changed'] = !item['changed'];
+    }
+
     setChangedToFalse(sharesArray: Array<number>) {
         sharesArray.forEach((shareId) => {
             this.access[shareId]['changed'] = false;
