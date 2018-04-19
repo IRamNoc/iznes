@@ -1,32 +1,26 @@
 package com.setl.openCSDClarityTests.UI.KYCModule;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.password;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -61,6 +55,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
     }
+
+
 
     @Test
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
@@ -116,7 +112,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
-        inviteAnInvestor("testops080@setl.io", "TestUser", "One", "Success!");
+        inviteAnInvestor("testops096@setl.io", "TestUser", "One", "Success!");
     }
 
     @Test

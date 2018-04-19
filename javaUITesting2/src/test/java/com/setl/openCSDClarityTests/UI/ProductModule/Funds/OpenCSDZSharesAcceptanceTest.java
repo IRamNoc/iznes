@@ -51,7 +51,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Test
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         try {
             driver.findElement(By.id("new-share-btn")).click();
