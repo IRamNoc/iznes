@@ -4,6 +4,8 @@ import {CLEAR_REQUESTED_WALLET_HOLDING, SET_REQUESTED_WALLET_HOLDING} from './ac
 import {MyWalletHoldingState} from './model';
 import * as _ from 'lodash';
 import {ShortHash} from '@setl/utils/helper/common/shorthash';
+import {randomBytes} from 'crypto';
+import {immutableHelper} from '@setl/utils';
 
 const initialState: MyWalletHoldingState = {
     holdingByAddress: {},
@@ -35,10 +37,10 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
         let payload = _.get(action, 'payload[1]', []);
         let walletId = payload.request.walletid;
 
-        const holdingByAddress = state.holdingByAddress;
+        const holdingByAddress = immutableHelper.copy(state.holdingByAddress);
         const holdingByAddressBalances = _.get(action, 'payload[1].data.balances', []);
 
-        let holdingByAsset = state.holdingByAsset;
+        let holdingByAsset = immutableHelper.copy(state.holdingByAsset);
         const holdingByAssetBalances = holdingByAddressToByAsset(holdingByAddressBalances);
 
         holdingByAddress[walletId] = holdingByAddressBalances;
@@ -117,7 +119,7 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
                     holdingByAsset[asset]['free'] += free;
                 }
 
-                holdingByAsset[asset].breakdown.push({ addr, balance, encumbrance, free: balance - encumbrance });
+                holdingByAsset[asset].breakdown.push({addr, balance, encumbrance, free: balance - encumbrance});
             }
         }
 

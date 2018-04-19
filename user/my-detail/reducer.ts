@@ -20,7 +20,6 @@ const initialState: MyDetailState = {
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
-
     let newState = {};
     let emailAddress = '';
 
@@ -107,4 +106,4 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
         default:
             return state;
     }
-}
+};
