@@ -57,6 +57,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndDisplayCreatedFundInFundsTableAndCheckDatabase() throws InterruptedException, IOException, SQLException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -94,6 +95,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayCorrectTitle() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -124,6 +126,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldBeAbleToCancelFundCreationStep1() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -148,6 +151,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -166,6 +170,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldTakeUserToStep2WhenNextIsClicked() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -189,6 +194,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     public void shouldBeAbleToCancelFundCreationStep2() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
+        waitForHomePageToLoad();
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -251,6 +257,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldUpdateFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();

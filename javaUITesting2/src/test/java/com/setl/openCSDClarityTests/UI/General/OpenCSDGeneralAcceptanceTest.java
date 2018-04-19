@@ -61,6 +61,7 @@ public class OpenCSDGeneralAcceptanceTest {
         String userName = userDetails[0];
         String email = userDetails[1];
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         enterUsername(userName);
@@ -79,6 +80,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotPersistInformationAfterSave() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         int persist = databaseCountRows("UsersFormdata");
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
@@ -91,6 +93,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check title is not displayed inside text field
@@ -99,13 +102,13 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check asterisks are displayed next to title
     }
 
     @Test
-    @Repeat
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -116,12 +119,14 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         assertTrue(driver.findElement(By.id("topBarMenu")).isDisplayed());
     }
 
     @Test
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
@@ -137,6 +142,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToPage("messages");
         assertButtonIsNotPresent("messagesworkflow");
     }
@@ -165,6 +171,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
@@ -172,6 +179,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
@@ -179,6 +187,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
@@ -191,6 +200,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayFirstnameInMyInformationScreen() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails [] = generateUserDetails();
@@ -265,6 +275,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void loginAndAssertMyInformation(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(username, password);
+        waitForHomePageToLoad();
         driver.findElement(By.id("dropdown-user")).click();
         try{
             driver.findElement(By.id("top-menu-my-info")).click();
@@ -508,6 +519,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
+        waitForHomePageToLoad();
         try{
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
         }catch (Exception e){

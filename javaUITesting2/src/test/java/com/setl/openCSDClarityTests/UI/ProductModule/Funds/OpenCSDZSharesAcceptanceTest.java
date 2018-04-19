@@ -51,6 +51,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Test
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         try {
