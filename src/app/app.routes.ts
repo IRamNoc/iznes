@@ -24,6 +24,7 @@ import {
     MyOrdersComponent,
     OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
+    CentralizationReportComponent,
     OfiCentralizationHistoryComponent,
     OfiDocumentsComponent,
     OfiFundAccessComponent,
@@ -303,6 +304,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'holders-list/:tabid',
                         component: ShareHoldersComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'centralization',
+                        component: CentralizationReportComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],
