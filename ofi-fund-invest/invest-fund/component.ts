@@ -24,7 +24,9 @@ import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderType} from "../../ofi-orders/order.model";
+import {OrderHelper} from '../../ofi-product/fund-share/helper/order-helper';
+import {commonHelper} from '@setl/utils';
+import {OrderByType, OrderType} from '../../ofi-orders/order.model';
 
 @Component({
     selector: 'app-invest-fund',
@@ -36,8 +38,6 @@ import {OrderType} from "../../ofi-orders/order.model";
 
 export class InvestFundComponent implements OnInit, OnDestroy {
     static DateFormat = 'DD/MM/YYYY';
-    // static valuationOffset = 2;
-    // static settlementOffset = 3;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -191,6 +191,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this._actionBy;
     }
 
+    get actionByNumber() {
+        return {
+            a: OrderByType.Amount,
+            q: OrderByType.Quantity
+        }[this.actionBy];
+    }
+
     set dateBy(value) {
         this._dateBy = value;
     }
@@ -223,7 +230,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get allowCheckDisclaimer(): string | null {
-        return this.form.valid ? null : '';
+        return (this.form.valid && this.isValidOrderValue()) ? null : '';
     }
 
     get allowToPlaceOrder(): string | null {
@@ -438,12 +445,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.close.emit();
     }
 
-    handleSubmit() {
+    buildOrderRequest() {
 
-        const request = {
+        return {
             shareIsin: this.shareData.isin,
             portfolioId: this.connectedWalletId,
-            subportfolio: this.address.value[0].id,
+            subportfolio: _.get(this.address, ['value', '0', 'id'], ''),
             dateBy: this.dateBy,
             dateValue: this.dateValue,
             orderType: this.orderType,
@@ -451,13 +458,36 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value
         };
+    }
+
+    handleSubmit() {
+        const request = this.buildOrderRequest();
 
         console.log('place an order', request);
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
-            console.log('order created successfully', data);
-        }).catch((e) => {
-            console.log('order created successfully', e);
+            const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+            const orderRef = commonHelper.pad(orderId, 8, '0');
+            this._alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">Order ${orderRef} has been successfully created</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        }).catch((data) => {
+            const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+            this._alertsService.create('error', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">${errorMessage}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `);
         });
 
     }
@@ -477,6 +507,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const callBack = {
             'quantity': (value) => {
                 const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
+
                 /**
                  * amount = unit * nav
                  */
@@ -519,6 +550,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }[type];
 
         this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
+    }
+
+    isValidOrderValue() {
+        const minValue = OrderHelper.getSubsequentMinFig(this.shareData, this.orderTypeNumber, this.actionByNumber);
+
+        return Boolean(minValue <= this.orderValue);
     }
 
     subscribeForChangeDate(type: string, $event: any): boolean {

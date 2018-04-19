@@ -3,16 +3,31 @@
         "module": "commonjs",
         "target": "es5",
         "noImplicitAny": false,
-        "strictNullChecks": true,
+        "strictNullChecks": false,
         "moduleResolution": "node",
-        "sourceMap": true,
+        "skipLibCheck": true,
+        "declaration": false,
+        "sourceMap": false,
+        "strict": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "noImplicitThis": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "alwaysStrict": false,
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
             "*": [
-                "../../node_modules/*"
+                "node_modules/*"
             ]
-        }
+        },
+        "lib": [
+            "es2016",
+            "es2015",
+            "dom"
+        ]
     },
     "include": [
         "./**/*"
