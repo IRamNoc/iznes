@@ -88,6 +88,9 @@ public class OpenCSDZSharesAcceptanceTest {
         openDropdownAndSelectOption("status", 1);
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
+        openDropdownAndSelectOption("valuationFrequency", 3);
+        openDropdownAndSelectOption("couponType", 3);
+        openDropdownAndSelectOption("freqOfDistributionDeclaration", 3);
         assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 2);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
@@ -139,13 +142,13 @@ public class OpenCSDZSharesAcceptanceTest {
         driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
         //PROFILE
-//        assertClassRequiredIsPresent("tabFeesButton");
-//        openDropdownAndSelectOption("investorProfile", 1);
-//        assertHiddenAttributeIsPresent("tabFeesButton");
+        assertClassRequiredIsPresent("tabProfileButton");
+        openDropdownAndSelectOption("investorProfile", 1);
+        assertHiddenAttributeIsPresent("tabProfileButton");
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
-        driver.findElement(By.id(dropdownID)).click();
+        driver.findElement(By.id("//*[@id='" + dropdownID + "']/div")).click();
         Thread.sleep(750);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
