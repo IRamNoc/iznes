@@ -182,13 +182,16 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void loginAndVerifySuccess(String username, String password) throws InterruptedException, IOException {
+    public static void loginAndVerifySuccess(String username, String password) throws InterruptedException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
-
         clickLoginButton();
-            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+    }
+
+    public static void waitForHomePageToLoad() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             WebElement topBar = driver.findElement(By.id("topBarMenu"));
             wait.until(visibilityOf(topBar));
@@ -261,12 +264,12 @@ public class LoginAndNavigationHelper {
     public static void logout() {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement settings = driver.findElement(By.id("dropdown-settings"));
 
         try {
             wait.until(invisibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
-            wait.until(visibilityOf(settings));
-            wait.until(elementToBeClickable(settings));
+            wait.until(visibilityOfElementLocated(By.id("dropdown-settings")));
+            wait.until(elementToBeClickable(By.id("dropdown-settings")));
+            WebElement settings = driver.findElement(By.id("dropdown-settings"));
             settings.click();
 
         } catch (Exception e) {
@@ -290,10 +293,10 @@ public class LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
-        WebElement dropdown = driver.findElement(By.id(dropdownID));
             wait.until(presenceOfElementLocated(By.id(dropdownID)));
             wait.until(visibilityOfElementLocated(By.id(dropdownID)));
             wait.until(elementToBeClickable(By.id(dropdownID)));
+        WebElement dropdown = driver.findElement(By.id(dropdownID));
             dropdown.click();
         } catch (Error e) {
             System.out.println(dropdownID + "not present");
