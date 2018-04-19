@@ -57,7 +57,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -96,7 +96,7 @@ public class OpenCSDSprint4AcceptanceTest {
     public void shouldUpdateFund() throws IOException, InterruptedException {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         //Get the name of the fund from the database
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();

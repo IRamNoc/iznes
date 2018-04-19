@@ -187,7 +187,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
-
+        waitForHomePageToLoad();
     }
 
     public static void waitForHomePageToLoad() {
