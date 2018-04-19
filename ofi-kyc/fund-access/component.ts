@@ -156,7 +156,9 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                     shareArray[(this.access[key]['access'] ? 'add' : 'remove')].push(key);
 
                     //array for email
-                    if (emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] == null) emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] = [];
+                    if (emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] == null) {
+                        emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] = [];
+                    }
                     emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']].push({
                         shareName: this.access[key]['shareName'],
                         isin: this.access[key]['isin']
@@ -203,7 +205,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 let recipientsArr = [this.investorData['investorWalletID']];
                 let subjectStr = this.amCompany + ' has approved your application - You can invest!';
 
-                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>Good news: you are now authorised to start trading on IZNES.';
+                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
                 if (shareArray['add'].length > 0) {
                     bodyStr += '<br><br>You have been authorised to access the following shares:';
                     Object.keys(emailArray['add']).forEach((key) => {
@@ -222,7 +224,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                         });
                     });
                 }
-                bodyStr += '<br><br><a class="btn" href="/#/list-of-funds/0">Go to the Funds shares page to start trading</a><br><br>Thank you,<br><br>The IZNES team.';
+                bodyStr += '<br><br><a class="btn" href="/#/list-of-funds/0">Go to the Funds shares page to see all changes and begin trading on IZNES</a><br><br>Thank you,<br><br>The IZNES team.';
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });
         }
