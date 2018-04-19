@@ -27,6 +27,8 @@ import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helpe
 import {OrderHelper} from '../../ofi-product/fund-share/helper/order-helper';
 import {commonHelper} from '@setl/utils';
 import {OrderByType, OrderType} from '../../ofi-orders/order.model';
+import {ToasterService} from "angular2-toaster";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-invest-fund',
@@ -257,6 +259,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _ofiOrdersService: OfiOrdersService,
                 private _alertsService: AlertsService,
                 private _confirmationService: ConfirmationService,
+                private _toaster: ToasterService,
+                private _router: Router,
                 private _ngRedux: NgRedux<any>) {
     }
 
@@ -468,26 +472,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this._ofiOrdersService.addNewOrder(request).then((data) => {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
             const orderRef = commonHelper.pad(orderId, 8, '0');
-            this._alertsService.create('success', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                       <td class="text-center text-success">Order ${orderRef} has been successfully created</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
+            this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
+            this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
-            this._alertsService.create('error', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                       <td class="text-center text-success">${errorMessage}</td>
-                    </tr>
-                </tbody>
-            </table>
-            `);
+            this._toaster.pop('warning', errorMessage);
         });
 
     }
