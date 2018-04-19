@@ -50,8 +50,8 @@ module.exports = function (config) {
         mochaReporter: {
             colors: {
                 success: 'green',
-                info: 'blue',
-                warning: 'cyan',
+                info: 'grey',
+                warning: 'yellow',
                 error: 'red'
             },
             symbols: {
