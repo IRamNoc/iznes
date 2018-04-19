@@ -1,26 +1,18 @@
 package com.setl.UI.common.SETLUIHelpers;
 
-import org.apache.commons.lang3.RandomStringUtils;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.selectNewPageToNavigateTo;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForLinkText;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static junit.framework.TestCase.assertEquals;
+
 import static org.apache.commons.lang3.RandomStringUtils.*;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+
 
 
 public class UserDetailsHelper extends LoginAndNavigationHelper {

@@ -104,6 +104,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldClickAddNewUmbrellaFundAndBeNavigatedAway() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-product-module");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -262,6 +263,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
+        scrollElementIntoViewById("fund-submitfund-btn");
         driver.findElement(By.id("fund-submitfund-btn")).click();
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
