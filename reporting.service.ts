@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-wallet-holding';
 import {Observable} from 'rxjs/Observable';
 import {isEmpty} from 'lodash';
-import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
+import {InitialisationService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
 import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {
     setRequestedWalletHolding,
@@ -51,7 +51,7 @@ export class ReportingService {
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private myWalletService: MyWalletsService
-            ) {
+    ) {
         const connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
         const connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
         const myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
@@ -105,9 +105,9 @@ export class ReportingService {
                 if (
                     (this.addressList.length === 0 && requested > 1)
                     || (this.addressList.constructor !== Array
-                        && Object.keys(this.addressList).length
-                        && Object.keys(this.addressList)[0] in this.addressList
-                        && 'label' in this.addressList[Object.keys(this.addressList)[0]])
+                    && Object.keys(this.addressList).length
+                    && Object.keys(this.addressList)[0] in this.addressList
+                    && 'label' in this.addressList[Object.keys(this.addressList)[0]])
                 ) {
                     // Only initialise after we have address labels (or there are no address labels after requesting them...)
                     initialisedSubject.next(true);
@@ -128,7 +128,7 @@ export class ReportingService {
                                 const asset = wallets.holdingByAsset[this.connectedWalletId][key];
 
                                 // Merge in address labels
-                                asset.breakdown = asset.breakdown.map(b => ({ ...b, ...this.addressList[b.addr]}));
+                                asset.breakdown = asset.breakdown.map(b => ({...b, ...this.addressList[b.addr]}));
 
                                 return asset;
                             })
@@ -140,7 +140,6 @@ export class ReportingService {
                 this.refreshDataSources();
             });
             walletIssuerDetail$
-                .filter((walletIssuerDetail: WalletIssuerDetail) => !!walletIssuerDetail.walletIssuer)
                 .subscribe((walletIssuerDetail: WalletIssuerDetail) => {
                     const issues = this.holdingsByAssetSubject.value;
                     const formatted = issues
@@ -198,6 +197,7 @@ export class ReportingService {
 
     public getTransactions(): Observable<Transaction[]> {
         this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode());
+
         return new Observable<Transaction[]>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs));
             return () => sub.unsubscribe();
@@ -206,6 +206,7 @@ export class ReportingService {
 
     public getTransaction(hash): Observable<Transaction> {
         this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode());
+
         return new Observable<Transaction>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs.find(tx => tx.hash === hash)));
             return () => sub.unsubscribe();
@@ -223,7 +224,6 @@ export class ReportingService {
             });
             return () => sub.unsubscribe();
         });
-
     }
 
     private getTransactionsFromWalletNode(asset?: string): void {
