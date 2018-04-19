@@ -22,7 +22,8 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setMenuShown,
-    setRequestedMailInitial
+    setRequestedMailInitial,
+    addWalletNodeInitialSnapshot
 } from '@setl/core-store';
 import {fromJS} from 'immutable';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
@@ -159,6 +160,11 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
                         this.changeDetectorRef.markForCheck();
                     }
+
+                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot : any) => {
+                        let action = addWalletNodeInitialSnapshot(initialSnapshot);
+                        this.ngRedux.dispatch(action);
+                    });
                 });
 
         }
