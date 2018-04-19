@@ -8,15 +8,15 @@
 <ng-template #menuItem let-childMenuJson="childMenuJson">
     <a *ngIf="!childMenuJson.children && !disableMenu" [attr.id]="childMenuJson.element_id" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
         <i class="{{childMenuJson.icon_class}}"></i>
-        <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
+        <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
     </a>
     <span *ngIf="disableMenu" class="fakeLink">
-        <i class="{{childMenuJson.icon_class}}" style="width:20px;"></i>{{childMenuJson.label}}
+        <i class="{{childMenuJson.icon_class}} sidenav-label" style="width:20px;"></i>{{childMenuJson.label}}
     </span>
 
     <section *ngIf="childMenuJson.children && !disableMenu" class="nav-group collapsible">
         <label [attr.id]="childMenuJson.element_id" menu-dropdown appHighlight [class.menuParent]="menuParentOpen == childMenuJson.element_id" (click)="menuSelected(childMenuJson.element_id)"><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
-            <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
+            <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
         <ul class="nav-list">
             <li *ngFor="let innerChild of childMenuJson.children">
                 <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link" appHighlight>

@@ -70,12 +70,12 @@
 
         </ng-sidebar>
 
-        <div ng-sidebar-content class="main-container-sidebar-content">
+        <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
 
             <!-- Navigation Topbar. -->
             <app-navigation-topbar (toggleSidebar)="_toggleSidebar()"></app-navigation-topbar>
 
-            <div class="content-container" [ngClass]="{'menuHideNav': menuShown === 0}">
+            <div class="content-container">
 
                 <!-- Navigation Sidebar. -->
                 <nav class="sidenav">
