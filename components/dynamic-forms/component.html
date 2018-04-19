@@ -55,7 +55,8 @@
                                 <div class="filedrop-wrapper">
                                     <input type="hidden" class="form-control" formControlName="{{item}}">
                                     <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
-                                    <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a>                                    
+                                    <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
+                                    <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a>                                     -->
                                 </div>
                             </ng-container>
                         </ng-container>
