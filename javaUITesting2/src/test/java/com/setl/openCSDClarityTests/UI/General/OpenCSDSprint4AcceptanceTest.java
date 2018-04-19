@@ -57,6 +57,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
@@ -96,6 +97,7 @@ public class OpenCSDSprint4AcceptanceTest {
     public void shouldUpdateFund() throws IOException, InterruptedException {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         //Get the name of the fund from the database

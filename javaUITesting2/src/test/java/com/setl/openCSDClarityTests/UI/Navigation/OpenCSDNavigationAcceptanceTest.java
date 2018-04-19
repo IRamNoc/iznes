@@ -61,12 +61,14 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore("Page removed for now")
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToPageByID("menu-asset-manager-dashboard");
     }
 
     @Test
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
     }
@@ -75,6 +77,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-account-module");
         navigateToPage("account/relationships");
     }
@@ -82,6 +85,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
     }
@@ -90,6 +94,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore("Page removed for now")
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-sicav");
     }
@@ -97,6 +102,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
 
     }
@@ -104,6 +110,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
@@ -112,6 +119,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToCreateResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/create-resolution");
     }
@@ -120,6 +128,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToIssueResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/issue-resolution");
     }
@@ -128,6 +137,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToDistribution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/distribution");
     }
@@ -144,6 +154,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToCouponPayment() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/coupon-payment");
     }
@@ -152,6 +163,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToSplit() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
+        waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage("corporate-actions/split");
     }

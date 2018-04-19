@@ -10,17 +10,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
+
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 import java.io.IOException;
-import java.sql.SQLException;
 
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
+
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static org.junit.Assert.fail;
+
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
