@@ -143,6 +143,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldAssertThatUmbrellaFundsHas3ExpandableFields(){
     }
+
     @Test
     public void shouldAssertThatFundsHas3ExpandableFields(){
     }
@@ -165,7 +166,14 @@ public class OpenCSDSprint4AcceptanceTest {
 
     @Test
     public void shouldCreateAndSetWalletWhenFundIsCreated(){
+    }
 
+    @Test
+    public void shouldCreateFundShareAndCheckDatabase(){
+    }
+
+    @Test
+    public void shouldUpdateFundShareAndCheckDatabase(){
     }
 
     public static void navigateToAddUser() {

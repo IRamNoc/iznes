@@ -30,6 +30,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("uf_lei")).sendKeys("testLei");
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
         //searchAndSelectTopDropdown("uf_managementCompany", "2019-10-20");
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_investmentAdvisor");

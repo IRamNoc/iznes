@@ -160,16 +160,19 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-product-module");
         navigateToPage("product-module");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
+        System.out.println(i);
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-        Thread.sleep(2500);
-        String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        System.out.println(preCreationNo);
-        System.out.println(postCreationNo);
-        assertFalse(preCreationNo.equals(postCreationNo));
+        try {
+            String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+            assertFalse(postCreationNo.equals(preCreationNo + 1));
+        }catch (Exception e){
+            fail();
+        }
     }
 
     @Test
