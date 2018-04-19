@@ -72,16 +72,16 @@ const manageOrders = {
     router_link: '/manage-orders/list'
 };
 const reportsCollectsArchives = {
-    label: 'Collects Archives',
-    label_txt: 'txt_collects-archives',
+    label: 'Centralisation',
+    label_txt: 'txt_centralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-am-reports-section-collective-archives',
     router_link: '/am-reports-section/collects-archive'
 };
 
 const reportsHistoricalOrders = {
-    label: 'Historical Orders',
-    label_txt: 'txt_historical_orders',
+    label: 'Holders Lists',
+    label_txt: 'txt_holders_list',
     icon_class: 'fa fa-book',
     element_id: 'menu-am-reports-section-historical-orders',
     router_link: '/reports-section/csv'
@@ -262,7 +262,7 @@ const ofiProductHome = {
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
-    router_link: '/product-module/home'
+    router_link: '/product-module'
 };
 const productsManagementCompany = {
     label: 'Management Company',
@@ -302,7 +302,7 @@ const profileMyInfo = {
 };
 
 const kycDocuments = {
-    label: 'KYC',
+    label: 'KYC Documents',
     label_txt: 'txt_kyc_documents',
     icon_class: 'fa fa-align-left',
     element_id: 'top-menu-kyc-documents',
@@ -319,7 +319,7 @@ export const menuSpec: MenuSpec = {
                     label_txt: 'txt_my_company_kyc',
                     icon_class: '',
                     element_id: 'top-menu-kyc',
-                    router_link: ''
+                    router_link: '/manage-orders/list'
                 },
             ],
             am: [
@@ -330,13 +330,6 @@ export const menuSpec: MenuSpec = {
                     icon_class: '',
                     element_id: 'top-menu-invite-investors',
                     router_link: '/invite-investors'
-                },
-                {
-                    label: 'Add an AM',
-                    label_txt: 'txt_add_am',
-                    icon_class: '',
-                    element_id: 'top-menu-add-am',
-                    router_link: ''
                 },
             ],
             valuer: [

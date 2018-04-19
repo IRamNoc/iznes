@@ -1,7 +1,12 @@
 package SETLAPIHelpers;
 
+import org.openqa.selenium.By;
+
+import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class FundDetailsHelper {
 
@@ -17,7 +22,6 @@ public class FundDetailsHelper {
     String fundLei = "lei_" + randomAlphabetic(5);
     int sicavId = Integer.parseInt(randomNumeric(1, 6));
     int companyId = Integer.parseInt(randomNumeric(1, 3));
-
 
     return new String[] {fundName, fundProspectus, fundReport, fundShares, fundLei, String.valueOf(sicavId), String.valueOf(companyId) };
   }
