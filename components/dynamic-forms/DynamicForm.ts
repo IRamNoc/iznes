@@ -11,9 +11,9 @@ export interface FormItem {
     validator?: ValidatorFn;
     hidden?: () => boolean;
     disabled?: boolean;
-    readonly value?: () => any;
-    readonly isValid?: () => boolean;
-    readonly cssClass?: string;
+    value?: () => any;
+    isValid?: () => boolean;
+    cssClass?: string;
 
     listItems?: {
         id: string | number;

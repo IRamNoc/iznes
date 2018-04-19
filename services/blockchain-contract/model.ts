@@ -179,7 +179,7 @@ export type ParameterData = [
     ];
 
 export interface ContractData {
-    contractfunction: string;
+    __function: string;
     parties: Array<number | PartyListEntryData>;
     authorisations: Array<AuthorisationEntryData>;
     parameters: Array<ParameterData>;
