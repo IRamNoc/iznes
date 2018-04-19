@@ -38,7 +38,7 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToPageByID(String pageID) throws InterruptedException {
+    public static void navigateToPageByID(String pageID) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
         WebElement page = driver.findElement(By.id(pageID));

@@ -47,7 +47,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -105,7 +105,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/net-asset-value");
+        navigateToPageByID("menu-nav");
     }
 
     @Test
