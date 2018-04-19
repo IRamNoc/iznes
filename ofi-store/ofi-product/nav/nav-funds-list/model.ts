@@ -5,6 +5,9 @@ export interface NavDetail {
     isin: number;
     currency: string;
     nav: number;
+    navEstimated?: number;
+    navTechnical?: number;
+    navValidated?: number;
     navDate: string;
     navPubDate: string;
     status: number;

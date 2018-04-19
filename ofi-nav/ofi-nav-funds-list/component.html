@@ -4,7 +4,8 @@
         <span mltag="txt_netassetvalue">Net asset value</span>
     </h1>
 
-    <span mltag="txt_viewthenavsforthesharesintheli9c31f5f60c">View the NAV's for the shares in the list below.</span>
+    <span mltag="txt_navdescription">Please select a date type and a date to access to the available NAVs.<br />
+        You will have access to the NAV's history of a specific share in clicking on the corresponding row.</span>
 </div>
 
 <clr-tabs *ngIf="searchForm">
@@ -24,24 +25,24 @@
                         </div>
                         <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
                             <label class="control-label" for="selectDateType" mltag="txt_selectadate">Select a Date</label>
-                            <ng-select id="selectDateType" class="fluid-width" [items]="dateTypes" formControlName="dateType" placeholder="Select Date type" [allowClear]="false" mltag="txt_selectdatetype">
-
-
-
-
-
-
+                            <ng-select id="selectDateType" class="fluid-width"
+                                [items]="dateTypes"
+                                formControlName="dateType"
+                                placeholder="Select Date type"
+                                [allowClear]="false"
+                                mltag="txt_selectdatetype">
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDatePicker" name="searchDate" placeholder="Choose a date" formControlName="date" [dpDayPicker]="dateConfig" mode="day" theme="dp-material" mltag="txt_chooseadate">
-
-
-
-
+                                <input id="navDatePicker" name="searchDate" placeholder="Choose a date"
+                                    formControlName="date"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_chooseadate">
                             </div>
                         </div>
                     </div>
@@ -49,47 +50,66 @@
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column>
+                <clr-dg-column class="col-fundsharename">
                     <span mltag="txt_sharename">Share name</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navdate">NAV Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navpubdate">NAV<br />Pub Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_navnextvaluation">Next Valuation Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-currency">
                     <span mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navdate">NAV Date</span>
+                    <span mltag="txt_navestimated">NAV<br />Estimated</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navpublicationdate">NAV Publication Date</span>
+                    <span mltag="txt_navtechnical">NAV<br />Technical</span>
                 </clr-dg-column>
                 <clr-dg-column>
+                    <span mltag="txt_navvalidated">NAV<br />Validated</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-status">
                     <span mltag="txt_status">Status</span>
-                </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_nextvaluationdate">Next Valuation Date</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems">
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharename" (click)="navigateToShare(item.shareId)" title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
-
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-currency" (click)="navigateToShare(item.shareId)">
+                        {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">
+                        {{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">
+                        {{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">
+                        {{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
                                 <span class="label label-success" mltag="txt_validated">Validated</span>
@@ -103,7 +123,6 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
                             <button id="addNav" (click)="addNav(item)" class="btn btn-success btn-sm">

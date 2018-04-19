@@ -19,9 +19,9 @@
 
                 <div class="row">
                     <div class="form-group col-sm-8">
-                        <label class="control-label" for="nav" *ngIf="!isDeleteMode()" mltag="txt_latestnav">Latest NAV</label>
-                        <label class="control-label" for="nav" *ngIf="isDeleteMode()" mltag="txt_nav">NAV</label>
-                        <input type="text" id="nav" name="nav" appNumberFormatter [fractionSize]="2" value="{{isDeleteMode() ? share.nav : navLatest}}" readonly>
+                        <label class="control-label" for="nav" mltag="txt_latestnav" *ngIf="!isDeleteMode()">Latest NAV</label>
+                        <label class="control-label" for="nav" mltag="txt_nav" *ngIf="isDeleteMode()">NAV</label>
+                        <input type="text" id="nav" name="nav" formControlName="nav" />
                     </div>
 
                     <div class="form-group col-sm-4">
@@ -42,44 +42,42 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="navDate" mltag="txt_navdate">NAV Date</label>
                     <div class="input-group date-pick-wrapper">
-                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
-                        <input id="navDate" name="navDate" placeholder="Select date" formControlName="navDate" [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker mltag="txt_selectdate">
-
-
-
-
-
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
+                        <input id="navDate" name="navDate" placeholder="Select date" mltag="txt_selectdate"
+                               formControlName="navDate"
+                               [dpDayPicker]="navDateConfig"
+                               mode="day"
+                               theme="dp-material"
+                               #navDatePicker/>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="navPublishDate" mltag="txt_publicationdate">Publication Date</label>
                     <div class="input-group date-pick-wrapper">
-                        <span class="fa fa-calendar" [class.disabled]="isEditMode()"></span>
-                        <input id="navPublishDate" name="navPublishDate" placeholder="Select date" formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material" #navPublishDatePicker mltag="txt_selectdate">
-
-
-
-
-
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
+                        <input id="navPublishDate" name="navPublishDate" placeholder="Select date" mltag="txt_selectdate"
+                               formControlName="navPubDate"
+                               [dpDayPicker]="navPublishDateConfig"
+                               mode="day"
+                               theme="dp-material"
+                               #navPublishDatePicker/>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="status" mltag="txt_status">Status</label>
-                    <ng-select id="status" [disabled]="navForm.controls['status'].disabled" class="fluid-width" [items]="statusItems" formControlName="status" [allowClear]="false" placeholder="Select status" mltag="txt_selectstatus">
-
-
-
-
-
-
-
+                    <ng-select id="status" class="fluid-width"
+                        [disabled]="navForm.controls['status'].disabled"
+                        [items]="statusItems" formControlName="status"
+                        [allowClear]="false"
+                        placeholder="Select status"
+                        mltag="txt_selectstatus">
                     </ng-select>
                 </div>
 
-                <span class="text-danger" [hidden]="!showStatusWarning()" mltag="txt_warningifyouclickvalidatethena30f2227d93">Warning: If you click "validate", the NAV will be modified at the selected date.
-
+                <span class="text-danger" mltag="txt_warningifyouclickvalidatethena30f2227d93">
+                    Warning: If you click "validate", the NAV will be modified at the selected date.
                 </span>
             </div>
         </form>
@@ -89,9 +87,7 @@
         <button class="btn btn-secondary" (click)="close()" mltag="txt_cancel">
             Cancel
         </button>
-
         <button class="btn btn-primary" *ngIf="!isDeleteMode()" [disabled]="!navFormValid()" (click)="updateNav()" mltag="txt_validate">
-
             Validate
         </button>
         <button class="btn btn-primary" *ngIf="isDeleteMode()" (click)="deleteNav()" mltag="txt_delete">

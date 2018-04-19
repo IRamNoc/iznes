@@ -42,24 +42,6 @@
                         <input type="text" id="currentDate" name="currentDate" value="{{currentDate}}" readonly>
                     </div>
 
-                    <!-- <div class="form-group col-sm-2">
-                        <label class="control-label" for="units" mltag="txt_units">Units</label>
-                        <input type="text" id="units" name="units" value="TBA" readonly />
-                    </div>
-
-                    <div class="form-group col-sm-2">
-                        <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
-                        <input type="text" id="aum" name="aum" value="TBA" readonly />
-                    </div> -->
-
-
-
-
-
-
-
-
-
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="navCurrency" mltag="txt_navcurrency">NAV Currency</label>
                         <input type="text" id="navCurrency" name="navCurrency" value="{{getCurrencyString(navFund.currency)}} ({{getCurrencySymbol(navFund.currency)}})" readonly>
@@ -79,12 +61,6 @@
                         <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
                         <input type="text" id="aum" name="aum" value="" readonly>
                     </div>
-
-                    <div class="form-group col-sm-2">
-                        <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
-                        <button class="btn btn-primary" (click)="addNav()" *ngIf="!navFund.nav" mltag="txt_addnewnav">Add New NAV</button>
-                        <button class="btn btn-primary" (click)="editNav(navFund)" *ngIf="navFund.nav" mltag="txt_editnav">Edit NAV</button>
-                    </div>
                 </div>
             </form>
 
@@ -98,11 +74,12 @@
                             <label class="control-label" for="navDateFrom" mltag="txt_datefrom">Date From</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDateFrom" name="navDateFrom" placeholder="Select date" formControlName="navDateFrom" [dpDayPicker]="dateFromConfig" mode="day" theme="dp-material" mltag="txt_selectdate">
-
-
-
-
+                                <input id="navDateFrom" name="navDateFrom" placeholder="Select date"
+                                    formControlName="navDateFrom"
+                                    [dpDayPicker]="dateFromConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_selectdate">
                             </div>
                         </div>
 
@@ -110,11 +87,12 @@
                             <label class="control-label" for="navDateTo" mltag="txt_dateto">Date To</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDateTo" name="navDateTo" placeholder="Select date" formControlName="navDateTo" [dpDayPicker]="dateToConfig" mode="day" theme="dp-material" mltag="txt_selectdate">
-
-
-
-
+                                <input id="navDateTo" name="navDateTo" placeholder="Select date"
+                                    formControlName="navDateTo"
+                                    [dpDayPicker]="dateToConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_selectdate">
                             </div>
                         </div>
 
@@ -125,36 +103,35 @@
 
                         <div class="form-group col-sm-3">
                             <label class="control-label" for="searchDatePeriod" mltag="txt_dateperiod">Date Period</label>
-                            <ng-select id="searchDatePeriod" class="fluid-width" [items]="datePeriodItems" formControlName="datePeriod" [allowClear]="true" placeholder="Select date period" mltag="txt_selectdateperiod">
-
-
-
-
-
-
+                            <ng-select id="searchDatePeriod" class="fluid-width"
+                                [items]="datePeriodItems"
+                                formControlName="datePeriod"
+                                [allowClear]="true"
+                                placeholder="Select date period"
+                                mltag="txt_selectdateperiod">
                             </ng-select>
                         </div>
 
-                        <div class="form-group col-sm-4 text-right">
-                            <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
-                            <div>Filtered by: {{getFilteredByDateText()}}</div>
+                        <div class="form-group col-sm-4 add-new-nav">
+                            <label class="control-label">&nbsp;</label>
+                            <button class="btn btn-primary" (click)="addNav()" mltag="txt_addnewnav">Add New NAV</button>
                         </div>
                     </div>
                 </div>
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column>
+                <clr-dg-column class="col-date">
                     <span mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_status">Status</span>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_publicationdate">Publication Date</span>
                 </clr-dg-column>
                 <!--<clr-dg-column>-->
                 <!--<span>Use</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column>
-                    <span mltag="txt_publicationdate">Publication Date</span>
+                <clr-dg-column class="col-currency">
+                    <span mltag="txt_fundcurrency">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_nav">NAV</span>
@@ -164,10 +141,7 @@
                 </clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_shareaum">Share AUM</span>
-                </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_fundcurrency">Fund Currency</span>
-                </clr-dg-column>
+                </clr-dg-column>                
                 <!--<clr-dg-column>-->
                 <!--<span>Parity</span>-->
                 <!--</clr-dg-column>-->
@@ -177,13 +151,28 @@
                 <clr-dg-column>
                     <span mltag="txt_coupons">Coupons</span>
                 </clr-dg-column>
+                <clr-dg-column class="col-status">
+                    <span mltag="txt_status">Status</span>
+                </clr-dg-column>
                 <clr-dg-column class="actions">
                     <span mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index">
-                    <clr-dg-cell>{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell class="col-currency">{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})</clr-dg-cell>
                     <clr-dg-cell>
+                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
                                 <span class="label label-success" mltag="txt_validated">Validated</span>
@@ -197,23 +186,9 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell>{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
-                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
-
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="editNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="editNav(item)" class="btn btn-success btn-sm">
+                            <button id="editNav" (click)="editNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit NAV</span>
                             </button>
                             <button id="cancelNav" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
