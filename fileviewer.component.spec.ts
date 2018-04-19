@@ -7,6 +7,8 @@ import {ClarityModule} from '@clr/angular';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {APP_CONFIG} from '@setl/utils';
 import {FileViewerComponent} from './fileviewer.component';
+import {FileViewerPreviewComponent} from './preview-modal/component';
+import {FileViewerPreviewService} from './preview-modal/service';
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {PdfMockService} from '@setl/core-req-services/pdf/pdf.mock.service';
 import {SecurityContext} from "@angular/core";
@@ -31,9 +33,10 @@ describe('FileViewerComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [ClarityModule],
-            declarations: [FileViewerComponent],
+            declarations: [FileViewerComponent, FileViewerPreviewComponent],
             providers: [
                 AlertsService,
+                FileViewerPreviewService,
                 {provide: PdfService, useValue: pdfMockService},
                 {provide: MemberSocketService, useValue: {hostname: '127.0.0.1', port: '9788', path: '/'}},
                 {provide: NgRedux, useClass: MockNgRedux},
