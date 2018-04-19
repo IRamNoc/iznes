@@ -11,6 +11,7 @@ import {APP_CONFIG} from '@setl/utils/appConfig/appConfig';
 import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
 
 import {ValidateFileMessageBody} from "./fileviewer.module";
+import {FileViewerPreviewService} from './preview-modal/service';
 
 @Component({
     selector: 'setl-file-viewer',
@@ -28,7 +29,6 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public fileUrl: SafeResourceUrl = null;
     public fileName: string = null;
     public fileType: string = null;
-    public fileModal = false;
     public baseUrl = '';
     public downloadId: string = null;
 
@@ -45,6 +45,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
         private pdfService: PdfService,
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
+        private previewModalService: FileViewerPreviewService,
         @Inject(APP_CONFIG) private appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
@@ -138,21 +139,25 @@ export class FileViewerComponent implements OnInit, OnChanges {
                 (result) => {
                     const data = result[1].Data;
                     if (data.error) {
-                        this.fileModal = false;
+                        this.previewModalService.close();
                         this.fileName = null;
                         this.fileType = null;
                         this.showAlert('Unable to view file', 'error');
                     } else {
-                        this.fileModal = true;
                         this.fileName = data.filename;
                         this.fileType = data.mimeType;
                         this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
                             this.baseUrl +
                             '/mn/file?' +
                             'method=retrieve' +
+                            '&fileHash=' + this.fileHash +
                             '&downloadId=' + data.downloadId +
                             '&walletId=' + this.walletId
                         );
+                        this.previewModalService.open({
+                            name: this.fileName,
+                            url: this.fileUrl as string
+                        });
                     }
                     this.changeDetectorRef.markForCheck();
                     resolve();
@@ -163,15 +168,6 @@ export class FileViewerComponent implements OnInit, OnChanges {
                 }
             ));
         });
-    }
-
-    /**
-     * Close File Modal
-     *
-     * @return {void}
-     */
-    public closeFileModal() {
-        this.fileModal = false;
     }
 
     /**

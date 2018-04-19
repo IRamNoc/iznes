@@ -1,27 +1,5 @@
 <div *ngIf="(pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')">
     <button type="button" class="btn btn-primary" (click)="openFileModal();" mltag="txt_viewfile">View File</button>
-    <clr-modal [(clrModalOpen)]="fileModal" [clrModalSize]="'xl'" [clrModalClosable]="false">
-        <div class="modal-title">
-            <div class="alert alert-success">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <div class="alert-icon-wrapper">
-                            <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
-                        </div>
-                        <span class="alert-text">
-                            File '{{fileName}}' is verified<br/>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-body fileviewer-main">
-            <iframe class="fileviewer-contents" [src]="fileUrl"></iframe>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="closeFileModal();" mltag="txt_close">Close</button>
-        </div>
-    </clr-modal>
 </div>
 <div class="no-file" *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')" mltag="txt_nofile">
     No File
