@@ -428,7 +428,7 @@ export class OrderHelper {
         // Check order value (quantity / amount) is meet requirements:
         // - [] greater than initial min order value ;
         // - [x] greater than subsequent min order value ;
-        if (orderValueToCheck <= this.subsequentMinFig) {
+        if (orderValueToCheck < this.subsequentMinFig) {
             return {
                 orderValid: false,
                 errorMessage: 'Order value does not meet subsequent minimum'
@@ -522,7 +522,7 @@ export class OrderHelper {
         if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDate);
         } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
-            return OrderHelper.getChildErrorMessage(orderDate);
+            return OrderHelper.getChildErrorMessage(orderFigures);
         } else {
             orderDate = orderDate as OrderDates;
             orderFigures = orderFigures as OrderFigures;
