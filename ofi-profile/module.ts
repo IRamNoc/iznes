@@ -1,5 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
+import {ClarityModule} from '@clr/angular';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SetlComponentsModule} from '@setl/utils/index';
 
 /* My informations module */
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
@@ -17,7 +21,12 @@ import {OfiProfileMyInformationsComponent} from './profile-my-informations/compo
     ],
     imports: [
         CommonModule,
+        BrowserModule,
         OfiMyInformationsModule,
+        ClarityModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SetlComponentsModule,
     ],
     providers: [
 

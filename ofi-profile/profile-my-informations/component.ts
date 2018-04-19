@@ -3,11 +3,12 @@ import { Location } from '@angular/common';
 import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
-import {KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
 import {SagaHelper} from '@setl/utils/index';
 import {MyUserService} from '@setl/core-req-services/index';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {SET_NEW_PASSWORD} from '@setl/core-store/index';
+import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -22,7 +23,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         lastName: '',
     };
     userType: string;
-    
+
     public userInfoExtended: any = {
         email: '',
         firstName: '',
@@ -33,6 +34,14 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         phoneNumber: ''
     };
 
+    changePassForm: FormGroup;
+    oldPassword: AbstractControl;
+    password: AbstractControl;
+    passwordConfirm: AbstractControl;
+
+
+    public showPasswords = false;
+
     @select(['user', 'myDetail']) myDetail: any;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
@@ -42,9 +51,35 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         private location: Location,
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
+        private alertsService: AlertsService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
+
+        this.changePassForm = new FormGroup({
+            'oldPassword': new FormControl(
+                '',
+                Validators.required
+            ),
+            'password': new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            ),
+            'passwordConfirm': new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6)
+                ])
+            )
+        }, this.passwordValidator);
+
+        this.oldPassword = this.changePassForm.controls['oldPassword'];
+        this.password = this.changePassForm.controls['password'];
+        this.passwordConfirm = this.changePassForm.controls['passwordConfirm'];
     }
 
     ngOnInit() {
@@ -69,6 +104,48 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         this.myKyc.subscribe((d) => {
             this.userInfoExtended.amCompanyName = d.amCompanyName;
         });
+    }
+
+    passwordValidator(g: FormGroup) {
+        const oldNew = g.get('oldPassword').value !== g.get('password').value ? null : {'oldNew': true};
+        const mismatch = g.get('password').value === g.get('passwordConfirm').value ? null : {'mismatch': true};
+        return (oldNew) ? oldNew : mismatch;
+    }
+
+    toggleShowPasswords() {
+        this.showPasswords = !this.showPasswords;
+    }
+
+    changePass(formValues) {
+        // console.log(formValues);
+
+        const asyncTaskPipe = this.myUserService.saveNewPassword({
+            oldPassword: formValues.oldPassword,
+            newPassword: formValues.password
+        });
+
+        // Get response
+        this._ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_NEW_PASSWORD], // redux success
+                [], // redux fail
+                asyncTaskPipe,
+                {},
+                (data) => { // anonymous : don't' loose this context
+                    this.changePassForm.reset();
+                    this.alertsService.create('success', `
+                        Your password has been successfully changed!
+                    `);
+                    this.location.back();
+                },
+                (e) => {
+                    this.alertsService.create('warning', `
+                        Failed to change your password!
+                    `);
+                }
+            )
+        );
+
     }
 
     saveUserInformations(userInformations) {
@@ -97,6 +174,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             asyncTaskPipe,
             () => {
                 this.toasterService.pop('success', 'Saved changes');
+                this.location.back();
             },
             (data) => {
                 this.toasterService.pop('error', JSON.stringify(data));
