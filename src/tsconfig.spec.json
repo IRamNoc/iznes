@@ -14,7 +14,9 @@
         "test.ts"
     ],
     "exclude": [
-        "../setl_modules/module-template"
+        "../setl_modules/module-template",
+        "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/test-data/**/*",
+        "../setl_modules/ofi-main/ofi-product/fund-share/helper/test-data/**/*"
     ],
     "include": [
         "**/*.spec.ts",

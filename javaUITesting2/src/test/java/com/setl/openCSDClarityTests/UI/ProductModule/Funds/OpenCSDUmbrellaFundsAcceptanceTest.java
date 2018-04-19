@@ -59,7 +59,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldNavigateToSharesFundsUmbrellaFunds() throws InterruptedException, IOException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         String pageHeading = driver.findElement(By.id("am-product-home")).getText();
         assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
@@ -68,7 +68,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldDisplaySameTitleIconAsNavIcon() throws InterruptedException, IOException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         String headingIcon = driver.findElement(By.xpath("//*[@id=\"am-product-home\"]/i")).getAttribute("class");
         String navIcon = driver.findElement(By.xpath("//*[@id=\"menu-product-home\"]/i")).getAttribute("class");
@@ -78,7 +78,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         validatePageLayout();
     }
@@ -86,7 +86,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
@@ -94,7 +94,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -121,7 +121,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -133,7 +133,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -145,7 +145,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
@@ -157,25 +157,28 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     @Test
     public void shouldIncreaseTitleNumberWhenUmbrellaFundIsCreated() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
+        System.out.println(i);
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-        Thread.sleep(2500);
-        String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        System.out.println(preCreationNo);
-        System.out.println(postCreationNo);
-        assertFalse(preCreationNo.equals(postCreationNo));
+        try {
+            String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+            assertFalse(postCreationNo.equals(preCreationNo + 1));
+        }catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {

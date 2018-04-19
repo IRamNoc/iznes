@@ -105,8 +105,10 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Repeat
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         driver.navigate().refresh();
         checkAlert();
     }
@@ -163,21 +165,21 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfTechnicalIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
 
     @Test
     public void shouldNotPopupWarningIfEstimatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
 

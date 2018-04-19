@@ -61,7 +61,7 @@ public class OpenCSDKYCModuleValidationRequestListAcceptanceTest {
     }
 
     @Test
-    public void shouldSeeCorrectFieldsOnKYCDocumentsPageTG_633() throws IOException, InterruptedException{
+    public void shouldSeeCorrectFieldsOnKYCDocumentsPageTG_633() throws InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.id("dropdown-user")).click();
         try {

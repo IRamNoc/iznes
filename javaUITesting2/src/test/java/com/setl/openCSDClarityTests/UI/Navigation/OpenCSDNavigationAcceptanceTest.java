@@ -82,7 +82,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
     }
 
@@ -90,22 +90,22 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore("Page removed for now")
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-sicav");
     }
 
     @Test
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
 
     }
 
     @Test
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
-        navigateToPage2("product-module/net-asset-value");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-nav");
     }
 
     @Test

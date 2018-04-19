@@ -51,14 +51,14 @@ public class OpenCSDZSharesAcceptanceTest {
     @Test
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         try {
             driver.findElement(By.id("new-share-btn")).click();
         }catch (Error e){
             fail(e.getMessage());
         }
-        Thread.sleep(1750);
+        Thread.sleep(750);
         try {
             String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")).getText();
             assertTrue(shareTitle.equals("Please enter following information to create a new Fund Share:"));

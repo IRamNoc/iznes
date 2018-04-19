@@ -57,7 +57,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndDisplayCreatedFundInFundsTableAndCheckDatabase() throws InterruptedException, IOException, SQLException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -94,7 +94,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayCorrectTitle() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         String pageHeading = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[1]/h1/span")).getText();
@@ -104,7 +104,8 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldClickAddNewUmbrellaFundAndBeNavigatedAway() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         try {
@@ -123,7 +124,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldBeAbleToCancelFundCreationStep1() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -147,7 +148,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -165,7 +166,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldTakeUserToStep2WhenNextIsClicked() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -187,7 +188,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldBeAbleToCancelFundCreationStep2() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -250,7 +251,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldUpdateFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-product-module");
+        navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         System.out.println(umbFundNamePrev);
@@ -262,6 +263,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
+        scrollElementIntoViewById("fund-submitfund-btn");
         driver.findElement(By.id("fund-submitfund-btn")).click();
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
