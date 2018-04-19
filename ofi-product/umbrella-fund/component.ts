@@ -428,7 +428,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     cancel() {
-        this._router.navigateByUrl('/product-module/home');
+        this._router.navigateByUrl('/product-module');
     }
 
     save(formValues) {
