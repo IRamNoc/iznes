@@ -213,7 +213,7 @@ export class BlockchainContractService {
         }
 
         const contractData: ContractData = {
-            contractfunction: 'dvp_uk',
+            __function: 'dvp_uk',
             parties: partiesListData,
             authorisations: authorisationsList,
             parameters: parametersData,

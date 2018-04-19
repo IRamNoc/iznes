@@ -29,7 +29,7 @@ export class DynamicFormService {
 
     private generateControl(model: { [key: string]: FormItem }, index: string, item: FormItem): FormControl {
         let preset;
-        
+
         if(item.preset) {
             if(item.type === FormItemType.boolean && (item.preset === "1" || item.preset === "0")) {
                 preset = item.preset === "1" ? true : false;
@@ -58,17 +58,17 @@ export class DynamicFormService {
         _.forEach(model, (item: FormItem, index: string) => {
             model[index].control = form.controls[index] as FormControl;
 
-            (model[index].value as any) = function(val?: any) {
+            model[index].value = function(val?: any) {
                 if(!val) return this.control.value;
-                
+
                 form.controls[index].patchValue(val);
             };
 
-            (model[index].isValid as any) = function(val?: any) {
+            model[index].isValid = function(val?: any) {
                 return (((model[index].hidden) && model[index].hidden()) || form.controls[index].disabled) ? true : form.controls[index].valid;
             };
-            
-            (model[index].cssClass as any) = this.getFormItemStyles(item);
+
+            model[index].cssClass = this.getFormItemStyles(item);
 
             if(item.type === FormItemType.date && !item.dateOptions) {
                 item.dateOptions = {
