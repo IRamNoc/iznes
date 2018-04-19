@@ -1,13 +1,13 @@
 <div class="p-1">
-    <h1 mltag="txt_dashboard"><i class="fa fa-tachometer"></i> Dashboard</h1>
+    <h1><i class="fa fa-tachometer"></i> <span mltag="txt_dashboard">Dashboard</span></h1>
 
-    <h3><b>Welcome {{username}}</b><span *ngIf="lastLogin"> <small>Last login: {{lastLogin | date: 'short'}}</small></span></h3>
+    <h3><b>Welcome {{username}}</b><span *ngIf="lastLogin"> <small>Last login: {{lastLogin | date: 'MMM d y HH:mm'}}</small></span></h3>
 
     <app-dashboard [rows]="2" [columns]="4">
-        <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">Actions</app-counter-tile>
-        <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">Connections</app-counter-tile>
-        <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">New messages</app-counter-tile>
-        <app-counter-tile name="contracts" icon="plug" count="0" color="blue">Contracts</app-counter-tile>
+        <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action" mltag="txt_actions">Actions</app-counter-tile>
+        <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections" mltag="txt_connections">Connections</app-counter-tile>
+        <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages" mltag="txt_newmessages">New messages</app-counter-tile>
+        <app-counter-tile name="contracts" icon="plug" count="0" color="blue" mltag="txt_contracts">Contracts</app-counter-tile>
         <app-basic-tile name="asset1" color="green">
             <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
         </app-basic-tile>
@@ -25,12 +25,12 @@
 
         <!-- Balances -->
         <div class="balances-grid">
-            <h1><i class="fa fa-th-list"></i> Balances</h1>
+            <h1><i class="fa fa-th-list"></i> <span mltag="txt_balances">Balances</span></h1>
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_actions" style="min-width: 160px;">Actions</clr-dg-column>
+                <clr-dg-column style="min-width: 160px;" mltag="txt_actions">Actions</clr-dg-column>
                 <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                <clr-dg-column mltag="txt_asset" style="min-width: 170px;">Asset</clr-dg-column>
-                <clr-dg-column mltag="txt_total" style="min-width: 170px;">Total</clr-dg-column>
+                <clr-dg-column style="min-width: 170px;" mltag="txt_asset">Asset</clr-dg-column>
+                <clr-dg-column style="min-width: 170px;" mltag="txt_total">Total</clr-dg-column>
                 <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
                 <clr-dg-column mltag="txt_free">Free</clr-dg-column>
 
@@ -44,14 +44,14 @@
                     </clr-dg-cell>
                     <!--<clr-dg-cell>{{asset.identifier}}</clr-dg-cell>-->
                     <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.totalChange">
-                        {{asset.total | moneyValue}}
+                    <clr-dg-cell [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
+
                     </clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.encumberChange">
-                        {{asset.totalencumbered | moneyValue}}
+                    <clr-dg-cell [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
+
                     </clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.freeChange">
-                        {{asset.free | moneyValue}}
+                    <clr-dg-cell [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
+
                     </clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
@@ -59,13 +59,13 @@
 
         <!-- Transactions -->
         <div class="transactions-grid">
-            <h1><i class="fa fa-key"></i> Transactions</h1>
+            <h1><i class="fa fa-key"></i> <span mltag="txt_transactions">Transactions</span></h1>
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_actions" style="min-width: 160px;">Actions</clr-dg-column>
-                <clr-dg-column mltag="txt_txid" style="min-width: 150px;">Tx ID</clr-dg-column>
+                <clr-dg-column style="min-width: 160px;" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column style="min-width: 150px;" mltag="txt_txid">Tx ID</clr-dg-column>
                 <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                <clr-dg-column mltag="txt_asset" style="min-width: 170px;">Asset</clr-dg-column>
-                <clr-dg-column mltag="txt_time" style="min-width: 170px;">Time (UTC)</clr-dg-column>
+                <clr-dg-column style="min-width: 170px;" mltag="txt_asset">Asset</clr-dg-column>
+                <clr-dg-column style="min-width: 170px;" mltag="txt_timeutc">Time (UTC)</clr-dg-column>
                 <clr-dg-column mltag="txt_type">Type</clr-dg-column>
 
 
@@ -105,4 +105,3 @@
 
     <div class="hSep"></div>
 </div>
-

@@ -9,7 +9,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import {MenuItem} from '@setl/utils';
+import {APP_CONFIG, AppConfig, MenuItem, SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
     clearRequestedMailInitial,
@@ -36,12 +36,10 @@ import {
     MyWalletsService,
     WalletNodeRequestService
 } from '@setl/core-req-services';
-import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {WalletNodeSocketService} from '@setl/websocket-service';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
-import {MemberSocketService} from '@setl/websocket-service';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -68,6 +66,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     subscriptionsArray: Array<Subscription> = [];
 
     public hasMail = {};
+    public unreadMessageCount;
 
     public currentUserDetails;
     public username;
@@ -102,6 +101,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.appConfig = appConfig;
         this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
         this.showCountdownModal = false;
+        this.unreadMessageCount = 0;
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -123,7 +123,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.lastLogin = this.currentUserDetails.lastLogin;
 
         if (this.lastLogin === '' || this.lastLogin === null) {
-            this.lastLogin = 'Never';
+            this.lastLogin = Date.now();
         }
 
         const chainAccess = getDefaultMyChainAccess(newState);
@@ -179,6 +179,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
+                '27': 'bank',
                 '35': 'member_user',
                 '36': 'am',
                 '45': 'standard_user',
@@ -188,6 +189,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 '49': 'cac',
                 '50': 'registrar',
                 '60': 't2s',
+                '65': 'rooster_operator',
             }[userType];
             this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
         }));
@@ -255,6 +257,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.hasMail = {
             'has-badge': messageState
         };
+
+        this.unreadMessageCount = unreadMessages;
 
         this.changeDetectorRef.markForCheck();
     }

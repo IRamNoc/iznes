@@ -42,6 +42,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
+                '27': 'bank',
                 '35': 'member_user',
                 '36': 'am',
                 '45': 'standard_user',
@@ -118,7 +119,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
      * @return {boolean} active - true if the route tested is matching the url
      */
     public activeRoute(route: string): boolean {
-        const routeRegex = new RegExp(`^${route}(\/\S+)?`);
+        const routeRegex = new RegExp(`^${route}(\/\S+)*`);
         return routeRegex.test(this.router.url);
     }
 

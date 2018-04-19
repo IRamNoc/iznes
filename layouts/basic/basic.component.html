@@ -2,23 +2,23 @@
 
     <ng-sidebar-container>
 
-        <ng-sidebar [(opened)]="_opened"
-                    [mode]="_MODES[_modeNum]"
-                    [keyClose]="_keyClose"
-                    [position]="_POSITIONS[_positionNum]"
-                    [dock]="_dock"
-                    [dockedSize]="'50px'"
-                    [autoCollapseHeight]="_autoCollapseHeight"
-                    [autoCollapseWidth]="_autoCollapseWidth"
-                    [closeOnClickOutside]="_closeOnClickOutside"
-                    [closeOnClickBackdrop]="_closeOnClickBackdrop"
-                    [showBackdrop]="_showBackdrop"
-                    [animate]="_animate"
-                    [trapFocus]="_trapFocus"
-                    [autoFocus]="_autoFocus"
-                    [sidebarClass]="'demo-sidebar'"
-                    [ariaLabel]="'My sidebar'"
-        >
+        <ng-sidebar [(opened)]="_opened" [mode]="_MODES[_modeNum]" [keyClose]="_keyClose" [position]="_POSITIONS[_positionNum]" [dock]="_dock" [dockedSize]="'50px'" [autoCollapseHeight]="_autoCollapseHeight" [autoCollapseWidth]="_autoCollapseWidth" [closeOnClickOutside]="_closeOnClickOutside" [closeOnClickBackdrop]="_closeOnClickBackdrop" [showBackdrop]="_showBackdrop" [animate]="_animate" [trapFocus]="_trapFocus" [autoFocus]="_autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
                     <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()" mltag="txt_close">Close</button>
@@ -49,14 +49,14 @@
                                 <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
                                 <label for="lang_eng" mltag="txt_english">English</label>
                             </div>
-                            <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">
-                                <label for="lang_tch">繁體中文</label>
-                            </div>
-                            <div class="radio" (click)="changeLanguage('eng')">
-                                <input type="radio" name="gridRadios1" id="lang_sch" [checked]="isCurrentLanguage('sch')">
-                                <label for="lang_sch">中文</label>
-                            </div>
+                            <!--<div class="radio" (click)="changeLanguage('eng')">-->
+                            <!--<input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">-->
+                            <!--<label for="lang_tch">繁體中文</label>-->
+                            <!--</div>-->
+                            <!--<div class="radio" (click)="changeLanguage('eng')">-->
+                            <!--<input type="radio" name="gridRadios1" id="lang_sch" [checked]="isCurrentLanguage('sch')">-->
+                            <!--<label for="lang_sch">中文</label>-->
+                            <!--</div>-->
                         </div>
                     </section>
 
@@ -87,13 +87,14 @@
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
                     -->
+
+
+
                     <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
                         <div class="fade-slide-right">
                             <router-outlet #o="outlet"></router-outlet>
                         </div>
                     </div>
-
-                    <div id="backtotop" class="backToTop" allowBackToTop="true"><i class="fa fa-arrow-circle-up" allowBackToTop="true" aria-hidden="true"></i></div>
 
                 </main>
             </div>
