@@ -193,10 +193,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             title: 'Shares',
             columns: [
                 this.columns['shareName'],
-                this.columns['fundName'],
                 this.columns['isin'],
+                this.columns['fundName'],
                 this.columns['shareCurrency'],
                 this.columns['managementCompany'],
+                this.columns['uFundName'],
                 this.columns['shareClass'],
                 this.columns['status']
             ],
@@ -336,7 +337,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     managementCompany: share.managementCompanyName,
                     shareClass: shareClass,
                     status: status,
-                    shareCurrency: shareCurrency.text
+                    shareCurrency: shareCurrency.text,
+                    umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
                 });
             });
         }
@@ -422,6 +424,21 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             case 'ufund':
                 this._router.navigateByUrl('/product-module/umbrella-fund/0');
                 break;
+        }
+    }
+
+    getUmbrellaFundName(id) {
+        if (id && id !== 0 && id !== null) {
+            if (this.umbrellaFundList.length > 0) {
+                const obj = this.umbrellaFundList.find(o => o.umbrellaFundID === id);
+                if (obj !== undefined) {
+                    return obj.umbrellaFundName;
+                } else {
+                    return '';
+                }
+            }
+        } else {
+            return '';
         }
     }
 
