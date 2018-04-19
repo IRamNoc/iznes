@@ -346,6 +346,35 @@ export class CalendarHelper {
         const cutoffDate = dateTimeToChecks.clone().businessSubtract(this.valuationOffSet);
         return this.isValidCutoffDateTime(cutoffDate, orderType);
     }
+
+    getCutoffTimeForSpecificDate(dateToCheck: moment, orderType: OrderType) {
+        this.orderType = orderType;
+        return getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZone);
+    }
+
+    getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+        this.orderType = orderType;
+
+        return cutoffDate.clone().businessAdd(this.valuationOffSet);
+    }
+
+    getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+        this.orderType = orderType;
+
+        return cutoffDate.clone().businessAdd(this.settlementOffSet);
+    }
+
+    getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
+        this.orderType = orderType;
+
+        return valuationDate.clone().businessSubtract(this.valuationOffSet);
+    }
+
+    getCutoffDateFromSettlement(settlementDate: moment, orderType: OrderType) {
+        this.orderType = orderType;
+
+        return settlementDate.clone().businessSubtract(this.settlementOffSet);
+    }
 }
 
 

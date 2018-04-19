@@ -25,6 +25,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
 import {OrderType} from "../../ofi-orders/order.model";
+import {commonHelper} from '@setl/utils';
 
 @Component({
     selector: 'app-invest-fund',
@@ -455,9 +456,28 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         console.log('place an order', request);
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
-            console.log('order created successfully', data);
-        }).catch((e) => {
-            console.log('order created successfully', e);
+            const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+            const orderRef = commonHelper.pad(orderId, 8, '0');
+            this._alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">Order ${orderRef} has been successfully created</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        }).catch((data) => {
+            const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+            this._alertsService.create('error', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                       <td class="text-center text-success">${errorMessage}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `);
         });
 
     }
