@@ -145,3 +145,36 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
         return result;
     });
 }
+
+/**
+ * Create common walletnode request helper.
+ *
+ * @param thisConnection
+ * @param messageType
+ * @param messageBody
+ * @return {{pipe: any[]}}
+ */
+export function createWalletNodeRequest(thisConnection, messageType: string, messageBody: WalletNodeMessageBody): any {
+    const request: WalletNodeRequest = {
+        messageType: messageType,
+        messageHeader: '',
+        requestID: 0,
+        messageBody: messageBody
+    };
+
+    return new Promise((resolve, reject) => {
+        thisConnection.sendRequest(request, (errorCode, data) => {
+            const status = _.get(data, 'status', 'Fail');
+            // No error code and status is ok -> success.
+            console.log('walletnode response: ', data);
+            if (status === 'OK') {
+                // success
+                resolve([errorCode, data]);
+            } else {
+                // fail
+                reject([errorCode, data]);
+            }
+        });
+    });
+
+}
