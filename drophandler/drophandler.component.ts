@@ -16,6 +16,11 @@ import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {FormControl} from '@angular/forms';
 import {FileDropItem} from '../FileDrop';
 
+export enum FilePermission {
+    Public =  0,
+    Private = 1
+}
+
 /* Decorator. */
 @Component({
     selector: 'drop-handler',
@@ -33,12 +38,14 @@ export class DropHandler implements AfterViewInit {
     @Input() multiple = false;
 
     /* Used to display inline version. */
-    @Input() inline:boolean = false;    
+    @Input() inline:boolean = false;
 
     /* Form control. */
     @Input() formControl: FormControl;
 
     @Input() preset:FileDropItem = null;
+
+    @Input() filePermission: FilePermission = FilePermission.Private;
 
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput: ElementRef;
@@ -437,6 +444,7 @@ export class DropHandler implements AfterViewInit {
                         this.silentEncodedFiles[j].name = files[i].name;
                         this.silentEncodedFiles[j].lastModified = files[i].lastModified;
                         this.silentEncodedFiles[j].status = files[i].status;
+                        this.silentEncodedFiles[j].filePermission = this.filePermission;
                         this.silentEncodedFiles[j].id = i;
                     }
                     j++;
