@@ -118,7 +118,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }
         try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
@@ -307,7 +307,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewByXpath("//*[@id=\"custodianBank\"]/div");
+        scrollElementIntoViewById("fund-cancelfund-btn");
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
 
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();

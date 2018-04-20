@@ -90,12 +90,13 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
-        verifyCorrectPage("My Account");
+        verifyCorrectPage("Management Company");
     }
 
     @Test
@@ -109,6 +110,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
