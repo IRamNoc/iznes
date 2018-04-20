@@ -1,4 +1,5 @@
 package com.setl.openCSDClarityTests.UI.MyAccount;
+
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -52,7 +53,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -69,21 +70,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
-
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:"));
-
-        assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
-        assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
-        assertTrue(driver.findElement(By.id("kyc_additionnal_firstName")).isDisplayed());
-        assertTrue(driver.findElement(By.id("kyc_additionnal_lastName")).isDisplayed());
-        assertTrue(driver.findElement(By.id("kyc_additionnal_companyName")).isDisplayed());
-        assertTrue(driver.findElement(By.id("kyc_additionnal_phoneNumber")).isDisplayed());
-
-        assertTrue(driver.findElement(By.id("btnKycSubmit")).isDisplayed());
-        assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
     }
 
     @Test
@@ -92,9 +78,13 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL", "224", "235689", true);
-    }
+        populateMyInfoPage("Peter", "Piper", "PP@setl.io", "222", "669669", true);
+        navigateToDropdown("dropdown-user");
+        navigateToPageByID("top-menu-my-info");
+        verifyUpdatedMyInfoPage("PP@setl.io", "", "Peter", "Piper",  "Ukraine (+380)", "669669");
+        populateMyInfoPage("Asset", "Manager", "am@setl.io", "224", "235689", true);
 
+    }
 
     @Test
     public void shouldNotSaveDataOnMyInformationPageWhenCancelled() throws IOException, InterruptedException {
@@ -102,7 +92,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
         verifyMyInfoPage();
-        populateMyInfoPage("Asset", "Manager", "am@setl.io", "SETL", "224", "235689", false);
+        populateMyInfoPage("Fred", "Custodian", "fred@setl.io",  "222", "111111", false);
+        navigateToDropdown("dropdown-user");
+        navigateToPageByID("top-menu-my-info");
+        verifyUpdatedMyInfoPage("am@setl.io", "", "Asset", "Manager",  "United Kingdom (+44)", "235689");
     }
 
     @Test
@@ -133,7 +126,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         loginAndVerifySuccess(userDetails[1], "alex01");
     }
 
-    private void populateMyInfoPage(String firstName, String lastName, String email, String companyName, String phoneCode, String phoneNumber, boolean save) throws InterruptedException {
+    private void populateMyInfoPage(String firstName, String lastName, String email, String phoneCode, String phoneNumber, boolean save) {
 
         driver.findElement(By.id("kyc_additionnal_email")).clear();
         driver.findElement(By.id("kyc_additionnal_email")).sendKeys(email);
@@ -141,8 +134,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys(firstName);
         driver.findElement(By.id("kyc_additionnal_lastName")).clear();
         driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys(lastName);
-        driver.findElement(By.id("kyc_additionnal_companyName")).clear();
-        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
 
         try {
             driver.findElement(By.id("kyc_additionnal_phoneCode")).click();
@@ -190,7 +181,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().contains("My information:"));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("My information"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -203,6 +194,32 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("btnKycSubmit")).isDisplayed());
         assertTrue(driver.findElement(By.id("btnKycClose")).isDisplayed());
     }
+
+    private void verifyUpdatedMyInfoPage(String email, String invitedBy, String firstName, String lastName,  String phoneCode, String phoneNumber) {
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
+
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("My information"));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value").equals(email));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value").equals(invitedBy));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_firstName")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value").equals(firstName));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_lastName")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value").equals(lastName));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_phoneCode")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_phoneCode")).getText().equals(phoneCode));
+
+        assertTrue(driver.findElement(By.id("kyc_additionnal_phoneNumber")).isDisplayed());
+        assertTrue(driver.findElement(By.id("kyc_additionnal_phoneNumber")).getAttribute("value").equals(phoneNumber));
+    }
 }
+
 
 
