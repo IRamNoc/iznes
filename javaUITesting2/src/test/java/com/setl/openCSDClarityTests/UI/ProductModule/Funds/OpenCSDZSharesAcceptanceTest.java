@@ -12,6 +12,8 @@ import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.LocalFileDetector;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -51,7 +53,6 @@ public class OpenCSDZSharesAcceptanceTest {
     @Test
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         try {
@@ -62,7 +63,7 @@ public class OpenCSDZSharesAcceptanceTest {
         Thread.sleep(750);
         try {
             String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")).getText();
-            assertTrue(shareTitle.equals("Please enter following information to create a new Fund Share:"));
+            assertTrue(shareTitle.equals("Please fill out the following information to create a new Share:"));
         }catch (Error e){
             fail(e.getMessage());
         }
@@ -90,10 +91,10 @@ public class OpenCSDZSharesAcceptanceTest {
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
-        openDropdownAndSelectOption("couponType", 3);
-        openDropdownAndSelectOption("freqOfDistributionDeclaration", 3);
+        openDropdownAndSelectOption("couponType", 1);
+        openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         assertClassRequiredIsPresent("tabKeyFactsButton");
-        openDropdownAndSelectOption("historicOrForwardPricing", 2);
+        openDropdownAndSelectOption("historicOrForwardPricing", 1);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
         //CHARACTERISTICS
         try {
@@ -143,13 +144,33 @@ public class OpenCSDZSharesAcceptanceTest {
         driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
         //PROFILE
+        try {
+            driver.findElement(By.id("tabProfileButton")).click();
+        }catch (Exception e){ fail(e.getMessage()); }
+        assertTrue(driver.findElement(By.id("toggleProfileMandatory")).isDisplayed());
         assertClassRequiredIsPresent("tabProfileButton");
         openDropdownAndSelectOption("investorProfile", 1);
         assertHiddenAttributeIsPresent("tabProfileButton");
+        //DOCUMENTS
+        try {
+            driver.findElement(By.id("tabDocumentsButton")).click();
+        }catch(Exception e){
+            fail(e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("toggleDocumentsMandatory")).isDisplayed());
+        try {
+            //driver.setFileDetector(new LocalFileDetector());
+            driver.findElement(By.cssSelector("#prospectus")).sendKeys("/Users/jordanmiller/Downloads/121212.jpg");
+            //driver.findElement(By.xpath("//*[@id=\"prospectus\"]")).sendKeys("/Users/jordanmiller/Downloads/121212.jpg");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
-        driver.findElement(By.id("//*[@id='" + dropdownID + "']/div")).click();
+        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
         Thread.sleep(750);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
@@ -164,7 +185,7 @@ public class OpenCSDZSharesAcceptanceTest {
     }
     public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
         try {
-            assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span")).isDisplayed());
+            assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
         }catch (Exception e){ fail("Asterisk was present " + e.getMessage()); }
     }
 
