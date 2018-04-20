@@ -278,3 +278,10 @@ export {
     WorkflowState,
     WorkflowReducer
 } from './workflow-engine';
+
+export {
+    addWalletNodeSnapshot,
+    addWalletNodeInitialSnapshot,
+    WalletNodeReducer,
+    WalletNodeState
+} from './wallet-nodes/';
