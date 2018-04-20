@@ -444,6 +444,7 @@ export class DropHandler implements AfterViewInit {
                         this.silentEncodedFiles[j].name = files[i].name;
                         this.silentEncodedFiles[j].lastModified = files[i].lastModified;
                         this.silentEncodedFiles[j].status = files[i].status;
+                        this.silentEncodedFiles[j].filePermission = this.filePermission;
                         this.silentEncodedFiles[j].id = i;
                     }
                     j++;
@@ -466,8 +467,7 @@ export class DropHandler implements AfterViewInit {
         /* Emit the event up a level. */
         this.onDropFiles.emit({
             'target': this,
-            'files': this.encodedFiles,
-            'filePermission': this.filePermission
+            'files': this.encodedFiles
         });
 
         /* Also patch the form control value. */

@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 /* DropHandler Component */
-import { DropHandler } from './drophandler/drophandler.component';
+import { DropHandler, FilePermission } from './drophandler/drophandler.component';
 import { FileDropItem } from './FileDrop';
 
 @Component({
@@ -28,6 +28,8 @@ export class FileDropComponent implements OnInit {
     @Input() inline:boolean = false;
 
     @Input() preset:FileDropItem = null;
+
+    @Input() filePermission: FilePermission = FilePermission.Private;
 
     /* Constructor */
     public constructor () {
