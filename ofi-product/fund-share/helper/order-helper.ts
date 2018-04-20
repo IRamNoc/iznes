@@ -18,6 +18,10 @@ import {
 
 } from '@setl/utils/services/blockchain-contract/model';
 
+
+// todo
+// need to check the user balance. when redeeming
+
 export interface OrderRequest {
     token: string;
     shareisin: string;
