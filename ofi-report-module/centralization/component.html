@@ -11,81 +11,92 @@
         </button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
-                <form>
-                    <div class="row bordered form-group">
-                        <div class="form-group col-sm-12">
-                            <h3>Please find below the centralization reports by Share:</h3>
-                        </div>
+                <form [formGroup]="searchForm" id="search-centralization-reports-form">
+                    <div class="form-horizontal">
+                        <div class="row bordered form-group">
+                            <div class="form-group col-sm-12">
+                                <h3>Please find below the centralization reports by Share:</h3>
+                            </div>
 
-                        <div class="form-group col-sm-6">
-                            <label class="control-label" for="input">Search for a specific share:</label>
-                            <input type="text" name="input" id="input" placeholder="Type a Share name or ISIN" [formControl]="filterInput"/>
-                        </div>
-                        <div class="form-group col-sm-6 flex-container-column">
-                            <button class="btn btn-default" (click)="onClickExportCentralizationReport()">Export centralization report</button>
+                            <div class="form-group col-sm-6">
+                                <label style="margin: 10px 0;">
+                                    <b><span>Search for a specific share:</span></b>
+                                </label>
+                                <br>
+                                <div class="input-button-group" *ngIf="dataListForSearch.length > 0">
+                                    <ng-select id="centralization-reports-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>
+                                </div>
+                            </div>
+                            <!--<div class="form-group col-sm-6">-->
+                                <!--<label class="control-label" for="input">Search for a specific share:</label>-->
+                                <!--<input type="text" name="input" id="input" placeholder="Type a Share name or ISIN" [formControl]="filterInput"/>-->
+                            <!--</div>-->
+                            <div class="form-group col-sm-6 flex-container-column">
+                                <button class="btn btn-default" (click)="onClickExportCentralizationReport()">Export centralization report</button>
+                            </div>
                         </div>
                     </div>
                 </form>
                 <br>
 
                 <clr-datagrid class="expandable">
-                    <clr-dg-column [clrDgField]="'isin'">
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>ISIN</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'">
+                    <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Share Name</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'navDate'">
+                    <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>NAV Date</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'settlementDate'">
+                    <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Settlement Date</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareCurrency'">
+                    <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Share Currency</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'latestNav'">
+                    <clr-dg-column [clrDgField]="'latestNav'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Latest NAV</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'aum'">
+                    <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>AUM</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netPositionShareCurrency'">
+                    <clr-dg-column [clrDgField]="'netPositionShareCurrency'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Net Position ([Share currency])</span>
+                            <span>Net Position</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netPositionPerCentAum'">
+                    <clr-dg-column [clrDgField]="'netPositionPerCentAum'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Net Position (% AUM)</span>
                         </ng-container>
                     </clr-dg-column>
 
 
-                    <clr-dg-row *clrDgItems="let data of filteredDatas" [clrDgItem]="data">
+                    <clr-dg-row *clrDgItems="let data of centralizationReportsList" [clrDgItem]="data">
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.shareName}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.navDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.shareCurrency}}</clr-dg-cell>
+                        <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
                         <clr-dg-cell>{{data.latestNav}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.aum}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netPositionShareCurrency}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netPositionPerCentAum}}</clr-dg-cell>
+                        <clr-dg-cell>{{(data.redQuantity + data.subQuantity) * data.latestNav}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.subAmount - data.redAmount}}</clr-dg-cell>
+                        <clr-dg-cell>{{calculNetPosition(data.subAmount, data.redAmount, data.redQuantity, data.subQuantity, data.latestNav)}} %</clr-dg-cell>
 
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -102,16 +113,16 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Subscriptions</td>
-                                                    <td>Sub Quantity</td>
-                                                    <td>32189489159498184894981981498</td>
-                                                    <td>Sub Cut-off Date</td>
+                                                    <td><b>Subscriptions</b></td>
+                                                    <td>{{data.subQuantity}}</td>
+                                                    <td>{{data.subAmount}}</td>
+                                                    <td>{{data.cutoffDate}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Redemptions</td>
-                                                    <td>Red Quantity</td>
-                                                    <td>Red Amount</td>
-                                                    <td>Red Cut-off Date</td>
+                                                    <td><b>Redemptions</b></td>
+                                                    <td>{{data.redQuantity}}</td>
+                                                    <td>{{data.redAmount}}</td>
+                                                    <td>{{data.cutoffDate}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -124,7 +135,7 @@
                                         </div>
                                         <div class="flex-container-row">
                                             <button class="btn btn-default" (click)="onClickViewCentralizationHistory()">View centralization history</button>
-                                            <button class="btn btn-default" (click)="onClickDownloadCentralizationHistory()"><i class="fa fa-download"></i></button>
+                                            <button class="btn btn-default" (click)="onClickDownloadCentralizationHistory(data.fundShareID)"><i class="fa fa-download"></i></button>
                                         </div>
                                     </div>
                                 </div>
