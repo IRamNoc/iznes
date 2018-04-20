@@ -13,7 +13,7 @@ import {
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {SagaHelper} from '@setl/utils';
 import * as _ from 'lodash';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 export function getManageMember(state) {
 
@@ -149,7 +149,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     }
 
     requestManagedMemberList(requestedState: boolean): void {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -169,7 +168,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     }
 
     requestAccountList(requestedState) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -198,7 +196,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleAddAccount(tabId: number): void {
-
         if (this.tabsControl[tabId].formControl.valid) {
             console.log(this.tabsControl[tabId].formControl.value);
 
@@ -317,7 +314,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleDelete(index: number): void {
-
         // Check if the tab is already open.
         // If yes, close the tab.
         let i;
@@ -346,7 +342,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 console.log(data);
             }
         ));
-
     }
 
     /**
@@ -373,7 +368,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     }
 
     setTabActive(index: number): void {
-
         /* Lets loop over all current tabs and switch them to not active. */
         this.tabsControl.map((i) => {
             i.active = false;
@@ -390,7 +384,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
