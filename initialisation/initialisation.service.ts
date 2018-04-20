@@ -13,7 +13,8 @@ import {
     SET_WALLET_ADDRESSES, SET_WALLET_DIRECTORY, SET_WALLET_HOLDING, SET_WALLET_TO_RELATIONSHIP,
     setUpdatedContractList,
     setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
-    updateLastCreatedRegisterIssuerDetail, SET_LANGUAGE
+    updateLastCreatedRegisterIssuerDetail, SET_LANGUAGE,
+    addWalletNodeSnapshot
 } from '@setl/core-store';
 import * as _ from 'lodash';
 
@@ -402,6 +403,10 @@ export class InitialisationService {
                 ngRedux.dispatch(updateLastCreatedRegisterIssuerDetail(tx));
             }
         }
+
+        // Update the walletnode snapshot list
+        let snapshot = _.get(data, 'Data');
+        ngRedux.dispatch(addWalletNodeSnapshot(snapshot));
     }
 
     /**
