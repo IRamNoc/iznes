@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="fundForm.value.legalEntity">
                 <form [formGroup]="fundForm">
                     <div class="form-group">
                         <div class="row">
