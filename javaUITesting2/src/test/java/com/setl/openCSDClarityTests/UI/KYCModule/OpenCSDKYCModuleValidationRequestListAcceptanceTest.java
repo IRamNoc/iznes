@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -64,9 +65,14 @@ public class OpenCSDKYCModuleValidationRequestListAcceptanceTest {
     public void shouldSeeCorrectFieldsOnKYCDocumentsPageTG_633() throws InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
-        driver.findElement(By.id("dropdown-user")).click();
+        driver.findElement(By.id("top-menu-my-clients")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("top-menu-onboarding-management")));
+        wait.until(elementToBeClickable(By.id("top-menu-onboarding-management")));
+
         try {
-            driver.findElement(By.id("top-menu-kyc-documents")).click();
+        driver.findElement(By.id("top-menu-onboarding-management")).click();
+
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
