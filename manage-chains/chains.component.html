@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-chains"><i class="fa fa-chain"></i> <span mltag="txt_chains">CHAINS</span></h1>
+    <h1 id="manage-chains"><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></h1>
 </div>
 
 <clr-tabs>
@@ -42,7 +42,7 @@
                 <span mltag="txt_addnewchain">Add New Chain</span></button>
         </div>
         <ng-template #editChainFTemplate>
-            <button id="chainTabEditChain" clrTabLink><i class="fa fa-pencil"></i> <span mltag="txt_editchain">Edit CHAIN</span></button>
+            <button id="chainTabEditChain" clrTabLink><i class="fa fa-pencil"></i> <span mltag="txt_editchain">Edit Chain</span></button>
         </ng-template>
         <clr-tab-content *clrIfActive="editForm">
             <!-- CHAIN FORMS -->
@@ -107,7 +107,7 @@
 
 <!--CONFIRM MODALS-->
 <clr-modal [(clrModalOpen)]="showConfirmModal">
-    <h3 class="modal-title" mltag="txt_deletecurrentchain">Delete a CHAIN</h3>
+    <h3 class="modal-title" mltag="txt_deletecurrentchain">Delete Chain</h3>
     <div class="modal-body">
         <p><span mltag="txt_deleting">Deleting</span> <b>'{{ chainToDelete && chainToDelete.chainName }}'</b>,
             <span mltag="txt_areyousure">are you sure</span>?</p>
