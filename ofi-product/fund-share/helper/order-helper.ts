@@ -18,7 +18,7 @@ import {
 
 } from '@setl/utils/services/blockchain-contract/model';
 
-interface OrderRequest {
+export interface OrderRequest {
     token: string;
     shareisin: string;
     portfolioid: string;

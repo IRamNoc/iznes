@@ -158,8 +158,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 sri: item.getIn(['keyFactOptionalData', 'sri'], ''),
                 currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
                 nav,
-                nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD'),
-                nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD'),
+                nextSubCutOff: nextSubCutOff.format('DD/MM/YYYY HH:mm'),
+                nextRedCutOff: nextRedCutOff.format('DD/MM/YYYY HH:mm'),
                 hasNoNav: Boolean(nav <= 0)
             });
 

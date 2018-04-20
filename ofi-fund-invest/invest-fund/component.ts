@@ -24,11 +24,11 @@ import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderHelper} from '../../ofi-product/fund-share/helper/order-helper';
+import {OrderHelper, OrderRequest} from '../../ofi-product/fund-share/helper/order-helper';
 import {commonHelper} from '@setl/utils';
 import {OrderByType, OrderType} from '../../ofi-orders/order.model';
-import {ToasterService} from "angular2-toaster";
-import {Router} from "@angular/router";
+import {ToasterService} from 'angular2-toaster';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-invest-fund',
@@ -39,6 +39,7 @@ import {Router} from "@angular/router";
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
+    static DateTimeFormat = 'DD/MM/YYYY HH:mm';
     static DateFormat = 'DD/MM/YYYY';
 
     @Input() shareId: number;
@@ -76,7 +77,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     // Date picker configuration
     configDateCutoff = {
         firstDayOfWeek: 'mo',
-        format: InvestFundComponent.DateFormat,
+        format: InvestFundComponent.DateTimeFormat,
         closeOnSelect: true,
         opens: 'right',
         locale: 'en',
@@ -145,6 +146,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         6: true
     };
 
+    orderHelper: OrderHelper;
+    calenderHelper: CalendarHelper;
+
     get feePercentage(): number {
         return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
     }
@@ -187,6 +191,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     set actionBy(value) {
         this._actionBy = value;
+        if (typeof this.shareData !== 'undefined') {
+            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+        }
     }
 
     get actionBy() {
@@ -202,6 +209,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     set dateBy(value) {
         this._dateBy = value;
+        if (typeof this.shareData !== 'undefined') {
+            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+        }
     }
 
     get dateBy() {
@@ -231,12 +241,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this._numberConverterService.toFrontEnd(this.shareData.price);
     }
 
+    get navStr() {
+        return this._moneyValuePipe.transform(this.nav, 4);
+    }
+
     get allowCheckDisclaimer(): string | null {
         return (this.form.valid && this.isValidOrderValue()) ? null : '';
     }
 
     get allowToPlaceOrder(): string | null {
-        return (this.form.valid) && this.disclaimer.value ? null : '';
+        return (this.form.valid && this.isValidOrderValue() && this.disclaimer.value) ? null : '';
     }
 
     get assetClass(): string {
@@ -244,11 +258,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get valuationOffset() {
-        return (new CalendarHelper(this.shareData)).valuationOffSet;
+        return this.calenderHelper.valuationOffSet;
     }
 
     get settlementOffset() {
-        return (new CalendarHelper(this.shareData)).settlementOffSet;
+        return this.calenderHelper.settlementOffSet;
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -317,8 +331,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+            this.calenderHelper = new CalendarHelper(this.shareData);
 
             this.updateDateInputs();
+
 
         }));
 
@@ -464,6 +480,21 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         };
     }
 
+    buildFakeOrderRequestToBackend(): OrderRequest {
+        return {
+            token: '',
+            shareisin: '',
+            portfolioid: '1',
+            subportfolio: '',
+            dateby: this.dateBy, // (cutoff, valuation, settlement)
+            datevalue: this.dateValue, // (date value relate to dateby)
+            ordertype: this.orderType, // ('s', 'r')
+            orderby: this.actionBy, // ('q', 'a' )
+            ordervalue: this.orderValue, // (order value relate to orderby)
+            comment: ''
+        };
+    }
+
     handleSubmit() {
         const request = this.buildOrderRequest();
 
@@ -501,16 +532,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  * amount = unit * nav
                  */
                 const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
-                beTriggered.setValue(this._moneyValuePipe.transform(amount));
+                beTriggered.setValue(this._moneyValuePipe.transform(amount.toString(), 4));
 
                 // calculate fee
                 const fee = calFee(amount, this.feePercentage);
-                const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
+                const feeStr = this._moneyValuePipe.transform(fee.toString(), 4).toString();
                 this.feeAmount.setValue(feeStr);
 
                 // net amount
                 const netAmount = calNetAmount(amount, fee, this.orderType);
-                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
+                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 4).toString();
                 this.netAmount.setValue(netAmountStr);
 
                 this.actionBy = 'q';
@@ -526,12 +557,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
                 // calculate fee
                 const fee = calFee(newValue, this.feePercentage);
-                const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
+                const feeStr = this._moneyValuePipe.transform(fee.toString(), 4).toString();
                 this.feeAmount.setValue(feeStr);
 
                 // net amount
                 const netAmount = calNetAmount(newValue, fee, this.orderType);
-                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
+                const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 4).toString();
                 this.netAmount.setValue(netAmountStr);
 
                 this.actionBy = 'a';
@@ -616,6 +647,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     handleOrderConfirmation() {
 
         const subPortfolioName = this.address.value[0]['text'];
+        const amount = this._moneyValuePipe.parse(this.amount.value);
+        const quantity = this._moneyValuePipe.parse(this.quantity.value);
+        const amountStr = this._moneyValuePipe.transform(amount, 4);
+        const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
 
         this._confirmationService.create(
             '<span>Order confirmation</span>',
@@ -641,11 +676,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                     <tr>
                         <td class="left"><b>Quantity:</b></td>
-                        <td>${this.quantity.value}</td>
+                        <td>${quantityStr}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Amount:</b></td>
-                        <td>${this.amount.value}</td>
+                        <td>${amountStr}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Settlement Date:</b></td>
@@ -654,12 +689,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 </tbody>
             </table>
             `,
-            {confirmText: 'Confirmation', declineText: 'Cancel', btnClass: 'primary'}
+            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.handleSubmit();
             }
         });
+    }
+
+    getKiidFileHash(): string {
+        return this.shareData.kiid;
     }
 
     unSubscribeForChange(): void {
