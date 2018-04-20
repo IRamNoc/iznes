@@ -18,9 +18,12 @@ import java.io.IOException;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToPage;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuser;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuserPassword;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -63,6 +66,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToPageByID("menu-asset-manager-dashboard");
+        verifyCorrectPage("My Account");
     }
 
     @Test
@@ -71,7 +75,9 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
+        verifyCorrectPage("My Account");
     }
+
 
     @Test
     @Ignore
@@ -80,6 +86,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-account-module");
         navigateToPage("account/relationships");
+        verifyCorrectPage("My Account");
     }
 
     @Test
@@ -88,6 +95,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
+        verifyCorrectPage("My Account");
     }
 
     @Test
@@ -97,6 +105,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-sicav");
+        verifyCorrectPage("My Account");
     }
 
     @Test
@@ -104,15 +113,19 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        verifyCorrectPage("Shares / Funds / Umbrella funds");
 
     }
 
     @Test
+    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
+        verifyCorrectPageById("Net asset value");
     }
 
     @Test
@@ -122,6 +135,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/create-resolution");
+        verifyCorrectPage("");
     }
 
     @Test
@@ -131,6 +145,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/issue-resolution");
+        verifyCorrectPage("");
     }
 
     @Test
@@ -140,6 +155,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/distribution");
+        verifyCorrectPage("");
     }
 
     @Test
@@ -148,6 +164,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/merger-absorption");
+        verifyCorrectPage("");
     }
 
     @Test
@@ -157,6 +174,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/coupon-payment");
+        verifyCorrectPage("");
     }
 
     @Test
@@ -166,6 +184,7 @@ public class OpenCSDNavigationAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage("corporate-actions/split");
+        verifyCorrectPage("");
     }
 
 }
