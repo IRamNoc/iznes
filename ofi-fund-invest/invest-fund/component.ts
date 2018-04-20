@@ -46,6 +46,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @Input() type: string;
     @Input() doValidate: boolean;
     @Input() initialFormData: { [p: string]: any };
+    @Input() walletBalance: any;
     //
     @Output() close: EventEmitter<any> = new EventEmitter();
     @Output() formDataChange: EventEmitter<any> = new EventEmitter();
@@ -246,11 +247,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get allowCheckDisclaimer(): string | null {
-        return (this.form.valid && this.isValidOrderValue()) ? null : '';
+        return (this.form.valid && this.isValidOrderValue() && !this.isRedeemTooMuch) ? null : '';
     }
 
     get allowToPlaceOrder(): string | null {
-        return (this.form.valid && this.isValidOrderValue() && this.disclaimer.value) ? null : '';
+        return (this.form.valid && this.isValidOrderValue() && this.disclaimer.value && !this.isRedeemTooMuch) ? null : '';
     }
 
     get assetClass(): string {
@@ -279,6 +280,25 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else {
             return this.orderHelper.checkOrderByIsAllow('q').orderValid ? null : '';
         }
+    }
+
+    get shareAsset(): string {
+        return this.shareData.isin + '|' + this.shareData.fundShareName;
+    }
+
+    get subPortfolioBalance(): number {
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown);
+    }
+
+    get isRedeemTooMuch(): boolean {
+        if (this.orderType === 's') {
+            return false;
+        }
+        const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
+        const redeeming = this._numberConverterService.toBlockchain(toNumber);
+        const balance = this.subPortfolioBalance;
+        return Boolean(redeeming >= balance);
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -520,6 +540,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         console.log('place an order', request);
 
+        if (this.isRedeemTooMuch) {
+            return false;
+        }
+
         this._ofiOrdersService.addNewOrder(request).then((data) => {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
             const orderRef = commonHelper.pad(orderId, 8, '0');
@@ -725,6 +749,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         if (this.inputSubscription) {
             this.inputSubscription.unsubscribe();
         }
+    }
+
+
+    findPortFolioBalance(balances) {
+        const breakDown = _.get(balances, ['breakdown'], []);
+
+        for (const balance of breakDown) {
+            const addressValue = _.get(this.address.value, ['0', 'id'], '');
+            if (balance.addr === addressValue) {
+                return balance.free;
+            }
+        }
+        return 0;
     }
 }
 

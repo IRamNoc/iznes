@@ -375,7 +375,8 @@
                             </div>
                             <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
-                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger" mltag="txt_lessthanminordervalue">Less than minimum order value</span>
+                            <span *ngIf="isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger" mltag="txt_insufficientbalancetoredeem">Insufficient balance to redeem</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -388,7 +389,7 @@
                             </div>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
-                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger" mltag="txt_lessthanminordervalue">Less than minimum order value</span>
                         </div>
                     </div>
                 </div>

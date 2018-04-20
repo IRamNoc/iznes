@@ -17,6 +17,10 @@ import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
 import {OrderType} from '../../ofi-orders/order.model';
+import {Observable} from 'rxjs/Observable';
+import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
+import {ReportingService} from '@setl/core-balances/reporting.service';
+import has = Reflect.has;
 
 
 @Component({
@@ -43,14 +47,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     allowOrder = true;
 
-    calandarHelper: CalendarHelper;
-
+    walletBalances: any;
 
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
+    @select(['wallet', 'myWalletHolding', 'holdingByAsset']) balancesOb;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _memberService: MemberService,
@@ -59,6 +63,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 private _route: ActivatedRoute,
                 private _router: Router,
                 private _alerts: AlertsService,
+                private reportingService: ReportingService,
                 private _ofiFundInvestService: OfiFundInvestService) {
     }
 
@@ -80,6 +85,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this._route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
+        }));
+
+        this.subscriptionsArray.push(this.balancesOb.subscribe((walletsbalances) => {
+            this.walletBalances = walletsbalances[this.connectedWalletId];
+            this._changeDetectorRef.markForCheck();
         }));
 
     }
@@ -387,5 +397,24 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         if (this.tabsControl[tabId] != null) {
             this.tabsControl[tabId].formData = formValue;
         }
+    }
+
+    // Get largest balance in any of the address
+    hasShareBalanceInAnyAddress(assetName): boolean {
+        const breakDown = _.get(this.walletBalances, [assetName, 'breakdown'], 0);
+
+        for (const balance of breakDown) {
+            const free = balance.free;
+            if (free > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    disableRedeem(assetName): string {
+        const hasShare = this.hasShareBalanceInAnyAddress(assetName);
+        return hasShare ? null : '';
     }
 }

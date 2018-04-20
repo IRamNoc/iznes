@@ -15,11 +15,11 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'view'">
@@ -74,7 +74,7 @@
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" (click)="handleSubscribe(i)">
                                     <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
-                                <button class="btn btn-danger btn-sm" (click)="handleRedeem(i)">
+                                <button class="btn btn-danger btn-sm" (click)="handleRedeem(i)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
                                     <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
                                 <!--<button class="btn text-yellow" (click)="handleBuySell(i)">-->
                                 <!--<i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>-->
