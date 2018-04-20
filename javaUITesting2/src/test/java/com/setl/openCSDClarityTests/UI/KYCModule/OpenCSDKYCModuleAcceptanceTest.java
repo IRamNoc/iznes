@@ -10,6 +10,7 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -56,17 +58,24 @@ public class OpenCSDKYCModuleAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
 
-
-
     @Test
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        driver.findElement(By.id("dropdown-user")).click();
+        waitForHomePageToLoad();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("top-menu-my-clients")));
+        wait.until(elementToBeClickable(By.id("top-menu-my-clients")));
+        driver.findElement(By.id("top-menu-my-clients")).click();
+        wait.until(visibilityOfElementLocated(By.id("top-menu-invite-investor")));
+        wait.until(elementToBeClickable(By.id("top-menu-invite-investor")));
+
         try {
-            driver.findElement(By.id("top-menu-invite-investors")).click();
+            driver.findElement(By.id("top-menu-invite-investor")).click();
+
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
+        wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
     }
 
     @Test
