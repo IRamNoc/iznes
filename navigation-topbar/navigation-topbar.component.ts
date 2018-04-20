@@ -22,7 +22,8 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setMenuShown,
-    setRequestedMailInitial
+    setRequestedMailInitial,
+    addWalletNodeInitialSnapshot
 } from '@setl/core-store';
 import {fromJS} from 'immutable';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
@@ -122,7 +123,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.lastLogin = this.currentUserDetails.lastLogin;
 
         if (this.lastLogin === '' || this.lastLogin === null) {
-            this.lastLogin = 'Never';
+            this.lastLogin = Date.now();
         }
 
         const chainAccess = getDefaultMyChainAccess(newState);
@@ -159,6 +160,11 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
                         this.changeDetectorRef.markForCheck();
                     }
+
+                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot : any) => {
+                        let action = addWalletNodeInitialSnapshot(initialSnapshot);
+                        this.ngRedux.dispatch(action);
+                    });
                 });
 
         }
@@ -173,6 +179,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
+                '27': 'bank',
                 '35': 'member_user',
                 '36': 'am',
                 '45': 'standard_user',
@@ -182,6 +189,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 '49': 'cac',
                 '50': 'registrar',
                 '60': 't2s',
+                '65': 'rooster_operator',
             }[userType];
             this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
         }));

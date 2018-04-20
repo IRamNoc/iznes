@@ -1,13 +1,13 @@
 <div class="header-breadcrumbs">
     <h1>
         <clr-icon shape="happy-face" class="is-solid"></clr-icon>
-        <span>Data Grid Expand</span></h1>
+        <span mltag="txt_datagridexpand">Data Grid Expand</span></h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button id="demoOptimisedDatagridBtn" clrTabLink>
-            <i class="fa fa-th-list"></i> <span>Optimised Datagrid Demo</span>
+            <i class="fa fa-th-list"></i> <span mltag="txt_optimiseddatagriddemo">Optimised Datagrid Demo</span>
         </button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
@@ -16,76 +16,76 @@
                     <div class="row bordered form-group">
                         <div class="col-sm-4">
                             <label>
-                                <span>Âge</span>
+                                <span mltag="txt_ge">Âge</span>
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-fundname" formControlName="age" name="search-fundname"
-                                       type="text" placeholder="Âge"/>
+                                <input id="orders-search-fundname" formControlName="age" name="search-fundname" type="text" placeholder="Âge" mltag="txt_ge">
+
                                 <button (click)="requestSearch()" style="margin-top: 0;"><i class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>
-                                <span>Start date</span>
+                                <span mltag="txt_startdate">Start date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="startDateID" formControlName="startDate"
-                                       placeholder="Choose a date" mode="day" theme="dp-material"
-                                       mltag="txt_chooseadate"/>
+                                <input id="startDateID" formControlName="startDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>
-                                <span>End date</span>
+                                <span mltag="txt_enddate">End date</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="endDateID" formControlName="endDate"
-                                       placeholder="Choose a date" mode="day" theme="dp-material"
-                                       mltag="txt_chooseadate"/>
+                                <input id="endDateID" formControlName="endDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+
                             </div>
                         </div>
                     </div>
                     <div class="row bordered form-group">
                         <div class="col-sm-4">
                             <label>
-                                <span mltag="txt_sharename">Genders</span>
+                                <span mltag="txt_genders">Genders</span>
                             </label>
                             <div>
-                                <ng-select
-                                    class="fluid-width"
-                                    [items]="genderOptions"
-                                    [allowClear]="true"
-                                    [formControl]="searchForm.controls['genders']"
-                                    placeholder="Status"></ng-select>
+                                <ng-select class="fluid-width" [items]="genderOptions" [allowClear]="true" [formControl]="searchForm.controls['genders']" placeholder="Status" mltag="txt_status">
+
+
+
+
+                                </ng-select>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>
-                                <span>Currencies</span>
+                                <span mltag="txt_currencies">Currencies</span>
                             </label>
                             <div>
-                                <ng-select
-                                    class="fluid-width"
-                                    [items]="currencyOptions"
-                                    [allowClear]="true"
-                                    [formControl]="searchForm.controls['currencies']"
-                                    placeholder="Status"></ng-select>
+                                <ng-select class="fluid-width" [items]="currencyOptions" [allowClear]="true" [formControl]="searchForm.controls['currencies']" placeholder="Status" mltag="txt_status">
+
+
+
+
+                                </ng-select>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label>
-                                <span>Available</span>
+                                <span mltag="txt_available">Available</span>
                             </label>
                             <div>
-                                <ng-select
-                                    class="fluid-width"
-                                    [items]="availableOptions"
-                                    [allowClear]="true"
-                                    [formControl]="searchForm.controls['available']"
-                                    placeholder="Type"></ng-select>
+                                <ng-select class="fluid-width" [items]="availableOptions" [allowClear]="true" [formControl]="searchForm.controls['available']" placeholder="Type" mltag="txt_type">
+
+
+
+
+                                </ng-select>
                             </div>
                         </div>
                     </div>
@@ -96,81 +96,81 @@
                 <clr-datagrid class="expandable">
                     <clr-dg-column [clrDgField]="'id'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>ID</span>
+                            <span mltag="txt_id">ID</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'name'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Name</span>
+                            <span mltag="txt_name">Name</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'age'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Age</span>
+                            <span mltag="txt_age">Age</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'startDate'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Start Date</span>
+                            <span mltag="txt_startdate">Start Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'endDate'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>End Date</span>
+                            <span mltag="txt_enddate">End Date</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'animal'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Animals</span>
+                            <span mltag="txt_animals">Animals</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'sport'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Sports</span>
+                            <span mltag="txt_sports">Sports</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'color'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Colors</span>
+                            <span mltag="txt_colors">Colors</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'gender'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Genders</span>
+                            <span mltag="txt_genders">Genders</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'amount'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Amount</span>
+                            <span mltag="txt_amount">Amount</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'currency'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Currency</span>
+                            <span mltag="txt_currency">Currency</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'codeBank'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Code Bank</span>
+                            <span mltag="txt_codebank">Code Bank</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'password'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Password</span>
+                            <span mltag="txt_password">Password</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'available'">
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span>Available</span>
+                            <span mltag="txt_available">Available</span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'country'">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Countries</span>
+                            <span mltag="txt_countries">Countries</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column><span>Delete</span></clr-dg-column>
-                    <clr-dg-column><span>Edit</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_delete">Delete</span></clr-dg-column>
+                    <clr-dg-column><span mltag="txt_edit">Edit</span></clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of filteredDatas" [clrDgItem]="data">
                         <clr-dg-cell>{{data.id}}</clr-dg-cell>
@@ -189,12 +189,12 @@
                         <clr-dg-cell>{{data.available}}</clr-dg-cell>
                         <clr-dg-cell>{{data.country}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span
-                                mltag="txt_ui_edit">Delete</span></button>
+                            <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_delete">
+                                    Delete</span></button>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span
-                                mltag="txt_ui_edit">Edit</span></button>
+                            <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">
+                                    Edit</span></button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -202,15 +202,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Age</b></td>
+                                                <td><b mltag="txt_age">Age</b></td>
                                                 <td>{{data.age}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Start Date</b></td>
+                                                <td><b mltag="txt_startdate">Start Date</b></td>
                                                 <td>{{data.startDate}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>End Date</b></td>
+                                                <td><b mltag="txt_enddate">End Date</b></td>
                                                 <td>{{data.endDate}}</td>
                                             </tr>
                                         </table>
@@ -219,15 +219,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Gender</b></td>
+                                                <td><b mltag="txt_gender">Gender</b></td>
                                                 <td>{{data.gender}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Currency</b></td>
+                                                <td><b mltag="txt_currency">Currency</b></td>
                                                 <td>{{data.currency}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Available</b></td>
+                                                <td><b mltag="txt_available">Available</b></td>
                                                 <td>{{data.available}}</td>
                                             </tr>
                                         </table>
@@ -236,15 +236,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Age</b></td>
+                                                <td><b mltag="txt_age">Age</b></td>
                                                 <td>{{data.age}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Start Date</b></td>
+                                                <td><b mltag="txt_startdate">Start Date</b></td>
                                                 <td>{{data.startDate}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>End Date</b></td>
+                                                <td><b mltag="txt_enddate">End Date</b></td>
                                                 <td>{{data.endDate}}</td>
                                             </tr>
                                         </table>
@@ -257,7 +257,7 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>Show/hide fields:</clr-dg-column-toggle-title>
+                            <clr-dg-column-toggle-title><span mltag="txt_showhidefields">Show/hide fields</span>:</clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
                             <!--Select All-->
@@ -268,8 +268,8 @@
                                     <clr-icon shape="check"></clr-icon>
                                 </button>
                             </clr-dg-column-toggle-button>
-                        </clr-dg-column-toggle>
-                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        </clr-dg-column-toggle>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                         <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>

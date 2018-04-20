@@ -1,99 +1,104 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-hand-pointer-o"></i> <span mltag="txt_ui_button">Button
-    </span></h1>
+    <h1><i class="fa fa-hand-pointer-o"></i> <span mltag="txt_button">Button
+        </span></h1>
 </div>
 
 <div class="padding">
     <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
-        '[+] show info panes' }}</a>
-    <app-ui-info-pane [hidden]="!showInfoPanes"
-                      [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+        '[+] show info panes' }}
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> <span mltag="txt_ui_button">Button</span>
+            <i class="fa fa-bars"></i> <span mltag="txt_button">Button</span>
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
-                <p>Lets add some text at the top if it required. No problems lots of space here</p>
+                <p mltag="txt_letsaddsometextatthetopifitreqac5c958790">Lets add some text at the top if it required. No problems lots of space here</p>
 
-                <h2><i class="fa fa-info-circle"></i> Primary & Secondary Buttons</h2>
+                <h2><i class="fa fa-info-circle"></i> <span mltag="txt_primarysecondarybuttons">Primary & Secondary Buttons</span></h2>
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-2">
-                            <button class="btn btn-primary">Send</button>
+                            <button class="btn btn-primary" mltag="txt_send">Send</button>
                         </div>
 
                         <div class="form-group col-sm-10">
-                            <p><b>Primary Button</b><br>A primary button is a color of solid colour, when something is
-                                positive or negative</p>
+                            <p><b mltag="txt_primarybutton">Primary Button</b><br><span mltag="txt_aprimarybuttonisacolorofsolidce089358fbc">A primary button is a color of solid colour, when something is
+                                positive or negative</span>
+                            </p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-2">
-                            <button class="btn">Cancel</button>
+                            <button class="btn" mltag="txt_cancel">Cancel</button>
                         </div>
 
                         <div class="form-group col-sm-10">
-                            <p><b>Secondary Button</b><br>Is button with outlined colour and used a cancel, reset or
-                                something similar</p>
+                            <p><b mltag="txt_secondarybutton">Secondary Button</b><br><span mltag="txt_isbuttonwithoutlinedcolourandub36a5f453f">Is button with outlined colour and used a cancel, reset or
+                                something similar</span>
+                            </p>
                         </div>
                     </div>
                 </section>
                 <div class="hr-line-dashed"></div>
 
-                <h2><i class="fa fa-info-circle"></i> Success, Error, Warning</h2>
+                <h2><i class="fa fa-info-circle"></i> <span mltag="txt_successerrorwarning">Success, Error, Warning</span></h2>
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-2">
-                            <button class="btn btn-success">Save</button>
+                            <button class="btn btn-success" mltag="txt_save">Save</button>
                         </div>
 
                         <div class="form-group col-sm-10">
-                            <p><b>Success Button</b><br>Example use on new and edit forms when saving, when something
-                                positive is happening</p>
+                            <p><b mltag="txt_successbutton">Success Button</b><br><span mltag="txt_exampleuseonnewandeditformswhe72de6777fb">Example use on new and edit forms when saving, when something
+                                positive is happening</span>
+                            </p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-2">
-                            <button class="btn btn-danger">Delete</button>
+                            <button class="btn btn-danger" mltag="txt_delete">Delete</button>
                         </div>
 
                         <div class="form-group col-sm-10">
-                            <p><b>Danger Button</b><br>Example use for delete and removing, when something negative is
-                                happening</p>
+                            <p><b mltag="txt_dangerbutton">Danger Button</b><br><span mltag="txt_exampleusefordeleteandremoving450241a280">Example use for delete and removing, when something negative is
+                                happening</span>
+                            </p>
                         </div>
                     </div>
                 </section>
                 <div class="hr-line-dashed"></div>
 
-                <h2><i class="fa fa-table"></i> Datagrid Area Button</h2>
+                <h2><i class="fa fa-table"></i> <span mltag="txt_datagridareabutton">Datagrid Area Button</span></h2>
                 <section class="form-block">
                     <clr-datagrid #dataGrid>
-                        <clr-dg-column mltag="txt_ui_column1">Column 1</clr-dg-column>
-                        <clr-dg-column mltag="txt_ui_column2">Column 2</clr-dg-column>
-                        <clr-dg-column class="actions" mltag="txt_ui_actions">Actions</clr-dg-column>
+                        <clr-dg-column mltag="txt_column1">Column 1</clr-dg-column>
+                        <clr-dg-column mltag="txt_column2">Column 2</clr-dg-column>
+                        <clr-dg-column class="actions" mltag="txt_actions">Actions</clr-dg-column>
 
                         <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
                             <clr-dg-cell>{{item.value1}}</clr-dg-cell>
                             <clr-dg-cell>{{item.value2}}</clr-dg-cell>
                             <clr-dg-cell class="actions">
-                                <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span
-                                    mltag="txt_ui_edit">Delete</span></button>
+                                <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_delete">
+                                        Delete</span></button>
 
-                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span
-                                    mltag="txt_ui_edit">Edit</span></button>
+                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">
+                                        Edit</span></button>
 
-                                <button class="btn btn-orange btn-sm"><i class="fa fa-"></i> <span
-                                    mltag="txt_ui_edit">View</span></button>
+                                <button class="btn btn-orange btn-sm"><i class="fa fa-"></i> <span mltag="txt_view">
+                                        View</span></button>
                             </clr-dg-cell>
                         </clr-dg-row>
 
-                        <clr-dg-footer>
-                            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                             <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
                         </clr-dg-footer>
                     </clr-datagrid>
@@ -102,8 +107,9 @@
 
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <button id="submit" type="submit" class="btn btn-primary" mltag="txt_ui_submit">Submit
+                        <button id="submit" type="submit" class="btn btn-primary" mltag="txt_submitbutton">Submit
                             Button
+
                         </button>
                     </div>
                 </section>

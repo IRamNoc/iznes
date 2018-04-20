@@ -54,6 +54,14 @@ header {
             border-right: 1px solid #efefef;
         }
 
+        .last-login {
+            margin-top: 25px;
+            margin-left: 60px;
+            padding: 0;
+            position: absolute;
+            width: 160px;
+        }
+
         .right-buttons {
             .dropdown {
                 height: 75px;
@@ -91,11 +99,12 @@ header {
                 color: #222;
                 width: calc(100% - 60px);
             }
+
             span {
                 font-size: 11px;
                 float: left;
                 opacity: 0.6;
-                width: 42px;
+                width: auto;
                 height: 20px;
                 line-height: 20px;
                 color: #222;

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th"></i> <span mltag="txt_ui_uiform">Tabs</span></h1>
+    <h1><i class="fa fa-th"></i> <span mltag="txt_tabs">Tabs</span></h1>
 </div>
 
 <div class="padding">
@@ -12,6 +12,8 @@
         <!--
             The tab button has a dynamic ID, title and Font Awesome icon.
         -->
+
+
         <button clrTabLink id="tab-button-{{id}}">
             <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
         </button>
@@ -20,6 +22,9 @@
             Whether the tab is active, is set in the tabdata, from the
             tabsControl object.
         -->
+
+
+
         <clr-tab-content *clrIfActive="tabdata.active">
             <!--
                 Tabs can be filtered by a numeric ID, or a string one.
@@ -27,10 +32,15 @@
                 In this case, we're using numbers, but you could simple use a
                 message type or user type etc.
             -->
+
+
+
+
+
             <ng-container *ngIf="id === 0">
-                <ng-container
-                        *ngTemplateOutlet="dynamicTab1"
-                ></ng-container>
+                <ng-container *ngTemplateOutlet="dynamicTab1">
+
+                </ng-container>
             </ng-container>
 
             <!--
@@ -42,10 +52,18 @@
                 the tabsControl property, or a object detailing data about an
                 entity.
             -->
+
+
+
+
+
+
+
+
             <ng-container *ngIf="id === 1">
-                <ng-container
-                        *ngTemplateOutlet="dynamicTab2; context: {'tabdata': tabdata}"
-                ></ng-container>
+                <ng-container *ngTemplateOutlet="dynamicTab2; context: {'tabdata': tabdata}">
+
+                </ng-container>
             </ng-container>
         </clr-tab-content>
     </clr-tab>
@@ -54,9 +72,9 @@
 <!-- Tab 1 content. -->
 <ng-template #dynamicTab1>
     <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This is the first tab, the component defaults this to be the active one by default in the tabsControl object.'"></app-ui-info-pane>
-    <p>
-        This button programatically moves to the second tab.
-        <button (click)="setTabActive(1); $event.preventDefault()">Go.</button>
+    <p><span mltag="txt_thisbuttonprogramaticallymoves4362c9d758">This button programatically moves to the second tab.</span>
+
+        <button (click)="setTabActive(1); $event.preventDefault()" mltag="txt_go">Go.</button>
     </p>
 </ng-template>
 

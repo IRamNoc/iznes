@@ -42,6 +42,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             const userTypeStr = {
                 '15': 'system_admin',
                 '25': 'chain_admin',
+                '27': 'bank',
                 '35': 'member_user',
                 '36': 'am',
                 '45': 'standard_user',
