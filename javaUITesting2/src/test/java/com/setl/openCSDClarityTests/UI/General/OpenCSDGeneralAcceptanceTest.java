@@ -110,6 +110,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Repeat
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -572,7 +573,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public void checkAlert() {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebDriverWait wait = new WebDriverWait(driver, 3);
             wait.until(ExpectedConditions.alertIsPresent());
         try {
             Alert alert = driver.switchTo().alert();
