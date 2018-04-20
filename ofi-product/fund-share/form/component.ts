@@ -270,7 +270,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.redux,
             this.model.getDocumentsRequest(data.fundShareID),
             (docsData) => {
-                this.toaster.pop('success', data.fundShareName + ' has been successfully creates');
+                this.toaster.pop('success', data.fundShareName + ' has been successfully created');
                 this.router.navigateByUrl(`product-module/home`);
             },
             (e) => this.onCreateError(e[1].Data[0]));
@@ -312,7 +312,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             { confirmText: 'Confirm', declineText: 'Cancel' }
         ).subscribe((ans) => {
             if(ans.resolved) {
-                this.router.navigateByUrl('product-module/home');
+                this.router.navigateByUrl('product-module');
             }
         });
     }
