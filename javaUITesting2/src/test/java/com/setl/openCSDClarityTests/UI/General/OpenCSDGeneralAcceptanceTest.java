@@ -35,6 +35,7 @@ import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -45,7 +46,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (30000);
+    public Timeout globalTimeout = new Timeout (300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -337,6 +338,23 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
+    public static void navigateToInviteInvestorPage() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("top-menu-my-clients")));
+        wait.until(elementToBeClickable(By.id("top-menu-my-clients")));
+        driver.findElement(By.id("top-menu-my-clients")).click();
+        wait.until(visibilityOfElementLocated(By.id("top-menu-invite-investor")));
+        wait.until(elementToBeClickable(By.id("top-menu-invite-investor")));
+
+        try {
+            driver.findElement(By.id("top-menu-invite-investor")).click();
+
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
+        wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
+    }
+
     public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
@@ -354,9 +372,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("FAILED : " + e.getMessage());
         }
         try {
-            Thread.sleep(750);
-            WebElement popupSuccess = driver.findElement(By.className("jaspero__dialog-title"));
-            wait.until(visibilityOf(popupSuccess));
+               wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
         } catch (Error e) {
             fail(e.getMessage());
         }
@@ -473,6 +489,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectInvestorOnManageUserAccountDropdown() throws InterruptedException {
         driver.findElement(By.id("new-user-account-select")).click();
+
         Thread.sleep(1500);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
@@ -581,8 +598,8 @@ public class OpenCSDGeneralAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         enterManageUserUsername(username);
         enterManageUserEmail(username + "@setl.io");
-        selectInvestorOnManageUserAccountDropdown();
-        selectInvestorOnManageUserUserDropdown();
+        selectManageUserAccountDropdown();
+        selectManageUserUserDropdown();
         enterManageUserPassword(password);
         enterManageUserPasswordRepeat(password);
         clickManageUserSubmit();
@@ -600,25 +617,32 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void enterManageUserUsername(String username) {
+        driver.findElement(By.id("new-user-username")).clear();
         driver.findElement(By.id("new-user-username")).sendKeys(username);
 
     }
 
     public static void enterManageUserEmail(String email) {
+        driver.findElement(By.id("new-user-email")).clear();
         driver.findElement(By.id("new-user-email")).sendKeys(email);
     }
 
     public static void enterManageUserPassword(String password) {
+        driver.findElement(By.id("new-user-password")).clear();
         driver.findElement(By.id("new-user-password")).sendKeys(password);
     }
 
     public static void enterManageUserPasswordRepeat(String password) {
+        driver.findElement(By.id("new-user-password-repeat")).clear();
         driver.findElement(By.id("new-user-password-repeat")).sendKeys(password);
     }
 
     public static void navigateToAddUser() {
-        driver.findElement(By.id("menu-user-administration")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("menu-user-administration")));
+        wait.until(elementToBeClickable(By.id("menu-user-administration")));
+        WebElement userAdd = driver.findElement(By.id("menu-user-administration"));
+        userAdd.click();
         WebElement dropdownItem = driver.findElement(By.id("menu-user-admin-users"));
         wait.until(visibilityOf(dropdownItem));
         try {
