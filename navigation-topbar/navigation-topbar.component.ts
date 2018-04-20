@@ -168,6 +168,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 });
 
         }
+        this.changeDetectorRef.markForCheck();
 
     }
 
