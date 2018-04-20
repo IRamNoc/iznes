@@ -1,0 +1,20 @@
+.password-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+
+.password-container input {
+    width: 95%;
+    margin-left: 0;
+    margin-right: .5rem;
+}
+
+.password-container span {
+    margin: 0 10px;
+    font-size: 18px;
+    line-height: 2em;
+    color: grey;
+    cursor:pointer;
+}
