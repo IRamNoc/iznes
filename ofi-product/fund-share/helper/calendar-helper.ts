@@ -126,7 +126,7 @@ export class CalendarHelper {
 
         this.orderType = orderType;
 
-        const dateTimeToCheckCopy = getSpecificDateCutOff(dateTimeToChecks.clone(), this.cutoffTime, this.tradeTimeZone);
+        const dateTimeToCheckCopy = getSpecificDateCutOff(momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZone);
 
         // check the date cutoff is still in the future.
         const isDateTimeToCheckInFuture = Boolean(dateTimeToCheckCopy.valueOf() > moment().valueOf());
@@ -326,19 +326,20 @@ export class CalendarHelper {
     }
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
+        const dateTimeToCheckCopy = momentToMomentBusiness(dateTimeToChecks);
         // check if the date is working date
         if (!isWorkingDate(dateTimeToChecks)) {
             return false;
         }
 
         // get cutoff date from settlement date.
-        const cutoffDate = dateTimeToChecks.clone().businessSubtract(this.settlementOffSet);
+        const cutoffDate = dateTimeToChecks.businessSubtract(this.settlementOffSet);
         return this.isValidCutoffDateTime(cutoffDate, orderType);
     }
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!isWorkingDate(dateTimeToChecks)) {
+        if (!isWorkingDate(momentToMomentBusiness(dateTimeToChecks))) {
             return false;
         }
 
@@ -375,8 +376,18 @@ export class CalendarHelper {
 
         return settlementDate.clone().businessSubtract(this.settlementOffSet);
     }
+
 }
 
+
+/**
+ * Make sure we have a moment business day here
+ * @param dateToConvert
+ * @return {}
+ */
+export function momentToMomentBusiness(dateToConvert): moment {
+    return moment(dateToConvert.valueOf());
+}
 
 /**
  * Convert moment object to specific timezone
