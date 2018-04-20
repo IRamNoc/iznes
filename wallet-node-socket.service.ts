@@ -111,10 +111,6 @@ export class WalletNodeSocketService{
 
         try {
             if ((this.websocket !== undefined)) {
-                // Disable snapshot for now.
-                // Get the initial snapshot, and handle it.
-                // this.getInitialSnapshotFromThroughSocket();
-
                 // Subscribe to topics
                 this.walletNodeMessagingSubscribe(ID, message, UserData);
 
@@ -148,31 +144,6 @@ export class WalletNodeSocketService{
             this.websocket.sendRequest(Request);
 
         }
-    }
-
-    getInitialSnapshotFromThroughSocket() {
-
-        const messageID = this.callBackRegister.uniqueIDValue;
-        this.callBackRegister.addHandler(messageID, this.renderSnapshot, {});
-
-
-        const Request = {
-            messageType: 'Request',
-            messageHeader: '',
-            messageBody: {
-                topic: 'state'
-            },
-            requestID: messageID
-        };
-
-        this.websocket.sendRequest(Request);
-    }
-
-    /**
-     * render initial snapshot.
-     */
-    renderSnapshot(ID, initialSnapshot, UserData) {
-        console.log(initialSnapshot);
     }
 
     sendRequest(request, callBack) {
