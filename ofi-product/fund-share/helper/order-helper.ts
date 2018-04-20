@@ -184,6 +184,13 @@ export class OrderHelper {
         return OrderHelper.getSubsequentMinFig(this.fundShare, this.orderType, this.orderBy);
     }
 
+    get orderAllowCategory() {
+        return Number({
+            [OrderType.Subscription]: this.fundShare.subscriptionCategory || 0,
+            [OrderType.Redemption]: this.fundShare.redemptionCategory || 0,
+        }[this.orderType]);
+    }
+
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {
         this.calendarHelper = new CalendarHelper(fundShare);
         this.orderRequest = orderRequest;
@@ -449,6 +456,12 @@ export class OrderHelper {
             return OrderHelper.getChildErrorMessage(checkOrderValue);
         }
 
+        const checkAllowOrderType = this.checkOrderByIsAllow();
+
+        if (!OrderHelper.isResponseGood(checkAllowOrderType)) {
+            return OrderHelper.getChildErrorMessage(checkAllowOrderType);
+        }
+
         switch (this.orderBy) {
             case OrderByType.Quantity:
                 quantity = this.orderValue;
@@ -473,10 +486,13 @@ export class OrderHelper {
                 /**
                  * quantity = amount / nav
                  */
-                amount = this.orderValue;
+                // if redemption amount will always be estimated.
+                amount = this.orderType === OrderType.Subscription ? this.orderValue : 0;
                 estimatedAmount = this.orderValue;
 
-                quantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+                // if redemption amount will always be estimated.
+                estimatedQuantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+                quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
 
                 // calculate fee
                 fee = calFee(estimatedAmount, this.feePercentage);
@@ -623,7 +639,8 @@ export class OrderHelper {
     }
 
     buildRedemptionArrangementData(): ArrangementData | VerifyResponse {
-        let actionData, addEncs;
+        let actionData;
+        const addEncs = [];
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
@@ -661,16 +678,16 @@ export class OrderHelper {
                 }
             ];
 
-            addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
-            ];
+            // addEncs = [
+            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+            // ];
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
             actionData = [
                 {
                     actionData: {
-                        amount: '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                        amount: orderFigures.quantity,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -684,9 +701,9 @@ export class OrderHelper {
                 }
             ];
 
-            addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
-            ];
+            // addEncs = [
+            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
+            // ];
 
         } else {
             return {
@@ -727,6 +744,32 @@ export class OrderHelper {
             creatorAddress: this.investorAddress
         };
     }
+
+
+    checkOrderByIsAllow(orderType = this.orderRequest.orderby): VerifyResponse {
+        const tryingToOrderBy = OrderByNumber[orderType] - 1;
+        // check if order type is allow
+        const typesAllow = this.orderAllowCategory;
+
+        if (typesAllow === 2) {
+            return {
+                orderValid: true
+            };
+        }
+
+        if (typesAllow !== tryingToOrderBy) {
+            return {
+                orderValid: false,
+                errorMessage: 'Not allow to order by this type'
+            };
+        } else {
+            return {
+                orderValid: true
+            };
+        }
+
+    }
+
 }
 
 /**

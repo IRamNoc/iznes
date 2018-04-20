@@ -265,6 +265,22 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.calenderHelper.settlementOffSet;
     }
 
+    get allowAmount(): any {
+        if (typeof this.orderHelper === 'undefined') {
+            return '';
+        } else {
+            return this.orderHelper.checkOrderByIsAllow('a').orderValid ? null : '';
+        }
+    }
+
+    get allowQuantity(): any {
+        if (typeof this.orderHelper === 'undefined') {
+            return '';
+        } else {
+            return this.orderHelper.checkOrderByIsAllow('q').orderValid ? null : '';
+        }
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _moneyValuePipe: MoneyValuePipe,
                 private _myWalletService: MyWalletsService,
@@ -328,10 +344,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             }
         }[this.type];
 
+        this.actionBy = 'q';
+
         // List of observable subscription.
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
             this.calenderHelper = new CalendarHelper(this.shareData);
+
+            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
             this.updateDateInputs();
 
