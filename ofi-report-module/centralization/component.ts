@@ -228,11 +228,11 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickViewCorrespondingOrders(id) {
-        console.log('onClickViewCorrespondingOrders');
+        this.router.navigateByUrl('manage-orders/' + id);
     }
 
     onClickViewCentralizationHistory(id) {
-        console.log('onClickViewCentralizationHistory');
+        this.buildLink(id);
     }
 
     onClickDownloadCorrespondingOrders(id) {
@@ -240,7 +240,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickDownloadCentralizationHistory(id) {
-        this.buildLink(id);
+        console.log('onClickDownloadCentralizationHistory');
     }
 
     ngOnDestroy() {
