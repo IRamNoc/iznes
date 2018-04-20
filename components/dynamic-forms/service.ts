@@ -12,8 +12,9 @@ import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
 export class DynamicFormService {
 
     constructor(private fileService: FileService,
-        private toaster: ToasterService,
-        private redux: NgRedux<any>) {}
+                private toaster: ToasterService,
+                private redux: NgRedux<any>) {
+    }
 
     generateForm(model: { [key: string]: FormItem }): FormGroup {
         const form = new FormGroup({});
@@ -30,26 +31,26 @@ export class DynamicFormService {
     private generateControl(model: { [key: string]: FormItem }, index: string, item: FormItem): FormControl {
         let preset;
 
-        if(item.preset) {
-            if(item.type === FormItemType.boolean && (item.preset === "1" || item.preset === "0")) {
+        if (item.preset) {
+            if (item.type === FormItemType.boolean && (item.preset === "1" || item.preset === "0")) {
                 preset = item.preset === "1" ? true : false;
             } else {
                 preset = item.preset;
             }
         } else {
-            if(item.type === FormItemType.boolean) preset = false;
-            if(item.type === FormItemType.text) preset = '';
-            if(item.type === FormItemType.date) preset = '';
-            if(item.type === FormItemType.number) preset = null;
-            if(item.type === FormItemType.list) preset = null;
-            if(item.type === FormItemType.file) preset = null;
+            if (item.type === FormItemType.boolean) preset = false;
+            if (item.type === FormItemType.text) preset = '';
+            if (item.type === FormItemType.date) preset = '';
+            if (item.type === FormItemType.number) preset = null;
+            if (item.type === FormItemType.list) preset = null;
+            if (item.type === FormItemType.file) preset = null;
         }
 
         const validator = (item.required && !item.validator) ? [Validators.required] : item.validator;
 
         const formControl = new FormControl(preset, validator);
 
-        if(item.disabled) formControl.disable();
+        if (item.disabled) formControl.disable();
 
         return formControl;
     }
@@ -58,19 +59,19 @@ export class DynamicFormService {
         _.forEach(model, (item: FormItem, index: string) => {
             model[index].control = form.controls[index] as FormControl;
 
-            model[index].value = function(val?: any) {
-                if(!val) return this.control.value;
+            model[index].value = function (val?: any) {
+                if (!val) return this.control.value;
 
                 form.controls[index].patchValue(val);
             };
 
-            model[index].isValid = function(val?: any) {
+            model[index].isValid = function (val?: any) {
                 return (((model[index].hidden) && model[index].hidden()) || form.controls[index].disabled) ? true : form.controls[index].valid;
             };
 
             model[index].cssClass = this.getFormItemStyles(item);
 
-            if(item.type === FormItemType.date && !item.dateOptions) {
+            if (item.type === FormItemType.date && !item.dateOptions) {
                 item.dateOptions = {
                     firstDayOfWeek: 'mo',
                     format: 'YYYY-MM-DD',
@@ -97,7 +98,7 @@ export class DynamicFormService {
     private getFormItemStyles(item: FormItem): string {
         let cssClass = 'col-sm-6 ';
 
-        if((item.style) && item.style.length > 0) {
+        if ((item.style) && item.style.length > 0) {
             item.style.forEach((style: FormItemStyle) => {
                 switch (style) {
                     case FormItemStyle.SingleRow:
@@ -129,7 +130,7 @@ export class DynamicFormService {
         const asyncTaskPipe = this.fileService.addFile({
             files: _.filter(event.files, function (file) {
                 return file.status !== 'uploaded-file';
-            })
+            }),
         });
 
         this.redux.dispatch(SagaHelper.runAsyncCallback(
