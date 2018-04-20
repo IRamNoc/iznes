@@ -149,10 +149,14 @@ public class DatabaseHelper {
                     if (name.equals("username")) {
 
                         assertTrue((jsonResult.get(name).toString().equals("\"" + userName + "\"")));
+                        System.out.println("UserName from DB = " + jsonResult.get(name).toString());
+                        System.out.println("UserName from input = " + userName);
                     }
                     if (name.equals("email")) {
 
                         assertTrue((jsonResult.get(name).toString().equals("\"" + email + "\"")));
+                        System.out.println("Email from DB = " + jsonResult.get(name).toString());
+                        System.out.println("Email from input = " + email);
                         }
                     }
 
