@@ -18,21 +18,26 @@ export class DynamicFormComponent implements OnInit {
         this._model = model;
         this.generateForm();
     }
-    get model() { return this._model; }
+
+    get model() {
+        return this._model;
+    }
 
     form: FormGroup;
     formKeys: string[];
 
     constructor(private service: DynamicFormService,
-        private changeDetectorRef: ChangeDetectorRef) {}
+                private changeDetectorRef: ChangeDetectorRef) {
+    }
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     private generateForm(): void {
         this.form = this.service.generateForm(this._model);
         this.formKeys = this.service.getFormKeys(this._model);
         this.service.updateModel(this._model, this.form);
-        
+
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
     }
@@ -43,7 +48,7 @@ export class DynamicFormComponent implements OnInit {
     }
 
     isHidden(item: string): boolean {
-        if(this._model[item].hidden !== undefined) {
+        if (this._model[item].hidden !== undefined) {
             return this._model[item].hidden();
         }
 

@@ -1,4 +1,5 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
+import {FilePermission} from '@setl/core-filedrop/drophandler/drophandler.component';
 
 export interface FormItem {
     type: FormItemType;
@@ -24,6 +25,8 @@ export interface FormItem {
     dateOptions?: { [key: string]: any };
 
     fileData?: any;
+
+    filePermission?: FilePermission;
 }
 
 export enum FormItemType {
