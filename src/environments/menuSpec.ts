@@ -78,14 +78,20 @@ const reportsCollectsArchives = {
     element_id: 'menu-am-reports-section-collective-archives',
     router_link: '/am-reports-section/collects-archive'
 };
-
-const reportsHistoricalOrders = {
-    label: 'Holders Lists',
-    label_txt: 'txt_holders_list',
+const reportsCentralization = {
+    label: 'Centralization',
+    label_txt: 'txt_centralization',
     icon_class: 'fa fa-book',
-    element_id: 'menu-am-reports-section-historical-orders',
-    router_link: '/reports-section/csv'
+    element_id: 'menu-report-centralization',
+    router_link: '/reports/centralization'
 };
+// const reportsHistoricalOrders = {
+//     label: 'Holders Lists',
+//     label_txt: 'txt_holders_list',
+//     icon_class: 'fa fa-book',
+//     element_id: 'menu-am-reports-section-historical-orders',
+//     router_link: '/reports-section/csv'
+// };
 const reportsTaxReport = {
     label: 'Tax Report',
     label_txt: 'txt_taxreport',
@@ -394,7 +400,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
-                    reportsHistoricalOrders,
+                    reportsCentralization,
                 ]
             },
             kycDocuments,
