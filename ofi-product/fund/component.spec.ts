@@ -268,13 +268,13 @@ describe('FundComponent', () => {
             const formGroupMainEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:first-child div.form-group')
             );
-            expect(formGroupMainEls.length).toEqual(27);
+            expect(formGroupMainEls.length).toEqual(26);
 
             // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
             const formGroupOptionEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:last-child div.form-group')
             );
-            expect(formGroupOptionEls.length).toEqual(24);
+            expect(formGroupOptionEls.length).toEqual(22);
         }));
 
         describe('conditionnal inputs', () => {
@@ -288,35 +288,6 @@ describe('FundComponent', () => {
                 fixture.detectChanges();
 
             }));
-
-            describe('umbrellaFundID', () => {
-                it('should display the umbrellaFundID input', fakeAsync(() => {
-                    const value1 = comp.umbrellaItems[0];
-                    comp.umbrellaControl.setValue([value1]);
-                    tick();
-                    fixture.detectChanges();
-
-                    const umbrellaBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaBeforeEls.length).toEqual(0);
-
-                    const value2 = comp.umbrellaItems[1];
-                    comp.umbrellaControl.setValue([value2]);
-                    tick();
-                    fixture.detectChanges();
-                    const umbrellaAfterEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaAfterEls.length).toEqual(1);
-                }));
-
-                it('should not display the umbrellaFundID input', fakeAsync(() => {
-                    const value1 = comp.umbrellaItems[0];
-                    comp.umbrellaControl.setValue([value1]);
-                    tick();
-                    fixture.detectChanges();
-                    const umbrellaEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaEls.length).toEqual(0);
-                }));
-
-            });
 
             describe('typeOfEuDirective', () => {
                 it('should display the typeOfEuDirective input', fakeAsync(() => {
