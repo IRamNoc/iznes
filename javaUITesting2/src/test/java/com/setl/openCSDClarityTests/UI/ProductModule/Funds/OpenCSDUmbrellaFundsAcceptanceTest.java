@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.*;
@@ -25,6 +26,8 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPres
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
 import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -167,9 +170,14 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")));
+
             String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-            assertFalse(postCreationNo.equals(preCreationNo + 1));
+            assertNotEquals(postCreationNo, preCreationNo + 1);
         }catch (Exception e){
             fail();
         }
