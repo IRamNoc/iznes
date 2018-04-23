@@ -128,7 +128,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         const chainAccess = getDefaultMyChainAccess(newState);
 
-        if (!this.connectedToWalletNode && chainAccess) {
+        if (!this.connectedToWalletNode && chainAccess && this.walletSelectItems.length > 0) {
 
             this.connectedToWalletNode = true;
 
@@ -161,7 +161,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                         this.changeDetectorRef.markForCheck();
                     }
 
-                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot : any) => {
+                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
                         let action = addWalletNodeInitialSnapshot(initialSnapshot);
                         this.ngRedux.dispatch(action);
                     });
