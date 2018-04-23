@@ -6,21 +6,23 @@ export interface UmbrellaFundDetail {
     legalEntityIdentifier: string;
     domicile: string;
     umbrellaFundCreationDate: string;
-    managementCompanyID: number;
-    fundAdministratorID: number;
-    custodianBankID: number;
-    investmentManagerID: number;
-    investmentAdvisorID: number;
-    payingAgentID: number;
-    transferAgentID: number;
-    centralisingAgentID: number;
+    managementCompanyID: string;
+    fundAdministratorID: string;
+    custodianBankID: string;
+    investmentManagerID: string;
+    investmentAdvisorID: string;
+    payingAgentID: string;
+    transferAgentID: string;
+    centralisingAgentID: string;
     giin: number;
-    delegatedManagementCompanyID: number;
-    auditorID: number;
-    taxAuditorID: number;
-    principlePromoterID: number;
-    legalAdvisorID: number;
+    delegatedManagementCompanyID: string;
+    auditorID: string;
+    taxAuditorID: string;
+    principlePromoterID: string;
+    legalAdvisorID: string;
     directors: string;
+    internalReference: string;
+    additionnalNotes: string;
 }
 
 export interface UmbrellaFundListState {

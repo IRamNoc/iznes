@@ -5,32 +5,8 @@ import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import {UmbrellaFundRequestMessageBody, SaveUmbrellaFundRequestBody, UpdateUmbrellaFundRequestBody} from './service.model';
-import {setRequestedUmbrellaFund, clearRequestedUmbrellaFund, SET_UMBRELLA_FUND_LIST} from '../../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-
-interface UmbrellaFundData {
-    umbrellaFundID?: number;
-    umbrellaFundName: string;
-    registerOffice: string;
-    registerOfficeAddress: string;
-    legalEntityIdentifier: string;
-    domicile: string;
-    umbrellaFundCreationDate: string;
-    managementCompanyID: number;
-    fundAdministratorID: number;
-    custodianBankID: number;
-    investmentManagerID: number;
-    investmentAdvisorID: number;
-    payingAgentID: number;
-    transferAgentID: number;
-    centralisingAgentID: number;
-    giin: number;
-    delegatedManagementCompanyID: number;
-    auditorID: number;
-    taxAuditorID: number;
-    principlePromoterID: number;
-    legalAdvisorID: number;
-    directors: string;
-}
+import {setRequestedUmbrellaFund, clearRequestedUmbrellaFund, SET_UMBRELLA_FUND_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
+import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 @Injectable()
 export class OfiUmbrellaFundService {
@@ -80,7 +56,7 @@ export class OfiUmbrellaFundService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveUmbrellaFund(ufData: UmbrellaFundData, ngRedux: NgRedux<any>): any {
+    saveUmbrellaFund(ufData: UmbrellaFundDetail, ngRedux: NgRedux<any>): any {
 
         const messageBody: SaveUmbrellaFundRequestBody = {
             RequestName: 'izncreateumbrellafund',
@@ -106,13 +82,15 @@ export class OfiUmbrellaFundService {
             taxAuditorID: ufData.taxAuditorID,
             principlePromoterID: ufData.principlePromoterID,
             legalAdvisorID: ufData.legalAdvisorID,
-            directors: ufData.directors
+            directors: ufData.directors,
+            internalReference: ufData.internalReference,
+            additionnalNotes: ufData.additionnalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    updateUmbrellaFund(ufData: UmbrellaFundData, ngRedux: NgRedux<any>): any {
+    updateUmbrellaFund(ufData: UmbrellaFundDetail, ngRedux: NgRedux<any>): any {
 
         const messageBody: UpdateUmbrellaFundRequestBody = {
             RequestName: 'iznupdateumbrellafund',
@@ -139,7 +117,9 @@ export class OfiUmbrellaFundService {
             taxAuditorID: ufData.taxAuditorID,
             principlePromoterID: ufData.principlePromoterID,
             legalAdvisorID: ufData.legalAdvisorID,
-            directors: ufData.directors
+            directors: ufData.directors,
+            internalReference: ufData.internalReference,
+            additionnalNotes: ufData.additionnalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

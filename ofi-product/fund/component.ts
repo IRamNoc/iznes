@@ -11,36 +11,12 @@ import {ToasterService} from 'angular2-toaster';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {typeOfEuDirective} from '../productConfig';
 
-interface UmbrellaItem {
-    auditorID: string;
-    centralisingAgentID: string;
-    custodianBankID: string;
-    delegatedManagementCompanyID: string;
-    directors: string;
-    domicile: string;
-    fundAdministratorID: string;
-    giin: string;
-    investmentAdvisorID: string;
-    investmentManagerID: string;
-    legalAdvisorID: string;
-    legalEntityIdentifier: string;
-    managementCompanyID: string;
-    payingAgentID: string;
-    principlePromoterID: string;
-    registerOffice: string;
-    registerOfficeAddress: string;
-    taxAuditorID: string;
-    transferAgentID: string;
-    umbrellaFundCreationDate: string; // datetime
-    umbrellaFundID: string;
-    umbrellaFundName: string;
-}
-
 interface UmbrellaList {
-    [key: string]: UmbrellaItem;
+    [key: string]: UmbrellaFundDetail;
 }
 
 interface FundList {
@@ -234,6 +210,9 @@ export class FundComponent implements OnInit, OnDestroy {
             'umbrellaFundCreationDate': {value: '', disabled: true},
             'umbrellaFundID': {value: '', disabled: true},
             'umbrellaFundName': {value: '', disabled: true},
+            'internalReference': {value: '', disabled: true},
+            'additionnalNotes': {value: '', disabled: true},
+
         });
 
         this.fundForm = fb.group({
@@ -296,6 +275,8 @@ export class FundComponent implements OnInit, OnDestroy {
             'hasSwap': [null],
             'hasDurationHedge': [null],
             'investmentObjective': [null],
+            'internalReference': ['', this.validators.internalReference],
+            'additionnalNotes': ['', this.validators.additionnalNotes],
         });
 
         this.umbrellaForm.addControl('umbrellaFund', this.umbrellaControl);
@@ -347,6 +328,8 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['umbrellaFundCreationDate'].setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
                     this.umbrellaEditForm.controls['umbrellaFundID'].setValue(newUmbrella.umbrellaFundID);
                     this.umbrellaEditForm.controls['umbrellaFundName'].setValue(newUmbrella.umbrellaFundName);
+                    this.umbrellaEditForm.controls['internalReference'].setValue(newUmbrella.internalReference);
+                    this.umbrellaEditForm.controls['additionnalNotes'].setValue(newUmbrella.additionnalNotes);
 
                     this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
 

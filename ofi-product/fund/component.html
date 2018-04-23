@@ -364,6 +364,16 @@
                                                 <input type="text" id="uf_directors" class="form-control" formControlName="directors">
                                             </div>
                                         </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_internalReference">Internal Reference</label>
+                                            <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_additionnalNotes">Additionnal Notes</label>
+                                            <textarea id="uf_additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1029,6 +1039,11 @@
                                                     <label for="hasDurationHedge2" mltag="txt_no">No</label>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="internalReference">Internal Reference</label>
+                                                <input type="text" name="internalReference" id="internalReference" formControlName="internalReference" maxlength="50">
+                                            </div>
                                         </div>
 
                                         <div class="row">
@@ -1037,7 +1052,12 @@
                                                 <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
                                             </div>
                                         </div>
-
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="additionnalNotes">Additionnal Notes</label>
+                                                <textarea name="additionnalNotes" id="additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

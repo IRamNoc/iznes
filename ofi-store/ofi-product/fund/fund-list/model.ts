@@ -99,4 +99,6 @@ export interface IznesFundDetail {
     hasSwap: string;
     hasDurationHedge: string;
     investmentObjective: string;
+    internalReference: string;
+    additionnalNotes: string;
 }
