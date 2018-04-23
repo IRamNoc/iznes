@@ -10,6 +10,7 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -213,8 +214,13 @@ public class OpenCSDKYCModuleAcceptanceTest {
 //        selectOptionAndSubmitKYC("no");
 //        logout();
         loginAndVerifySuccess("am", "alex01");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
-            driver.findElement(By.id("top-menu-kyc-documents")).click();
+            wait.until(visibilityOfElementLocated(By.id("top-menu-kyc-documents")));
+            wait.until(elementToBeClickable(By.id("top-menu-kyc-documents")));
+            WebElement documents = driver.findElement(By.id("top-menu-kyc-documents"));
+            documents.click();
         }catch (Exception e){
             fail(e.getMessage());
         }

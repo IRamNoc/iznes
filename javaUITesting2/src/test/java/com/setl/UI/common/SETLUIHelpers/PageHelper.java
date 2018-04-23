@@ -46,4 +46,29 @@ public class PageHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.id("pageTitle")).getText().equals(title));
 
     }
+
+    public static void waitForNewFundShareTitle() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        try {
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")));
+            String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")).getText();
+
+            assertTrue(shareTitle.equals("Please enter following information to create a new Fund Share"));
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+    }
+
+    public static void waitForNewShareButton() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+            wait.until(visibilityOfElementLocated((By.id("new-share-btn"))));
+            wait.until(elementToBeClickable(By.id("new-share-btn")));
+            WebElement newShare = driver.findElement(By.id("new-share-btn"));
+            newShare.click();
+        }catch (Error e){
+            fail(e.getMessage());
+        }
+    }
 }
