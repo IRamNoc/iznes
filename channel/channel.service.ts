@@ -23,7 +23,8 @@ import {
     setRequestedMailInitial,
 
     setRequestedMyChainAccess,
-    SET_MY_CHAIN_ACCESS
+    SET_MY_CHAIN_ACCESS,
+    SET_WALLET_DIRECTORY
 } from '@setl/core-store';
 import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
 import {ChainService} from '@setl/core-req-services/chain/service';
@@ -38,8 +39,7 @@ export class ChannelService {
     constructor(private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private myWalletsService: MyWalletsService,
-                private chainService: ChainService
-    ) {
+                private chainService: ChainService) {
         this.checkChangedPassword.subscribe(
             (data) => {
                 this.changedPassword = data;
@@ -171,6 +171,15 @@ export class ChannelService {
             case 'uduwp': // update user wallet permissions
                 console.log(' | UPDATE USER WALLET PERMISSION: ');
 
+                const asyncTaskPipes = this.myWalletsService.requestWalletDirectory();
+
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_WALLET_DIRECTORY],
+                    [],
+                    asyncTaskPipes,
+                    {}
+                ));
+
                 // need to be retrieve as the admin does not know our wallet list
                 const asyncTaskPipes = this.myWalletsService.requestOwnWallets();
 
@@ -178,9 +187,6 @@ export class ChannelService {
                     [SET_OWN_WALLETS],
                     [],
                     asyncTaskPipes, {}));
-
-
-
 
                 // Set the state flag to true. so we do not request it again.
                 this.ngRedux.dispatch(setRequestedMyChainAccess());
