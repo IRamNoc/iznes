@@ -56,6 +56,7 @@ public class OpenCSDZSharesAcceptanceTest {
     }
 
     @Test
+    @Ignore("Wont work until we have a solution for documents fields")
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");

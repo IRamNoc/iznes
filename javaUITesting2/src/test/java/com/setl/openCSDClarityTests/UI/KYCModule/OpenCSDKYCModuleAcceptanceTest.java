@@ -206,6 +206,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("Test needs to be redone")
     public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
 //        loginAndVerifySuccessKYC("testops002@setl.io", "alex01");
 //        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
