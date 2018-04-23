@@ -666,7 +666,6 @@ describe('FundComponent', () => {
                 taxAuditor: null,
                 legalAdvisor: null,
                 directors: null,
-                pocket: null,
                 hasEmbeddedDirective: null,
                 hasCapitalPreservation: null,
                 capitalPreservationLevel: null,

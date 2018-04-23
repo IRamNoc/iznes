@@ -434,12 +434,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-sm-6" *ngIf="fundForm.controls['isFundStructure'].value === enums.isFundStructure.UMBRELLA.toString()">
-                                                <label class="control-label" for="umbrellaFundID" mltag="txt_umbrellaname">Umbrella Name</label>
-                                                <input type="text" name="umbrellaFundID" id="umbrellaFundID" value="{{umbrellaControl.value[0].text}}" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="legalEntityIdentifier" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
                                                 <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
@@ -760,6 +754,11 @@
                                                     <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
+                                                <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -837,11 +836,6 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="directors" mltag="txt_directors">Directors</label>
                                                 <input type="text" name="directors" id="directors" formControlName="directors">
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label" for="pocket" mltag="txt_pocket">Pocket</label>
-                                                <input type="text" name="pocket" id="pocket" formControlName="pocket">
                                             </div>
 
                                             <div class="form-group col-sm-6">
@@ -1019,12 +1013,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
-                                                <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
-                                            </div>
-                                        </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="additionnalNotes" mltag="txt_additionnalnotes">Additionnal Notes</label>

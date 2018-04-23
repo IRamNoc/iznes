@@ -253,7 +253,6 @@ export class FundComponent implements OnInit, OnDestroy {
             'taxAuditor': [[]],
             'legalAdvisor': [[]],
             'directors': [null],
-            'pocket': [null],
             'hasEmbeddedDirective': [null],
             'hasCapitalPreservation': [null],
             'capitalPreservationLevel': [null, Validators.compose([
