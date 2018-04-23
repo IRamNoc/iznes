@@ -6,7 +6,8 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="testlink{{id}}" [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button *ngIf="tabdata.groupId < 0" clrTabLink id="testlink{{id}}" [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="testlink{{id}}" (click)="handleEdit(tabdata.groupIndex)"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
