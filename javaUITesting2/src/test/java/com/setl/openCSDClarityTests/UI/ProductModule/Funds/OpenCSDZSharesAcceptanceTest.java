@@ -63,7 +63,11 @@ public class OpenCSDZSharesAcceptanceTest {
         waitForNewShareButton();
         waitForNewFundShareTitle();
         openDropdownAndSelectOption("selectFund", 1);
-        driver.findElement(By.id("buttonSelectFund")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        wait.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
         try {
             assertTrue(driver.findElement(By.id("saveFundShareTop")).isDisplayed());
         }catch (Exception e){
