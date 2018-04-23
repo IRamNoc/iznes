@@ -1,6 +1,5 @@
 package com.setl.openCSDClarityTests.UI.General;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -12,28 +11,21 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
-import static SETLAPIHelpers.DatabaseHelper.*;
+
+
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccessAdmin;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.logout;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateTo365Page;
+
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToLoginPage;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPageByID;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
+
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
+
 import static org.junit.Assert.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -57,6 +49,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
@@ -96,6 +89,7 @@ public class OpenCSDSprint4AcceptanceTest {
     public void shouldUpdateFund() throws IOException, InterruptedException {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         //Get the name of the fund from the database

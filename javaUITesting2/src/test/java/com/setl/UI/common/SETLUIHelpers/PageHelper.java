@@ -37,4 +37,13 @@ public class PageHelper extends LoginAndNavigationHelper {
             System.out.println(text +  " was not available " + e);
         }
     }
+
+    public static void verifyCorrectPage(String title) {
+        assertTrue(driver.findElement(By.className("header-breadcrumbs")).getText().equals(title));
+    }
+
+    public static void verifyCorrectPageById(String title) {
+        assertTrue(driver.findElement(By.id("pageTitle")).getText().equals(title));
+
+    }
 }

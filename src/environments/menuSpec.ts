@@ -78,14 +78,20 @@ const reportsCollectsArchives = {
     element_id: 'menu-am-reports-section-collective-archives',
     router_link: '/am-reports-section/collects-archive'
 };
-
-const reportsHistoricalOrders = {
-    label: 'Holders Lists',
-    label_txt: 'txt_holders_list',
+const reportsCentralization = {
+    label: 'Centralization',
+    label_txt: 'txt_centralization',
     icon_class: 'fa fa-book',
-    element_id: 'menu-am-reports-section-historical-orders',
-    router_link: '/reports-section/csv'
+    element_id: 'menu-report-centralization',
+    router_link: '/reports/centralization'
 };
+// const reportsHistoricalOrders = {
+//     label: 'Holders Lists',
+//     label_txt: 'txt_holders_list',
+//     icon_class: 'fa fa-book',
+//     element_id: 'menu-am-reports-section-historical-orders',
+//     router_link: '/reports-section/csv'
+// };
 const reportsTaxReport = {
     label: 'Tax Report',
     label_txt: 'txt_taxreport',
@@ -309,14 +315,14 @@ const kycDocuments = {
     children: [
         {
             label: 'On-boarding Management',
-            label_txt: 'txt_my_information',
+            label_txt: 'txt_on_boarding_management',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-onboarding-management',
             router_link: '/kyc-am-documents'
         },
         {
-            label: 'Invite Investor',
-            label_txt: 'txt_my_information',
+            label: 'Invite Investors',
+            label_txt: 'txt_invite_investors',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-invite-investor',
             router_link: '/invite-investors'
@@ -339,13 +345,6 @@ export const menuSpec: MenuSpec = {
             ],
             am: [
                 profileMyInfo,
-                {
-                    label: 'Invite Investors',
-                    label_txt: 'txt_invite_investors',
-                    icon_class: '',
-                    element_id: 'top-menu-invite-investors',
-                    router_link: '/invite-investors'
-                },
             ],
             valuer: [
                 profileMyInfo,
@@ -401,7 +400,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
-                    reportsHistoricalOrders,
+                    reportsCentralization,
                 ]
             },
             kycDocuments,

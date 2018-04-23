@@ -19,6 +19,7 @@ import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,6 +58,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndDisplayCreatedFundInFundsTableAndCheckDatabase() throws InterruptedException, IOException, SQLException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -94,6 +96,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayCorrectTitle() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -115,7 +118,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }
         try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
@@ -124,6 +127,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldBeAbleToCancelFundCreationStep1() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -148,6 +152,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -166,6 +171,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldTakeUserToStep2WhenNextIsClicked() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
@@ -189,6 +195,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     public void shouldBeAbleToCancelFundCreationStep2() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
+        waitForHomePageToLoad();
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -251,6 +258,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldUpdateFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
@@ -292,19 +300,19 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fundManagers")).sendKeys("testManager");
-        Thread.sleep(1750);
-        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,200)");
+
+        scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
         driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
-        Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
-        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
+        scrollElementIntoViewById("fund-cancelfund-btn");
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
-        Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        Thread.sleep(750);
-        ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)");
+
+        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");

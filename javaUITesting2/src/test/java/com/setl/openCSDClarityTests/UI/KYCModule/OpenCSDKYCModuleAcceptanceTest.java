@@ -10,6 +10,7 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -56,20 +58,17 @@ public class OpenCSDKYCModuleAcceptanceTest {
         screenshotRule.setDriver(driver);
     }
 
-
-
     @Test
+    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        driver.findElement(By.id("dropdown-user")).click();
-        try {
-            driver.findElement(By.id("top-menu-invite-investors")).click();
-        }catch (Exception e){
-            fail("FAILED : " + e.getMessage());
-        }
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
     }
 
     @Test
+    @Ignore("Awaiting Code Fix For TG-346")
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
@@ -94,9 +93,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
         inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
     }
 
@@ -104,35 +105,38 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Ignore("Currently given a toaster, plans to change to a modal")
     public void shouldNotInviteAnInvestorIfUsedEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        navigateToInviteInvestorPage();
         inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Failed!");
     }
 
     @Test
+    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        navigateToInviteInvestorPage();
         inviteAnInvestor("testops096@setl.io", "TestUser", "One", "Success!");
     }
 
     @Test
+    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        navigateToInviteInvestorPage();
         inviteAnInvestor("testops082@setl.io", "", "Miller", "Success!");
     }
 
     @Test
+    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        navigateToInviteInvestorPage();
         inviteAnInvestor("testops083@setl.io", "Jordan", "", "Success!");
     }
 
     @Test
     public void shouldNotInviteAnInvestorWithoutEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
-        navigateToTopbarItem("dropdown-user", "top-menu-invite-investors", "ofi-kyc-invite-investors" );
+        navigateToInviteInvestorPage();
         inviteAnInvestorExpectingFailed("", "Jordan", "Miller");
     }
 

@@ -1,11 +1,15 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
@@ -16,10 +20,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void selectAddUmbrellaFund(){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
         try{
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a New Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         }catch (Exception e){
             fail("Page heading text was not correct : " + e.getMessage());
         }
