@@ -13,6 +13,11 @@ import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
 import {ValidateFileMessageBody} from "./fileviewer.module";
 import {FileViewerPreviewService} from './preview-modal/service';
 
+enum ViewType {
+    Button = 0,
+    Link = 1
+}
+
 @Component({
     selector: 'setl-file-viewer',
     templateUrl: 'fileviewer.component.html',
@@ -23,6 +28,7 @@ import {FileViewerPreviewService} from './preview-modal/service';
 export class FileViewerComponent implements OnInit, OnChanges {
     @Input() fileHash: string = null;
     @Input() pdfId: string = null;
+    @Input() viewType: ViewType = ViewType.Button;
     public token: string = null;
     public userId: string = null;
     public walletId: string = null;
@@ -38,23 +44,21 @@ export class FileViewerComponent implements OnInit, OnChanges {
     /**
      * Constructor
      */
-    public constructor(
-        private alertsService: AlertsService,
-        private memberSocketService: MemberSocketService,
-        public sanitizer: DomSanitizer,
-        private pdfService: PdfService,
-        private changeDetectorRef: ChangeDetectorRef,
-        private ngRedux: NgRedux<any>,
-        private previewModalService: FileViewerPreviewService,
-        @Inject(APP_CONFIG) private appConfig: AppConfig
-    ) {
+    public constructor(private alertsService: AlertsService,
+                       private memberSocketService: MemberSocketService,
+                       public sanitizer: DomSanitizer,
+                       private pdfService: PdfService,
+                       private changeDetectorRef: ChangeDetectorRef,
+                       private ngRedux: NgRedux<any>,
+                       private previewModalService: FileViewerPreviewService,
+                       @Inject(APP_CONFIG) private appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
         if (this.appConfig.MEMBER_NODE_CONNECTION.port === 443) {
             this.baseUrl = 'https';
         }
         this.baseUrl += '://' + this.appConfig.MEMBER_NODE_CONNECTION.host + ':' +
-           this.appConfig.MEMBER_NODE_CONNECTION.port;
+            this.appConfig.MEMBER_NODE_CONNECTION.port;
         this.token = this.memberSocketService.token;
         if (this.getUser) {
             this.getUser.subscribe(
