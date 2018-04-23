@@ -146,6 +146,8 @@ export interface Fund {
     hasSwap: hasSwap;
     hasDurationHedge: hasDurationHedge;
     investmentObjective: string;
+    internalReference: string;
+    additionnalNotes: string;
 }
 
 export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {

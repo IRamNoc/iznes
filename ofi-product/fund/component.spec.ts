@@ -148,7 +148,7 @@ describe('FundComponent', () => {
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
-                umbrellaFundID: '7',
+                umbrellaFundID: 7,
                 umbrellaFundName: 'test',
                 registerOffice: '4',
                 registerOfficeAddress: 'sdΩ',
@@ -163,13 +163,15 @@ describe('FundComponent', () => {
                 payingAgentID: '0',
                 transferAgentID: '0',
                 centralisingAgentID: '0',
-                giin: '43453',
+                giin: 43453,
                 delegatedManagementCompanyID: '0',
                 auditorID: '0',
                 taxAuditorID: '0',
                 principlePromoterID: '0',
                 legalAdvisorID: '0',
-                directors: '0'
+                directors: '0',
+                internalReference: '',
+                additionnalNotes: '',
             },
         };
         comp.umbrellaItems = [
@@ -273,7 +275,7 @@ describe('FundComponent', () => {
             const formGroupOptionEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:last-child div.form-group')
             );
-            expect(formGroupOptionEls.length).toEqual(22);
+            expect(formGroupOptionEls.length).toEqual(24);
         }));
 
         describe('conditionnal inputs', () => {
@@ -627,8 +629,7 @@ describe('FundComponent', () => {
             });
         });
 
-        describe('create mode', () => {
-
+        describe('network calls', () => {
             const testPayload = {
                 isFundStructure: '1',
                 fundName: 'test',
@@ -684,167 +685,112 @@ describe('FundComponent', () => {
                 hasSecurityiesLending: null,
                 hasSwap: null,
                 hasDurationHedge: null,
-                investmentObjective: null
+                investmentObjective: null,
+                internalReference: '',
+                additionnalNotes: '',
             };
+            describe('create mode', () => {
+                beforeEach(fakeAsync(() => {
+                    const value = comp.umbrellaItems[0];
+                    comp.umbrellaControl.setValue([value]);
+                    comp.viewMode = 'FUND';
 
-            beforeEach(fakeAsync(() => {
-                const value = comp.umbrellaItems[0];
-                comp.umbrellaControl.setValue([value]);
-                comp.viewMode = 'FUND';
+                    tick();
+                    fixture.detectChanges();
 
-                tick();
-                fixture.detectChanges();
+                    comp.fundForm.setValue(testPayload);
+                }));
 
-                comp.fundForm.setValue(testPayload);
-            }));
+                afterEach(() => {
+                    iznCreateFund.calls.reset();
+                    pop.calls.reset();
+                });
 
-            afterEach(() => {
-                iznCreateFund.calls.reset();
-                pop.calls.reset();
+                it('should call fundService.createFund', fakeAsync(() => {
+
+                    const expectedResult: Fund = Object(_.omit({
+                        ...testPayload,
+                        domicile: testPayload.domicile[0].id,
+                        legalForm: testPayload.legalForm[0].id,
+                        nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                        fundCurrency: testPayload.fundCurrency[0].id,
+                        portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                        fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                        fundAdministrator: testPayload.fundAdministrator[0].id,
+                        custodianBank: testPayload.custodianBank[0].id,
+                        managementCompanyID: testPayload.managementCompanyID[0].id,
+                        umbrellaFundID: comp.umbrellaControl.value[0].id,
+                    }, ['AuMFund', 'AuMFundDate']));
+                    comp.submitFundForm();
+
+                    expect(iznCreateFund).toHaveBeenCalledTimes(1);
+                    expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
+                }));
+
+                it('should fire the toaster service with a success message', fakeAsync(() => {
+                    const expectedResult = [
+                        'success',
+                        `${testPayload.fundName} has been successfully created.`
+                    ];
+                    comp.submitFundForm();
+                    tick();
+
+                    expect(pop).toHaveBeenCalledTimes(1);
+                    expect(pop).toHaveBeenCalledWith(...expectedResult);
+                }));
             });
 
-            it('should call fundService.createFund', fakeAsync(() => {
+            describe('edit mode', () => {
+                beforeEach(fakeAsync(() => {
+                    const value = comp.umbrellaItems[0];
+                    comp.umbrellaControl.setValue([value]);
+                    comp.viewMode = 'FUND';
+                    comp.param = '9';
 
-                const expectedResult: Fund = Object(_.omit({
-                    ...testPayload,
-                    domicile: testPayload.domicile[0].id,
-                    legalForm: testPayload.legalForm[0].id,
-                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                    fundCurrency: testPayload.fundCurrency[0].id,
-                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                    fundAdministrator: testPayload.fundAdministrator[0].id,
-                    custodianBank: testPayload.custodianBank[0].id,
-                    managementCompanyID: testPayload.managementCompanyID[0].id,
-                    umbrellaFundID: comp.umbrellaControl.value[0].id,
-                }, ['AuMFund', 'AuMFundDate']));
-                comp.submitFundForm();
+                    tick();
+                    fixture.detectChanges();
 
-                expect(iznCreateFund).toHaveBeenCalledTimes(1);
-                expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
-            }));
+                    comp.fundForm.setValue(testPayload);
+                }));
 
-            it('should fire the toaster service with a success message', fakeAsync(() => {
-                const expectedResult = [
-                    'success',
-                    `${testPayload.fundName} has been successfully created.`
-                ];
-                comp.submitFundForm();
-                tick();
+                afterEach(() => {
+                    iznUpdateFund.calls.reset();
+                    pop.calls.reset();
+                });
 
-                expect(pop).toHaveBeenCalledTimes(1);
-                expect(pop).toHaveBeenCalledWith(...expectedResult);
-            }));
-        });
+                it('should call fundService.updateFund', fakeAsync(() => {
 
-        describe('edit mode', () => {
-            const testPayload = {
-                isFundStructure: '1',
-                fundName: 'test',
-                AuMFund: 'test',
-                AuMFundDate: '2017-02-02',
-                legalEntityIdentifier: null,
-                registerOffice: null,
-                registerOfficeAddress: null,
-                domicile: [{id: 'AF', text: 'Afghanistan'}],
-                isEuDirective: '0',
-                typeOfEuDirective: null,
-                UcitsVersion: null,
-                legalForm: [{ id: '0', text: 'Contractual Fund' }],
-                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
-                homeCountryLegalType: null,
-                fundCreationDate: null,
-                fundLaunchate: null,
-                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
-                openOrCloseEnded: '0',
-                fiscalYearEnd: '2017-02',
-                isFundOfFund: '0',
-                managementCompanyID: [{ id: '0', text: 'test management company' }],
-                fundAdministrator: [{ id : '1', text: 'Fund Admin 1' }],
-                custodianBank: [{ id : '1', text: 'Custodian Bank 1' }],
-                investmentManager: null,
-                principalPromoter: null,
-                payingAgent: null,
-                fundManagers: null,
-                transferAgent: null,
-                centralizingAgent: null,
-                isDedicatedFund: '0',
-                portfolioCurrencyHedge: [{ id : '1', text: 'No Hedge' }],
-                globalItermediaryIdentification: null,
-                delegatedManagementCompany: null,
-                investmentAdvisor: null,
-                auditor: null,
-                taxAuditor: null,
-                legalAdvisor: null,
-                directors: null,
-                pocket: null,
-                hasEmbeddedDirective: null,
-                hasCapitalPreservation: null,
-                capitalPreservationLevel: null,
-                capitalPreservationPeriod: null,
-                hasCppi: null,
-                cppiMultiplier: null,
-                hasHedgeFundStrategy: null,
-                isLeveraged: null,
-                has130Or30Strategy: null,
-                isFundTargetingEos: null,
-                isFundTargetingSri: null,
-                isPassiveFund: null,
-                hasSecurityiesLending: null,
-                hasSwap: null,
-                hasDurationHedge: null,
-                investmentObjective: null
-            };
+                    const expectedResult: Fund = Object(_.omit({
+                        ...testPayload,
+                        domicile: testPayload.domicile[0].id,
+                        legalForm: testPayload.legalForm[0].id,
+                        nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
+                        fundCurrency: testPayload.fundCurrency[0].id,
+                        portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
+                        fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
+                        fundAdministrator: testPayload.fundAdministrator[0].id,
+                        custodianBank: testPayload.custodianBank[0].id,
+                        managementCompanyID: testPayload.managementCompanyID[0].id,
+                        umbrellaFundID: comp.umbrellaControl.value[0].id,
+                    }, ['AuMFund', 'AuMFundDate']));
+                    comp.submitFundForm();
 
-            beforeEach(fakeAsync(() => {
-                const value = comp.umbrellaItems[0];
-                comp.umbrellaControl.setValue([value]);
-                comp.viewMode = 'FUND';
-                comp.param = '9';
+                    expect(iznUpdateFund).toHaveBeenCalledTimes(1);
+                    expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
+                }));
 
-                tick();
-                fixture.detectChanges();
+                it('should fire the toaster service with a success message', fakeAsync(() => {
+                    const expectedResult = [
+                        'success',
+                        `${testPayload.fundName} has been successfully updated.`
+                    ];
+                    comp.submitFundForm();
+                    tick();
 
-                comp.fundForm.setValue(testPayload);
-            }));
-
-            afterEach(() => {
-                iznUpdateFund.calls.reset();
-                pop.calls.reset();
+                    expect(pop).toHaveBeenCalledTimes(1);
+                    expect(pop).toHaveBeenCalledWith(...expectedResult);
+                }));
             });
-
-            it('should call fundService.updateFund', fakeAsync(() => {
-
-                const expectedResult: Fund = Object(_.omit({
-                    ...testPayload,
-                    domicile: testPayload.domicile[0].id,
-                    legalForm: testPayload.legalForm[0].id,
-                    nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                    fundCurrency: testPayload.fundCurrency[0].id,
-                    portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                    fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                    fundAdministrator: testPayload.fundAdministrator[0].id,
-                    custodianBank: testPayload.custodianBank[0].id,
-                    managementCompanyID: testPayload.managementCompanyID[0].id,
-                    umbrellaFundID: comp.umbrellaControl.value[0].id,
-                }, ['AuMFund', 'AuMFundDate']));
-                comp.submitFundForm();
-
-                expect(iznUpdateFund).toHaveBeenCalledTimes(1);
-                expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
-            }));
-
-            it('should fire the toaster service with a success message', fakeAsync(() => {
-                const expectedResult = [
-                    'success',
-                    `${testPayload.fundName} has been successfully updated.`
-                ];
-                comp.submitFundForm();
-                tick();
-
-                expect(pop).toHaveBeenCalledTimes(1);
-                expect(pop).toHaveBeenCalledWith(...expectedResult);
-            }));
         });
     });
 });

@@ -22,6 +22,8 @@ export const validators = {
     alphanumeric: Validators.pattern(/^[\w ]+$/),
     lei: Validators.pattern(/^(\w{20})?$/),
     giin: Validators.pattern(/^([0-9]{19})?$/),
+    internalReference: Validators.maxLength(50),
+    additionnalNotes: Validators.maxLength(500),
 };
 
 export enum typeOfEuDirective {
