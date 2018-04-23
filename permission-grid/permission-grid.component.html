@@ -19,7 +19,7 @@
                     <!-- Option List, defaults to this grid. -->
                     <options-list
                         (selected)="updateValue( area.id, level.id, $event.id)"
-                        [initData]="updateEvent"
+                        [initData]="rawComponentData[area.id][level.id]"
                         [metaData]="{ 'permissionId': area.id, 'levelId': level.id }"
                     ></options-list>
                 </td>
