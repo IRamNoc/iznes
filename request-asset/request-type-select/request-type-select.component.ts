@@ -21,18 +21,18 @@ import {SagaHelper, walletHelper, immutableHelper} from '@setl/utils';
     styleUrls: ['./request-type-select.component.css']
 })
 export class RequestTypeSelectComponent implements OnInit, OnDestroy {
-    
+
     @Output() requestType = new EventEmitter<number>();
     @Output() fromRelationship = new EventEmitter<number>();
     @Output() walletFrom = new EventEmitter<number>();
     @Output() addressTo = new EventEmitter<string>();
-    
+
     connectedWalletId: number;
     requestTypeForm: FormGroup;
     subscriptionsArray: Array<Subscription> = [];
 
     requestTypes = [
-        {id: 1, text: 'Relationship'},
+        {id: 1, text: 'Connection'},
         {id: 2, text: 'Address'},
     ];
     selectedRequestType: number;
@@ -62,7 +62,7 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
         private walletNodeRequestService: WalletNodeRequestService,
         private walletnodeTxService: WalletnodeTxService,
         private myWalletService: MyWalletsService) {
-        
+
         this.requestTypeForm = new FormGroup({
             type: new FormControl('', Validators.required),
             fromRelationship: new FormControl('', Validators.required),
@@ -75,7 +75,7 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
         this.initWalletDirectorySubscriptions();
         this.initMyWalletSubscriptions();
     }
-        
+
     ngOnInit() { }
 
     private initWalletIdSubscription(): void {
@@ -89,10 +89,12 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     private initWalletRelationshipsSubscriptions(): void {
         this.subscriptionsArray.push(
             this.requestedWalletRelationshipListOb.subscribe((requested) => {
-                if(!requested) InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
+                if (!requested) {
+                    InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
+                }
             }),
             this.walletRelationshipListOb.subscribe((walletList) => {
-                if(Object.keys(walletList).length !== 0) {
+                if (Object.keys(walletList).length !== 0) {
                     this.walletRelationships = walletHelper.walletToRelationshipToSelectItem(walletList, this.walletDirectoryList);
                 }
             })
@@ -108,15 +110,15 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
         );
     }
 
-    private initMyWalletSubscriptions(): void {        
+    private initMyWalletSubscriptions(): void {
         this.subscriptionsArray.push(
             this.requestedWalletAddressListOb.subscribe((requested) => {
-                if(!requested) {                    
+                if (!requested) { 
                     InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
                 }
             }),
             this.requestedWalletAddressLabelsOb.subscribe((requested) => {
-                if(!requested && this.connectedWalletId !== 0) {
+                if (!requested && this.connectedWalletId !== 0) {
                     MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
                 }
             }),
@@ -144,9 +146,8 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        for(const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
-
 }
