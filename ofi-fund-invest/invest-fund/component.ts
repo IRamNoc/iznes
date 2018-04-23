@@ -320,8 +320,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
 
-        const formValue = Object.assign({}, this.form.value, {'actionBy': this.actionBy});
-        this.formDataChange.emit(formValue);
+        // const formValue = Object.assign({}, this.form.value, {'actionBy': this.actionBy});
+        // this.formDataChange.emit(formValue);
     }
 
     ngOnInit() {
@@ -350,7 +350,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             disclaimer: this.disclaimer
         });
 
-        this.setInitialFormValue();
+        // this.setInitialFormValue();
 
         this.metadata = {
             subscribe: {
