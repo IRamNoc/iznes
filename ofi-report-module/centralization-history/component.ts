@@ -154,7 +154,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
         this.createsearchForm();
         this.createFilterForm();
-        // this.setInitialTabs();
+        this.setInitialTabs();
 
         this.subscriptions.push(this.route.params.subscribe(params => {
             this.shareID = params['tabid'];
@@ -173,8 +173,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 };
                 if (share && typeof share !== 'undefined' && share !== undefined && share !== null) {
                     // this.fundShareID = order.fundShareID;
-                    // this.tabsControl[0].active = false;
-                    const tabTitle = 'Orders history';
+                    this.tabsControl[0].active = false;
+                    const tabTitle = 'History';
                     // if (order.orderType === 3) tabTitle += 'Subscription: ';
                     // if (order.orderType === 4) tabTitle += 'Redemption: ';
                     // tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);

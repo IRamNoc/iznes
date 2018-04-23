@@ -27,7 +27,7 @@ import * as _ from 'lodash';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 
 /* store */
-import {ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
+import {ofiManageOrderActions, ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */
 interface SelectedItem {
@@ -97,6 +97,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private _fb: FormBuilder,
+        private memberSocketService: MemberSocketService,
         private ofiReportsService: OfiReportsService,
         private alerts: AlertsService,
         private _confirmationService: ConfirmationService,
@@ -224,23 +225,71 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickExportCentralizationReport(id) {
-        console.log('onClickExportCentralizationReport');
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv';
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
     }
 
-    onClickViewCorrespondingOrders(id) {
-        this.router.navigateByUrl('manage-orders/' + id);
-    }
 
     onClickViewCentralizationHistory(id) {
         this.buildLink(id);
     }
 
+    onClickViewCorrespondingOrders(id) {
+        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        if (obj !== undefined) {
+            const orderFilters = { filters: {
+                isin: obj.isin,
+                shareName: obj.fundShareName,
+                status: '',
+                orderType: '',
+            }};
+
+            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+            this.router.navigateByUrl('manage-orders/list');
+        }
+    }
+
     onClickDownloadCorrespondingOrders(id) {
-        console.log('onClickDownloadCorrespondingOrders');
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
+
+        console.log(this.centralizationReportsList, id);
+
+        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        if (obj !== undefined) {
+            const params = {
+                shareName: obj.fundShareName,
+                isin: obj.isin,
+                status: null,
+                orderType: null,
+                pageSize: null,
+                rowOffSet: null,
+                sortByField: null,
+                sortOrder: null,
+                dateSearchField: null,
+                fromDate: null,
+                toDate: null,
+            };
+            for (let filter in params) {
+                if (params.hasOwnProperty(filter)) {
+                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
+                }
+            }
+            const url = this.generateExportURL(paramUrl, false);
+            // console.log(url);
+            window.open(url, '_blank');
+        }
     }
 
     onClickDownloadCentralizationHistory(id) {
-        console.log('onClickDownloadCentralizationHistory');
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id;
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
+
+    generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
     }
 
     ngOnDestroy() {

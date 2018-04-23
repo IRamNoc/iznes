@@ -14,19 +14,19 @@
                 <form [formGroup]="searchForm" id="search-centralization-reports-form">
                     <div class="form-horizontal">
                         <div class="row bordered form-group">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-6">
                                 <h3>Please find below the centralization reports by Share:</h3>
                             </div>
 
-                            <div class="form-group col-sm-6">
-                                <label style="margin: 10px 0;">
-                                    <b><span>Search for a specific share:</span></b>
-                                </label>
-                                <br>
-                                <div class="input-button-group" *ngIf="dataListForSearch.length > 0">
-                                    <ng-select id="centralization-reports-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>
-                                </div>
-                            </div>
+                            <!--<div class="form-group col-sm-6">-->
+                                <!--<label style="margin: 10px 0;">-->
+                                    <!--<b><span>Search for a specific share:</span></b>-->
+                                <!--</label>-->
+                                <!--<br>-->
+                                <!--<div class="input-button-group" *ngIf="dataListForSearch.length > 0">-->
+                                    <!--<ng-select id="centralization-reports-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <!--<div class="form-group col-sm-6">-->
                                 <!--<label class="control-label" for="input">Search for a specific share:</label>-->
                                 <!--<input type="text" name="input" id="input" placeholder="Type a Share name or ISIN" [formControl]="filterInput"/>-->
@@ -130,12 +130,12 @@
 
                                     <div class="form-group col-sm-5 flex-container-column">
                                         <div class="flex-container-row">
-                                            <button class="btn btn-default" (click)="onClickViewCorrespondingOrders()">View corresponding orders</button>
-                                            <button class="btn btn-default" (click)="onClickDownloadCorrespondingOrders()"><i class="fa fa-download"></i></button>
+                                            <button class="btn btn-default" type="button" (click)="onClickViewCorrespondingOrders(data.fundShareID)">View corresponding orders</button>
+                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCorrespondingOrders(data.fundShareID)"><i class="fa fa-download"></i></button>
                                         </div>
                                         <div class="flex-container-row">
-                                            <button class="btn btn-default" (click)="onClickViewCentralizationHistory()">View centralization history</button>
-                                            <button class="btn btn-default" (click)="onClickDownloadCentralizationHistory(data.fundShareID)"><i class="fa fa-download"></i></button>
+                                            <button class="btn btn-default" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View centralization history</button>
+                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCentralizationHistory(data.fundShareID)"><i class="fa fa-download"></i></button>
                                         </div>
                                     </div>
                                 </div>

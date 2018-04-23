@@ -20,3 +20,4 @@ export const ofiSetRequestedCentralizationReports = kAction(OFI_SET_REQUESTED_CE
  */
 export const OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS = `${name}/OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS`;
 export const ofiClearRequestedCentralizationReports = kAction(OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS);
+

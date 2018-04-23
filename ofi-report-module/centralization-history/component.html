@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
-        <span><span mltag="txt_holderslist">Holders list</span>:</span>
+        <span>Centralization History:</span>
         <span *ngIf="shareID === 0" mltag="txt_allshares">All Shares</span>
         <span *ngIf="shareID > 0">{{shareID}}</span>
     </h1>
@@ -146,6 +146,13 @@
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
                         <tr>
+                            <!--
+                            todo: Qu'il y ai un umbrella ou pas on affiche le champ et on met none dedans si ya pas
+                            todo: Qu'il y ai un umbrella ou pas on affiche le champ et on met none dedans si ya pas
+                            todo: Qu'il y ai un umbrella ou pas on affiche le champ et on met none dedans si ya pas
+                            todo: Qu'il y ai un umbrella ou pas on affiche le champ et on met none dedans si ya pas
+                            todo: Qu'il y ai un umbrella ou pas on affiche le champ et on met none dedans si ya pas
+                            -->
                             <td [ngStyle]="(isFundUmbrella && {'width': '40%'}) || (!isFundUmbrella && {'width': '60%'})">
                                 <div class="form-group">
                                     <label>
@@ -169,7 +176,7 @@
                             <td [ngStyle]="(isFundUmbrella && {'width': '20%'}) || (!isFundUmbrella && {'width': '40%'})">
                                 <div class="form-group">
                                     <label>
-                                        <span><span mltag="txt_numberofunits">Number of units</span>:</span>
+                                        <span><span mltag="txt_currency">Currency</span>:</span>
                                     </label>
                                     <div>
                                         <span class="readonly-field" mltag="txt_eur">EUR</span>
@@ -197,11 +204,8 @@
                             </td>
                             <td style="width: 30px; padding: 0;">
                                 <div class="form-group">
-                                    <label mltag="txt_nbsp">&nbsp;</label>
+                                    <label>&nbsp;<span mltag="txt_or">or</span>:</label>
                                     <br>
-                                    <div><span mltag="txt_or">or</span>:
-
-                                    </div>
                                 </div>
                             </td>
                             <td>
@@ -324,7 +328,7 @@
             </clr-datagrid>
 
             <div class="text-center mt-1">
-                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization', 'list']" mltag="txt_backtocentralization">Back to Centralization</button>
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization']" mltag="txt_backtocentralization">Back to Centralization</button>
             </div>
         </div>
     </ng-template>

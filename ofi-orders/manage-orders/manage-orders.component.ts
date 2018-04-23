@@ -71,6 +71,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         fromDate: null,
         toDate: null,
     };
+    filtersFromRedux = {
+        isin: '',
+        shareName: '',
+        status: '',
+        orderType: '',
+    };
+    filtersApplied = false;
     lastPage: number;
     loading = true;
 
@@ -181,6 +188,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersObj;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersObj;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersObj: any;
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListObj: any;
@@ -235,6 +243,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             // if new Orders coming (broadcast)
             this.subscriptions.push(this.newOrderOfiInvOrdersObj.subscribe((newInvOrder) => this.getInvOrdersNewOrder(newInvOrder)));
         }
+        this.subscriptions.push(this.OfiAmOrdersFiltersObj.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
     }
 
     ngOnInit() {
@@ -457,6 +466,40 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.updateTabs();
         this.changeDetectorRef.markForCheck();
+    }
+
+    getAmOrdersFiltersFromRedux(filters) {
+        this.filtersFromRedux = filters;
+        this.applyFilters();
+        this.changeDetectorRef.markForCheck();
+    }
+
+    applyFilters() {
+        if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
+            if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
+                this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
+                this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+            }
+            if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
+                this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
+                this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+            }
+            // if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
+            //     this.tabsControl[0].searchForm.get('status').patchValue(this.filtersFromRedux.status, {emitEvent: false});
+            //     this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+            // }
+            // if (this.filtersFromRedux.orderType && this.filtersFromRedux.orderType !== '') {
+            //     this.tabsControl[0].searchForm.get('type').patchValue(this.filtersFromRedux.orderType, {emitEvent: false});
+            //     this.tabsControl[0].searchForm.get('type').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+            // }
+
+            // remove filters from redux
+            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
+
+            this.filtersApplied = true;
+
+            this.requestSearch(this.tabsControl[0].searchForm);
+        }
     }
 
     getInvOrdersRequested(requested): void {

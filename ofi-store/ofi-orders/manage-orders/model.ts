@@ -58,4 +58,5 @@ export interface ManageOrders {
     requested: boolean;
     newOrder: boolean;
     openedTabs: Array<OrderTab>;
+    filters: any;
 }
