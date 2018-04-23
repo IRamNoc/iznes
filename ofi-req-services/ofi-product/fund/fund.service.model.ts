@@ -129,7 +129,6 @@ export interface Fund {
     taxAuditor: number;
     legalAdvisor: number;
     directors: string;
-    pocket: string;
     hasEmbeddedDirective: hasEmbeddedDirective;
     hasCapitalPreservation: hasCapitalPreservation;
     capitalPreservationLevel: number;

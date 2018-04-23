@@ -218,8 +218,6 @@ export class FundComponent implements OnInit, OnDestroy {
         this.fundForm = fb.group({
             'isFundStructure': {value: '', disabled: true},
             'fundName': [null, Validators.compose([Validators.required, this.validators.alphanumeric])],
-            'AuMFund': [null],
-            'AuMFundDate': [null, Validators.compose([this.validators.date.day])],
             'legalEntityIdentifier': [null, this.validators.lei],
             'registerOffice': [null, Validators.compose([this.validators.alphanumeric])],
             'registerOfficeAddress': [null, Validators.compose([this.validators.alphanumeric])],
@@ -255,7 +253,6 @@ export class FundComponent implements OnInit, OnDestroy {
             'taxAuditor': [[]],
             'legalAdvisor': [[]],
             'directors': [null],
-            'pocket': [null],
             'hasEmbeddedDirective': [null],
             'hasCapitalPreservation': [null],
             'capitalPreservationLevel': [null, Validators.compose([
@@ -555,8 +552,6 @@ export class FundComponent implements OnInit, OnDestroy {
 
                     this.fundForm.setValue({
                         ...fund,
-                        AuMFund: null,
-                        AuMFundDate: null,
                         domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
                         typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
                         UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
@@ -594,7 +589,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     submitFundForm() {
-        const payload: Fund = _.omit({
+        const payload: Fund = {
             ...this.fundForm.getRawValue(),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
@@ -620,7 +615,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-        }, ['AuMFund', 'AuMFundDate']);
+        };
 
         if (this.param === 'new') {
             this.fundService.iznCreateFund(payload)

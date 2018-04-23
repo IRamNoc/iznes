@@ -82,7 +82,6 @@ export interface IznesFundDetail {
     taxAuditor: string;
     legalAdvisor: string;
     directors: string;
-    pocket: string;
     hasEmbeddedDirective: string;
     hasCapitalPreservation: string;
     capitalPreservationLevel: string;
